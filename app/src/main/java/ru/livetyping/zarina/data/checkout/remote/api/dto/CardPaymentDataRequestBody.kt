@@ -11,11 +11,11 @@ data class CardPaymentDataRequestBody(
     val products: List<Product>? = null,
 
     @SerialName("amount")
-    val totalPrice: Int,
+    val finalPrice: Int,
 
     @SerialName("userId")
     val userId: String?,
-    
+
     @SerialName("storeId") 
     val storeId: String?,
 ) {

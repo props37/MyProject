@@ -32,7 +32,7 @@ fun CartPrice(
     discountSize: Int,
     isDeliveryPriceIncluded: Boolean,
     deliveryPrice: Int?,
-    totalPrice: Int,
+    finalPrice: Int,
     modifier: Modifier = Modifier,
     backgroundColor: Color = BackgroundColor,
     contentColor: Color = ContentColor,
@@ -72,7 +72,7 @@ fun CartPrice(
 
             PriceItem(
                 name = stringResource(R.string.total),
-                price = totalPrice,
+                price = finalPrice,
                 nameTextStyle = TotalPriceNameTextStyle,
                 priceTextStyle = TotalPriceTextStyle,
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -130,7 +130,7 @@ private fun Preview() {
             discountSize = 4050,
             isDeliveryPriceIncluded = true,
             deliveryPrice = 550,
-            totalPrice = 21743,
+            finalPrice = 21743,
         )
     }
 }

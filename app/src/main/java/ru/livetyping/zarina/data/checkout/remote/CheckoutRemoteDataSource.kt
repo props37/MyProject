@@ -140,13 +140,13 @@ class CheckoutRemoteDataSource @Inject constructor(
     suspend fun applyGiftCertificate(
         certificateNumber: String,
         certificateVerificationCode: String,
-        cartTotalPrice: Int,
+        cartFinalPrice: Int,
         cartType: CartType,
     ) {
         api.applyGiftCertificate(
             certificateNumber = certificateNumber,
             certificateVerificationCode = certificateVerificationCode,
-            cartTotalPrice = cartTotalPrice,
+            cartFinalPrice = cartFinalPrice,
             cartType = cartType,
         )
     }

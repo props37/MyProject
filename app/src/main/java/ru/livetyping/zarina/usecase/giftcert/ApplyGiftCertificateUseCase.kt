@@ -22,7 +22,7 @@ class ApplyGiftCertificateUseCase @Inject constructor(
         checkoutRepository.applyGiftCertificate(
             certificateNumber = certNumber,
             certificateVerificationCode = certVerificationCode,
-            cartTotalPrice = params.cartTotalPrice,
+            cartFinalPrice = params.cartFinalPrice,
             cartType = params.cartType,
         )
     }
@@ -50,7 +50,7 @@ class ApplyGiftCertificateUseCase @Inject constructor(
     data class Params(
         val certificateNumber: String,
         val certificateVerificationCode: String,
-        val cartTotalPrice: Int,
+        val cartFinalPrice: Int,
         val cartType: CartType,
     )
 }

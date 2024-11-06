@@ -55,7 +55,7 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                     is CheckoutOrderPlacingScreenAction.GiftCertificateSelected -> {
                         val giftCertificate = CheckoutGraph.GiftCertificate(
                             cartType = CartTypeParcelable.from(action.cartType),
-                            cartTotalPrice = action.cart.price.totalPrice,
+                            cartFinalPrice = action.cart.price.finalPrice,
                         )
                         navController.navigate(giftCertificate)
                     }

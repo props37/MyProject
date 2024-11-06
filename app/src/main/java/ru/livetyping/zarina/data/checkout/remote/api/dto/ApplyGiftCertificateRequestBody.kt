@@ -15,7 +15,7 @@ data class ApplyGiftCertificateRequestBody(
     val certificateVerificationCode: String,
 
     @SerialName("order_price")
-    val cartTotalPrice: Int,
+    val cartFinalPrice: Int,
 
     @SerialName("cart_type")
     val cartType: CartTypeDto,

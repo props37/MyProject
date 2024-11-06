@@ -181,7 +181,7 @@ object CheckoutOrderPlacingScreenComponents {
 
                 CartScreenComponents.CartBottomFloatingBlock(
                     isVisible = !isPayItemVisible && !WindowInsets.isImeVisible,
-                    totalPrice = cartState.price.totalPrice,
+                    finalPrice = cartState.price.finalPrice,
                     buttonText = stringResource(R.string.pay).uppercase(),
                     isButtonEnabled = true,
                     onButtonClicked = onPayClicked,
@@ -606,7 +606,7 @@ object CheckoutOrderPlacingScreenComponents {
                 discountSize = cartState.price.discountSize,
                 isDeliveryPriceIncluded = true,
                 deliveryPrice = cartState.price.deliveryPrice,
-                totalPrice = cartState.price.totalPrice,
+                finalPrice = cartState.price.finalPrice,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)

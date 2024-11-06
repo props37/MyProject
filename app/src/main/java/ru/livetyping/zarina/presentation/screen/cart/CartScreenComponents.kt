@@ -512,7 +512,7 @@ object CartScreenComponents {
 
             CartBottomFloatingBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
-                totalPrice = cartState.price.totalPrice,
+                finalPrice = cartState.price.finalPrice,
                 buttonText = stringResource(R.string.checkout).uppercase(),
                 isButtonEnabled = !cartState.productLimit.isExceeded,
                 onButtonClicked = onCheckoutClicked,
@@ -668,7 +668,7 @@ object CartScreenComponents {
                     discountSize = cartState.price.discountSize,
                     isDeliveryPriceIncluded = false,
                     deliveryPrice = null,
-                    totalPrice = cartState.price.totalPrice,
+                    finalPrice = cartState.price.finalPrice,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
@@ -744,7 +744,7 @@ object CartScreenComponents {
     @Composable
     fun CartBottomFloatingBlock(
         isVisible: Boolean,
-        totalPrice: Int,
+        finalPrice: Int,
         buttonText: String,
         isButtonEnabled: Boolean,
         onButtonClicked: () -> Unit,
@@ -778,7 +778,7 @@ object CartScreenComponents {
 
                     Spacer(modifier = Modifier.height(2.dp))
 
-                    val formattedPrice = rememberFormattedPrice(totalPrice)
+                    val formattedPrice = rememberFormattedPrice(finalPrice)
                     Text(
                         text = stringResource(R.string.price_in_rubles_string, formattedPrice),
                         style = UiKitTheme.typography.primary.bold,

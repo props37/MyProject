@@ -108,7 +108,7 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
                 val params = ApplyGiftCertificateUseCase.Params(
                     certificateNumber = giftCertificateNumberTextFieldState.text.toString(),
                     certificateVerificationCode = giftCertificateVerificationCodeTextFieldState.text.toString(),
-                    cartTotalPrice = giftCertificateParams.cartTotalPrice,
+                    cartFinalPrice = giftCertificateParams.cartFinalPrice,
                     cartType = giftCertificateParams.cartType.toCartType(),
                 )
                 interactor.applyGiftCertificate(params)

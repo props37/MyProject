@@ -135,7 +135,7 @@ class CheckoutApi @Inject constructor(
         val paymentMethodPath = getCardPaymentMethodPath(paymentMethodType)
         val parametersDto = CardPaymentDataRequestBody(
             products = cart.products.map { CardPaymentDataRequestBody.Product.from(it) },
-            totalPrice = cart.price.totalPrice,
+            finalPrice = cart.price.finalPrice,
             userId = userId?.value,
             storeId = pickupStoreId?.value,
         )
@@ -172,13 +172,13 @@ class CheckoutApi @Inject constructor(
     suspend fun applyGiftCertificate(
         certificateNumber: String,
         certificateVerificationCode: String,
-        cartTotalPrice: Int,
+        cartFinalPrice: Int,
         cartType: CartType,
     ) {
         val body = ApplyGiftCertificateRequestBody(
             certificateNumber = certificateNumber,
             certificateVerificationCode = certificateVerificationCode,
-            cartTotalPrice = cartTotalPrice,
+            cartFinalPrice = cartFinalPrice,
             cartType = CartTypeDto.from(cartType),
         )
         applyGiftCertificateApiExceptionConverter {

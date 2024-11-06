@@ -294,7 +294,7 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
     @Serializable
     data class GiftCertificate(
         val cartType: CartTypeParcelable,
-        val cartTotalPrice: Int,
+        val cartFinalPrice: Int,
     ) {
         @Parcelize
         data class Result(
