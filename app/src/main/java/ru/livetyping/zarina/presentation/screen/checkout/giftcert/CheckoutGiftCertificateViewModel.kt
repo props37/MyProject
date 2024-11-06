@@ -23,10 +23,10 @@ import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateNumberException
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateVerificationCodeException
 import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateReservedException
-import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
@@ -125,7 +125,7 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
 
     private fun onApplyFailure(t: Throwable) {
         when (t) {
-            is GiftCertificateValidationException -> handleGiftCertificateException(t)
+            is ValidationException -> handleGiftCertificateValidationException(t)
 
             !is IOException -> {
                 _isGiftCertificateNumberInvalid.value = true
@@ -143,7 +143,7 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
         }
     }
 
-    private fun handleGiftCertificateException(e: GiftCertificateValidationException) {
+    private fun handleGiftCertificateValidationException(e: ValidationException) {
         val exceptions = listOf(e) + e.suppressedExceptions
         val isNumberEmpty = exceptions.any { it is EmptyGiftCertificateNumberException }
         val isVerificationCodeEmpty =
