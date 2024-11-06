@@ -42,6 +42,9 @@ data class CartDto(
 
     @SerialName("myCard")
     val myCard: MyCard? = null,
+
+    @SerialName("giftCard")
+    val giftCertificate: GiftCertificate? = null,
     
     @SerialName("deliveryPrice") 
     val deliveryPrice: Int? = null,
@@ -168,6 +171,21 @@ data class CartDto(
 
         @SerialName("productsFirstPriceSum")
         val productsFirstPriceSum: Int? = null,
+    )
+
+    @Serializable
+    data class GiftCertificate(
+        @SerialName("barcode")
+        val number: String? = null,
+
+        @SerialName("amount")
+        val amount: Int? = null,
+
+        @SerialName("away_amount")
+        val amountToWriteOff: String? = null,
+
+        @SerialName("total")
+        val finalPrice: Int? = null,
     )
 
     @Serializable
