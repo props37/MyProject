@@ -23,13 +23,13 @@ data class CartDto(
     val pickupProductCount: Int? = null,
 
     @SerialName("total_sum")
-    val totalSum: Int? = null,
+    val finalPrice: Int? = null,
 
     @SerialName("total_discount")
-    val totalDiscount: Int? = null,
+    val discountSize: Int? = null,
 
     @SerialName("discount")
-    val discount: Int? = null,
+    val cartPrice: Int? = null,
 
     @SerialName("bonus_balance")
     val availableBonusCount: Int? = null,
@@ -81,14 +81,21 @@ data class CartDto(
     }
 
     private fun getCartPrice(): CartPrice {
-        checkNotNull(totalSum) { "cartPrice is null" }
-        checkNotNull(totalDiscount) { "discountSize is null" }
-        checkNotNull(discount) { "totalPrice is null" }
+        checkNotNull(cartPrice) { "cartPrice is null" }
+        checkNotNull(discountSize) { "discountSize is null" }
+        checkNotNull(finalPrice) { "finalPrice is null" }
+        val giftCertificateWriteOffSize = giftCertificate?.amountToWriteOff?.toIntOrNull()
+        val finalPrice = if (giftCertificate?.finalPrice != null) {
+            giftCertificate.finalPrice
+        } else {
+            finalPrice
+        }
         return CartPrice(
-            cartPrice = discount,
-            discountSize = totalDiscount,
-            finalPrice = totalSum,
+            cartPrice = cartPrice,
+            discountSize = discountSize,
+            finalPrice = finalPrice,
             deliveryPrice = deliveryPrice,
+            giftCertificateWriteOffSize = giftCertificateWriteOffSize,
         )
     }
 
