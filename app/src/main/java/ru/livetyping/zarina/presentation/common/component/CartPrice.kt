@@ -32,6 +32,7 @@ fun CartPrice(
     discountSize: Int,
     isDeliveryPriceIncluded: Boolean,
     deliveryPrice: Int?,
+    giftCertificateWriteOffSize: Int?,
     finalPrice: Int,
     modifier: Modifier = Modifier,
     backgroundColor: Color = BackgroundColor,
@@ -64,6 +65,16 @@ fun CartPrice(
                 PriceItem(
                     name = stringResource(R.string.delivery),
                     price = deliveryPrice,
+                    nameTextStyle = DefaultPriceNameTextStyle,
+                    priceTextStyle = DefaultPriceTextStyle,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                )
+            }
+
+            if (giftCertificateWriteOffSize != null) {
+                PriceItem(
+                    name = stringResource(R.string.written_off_from_gift_certificate),
+                    price = giftCertificateWriteOffSize,
                     nameTextStyle = DefaultPriceNameTextStyle,
                     priceTextStyle = DefaultPriceTextStyle,
                     modifier = Modifier.padding(vertical = 4.dp),
@@ -130,6 +141,7 @@ private fun Preview() {
             discountSize = 4050,
             isDeliveryPriceIncluded = true,
             deliveryPrice = 550,
+            giftCertificateWriteOffSize = null,
             finalPrice = 21743,
         )
     }

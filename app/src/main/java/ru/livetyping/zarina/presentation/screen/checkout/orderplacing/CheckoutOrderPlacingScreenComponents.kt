@@ -606,6 +606,7 @@ object CheckoutOrderPlacingScreenComponents {
                 discountSize = cartState.price.discountSize,
                 isDeliveryPriceIncluded = true,
                 deliveryPrice = cartState.price.deliveryPrice,
+                giftCertificateWriteOffSize = cartState.price.giftCertificateWriteOffSize,
                 finalPrice = cartState.price.finalPrice,
                 modifier = Modifier
                     .fillMaxWidth()

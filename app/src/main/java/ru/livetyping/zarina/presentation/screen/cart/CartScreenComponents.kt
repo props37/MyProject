@@ -668,6 +668,7 @@ object CartScreenComponents {
                     discountSize = cartState.price.discountSize,
                     isDeliveryPriceIncluded = false,
                     deliveryPrice = null,
+                    giftCertificateWriteOffSize = cartState.price.giftCertificateWriteOffSize,
                     finalPrice = cartState.price.finalPrice,
                     modifier = Modifier
                         .fillMaxWidth()
