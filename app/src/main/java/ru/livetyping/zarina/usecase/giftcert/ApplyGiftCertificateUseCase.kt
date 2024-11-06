@@ -3,9 +3,8 @@ package ru.livetyping.zarina.usecase.giftcert
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.checkout.CheckoutRepository
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.common.exception.ValidationException
-import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateNumberException
-import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateVerificationCodeException
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
+import ru.livetyping.zarina.domain.validation.GiftCertificateValidator
 import javax.inject.Inject
 
 class ApplyGiftCertificateUseCase @Inject constructor(
@@ -13,43 +12,22 @@ class ApplyGiftCertificateUseCase @Inject constructor(
 ) : UseCase<ApplyGiftCertificateUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params) {
-        val certNumber = params.certificateNumber
-        val certVerificationCode = params.certificateVerificationCode
-        validateGiftCertificate(
-            certificateNumber = certNumber,
-            certificateVerificationCode = certVerificationCode,
-        )
+        val certificate = params.giftCertificate
+        validateGiftCertificate(certificate)
         checkoutRepository.applyGiftCertificate(
-            certificateNumber = certNumber,
-            certificateVerificationCode = certVerificationCode,
+            giftCertificate = certificate,
             cartFinalPrice = params.cartFinalPrice,
             cartType = params.cartType,
         )
     }
 
-    private fun validateGiftCertificate(
-        certificateNumber: String,
-        certificateVerificationCode: String,
-    ) {
-        val numberException = if (certificateNumber.isBlank()) {
-            EmptyGiftCertificateNumberException()
-        } else {
-            null
-        }
-        val verificationCodeException = if (certificateVerificationCode.isBlank()) {
-            EmptyGiftCertificateVerificationCodeException()
-        } else {
-            null
-        }
-
-        val validationException =
-            ValidationException.from(numberException, verificationCodeException)
-        if (validationException != null) throw validationException
+    private fun validateGiftCertificate(certificate: GiftCertificate) {
+        val validator = GiftCertificateValidator()
+        validator.validate(certificate)
     }
 
     data class Params(
-        val certificateNumber: String,
-        val certificateVerificationCode: String,
+        val giftCertificate: GiftCertificate,
         val cartFinalPrice: Int,
         val cartType: CartType,
     )

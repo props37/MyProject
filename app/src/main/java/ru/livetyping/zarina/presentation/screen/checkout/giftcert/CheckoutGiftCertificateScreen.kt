@@ -139,7 +139,7 @@ private fun ScreenContent(
                     .byValue { _, proposed ->
                         proposed.filter { it.isDigit() }
                     }
-                    .maxLength(GiftCertificate.GIFT_CERTIFICATE_MAX_LENGTH),
+                    .maxLength(GiftCertificate.NUMBER_MAX_LENGTH),
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -179,7 +179,7 @@ private fun ScreenContent(
                     .byValue { _, proposed ->
                         proposed.filter { it.isDigit() }
                     }
-                    .maxLength(GiftCertificate.GIFT_CERTIFICATE_VERIFICATION_CODE_MAX_LENGTH),
+                    .maxLength(GiftCertificate.VERIFICATION_CODE_MAX_LENGTH),
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Number,

@@ -1,6 +1,14 @@
 package ru.livetyping.zarina.domain.giftcert
 
-object GiftCertificate {
-    const val GIFT_CERTIFICATE_MAX_LENGTH = 13
-    const val GIFT_CERTIFICATE_VERIFICATION_CODE_MAX_LENGTH = 5
+data class GiftCertificate(
+    val number: Number,
+    val verificationCode: String,
+) {
+    @JvmInline
+    value class Number(val value: String)
+
+    companion object {
+        const val NUMBER_MAX_LENGTH = 13
+        const val VERIFICATION_CODE_MAX_LENGTH = 5
+    }
 }

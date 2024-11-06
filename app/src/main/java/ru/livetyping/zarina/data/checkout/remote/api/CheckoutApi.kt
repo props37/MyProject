@@ -35,6 +35,7 @@ import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.store.Store
@@ -170,14 +171,13 @@ class CheckoutApi @Inject constructor(
     }
 
     suspend fun applyGiftCertificate(
-        certificateNumber: String,
-        certificateVerificationCode: String,
+        giftCertificate: GiftCertificate,
         cartFinalPrice: Int,
         cartType: CartType,
     ) {
         val body = ApplyGiftCertificateRequestBody(
-            certificateNumber = certificateNumber,
-            certificateVerificationCode = certificateVerificationCode,
+            certificateNumber = giftCertificate.number.value,
+            certificateVerificationCode = giftCertificate.verificationCode,
             cartFinalPrice = cartFinalPrice,
             cartType = CartTypeDto.from(cartType),
         )

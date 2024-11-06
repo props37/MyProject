@@ -24,6 +24,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.exception.ValidationException
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateNumberException
 import ru.livetyping.zarina.domain.giftcert.exception.EmptyGiftCertificateVerificationCodeException
 import ru.livetyping.zarina.domain.giftcert.exception.GiftCertificateReservedException
@@ -105,9 +106,15 @@ class CheckoutGiftCertificateViewModel @Inject constructor(
         if (applyGiftCertificateJob?.isActive == true) return
         applyGiftCertificateJob = viewModelScope.launch {
             operationTracker.track(ApplyGiftCertificateOperation) {
+                val giftCertificateNumber = GiftCertificate.Number(
+                    value = giftCertificateNumberTextFieldState.text.toString().trim(),
+                )
+                val giftCertificate = GiftCertificate(
+                    number = giftCertificateNumber,
+                    verificationCode = giftCertificateVerificationCodeTextFieldState.text.toString(),
+                )
                 val params = ApplyGiftCertificateUseCase.Params(
-                    certificateNumber = giftCertificateNumberTextFieldState.text.toString(),
-                    certificateVerificationCode = giftCertificateVerificationCodeTextFieldState.text.toString(),
+                    giftCertificate = giftCertificate,
                     cartFinalPrice = giftCertificateParams.cartFinalPrice,
                     cartType = giftCertificateParams.cartType.toCartType(),
                 )

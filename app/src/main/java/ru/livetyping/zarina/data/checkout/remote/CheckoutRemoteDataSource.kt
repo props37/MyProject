@@ -18,6 +18,7 @@ import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.store.Store
@@ -138,14 +139,12 @@ class CheckoutRemoteDataSource @Inject constructor(
     }
 
     suspend fun applyGiftCertificate(
-        certificateNumber: String,
-        certificateVerificationCode: String,
+        giftCertificate: GiftCertificate,
         cartFinalPrice: Int,
         cartType: CartType,
     ) {
         api.applyGiftCertificate(
-            certificateNumber = certificateNumber,
-            certificateVerificationCode = certificateVerificationCode,
+            giftCertificate = giftCertificate,
             cartFinalPrice = cartFinalPrice,
             cartType = cartType,
         )
