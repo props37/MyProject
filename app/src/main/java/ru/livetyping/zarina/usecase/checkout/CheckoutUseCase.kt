@@ -72,6 +72,16 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
+                PaymentMethodType.GIFT_CARD -> {
+                    checkoutWithGiftCertificatePayment(
+                        cart = cart,
+                        paymentMethod = paymentMethod,
+                        availablePaymentMethods = params.availablePaymentMethods,
+                        checkoutParams = checkoutParams,
+                        user = user,
+                    )
+                }
+
                 else -> error("Unsupported payment method type ${paymentMethod.type}")
             }
         }
@@ -163,6 +173,80 @@ class CheckoutUseCase @Inject constructor(
         emit(completed)
     }
 
+    private suspend fun FlowCollector<CheckoutStage>.checkoutWithGiftCertificatePayment(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+        availablePaymentMethods: List<PaymentMethod>,
+        checkoutParams: CheckoutParams,
+        user: User?,
+    ) {
+        if (cart.price.finalPrice > 0) {
+            // User has to pay the remaining price
+            val paymentMethodForRemainingPrice =
+                findPaymentMethodForRemainingPriceAfterGiftCertificate(availablePaymentMethods)
+            val paymentData = getPaymentData(
+                cart = cart,
+                paymentMethod = paymentMethodForRemainingPrice,
+                checkoutParams = checkoutParams,
+                user = user,
+            )
+            emit(CheckoutStage.Payment(paymentData))
+
+            awaitPaymentCompleted(
+                paymentData = paymentData,
+                paymentMethod = paymentMethodForRemainingPrice,
+            )
+            emit(CheckoutStage.PaymentCompleted)
+
+            // Use the original payment method to create an order
+            val order = createOrder(
+                cart = cart,
+                paymentMethod = paymentMethod,
+                checkoutParams = checkoutParams,
+                paymentData = paymentData,
+            )
+            updateOrderPaymentStatus(order, paymentMethod)
+
+            val completed = CheckoutStage.Completed(
+                order = order,
+                paymentMethodType = paymentMethod.type,
+                shouldUpdateOrderStatus = false,
+                shouldAwaitPaymentCompleted = false,
+            )
+            emit(completed)
+        } else {
+            // The gift certificate is enough, there is no remaining price the user has to pay
+            val order = createOrder(
+                cart = cart,
+                paymentMethod = paymentMethod,
+                checkoutParams = checkoutParams,
+                paymentData = null,
+            )
+            updateOrderPaymentStatus(order, paymentMethod)
+
+            val completed = CheckoutStage.Completed(
+                order = order,
+                paymentMethodType = paymentMethod.type,
+                shouldUpdateOrderStatus = false,
+                shouldAwaitPaymentCompleted = false,
+            )
+            emit(completed)
+        }
+    }
+
+    private fun findPaymentMethodForRemainingPriceAfterGiftCertificate(
+        availablePaymentMethods: List<PaymentMethod>,
+    ): PaymentMethod {
+        val paymentMethod = availablePaymentMethods.find {
+            it.type == PaymentMethodType.PAYTURE_WALLET
+                    || it.type == PaymentMethodType.PAYTURE_IN_PAY
+        }
+        checkNotNull(paymentMethod) {
+            "Failed to find payment method for remaining price after gift certificate"
+        }
+        return paymentMethod
+    }
+
     private suspend fun getPaymentData(
         cart: Cart,
         paymentMethod: PaymentMethod,
@@ -245,6 +329,7 @@ class CheckoutUseCase @Inject constructor(
     data class Params(
         val cart: Cart,
         val paymentMethod: PaymentMethod,
+        val availablePaymentMethods: List<PaymentMethod>,
         val checkoutParams: CheckoutParams,
     )
 

@@ -12,7 +12,6 @@ import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.OrderCreationParams
-import ru.livetyping.zarina.domain.order.PaymentMethodType
 
 @Serializable
 data class CreateOrderRequestBody(
@@ -237,12 +236,8 @@ data class CreateOrderRequestBody(
         fun from(params: OrderCreationParams): CreateOrderRequestBody {
             val checkoutParams = params.checkoutParams
             val cardPaymentData = params.paymentData as? CardPaymentData
-            val paytureWalletPaymentId = cardPaymentData?.paymentId?.value?.takeIf {
-                params.paymentMethodType == PaymentMethodType.PAYTURE_WALLET
-            }
-            val paytureInPayPaymentId = cardPaymentData?.paymentId?.value?.takeIf {
-                params.paymentMethodType == PaymentMethodType.PAYTURE_IN_PAY
-            }
+            val paytureWalletPaymentId = cardPaymentData?.paymentId?.value
+            val paytureInPayPaymentId = cardPaymentData?.paymentId?.value
             return CreateOrderRequestBody(
                 contactInfo = ContactInfo.from(checkoutParams.customer),
                 delivery = Delivery.from(checkoutParams),

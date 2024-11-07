@@ -142,6 +142,9 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     private val cart: Cart?
         get() = cartResult.value?.getOrNull()
 
+    private val availablePaymentMethods: List<PaymentMethod>
+        get() = paymentMethodsResult.value?.getOrNull().orEmpty()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest) {
         cartResult.flatMapLatest { result ->
@@ -453,7 +456,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
             return
         }
 
-        checkout(cart, paymentMethod)
+        checkout(cart, paymentMethod, availablePaymentMethods)
     }
 
     fun onPullRefreshTriggered() {
@@ -558,6 +561,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     private fun checkout(
         cart: Cart,
         paymentMethod: PaymentMethod,
+        availablePaymentMethods: List<PaymentMethod>,
     ) {
         if (checkoutJob?.isActive == true) return
 
@@ -566,6 +570,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 val params = CheckoutUseCase.Params(
                     cart = cart,
                     paymentMethod = paymentMethod,
+                    availablePaymentMethods = availablePaymentMethods,
                     checkoutParams = checkoutParams,
                 )
                 interactor.checkout(params).collect { checkoutStageResult ->
