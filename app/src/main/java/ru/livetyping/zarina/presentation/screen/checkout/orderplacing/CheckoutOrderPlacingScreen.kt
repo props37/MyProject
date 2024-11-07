@@ -217,6 +217,7 @@ private fun ScreenContent(
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
                     isPayButtonLoading = isPayButtonLoading,
+                    onUrlClicked = { onUrlClicked(Url(it)) },
                     modifier = Modifier
                         .fillMaxSize()
                         .pullRefresh(pullRefreshState),

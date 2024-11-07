@@ -44,7 +44,7 @@ fun rememberStringWithLinks(
     urlStyle: SpanStyle,
     onUrlClicked: (String) -> Unit,
 ): AnnotatedString {
-    return remember(baseString, substringToUrl) {
+    return remember(baseString, substringToUrl, urlStyle, onUrlClicked) {
         buildAnnotatedString {
             append(baseString)
             val string = this.toAnnotatedString()

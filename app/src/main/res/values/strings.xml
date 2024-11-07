@@ -347,6 +347,10 @@
     <string name="gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введи его номер</string>
     <string name="gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введи проверочный код</string>
     <string name="written_off_from_gift_certificate">Списано по сертификату</string>
+    <string name="payment_policies">Нажимая на кнопку «Оплатить», ты принимаешь правила работы интернет-магазина и подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Также даёшь согласие на обработку персональных данных с целью получения информационной рассылки</string>
+    <string name="payment_policies_online_store">правила работы интернет-магазина</string>
+    <string name="payment_policies_privacy">политикой конфиденциальности</string>
+    <string name="payment_policies_personal_data">согласие на обработку персональных данных</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
