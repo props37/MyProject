@@ -11,12 +11,19 @@ import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.PaymentMethodType
+import ru.livetyping.zarina.domain.store.Store
+import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
+import kotlin.time.Duration
 
 class CheckoutRepository @Inject constructor(
     private val remoteDataSource: CheckoutRemoteDataSource,
@@ -65,8 +72,8 @@ class CheckoutRepository @Inject constructor(
         return remoteDataSource.getPickupPointDetailsFlow(cityKladrId, pickupPointId)
     }
 
-    fun getCartFlow(checkoutParams: CheckoutParams): Flow<Cart> {
-        return remoteDataSource.getCartFlow(checkoutParams)
+    fun getCartFlow(checkoutParams: CheckoutParams, paymentMethod: PaymentMethod?): Flow<Cart> {
+        return remoteDataSource.getCartFlow(checkoutParams, paymentMethod)
     }
 
     fun getPaymentMethodsFlow(
@@ -74,6 +81,55 @@ class CheckoutRepository @Inject constructor(
         cart: Cart,
     ): Flow<List<PaymentMethod>> {
         return remoteDataSource.getPaymentMethodsFlow(checkoutParams, cart)
+    }
+
+    suspend fun getPaymentData(
+        cart: Cart,
+        paymentMethodType: PaymentMethodType,
+        userId: User.Id?,
+        pickupStoreId: Store.Id?,
+    ): PaymentData {
+        return remoteDataSource.getPaymentData(
+            cart = cart,
+            paymentMethodType = paymentMethodType,
+            userId = userId,
+            pickupStoreId = pickupStoreId,
+        )
+    }
+
+    suspend fun awaitPaymentCompleted(
+        paymentData: PaymentData,
+        paymentMethodType: PaymentMethodType,
+        pollingDelay: Duration,
+    ) {
+        remoteDataSource.awaitPaymentCompleted(
+            paymentData = paymentData,
+            paymentMethodType = paymentMethodType,
+            pollingDelay = pollingDelay,
+        )
+    }
+
+    suspend fun updateOrderPaymentStatus(
+        orderId: Order.Id,
+        paymentMethodType: PaymentMethodType,
+    ) {
+        remoteDataSource.updateOrderPaymentStatus(orderId, paymentMethodType)
+    }
+
+    suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    ) {
+        remoteDataSource.applyGiftCertificate(
+            giftCertificate = giftCertificate,
+            cartFinalPrice = cartFinalPrice,
+            cartType = cartType,
+        )
+    }
+
+    suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
+        remoteDataSource.removeGiftCertificate(paymentMethodType)
     }
 
     fun clear() {

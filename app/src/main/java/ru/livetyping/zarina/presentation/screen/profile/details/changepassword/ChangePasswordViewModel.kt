@@ -21,8 +21,8 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.User
-import ru.livetyping.zarina.domain.user.exception.OldPasswordException
-import ru.livetyping.zarina.domain.user.exception.PasswordException
+import ru.livetyping.zarina.domain.user.exception.OldPasswordValidationException
+import ru.livetyping.zarina.domain.user.exception.PasswordValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -138,11 +138,11 @@ class ChangePasswordViewModel @Inject constructor(
             is ValidationException -> {
                 val exceptions = listOf(throwable) + throwable.suppressedExceptions
                 val text = when {
-                    exceptions.any { it is OldPasswordException } -> {
+                    exceptions.any { it is OldPasswordValidationException } -> {
                         Text.Resource(R.string.invalid_old_password)
                     }
 
-                    exceptions.any { it is PasswordException } -> {
+                    exceptions.any { it is PasswordValidationException } -> {
                         Text.Resource(R.string.password_does_not_meet_requirements)
                     }
 
@@ -151,10 +151,10 @@ class ChangePasswordViewModel @Inject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                if (exceptions.any { it is OldPasswordException }) {
+                if (exceptions.any { it is OldPasswordValidationException }) {
                     _isOldPasswordInvalid.value = true
                 }
-                if (exceptions.any { it is PasswordException }) {
+                if (exceptions.any { it is PasswordValidationException }) {
                     _isNewPasswordInvalid.value = true
                 }
             }

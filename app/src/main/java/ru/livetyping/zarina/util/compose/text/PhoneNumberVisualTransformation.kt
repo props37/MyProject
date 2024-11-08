@@ -11,13 +11,13 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import ru.livetyping.zarina.presentation.common.phone.PhoneNumberUtilProvider
-import ru.livetyping.zarina.util.platform.locale
+import ru.livetyping.zarina.util.kotlin.LocaleUtil
 
 // Source: https://medium.com/google-developer-experts/hands-on-jetpack-compose-visualtransformation-to-create-a-phone-number-formatter-99b0347fc4f6
 
 class PhoneNumberVisualTransformation(
     context: Context,
-    countryCode: String = context.locale.country,
+    countryCode: String = LocaleUtil.RU.country,
 ) : VisualTransformation {
     private val phoneNumberFormatter =
         PhoneNumberUtilProvider.provide(context).getAsYouTypeFormatter(countryCode)
@@ -90,8 +90,6 @@ class PhoneNumberVisualTransformation(
             phoneNumberFormatter.inputDigit(lastNonSeparator)
         }
     }
-
-
 }
 
 @Composable

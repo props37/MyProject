@@ -12,16 +12,17 @@ import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
 import ru.livetyping.zarina.presentation.navigation.screen.genericBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.graph.cartGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
+import ru.livetyping.zarina.presentation.navigation.screen.graph.checkoutGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.favoritesGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.homeGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.loyaltyProgramGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.checkoutGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.profileGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.signInGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.signUpGraph
 import ru.livetyping.zarina.presentation.navigation.screen.graph.sizeSelectorGraph
 import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
+import ru.livetyping.zarina.presentation.navigation.screen.paymentScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
@@ -72,6 +73,7 @@ fun ZarinaNavigation(
         listFilterScreen(navController)
         productSubscriptionScreen(navController)
         permissionRequirementBottomSheetScreen(navController)
+        paymentScreen(navController)
 
         genericBottomSheetScreen(navController)
     }

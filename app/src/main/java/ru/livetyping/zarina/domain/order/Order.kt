@@ -10,6 +10,10 @@ sealed class Order(
     open val status: OrderStatus,
     open val totalPrice: Int,
 ) {
+    val isPaid: Boolean by lazy {
+        status == OrderStatus.PAID
+    }
+
     @JvmInline
     value class Id(val value: Long)
 

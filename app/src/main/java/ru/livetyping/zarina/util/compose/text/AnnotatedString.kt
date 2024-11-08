@@ -44,7 +44,7 @@ fun rememberStringWithLinks(
     urlStyle: SpanStyle,
     onUrlClicked: (String) -> Unit,
 ): AnnotatedString {
-    return remember(baseString, substringToUrl) {
+    return remember(baseString, substringToUrl, urlStyle, onUrlClicked) {
         buildAnnotatedString {
             append(baseString)
             val string = this.toAnnotatedString()
@@ -65,5 +65,15 @@ fun rememberStringWithLinks(
                 }
             }
         }
+    }
+}
+
+fun AnnotatedString.Builder.addStyle(
+    substring: String,
+    spanStyle: SpanStyle,
+) {
+    val substringBounds = this.toAnnotatedString().findSubstringBounds(substring)
+    if (substringBounds != null) {
+        addStyle(spanStyle, substringBounds.first, substringBounds.last)
     }
 }

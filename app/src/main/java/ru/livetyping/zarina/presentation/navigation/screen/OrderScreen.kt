@@ -1,12 +1,16 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.navigation.util.slideEnterTransition
+import ru.livetyping.zarina.presentation.navigation.util.slideExitTransition
+import ru.livetyping.zarina.presentation.navigation.util.slidePopEnterTransition
 import ru.livetyping.zarina.presentation.navigation.util.slidePopExitTransition
 import ru.livetyping.zarina.presentation.screen.order.OrderScreen
 import ru.livetyping.zarina.presentation.screen.order.OrderScreenAction
@@ -19,6 +23,24 @@ fun NavGraphBuilder.orderScreen(navController: NavHostController) {
         enterTransition = {
             when (initialState.destination.route) {
                 ProfileGraph.MyOrders.routeSchema -> slideEnterTransition()
+                else -> null
+            }
+        },
+        exitTransition = {
+            when {
+                targetState.destination.hasRoute<UnscopedDestinations.Payment>() -> {
+                    slideExitTransition()
+                }
+
+                else -> null
+            }
+        },
+        popEnterTransition = {
+            when {
+                initialState.destination.hasRoute<UnscopedDestinations.Payment>() -> {
+                    slidePopEnterTransition()
+                }
+
                 else -> null
             }
         },
@@ -45,6 +67,11 @@ fun NavGraphBuilder.orderScreen(navController: NavHostController) {
                             route = ProfileGraph.Order.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    is OrderScreenAction.PayForOrderClicked -> {
+                        val payment = UnscopedDestinations.Payment(action.paymentUrl.value)
+                        navController.navigate(payment)
                     }
 
                     is OrderScreenAction.CancelOrderClicked -> {

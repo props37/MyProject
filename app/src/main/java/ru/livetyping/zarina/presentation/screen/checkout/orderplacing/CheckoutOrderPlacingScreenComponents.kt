@@ -75,6 +75,7 @@ import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 
 @Suppress("ConstPropertyName")
 object CheckoutOrderPlacingScreenComponents {
@@ -98,6 +99,8 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
+        onUrlClicked: (String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
         val listState = rememberLazyListState()
@@ -166,6 +169,8 @@ object CheckoutOrderPlacingScreenComponents {
                     selectedPaymentMethod = selectedPaymentMethod,
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
+                    onUrlClicked = onUrlClicked,
                 )
             }
 
@@ -179,10 +184,11 @@ object CheckoutOrderPlacingScreenComponents {
 
                 CartScreenComponents.CartBottomFloatingBlock(
                     isVisible = !isPayItemVisible && !WindowInsets.isImeVisible,
-                    totalPrice = cartState.price.totalPrice,
+                    finalPrice = cartState.price.finalPrice,
                     buttonText = stringResource(R.string.pay).uppercase(),
                     isButtonEnabled = true,
                     onButtonClicked = onPayClicked,
+                    isButtonLoading = isPayButtonLoading,
                     windowInsets = WindowInsets.navigationBars,
                     modifier = Modifier.align(Alignment.BottomCenter),
                 )
@@ -192,7 +198,7 @@ object CheckoutOrderPlacingScreenComponents {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun PaymentMethodsBottomSheet(
+    fun PaymentMethodSelectorBottomSheet(
         isVisible: Boolean,
         onDismissRequest: () -> Unit,
         paymentMethodsState: PaymentMethodsState,
@@ -356,6 +362,8 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
+        onUrlClicked: (String) -> Unit,
     ) {
         when (cartState) {
             is CartState.Cart -> {
@@ -371,6 +379,8 @@ object CheckoutOrderPlacingScreenComponents {
                     selectedPaymentMethod = selectedPaymentMethod,
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
+                    onUrlClicked = onUrlClicked,
                 )
             }
 
@@ -436,6 +446,8 @@ object CheckoutOrderPlacingScreenComponents {
         selectedPaymentMethod: PaymentMethod?,
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
+        isPayButtonLoading: Boolean,
+        onUrlClicked: (String) -> Unit,
     ) {
         itemsIndexed(
             items = cartState.productItems,
@@ -598,8 +610,10 @@ object CheckoutOrderPlacingScreenComponents {
             CartPrice(
                 cartPrice = cartState.price.cartPrice,
                 discountSize = cartState.price.discountSize,
+                isDeliveryPriceIncluded = true,
                 deliveryPrice = cartState.price.deliveryPrice,
-                totalPrice = cartState.price.totalPrice,
+                giftCertificateWriteOffSize = cartState.price.giftCertificateWriteOffSize,
+                finalPrice = cartState.price.finalPrice,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)
@@ -617,10 +631,10 @@ object CheckoutOrderPlacingScreenComponents {
         ) {
             ZarinaButton(
                 onClick = onPayClicked,
+                isLoading = isPayButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp, bottom = 20.dp)
+                    .padding(16.dp)
                     .animateItem(
                         fadeInSpec = LazyListFadeInSpec,
                         placementSpec = LazyListPlacementSpec,
@@ -629,6 +643,23 @@ object CheckoutOrderPlacingScreenComponents {
             ) {
                 Text(text = stringResource(R.string.pay).uppercase())
             }
+        }
+
+        item(
+            key = OrderPlacingKey.PaymentPolicies,
+            contentType = OrderPlacingContentType.PaymentPolicies,
+        ) {
+            PaymentPolicies(
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .animateItem(
+                        fadeInSpec = LazyListFadeInSpec,
+                        placementSpec = LazyListPlacementSpec,
+                        fadeOutSpec = LazyListFadeOutSpec,
+                    ),
+            )
         }
     }
 
@@ -853,6 +884,48 @@ object CheckoutOrderPlacingScreenComponents {
         }
     }
 
+    @Composable
+    private fun PaymentPolicies(
+        onUrlClicked: (String) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        val policiesRawText = stringResource(R.string.payment_policies)
+        val onlineStorePolicy = stringResource(R.string.payment_policies_online_store)
+        val privacyPolicy = stringResource(R.string.payment_policies_privacy)
+        val personalDataPolicy = stringResource(R.string.payment_policies_personal_data)
+        val onlineStorePolicyUrl = stringResource(R.string.online_store_policy_url)
+        val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
+        val personalDataPolicyUrl = stringResource(R.string.personal_data_policy_url)
+
+        val substringToUrl = remember(
+            onlineStorePolicy,
+            onlineStorePolicyUrl,
+            privacyPolicy,
+            privacyPolicyUrl,
+            personalDataPolicy,
+            personalDataPolicyUrl,
+        ) {
+            mapOf(
+                onlineStorePolicy to onlineStorePolicyUrl,
+                privacyPolicy to privacyPolicyUrl,
+                personalDataPolicy to personalDataPolicyUrl,
+            )
+        }
+        val text = rememberStringWithLinks(
+            baseString = policiesRawText,
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            onUrlClicked = onUrlClicked,
+        )
+
+        Text(
+            text = text,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
+            modifier = modifier,
+        )
+    }
+
     @Parcelize
     @Stable
     private sealed class OrderPlacingKey : Parcelable {
@@ -883,6 +956,8 @@ object CheckoutOrderPlacingScreenComponents {
         data object Price : OrderPlacingKey()
 
         data object Pay : OrderPlacingKey()
+
+        data object PaymentPolicies : OrderPlacingKey()
     }
 
     @Stable
@@ -901,6 +976,7 @@ object CheckoutOrderPlacingScreenComponents {
         PromoCode,
         Price,
         Pay,
+        PaymentPolicies,
     }
 
     @Stable

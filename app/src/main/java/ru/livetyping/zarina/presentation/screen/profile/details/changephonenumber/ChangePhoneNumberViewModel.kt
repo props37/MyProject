@@ -22,7 +22,7 @@ import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.InvalidPhoneNumberException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseException
-import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
@@ -129,7 +129,7 @@ class ChangePhoneNumberViewModel @Inject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                if (exceptions.any { it is PhoneNumberException }) {
+                if (exceptions.any { it is PhoneNumberValidationException }) {
                     _isPhoneInvalid.value = true
                 }
             }

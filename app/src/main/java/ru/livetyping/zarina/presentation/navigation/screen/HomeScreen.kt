@@ -3,6 +3,8 @@ package ru.livetyping.zarina.presentation.navigation.screen
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.common.ClickAction
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
+import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.graph.HomeGraph
 import ru.livetyping.zarina.presentation.screen.home.HomeScreen
@@ -27,4 +29,12 @@ fun NavGraphBuilder.homeScreen(navController: NavHostController) {
             },
         )
     }
+}
+
+fun NavHostController.navigateToHomeScreen() {
+    this.navigateToBottomNavBarItem(BottomNavBarItem.Home)
+    this.popBackStack(
+        route = HomeGraph.Home.routeSchema,
+        inclusive = false,
+    )
 }

@@ -80,7 +80,7 @@ class CheckoutPostDeliveryViewModel @Inject constructor(
     private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest) {
         addressComponent.selectedBuilding.flatMapLatest { building ->
             if (building != null) {
-                markAsLoading(it)
+                markAsLoading(DeliveryOptionsRequest)
                 val params = GetPostDeliveryOptionsFlowUseCase.Params(building.id)
                 interactor.getPostDeliveryOptionsFlow(params)
             } else flowOf(null)

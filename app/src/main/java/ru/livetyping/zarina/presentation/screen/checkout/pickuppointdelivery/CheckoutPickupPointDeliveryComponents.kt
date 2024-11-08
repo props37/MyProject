@@ -458,10 +458,10 @@ object CheckoutPickupPointDeliveryComponents {
             Column {
                 ZarinaTextSkeleton(
                     textStyle = UiKitTheme.typography.secondary.light,
-                    modifier = Modifier.fillMaxWidth(fraction = 0.8f),
+                    modifier = Modifier.fillMaxWidth(fraction = 0.7f),
                     shimmer = shimmer,
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 ZarinaTextSkeleton(
                     textStyle = UiKitTheme.typography.footnote.light,
                     modifier = Modifier.fillMaxWidth(fraction = 0.5f),

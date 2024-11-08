@@ -15,6 +15,7 @@ data class OrderDetails(
     val products: List<Product>,
     val price: OrderPrice,
     val paymentMethodType: PaymentMethodType,
+    val paymentUrl: Url?,
     val deliveryInfo: OrderDeliveryInfo,
     val contactInfo: OrderContactInfo,
     val deliveryAddress: String,

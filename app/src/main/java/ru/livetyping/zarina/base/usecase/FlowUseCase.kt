@@ -21,7 +21,7 @@ import timber.log.Timber
  * @property dispatcher [CoroutineDispatcher] to run the operation on.
  */
 // TODO: [Low] Remove dispatcher
-abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatcher) {
+abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatcher? = null) {
 
     private val className = if (Timber.treeCount != 0) this.javaClass.simpleName else TAG
 

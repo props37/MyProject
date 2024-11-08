@@ -117,6 +117,7 @@ object OrderScreenComponents {
     @Composable
     fun Order(
         orderState: OrderState,
+        onPayForOrderClicked: () -> Unit,
         onCancelOrderClicked: () -> Unit,
         isRefreshing: Boolean,
         onPullRefreshTriggered: () -> Unit,
@@ -151,6 +152,7 @@ object OrderScreenComponents {
                     is OrderState.Order -> {
                         OrderImpl(
                             order = state.order,
+                            onPayForOrderClicked = onPayForOrderClicked,
                             onCancelOrderClicked = onCancelOrderClicked,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -180,6 +182,7 @@ object OrderScreenComponents {
     @Composable
     private fun OrderImpl(
         order: OrderDetails,
+        onPayForOrderClicked: () -> Unit,
         onCancelOrderClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -188,8 +191,8 @@ object OrderScreenComponents {
             modifier = modifier,
         ) {
             item(
-                key = OrderListKeyStatus,
-                contentType = OrderListContentTypeStatus,
+                key = OrderListKey.Status,
+                contentType = OrderListContentType.Status,
             ) {
                 ZarinaItem(
                     modifier = Modifier
@@ -208,8 +211,8 @@ object OrderScreenComponents {
             }
 
             item(
-                key = OrderListKeyContents,
-                contentType = OrderListContentTypeContents,
+                key = OrderListKey.Contents,
+                contentType = OrderListContentType.Contents,
             ) {
                 OrderProductContentsItem(
                     productCount = order.productCount,
@@ -224,7 +227,7 @@ object OrderScreenComponents {
             itemsIndexed(
                 items = order.products,
                 key = { _, order -> order.id.value },
-                contentType = { _, _ -> OrderListContentTypeProduct },
+                contentType = { _, _ -> OrderListContentType.Product },
             ) { index, product ->
                 Column(
                     modifier = Modifier.animateItem(
@@ -257,8 +260,8 @@ object OrderScreenComponents {
             }
 
             item(
-                key = OrderListKeyPrice,
-                contentType = OrderListContentTypePrice,
+                key = OrderListKey.Price,
+                contentType = OrderListContentType.Price,
             ) {
                 OrderPrice(
                     orderPrice = order.price.orderPrice,
@@ -275,8 +278,8 @@ object OrderScreenComponents {
             }
 
             item(
-                key = OrderListKeyInfo,
-                contentType = OrderListContentTypeInfo,
+                key = OrderListKey.Info,
+                contentType = OrderListContentType.Info,
             ) {
                 OrderInfo(
                     deliveryMethodType = order.deliveryInfo.type,
@@ -291,17 +294,40 @@ object OrderScreenComponents {
                 )
             }
 
+            if (!order.isPaid && order.paymentUrl != null) {
+                item(
+                    key = OrderListKey.PayButton,
+                    contentType = OrderListContentType.PayButton,
+                ) {
+                    ZarinaButton(
+                        onClick = onPayForOrderClicked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp)
+                            .animateItem(
+                                fadeInSpec = LazyListFadeInSpec,
+                                placementSpec = LazyListPlacementSpec,
+                                fadeOutSpec = LazyListFadeOutSpec,
+                            ),
+                    ) {
+                        Text(text = stringResource(R.string.pay).uppercase())
+                    }
+                }
+            }
+
             if (order.isCancellable) {
                 item(
-                    key = OrderListKeyCancelButton,
-                    contentType = OrderListContentTypeCancelButton,
+                    key = OrderListKey.CancelButton,
+                    contentType = OrderListContentType.CancelButton,
                 ) {
                     ZarinaButton(
                         onClick = onCancelOrderClicked,
                         colors = ZarinaButtonDefaults.backlessErrorColors(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp)
                             .animateItem(
                                 fadeInSpec = LazyListFadeInSpec,
                                 placementSpec = LazyListPlacementSpec,
@@ -582,18 +608,24 @@ object OrderScreenComponents {
 
     private const val OrderContentKeyOrder = "OrderContentKeyOrder"
 
-    private const val OrderListKeyStatus = "OrderListKeyStatus"
-    private const val OrderListKeyContents = "OrderListKeyContents"
-    private const val OrderListKeyPrice = "OrderListKeyPrice"
-    private const val OrderListKeyInfo = "OrderListKeyInfo"
-    private const val OrderListKeyCancelButton = "OrderListKeyCancelButton"
+    private enum class OrderListKey {
+        Status,
+        Contents,
+        Price,
+        Info,
+        PayButton,
+        CancelButton,
+    }
 
-    private const val OrderListContentTypeStatus = "OrderListContentTypeStatus"
-    private const val OrderListContentTypeContents = "OrderListContentTypeContents"
-    private const val OrderListContentTypeProduct = "OrderListContentTypeProduct"
-    private const val OrderListContentTypePrice = "OrderListContentTypePrice"
-    private const val OrderListContentTypeInfo = "OrderListContentTypeInfo"
-    private const val OrderListContentTypeCancelButton = "OrderListContentTypeCancelButton"
+    private enum class OrderListContentType {
+        Status,
+        Contents,
+        Product,
+        Price,
+        Info,
+        PayButton,
+        CancelButton,
+    }
 
     private val OrderInfoContentPadding: PaddingValues get() = PaddingValues(16.dp)
 

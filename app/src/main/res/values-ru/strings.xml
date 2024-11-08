@@ -327,6 +327,24 @@
     <string name="select_payment_method">Выбери способ оплаты</string>
     <string name="pay">Оплатить</string>
     <string name="payment_method_not_selected_error">Сначала выбери способ оплаты</string>
+    <string name="cart_has_changed_error">Состав заказ изменился. Проверь его и попробуй снова</string>
+    <string name="thanks_for_order">Спасибо за заказ!</string>
+    <string name="to_home_screen">На главную</string>
+    <string name="gift_certificate">Подарочный сертификат</string>
+    <string name="certificate_number">Номер сертификата</string>
+    <string name="verification_code">Проверочный код</string>
+    <string name="gift_certificate_applying_error">Не удалось применить подарочный сертификат. Попробуйте снова</string>
+    <string name="gift_certificate_removing_error">Не удалось отменить действие подарочного сертификата. Попробуйте снова</string>
+    <string name="gift_certificate_reserved_error">Подарочный сертификат зарезервирован другим заказом и будет разблокирован в течение часа</string>
+    <string name="unknown_gift_certificate_error">Такого сертификата нет, или срок его действия истёк. Введи данные заново</string>
+    <string name="gift_certificate_fields_empty_error">Поля ввода пусты. Для применения сертификата введи его номер и проверочный код</string>
+    <string name="gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введи его номер</string>
+    <string name="gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введи проверочный код</string>
+    <string name="written_off_from_gift_certificate">Списано по сертификату</string>
+    <string name="payment_policies">Нажимая на кнопку «Оплатить», ты принимаешь правила работы интернет-магазина и подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Также даёшь согласие на обработку персональных данных с целью получения информационной рассылки</string>
+    <string name="payment_policies_online_store">правила работы интернет-магазина</string>
+    <string name="payment_policies_privacy">политикой конфиденциальности</string>
+    <string name="payment_policies_personal_data">согласие на обработку персональных данных</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -412,6 +430,12 @@
     <string name="account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
 
     <string name="my_orders_no_orders_body">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
+
+    <string name="order_confirmed_description_paid">Твой заказ %1$s оплачен. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный</string>
+    <string name="order_confirmed_description_should_be_paid">Твой заказ %1$s принят. В течение часа тебе необходимо оплатить заказ. После оплаты ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
+    <string name="order_confirmed_description_should_be_paid_upon_receipt">Твой заказ %1$s принят. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
+
+    <string name="gift_certificate_description">Воспользуйся электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

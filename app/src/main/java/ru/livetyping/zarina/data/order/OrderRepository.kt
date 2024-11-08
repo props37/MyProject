@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.data.order.remote.OrderRemoteDataSource
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderCreationParams
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderItem
 import javax.inject.Inject
@@ -17,6 +18,10 @@ class OrderRepository @Inject constructor(
 
     fun getOrderFlow(orderId: Order.Id): Flow<OrderDetails> {
         return remoteDataSource.getOrderFlow(orderId)
+    }
+
+    suspend fun createOrder(params: OrderCreationParams): OrderDetails {
+        return remoteDataSource.createOrder(params)
     }
 
     suspend fun cancelOrder(orderId: Order.Id) {

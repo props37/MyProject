@@ -6,13 +6,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -20,23 +25,33 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.base.operationtracker.OperationKey
+import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.cart.Cart
+import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
+import ru.livetyping.zarina.domain.checkout.CheckoutStage
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
+import ru.livetyping.zarina.domain.checkout.UrlPaymentData
+import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
+import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -53,28 +68,38 @@ import ru.livetyping.zarina.usecase.cart.ApplyMyCardToCartUseCase
 import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
+import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.usecase.giftcert.RemoveGiftCertificateUseCase
+import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
-import javax.inject.Inject
 
-@HiltViewModel
-class CheckoutOrderPlacingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CheckoutOrderPlacingViewModel.Factory::class)
+class CheckoutOrderPlacingViewModel @AssistedInject constructor(
+    @Assisted
+    private val giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: CheckoutOrderPlacingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val operationTracker = OperationTracker()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
+
     private val cartStateBuilder = CartStateBuilder()
 
     private var bonusJob: Job? = null
     private var myCardJob: Job? = null
     private var promoCodeJob: Job? = null
+    private var checkoutJob: Job? = null
 
     private val params = savedStateHandle.toRoute<CheckoutGraph.OrderPlacing>(
         typeMap = CheckoutGraph.OrderPlacing.typeMap(),
@@ -88,9 +113,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private val promoCodeStateHolder = CartPromoCodeStateHolder(savedStateHandle)
 
-    private val cartRequester = FlowRequester(CartRequest.LOADING) {
-        val params = GetCheckoutCartFlowUseCase.Params(checkoutParams)
-        interactor.getCheckoutCartFlow(params)
+    private val selectedPaymentMethod = MutableStateFlow<PaymentMethod?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val cartRequester = FlowRequester(CartRequest.LOADING) { request ->
+        selectedPaymentMethod.flatMapLatest { paymentMethod ->
+            markAsLoading(request)
+            val params = GetCheckoutCartFlowUseCase.Params(checkoutParams, paymentMethod)
+            interactor.getCheckoutCartFlow(params)
+        }
     }
 
     private val cartResult: StateFlow<Result<Cart>?> = cartRequester.flow
@@ -107,6 +138,12 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
+
+    private val cart: Cart?
+        get() = cartResult.value?.getOrNull()
+
+    private val availablePaymentMethods: List<PaymentMethod>
+        get() = paymentMethodsResult.value?.getOrNull().orEmpty()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val paymentMethodsFlowRequester = FlowRequester(PaymentMethodsRequest) {
@@ -128,17 +165,15 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val selectedPaymentMethodId = MutableStateFlow<PaymentMethod.Id?>(null)
-
     val paymentMethodsState: StateFlow<PaymentMethodsState> = combine(
         paymentMethodsResult,
         paymentMethodsFlowRequester.loadingState,
-        selectedPaymentMethodId,
-    ) { paymentMethodsResult, paymentMethodsLoadingState, selectedPaymentMethodId ->
+        selectedPaymentMethod,
+    ) { paymentMethodsResult, paymentMethodsLoadingState, selectedPaymentMethod ->
         createPaymentMethodsState(
             paymentMethodsResult = paymentMethodsResult,
             paymentMethodsLoadingState = paymentMethodsLoadingState,
-            selectedPaymentMethodId = selectedPaymentMethodId,
+            selectedPaymentMethod = selectedPaymentMethod,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -179,15 +214,17 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         initialValue = CartState.Loading,
     )
 
-    val isRefreshing: StateFlow<Boolean> = cartRequester.loadingState
-        .map { loadingState ->
-            loadingState.loadingRequest == CartRequest.REFRESHING
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = false,
-        )
+    val isRefreshing: StateFlow<Boolean> = combine(
+        cartRequester.loadingState,
+        operationTracker.isOperationOngoing(Operation.CHECKOUT),
+    ) { cartLoadingState, isCheckoutOngoing ->
+        val isCartLoading = cartLoadingState.loadingRequest == CartRequest.REFRESHING
+        isCartLoading || isCheckoutOngoing
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
 
     val isPullRefreshing: StateFlow<Boolean> = cartRequester.loadingState
         .map { loadingState ->
@@ -199,7 +236,36 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
             initialValue = false,
         )
 
+    private val _isPaymentMethodSelectorBottomSheetVisible = MutableStateFlow(false)
+    val isPaymentMethodSelectorBottomSheetVisible: StateFlow<Boolean> =
+        _isPaymentMethodSelectorBottomSheetVisible.asStateFlow()
+
+    val isPayButtonLoading: StateFlow<Boolean> = operationTracker
+        .isOperationOngoing(Operation.CHECKOUT)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = false,
+        )
+
+    private var currentCheckoutStage: CheckoutStage? = null
+
+    init {
+        handleGiftCertificateResult()
+    }
+
+    fun onScreenOpened() {
+        val currentCheckoutStage = currentCheckoutStage
+        if (currentCheckoutStage is CheckoutStage.Completed) {
+            viewModelScope.launch {
+                completeCheckout(currentCheckoutStage)
+            }
+        }
+    }
+
     fun onBackClicked() {
+        if (checkoutJob?.isActive == true) return
+
         navigationThrottler.throttle {
             val action = CheckoutOrderPlacingScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
@@ -326,8 +392,49 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         cartRequester.request(CartRequest.LOADING)
     }
 
+    fun onPaymentMethodSelectorClicked() {
+        _isPaymentMethodSelectorBottomSheetVisible.value = true
+    }
+
+    fun onPaymentMethodSelectorDismissRequested() {
+        _isPaymentMethodSelectorBottomSheetVisible.value = false
+    }
+
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
-        selectedPaymentMethodId.value = paymentMethod.id
+        val currentPaymentMethod = selectedPaymentMethod.value
+        when {
+            paymentMethod.type == PaymentMethodType.GIFT_CARD
+                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CARD -> {
+                val cart = cart ?: return
+                navigationThrottler.throttle {
+                    val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected(
+                        cartType = checkoutParams.cartType,
+                        cart = cart,
+                    )
+                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
+
+            paymentMethod.type != PaymentMethodType.GIFT_CARD
+                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CARD -> {
+                viewModelScope.launch {
+                    val params = RemoveGiftCertificateUseCase.Params(
+                        paymentMethodType = paymentMethod.type,
+                    )
+                    interactor.removeGiftCertificate(params)
+                        .onSuccess {
+                            selectedPaymentMethod.value = paymentMethod
+                        }
+                        .onFailure {
+                            val messageText = Text.Resource(R.string.gift_certificate_removing_error)
+                            val message = ZarinaToastMessage.error(messageText)
+                            emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        }
+                }
+            }
+
+            else -> selectedPaymentMethod.value = paymentMethod
+        }
     }
 
     fun onPaymentMethodsErrorRefreshClicked() {
@@ -335,15 +442,21 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     }
 
     fun onPayClicked() {
-        if (selectedPaymentMethodId.value == null) {
-            val messageText = Text.Resource(R.string.payment_method_not_selected_error)
-            val message = ZarinaToastMessage(messageText)
-            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        val paymentMethod = selectedPaymentMethod.value
+        if (paymentMethod == null) {
+            _isPaymentMethodSelectorBottomSheetVisible.value = true
+            return
         }
 
-        navigationThrottler.throttle {
-            // TODO: [High] Implement
+        val cart = cart
+        if (cart == null) {
+            val messageText = Text.Resource(R.string.something_went_wrong)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
         }
+
+        checkout(cart, paymentMethod, availablePaymentMethods)
     }
 
     fun onPullRefreshTriggered() {
@@ -445,6 +558,87 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
         emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
+    private fun checkout(
+        cart: Cart,
+        paymentMethod: PaymentMethod,
+        availablePaymentMethods: List<PaymentMethod>,
+    ) {
+        if (checkoutJob?.isActive == true) return
+
+        checkoutJob = viewModelScope.launch {
+            operationTracker.track(Operation.CHECKOUT) {
+                val params = CheckoutUseCase.Params(
+                    cart = cart,
+                    paymentMethod = paymentMethod,
+                    availablePaymentMethods = availablePaymentMethods,
+                    checkoutParams = checkoutParams,
+                )
+                interactor.checkout(params).collect { checkoutStageResult ->
+                    checkoutStageResult
+                        .onSuccess { onCheckoutStage(it) }
+                        .onFailure(::onCheckoutFailure)
+                }
+            }
+        }
+    }
+
+    private suspend fun onCheckoutStage(stage: CheckoutStage) {
+        currentCheckoutStage = stage
+        when (stage) {
+            is CheckoutStage.Payment -> {
+                val paymentUrl = when (val data = stage.paymentData) {
+                    is CardPaymentData -> data.paymentUrl
+                    is UrlPaymentData -> data.paymentUrl
+                }
+                val action = CheckoutOrderPlacingScreenAction.PaymentStarted(paymentUrl)
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+
+            CheckoutStage.PaymentCompleted -> Unit
+
+            is CheckoutStage.Completed -> {
+                if (!stage.shouldAwaitPaymentCompleted) {
+                    completeCheckout(stage)
+                }
+            }
+        }
+    }
+
+    private fun onCheckoutFailure(t: Throwable) {
+        val messageText = when (t) {
+            is CartChangedException -> Text.Resource(R.string.cart_has_changed_error)
+            else -> Text.Resource(R.string.something_went_wrong)
+        }
+        val message = ZarinaToastMessage.error(messageText)
+        emitSideEffect(SideEffect.ShowZarinaToast(message))
+    }
+
+    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
+        val order = completedCheckoutStage.order
+        operationTracker.track(Operation.CHECKOUT) {
+            if (completedCheckoutStage.shouldUpdateOrderStatus) {
+                updateOrderPaymentStatus(order.id, order.paymentMethodType)
+            }
+            val updatedOrder = getOrder(order.id)
+            val resultOrder = updatedOrder ?: order
+            val action = CheckoutOrderPlacingScreenAction.OrderConfirmed(resultOrder)
+            emitSideEffect(SideEffect.Navigate(action))
+        }
+    }
+
+    private suspend fun updateOrderPaymentStatus(
+        orderId: Order.Id,
+        paymentMethodType: PaymentMethodType,
+    ) {
+        val params = UpdateOrderPaymentStatusUseCase.Params(orderId, paymentMethodType)
+        interactor.updateOrderPaymentStatus(params)
+    }
+
+    private suspend fun getOrder(orderId: Order.Id): OrderDetails? {
+        val params = GetOrderFlowUseCase.Params(orderId)
+        return interactor.getOrderFlow(params).firstOrNull()?.getOrNull()
+    }
+
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
         val descriptions = when (checkoutParams) {
             is CourierDeliveryCheckoutParams -> {
@@ -496,15 +690,16 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
     private fun createPaymentMethodsState(
         paymentMethodsResult: Result<List<PaymentMethod>>?,
         paymentMethodsLoadingState: FlowRequester.LoadingState,
-        selectedPaymentMethodId: PaymentMethod.Id?,
+        selectedPaymentMethod: PaymentMethod?,
     ): PaymentMethodsState {
         return if (paymentMethodsResult == null || paymentMethodsLoadingState.isLoading()) {
             PaymentMethodsState.Loading
         } else {
             paymentMethodsResult.fold(
                 onSuccess = { paymentMethods ->
-                    val selectedPaymentMethod = selectedPaymentMethodId?.let { selectedId ->
-                        paymentMethods.find { it.id == selectedId }
+                    @Suppress("NAME_SHADOWING")
+                    val selectedPaymentMethod = selectedPaymentMethod?.let { paymentMethod ->
+                        paymentMethods.find { it.type == paymentMethod.type }
                     }
                     PaymentMethodsState.Success(
                         paymentMethods = paymentMethods,
@@ -516,6 +711,31 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
                     PaymentMethodsState.Error(errorState)
                 },
             )
+        }
+    }
+
+    private fun handleGiftCertificateResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<CheckoutGraph.GiftCertificate.Result>(
+                resultFlow = giftCertificateResultFlow,
+                key = KEY_RESULT_GIFT_CERTIFICATE_RESULT,
+            ) { result ->
+                if (result.isGiftCertificateApplied) {
+                    val paymentMethods = paymentMethodsResult.value?.getOrNull()
+                    val giftCertificatePaymentMethod = paymentMethods?.find {
+                        it.type == PaymentMethodType.GIFT_CARD
+                    }
+                    if (giftCertificatePaymentMethod != null) {
+                        selectedPaymentMethod.value = giftCertificatePaymentMethod
+                        cartRequester.request(CartRequest.REFRESHING)
+                    } else {
+                        val messageText = Text.Resource(R.string.gift_certificate_applying_error)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        paymentMethodsFlowRequester.request(PaymentMethodsRequest)
+                    }
+                }
+            }
         }
     }
 
@@ -556,7 +776,18 @@ class CheckoutOrderPlacingViewModel @Inject constructor(
 
     private data object PaymentMethodsRequest : FlowRequester.Request
 
+    private enum class Operation : OperationKey { CHECKOUT }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
+        ): CheckoutOrderPlacingViewModel
+    }
+
     companion object {
         private const val COMMA_SEPARATOR = ", "
+
+        private const val KEY_RESULT_GIFT_CERTIFICATE_RESULT = "result_gift_certificate"
     }
 }

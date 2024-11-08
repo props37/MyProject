@@ -17,7 +17,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * @property dispatcher [CoroutineDispatcher] to run the operation on.
  */
 // TODO: [Low] Remove dispatcher
-abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher) {
+abstract class UseCase<in P, out R>(private val dispatcher: CoroutineDispatcher? = null) {
 
     private val className = if (Timber.treeCount != 0) this.javaClass.simpleName else TAG
 
