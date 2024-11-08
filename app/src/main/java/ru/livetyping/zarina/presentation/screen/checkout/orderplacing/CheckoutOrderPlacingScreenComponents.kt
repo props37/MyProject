@@ -889,7 +889,7 @@ object CheckoutOrderPlacingScreenComponents {
         onUrlClicked: (String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        val policiesRawText = stringResource(R.string.payment_policies_privacy)
+        val policiesRawText = stringResource(R.string.payment_policies)
         val onlineStorePolicy = stringResource(R.string.payment_policies_online_store)
         val privacyPolicy = stringResource(R.string.payment_policies_privacy)
         val personalDataPolicy = stringResource(R.string.payment_policies_personal_data)
