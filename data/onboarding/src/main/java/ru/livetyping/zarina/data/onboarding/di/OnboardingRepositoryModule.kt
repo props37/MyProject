@@ -20,23 +20,23 @@ import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApiImpl
 internal abstract class OnboardingRepositoryModule {
 
     @Binds
-    abstract fun bindsOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
+    abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
 
     @Binds
-    abstract fun bindsOnboardingLocalDataSource(
+    abstract fun bindOnboardingLocalDataSource(
         impl: OnboardingLocalDataSourceImpl,
     ): OnboardingLocalDataSource
 
     @Binds
-    abstract fun bindsOnboardingDataHolder(
+    abstract fun bindOnboardingDataHolder(
         impl: OnboardingDataHolderImpl,
     ): OnboardingDataHolder
 
     @Binds
-    abstract fun bindsOnboardingRemoteDataSource(
+    abstract fun bindOnboardingRemoteDataSource(
         impl: OnboardingRemoteDataSourceImpl,
     ): OnboardingRemoteDataSource
 
     @Binds
-    abstract fun bindsOnboardingApi(impl: OnboardingApiImpl): OnboardingApi
+    abstract fun bindOnboardingApi(impl: OnboardingApiImpl): OnboardingApi
 }
