@@ -7,6 +7,7 @@ import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.authProvider
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -14,7 +15,6 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
-import io.ktor.client.plugins.pluginOrNull
 import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -132,11 +132,7 @@ private fun HttpClient.loadBearerTokensOnAuthorizationFailure() {
 }
 
 private fun HttpClient.clearBearerTokens() {
-    this.pluginOrNull(Auth)
-        ?.providers
-        ?.filterIsInstance<BearerAuthProvider>()
-        ?.firstOrNull()
-        ?.clearToken()
+    this.authProvider<BearerAuthProvider>()?.clearToken()
 }
 
 private const val HEADER_AUTHORIZATION = "Authorization"
