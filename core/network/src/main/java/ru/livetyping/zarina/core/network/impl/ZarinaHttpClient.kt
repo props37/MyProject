@@ -7,8 +7,6 @@ import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.authProvider
-import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -22,6 +20,7 @@ import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.BearerTokens
+import ru.livetyping.zarina.core.network.util.clearBearerTokens
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
@@ -129,10 +128,6 @@ private fun HttpClient.loadBearerTokensOnAuthorizationFailure() {
         }
         call
     }
-}
-
-private fun HttpClient.clearBearerTokens() {
-    this.authProvider<BearerAuthProvider>()?.clearToken()
 }
 
 private const val HEADER_AUTHORIZATION = "Authorization"

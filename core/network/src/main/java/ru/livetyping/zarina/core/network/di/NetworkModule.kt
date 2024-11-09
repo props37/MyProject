@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.network.di
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,55 +9,65 @@ import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
+import ru.livetyping.zarina.core.network.auth.BearerTokenCleaner
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
+import ru.livetyping.zarina.core.network.impl.ZarinaBearerTokenCleaner
 import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaUnauthorizedHttpClient
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object NetworkModule {
-    private val json by lazy {
-        Json {
-            isLenient = true
-            ignoreUnknownKeys = true
-            encodeDefaults = true
-            explicitNulls = false
+internal abstract class NetworkModule {
+
+    @Binds
+    abstract fun bindBearerTokenCleaner(
+        impl: ZarinaBearerTokenCleaner,
+    ): BearerTokenCleaner
+
+    companion object {
+        private val json by lazy {
+            Json {
+                isLenient = true
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+                explicitNulls = false
+            }
         }
-    }
 
-    @Provides
-    @Singleton
-    @ZarinaApi(ZarinaApiType.AUTHORIZED)
-    fun provideZarinaAuthorizedHttpClient(
-        @ZarinaBaseUrl
-        baseUrl: String,
-        bearerTokenService: BearerTokenService,
-        buildType: BuildType,
-    ): HttpClient {
-        return getZarinaAuthorizedHttpClient(
-            json = json,
-            baseUrl = baseUrl,
-            headerProvider = ZarinaApiHeaderProvider(),
-            bearerTokenService = bearerTokenService,
-            buildType = buildType,
-        )
-    }
+        @Provides
+        @Singleton
+        @ZarinaApi(ZarinaApiType.AUTHORIZED)
+        fun provideZarinaAuthorizedHttpClient(
+            @ZarinaBaseUrl
+            baseUrl: String,
+            bearerTokenService: BearerTokenService,
+            buildType: BuildType,
+        ): HttpClient {
+            return getZarinaAuthorizedHttpClient(
+                json = json,
+                baseUrl = baseUrl,
+                headerProvider = ZarinaApiHeaderProvider(),
+                bearerTokenService = bearerTokenService,
+                buildType = buildType,
+            )
+        }
 
-    @Provides
-    @Singleton
-    @ZarinaApi(ZarinaApiType.UNAUTHORIZED)
-    fun provideZarinaUnauthorizedHttpClient(
-        @ZarinaBaseUrl
-        baseUrl: String,
-        buildType: BuildType,
-    ): HttpClient {
-        return getZarinaUnauthorizedHttpClient(
-            json = json,
-            baseUrl = baseUrl,
-            headerProvider = ZarinaApiHeaderProvider(),
-            buildType = buildType,
-        )
+        @Provides
+        @Singleton
+        @ZarinaApi(ZarinaApiType.UNAUTHORIZED)
+        fun provideZarinaUnauthorizedHttpClient(
+            @ZarinaBaseUrl
+            baseUrl: String,
+            buildType: BuildType,
+        ): HttpClient {
+            return getZarinaUnauthorizedHttpClient(
+                json = json,
+                baseUrl = baseUrl,
+                headerProvider = ZarinaApiHeaderProvider(),
+                buildType = buildType,
+            )
+        }
     }
 }
