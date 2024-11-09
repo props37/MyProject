@@ -20,6 +20,7 @@ internal class PermissionManagerImpl @Inject constructor(
     private val storage: PermissionManagerStorage,
 ) : PermissionManager {
     private var activityRef = AtomicReference<WeakReference<ComponentActivity>?>(null)
+    private val activityLock = Any()
 
     override fun isPermissionGranted(permission: String): Boolean {
         val activity = requireActivity()
@@ -129,8 +130,9 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     override fun unsetActivity(activity: ComponentActivity) {
+        val currentActivityRef = activityRef.get()
         activityRef.compareAndSet(
-            /* expectedValue = */ WeakReference(activity),
+            /* expectedValue = */ currentActivityRef,
             /* newValue = */ null,
         )
     }
