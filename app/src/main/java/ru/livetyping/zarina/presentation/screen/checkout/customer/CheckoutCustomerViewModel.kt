@@ -25,14 +25,14 @@ import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
-import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmailValidationException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyFirstNameException
 import ru.livetyping.zarina.domain.user.exception.EmptyLastNameException
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
-import ru.livetyping.zarina.domain.user.exception.FirstNameException
-import ru.livetyping.zarina.domain.user.exception.LastNameException
-import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.FirstNameValidationException
+import ru.livetyping.zarina.domain.user.exception.LastNameValidationException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -170,16 +170,16 @@ class CheckoutCustomerViewModel @Inject constructor(
         when (t) {
             is ValidationException -> {
                 val exceptions = listOf(t) + t.suppressedExceptions
-                if (exceptions.any { it is FirstNameException }) {
+                if (exceptions.any { it is FirstNameValidationException }) {
                     _isFirstNameInvalid.value = true
                 }
-                if (exceptions.any { it is LastNameException }) {
+                if (exceptions.any { it is LastNameValidationException }) {
                     _isLastNameInvalid.value = true
                 }
-                if (exceptions.any { it is PhoneNumberException }) {
+                if (exceptions.any { it is PhoneNumberValidationException }) {
                     _isPhoneInvalid.value = true
                 }
-                if (exceptions.any { it is EmailException }) {
+                if (exceptions.any { it is EmailValidationException }) {
                     _isEmailInvalid.value = true
                 }
 

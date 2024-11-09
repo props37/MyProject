@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.onboarding
 
+import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -11,6 +12,7 @@ import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavB
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavBarBehaviorController
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBottomNavBarBehavior
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
+import ru.livetyping.zarina.presentation.common.navigation.safeNavigate
 import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastController
 import ru.livetyping.zarina.presentation.screen.onboarding.OnboardingViewModel.SideEffect
 
@@ -26,15 +28,18 @@ fun OnboardingScreenBehavior(
     ForcedBottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
+        val startedElapsedRealtime = SystemClock.elapsedRealtime()
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is SideEffect.NavigateForward -> {
-                        if (sideEffect.action is OnboardingScreenAction.OnboardingCompleted) {
-                            makeBottomNavBarVisibleByDefault(updatedBottomNavBarController)
-                        }
+                        safeNavigate(startedElapsedRealtime) {
+                            if (sideEffect.action is OnboardingScreenAction.OnboardingCompleted) {
+                                makeBottomNavBarVisibleByDefault(updatedBottomNavBarController)
+                            }
 
-                        updatedNavigateForward(sideEffect.action)
+                            updatedNavigateForward(sideEffect.action)
+                        }
                     }
 
                     is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)

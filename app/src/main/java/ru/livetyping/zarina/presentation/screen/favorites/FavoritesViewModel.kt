@@ -84,6 +84,9 @@ class FavoritesViewModel @AssistedInject constructor(
 
     fun onScreenCreated() {
         favoriteProductsRequester.request(FavoriteProductsRequest)
+        viewModelScope.launch {
+            interactor.fetchFavoriteProductIds()
+        }
     }
 
     fun onProductClicked(product: Product) {

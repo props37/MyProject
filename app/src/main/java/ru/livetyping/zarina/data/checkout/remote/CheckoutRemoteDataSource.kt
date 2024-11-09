@@ -1,20 +1,32 @@
 package ru.livetyping.zarina.data.checkout.remote
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import ru.livetyping.zarina.data.checkout.remote.api.CheckoutApi
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDtoType
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
+import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate
+import ru.livetyping.zarina.domain.order.Order
+import ru.livetyping.zarina.domain.order.PaymentMethodType
+import ru.livetyping.zarina.domain.store.Store
+import ru.livetyping.zarina.domain.user.User
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
+import kotlin.time.Duration
 
 class CheckoutRemoteDataSource @Inject constructor(
     private val api: CheckoutApi,
@@ -64,8 +76,8 @@ class CheckoutRemoteDataSource @Inject constructor(
         emit(dto.toPickupPointDetails())
     }
 
-    fun getCartFlow(checkoutParams: CheckoutParams) = flow {
-        val dto = api.getCart(checkoutParams)
+    fun getCartFlow(checkoutParams: CheckoutParams, paymentMethod: PaymentMethod?) = flow {
+        val dto = api.getCart(checkoutParams, paymentMethod)
         emit(dto.toCart(checkoutParams.cartType))
     }
 
@@ -77,5 +89,97 @@ class CheckoutRemoteDataSource @Inject constructor(
         val paymentMethods = dtos.map { it.toPaymentMethod() }
         check(paymentMethods.isNotEmpty()) { "PaymentMethod list is empty" }
         emit(paymentMethods)
+    }
+
+    suspend fun getPaymentData(
+        cart: Cart,
+        paymentMethodType: PaymentMethodType,
+        userId: User.Id?,
+        pickupStoreId: Store.Id?,
+    ): PaymentData {
+        return when (paymentMethodType) {
+            PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
+                val dto = api.getCardPaymentData(
+                    cart = cart,
+                    paymentMethodType = paymentMethodType,
+                    userId = userId,
+                    pickupStoreId = pickupStoreId,
+                )
+                dto.toCardPaymentData()
+            }
+
+            else -> error("Unsupported payment method type $paymentMethodType")
+        }
+    }
+
+    suspend fun awaitPaymentCompleted(
+        paymentData: PaymentData,
+        paymentMethodType: PaymentMethodType,
+        pollingDelay: Duration,
+    ) {
+        when (paymentMethodType) {
+            PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
+                check(paymentData is CardPaymentData) { "Payment data is not CardPaymentData" }
+                awaitCardPaymentCompleted(
+                    paymentData = paymentData,
+                    paymentMethodType = paymentMethodType,
+                    pollingDelay = pollingDelay,
+                )
+            }
+
+            else -> Unit
+        }
+    }
+
+    suspend fun updateOrderPaymentStatus(
+        orderId: Order.Id,
+        paymentMethodType: PaymentMethodType,
+    ) {
+        api.updateOrderPaymentStatus(orderId, paymentMethodType)
+    }
+
+    suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    ) {
+        api.applyGiftCertificate(
+            giftCertificate = giftCertificate,
+            cartFinalPrice = cartFinalPrice,
+            cartType = cartType,
+        )
+    }
+
+    suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
+        api.removeGiftCertificate(paymentMethodType)
+    }
+
+    private suspend fun awaitCardPaymentCompleted(
+        paymentData: CardPaymentData,
+        paymentMethodType: PaymentMethodType,
+        pollingDelay: Duration,
+    ) {
+        var errorCount = 0
+        while (coroutineContext.isActive) {
+            try {
+                val result = api.getCardPaymentResult(
+                    paymentMethodType = paymentMethodType,
+                    paymentData = paymentData,
+                )
+                if (result.success == true) break
+            } catch (e: Exception) {
+                Timber.e(e)
+                errorCount++
+                if (errorCount > PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT) {
+                    throw e
+                }
+            }
+
+            delay(pollingDelay)
+        }
+    }
+
+    companion object {
+        private const val PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT = 2
     }
 }

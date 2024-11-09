@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.common.component
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import ru.livetyping.zarina.domain.order.OrderStatus
@@ -18,13 +19,28 @@ fun OrderStatusLabel(
     modifier: Modifier = Modifier,
     size: ZarinaLabelSize = ZarinaLabelSize.Large,
 ) {
+    OrderStatusLabel(
+        statusName = stringResource(status.nameResId),
+        statusColor = status.color,
+        size = size,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun OrderStatusLabel(
+    statusName: String,
+    statusColor: Color,
+    modifier: Modifier = Modifier,
+    size: ZarinaLabelSize = ZarinaLabelSize.Large,
+) {
     ZarinaLabel(
         size = size,
-        colors = ZarinaLabelDefaults.successColors(indicatorColor = status.color),
+        colors = ZarinaLabelDefaults.successColors(indicatorColor = statusColor),
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(status.nameResId).uppercase(),
+            text = statusName.uppercase(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

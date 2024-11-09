@@ -512,7 +512,7 @@ object CartScreenComponents {
 
             CartBottomFloatingBlock(
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
-                totalPrice = cartState.price.totalPrice,
+                finalPrice = cartState.price.finalPrice,
                 buttonText = stringResource(R.string.checkout).uppercase(),
                 isButtonEnabled = !cartState.productLimit.isExceeded,
                 onButtonClicked = onCheckoutClicked,
@@ -666,8 +666,10 @@ object CartScreenComponents {
                 CartPrice(
                     cartPrice = cartState.price.cartPrice,
                     discountSize = cartState.price.discountSize,
-                    deliveryPrice = cartState.price.deliveryPrice,
-                    totalPrice = cartState.price.totalPrice,
+                    isDeliveryPriceIncluded = false,
+                    deliveryPrice = null,
+                    giftCertificateWriteOffSize = cartState.price.giftCertificateWriteOffSize,
+                    finalPrice = cartState.price.finalPrice,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp)
@@ -743,12 +745,13 @@ object CartScreenComponents {
     @Composable
     fun CartBottomFloatingBlock(
         isVisible: Boolean,
-        totalPrice: Int,
+        finalPrice: Int,
         buttonText: String,
         isButtonEnabled: Boolean,
         onButtonClicked: () -> Unit,
         modifier: Modifier = Modifier,
         windowInsets: WindowInsets = WindowInsets.none,
+        isButtonLoading: Boolean = false,
     ) {
         val animationSpec = remember { spring<IntOffset>(stiffness = Spring.StiffnessMedium) }
 
@@ -776,7 +779,7 @@ object CartScreenComponents {
 
                     Spacer(modifier = Modifier.height(2.dp))
 
-                    val formattedPrice = rememberFormattedPrice(totalPrice)
+                    val formattedPrice = rememberFormattedPrice(finalPrice)
                     Text(
                         text = stringResource(R.string.price_in_rubles_string, formattedPrice),
                         style = UiKitTheme.typography.primary.bold,
@@ -789,6 +792,7 @@ object CartScreenComponents {
                 ZarinaButton(
                     onClick = onButtonClicked,
                     isEnabled = isButtonEnabled,
+                    isLoading = isButtonLoading,
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(text = buttonText)

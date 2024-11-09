@@ -15,6 +15,7 @@ import ru.livetyping.zarina.presentation.model.checkout.CustomerParcelable
 import ru.livetyping.zarina.presentation.model.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.order.DeliveryMethodTypeParcelable
+import ru.livetyping.zarina.presentation.model.order.OrderDetailsParcelable
 import ru.livetyping.zarina.presentation.model.store.StoreParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
@@ -22,10 +23,12 @@ import ru.livetyping.zarina.presentation.navigation.base.Graph
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
 import ru.livetyping.zarina.presentation.navigation.base.ScreenResult
 import ru.livetyping.zarina.presentation.navigation.navtype.CartProductParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.CartTypeParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CheckoutParamsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CityParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.CustomerParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.DeliveryOptionDateTimePeriodParcelableListType
+import ru.livetyping.zarina.presentation.navigation.navtype.OrderDetailsParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.StoreParcelableType
 import ru.livetyping.zarina.presentation.screen.checkout.courierdelivery.deliverydatetimeselector.CourierDeliveryDateTimeSelectorType
 import ru.livetyping.zarina.util.library.navigation.getTypeMapEnumTypePair
@@ -270,6 +273,41 @@ data object CheckoutGraph : Graph<CheckoutGraph.Customer.Args>() {
             fun typeMap(): Map<KType, NavType<*>> {
                 return mapOf(
                     typeOf<CheckoutParamsParcelable>() to NavType.CheckoutParamsParcelableType,
+                )
+            }
+        }
+    }
+
+    @Serializable
+    data class OrderConfirmed(
+        val order: OrderDetailsParcelable,
+    ) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<OrderDetailsParcelable>() to NavType.OrderDetailsParcelableType,
+                )
+            }
+        }
+    }
+
+    @Serializable
+    data class GiftCertificate(
+        val cartType: CartTypeParcelable,
+        val cartFinalPrice: Int,
+    ) {
+        @Parcelize
+        data class Result(
+            val isGiftCertificateApplied: Boolean,
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
+
+        companion object {
+            const val RESULT_KEY = "gift_certificate_result"
+
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(
+                    typeOf<CartTypeParcelable>() to NavType.CartTypeParcelableType,
                 )
             }
         }

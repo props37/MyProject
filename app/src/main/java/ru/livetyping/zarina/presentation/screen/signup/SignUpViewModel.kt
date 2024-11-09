@@ -21,21 +21,21 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
-import ru.livetyping.zarina.domain.common.exception.DateException
+import ru.livetyping.zarina.domain.common.exception.DateValidationException
 import ru.livetyping.zarina.domain.common.exception.EmptyDateException
 import ru.livetyping.zarina.domain.common.exception.OtpTimeoutException
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.CaptchaException
 import ru.livetyping.zarina.domain.user.exception.EmailAlreadyInUseException
-import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmailValidationException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyFirstNameException
 import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
-import ru.livetyping.zarina.domain.user.exception.FirstNameException
-import ru.livetyping.zarina.domain.user.exception.PasswordException
+import ru.livetyping.zarina.domain.user.exception.FirstNameValidationException
+import ru.livetyping.zarina.domain.user.exception.PasswordValidationException
 import ru.livetyping.zarina.domain.user.exception.PhoneNumberAlreadyInUseException
-import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
@@ -297,19 +297,19 @@ class SignUpViewModel @Inject constructor(
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-        if (exceptions.any { it is FirstNameException }) {
+        if (exceptions.any { it is FirstNameValidationException }) {
             _isFirstNameInvalid.value = true
         }
-        if (exceptions.any { it is DateException }) {
+        if (exceptions.any { it is DateValidationException }) {
             _isBirthDateInvalid.value = true
         }
-        if (exceptions.any { it is EmailException }) {
+        if (exceptions.any { it is EmailValidationException }) {
             _isEmailInvalid.value = true
         }
-        if (exceptions.any { it is PhoneNumberException }) {
+        if (exceptions.any { it is PhoneNumberValidationException }) {
             _isPhoneInvalid.value = true
         }
-        if (exceptions.any { it is PasswordException }) {
+        if (exceptions.any { it is PasswordValidationException }) {
             _isPasswordInvalid.value = true
         }
     }

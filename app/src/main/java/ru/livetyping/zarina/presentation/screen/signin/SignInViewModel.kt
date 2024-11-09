@@ -26,12 +26,12 @@ import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.exception.CaptchaException
-import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmailValidationException
 import ru.livetyping.zarina.domain.user.exception.EmptyEmailException
 import ru.livetyping.zarina.domain.user.exception.EmptyPasswordException
 import ru.livetyping.zarina.domain.user.exception.EmptyPhoneNumberException
-import ru.livetyping.zarina.domain.user.exception.PasswordException
-import ru.livetyping.zarina.domain.user.exception.PhoneNumberException
+import ru.livetyping.zarina.domain.user.exception.PasswordValidationException
+import ru.livetyping.zarina.domain.user.exception.PhoneNumberValidationException
 import ru.livetyping.zarina.domain.user.exception.UserNotFoundException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.credentialmanager.CredentialFetchingResult
@@ -255,10 +255,10 @@ class SignInViewModel @Inject constructor(
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-        if (exceptions.any { it is EmailException }) {
+        if (exceptions.any { it is EmailValidationException }) {
             _isEmailInvalid.value = true
         }
-        if (exceptions.any { it is PasswordException }) {
+        if (exceptions.any { it is PasswordValidationException }) {
             _isPasswordInvalid.value = true
         }
     }
@@ -299,7 +299,7 @@ class SignInViewModel @Inject constructor(
         val message = ZarinaToastMessage.error(messageText)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-        if (exceptions.any { it is PhoneNumberException }) {
+        if (exceptions.any { it is PhoneNumberValidationException }) {
             _isPhoneInvalid.value = true
         }
     }

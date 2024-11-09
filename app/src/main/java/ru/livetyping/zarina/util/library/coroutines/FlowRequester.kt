@@ -14,15 +14,15 @@ import kotlin.contracts.contract
 
 class FlowRequester<T, R : FlowRequester.Request>(
     initialRequest: R? = null,
-    flowBuilder: suspend FlowBuilderScope.(R) -> Flow<T>,
+    flowBuilder: suspend FlowBuilderScope<R>.(R) -> Flow<T>,
 ) {
     private val requests = Channel<R>(Channel.CONFLATED)
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.NotLoading)
     val loadingState: StateFlow<LoadingState> = _loadingState.asStateFlow()
 
-    private val flowBuilderScopeImpl = object : FlowBuilderScope {
-        override fun markAsLoading(request: Request) {
+    private val flowBuilderScopeImpl = object : FlowBuilderScope<R> {
+        override fun markAsLoading(request: R) {
             _loadingState.value = LoadingState.Loading(request)
         }
     }
@@ -67,7 +67,7 @@ class FlowRequester<T, R : FlowRequester.Request>(
 
     interface Request
 
-    interface FlowBuilderScope {
-        fun markAsLoading(request: Request)
+    interface FlowBuilderScope<R : Request> {
+        fun markAsLoading(request: R)
     }
 }

@@ -171,6 +171,7 @@ dependencies {
     implementation(libs.jetpack.browser)
     implementation(libs.jetpack.credentials)
     implementation(libs.jetpack.credentials.compat)
+    implementation(libs.jetpack.webkit)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)

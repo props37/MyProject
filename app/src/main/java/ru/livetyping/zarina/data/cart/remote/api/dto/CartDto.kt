@@ -23,7 +23,7 @@ data class CartDto(
     val pickupProductCount: Int? = null,
 
     @SerialName("total_sum")
-    val totalPrice: Int? = null,
+    val finalPrice: Int? = null,
 
     @SerialName("total_discount")
     val discountSize: Int? = null,
@@ -42,7 +42,10 @@ data class CartDto(
 
     @SerialName("myCard")
     val myCard: MyCard? = null,
-    
+
+    @SerialName("giftCard")
+    val giftCertificate: GiftCertificate? = null,
+
     @SerialName("deliveryPrice") 
     val deliveryPrice: Int? = null,
 
@@ -78,14 +81,21 @@ data class CartDto(
     }
 
     private fun getCartPrice(): CartPrice {
-        checkNotNull(totalPrice) { "cartPrice is null" }
+        checkNotNull(cartPrice) { "cartPrice is null" }
         checkNotNull(discountSize) { "discountSize is null" }
-        checkNotNull(cartPrice) { "totalPrice is null" }
+        checkNotNull(finalPrice) { "finalPrice is null" }
+        val giftCertificateWriteOffSize = giftCertificate?.amountToWriteOff?.toIntOrNull()
+        val finalPrice = if (giftCertificate?.finalPrice != null) {
+            giftCertificate.finalPrice
+        } else {
+            finalPrice
+        }
         return CartPrice(
             cartPrice = cartPrice,
             discountSize = discountSize,
-            totalPrice = totalPrice,
+            finalPrice = finalPrice,
             deliveryPrice = deliveryPrice,
+            giftCertificateWriteOffSize = giftCertificateWriteOffSize,
         )
     }
 
@@ -168,6 +178,21 @@ data class CartDto(
 
         @SerialName("productsFirstPriceSum")
         val productsFirstPriceSum: Int? = null,
+    )
+
+    @Serializable
+    data class GiftCertificate(
+        @SerialName("barcode")
+        val number: String? = null,
+
+        @SerialName("amount")
+        val amount: Int? = null,
+
+        @SerialName("away_amount")
+        val amountToWriteOff: String? = null,
+
+        @SerialName("total")
+        val finalPrice: Int? = null,
     )
 
     @Serializable

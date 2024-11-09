@@ -13,6 +13,7 @@ import ru.livetyping.zarina.domain.order.OrderPrice
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
+import java.time.format.DateTimeParseException
 import ru.livetyping.zarina.domain.common.Color as DomainColor
 import ru.livetyping.zarina.domain.product.Product as DomainProduct
 
@@ -44,6 +45,9 @@ data class OrderDto(
 
     @SerialName("payment_method")
     val paymentMethod: PaymentMethod? = null,
+    
+    @SerialName("payment_tool")
+    val paymentTool: PaymentTool? = null,
 
     @SerialName("contact_info")
     val contactInfo: ContactInfo? = null,
@@ -54,7 +58,7 @@ data class OrderDto(
     @SerialName("is_cancelable")
     val isCancelable: Boolean? = null,
 ) {
-    fun toOrderDetails(): OrderDetails {
+    fun toOrderDetails(requireAddress: Boolean = true): OrderDetails {
         checkNotNull(id) { "id is null" }
         checkNotNull(number) { "number is null" }
         checkNotNull(productCount) { "productCount is null" }
@@ -67,7 +71,14 @@ data class OrderDto(
         checkNotNull(paymentMethod) { "paymentMethod is null" }
         checkNotNull(paymentMethod.type) { "paymentMethodType method is null" }
         checkNotNull(contactInfo) { "contactInfo is null" }
-        checkNotNull(address) { "address is null" }
+        if (requireAddress) {
+            checkNotNull(address) { "address is null" }
+        }
+        val date = try {
+            LocalDate.parse(date)
+        } catch (e: DateTimeParseException) {
+            LocalDate.parse(date.substringBefore('T'))
+        }
         // TODO: [Backend] Migrate to separate field when it is available
         val deliveryPrice = deliveryInfo.method.price ?: 0
         val price = OrderPrice(
@@ -79,14 +90,15 @@ data class OrderDto(
             id = Order.Id(id),
             number = Order.Number(number),
             productCount = productCount,
-            date = LocalDate.parse(date),
+            date = date,
             status = status.toOrderStatus(),
             products = products.map { it.toOrderProduct() },
             price = price,
             paymentMethodType = paymentMethod.type.toPaymentMethodType(),
+            paymentUrl = paymentTool?.link?.let { Url(it) },
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
-            deliveryAddress = address,
+            deliveryAddress = address.orEmpty(),
             isCancellable = isCancelable ?: false,
         )
     }
@@ -183,6 +195,12 @@ data class OrderDto(
     data class PaymentMethod(
         @SerialName("code")
         val type: PaymentMethodTypeDto? = null,
+    )
+
+    @Serializable
+    data class PaymentTool(
+        @SerialName("link") 
+        val link: String? = null,
     )
 
     @Serializable

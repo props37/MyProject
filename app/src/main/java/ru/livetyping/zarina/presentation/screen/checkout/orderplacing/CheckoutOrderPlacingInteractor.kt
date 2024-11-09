@@ -6,8 +6,12 @@ import ru.livetyping.zarina.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveBonusWriteOffUseCase
 import ru.livetyping.zarina.usecase.cart.RemoveMyCardFromCartUseCase
 import ru.livetyping.zarina.usecase.cart.RemovePromoCodeUseCase
+import ru.livetyping.zarina.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.usecase.giftcert.RemoveGiftCertificateUseCase
+import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
 import javax.inject.Inject
 
 class CheckoutOrderPlacingInteractor @Inject constructor(
@@ -19,4 +23,8 @@ class CheckoutOrderPlacingInteractor @Inject constructor(
     val removeMyCardFromCart: RemoveMyCardFromCartUseCase,
     val applyPromoCode: ApplyPromoCodeUseCase,
     val removePromoCode: RemovePromoCodeUseCase,
+    val checkout: CheckoutUseCase,
+    val updateOrderPaymentStatus: UpdateOrderPaymentStatusUseCase,
+    val getOrderFlow: GetOrderFlowUseCase,
+    val removeGiftCertificate: RemoveGiftCertificateUseCase,
 )

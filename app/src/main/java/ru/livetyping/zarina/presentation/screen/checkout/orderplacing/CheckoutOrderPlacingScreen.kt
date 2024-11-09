@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.checkout.orderplacing
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -31,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
@@ -45,7 +45,7 @@ import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
-import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodsBottomSheet
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
@@ -53,8 +53,8 @@ import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
 fun CheckoutOrderPlacingScreen(
+    viewModel: CheckoutOrderPlacingViewModel,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
-    viewModel: CheckoutOrderPlacingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.step.collectAsStateWithLifecycle()
     val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
@@ -63,7 +63,9 @@ fun CheckoutOrderPlacingScreen(
     val cartState by viewModel.cartState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val isPullRefreshing by viewModel.isPullRefreshing.collectAsStateWithLifecycle()
+    val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
+    val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -85,11 +87,16 @@ fun CheckoutOrderPlacingScreen(
         onApplyPromoCodeClicked = viewModel::onApplyPromoCodeClicked,
         onRemovePromoCodeClicked = viewModel::onRemovePromoCodeClicked,
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
+        isPaymentMethodSelectorBottomSheetVisible = isPaymentMethodSelectorBottomSheetVisible,
+        onPaymentMethodSelectorClicked = viewModel::onPaymentMethodSelectorClicked,
+        onPaymentMethodSelectorDismissRequested = viewModel::onPaymentMethodSelectorDismissRequested,
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = viewModel::onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         onPayClicked = viewModel::onPayClicked,
+        isPayButtonLoading = isPayButtonLoading,
         onUrlClicked = viewModel::onUrlClicked,
+        onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -119,18 +126,26 @@ private fun ScreenContent(
     onApplyPromoCodeClicked: () -> Unit,
     onRemovePromoCodeClicked: () -> Unit,
     onPromoCodeImeDoneClicked: () -> Unit,
+    isPaymentMethodSelectorBottomSheetVisible: Boolean,
+    onPaymentMethodSelectorClicked: () -> Unit,
+    onPaymentMethodSelectorDismissRequested: () -> Unit,
     paymentMethodsState: PaymentMethodsState,
     onPaymentMethodSelected: (PaymentMethod) -> Unit,
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
     onPayClicked: () -> Unit,
+    isPayButtonLoading: Boolean,
     onUrlClicked: (Url) -> Unit,
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CheckoutOrderPlacingScreenAction) -> Unit,
 ) {
     CheckoutOrderPlacingScreenBehavior(
+        onScreenOpened = onScreenOpened,
         sideEffects = sideEffects,
         navigate = navigate,
     )
+
+    BackHandler(onBack = onBackClicked)
 
     var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
     ZarinaClubModalBottomSheet(
@@ -139,10 +154,9 @@ private fun ScreenContent(
         onUrlClicked = onUrlClicked,
     )
 
-    var isPaymentMethodsBottomSheetVisible by remember { mutableStateOf(false) }
-    PaymentMethodsBottomSheet(
-        isVisible = isPaymentMethodsBottomSheetVisible,
-        onDismissRequest = { isPaymentMethodsBottomSheetVisible = false },
+    PaymentMethodSelectorBottomSheet(
+        isVisible = isPaymentMethodSelectorBottomSheetVisible,
+        onDismissRequest = onPaymentMethodSelectorDismissRequested,
         paymentMethodsState = paymentMethodsState,
         onPaymentMethodSelected = onPaymentMethodSelected,
         onPaymentMethodsErrorRefreshClicked = onPaymentMethodsErrorRefreshClicked,
@@ -200,8 +214,10 @@ private fun ScreenContent(
                     selectedPaymentMethod = remember(paymentMethodsState) {
                         paymentMethodsState.findSelectedPaymentMethod()
                     },
-                    onPaymentMethodSelectorClicked = { isPaymentMethodsBottomSheetVisible = true },
+                    onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
+                    isPayButtonLoading = isPayButtonLoading,
+                    onUrlClicked = { onUrlClicked(Url(it)) },
                     modifier = Modifier
                         .fillMaxSize()
                         .pullRefresh(pullRefreshState),

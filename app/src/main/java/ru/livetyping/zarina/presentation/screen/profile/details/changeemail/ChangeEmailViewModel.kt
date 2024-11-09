@@ -21,7 +21,7 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.ValidationException
 import ru.livetyping.zarina.domain.user.User
-import ru.livetyping.zarina.domain.user.exception.EmailException
+import ru.livetyping.zarina.domain.user.exception.EmailValidationException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
@@ -113,7 +113,7 @@ class ChangeEmailViewModel @Inject constructor(
             is ValidationException -> {
                 val exceptions = listOf(this) + throwable.suppressedExceptions
                 val text = when {
-                    exceptions.any { it is EmailException } -> {
+                    exceptions.any { it is EmailValidationException } -> {
                         Text.Resource(R.string.invalid_email_try_again)
                     }
 
@@ -122,7 +122,7 @@ class ChangeEmailViewModel @Inject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SideEffect.ShowZarinaToast(message))
 
-                if (exceptions.any { it is EmailException }) {
+                if (exceptions.any { it is EmailValidationException }) {
                     _isEmailInvalid.value = true
                 }
             }
