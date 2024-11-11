@@ -18,6 +18,8 @@ public sealed interface Text : Parcelable {
     @Serializable
     public data object Empty : Text {
         override fun getString(context: Context): kotlin.String = ""
+
+        override fun toString(): kotlin.String = ""
     }
 
     @Parcelize
@@ -29,6 +31,10 @@ public sealed interface Text : Parcelable {
     ) : Text {
         override fun getString(context: Context): kotlin.String {
             return context.resources.getString(resId, *args)
+        }
+
+        override fun toString(): kotlin.String {
+            return "Resource(resId=$resId, args=${args.contentToString()})"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -60,6 +66,10 @@ public sealed interface Text : Parcelable {
     ) : Text {
         override fun getString(context: Context): kotlin.String {
             return context.resources.getQuantityString(resId, count, *args)
+        }
+
+        override fun toString(): kotlin.String {
+            return "PluralResource(resId=$resId, count=$count, args=${args.contentToString()})"
         }
 
         override fun equals(other: Any?): Boolean {
