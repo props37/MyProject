@@ -14,6 +14,6 @@ enum class YandexCaptchaMode {
     companion object {
         fun getMain(): YandexCaptchaMode = SLIDER
 
-        const val MODE_MAX_DURATION_MILLIS = 10_000L
+        const val MODE_MAX_DURATION_MILLIS = 15_000L
     }
 }
