@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.captcha
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.data.captcha.local.CaptchaLocalDataSource
 import ru.livetyping.zarina.data.captcha.remote.CaptchaRemoteDataSource
@@ -19,7 +20,10 @@ class CaptchaRepository @Inject constructor(
     }
 
     suspend fun fetchYandexCaptchaUrl() {
-        val yandexCaptcha = remoteDataSource.getYandexCaptcha()
-        localDataSource.setYandexCaptcha(yandexCaptcha)
+        val currentYandexCaptcha = localDataSource.getYandexCaptcha().firstOrNull()
+        if (currentYandexCaptcha == null) {
+            val yandexCaptcha = remoteDataSource.getYandexCaptcha()
+            localDataSource.setYandexCaptcha(yandexCaptcha)
+        }
     }
 }

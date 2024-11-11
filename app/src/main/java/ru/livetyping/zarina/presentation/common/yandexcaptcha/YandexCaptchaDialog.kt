@@ -43,7 +43,7 @@ fun BoxScope.YandexCaptchaDialog(
     onTokenReceived: (YandexCaptchaToken) -> Unit,
 ) {
     if (state is YandexCaptchaDialogState.Visible) {
-        val isCaptchaInvisible = state.isCaptchaInvisible
+        val captcha = state.captcha
         var currentCaptchaMode by remember(state) {
             mutableStateOf(YandexCaptchaMode.getMain())
         }
@@ -55,17 +55,17 @@ fun BoxScope.YandexCaptchaDialog(
                 }
             }
         }
-        val currentCaptchaUrl by remember(state) {
+        val currentCaptchaUrl by remember(captcha) {
             derivedStateOf {
-                getCaptchaUrl(state.url, currentCaptchaModeKey, state.isCaptchaInvisible)
+                getCaptchaUrl(captcha.url.value, currentCaptchaModeKey, captcha.isInvisible)
             }
         }
         var isUserActionRequired by remember { mutableStateOf(false) }
 
         var isPageLoaded by remember(state, currentCaptchaMode) { mutableStateOf(false) }
-        val isWebViewVisible by remember(isCaptchaInvisible) {
+        val isWebViewVisible by remember(captcha.isInvisible) {
             derivedStateOf {
-                isPageLoaded && (!isCaptchaInvisible || (isCaptchaInvisible && isUserActionRequired))
+                isPageLoaded && (!captcha.isInvisible || (captcha.isInvisible && isUserActionRequired))
             }
         }
 

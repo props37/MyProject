@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -47,8 +48,10 @@ import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.usecase.user.ValidateSignInByEmailFieldsUseCase
 import ru.livetyping.zarina.usecase.user.ValidateSignInByPhoneFieldsUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -122,6 +125,12 @@ class SignInViewModel @Inject constructor(
     )
 
     private var captchaTrigger: CaptchaTrigger? = null
+
+    init {
+        viewModelScope.launch {
+            interactor.fetchYandexCaptcha()
+        }
+    }
 
     fun onScreenOpened() {
         if (credentialManagerJob?.isActive == true) return
@@ -366,11 +375,19 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun startYandexCaptcha(trigger: CaptchaTrigger) {
-        // TODO: [Top] Implement
-        _yandexCaptchaState.value =
-            YandexCaptchaDialogState.Visible("https://smartcaptcha.yandexcloud.net/webview", true)
-        captchaTrigger = trigger
+    private suspend fun startYandexCaptcha(trigger: CaptchaTrigger) {
+        val yandexCaptcha = interactor.getYandexCaptchaFlow()
+            .firstOrNull()
+            ?.getOrNull()
+        if (yandexCaptcha != null) {
+            _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
+            captchaTrigger = trigger
+        } else {
+            interactor.fetchYandexCaptcha()
+            val messageText = Text.Resource(R.string.something_went_wrong_try_again)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

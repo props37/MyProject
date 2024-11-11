@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -47,6 +48,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.usecase.user.ValidateSignUpFieldsUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -157,6 +159,12 @@ class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
+    init {
+        viewModelScope.launch {
+            interactor.fetchYandexCaptcha()
+        }
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignUpScreenAction.ScreenClosed
@@ -238,9 +246,17 @@ class SignUpViewModel @Inject constructor(
             )
             interactor.validateSignUpFields(params)
                 .onSuccess {
-                    // TODO: [Top] Implement
-                    _yandexCaptchaState.value =
-                        YandexCaptchaDialogState.Visible("https://smartcaptcha.yandexcloud.net/webview", true)
+                    val yandexCaptcha = interactor.getYandexCaptchaFlow()
+                        .firstOrNull()
+                        ?.getOrNull()
+                    if (yandexCaptcha != null) {
+                        _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
+                    } else {
+                        interactor.fetchYandexCaptcha()
+                        val messageText = Text.Resource(R.string.something_went_wrong_try_again)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
                 }
                 .onFailure(::onSignUpFailure)
         }
