@@ -132,8 +132,8 @@ class UserRemoteDataSource @Inject constructor(
         return api.signIn(email, password, yandexCaptchaToken).toAuthorizationResult()
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
-        return api.signIn(phone, recaptchaToken)
+    suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        return api.signIn(phone, yandexCaptchaToken)
     }
 
     suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthorizationResult {

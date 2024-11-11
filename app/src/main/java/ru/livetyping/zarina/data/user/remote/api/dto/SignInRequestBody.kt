@@ -23,10 +23,7 @@ sealed class SignInRequestBody {
         @SerialName("phone")
         val phone: String,
 
-        @SerialName("reCaptchaKey")
-        val recaptchaToken: String,
-
         @SerialName("smartCaptchaToken")
-        val smartCaptchaToken: String = "smartCaptchaToken",
+        val yandexCaptchaToken: YandexCaptchaTokenDto,
     ) : SignInRequestBody()
 }

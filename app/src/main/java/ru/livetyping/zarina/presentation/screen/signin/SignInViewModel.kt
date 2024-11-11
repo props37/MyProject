@@ -46,6 +46,7 @@ import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SideEffec
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.usecase.user.ValidateSignInByEmailFieldsUseCase
+import ru.livetyping.zarina.usecase.user.ValidateSignInByPhoneFieldsUseCase
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -193,7 +194,7 @@ class SignInViewModel @Inject constructor(
         _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
         when (captchaTrigger) {
             CaptchaTrigger.SIGN_IN_BY_EMAIL -> signInByEmail(token)
-            CaptchaTrigger.SIGN_IN_BY_PHONE -> signInByPhone()
+            CaptchaTrigger.SIGN_IN_BY_PHONE -> signInByPhone(token)
             null -> Unit
         }
     }
@@ -244,6 +245,19 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun signInByPhone() {
+        viewModelScope.launch {
+            val validationParams = ValidateSignInByPhoneFieldsUseCase.Params(
+                phone = PhoneNumber.create(phone.value),
+            )
+            interactor.validateSignInByPhoneFields(validationParams)
+                .onSuccess {
+                    startYandexCaptcha(CaptchaTrigger.SIGN_IN_BY_PHONE)
+                }
+                .onFailure(::onSignInByPhoneFailure)
+        }
+    }
+
+    private fun signInByPhone(yandexCaptchaToken: YandexCaptchaToken) {
         if (signInJob?.isActive == true) return
 
         signInJob = viewModelScope.launch {
@@ -253,7 +267,7 @@ class SignInViewModel @Inject constructor(
                     codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
                 )
                 val phone = PhoneNumber.create(phone.value)
-                val params = SignInByPhoneUseCase.Params(phone)
+                val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
                 interactor.signInByPhone(params)
                     .onSuccess {
                         val action = SignInScreenAction.SignInByPhoneRequested(phone)

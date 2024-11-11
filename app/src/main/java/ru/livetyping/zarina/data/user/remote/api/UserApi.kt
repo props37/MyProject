@@ -217,8 +217,11 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
-        val body = SignInRequestBody.Phone(phone.value, recaptchaToken.value)
+    suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        val body = SignInRequestBody.Phone(
+            phone = phone.value,
+            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
+        )
         signInApiExceptionConverter {
             httpClient.post("/api/auth/phone") {
                 setJsonBody(body)
