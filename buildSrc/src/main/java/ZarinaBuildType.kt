@@ -19,6 +19,8 @@ sealed class ZarinaBuildType(val name: String) {
     open val recaptchaKey = "6LeII9QmAAAAAFdDn-mO2tUjOZwUYZmM5aqT5GY6"
     open val anyQueryKey = "L1WU1VJBYK"
     open val googleMapsKey = "AIzaSyDxodqz9YA48xbw5T7Nc4iQr9n0YDeBxx0"
+    open val yandexCaptchaSliderKey = "ysc1_gKIsC7Ev2vjMgi90TPtMXKmkYeYv2ASe014nTrvXa13138ac"
+    open val yandexCaptchaCheckboxKey = "ysc1_OEgl6zPKaf7fMSCGZ7TkiKsP1wE6fP0ytiPwxmeQcf348e7a"
 
     object Debug : ZarinaBuildType("debug") {
         override val isDebuggable = true
