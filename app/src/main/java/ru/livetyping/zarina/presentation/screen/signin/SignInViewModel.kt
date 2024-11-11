@@ -367,6 +367,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun startYandexCaptcha(trigger: CaptchaTrigger) {
+        // TODO: [Top] Implement
         _yandexCaptchaState.value =
             YandexCaptchaDialogState.Visible("https://smartcaptcha.yandexcloud.net/webview", true)
         captchaTrigger = trigger

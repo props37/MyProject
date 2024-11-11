@@ -106,7 +106,7 @@ class UserRemoteDataSource @Inject constructor(
         password: String,
         receiveNews: Boolean,
         receiveSms: Boolean,
-        recaptchaToken: Token,
+        yandexCaptchaToken: YandexCaptchaToken,
     ) {
         api.signUp(
             firstName = firstName,
@@ -116,7 +116,7 @@ class UserRemoteDataSource @Inject constructor(
             password = password,
             receiveEmails = receiveNews,
             receiveSms = receiveSms,
-            recaptchaToken = recaptchaToken,
+            yandexCaptchaToken = yandexCaptchaToken,
         )
     }
 

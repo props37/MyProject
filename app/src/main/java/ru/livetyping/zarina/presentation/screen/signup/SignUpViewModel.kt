@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -18,6 +19,7 @@ import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
@@ -40,9 +42,11 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignUpUseCase
+import ru.livetyping.zarina.usecase.user.ValidateSignUpFieldsUseCase
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -137,13 +141,21 @@ class SignUpViewModel @Inject constructor(
 
     val isPoliciesErrorVisible: StateFlow<Boolean> = isPoliciesErrorVisibleValueHolder.stateFlow
 
-    val isSignUpButtonLoading: StateFlow<Boolean> = operationTracker
-        .isOperationOngoing(Operation.SIGN_UP)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = false,
-        )
+    private val _yandexCaptchaState =
+        MutableStateFlow<YandexCaptchaDialogState>(YandexCaptchaDialogState.Hidden)
+    val yandexCaptchaState: StateFlow<YandexCaptchaDialogState> = _yandexCaptchaState.asStateFlow()
+
+    val isSignUpButtonLoading: StateFlow<Boolean> = combine(
+        operationTracker.ongoingOperationKeys,
+        yandexCaptchaState,
+    ) { ongoingOperations, yandexCaptchaState ->
+        Operation.SIGN_UP in ongoingOperations
+                || yandexCaptchaState is YandexCaptchaDialogState.Visible
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -210,6 +222,50 @@ class SignUpViewModel @Inject constructor(
             return
         }
 
+        viewModelScope.launch {
+            val phone = PhoneNumber.create(phone.value)
+            val birthDate = birthDateMillis.value?.let {
+                LocalDateUtil.fromMillis(it)
+            }
+            val email = Email.create(email.value)
+            val password = password.value
+            val params = ValidateSignUpFieldsUseCase.Params(
+                firstName = firstName.value,
+                birthDate = birthDate,
+                email = email,
+                phone = phone,
+                password = password,
+            )
+            interactor.validateSignUpFields(params)
+                .onSuccess {
+                    // TODO: [Top] Implement
+                    _yandexCaptchaState.value =
+                        YandexCaptchaDialogState.Visible("https://smartcaptcha.yandexcloud.net/webview", true)
+                }
+                .onFailure(::onSignUpFailure)
+        }
+    }
+
+    fun onYandexCaptchaDismissRequested() {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+    }
+
+    fun onYandexCaptchaTokenReceived(token: YandexCaptchaToken) {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+        signUp(token)
+    }
+
+    private fun signUp(yandexCaptchaToken: YandexCaptchaToken) {
+        if (signUpJob?.isActive == true) return
+
+        if (!arePoliciesAccepted.value) {
+            isPoliciesErrorVisibleValueHolder.set(true)
+            val text = Text.Resource(R.string.sign_up_agreement_error)
+            val message = ZarinaToastMessage.error(text)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
+        }
+
         interactor.smsCodeRetriever.start(
             sender = SmsConstants.SENDER_ZARINA,
             codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
@@ -231,6 +287,7 @@ class SignUpViewModel @Inject constructor(
                     password = password,
                     receiveEmails = receiveEmails.value,
                     receiveSms = receiveSms.value,
+                    yandexCaptchaToken = yandexCaptchaToken,
                 )
                 interactor.signUp(params)
                     .onSuccess {

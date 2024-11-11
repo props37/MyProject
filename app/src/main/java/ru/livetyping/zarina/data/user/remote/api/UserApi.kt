@@ -172,7 +172,7 @@ class UserApi @Inject constructor(
         password: String,
         receiveEmails: Boolean,
         receiveSms: Boolean,
-        recaptchaToken: Token,
+        yandexCaptchaToken: YandexCaptchaToken,
     ) {
         val body = SignUpRequestBody(
             firstName = firstName,
@@ -182,7 +182,7 @@ class UserApi @Inject constructor(
             password = password,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
-            recaptchaToken = recaptchaToken.value,
+            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
         )
         signUpApiExceptionConverter {
             httpClient.post("/api/register") {
