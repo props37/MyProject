@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.signin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -25,8 +26,11 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialog
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.screen.signin.SignInScreenComponents.SignInTypePager
 import ru.livetyping.zarina.presentation.screen.signin.SignInScreenComponents.SignInTypeTabRow
 import ru.livetyping.zarina.presentation.screen.signin.SignInScreenComponents.TopBar
@@ -55,6 +59,7 @@ fun SignInScreen(
     )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()
+    val yandexCaptchaDialogState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         signInTypes = signInTypes,
@@ -76,6 +81,9 @@ fun SignInScreen(
         onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
         onScreenOpened = viewModel::onScreenOpened,
+        yandexCaptchaDialogState = yandexCaptchaDialogState,
+        onYandexCaptchaDismissRequested = viewModel::onYandexCaptchaDismissRequested,
+        onYandexCaptchaTokenReceived = viewModel::onYandexCaptchaTokenReceived,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -102,6 +110,9 @@ private fun ScreenContent(
     onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
     onScreenOpened: () -> Unit,
+    yandexCaptchaDialogState: YandexCaptchaDialogState,
+    onYandexCaptchaDismissRequested: () -> Unit,
+    onYandexCaptchaTokenReceived: (YandexCaptchaToken) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignInScreenAction) -> Unit,
 ) {
@@ -111,55 +122,63 @@ private fun ScreenContent(
         navigate = navigate,
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
-            ),
-    ) {
-        TopBar(onBackClicked = onBackClicked)
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                ),
+        ) {
+            TopBar(onBackClicked = onBackClicked)
 
-        val signInTypePagerState = rememberPagerState(
-            initialPage = signInTypes.indexOf(currentSignInType),
-            pageCount = { signInTypes.size },
-        )
+            val signInTypePagerState = rememberPagerState(
+                initialPage = signInTypes.indexOf(currentSignInType),
+                pageCount = { signInTypes.size },
+            )
 
-        PagerTabRowIntegration(
-            pagerState = signInTypePagerState,
-            tabs = signInTypes,
-            currentTab = currentSignInType,
-            onCurrentTabChanged = onSignInTypeChanged,
-        )
+            PagerTabRowIntegration(
+                pagerState = signInTypePagerState,
+                tabs = signInTypes,
+                currentTab = currentSignInType,
+                onCurrentTabChanged = onSignInTypeChanged,
+            )
 
-        SignInTypeTabRow(
-            signInTypes = signInTypes,
-            currentSignInType = currentSignInType,
-            onSignInTypeChanged = onSignInTypeChanged,
-            signInTypePagerState = signInTypePagerState,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
+            SignInTypeTabRow(
+                signInTypes = signInTypes,
+                currentSignInType = currentSignInType,
+                onSignInTypeChanged = onSignInTypeChanged,
+                signInTypePagerState = signInTypePagerState,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
-        SignInTypePager(
-            signInTypes = signInTypes,
-            signInTypePagerState = signInTypePagerState,
-            email = email,
-            onEmailChanged = onEmailChanged,
-            isEmailInvalid = isEmailInvalid,
-            password = password,
-            onPasswordChanged = onPasswordChanged,
-            isPasswordInvalid = isPasswordInvalid,
-            phone = phone,
-            onPhoneChanged = onPhoneChanged,
-            isPhoneInvalid = isPhoneInvalid,
-            onSignInClicked = onSignInClicked,
-            isSignInButtonLoading = isSignInButtonLoading,
-            onForgotPasswordClicked = onForgotPasswordClicked,
-            onSignUpClicked = onSignUpClicked,
-            onUrlClicked = onUrlClicked,
-            modifier = Modifier.fillMaxSize(),
+            SignInTypePager(
+                signInTypes = signInTypes,
+                signInTypePagerState = signInTypePagerState,
+                email = email,
+                onEmailChanged = onEmailChanged,
+                isEmailInvalid = isEmailInvalid,
+                password = password,
+                onPasswordChanged = onPasswordChanged,
+                isPasswordInvalid = isPasswordInvalid,
+                phone = phone,
+                onPhoneChanged = onPhoneChanged,
+                isPhoneInvalid = isPhoneInvalid,
+                onSignInClicked = onSignInClicked,
+                isSignInButtonLoading = isSignInButtonLoading,
+                onForgotPasswordClicked = onForgotPasswordClicked,
+                onSignUpClicked = onSignUpClicked,
+                onUrlClicked = onUrlClicked,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaDialogState,
+            onDismissRequest = onYandexCaptchaDismissRequested,
+            onTokenReceived = onYandexCaptchaTokenReceived,
         )
     }
 }
@@ -190,6 +209,9 @@ private fun Preview() {
             onUrlClicked = {},
             onBackClicked = {},
             onScreenOpened = {},
+            yandexCaptchaDialogState = YandexCaptchaDialogState.Hidden,
+            onYandexCaptchaDismissRequested = {},
+            onYandexCaptchaTokenReceived = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )
@@ -222,6 +244,9 @@ private fun PreviewPhone() {
             onUrlClicked = {},
             onBackClicked = {},
             onScreenOpened = {},
+            yandexCaptchaDialogState = YandexCaptchaDialogState.Hidden,
+            onYandexCaptchaDismissRequested = {},
+            onYandexCaptchaTokenReceived = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )

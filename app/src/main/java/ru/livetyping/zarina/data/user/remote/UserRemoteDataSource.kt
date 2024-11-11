@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.data.user.remote.api.UserApi
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Page
@@ -123,8 +124,12 @@ class UserRemoteDataSource @Inject constructor(
         return api.confirmSignUp(phone, otp).toAuthorizationResult()
     }
 
-    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationResult {
-        return api.signIn(email, password, recaptchaToken).toAuthorizationResult()
+    suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthorizationResult {
+        return api.signIn(email, password, yandexCaptchaToken).toAuthorizationResult()
     }
 
     suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {

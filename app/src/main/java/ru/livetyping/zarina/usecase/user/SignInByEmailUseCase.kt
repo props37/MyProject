@@ -2,11 +2,10 @@ package ru.livetyping.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
-import ru.livetyping.zarina.data.recaptcha.RecaptchaManager
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
-import ru.livetyping.zarina.domain.common.exception.ValidationException
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,9 +13,7 @@ class SignInByEmailUseCase @Inject constructor(
     @Qualifiers.CoroutineDispatcher(Qualifiers.CoroutineDispatchers.IO)
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
-    private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordUseCase: ValidatePasswordUseCase,
-    private val recaptchaManager: RecaptchaManager,
+    private val validateFieldsUseCase: ValidateSignInByEmailFieldsUseCase,
     private val setUserWithAuthorizationTokensUseCase: SetUserWithAuthorizationTokensUseCase,
 ) : UseCase<SignInByEmailUseCase.Params, Unit>(dispatcher) {
 
@@ -25,20 +22,14 @@ class SignInByEmailUseCase @Inject constructor(
         val password = params.password
         Timber.v("Sign in by email. Email: $email, password: $password")
 
-        val emailValidationException =
-            validateEmailUseCase(ValidateEmailUseCase.Params(email)).exceptionOrNull()
-        val passwordValidationException =
-            validatePasswordUseCase(ValidatePasswordUseCase.Params(password)).exceptionOrNull()
+        val validationParams = ValidateSignInByEmailFieldsUseCase.Params(email, password)
+        validateFieldsUseCase(validationParams).getOrThrow()
 
-        val validationException = ValidationException.from(
-            emailValidationException,
-            passwordValidationException,
+        val authorizationResult = userRepository.signIn(
+            email = email,
+            password = password,
+            yandexCaptchaToken = params.yandexCaptchaToken,
         )
-        if (validationException != null) throw validationException
-
-        val recaptchaToken = recaptchaManager.execute(RecaptchaManager.ACTION_SIGN_IN_BY_EMAIL)
-
-        val authorizationResult = userRepository.signIn(email, password, recaptchaToken)
         val tokens = authorizationResult.tokens
         val user = authorizationResult.user
 
@@ -49,5 +40,6 @@ class SignInByEmailUseCase @Inject constructor(
     data class Params(
         val email: Email,
         val password: String,
+        val yandexCaptchaToken: YandexCaptchaToken,
     )
 }

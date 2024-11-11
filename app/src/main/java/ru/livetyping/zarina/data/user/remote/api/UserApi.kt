@@ -26,6 +26,7 @@ import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.UpdateUserInfoRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.YandexCaptchaTokenDto
 import ru.livetyping.zarina.data.user.remote.api.exception.ChangePhoneNumberApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
@@ -33,6 +34,7 @@ import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionCon
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.UpdateUserInfoApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
@@ -198,8 +200,16 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationDto {
-        val body = SignInRequestBody.Email(email.value, password, recaptchaToken.value)
+    suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthorizationDto {
+        val body = SignInRequestBody.Email(
+            email = email.value,
+            password = password,
+            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
+        )
         return signInApiExceptionConverter {
             httpClient.post("/api/auth/email") {
                 setJsonBody(body)
