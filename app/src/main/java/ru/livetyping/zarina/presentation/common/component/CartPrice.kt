@@ -47,6 +47,8 @@ fun CartPrice(
     giftCertificateWriteOffSize: Int?,
     finalPrice: Int,
     modifier: Modifier = Modifier,
+    isGiftCertificateWriteOffSizeButtonVisible: Boolean = false,
+    onGiftCertificateWriteOffSizeButtonClicked: (() -> Unit)? = null,
     isFinalPriceDetailsButtonVisible: Boolean = false,
     onFinalPriceDetailsButtonClicked: (() -> Unit)? = null,
     backgroundColor: Color = BackgroundColor,
@@ -91,6 +93,8 @@ fun CartPrice(
                     price = giftCertificateWriteOffSize,
                     nameTextStyle = DefaultPriceNameTextStyle,
                     priceTextStyle = DefaultPriceTextStyle,
+                    isDetailsButtonVisible = isGiftCertificateWriteOffSizeButtonVisible,
+                    onDetailsButtonClicked = onGiftCertificateWriteOffSizeButtonClicked,
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
             }
@@ -138,11 +142,11 @@ private fun PriceItem(
             overflow = TextOverflow.Ellipsis,
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         if (isDetailsButtonVisible) {
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                val iconSize = 20.dp
+                val iconSize = 16.dp
                 ZarinaIconButton(
                     onClick = { onDetailsButtonClicked?.invoke() },
                     indication = ripple(bounded = false, radius = iconSize),
