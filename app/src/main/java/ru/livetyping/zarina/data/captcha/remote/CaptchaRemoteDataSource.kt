@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CaptchaRemoteDataSource @Inject constructor(
     private val api: CaptchaApi,
 ) {
-    suspend fun getYandexCaptcha(): YandexCaptcha {
+    fun getYandexCaptcha(): YandexCaptcha {
         return api.getYandexCaptcha()
     }
 }

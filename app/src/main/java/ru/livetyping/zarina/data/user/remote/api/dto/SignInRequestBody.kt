@@ -15,7 +15,7 @@ sealed class SignInRequestBody {
         val password: String,
 
         @SerialName("smartCaptchaToken")
-        val yandexCaptchaToken: YandexCaptchaTokenDto,
+        val yandexCaptchaToken: String,
     ) : SignInRequestBody()
 
     @Serializable
@@ -24,6 +24,6 @@ sealed class SignInRequestBody {
         val phone: String,
 
         @SerialName("smartCaptchaToken")
-        val yandexCaptchaToken: YandexCaptchaTokenDto,
+        val yandexCaptchaToken: String,
     ) : SignInRequestBody()
 }

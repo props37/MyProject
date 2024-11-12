@@ -96,14 +96,6 @@ android {
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.RECAPTCHA_KEY, buildType.recaptchaKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
-                buildConfigStringField(
-                    name = Keys.YANDEX_CAPTCHA_SLIDER_KEY,
-                    value = buildType.yandexCaptchaSliderKey,
-                )
-                buildConfigStringField(
-                    name = Keys.YANDEX_CAPTCHA_CHECKBOX_KEY,
-                    value = buildType.yandexCaptchaCheckboxKey,
-                )
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
             }

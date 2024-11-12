@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -159,12 +158,6 @@ class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
-    init {
-        viewModelScope.launch {
-            interactor.fetchYandexCaptcha()
-        }
-    }
-
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignUpScreenAction.ScreenClosed
@@ -246,13 +239,10 @@ class SignUpViewModel @Inject constructor(
             )
             interactor.validateSignUpFields(params)
                 .onSuccess {
-                    val yandexCaptcha = interactor.getYandexCaptchaFlow()
-                        .firstOrNull()
-                        ?.getOrNull()
+                    val yandexCaptcha = interactor.getYandexCaptcha().getOrNull()
                     if (yandexCaptcha != null) {
                         _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
                     } else {
-                        interactor.fetchYandexCaptcha()
                         val messageText = Text.Resource(R.string.something_went_wrong_try_again)
                         val message = ZarinaToastMessage.error(messageText)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))

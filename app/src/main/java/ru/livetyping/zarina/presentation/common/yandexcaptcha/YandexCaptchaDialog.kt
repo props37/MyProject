@@ -27,9 +27,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.isVisible
-import kotlinx.coroutines.delay
-import ru.livetyping.zarina.BuildConfig
-import ru.livetyping.zarina.domain.captcha.YandexCaptchaMode
 import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
 import timber.log.Timber
@@ -44,29 +41,13 @@ fun BoxScope.YandexCaptchaDialog(
 ) {
     if (state is YandexCaptchaDialogState.Visible) {
         val captcha = state.captcha
-        var currentCaptchaMode by remember(state) {
-            mutableStateOf(YandexCaptchaMode.getMain())
-        }
-        val currentCaptchaModeKey by remember {
-            derivedStateOf {
-                when (currentCaptchaMode) {
-                    YandexCaptchaMode.SLIDER -> BuildConfig.YANDEX_CAPTCHA_SLIDER_KEY
-                    YandexCaptchaMode.CHECKBOX -> BuildConfig.YANDEX_CAPTCHA_CHECKBOX_KEY
-                }
-            }
-        }
-        val currentCaptchaUrl by remember(captcha) {
-            derivedStateOf {
-                getCaptchaUrl(captcha.url.value, currentCaptchaModeKey, captcha.isInvisible)
-            }
-        }
-        var isUserActionRequired by remember { mutableStateOf(false) }
+        val captchaUrl = captcha.url.value
 
-        var isPageLoaded by remember(state, currentCaptchaMode) { mutableStateOf(false) }
-        val isWebViewVisible by remember(captcha.isInvisible) {
-            derivedStateOf {
-                isPageLoaded && (!captcha.isInvisible || (captcha.isInvisible && isUserActionRequired))
-            }
+        var isUserActionRequired by remember { mutableStateOf(false) }
+        var isPageLoaded by remember(captcha) { mutableStateOf(false) }
+
+        val isWebViewVisible by remember(captcha) {
+            derivedStateOf { isPageLoaded && isUserActionRequired }
         }
 
         val backgroundClickableModifier = if (isWebViewVisible) {
@@ -86,14 +67,6 @@ fun BoxScope.YandexCaptchaDialog(
             }
         }
 
-        LaunchedEffect(currentCaptchaMode, isWebViewVisible) {
-            val nextMode = currentCaptchaMode.getNext()
-            if (isWebViewVisible && nextMode != null) {
-                delay(YandexCaptchaMode.MODE_MAX_DURATION_MILLIS)
-                currentCaptchaMode = nextMode
-            }
-        }
-
         BackHandler(
             enabled = isWebViewVisible,
             onBack = onDismissRequest,
@@ -108,6 +81,7 @@ fun BoxScope.YandexCaptchaDialog(
                         alpha = if (isWebViewVisible) 1f else 0f,
                     )
                 }
+                .safeDrawingPadding()
                 .then(backgroundClickableModifier),
         ) {
             AndroidView(
@@ -117,14 +91,12 @@ fun BoxScope.YandexCaptchaDialog(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                         )
-                        settings.useWideViewPort = true
-                        settings.loadWithOverviewMode = true
                         isVisible = isWebViewVisible
 
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 Timber.tag(TAG).v("onPageFinished: $url")
-                                if (url == currentCaptchaUrl) isPageLoaded = true
+                                if (url == captchaUrl) isPageLoaded = true
                             }
                         }
 
@@ -133,11 +105,7 @@ fun BoxScope.YandexCaptchaDialog(
                             @JavascriptInterface
                             override fun onGetToken(token: String) {
                                 Timber.tag(TAG).v("onGetToken: $token")
-                                val captchaToken = YandexCaptchaToken(
-                                    token = token,
-                                    mode = currentCaptchaMode,
-                                )
-                                onTokenReceived(captchaToken)
+                                onTokenReceived(YandexCaptchaToken(token))
                             }
 
                             @JavascriptInterface
@@ -154,37 +122,24 @@ fun BoxScope.YandexCaptchaDialog(
                         }
                         addJavascriptInterface(jsInterface, "NativeClient")
 
-                        loadUrl(currentCaptchaUrl)
+                        loadUrl(captchaUrl)
                     }
                 },
                 update = { webView ->
                     webView.isVisible = isWebViewVisible
 
-                    if (webView.url != currentCaptchaUrl) {
-                        webView.loadUrl(currentCaptchaUrl)
+                    if (webView.url != captchaUrl) {
+                        webView.loadUrl(captchaUrl)
                     }
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.5f)
-                    .safeDrawingPadding(),
+                    .fillMaxHeight(fraction = 0.5f),
             )
         }
     }
 }
-
-private fun getCaptchaUrl(baseUrl: String, key: String, isInvisible: Boolean): String {
-    return buildString {
-        append(baseUrl)
-        append("?sitekey=$key")
-        if (isInvisible) {
-            append("&invisible=true")
-        }
-    }
-}
-
-private const val TAG = "YandexCaptchaDialog"
 
 private interface YandexCaptchaJsInterface {
     @JavascriptInterface
@@ -196,3 +151,5 @@ private interface YandexCaptchaJsInterface {
     @JavascriptInterface
     fun onChallengeHidden()
 }
+
+private const val TAG = "YandexCaptchaDialog"

@@ -26,7 +26,6 @@ import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.UpdateUserInfoRequestBody
-import ru.livetyping.zarina.data.user.remote.api.dto.YandexCaptchaTokenDto
 import ru.livetyping.zarina.data.user.remote.api.exception.ChangePhoneNumberApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.RequestPasswordResetApiExceptionConverter
@@ -182,7 +181,7 @@ class UserApi @Inject constructor(
             password = password,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
-            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         signUpApiExceptionConverter {
             httpClient.post("/api/register") {
@@ -208,7 +207,7 @@ class UserApi @Inject constructor(
         val body = SignInRequestBody.Email(
             email = email.value,
             password = password,
-            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         return signInApiExceptionConverter {
             httpClient.post("/api/auth/email") {
@@ -220,7 +219,7 @@ class UserApi @Inject constructor(
     suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
         val body = SignInRequestBody.Phone(
             phone = phone.value,
-            yandexCaptchaToken = YandexCaptchaTokenDto.from(yandexCaptchaToken),
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         signInApiExceptionConverter {
             httpClient.post("/api/auth/phone") {

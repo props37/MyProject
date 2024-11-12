@@ -27,5 +27,5 @@ data class SignUpRequestBody(
     val receiveSms: Boolean,
 
     @SerialName("smartCaptchaToken")
-    val yandexCaptchaToken: YandexCaptchaTokenDto,
+    val yandexCaptchaToken: String,
 )
