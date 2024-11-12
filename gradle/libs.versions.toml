@@ -7,7 +7,7 @@ androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
 kotlin = "2.0.21"
-kotlin-ksp = "2.0.21-1.0.26"
+kotlin-ksp = "2.0.21-1.0.27"
 kotlin-coroutines = "1.9.0"
 kotlin-serialization = "1.7.3"
 kotlin-immutableCollections = "0.3.8"
