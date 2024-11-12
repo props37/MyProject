@@ -72,7 +72,7 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
-                PaymentMethodType.GIFT_CARD -> {
+                PaymentMethodType.GIFT_CERTIFICATE -> {
                     checkoutWithGiftCertificatePayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
@@ -181,7 +181,7 @@ class CheckoutUseCase @Inject constructor(
         user: User?,
     ) {
         if (cart.price.finalPrice > 0) {
-            // User has to pay the remaining price
+            // User has to pay the remaining amount
             val paymentMethodForRemainingPrice =
                 findPaymentMethodForRemainingPriceAfterGiftCertificate(availablePaymentMethods)
             val paymentData = getPaymentData(
@@ -205,7 +205,8 @@ class CheckoutUseCase @Inject constructor(
                 checkoutParams = checkoutParams,
                 paymentData = paymentData,
             )
-            updateOrderPaymentStatus(order, paymentMethod)
+            // Use the payment method used to pay the remaining amount
+            updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
             val completed = CheckoutStage.Completed(
                 order = order,
@@ -222,7 +223,6 @@ class CheckoutUseCase @Inject constructor(
                 checkoutParams = checkoutParams,
                 paymentData = null,
             )
-            updateOrderPaymentStatus(order, paymentMethod)
 
             val completed = CheckoutStage.Completed(
                 order = order,

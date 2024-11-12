@@ -52,6 +52,7 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
+import ru.livetyping.zarina.presentation.common.util.formatPrice
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
@@ -159,11 +160,22 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     }
 
     private val paymentMethodsResult: StateFlow<Result<List<PaymentMethod>>?> =
-        paymentMethodsFlowRequester.flow.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+        paymentMethodsFlowRequester.flow
+            .onEach { result ->
+                // Check if the cart contains applied gift certificate
+                val cart = cart
+                if (selectedPaymentMethod.value == null && cart?.giftCertificate != null) {
+                    val paymentMethods = result?.getOrNull()
+                    selectedPaymentMethod.value = paymentMethods?.find {
+                        it.type == PaymentMethodType.GIFT_CERTIFICATE
+                    }
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val paymentMethodsState: StateFlow<PaymentMethodsState> = combine(
         paymentMethodsResult,
@@ -247,6 +259,9 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
             started = SharingStarted.WhileUiSubscribed,
             initialValue = false,
         )
+
+    private val _infoModalBottomSheetState = MutableStateFlow<InfoModalBottomSheetState?>(null)
+    val infoModalBottomSheetState: StateFlow<InfoModalBottomSheetState?> = _infoModalBottomSheetState.asStateFlow()
 
     private var currentCheckoutStage: CheckoutStage? = null
 
@@ -403,8 +418,8 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         val currentPaymentMethod = selectedPaymentMethod.value
         when {
-            paymentMethod.type == PaymentMethodType.GIFT_CARD
-                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CARD -> {
+            paymentMethod.type == PaymentMethodType.GIFT_CERTIFICATE
+                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CERTIFICATE -> {
                 val cart = cart ?: return
                 navigationThrottler.throttle {
                     val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected(
@@ -415,8 +430,8 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 }
             }
 
-            paymentMethod.type != PaymentMethodType.GIFT_CARD
-                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CARD -> {
+            paymentMethod.type != PaymentMethodType.GIFT_CERTIFICATE
+                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CERTIFICATE -> {
                 viewModelScope.launch {
                     val params = RemoveGiftCertificateUseCase.Params(
                         paymentMethodType = paymentMethod.type,
@@ -463,6 +478,35 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         if (!cartRequester.loadingState.value.isLoading()) {
             cartRequester.request(CartRequest.PULL_REFRESHING)
         }
+    }
+
+    fun onInfoButtonClicked(button: InfoButton) {
+        val cart = cart ?: return
+        val text = when (button) {
+            InfoButton.GIFT_CERTIFICATE_WRITE_OFF_SIZE -> {
+                val giftCertificateWriteOffSize = cart.price.giftCertificateWriteOffSize ?: return
+                val formattedGiftCertificateWriteOff = formatPrice(giftCertificateWriteOffSize)
+                Text.Resource(
+                    resourceId = R.string.gift_certificate_write_off_info,
+                    formattedGiftCertificateWriteOff
+                )
+            }
+
+            InfoButton.FINAL_PRICE -> {
+                val resId = if (cart.price.finalPrice > 0) {
+                    R.string.gift_certificate_user_need_to_pay_difference
+                } else {
+                    R.string.gift_certificate_covers_whole_price
+                }
+                Text.Resource(resId)
+            }
+        }
+
+        _infoModalBottomSheetState.value = InfoModalBottomSheetState(text)
+    }
+
+    fun onInfoModalBottomSheetClosed() {
+        _infoModalBottomSheetState.value = null
     }
 
     fun onUrlClicked(url: Url) {
@@ -723,7 +767,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 if (result.isGiftCertificateApplied) {
                     val paymentMethods = paymentMethodsResult.value?.getOrNull()
                     val giftCertificatePaymentMethod = paymentMethods?.find {
-                        it.type == PaymentMethodType.GIFT_CARD
+                        it.type == PaymentMethodType.GIFT_CERTIFICATE
                     }
                     if (giftCertificatePaymentMethod != null) {
                         selectedPaymentMethod.value = giftCertificatePaymentMethod
@@ -772,6 +816,14 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         fun findSelectedPaymentMethod(): PaymentMethod? {
             return (this as? Success)?.selectedPaymentMethod
         }
+    }
+
+    @Immutable
+    data class InfoModalBottomSheetState(val text: Text)
+
+    enum class InfoButton {
+        GIFT_CERTIFICATE_WRITE_OFF_SIZE,
+        FINAL_PRICE,
     }
 
     private data object PaymentMethodsRequest : FlowRequester.Request

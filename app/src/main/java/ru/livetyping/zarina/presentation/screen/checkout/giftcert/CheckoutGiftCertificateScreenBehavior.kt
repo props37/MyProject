@@ -4,6 +4,7 @@ import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,7 @@ fun CheckoutGiftCertificateScreenBehavior(
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedFocusManager by rememberUpdatedState(LocalFocusManager.current)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -29,6 +31,7 @@ fun CheckoutGiftCertificateScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is SideEffect.Navigate -> {
+                        updatedFocusManager.clearFocus()
                         safeNavigate(startedElapsedRealtime) {
                             updatedNavigate(sideEffect.action)
                         }

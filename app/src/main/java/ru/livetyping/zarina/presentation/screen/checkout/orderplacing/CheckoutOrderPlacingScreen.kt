@@ -44,9 +44,12 @@ import ru.livetyping.zarina.presentation.common.component.pullrefresh.ZarinaPull
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.common.CheckoutComponents
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.InfoModalBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.OrderPlacing
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.InfoButton
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.InfoModalBottomSheetState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -66,6 +69,7 @@ fun CheckoutOrderPlacingScreen(
     val isPaymentMethodSelectorBottomSheetVisible by viewModel.isPaymentMethodSelectorBottomSheetVisible.collectAsStateWithLifecycle()
     val paymentMethodsState by viewModel.paymentMethodsState.collectAsStateWithLifecycle()
     val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
+    val infoModalBottomSheetState by viewModel.infoModalBottomSheetState.collectAsStateWithLifecycle()
 
     ScreenContent(
         step = state,
@@ -95,6 +99,9 @@ fun CheckoutOrderPlacingScreen(
         onPaymentMethodsErrorRefreshClicked = viewModel::onPaymentMethodsErrorRefreshClicked,
         onPayClicked = viewModel::onPayClicked,
         isPayButtonLoading = isPayButtonLoading,
+        onInfoButtonClicked = viewModel::onInfoButtonClicked,
+        infoModalBottomSheetState = infoModalBottomSheetState,
+        onInfoModalBottomSheetClosed = viewModel::onInfoModalBottomSheetClosed,
         onUrlClicked = viewModel::onUrlClicked,
         onScreenOpened = viewModel::onScreenOpened,
         sideEffects = viewModel.sideEffects,
@@ -134,6 +141,9 @@ private fun ScreenContent(
     onPaymentMethodsErrorRefreshClicked: () -> Unit,
     onPayClicked: () -> Unit,
     isPayButtonLoading: Boolean,
+    onInfoButtonClicked: (InfoButton) -> Unit,
+    infoModalBottomSheetState: InfoModalBottomSheetState?,
+    onInfoModalBottomSheetClosed: () -> Unit,
     onUrlClicked: (Url) -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -146,6 +156,11 @@ private fun ScreenContent(
     )
 
     BackHandler(onBack = onBackClicked)
+
+    InfoModalBottomSheet(
+        state = infoModalBottomSheetState,
+        onDismissRequest = onInfoModalBottomSheetClosed,
+    )
 
     var isZarinaClubBottomSheetVisible by remember { mutableStateOf(false) }
     ZarinaClubModalBottomSheet(
@@ -217,6 +232,7 @@ private fun ScreenContent(
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
                     isPayButtonLoading = isPayButtonLoading,
+                    onInfoButtonClicked = onInfoButtonClicked,
                     onUrlClicked = { onUrlClicked(Url(it)) },
                     modifier = Modifier
                         .fillMaxSize()
