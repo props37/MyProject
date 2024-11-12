@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -21,6 +22,7 @@ import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
@@ -38,10 +40,14 @@ import ru.livetyping.zarina.presentation.common.credentialmanager.CredentialFetc
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.usecase.user.ValidateSignInByEmailFieldsUseCase
+import ru.livetyping.zarina.usecase.user.ValidateSignInByPhoneFieldsUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -57,6 +63,7 @@ class SignInViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var signInJob: Job? = null
+    private var credentialManagerJob: Job? = null
 
     private val currentSignInTypeValueHolder = savedStateHandle.createValueHolder(
         key = KEY_CURRENT_SIGN_IN_TYPE,
@@ -100,17 +107,26 @@ class SignInViewModel @Inject constructor(
 
     private var showSaveCredentialPrompt = true
 
-    val isSignInButtonLoading: StateFlow<Boolean> = operationTracker
-        .isOperationOngoing(Operation.SIGN_IN)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = false,
-        )
+    private val _yandexCaptchaState =
+        MutableStateFlow<YandexCaptchaDialogState>(YandexCaptchaDialogState.Hidden)
+    val yandexCaptchaState: StateFlow<YandexCaptchaDialogState> = _yandexCaptchaState.asStateFlow()
+
+    val isSignInButtonLoading: StateFlow<Boolean> = combine(
+        operationTracker.ongoingOperationKeys,
+        yandexCaptchaState,
+    ) { ongoingOperations, yandexCaptchaState ->
+        Operation.SIGN_IN in ongoingOperations || yandexCaptchaState is YandexCaptchaDialogState.Visible
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
+
+    private var captchaTrigger: CaptchaTrigger? = null
 
     fun onScreenOpened() {
-        if (signInJob?.isActive == true) return
-        signInJob = viewModelScope.launch {
+        if (credentialManagerJob?.isActive == true) return
+        credentialManagerJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_IN) {
                 val result = interactor.credentialManager.getCredential()
                 if (result is CredentialFetchingResult.Success) {
@@ -151,14 +167,9 @@ class SignInViewModel @Inject constructor(
     }
 
     fun onSignInClicked() {
-        if (signInJob?.isActive == true) return
-        signInJob = viewModelScope.launch {
-            operationTracker.track(Operation.SIGN_IN) {
-                when (currentSignInType.value) {
-                    SignInType.EMAIL -> signInByEmail()
-                    SignInType.PHONE -> signInByPhone()
-                }
-            }
+        when (currentSignInType.value) {
+            SignInType.EMAIL -> signInByEmail()
+            SignInType.PHONE -> signInByPhone()
         }
     }
 
@@ -176,44 +187,96 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    fun onYandexCaptchaDismissRequested() {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+    }
+
+    fun onYandexCaptchaTokenReceived(token: YandexCaptchaToken) {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+        when (captchaTrigger) {
+            CaptchaTrigger.SIGN_IN_BY_EMAIL -> signInByEmail(token)
+            CaptchaTrigger.SIGN_IN_BY_PHONE -> signInByPhone(token)
+            null -> Unit
+        }
+    }
+
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.OpenUrl(url))
         }
     }
 
-    private suspend fun signInByEmail() {
-        val email = Email.create(email.value)
-        val password = password.value
-        val params = SignInByEmailUseCase.Params(email, password)
-        interactor.signInByEmail(params)
-            .onSuccess {
-                if (showSaveCredentialPrompt) {
-                    interactor.credentialManager.createCredential(
-                        username = email.value,
-                        password = password,
-                    )
+    private fun signInByEmail() {
+        viewModelScope.launch {
+            val validationParams = ValidateSignInByEmailFieldsUseCase.Params(
+                email = Email.create(email.value),
+                password = password.value,
+            )
+            interactor.validateSignInByEmailFields(validationParams)
+                .onSuccess {
+                    startYandexCaptcha(CaptchaTrigger.SIGN_IN_BY_EMAIL)
                 }
-
-                val action = SignInScreenAction.UserSignedIn
-                emitSideEffect(SideEffect.Navigate(action))
-            }
-            .onFailure(::onSignInByEmailFailure)
+                .onFailure(::onSignInByEmailFailure)
+        }
     }
 
-    private suspend fun signInByPhone() {
-        interactor.smsCodeRetriever.start(
-            sender = SmsConstants.SENDER_ZARINA,
-            codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
-        )
-        val phone = PhoneNumber.create(phone.value)
-        val params = SignInByPhoneUseCase.Params(phone)
-        interactor.signInByPhone(params)
-            .onSuccess {
-                val action = SignInScreenAction.SignInByPhoneRequested(phone)
-                emitSideEffect(SideEffect.Navigate(action))
+    private fun signInByEmail(yandexCaptchaToken: YandexCaptchaToken) {
+        if (signInJob?.isActive == true) return
+
+        signInJob = viewModelScope.launch {
+            operationTracker.track(Operation.SIGN_IN) {
+                val email = Email.create(email.value)
+                val password = password.value
+                val params = SignInByEmailUseCase.Params(email, password, yandexCaptchaToken)
+                interactor.signInByEmail(params)
+                    .onSuccess {
+                        if (showSaveCredentialPrompt) {
+                            interactor.credentialManager.createCredential(
+                                username = email.value,
+                                password = password,
+                            )
+                        }
+
+                        val action = SignInScreenAction.UserSignedIn
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                    .onFailure(::onSignInByEmailFailure)
             }
-            .onFailure(::onSignInByPhoneFailure)
+        }
+    }
+
+    private fun signInByPhone() {
+        viewModelScope.launch {
+            val validationParams = ValidateSignInByPhoneFieldsUseCase.Params(
+                phone = PhoneNumber.create(phone.value),
+            )
+            interactor.validateSignInByPhoneFields(validationParams)
+                .onSuccess {
+                    startYandexCaptcha(CaptchaTrigger.SIGN_IN_BY_PHONE)
+                }
+                .onFailure(::onSignInByPhoneFailure)
+        }
+    }
+
+    private fun signInByPhone(yandexCaptchaToken: YandexCaptchaToken) {
+        if (signInJob?.isActive == true) return
+
+        signInJob = viewModelScope.launch {
+            operationTracker.track(Operation.SIGN_IN) {
+                interactor.smsCodeRetriever.start(
+                    sender = SmsConstants.SENDER_ZARINA,
+                    codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
+                )
+                val phone = PhoneNumber.create(phone.value)
+                val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
+                interactor.signInByPhone(params)
+                    .onSuccess {
+                        val action = SignInScreenAction.SignInByPhoneRequested(phone)
+                        emitSideEffect(SideEffect.Navigate(action))
+                    }
+                    .onFailure(::onSignInByPhoneFailure)
+            }
+        }
     }
 
     private fun onSignInByEmailFailure(e: Throwable) {
@@ -304,6 +367,18 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    private suspend fun startYandexCaptcha(trigger: CaptchaTrigger) {
+        val yandexCaptcha = interactor.getYandexCaptcha().getOrNull()
+        if (yandexCaptcha != null) {
+            _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
+            captchaTrigger = trigger
+        } else {
+            val messageText = Text.Resource(R.string.something_went_wrong_try_again)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: SignInScreenAction) : SideEffect
 
@@ -316,6 +391,11 @@ class SignInViewModel @Inject constructor(
 
     @Parcelize
     enum class SignInType : Parcelable { EMAIL, PHONE }
+
+    private enum class CaptchaTrigger {
+        SIGN_IN_BY_EMAIL,
+        SIGN_IN_BY_PHONE,
+    }
 
     private enum class Operation : OperationKey { SIGN_IN }
 

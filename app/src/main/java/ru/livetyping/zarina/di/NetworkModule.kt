@@ -141,7 +141,9 @@ class NetworkModule {
             val call = execute(request)
             val isAccessTokenPresent = request.headers[HEADER_AUTHORIZATION] != null
             val response = call.response
-            if (response.status == HttpStatusCode.Forbidden && !isAccessTokenPresent) {
+            val wasAccessTokenRequired = response.status == HttpStatusCode.Forbidden
+                    || response.status == HttpStatusCode.Unauthorized
+            if (wasAccessTokenRequired && !isAccessTokenPresent) {
                 Timber
                     .tag(HTTP_CLIENT_TAG)
                     .w("${response.status} received and access token is not present. Initiating loading of tokens")

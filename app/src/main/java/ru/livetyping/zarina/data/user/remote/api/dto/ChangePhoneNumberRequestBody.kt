@@ -8,6 +8,6 @@ data class ChangePhoneNumberRequestBody(
     @SerialName("phone")
     val phone: String,
 
-    @SerialName("reCaptchaKey")
-    val recaptchaToken: String,
+    @SerialName("smartCaptchaToken")
+    val yandexCaptchaToken: String,
 )

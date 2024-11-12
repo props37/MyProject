@@ -33,10 +33,10 @@ import ru.livetyping.zarina.data.user.remote.api.exception.SignInApiExceptionCon
 import ru.livetyping.zarina.data.user.remote.api.exception.SignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.remote.api.exception.UpdateUserInfoApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import java.time.LocalDate
@@ -86,8 +86,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
-        val body = ChangePhoneNumberRequestBody(phone.value, recaptchaToken.value)
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        val body = ChangePhoneNumberRequestBody(phone.value, yandexCaptchaToken.value)
         changePhoneNumberApiExceptionConverter {
             httpClient.post("/api/phone/verification") {
                 setJsonBody(body)
@@ -170,7 +170,7 @@ class UserApi @Inject constructor(
         password: String,
         receiveEmails: Boolean,
         receiveSms: Boolean,
-        recaptchaToken: Token,
+        yandexCaptchaToken: YandexCaptchaToken,
     ) {
         val body = SignUpRequestBody(
             firstName = firstName,
@@ -180,7 +180,7 @@ class UserApi @Inject constructor(
             password = password,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
-            recaptchaToken = recaptchaToken.value,
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         signUpApiExceptionConverter {
             httpClient.post("/api/register") {
@@ -198,8 +198,16 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationDto {
-        val body = SignInRequestBody.Email(email.value, password, recaptchaToken.value)
+    suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthorizationDto {
+        val body = SignInRequestBody.Email(
+            email = email.value,
+            password = password,
+            yandexCaptchaToken = yandexCaptchaToken.value,
+        )
         return signInApiExceptionConverter {
             httpClient.post("/api/auth/email") {
                 setJsonBody(body)
@@ -207,8 +215,11 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
-        val body = SignInRequestBody.Phone(phone.value, recaptchaToken.value)
+    suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        val body = SignInRequestBody.Phone(
+            phone = phone.value,
+            yandexCaptchaToken = yandexCaptchaToken.value,
+        )
         signInApiExceptionConverter {
             httpClient.post("/api/auth/phone") {
                 setJsonBody(body)

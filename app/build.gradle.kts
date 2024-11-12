@@ -194,8 +194,6 @@ dependencies {
     implementation(libs.googlePlayServices.maps.compose.utils)
     implementation(libs.googlePlayServices.auth.api.phone)
 
-    implementation(libs.recaptcha)
-
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
