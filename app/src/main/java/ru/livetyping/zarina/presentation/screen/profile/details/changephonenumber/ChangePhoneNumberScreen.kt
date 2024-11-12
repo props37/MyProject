@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -38,12 +39,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialog
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -58,6 +62,7 @@ fun ChangePhoneNumberScreen(
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isChangePhoneButtonLoading by viewModel.isChangePhoneButtonLoading.collectAsStateWithLifecycle()
+    val yandexCaptchaDialogState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         phone = phone,
@@ -66,6 +71,9 @@ fun ChangePhoneNumberScreen(
         isPhoneInvalid = isPhoneInvalid,
         onChangePhoneClicked = viewModel::onChangePhoneClicked,
         isChangePhoneButtonLoading = isChangePhoneButtonLoading,
+        yandexCaptchaDialogState = yandexCaptchaDialogState,
+        onYandexCaptchaDialogDismissRequested = viewModel::onYandexCaptchaDismissRequested,
+        onYandexCaptchaTokenReceived = viewModel::onYandexCaptchaTokenReceived,
         onUrlClicked = viewModel::onUrlClicked,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
@@ -82,6 +90,9 @@ private fun ScreenContent(
     isPhoneInvalid: Boolean,
     onChangePhoneClicked: () -> Unit,
     isChangePhoneButtonLoading: Boolean,
+    yandexCaptchaDialogState: YandexCaptchaDialogState,
+    onYandexCaptchaDialogDismissRequested: () -> Unit,
+    onYandexCaptchaTokenReceived: (YandexCaptchaToken) -> Unit,
     onUrlClicked: (Url) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
@@ -97,74 +108,82 @@ private fun ScreenContent(
         focusRequester.tryRequestFocus()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout)
-                    .union(WindowInsets.ime),
-            )
-            .bottomNavBarPadding(WindowInsets.ime),
-    ) {
-        TopBar(onBackClicked = onBackClicked)
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout)
+                        .union(WindowInsets.ime),
+                )
+                .bottomNavBarPadding(WindowInsets.ime),
+        ) {
+            TopBar(onBackClicked = onBackClicked)
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = stringResource(R.string.we_will_send_code_for_changing_phone_number),
-                style = UiKitTheme.typography.tertiary.light,
-                color = UiKitTheme.colors.text.general.regular.default,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = stringResource(R.string.we_will_send_code_for_changing_phone_number),
+                    style = UiKitTheme.typography.tertiary.light,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaPhoneNumberTextField(
-                phoneNumber = phone,
-                onPhoneNumberChanged = onPhoneChanged,
-                isError = isPhoneInvalid,
-                keyboardOptions = remember {
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Done,
-                    )
-                },
-                keyboardActions = remember(onPhoneEntered) {
-                    KeyboardActions(
-                        onDone = { onPhoneEntered() },
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .focusRequester(focusRequester)
-                    .autofill(
-                        autofillType = AutofillType.PhoneNumber,
-                        onFilled = { onPhoneChanged(it) },
-                    ),
-            )
-            Spacer(modifier = Modifier.height(32.dp))
+                ZarinaPhoneNumberTextField(
+                    phoneNumber = phone,
+                    onPhoneNumberChanged = onPhoneChanged,
+                    isError = isPhoneInvalid,
+                    keyboardOptions = remember {
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Done,
+                        )
+                    },
+                    keyboardActions = remember(onPhoneEntered) {
+                        KeyboardActions(
+                            onDone = { onPhoneEntered() },
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .focusRequester(focusRequester)
+                        .autofill(
+                            autofillType = AutofillType.PhoneNumber,
+                            onFilled = { onPhoneChanged(it) },
+                        ),
+                )
+                Spacer(modifier = Modifier.height(32.dp))
 
-            ZarinaButton(
-                onClick = onChangePhoneClicked,
-                isLoading = isChangePhoneButtonLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) {
-                Text(text = stringResource(R.string.continue_).uppercase())
+                ZarinaButton(
+                    onClick = onChangePhoneClicked,
+                    isLoading = isChangePhoneButtonLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                ) {
+                    Text(text = stringResource(R.string.continue_).uppercase())
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RecaptchaPolicy(
+                    onUrlClicked = onUrlClicked,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            RecaptchaPolicy(
-                onUrlClicked = onUrlClicked,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaDialogState,
+            onDismissRequest = onYandexCaptchaDialogDismissRequested,
+            onTokenReceived = onYandexCaptchaTokenReceived,
+        )
     }
 }
 

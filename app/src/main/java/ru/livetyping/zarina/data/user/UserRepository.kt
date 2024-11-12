@@ -65,8 +65,8 @@ class UserRepository @Inject constructor(
         if (user != null) setUser(user)
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
-        remoteDataSource.changePhoneNumber(phone, recaptchaToken)
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        remoteDataSource.changePhoneNumber(phone, yandexCaptchaToken)
     }
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {

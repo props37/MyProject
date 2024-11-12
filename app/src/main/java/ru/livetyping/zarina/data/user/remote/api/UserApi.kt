@@ -37,7 +37,6 @@ import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import java.time.LocalDate
@@ -87,8 +86,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
-        val body = ChangePhoneNumberRequestBody(phone.value, recaptchaToken.value)
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        val body = ChangePhoneNumberRequestBody(phone.value, yandexCaptchaToken.value)
         changePhoneNumberApiExceptionConverter {
             httpClient.post("/api/phone/verification") {
                 setJsonBody(body)
