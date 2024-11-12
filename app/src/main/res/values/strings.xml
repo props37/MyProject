@@ -351,6 +351,9 @@
     <string name="payment_policies_online_store">правила работы интернет-магазина</string>
     <string name="payment_policies_privacy">политикой конфиденциальности</string>
     <string name="payment_policies_personal_data">согласие на обработку персональных данных</string>
+    <string name="gift_certificate_write_off_info">Забронировали %1$s ₽ на сертификате. При отменённом заказе вернём эту сумму в течение часа</string>
+    <string name="gift_certificate_user_need_to_pay_difference">Доплата проведётся банковской картой онлайн, после перенаправления на страницу оплаты. Если после оформления заказа оплата не поступит в течение часа, то деньги вернутся на подарочный сертификат</string>
+    <string name="gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если ты отменишь заказ, то деньги вернутся на сертификат в течение часа</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
