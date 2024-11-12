@@ -6,6 +6,8 @@ import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartPrice
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.CartType
+import ru.livetyping.zarina.domain.giftcert.AppliedGiftCertificate
+import ru.livetyping.zarina.domain.giftcert.GiftCertificate as DomainGiftCertificate
 import ru.livetyping.zarina.domain.user.MyCard as DomainMyCard
 
 @Serializable
@@ -66,6 +68,7 @@ data class CartDto(
             price = getCartPrice(),
             bonuses = getBonuses(),
             myCard = getMyCard(),
+            giftCertificate = getAppliedGiftCertificate(),
             promoCode = getPromoCode(),
             productLimit = getProductLimit(cartType),
         )
@@ -126,6 +129,18 @@ data class CartDto(
             info = myCard.info,
             isApplied = myCard.isApplied,
             productsFirstPriceSum = myCard.productsFirstPriceSum,
+        )
+    }
+
+    private fun getAppliedGiftCertificate(): AppliedGiftCertificate? {
+        if (giftCertificate?.number == null) return null
+        checkNotNull(giftCertificate.amount) { "amount is null" }
+        val writeOffSize = giftCertificate.amountToWriteOff?.toIntOrNull()
+        checkNotNull(writeOffSize) { "writeOffSize is null" }
+        return AppliedGiftCertificate(
+            number = DomainGiftCertificate.Number(giftCertificate.number),
+            balance = giftCertificate.amount,
+            writeOffSize = writeOffSize,
         )
     }
 

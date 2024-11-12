@@ -160,11 +160,22 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     }
 
     private val paymentMethodsResult: StateFlow<Result<List<PaymentMethod>>?> =
-        paymentMethodsFlowRequester.flow.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
+        paymentMethodsFlowRequester.flow
+            .onEach { result ->
+                // Check if the cart contains applied gift certificate
+                val cart = cart
+                if (selectedPaymentMethod.value == null && cart?.giftCertificate != null) {
+                    val paymentMethods = result?.getOrNull()
+                    selectedPaymentMethod.value = paymentMethods?.find {
+                        it.type == PaymentMethodType.GIFT_CARD
+                    }
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val paymentMethodsState: StateFlow<PaymentMethodsState> = combine(
         paymentMethodsResult,
