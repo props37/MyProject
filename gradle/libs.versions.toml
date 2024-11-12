@@ -7,7 +7,7 @@ androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
 kotlin = "2.0.21"
-kotlin-ksp = "2.0.21-1.0.26"
+kotlin-ksp = "2.0.21-1.0.27"
 kotlin-coroutines = "1.9.0"
 kotlin-serialization = "1.7.3"
 kotlin-immutableCollections = "0.3.8"
@@ -52,7 +52,7 @@ leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "19.0.0"
-googlePlayServices-maps-compose = "6.2.0"
+googlePlayServices-maps-compose = "6.2.1"
 googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.6.1"
@@ -60,13 +60,13 @@ recaptcha = "18.6.1"
 firebase-bom = "33.5.1"
 
 firebase-performance = "1.4.2"
-mindbox = "2.11.1"
+mindbox = "2.11.2"
 
 junit = "4.13.2"
 
 lint-composeChecks = "1.4.2"
 
-coreLibraryDesugaring = "2.1.2"
+coreLibraryDesugaring = "2.1.3"
 
 
 [libraries]
