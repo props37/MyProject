@@ -72,7 +72,7 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
-                PaymentMethodType.GIFT_CARD -> {
+                PaymentMethodType.GIFT_CERTIFICATE -> {
                     checkoutWithGiftCertificatePayment(
                         cart = cart,
                         paymentMethod = paymentMethod,

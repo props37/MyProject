@@ -13,7 +13,7 @@ value class PaymentMethodTypeDto(val value: String) {
         VALUE_QR -> PaymentMethodType.QR
         VALUE_PODELI -> PaymentMethodType.PODELI
         VALUE_PREPAID -> PaymentMethodType.PREPAID
-        VALUE_GIFT_CARD -> PaymentMethodType.GIFT_CARD
+        VALUE_GIFT_CERTIFICATE -> PaymentMethodType.GIFT_CERTIFICATE
         VALUE_FREE -> PaymentMethodType.FREE
         else -> error("Unknown payment method $value")
     }
@@ -27,7 +27,7 @@ value class PaymentMethodTypeDto(val value: String) {
                 PaymentMethodType.QR -> VALUE_QR
                 PaymentMethodType.PODELI -> VALUE_PODELI
                 PaymentMethodType.PREPAID -> VALUE_PREPAID
-                PaymentMethodType.GIFT_CARD -> VALUE_GIFT_CARD
+                PaymentMethodType.GIFT_CERTIFICATE -> VALUE_GIFT_CERTIFICATE
                 PaymentMethodType.FREE -> VALUE_FREE
             }
             return PaymentMethodTypeDto(value)
@@ -39,7 +39,7 @@ value class PaymentMethodTypeDto(val value: String) {
         private const val VALUE_QR = "qr"
         private const val VALUE_PODELI = "podeli"
         private const val VALUE_PREPAID = "prepaid"
-        private const val VALUE_GIFT_CARD = "gift_card"
+        private const val VALUE_GIFT_CERTIFICATE = "gift_card"
         private const val VALUE_FREE = "free"
     }
 }

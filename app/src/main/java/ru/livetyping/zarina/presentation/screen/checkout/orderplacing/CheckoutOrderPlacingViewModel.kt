@@ -167,7 +167,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 if (selectedPaymentMethod.value == null && cart?.giftCertificate != null) {
                     val paymentMethods = result?.getOrNull()
                     selectedPaymentMethod.value = paymentMethods?.find {
-                        it.type == PaymentMethodType.GIFT_CARD
+                        it.type == PaymentMethodType.GIFT_CERTIFICATE
                     }
                 }
             }
@@ -418,8 +418,8 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         val currentPaymentMethod = selectedPaymentMethod.value
         when {
-            paymentMethod.type == PaymentMethodType.GIFT_CARD
-                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CARD -> {
+            paymentMethod.type == PaymentMethodType.GIFT_CERTIFICATE
+                    && currentPaymentMethod?.type != PaymentMethodType.GIFT_CERTIFICATE -> {
                 val cart = cart ?: return
                 navigationThrottler.throttle {
                     val action = CheckoutOrderPlacingScreenAction.GiftCertificateSelected(
@@ -430,8 +430,8 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 }
             }
 
-            paymentMethod.type != PaymentMethodType.GIFT_CARD
-                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CARD -> {
+            paymentMethod.type != PaymentMethodType.GIFT_CERTIFICATE
+                    && currentPaymentMethod?.type == PaymentMethodType.GIFT_CERTIFICATE -> {
                 viewModelScope.launch {
                     val params = RemoveGiftCertificateUseCase.Params(
                         paymentMethodType = paymentMethod.type,
@@ -767,7 +767,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 if (result.isGiftCertificateApplied) {
                     val paymentMethods = paymentMethodsResult.value?.getOrNull()
                     val giftCertificatePaymentMethod = paymentMethods?.find {
-                        it.type == PaymentMethodType.GIFT_CARD
+                        it.type == PaymentMethodType.GIFT_CERTIFICATE
                     }
                     if (giftCertificatePaymentMethod != null) {
                         selectedPaymentMethod.value = giftCertificatePaymentMethod

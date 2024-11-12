@@ -9,7 +9,7 @@ enum class PaymentMethodTypeParcelable {
     QR,
     PODELI,
     PREPAID,
-    GIFT_CARD,
+    GIFT_CERTIFICATE,
     FREE;
 
     fun toPaymentMethodType(): PaymentMethodType = when (this) {
@@ -19,7 +19,7 @@ enum class PaymentMethodTypeParcelable {
         QR -> PaymentMethodType.QR
         PODELI -> PaymentMethodType.PODELI
         PREPAID -> PaymentMethodType.PREPAID
-        GIFT_CARD -> PaymentMethodType.GIFT_CARD
+        GIFT_CERTIFICATE -> PaymentMethodType.GIFT_CERTIFICATE
         FREE -> PaymentMethodType.FREE
     }
 
@@ -31,7 +31,7 @@ enum class PaymentMethodTypeParcelable {
             PaymentMethodType.QR -> QR
             PaymentMethodType.PODELI -> PODELI
             PaymentMethodType.PREPAID -> PREPAID
-            PaymentMethodType.GIFT_CARD -> GIFT_CARD
+            PaymentMethodType.GIFT_CERTIFICATE -> GIFT_CERTIFICATE
             PaymentMethodType.FREE -> FREE
         }
     }

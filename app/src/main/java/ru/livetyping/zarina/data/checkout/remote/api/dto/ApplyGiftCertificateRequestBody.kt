@@ -21,5 +21,5 @@ data class ApplyGiftCertificateRequestBody(
     val cartType: CartTypeDto,
 
     @SerialName("payment_method")
-    val paymentMethodType: PaymentMethodTypeDto = PaymentMethodTypeDto.from(PaymentMethodType.GIFT_CARD),
+    val paymentMethodType: PaymentMethodTypeDto = PaymentMethodTypeDto.from(PaymentMethodType.GIFT_CERTIFICATE),
 )
