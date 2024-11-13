@@ -86,6 +86,11 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             setContentTitle(message.title)
             setContentText(message.description)
             setStyle(getNotificationStyle(message))
+            // TODO: [High] Add PendingIntent
+            val actions = getActions(message)
+            actions.forEach { action ->
+                addAction(action)
+            }
         }.build()
     }
 
@@ -107,6 +112,18 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             else -> {
                 NotificationCompat.BigTextStyle()
                     .bigText(message.description)
+            }
+        }
+    }
+
+    private fun getActions(message: MindboxRemoteMessage): List<NotificationCompat.Action> {
+        return message.pushActions.mapNotNull { action ->
+            if (action.text != null && action.url != null) {
+                // TODO: [High] Add PendingIntent
+                NotificationCompat.Action.Builder(null, action.text, null)
+                    .build()
+            } else {
+                null
             }
         }
     }
