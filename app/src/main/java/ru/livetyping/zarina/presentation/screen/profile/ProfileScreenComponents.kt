@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.screen.profile
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +47,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTrans
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.util.platform.copyTextToClipboard
 import ru.livetyping.zarina.presentation.common.component.LoyaltyCard as LoyaltyCardImpl
 
 object ProfileScreenComponents {
@@ -285,11 +288,20 @@ object ProfileScreenComponents {
         version: String,
         modifier: Modifier = Modifier,
     ) {
+        val context = LocalContext.current
+
         Text(
             text = stringResource(R.string.app_version_s, version),
             style = UiKitTheme.typography.footnote.regular,
             color = UiKitTheme.colors.text.general.regular.muted,
-            modifier = modifier,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {
+                    val label = context.getString(R.string.zarina_app_version)
+                    context.copyTextToClipboard(label, version)
+                }
+            ),
         )
     }
 }

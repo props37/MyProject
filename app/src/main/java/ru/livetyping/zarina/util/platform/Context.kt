@@ -1,8 +1,11 @@
 package ru.livetyping.zarina.util.platform
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.content.getSystemService
 import java.util.Locale
 
 val Context.locale: Locale
@@ -33,6 +36,12 @@ fun Context.shareText(text: String) {
     if (shareIntent.resolveActivity(packageManager) != null) {
         startActivity(shareIntent)
     }
+}
+
+fun Context.copyTextToClipboard(label: String, text: String) {
+    val clipboardManager = this.getSystemService<ClipboardManager>() ?: return
+    val clipData = ClipData.newPlainText(label, text)
+    clipboardManager.setPrimaryClip(clipData)
 }
 
 private const val MIME_TYPE_TEXT_PLAIN = "text/plain"
