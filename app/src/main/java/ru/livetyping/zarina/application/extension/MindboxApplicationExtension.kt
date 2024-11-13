@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.application.extension
 
 import android.app.Application
+import androidx.core.app.NotificationManagerCompat
 import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.MindboxConfiguration
@@ -20,6 +21,11 @@ class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
         )
         if (BuildConfig.IS_LOGGING_ENABLED) {
             Mindbox.setLogLevel(Level.DEBUG)
+        }
+        val areNotificationsEnabled =
+            NotificationManagerCompat.from(application).areNotificationsEnabled()
+        if (areNotificationsEnabled) {
+            Mindbox.updateNotificationPermissionStatus(application)
         }
         Mindbox.subscribeDeviceUuid { uuid ->
             Timber.tag(TAG).v("Mindbox device UUID: $uuid")
