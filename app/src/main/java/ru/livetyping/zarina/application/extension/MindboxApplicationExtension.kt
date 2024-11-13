@@ -6,6 +6,7 @@ import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.MindboxConfiguration
 import cloud.mindbox.mobile_sdk.logger.Level
+import com.google.firebase.messaging.FirebaseMessaging
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
 import timber.log.Timber
@@ -31,6 +32,9 @@ class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
             NotificationManagerCompat.from(application).areNotificationsEnabled()
         if (areNotificationsEnabled) {
             Mindbox.updateNotificationPermissionStatus(application)
+        }
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            Mindbox.updatePushToken(application, token, MindboxFirebase)
         }
         Mindbox.subscribeDeviceUuid { uuid ->
             Timber.tag(TAG).v("Mindbox device UUID: $uuid")
