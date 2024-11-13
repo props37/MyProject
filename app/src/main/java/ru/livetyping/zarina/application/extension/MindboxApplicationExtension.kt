@@ -14,10 +14,15 @@ import javax.inject.Inject
 class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
     override fun install(application: Application) {
         val configuration = getConfiguration(application)
+        val pushServices = listOf(MindboxFirebase)
+        Mindbox.initPushServices(
+            context = application,
+            pushServices = pushServices,
+        )
         Mindbox.init(
             application = application,
             configuration = configuration,
-            pushServices = listOf(MindboxFirebase),
+            pushServices = pushServices,
         )
         if (BuildConfig.IS_LOGGING_ENABLED) {
             Mindbox.setLogLevel(Level.DEBUG)
