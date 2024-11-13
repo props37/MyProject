@@ -4,7 +4,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import java.util.Locale
 
@@ -42,6 +44,11 @@ fun Context.copyTextToClipboard(label: String, text: String) {
     val clipboardManager = this.getSystemService<ClipboardManager>() ?: return
     val clipData = ClipData.newPlainText(label, text)
     clipboardManager.setPrimaryClip(clipData)
+}
+
+fun Context.isPermissionGranted(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(this, permission) ==
+            PackageManager.PERMISSION_GRANTED
 }
 
 private const val MIME_TYPE_TEXT_PLAIN = "text/plain"

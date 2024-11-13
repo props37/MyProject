@@ -449,6 +449,9 @@
 
     <string name="gift_certificate_description">Воспользуйся электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
 
+    <string name="notification_channel_marketing_name">Маркетинг</string>
+    <string name="notification_channel_marketing_description">Реклама, акции и персональные предложения</string>
+
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>
         <item quantity="one">Показать %1$d товар</item>
