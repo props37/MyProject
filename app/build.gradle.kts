@@ -200,6 +200,7 @@ dependencies {
     implementation(libs.firebase.performance)
 
     implementation(libs.mindbox)
+    implementation(libs.mindbox.firebase)
 
     debugImplementation(libs.leakCanary)
 

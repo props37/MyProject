@@ -151,6 +151,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
+mindbox-firebase = { group = "cloud.mindbox", name = "mindbox-firebase", version.ref = "mindbox" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
