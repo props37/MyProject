@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.push
+package ru.livetyping.zarina.presentation.notification
 
 import android.content.Context
 import androidx.annotation.StringRes

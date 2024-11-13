@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.push
+package ru.livetyping.zarina.presentation.notification.push
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.notification.ZarinaNotificationChannel
 import ru.livetyping.zarina.util.platform.isPermissionGranted
 import timber.log.Timber
 import javax.inject.Inject
