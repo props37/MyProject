@@ -16,9 +16,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -28,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cloud.mindbox.mobile_sdk.Mindbox
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
@@ -187,6 +192,7 @@ object ProfileScreenComponents {
         onInfoItemClicked: (InfoItem) -> Unit,
         appVersion: String,
         modifier: Modifier = Modifier,
+        isMindboxDeviceUuidVisible: Boolean = false,
     ) {
         Column(modifier = modifier) {
             infoItems.forEachIndexed { index, item ->
@@ -214,6 +220,11 @@ object ProfileScreenComponents {
                 version = appVersion,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
+
+            if (isMindboxDeviceUuidVisible) {
+                Spacer(modifier = Modifier.height(8.dp))
+                MindboxDeviceUuid(modifier = Modifier.padding(horizontal = 16.dp))
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -300,6 +311,31 @@ object ProfileScreenComponents {
                 onClick = {
                     val label = context.getString(R.string.zarina_app_version)
                     context.copyTextToClipboard(label, version)
+                }
+            ),
+        )
+    }
+
+    @Composable
+    private fun MindboxDeviceUuid(
+        modifier: Modifier = Modifier,
+    ) {
+        val context = LocalContext.current
+        var mindboxDeviceUuid by remember { mutableStateOf("") }
+        LaunchedEffect(Unit) {
+            Mindbox.subscribeDeviceUuid { mindboxDeviceUuid = it }
+        }
+
+        Text(
+            text = stringResource(R.string.mindbox_device_uuid, mindboxDeviceUuid),
+            style = UiKitTheme.typography.footnote.regular,
+            color = UiKitTheme.colors.text.general.regular.muted,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {
+                    val label = context.getString(R.string.mindbox_device_uuid_clipboard_label)
+                    context.copyTextToClipboard(label, mindboxDeviceUuid)
                 }
             ),
         )

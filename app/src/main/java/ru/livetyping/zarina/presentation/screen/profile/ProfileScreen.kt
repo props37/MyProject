@@ -171,6 +171,7 @@ private fun ScreenContent(
                 city = city,
                 onInfoItemClicked = onInfoItemClicked,
                 appVersion = BuildConfig.VERSION_NAME,
+                isMindboxDeviceUuidVisible = BuildConfig.IS_LOGGING_ENABLED,
             )
         }
     }
