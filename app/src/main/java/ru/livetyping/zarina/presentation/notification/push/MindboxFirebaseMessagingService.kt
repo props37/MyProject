@@ -3,11 +3,15 @@ package ru.livetyping.zarina.presentation.notification.push
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
 import androidx.core.graphics.drawable.toBitmapOrNull
 import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
@@ -22,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.activity.MainActivity
 import ru.livetyping.zarina.presentation.notification.ZarinaNotificationChannel
 import ru.livetyping.zarina.util.platform.isPermissionGranted
 import timber.log.Timber
@@ -87,7 +92,11 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             setContentTitle(message.title)
             setContentText(message.description)
             setStyle(getNotificationStyle(message))
-            // TODO: [High] Add PendingIntent
+            val pendingIntent = message.pushLink?.let {
+                getUrlPendingIntent(it)
+            } ?: getMainActivityPendingIntent()
+            setContentIntent(pendingIntent)
+            setAutoCancel(true)
             val actions = getActions(message)
             actions.forEach { action ->
                 addAction(action)
@@ -120,13 +129,40 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
     private fun getActions(message: MindboxRemoteMessage): List<NotificationCompat.Action> {
         return message.pushActions.mapNotNull { action ->
             if (action.text != null && action.url != null) {
-                // TODO: [High] Add PendingIntent
-                NotificationCompat.Action.Builder(null, action.text, null)
+                val pendingIntent = action.url?.let {
+                    getUrlPendingIntent(it)
+                } ?: getMainActivityPendingIntent()
+                NotificationCompat.Action.Builder(null, action.text, pendingIntent)
                     .build()
             } else {
                 null
             }
         }
+    }
+
+    private fun getUrlPendingIntent(actionUrl: String): PendingIntent? {
+        val intent = Intent(
+            /* action = */ Intent.ACTION_VIEW,
+            /* uri = */ Uri.parse(actionUrl),
+            /* packageContext = */ this,
+            /* cls = */ MainActivity::class.java,
+        )
+        val taskBuilder = TaskStackBuilder.create(this).apply {
+            addNextIntentWithParentStack(intent)
+        }
+        return taskBuilder.getPendingIntent(
+            /* requestCode = */ 0,
+            /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+    }
+
+    private fun getMainActivityPendingIntent(): PendingIntent {
+        return PendingIntent.getActivity(
+            /* context = */ this,
+            /* requestCode = */ 0,
+            /* intent = */ Intent(this, MainActivity::class.java),
+            /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
     }
 
     private suspend fun getBitmap(imageUrl: String): Bitmap? {
