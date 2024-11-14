@@ -4,8 +4,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -20,6 +22,7 @@ import ru.livetyping.zarina.presentation.model.geography.CityParcelable
 import ru.livetyping.zarina.presentation.model.product.ProductItemParcelable
 import ru.livetyping.zarina.presentation.model.product.ProductOfferParcelable
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
+import ru.livetyping.zarina.presentation.navigation.ZarinaDeepLinkUris
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.base.OptionalNavArg
 import ru.livetyping.zarina.presentation.navigation.base.RouteUtils
@@ -149,6 +152,13 @@ object UnscopedDestinations {
             val filtersParcelable = args.filters?.let { FiltersParcelable.from(it) }
             putParcelable(ARG_KEY_FILTERS, filtersParcelable)
         }
+
+        override val deepLinks: List<NavDeepLink>
+            get() = ZarinaDeepLinkUris.map { uri ->
+                navDeepLink {
+                    uriPattern = "$uri/catalog/{$ARG_KEY_CATEGORY_ID}"
+                }
+            }
 
         data class Args(
             val categoryId: Category.Id,

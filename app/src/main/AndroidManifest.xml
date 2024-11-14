@@ -34,6 +34,56 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Products deep links start -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="zarina.ru"
+                    android:pathPattern="/catalog/.*"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.zarina.ru"
+                    android:pathPattern="/catalog/.*"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="pwa.zarina.ru"
+                    android:pathPattern="/catalog/.*"
+                    android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.pwa.zarina.ru"
+                    android:pathPattern="/catalog/.*"
+                    android:scheme="https" />
+            </intent-filter>
+            <!-- Products deep links end -->
+
         </activity>
 
         <service
@@ -48,7 +98,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_KEY}" />
 
-        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
 
     </application>
 
