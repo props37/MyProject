@@ -317,6 +317,14 @@ object UnscopedDestinations {
             putString(ARG_KEY_PRODUCT_ID, args.productId.value)
         }
 
+        override val deepLinks: List<NavDeepLink>
+            get() = buildList {
+                ZarinaDeepLinkUris.forEach { uri ->
+                    add(navDeepLink { uriPattern = "$uri/catalog/product/{$ARG_KEY_PRODUCT_ID}" })
+                    add(navDeepLink { uriPattern = "$uri/catalog/product/{$ARG_KEY_PRODUCT_ID}/" })
+                }
+            }
+
         data class Args(
             val productId: DomainProduct.Id,
         )
