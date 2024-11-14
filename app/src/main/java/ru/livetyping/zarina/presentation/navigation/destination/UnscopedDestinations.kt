@@ -154,9 +154,10 @@ object UnscopedDestinations {
         }
 
         override val deepLinks: List<NavDeepLink>
-            get() = ZarinaDeepLinkUris.map { uri ->
-                navDeepLink {
-                    uriPattern = "$uri/catalog/{$ARG_KEY_CATEGORY_ID}"
+            get() = buildList {
+                ZarinaDeepLinkUris.forEach { uri ->
+                    add(navDeepLink { uriPattern = "$uri/catalog/{$ARG_KEY_CATEGORY_ID}" })
+                    add(navDeepLink { uriPattern = "$uri/catalog/{$ARG_KEY_CATEGORY_ID}/" })
                 }
             }
 
