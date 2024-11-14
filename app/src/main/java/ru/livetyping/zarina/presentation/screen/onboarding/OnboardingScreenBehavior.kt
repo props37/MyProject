@@ -4,8 +4,10 @@ import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
+import cloud.mindbox.mobile_sdk.Mindbox
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavBarBehavior
@@ -24,6 +26,7 @@ fun OnboardingScreenBehavior(
     val updatedToastController by rememberUpdatedState(LocalToastController.current)
     val updatedBottomNavBarController by rememberUpdatedState(LocalBottomNavBarBehaviorController.current)
     val updatedNavigateForward by rememberUpdatedState(navigateForward)
+    val updatedContext by rememberUpdatedState(LocalContext.current)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 
@@ -43,6 +46,9 @@ fun OnboardingScreenBehavior(
                     }
 
                     is SideEffect.ShowToast -> updatedToastController.show(sideEffect.message)
+                    SideEffect.NotificationPermissionGranted -> {
+                        Mindbox.updateNotificationPermissionStatus(updatedContext)
+                    }
                 }
             }
         }

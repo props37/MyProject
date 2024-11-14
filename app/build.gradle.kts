@@ -195,11 +195,13 @@ dependencies {
     implementation(libs.googlePlayServices.auth.api.phone)
 
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.performance)
 
     implementation(libs.mindbox)
+    implementation(libs.mindbox.firebase)
 
     debugImplementation(libs.leakCanary)
 

@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.screen.profile
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -15,17 +16,23 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cloud.mindbox.mobile_sdk.Mindbox
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.geography.City
@@ -45,6 +52,7 @@ import ru.livetyping.zarina.util.compose.animation.AnimatedContentCrossfadeTrans
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.util.platform.copyTextToClipboard
 import ru.livetyping.zarina.presentation.common.component.LoyaltyCard as LoyaltyCardImpl
 
 object ProfileScreenComponents {
@@ -184,6 +192,7 @@ object ProfileScreenComponents {
         onInfoItemClicked: (InfoItem) -> Unit,
         appVersion: String,
         modifier: Modifier = Modifier,
+        isMindboxDeviceUuidVisible: Boolean = false,
     ) {
         Column(modifier = modifier) {
             infoItems.forEachIndexed { index, item ->
@@ -211,6 +220,11 @@ object ProfileScreenComponents {
                 version = appVersion,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
+
+            if (isMindboxDeviceUuidVisible) {
+                Spacer(modifier = Modifier.height(8.dp))
+                MindboxDeviceUuid(modifier = Modifier.padding(horizontal = 16.dp))
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -285,11 +299,45 @@ object ProfileScreenComponents {
         version: String,
         modifier: Modifier = Modifier,
     ) {
+        val context = LocalContext.current
+
         Text(
             text = stringResource(R.string.app_version_s, version),
             style = UiKitTheme.typography.footnote.regular,
             color = UiKitTheme.colors.text.general.regular.muted,
-            modifier = modifier,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {
+                    val label = context.getString(R.string.zarina_app_version)
+                    context.copyTextToClipboard(label, version)
+                }
+            ),
+        )
+    }
+
+    @Composable
+    private fun MindboxDeviceUuid(
+        modifier: Modifier = Modifier,
+    ) {
+        val context = LocalContext.current
+        var mindboxDeviceUuid by remember { mutableStateOf("") }
+        LaunchedEffect(Unit) {
+            Mindbox.subscribeDeviceUuid { mindboxDeviceUuid = it }
+        }
+
+        Text(
+            text = stringResource(R.string.mindbox_device_uuid, mindboxDeviceUuid),
+            style = UiKitTheme.typography.footnote.regular,
+            color = UiKitTheme.colors.text.general.regular.muted,
+            modifier = modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {
+                    val label = context.getString(R.string.mindbox_device_uuid_clipboard_label)
+                    context.copyTextToClipboard(label, mindboxDeviceUuid)
+                }
+            ),
         )
     }
 }

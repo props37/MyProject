@@ -146,11 +146,13 @@ googlePlayServices-auth-api-phone = { group = "com.google.android.gms", name = "
 recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
+mindbox-firebase = { group = "cloud.mindbox", name = "mindbox-firebase" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
