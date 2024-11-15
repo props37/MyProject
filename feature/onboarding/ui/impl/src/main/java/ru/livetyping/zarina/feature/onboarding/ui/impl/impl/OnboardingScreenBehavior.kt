@@ -52,6 +52,8 @@ internal fun OnboardingScreenBehavior(
 }
 
 private fun navigate(navActions: OnboardingNavActions, action: OnboardingScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        is OnboardingScreenAction.OnboardingCompleted -> navActions.onboardingCompleted()
+        is OnboardingScreenAction.SelectCityClicked -> TODO()
+    }
 }

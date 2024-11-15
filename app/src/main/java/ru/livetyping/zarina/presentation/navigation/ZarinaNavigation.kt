@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlide
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
 import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
@@ -31,7 +32,16 @@ fun ZarinaNavigation(
     val navController by rememberUpdatedState(navController)
 
     val onboardingFeature = features.find<OnboardingFeatureEntry>()
-    val onboardingNavActions = remember { OnboardingNavActions() }
+    val onboardingNavActions = remember(navController) {
+        OnboardingNavActions(
+            onboardingCompleted = {
+                navController.navigate(HomeNavEntry) {
+                    popUpTo(0)
+                }
+                // TODO: [Top] Show default city dialog?
+            }
+        )
+    }
 
     val homeFeature = features.find<HomeFeatureEntry>()
     val homeNavActions = remember {
