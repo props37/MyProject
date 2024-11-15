@@ -40,6 +40,8 @@ ktor = "3.0.1"
 hilt = "2.52"
 hilt-navigationCompose = "1.2.0"
 
+dagger = "2.52"
+
 accompanist = "0.36.0"
 
 coil = "2.7.0"
@@ -130,6 +132,9 @@ ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlin
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigationCompose" }
+
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
+dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
 
 accompanist-systemUi = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
