@@ -80,7 +80,7 @@ public fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .defaultMinSize(minSize)
+                .defaultMinSize(minSize, minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
                 .border(width = 1.dp, color = borderColor.value, shape = shape)
