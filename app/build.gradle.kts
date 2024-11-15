@@ -163,7 +163,6 @@ dependencies {
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
     implementation(projects.core.uiKit)
-    implementation(projects.core.diFeature)
     implementation(projects.core.sharedpreferences)
 
     implementation(libs.jetpack.core)
