@@ -47,6 +47,7 @@ fun ZarinaClubModalBottomSheet(
         ZarinaModalBottomSheet(
             onDismissRequest = onDismissRequest,
             sheetState = sheetState,
+            modifier = modifier,
         ) {
             ZarinaClubModalBottomSheetContent(
                 onCloseClicked = {

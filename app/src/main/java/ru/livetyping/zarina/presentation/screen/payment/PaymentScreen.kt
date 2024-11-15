@@ -1,18 +1,28 @@
 package ru.livetyping.zarina.presentation.screen.payment
 
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.isVisible
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.domain.common.Url
+import ru.livetyping.zarina.presentation.common.component.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.presentation.screen.payment.PaymentScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.payment.PaymentViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -52,16 +62,37 @@ private fun ScreenContent(
     ) {
         TopBar(onBackClicked = onBackClicked)
 
-        AndroidView(
-            factory = { context ->
-                WebView(context).apply {
-                    loadUrl(paymentUrl.value)
-                    settings.apply {
-                        javaScriptEnabled = true
+        Box {
+            var isWebViewVisible by remember { mutableStateOf(false) }
+
+            if (!isWebViewVisible) {
+                ZarinaCircularLoader(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(40.dp),
+                )
+            }
+
+            AndroidView(
+                factory = { context ->
+                    WebView(context).apply {
+                        isVisible = isWebViewVisible
+                        loadUrl(paymentUrl.value)
+                        settings.javaScriptEnabled = true
+                        webViewClient = object : WebViewClient() {
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                if (!isWebViewVisible && url == paymentUrl.value) {
+                                    isWebViewVisible = true
+                                }
+                            }
+                        }
                     }
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-        )
+                },
+                update = { webView ->
+                    webView.isVisible = isWebViewVisible
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }

@@ -11,6 +11,6 @@ val PaymentMethodType.nameResId: Int
         PaymentMethodType.QR -> R.string.order_payment_method_sbp
         PaymentMethodType.PODELI -> R.string.order_payment_method_podeli
         PaymentMethodType.PREPAID -> R.string.order_payment_method_by_card_online
-        PaymentMethodType.GIFT_CARD -> R.string.order_payment_method_gift_certificate
+        PaymentMethodType.GIFT_CERTIFICATE -> R.string.order_payment_method_gift_certificate
         PaymentMethodType.FREE -> R.string.order_payment_method_gift_certificate
     }

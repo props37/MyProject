@@ -7,6 +7,7 @@ import ru.livetyping.zarina.data.user.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Page
@@ -64,8 +65,8 @@ class UserRepository @Inject constructor(
         if (user != null) setUser(user)
     }
 
-    suspend fun changePhoneNumber(phone: PhoneNumber, recaptchaToken: Token) {
-        remoteDataSource.changePhoneNumber(phone, recaptchaToken)
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        remoteDataSource.changePhoneNumber(phone, yandexCaptchaToken)
     }
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {
@@ -136,7 +137,7 @@ class UserRepository @Inject constructor(
         password: String,
         receiveEmails: Boolean,
         receiveSms: Boolean,
-        recaptchaToken: Token,
+        yandexCaptchaToken: YandexCaptchaToken,
     ) {
         remoteDataSource.signUp(
             firstName = firstName,
@@ -146,7 +147,7 @@ class UserRepository @Inject constructor(
             password = password,
             receiveNews = receiveEmails,
             receiveSms = receiveSms,
-            recaptchaToken = recaptchaToken,
+            yandexCaptchaToken = yandexCaptchaToken,
         )
     }
 
@@ -154,12 +155,16 @@ class UserRepository @Inject constructor(
         return remoteDataSource.confirmSignUp(phone, otp)
     }
 
-    suspend fun signIn(email: Email, password: String, recaptchaToken: Token): AuthorizationResult {
-        return remoteDataSource.signIn(email, password, recaptchaToken)
+    suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthorizationResult {
+        return remoteDataSource.signIn(email, password, yandexCaptchaToken)
     }
 
-    suspend fun signIn(phone: PhoneNumber, recaptchaToken: Token) {
-        remoteDataSource.signIn(phone, recaptchaToken)
+    suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        remoteDataSource.signIn(phone, yandexCaptchaToken)
     }
 
     suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthorizationResult {

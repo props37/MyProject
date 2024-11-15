@@ -73,6 +73,8 @@ import ru.livetyping.zarina.presentation.common.util.rememberFormattedPhoneNumbe
 import ru.livetyping.zarina.presentation.screen.cart.CartScreenComponents
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.DeliveryInfo
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.InfoButton
+import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.InfoModalBottomSheetState
 import ru.livetyping.zarina.presentation.screen.checkout.orderplacing.CheckoutOrderPlacingViewModel.PaymentMethodsState
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
@@ -100,6 +102,7 @@ object CheckoutOrderPlacingScreenComponents {
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
         isPayButtonLoading: Boolean,
+        onInfoButtonClicked: (InfoButton) -> Unit,
         onUrlClicked: (String) -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -170,6 +173,7 @@ object CheckoutOrderPlacingScreenComponents {
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
                     isPayButtonLoading = isPayButtonLoading,
+                    onInfoButtonClicked = onInfoButtonClicked,
                     onUrlClicked = onUrlClicked,
                 )
             }
@@ -192,6 +196,50 @@ object CheckoutOrderPlacingScreenComponents {
                     windowInsets = WindowInsets.navigationBars,
                     modifier = Modifier.align(Alignment.BottomCenter),
                 )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun InfoModalBottomSheet(
+        state: InfoModalBottomSheetState?,
+        onDismissRequest: () -> Unit,
+        modifier: Modifier = Modifier,
+        sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        if (state != null) {
+            val coroutineScope = rememberCoroutineScope()
+
+            ZarinaModalBottomSheet(
+                onDismissRequest = onDismissRequest,
+                sheetState = sheetState,
+                modifier = modifier,
+            ) {
+                ZarinaTopBar(
+                    endContent = {
+                        ZarinaCloseIconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    sheetState.hide()
+                                    onDismissRequest()
+                                }
+                            },
+                            iconSize = 20.dp,
+                            modifier = Modifier.padding(end = 2.dp),
+                        )
+                    },
+                    contentPadding = PaddingValues(vertical = 4.dp),
+                )
+
+                Text(
+                    text = textString(state.text),
+                    style = UiKitTheme.typography.secondary.regular,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
@@ -363,6 +411,7 @@ object CheckoutOrderPlacingScreenComponents {
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
         isPayButtonLoading: Boolean,
+        onInfoButtonClicked: (InfoButton) -> Unit,
         onUrlClicked: (String) -> Unit,
     ) {
         when (cartState) {
@@ -380,6 +429,7 @@ object CheckoutOrderPlacingScreenComponents {
                     onPaymentMethodSelectorClicked = onPaymentMethodSelectorClicked,
                     onPayClicked = onPayClicked,
                     isPayButtonLoading = isPayButtonLoading,
+                    onInfoButtonClicked = onInfoButtonClicked,
                     onUrlClicked = onUrlClicked,
                 )
             }
@@ -447,6 +497,7 @@ object CheckoutOrderPlacingScreenComponents {
         onPaymentMethodSelectorClicked: () -> Unit,
         onPayClicked: () -> Unit,
         isPayButtonLoading: Boolean,
+        onInfoButtonClicked: (InfoButton) -> Unit,
         onUrlClicked: (String) -> Unit,
     ) {
         itemsIndexed(
@@ -607,13 +658,22 @@ object CheckoutOrderPlacingScreenComponents {
             key = OrderPlacingKey.Price,
             contentType = OrderPlacingContentType.Price,
         ) {
+            val isGiftCertificateApplied = cartState.price.giftCertificateWriteOffSize != null
             CartPrice(
                 cartPrice = cartState.price.cartPrice,
                 discountSize = cartState.price.discountSize,
                 isDeliveryPriceIncluded = true,
                 deliveryPrice = cartState.price.deliveryPrice,
                 giftCertificateWriteOffSize = cartState.price.giftCertificateWriteOffSize,
+                isGiftCertificateWriteOffSizeButtonVisible = isGiftCertificateApplied,
+                onGiftCertificateWriteOffSizeButtonClicked = {
+                    onInfoButtonClicked(InfoButton.GIFT_CERTIFICATE_WRITE_OFF_SIZE)
+                },
                 finalPrice = cartState.price.finalPrice,
+                isFinalPriceDetailsButtonVisible = isGiftCertificateApplied,
+                onFinalPriceDetailsButtonClicked = {
+                    onInfoButtonClicked(InfoButton.FINAL_PRICE)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp)

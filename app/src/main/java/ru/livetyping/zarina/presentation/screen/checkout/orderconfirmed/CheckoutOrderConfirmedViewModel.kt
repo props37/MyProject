@@ -76,6 +76,10 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
                 DescriptionType.ORDER_SHOULD_BE_PAID_UPON_RECEIPT
             }
 
+            order.paymentMethodType == PaymentMethodType.FREE -> {
+                DescriptionType.ORDER_PAID
+            }
+
             else -> DescriptionType.ORDER_SHOULD_BE_PAID
         }
     }
@@ -84,6 +88,10 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
         return when {
             order.isPaid -> ButtonType.RETURN_TO_HOME_SCREEN
             order.paymentMethodType == PaymentMethodType.POSTPAID -> {
+                ButtonType.RETURN_TO_HOME_SCREEN
+            }
+
+            order.paymentMethodType == PaymentMethodType.FREE -> {
                 ButtonType.RETURN_TO_HOME_SCREEN
             }
 

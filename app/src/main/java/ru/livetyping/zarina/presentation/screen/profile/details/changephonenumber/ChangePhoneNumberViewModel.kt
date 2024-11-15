@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -17,6 +18,7 @@ import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.common.exception.ValidationException
@@ -27,9 +29,13 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.savedstatehandle.createValueHolder
 import ru.livetyping.zarina.presentation.common.sms.SmsConstants
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.ChangePhoneNumberViewModel.SideEffect
+import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel
 import ru.livetyping.zarina.usecase.user.ChangePhoneNumberUseCase
+import ru.livetyping.zarina.usecase.user.ValidatePhoneChangeFieldsUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
 
@@ -55,13 +61,21 @@ class ChangePhoneNumberViewModel @Inject constructor(
     private val _isPhoneInvalid = MutableStateFlow(false)
     val isPhoneInvalid = _isPhoneInvalid.asStateFlow()
 
-    val isChangePhoneButtonLoading = operationTracker
-        .isOperationOngoing(Operation.CHANGE_PHONE)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = false,
-        )
+    private val _yandexCaptchaState =
+        MutableStateFlow<YandexCaptchaDialogState>(YandexCaptchaDialogState.Hidden)
+    val yandexCaptchaState: StateFlow<YandexCaptchaDialogState> = _yandexCaptchaState.asStateFlow()
+
+    val isChangePhoneButtonLoading = combine(
+        operationTracker.ongoingOperationKeys,
+        yandexCaptchaState,
+    ) { ongoingOperations, yandexCaptchaState ->
+        Operation.CHANGE_PHONE in ongoingOperations
+                || yandexCaptchaState is YandexCaptchaDialogState.Visible
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
@@ -82,6 +96,42 @@ class ChangePhoneNumberViewModel @Inject constructor(
     fun onChangePhoneClicked() {
         if (changePhoneJob?.isActive == true) return
 
+        viewModelScope.launch {
+            val phone = PhoneNumber.create(phone.value)
+            val params = ValidatePhoneChangeFieldsUseCase.Params(phone)
+            interactor.validatePhoneChangeFields(params)
+                .onSuccess {
+                    val yandexCaptcha = interactor.getYandexCaptcha().getOrNull()
+                    if (yandexCaptcha != null) {
+                        _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
+                    } else {
+                        val messageText = Text.Resource(R.string.something_went_wrong_try_again)
+                        val message = ZarinaToastMessage.error(messageText)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure(::onChangePhoneFailure)
+        }
+    }
+
+    fun onUrlClicked(url: Url) {
+        navigationThrottler.throttle {
+            emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
+    fun onYandexCaptchaDismissRequested() {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+    }
+
+    fun onYandexCaptchaTokenReceived(token: YandexCaptchaToken) {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+        changePhoneNumber(token)
+    }
+
+    private fun changePhoneNumber(yandexCaptchaToken: YandexCaptchaToken) {
+        if (changePhoneJob?.isActive == true) return
+
         interactor.smsCodeRetriever.start(
             sender = SmsConstants.SENDER_ZARINA,
             codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
@@ -90,17 +140,11 @@ class ChangePhoneNumberViewModel @Inject constructor(
         changePhoneJob = viewModelScope.launch {
             operationTracker.track(Operation.CHANGE_PHONE) {
                 val phone = PhoneNumber.create(phone.value)
-                val params = ChangePhoneNumberUseCase.Params(phone)
+                val params = ChangePhoneNumberUseCase.Params(phone, yandexCaptchaToken)
                 interactor.changePhoneNumber(params)
                     .onSuccess { onChangePhoneSuccess(phone) }
                     .onFailure(::onChangePhoneFailure)
             }
-        }
-    }
-
-    fun onUrlClicked(url: Url) {
-        navigationThrottler.throttle {
-            emitSideEffect(SideEffect.OpenUrl(url))
         }
     }
 

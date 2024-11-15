@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.screen.signup
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -45,6 +46,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePicker
@@ -61,6 +63,8 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.datetime.DateTimeUtils
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedLocalDate
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialog
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Policies
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
@@ -100,6 +104,7 @@ fun SignUpScreen(
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
     val isSignUpButtonLoading by viewModel.isSignUpButtonLoading.collectAsStateWithLifecycle()
+    val yandexCaptchaDialogState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         onBackClicked = viewModel::onBackClicked,
@@ -128,6 +133,9 @@ fun SignUpScreen(
         onUrlClicked = viewModel::onUrlClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         isSignUpButtonLoading = isSignUpButtonLoading,
+        yandexCaptchaDialogState = yandexCaptchaDialogState,
+        onYandexCaptchaDialogDismissRequested = viewModel::onYandexCaptchaDismissRequested,
+        onYandexCaptchaTokenReceived = viewModel::onYandexCaptchaTokenReceived,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -162,6 +170,9 @@ private fun ScreenContent(
     onUrlClicked: (Url) -> Unit,
     onSignUpClicked: () -> Unit,
     isSignUpButtonLoading: Boolean,
+    yandexCaptchaDialogState: YandexCaptchaDialogState,
+    onYandexCaptchaDialogDismissRequested: () -> Unit,
+    onYandexCaptchaTokenReceived: (YandexCaptchaToken) -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (SignUpScreenAction) -> Unit,
 ) {
@@ -198,237 +209,245 @@ private fun ScreenContent(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
-            ),
-    ) {
-        TopBar(onBackClicked = onBackClicked)
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                ),
+        ) {
+            TopBar(onBackClicked = onBackClicked)
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            ZarinaTextField(
-                value = firstName,
-                onValueChanged = onFirstNameChanged,
-                isError = isFirstNameInvalid,
-                label = { Text(text = stringResource(R.string.first_name)) },
-                placeholder = {
-                    Text(text = stringResource(R.string.first_name_text_field_placeholder))
-                },
-                innerTrailingContent = {
-                    ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = firstName.isNotEmpty(),
-                        onClick = {
-                            onFirstNameChanged("")
-                            firstNameFocusRequester.tryRequestFocus()
-                        },
-                    )
-                },
-                keyboardOptions = remember {
-                    KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words,
-                        imeAction = ImeAction.Next,
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .focusRequester(firstNameFocusRequester)
-                    .autofill(
-                        autofillType = AutofillType.PersonFirstName,
-                        onFilled = { onFirstNameChanged(it) },
-                    ),
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val formattedBirthDate = if (birthDateMillis != null) {
-                rememberFormattedLocalDate(
-                    localDate = remember(birthDateMillis) {
-                        LocalDateUtil.fromMillis(birthDateMillis)
+                ZarinaTextField(
+                    value = firstName,
+                    onValueChanged = onFirstNameChanged,
+                    isError = isFirstNameInvalid,
+                    label = { Text(text = stringResource(R.string.first_name)) },
+                    placeholder = {
+                        Text(text = stringResource(R.string.first_name_text_field_placeholder))
                     },
-                    formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
+                    innerTrailingContent = {
+                        ZarinaTextFieldDefaults.ClearButton(
+                            isVisible = firstName.isNotEmpty(),
+                            onClick = {
+                                onFirstNameChanged("")
+                                firstNameFocusRequester.tryRequestFocus()
+                            },
+                        )
+                    },
+                    keyboardOptions = remember {
+                        KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words,
+                            imeAction = ImeAction.Next,
+                        )
+                    },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .focusRequester(firstNameFocusRequester)
+                        .autofill(
+                            autofillType = AutofillType.PersonFirstName,
+                            onFilled = { onFirstNameChanged(it) },
+                        ),
                 )
-            } else ""
-            ZarinaTextField(
-                value = formattedBirthDate,
-                onValueChanged = {},
-                isEnabled = false,
-                isError = isBirthDateInvalid,
-                label = { Text(text = stringResource(R.string.birth_date_text_field_label)) },
-                placeholder = {
-                    Text(text = stringResource(R.string.birth_date_text_field_placeholder))
-                },
-                colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { isDatePickerVisible = true }
-                    .padding(horizontal = 16.dp),
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            val emailFocusRequester = remember { FocusRequester() }
-            ZarinaTextField(
-                value = email,
-                onValueChanged = onEmailChanged,
-                isError = isEmailInvalid,
-                label = { Text(text = stringResource(R.string.email)) },
-                placeholder = { Text(text = stringResource(R.string.email_text_field_placeholder)) },
-                innerTrailingContent = {
-                    ZarinaTextFieldDefaults.ClearButton(
-                        isVisible = email.isNotEmpty(),
-                        onClick = {
-                            onEmailChanged("")
-                            emailFocusRequester.tryRequestFocus()
+                val formattedBirthDate = if (birthDateMillis != null) {
+                    rememberFormattedLocalDate(
+                        localDate = remember(birthDateMillis) {
+                            LocalDateUtil.fromMillis(birthDateMillis)
                         },
+                        formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
                     )
-                },
-                keyboardOptions = remember {
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next,
-                    )
-                },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .focusRequester(emailFocusRequester)
-                    .autofill(
-                        autofillType = AutofillType.EmailAddress,
-                        onFilled = { onEmailChanged(it) },
-                    ),
-            )
+                } else ""
+                ZarinaTextField(
+                    value = formattedBirthDate,
+                    onValueChanged = {},
+                    isEnabled = false,
+                    isError = isBirthDateInvalid,
+                    label = { Text(text = stringResource(R.string.birth_date_text_field_label)) },
+                    placeholder = {
+                        Text(text = stringResource(R.string.birth_date_text_field_placeholder))
+                    },
+                    colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { isDatePickerVisible = true }
+                        .padding(horizontal = 16.dp),
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaPhoneNumberTextField(
-                phoneNumber = phone,
-                onPhoneNumberChanged = onPhoneChanged,
-                isError = isPhoneInvalid,
-                keyboardOptions = remember {
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Phone,
-                        imeAction = ImeAction.Next,
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .autofill(
-                        autofillType = AutofillType.PhoneNumber,
-                        onFilled = { onPhoneChanged(it) },
-                    ),
-            )
+                val emailFocusRequester = remember { FocusRequester() }
+                ZarinaTextField(
+                    value = email,
+                    onValueChanged = onEmailChanged,
+                    isError = isEmailInvalid,
+                    label = { Text(text = stringResource(R.string.email)) },
+                    placeholder = { Text(text = stringResource(R.string.email_text_field_placeholder)) },
+                    innerTrailingContent = {
+                        ZarinaTextFieldDefaults.ClearButton(
+                            isVisible = email.isNotEmpty(),
+                            onClick = {
+                                onEmailChanged("")
+                                emailFocusRequester.tryRequestFocus()
+                            },
+                        )
+                    },
+                    keyboardOptions = remember {
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next,
+                        )
+                    },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .focusRequester(emailFocusRequester)
+                        .autofill(
+                            autofillType = AutofillType.EmailAddress,
+                            onFilled = { onEmailChanged(it) },
+                        ),
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaPasswordTextField(
-                password = password,
-                onPasswordChanged = onPasswordChanged,
-                isError = isPasswordInvalid,
-                keyboardOptions = remember {
-                    KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done,
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .autofill(
-                        autofillType = AutofillType.NewPassword,
-                        onFilled = { onPasswordChanged(it) },
-                    ),
-            )
+                ZarinaPhoneNumberTextField(
+                    phoneNumber = phone,
+                    onPhoneNumberChanged = onPhoneChanged,
+                    isError = isPhoneInvalid,
+                    keyboardOptions = remember {
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Phone,
+                            imeAction = ImeAction.Next,
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .autofill(
+                            autofillType = AutofillType.PhoneNumber,
+                            onFilled = { onPhoneChanged(it) },
+                        ),
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            ZarinaItem(
-                modifier = Modifier.fillMaxWidth(),
-                startContent = {
-                    Text(
-                        text = stringResource(R.string.receive_news_by_email),
-                        style = UiKitTheme.typography.secondary.light,
-                    )
-                },
-                endContent = {
-                    ZarinaSwitch(
-                        isChecked = receiveEmails,
-                        onCheckedChanged = onReceiveEmailsChanged,
-                    )
-                },
-            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            ZarinaDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
+                ZarinaPasswordTextField(
+                    password = password,
+                    onPasswordChanged = onPasswordChanged,
+                    isError = isPasswordInvalid,
+                    keyboardOptions = remember {
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .autofill(
+                            autofillType = AutofillType.NewPassword,
+                            onFilled = { onPasswordChanged(it) },
+                        ),
+                )
 
-            ZarinaItem(
-                modifier = Modifier.fillMaxWidth(),
-                startContent = {
-                    Text(
-                        text = stringResource(R.string.receive_sms_notifications),
-                        style = UiKitTheme.typography.secondary.light,
-                        modifier = Modifier.weight(1f),
-                    )
-                },
-                endContent = {
-                    ZarinaSwitch(
-                        isChecked = receiveSms,
-                        onCheckedChanged = onReceiveSmsChanged,
-                    )
-                },
-            )
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+                ZarinaItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    startContent = {
+                        Text(
+                            text = stringResource(R.string.receive_news_by_email),
+                            style = UiKitTheme.typography.secondary.light,
+                        )
+                    },
+                    endContent = {
+                        ZarinaSwitch(
+                            isChecked = receiveEmails,
+                            onCheckedChanged = onReceiveEmailsChanged,
+                        )
+                    },
+                )
 
-            Policies(
-                areAccepted = arePoliciesAccepted,
-                onAcceptedChanged = onPoliciesAcceptedChanged,
-                isError = isPoliciesErrorVisible,
-                onUrlClicked = onUrlClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
+                ZarinaDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
 
-            Spacer(modifier = Modifier.height(36.dp))
+                ZarinaItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    startContent = {
+                        Text(
+                            text = stringResource(R.string.receive_sms_notifications),
+                            style = UiKitTheme.typography.secondary.light,
+                            modifier = Modifier.weight(1f),
+                        )
+                    },
+                    endContent = {
+                        ZarinaSwitch(
+                            isChecked = receiveSms,
+                            onCheckedChanged = onReceiveSmsChanged,
+                        )
+                    },
+                )
 
-            ZarinaButton(
-                onClick = onSignUpClicked,
-                isLoading = isSignUpButtonLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) {
-                Text(text = stringResource(R.string.continue_).uppercase())
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Policies(
+                    areAccepted = arePoliciesAccepted,
+                    onAcceptedChanged = onPoliciesAcceptedChanged,
+                    isError = isPoliciesErrorVisible,
+                    onUrlClicked = onUrlClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(36.dp))
+
+                ZarinaButton(
+                    onClick = onSignUpClicked,
+                    isLoading = isSignUpButtonLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                ) {
+                    Text(text = stringResource(R.string.continue_).uppercase())
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RecaptchaPolicy(
+                    onUrlClicked = onUrlClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                val navigationBarsOrImeBottomPadding =
+                    WindowInsets.navigationBarsOrIme.asPaddingValues().calculateBottomPadding()
+                Spacer(modifier = Modifier.height(navigationBarsOrImeBottomPadding))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            RecaptchaPolicy(
-                onUrlClicked = onUrlClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-            val navigationBarsOrImeBottomPadding =
-                WindowInsets.navigationBarsOrIme.asPaddingValues().calculateBottomPadding()
-            Spacer(modifier = Modifier.height(navigationBarsOrImeBottomPadding))
         }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaDialogState,
+            onDismissRequest = onYandexCaptchaDialogDismissRequested,
+            onTokenReceived = onYandexCaptchaTokenReceived,
+        )
     }
 }
 
@@ -465,6 +484,9 @@ private fun Preview() {
             onUrlClicked = {},
             onSignUpClicked = {},
             isSignUpButtonLoading = false,
+            yandexCaptchaDialogState = YandexCaptchaDialogState.Hidden,
+            onYandexCaptchaDialogDismissRequested = {},
+            onYandexCaptchaTokenReceived = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )

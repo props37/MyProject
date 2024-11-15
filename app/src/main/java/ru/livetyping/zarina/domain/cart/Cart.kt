@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.domain.cart
 
+import ru.livetyping.zarina.domain.giftcert.AppliedGiftCertificate
 import ru.livetyping.zarina.domain.user.MyCard as DomainMyCard
 
 data class Cart(
@@ -8,6 +9,7 @@ data class Cart(
     val price: CartPrice,
     val bonuses: Bonuses,
     val myCard: MyCard?,
+    val giftCertificate: AppliedGiftCertificate?,
     val promoCode: PromoCode?,
     val productLimit: ProductLimit,
 ) {

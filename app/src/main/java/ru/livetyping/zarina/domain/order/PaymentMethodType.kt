@@ -7,6 +7,6 @@ enum class PaymentMethodType {
     QR,
     PODELI,
     PREPAID,
-    GIFT_CARD,
+    GIFT_CERTIFICATE,
     FREE,
 }

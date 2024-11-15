@@ -351,6 +351,12 @@
     <string name="payment_policies_online_store">правила работы интернет-магазина</string>
     <string name="payment_policies_privacy">политикой конфиденциальности</string>
     <string name="payment_policies_personal_data">согласие на обработку персональных данных</string>
+    <string name="gift_certificate_write_off_info">Забронировали %1$s ₽ на сертификате. При отменённом заказе вернём эту сумму в течение часа</string>
+    <string name="gift_certificate_user_need_to_pay_difference">Доплата проведётся банковской картой онлайн, после перенаправления на страницу оплаты. Если после оформления заказа оплата не поступит в течение часа, то деньги вернутся на подарочный сертификат</string>
+    <string name="gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если ты отменишь заказ, то деньги вернутся на сертификат в течение часа</string>
+    <string name="zarina_app_version">Версия Zarina</string>
+    <string name="mindbox_device_uuid">Mindbox device UUID: %1$s</string>
+    <string name="mindbox_device_uuid_clipboard_label">Zarina Mindbox device UUID</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -442,6 +448,9 @@
     <string name="order_confirmed_description_should_be_paid_upon_receipt">Твой заказ %1$s принят. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
 
     <string name="gift_certificate_description">Воспользуйся электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
+
+    <string name="notification_channel_marketing_name">Маркетинг</string>
+    <string name="notification_channel_marketing_description">Реклама, акции и персональные предложения</string>
 
     <plurals name="show_products">
         <item quantity="zero">Показать %1$d товаров</item>

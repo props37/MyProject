@@ -146,8 +146,12 @@ class OnboardingViewModel @AssistedInject constructor(
                 val currentPermissionState = permissionManager.getPermissionState(permission)
                 if (currentPermissionState.isGranted) {
                     showOnboardingStep(OnboardingStep.CITY_DETECTION)
+                    emitSideEffect(SideEffect.NotificationPermissionGranted)
                 } else {
                     val newPermissionState = permissionManager.requestPermission(permission)
+                    if (newPermissionState.isGranted) {
+                        emitSideEffect(SideEffect.NotificationPermissionGranted)
+                    }
                     if (newPermissionState != currentPermissionState) {
                         // User has either granted or denied the permission
                         showOnboardingStep(OnboardingStep.CITY_DETECTION)
@@ -331,6 +335,8 @@ class OnboardingViewModel @AssistedInject constructor(
         data class NavigateForward(val action: OnboardingScreenAction) : SideEffect
 
         data class ShowToast(val message: Text) : SideEffect
+
+        data object NotificationPermissionGranted : SideEffect
     }
 
     @Parcelize

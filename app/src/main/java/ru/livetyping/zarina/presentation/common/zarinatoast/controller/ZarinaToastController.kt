@@ -11,7 +11,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 interface ZarinaToastController {
     val currentMessage: StateFlow<ZarinaToastMessage?>
 
-    fun show(message: ZarinaToastMessage)
+    fun show(message: ZarinaToastMessage, removePreviousMessage: Boolean = true)
     fun hideCurrentToast()
 }
 

@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "681359595971",
     "project_id": "zarina-app",
-    "storage_bucket": "zarina-app.appspot.com"
+    "storage_bucket": "zarina-app.firebasestorage.app"
   },
   "client": [
     {
@@ -79,6 +79,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:681359595971:android:f8a01f8f6c93b8c9950576",
+        "android_client_info": {
+          "package_name": "ru.livetyping.zarina.huawei.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyOj4fzMNQCGf-kYnjqLPtD_6OEYRkTWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "681359595971-51foc7s5sujouvvvnsr99j2g8hj94aq4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ltst.zarina"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:681359595971:android:e924a0bcc001daa1950576",
         "android_client_info": {
           "package_name": "ru.livetyping.zarina.qa"
@@ -115,117 +151,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:681359595971:android:08d4ecc5883c5d65950576",
+        "mobilesdk_app_id": "1:681359595971:android:ea5a9af677e0a7a7950576",
         "android_client_info": {
-          "package_name": "ru.zarina.zarina"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAyOj4fzMNQCGf-kYnjqLPtD_6OEYRkTWg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "681359595971-51foc7s5sujouvvvnsr99j2g8hj94aq4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.ltst.zarina"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:681359595971:android:3de856bfec15e0f0950576",
-        "android_client_info": {
-          "package_name": "ru.zarina.zarina.benchmark"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAyOj4fzMNQCGf-kYnjqLPtD_6OEYRkTWg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "681359595971-51foc7s5sujouvvvnsr99j2g8hj94aq4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.ltst.zarina"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:681359595971:android:e8346b5a26fad279950576",
-        "android_client_info": {
-          "package_name": "ru.zarina.zarina.debug"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAyOj4fzMNQCGf-kYnjqLPtD_6OEYRkTWg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "681359595971-husgfosgdl6oqb3idtk276dvjp5dik9s.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "681359595971-51foc7s5sujouvvvnsr99j2g8hj94aq4.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.ltst.zarina"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:681359595971:android:e3dcd023c749087f950576",
-        "android_client_info": {
-          "package_name": "ru.zarina.zarina.qa"
+          "package_name": "ru.livetyping.zarina.services.gms"
         }
       },
       "oauth_client": [
