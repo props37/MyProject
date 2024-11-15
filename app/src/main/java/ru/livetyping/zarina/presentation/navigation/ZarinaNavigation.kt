@@ -2,6 +2,7 @@ package ru.livetyping.zarina.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,31 +11,14 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTra
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
+import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
 import ru.livetyping.zarina.presentation.feature.Features
+import ru.livetyping.zarina.presentation.feature.find
 import ru.livetyping.zarina.presentation.navigation.base.Destination
-import ru.livetyping.zarina.presentation.navigation.screen.citySelectorScreen
-import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
-import ru.livetyping.zarina.presentation.navigation.screen.genericBottomSheetScreen
-import ru.livetyping.zarina.presentation.navigation.screen.graph.cartGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.catalogGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.checkoutGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.favoritesGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.homeGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.loyaltyProgramGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.profileGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.signInGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.signUpGraph
-import ru.livetyping.zarina.presentation.navigation.screen.graph.sizeSelectorGraph
-import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
-import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
-import ru.livetyping.zarina.presentation.navigation.screen.paymentScreen
-import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
-import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
 
 @Composable
 fun ZarinaNavigation(
@@ -46,41 +30,32 @@ fun ZarinaNavigation(
     @Suppress("NAME_SHADOWING")
     val navController by rememberUpdatedState(navController)
 
+    val onboardingFeature = features.find<OnboardingFeatureEntry>()
+    val onboardingNavActions = remember { OnboardingNavActions() }
+
+    val homeFeature = features.find<HomeFeatureEntry>()
+    val homeNavActions = remember {
+        // TODO: [Top] Implement
+        HomeNavActions(
+            bannerClicked = {},
+        )
+    }
+
     NavHost(
         navController = navController,
-        startDestination = startDestination.routeSchema,
+        startDestination = OnboardingNavEntry, // TODO: [Top] Implement
         enterTransition = { zarinaEnterSlideTransition() },
         exitTransition = { zarinaExitSlideTransition() },
         popEnterTransition = { zarinaPopEnterSlideTransition() },
         popExitTransition = { zarinaPopExitSlideTransition() },
         modifier = modifier,
     ) {
-        // Bottom nav bar graphs
-        catalogGraph(navController)
-        favoritesGraph(navController)
-        homeGraph(navController)
-        profileGraph(navController)
-        cartGraph(navController)
+        with(onboardingFeature) {
+            composable(onboardingNavActions)
+        }
 
-        signUpGraph(navController)
-        signInGraph(navController)
-        sizeSelectorGraph(navController)
-        loyaltyProgramGraph(navController)
-        checkoutGraph(navController)
-
-        onboardingScreen(navController)
-        citySelectorScreen(navController)
-        defaultCityDialog(navController)
-        productsScreen(navController)
-        productFiltersScreen(navController)
-        productSearchScreen(navController)
-        productSearchFiltersScreen(navController)
-        productScreen(navController)
-        listFilterScreen(navController)
-        productSubscriptionScreen(navController)
-        permissionRequirementBottomSheetScreen(navController)
-        paymentScreen(navController)
-
-        genericBottomSheetScreen(navController)
+        with(homeFeature) {
+            composable(homeNavActions)
+        }
     }
 }
