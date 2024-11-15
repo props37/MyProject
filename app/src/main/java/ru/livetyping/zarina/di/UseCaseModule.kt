@@ -7,7 +7,10 @@ import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
+import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
+import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
+import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
@@ -15,7 +18,12 @@ import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
@@ -168,6 +176,63 @@ internal class UseCaseModule {
     ): GetCurrentLocationFlowUseCase {
         return GetCurrentLocationFlowUseCase.getInstance(
             locationRepository = locationRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOnboardingBannerUrlFlowUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): GetOnboardingBannerUrlFlowUseCase {
+        return GetOnboardingBannerUrlFlowUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCurrentCityByLocationFlowUseCase(
+        locationRepository: LocationRepository,
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetCurrentCityByLocationFlowUseCase {
+        return GetCurrentCityByLocationFlowUseCase.getInstance(
+            locationRepository = locationRepository,
+            geographyRepository = geographyRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetIsOnboardingCompletedUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): SetIsOnboardingCompletedUseCase {
+        return SetIsOnboardingCompletedUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetUserCityUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SetUserCityUseCase {
+        return SetUserCityUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetLocalUserCityUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SetLocalUserCityUseCase {
+        return SetLocalUserCityUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }
