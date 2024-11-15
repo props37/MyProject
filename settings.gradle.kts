@@ -39,6 +39,7 @@ include(":data:wishlist")
 include(":data:location")
 include(":data:onboarding")
 include(":data:user")
+include(":data:geography")
 
 include(":core:domain")
 include(":core:navigation")
