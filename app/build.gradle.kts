@@ -151,8 +151,19 @@ dependencies {
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.feature.onboarding.ui.impl)
 
+    implementation(projects.data.content)
+    implementation(projects.data.auth)
+    implementation(projects.data.category)
+    implementation(projects.data.location)
+    implementation(projects.data.onboarding)
+    implementation(projects.data.user)
+    implementation(projects.data.wishlist)
+
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
+    implementation(projects.core.uiKit)
+    implementation(projects.core.diFeature)
+    implementation(projects.core.sharedpreferences)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
