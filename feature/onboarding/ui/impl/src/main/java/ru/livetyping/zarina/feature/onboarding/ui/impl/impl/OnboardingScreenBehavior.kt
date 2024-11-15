@@ -21,7 +21,7 @@ internal fun OnboardingScreenBehavior(
     val currentNavActions by rememberUpdatedState(navActions)
     val currentContext by rememberUpdatedState(LocalContext.current)
 
-    BottomNavBarBehavior(isVisible = true)
+    BottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         val lifecycleSafeNavigator = LifecycleSafeNavigator()
