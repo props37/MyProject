@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
@@ -34,14 +33,6 @@ class DataStoreModule {
             serializer = serializer,
             produceFile = { context.dataStoreFile(USER_CITY_DATA_STORE_NAME) },
         )
-    }
-
-    @Provides
-    fun providePreferencesDataStore(
-        @ApplicationContext
-        context: Context,
-    ): DataStore<Preferences> {
-        return context.preferencesDataStore
     }
 
     @Provides
