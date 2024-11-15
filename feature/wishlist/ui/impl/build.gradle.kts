@@ -62,6 +62,7 @@ dependencies {
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.navigationUtil)
     implementation(projects.core.paging)
+    implementation(projects.core.diFeature)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
