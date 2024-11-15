@@ -31,12 +31,14 @@ import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastContro
 import ru.livetyping.zarina.presentation.common.toastcontroller.rememberToastController
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.rememberZarinaToastController
+import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @Composable
 fun ZarinaApp(
+    features: Features,
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = hiltViewModel(),
 ) {
@@ -93,6 +95,7 @@ fun ZarinaApp(
             ) {
                 Box(modifier = modifier) {
                     ZarinaNavigation(
+                        features = features,
                         navController = navController,
                         startDestination = viewModel.startDestination,
                         modifier = Modifier.fillMaxSize(),

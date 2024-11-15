@@ -29,6 +29,7 @@ import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.toWind
 import ru.livetyping.zarina.presentation.common.behavior.systembars.LocalSystemBarsBehaviorController
 import ru.livetyping.zarina.presentation.common.behavior.systembars.SystemBarsBehavior
 import ru.livetyping.zarina.presentation.common.behavior.systembars.SystemBarsBehaviorController
+import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.presentation.theme.ZarinaTheme
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
@@ -42,6 +43,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var activityLifecycleObserverManager: ActivityLifecycleObserverManager
+
+    @Inject
+    lateinit var features: Features
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -67,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 ZarinaTheme {
                     ZarinaApp(
+                        features = features,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(UiKitTheme.colors.background.general.regular.default),

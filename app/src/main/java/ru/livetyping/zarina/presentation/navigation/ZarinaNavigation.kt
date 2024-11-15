@@ -6,6 +6,11 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTransition
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.screen.citySelectorScreen
 import ru.livetyping.zarina.presentation.navigation.screen.defaultCityDialog
@@ -30,11 +35,10 @@ import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersS
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
-import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
-import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
 
 @Composable
 fun ZarinaNavigation(
+    features: Features,
     navController: NavHostController,
     startDestination: Destination<Unit>,
     modifier: Modifier = Modifier,
@@ -45,8 +49,10 @@ fun ZarinaNavigation(
     NavHost(
         navController = navController,
         startDestination = startDestination.routeSchema,
-        enterTransition = { fadeInTransition() },
-        exitTransition = { fadeOutTransition() },
+        enterTransition = { zarinaEnterSlideTransition() },
+        exitTransition = { zarinaExitSlideTransition() },
+        popEnterTransition = { zarinaPopEnterSlideTransition() },
+        popExitTransition = { zarinaPopExitSlideTransition() },
         modifier = modifier,
     ) {
         // Bottom nav bar graphs
