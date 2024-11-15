@@ -24,9 +24,10 @@ public data class BearerTokens(
 
     public companion object {
         internal fun from(tokens: KtorBearerTokens): BearerTokens {
+            val refreshToken = checkNotNull(tokens.refreshToken) { "Refresh token is null" }
             return BearerTokens(
                 accessToken = tokens.accessToken,
-                refreshToken = tokens.refreshToken,
+                refreshToken = refreshToken,
             )
         }
 
