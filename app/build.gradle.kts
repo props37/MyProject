@@ -164,6 +164,7 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.uiKit)
     implementation(projects.core.sharedpreferences)
+    implementation(projects.core.permission)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

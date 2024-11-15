@@ -19,8 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.base.behavior.DefaultBehaviorController
-import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLifecycleObserverManager
 import ru.livetyping.zarina.presentation.app.ZarinaApp
+import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
 import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.LocalScreenBrightnessBehaviorController
 import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.ScreenBrightness
 import ru.livetyping.zarina.presentation.common.behavior.screenbrightness.ScreenBrightnessBehavior
@@ -42,7 +42,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var activityLifecycleObserverManager: ActivityLifecycleObserverManager
+    lateinit var activityLifecycleObservers: Set<@JvmSuppressWildcards ActivityLifecycleObserver>
 
     @Inject
     lateinit var features: Features
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addActivityLifecycleObservers() {
-        activityLifecycleObserverManager.observers.forEach { observer ->
+        activityLifecycleObservers.forEach { observer ->
             lifecycle.addObserver(observer)
         }
     }

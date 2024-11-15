@@ -2,8 +2,8 @@ package ru.livetyping.zarina.presentation.activity.lifecycleobserver
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
-import ru.livetyping.zarina.presentation.common.permissionmanager.PermissionManager
 import javax.inject.Inject
 
 class PermissionManagerActivityLifecycleObserver @Inject constructor(
