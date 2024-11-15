@@ -5,8 +5,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import dagger.Binds
+import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.domain.repository.UserRepository
@@ -22,6 +25,8 @@ import ru.livetyping.zarina.data.user.impl.remote.api.UserApi
 import ru.livetyping.zarina.data.user.impl.remote.api.UserApiImpl
 import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 internal abstract class UserRepositoryModule {
 
     @Binds
