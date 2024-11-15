@@ -17,12 +17,12 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
 import ru.livetyping.zarina.presentation.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.bottomnavbar.rememberBottomNavBarSizeTracker
-import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavBarBehavior
-import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
-import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.rememberBottomNavBarBehaviorController
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.presentation.common.component.toast.ZarinaToastContainer
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
