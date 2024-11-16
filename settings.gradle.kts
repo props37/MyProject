@@ -32,6 +32,8 @@ include(":feature:catalog:ui:impl")
 include(":feature:wishlist:ui:api")
 include(":feature:wishlist:ui:impl")
 
+include(":feature:cityselector:ui:api")
+
 include(":data:content")
 include(":data:auth")
 include(":data:category")
