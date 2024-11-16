@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl
+package ru.livetyping.zarina.feature.home.ui.impl
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
@@ -7,27 +7,27 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeatureEntry
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavEntry
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
+import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
+import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
 import kotlin.reflect.KClass
 
-public class WishlistFeatureEntryImpl : WishlistFeatureEntry {
+public class HomeFeatureImpl : HomeFeature {
     override fun NavGraphBuilder.composable(
-        actions: WishlistNavActions,
+        actions: HomeNavActions,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<WishlistNavEntry> {
-            WishlistScreen(navActions = actions)
+        composable<HomeNavEntry> {
+            HomeScreen(navActions = actions)
         }
     }
 
-    override fun getNavEntry(params: Unit): WishlistNavEntry = WishlistNavEntry
+    override fun getNavEntry(params: Unit): HomeNavEntry = HomeNavEntry
 
-    override fun getNavEntryClass(): KClass<WishlistNavEntry> = WishlistNavEntry::class
+    override fun getNavEntryClass(): KClass<HomeNavEntry> = HomeNavEntry::class
 }

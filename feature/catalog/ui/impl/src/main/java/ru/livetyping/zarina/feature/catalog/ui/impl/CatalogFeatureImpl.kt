@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.ui.impl
+package ru.livetyping.zarina.feature.catalog.ui.impl
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
@@ -7,27 +7,27 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
-import ru.livetyping.zarina.feature.home.ui.HomeNavActions
-import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
-import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
+import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
+import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
+import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
 import kotlin.reflect.KClass
 
-public class HomeFeatureEntryImpl : HomeFeatureEntry {
+public class CatalogFeatureImpl : CatalogFeature {
     override fun NavGraphBuilder.composable(
-        actions: HomeNavActions,
+        actions: CatalogNavActions,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<HomeNavEntry> {
-            HomeScreen(navActions = actions)
+        composable<CatalogNavEntry> {
+            CatalogScreen(navActions = actions)
         }
     }
 
-    override fun getNavEntry(params: Unit): HomeNavEntry = HomeNavEntry
+    override fun getNavEntry(params: Unit): CatalogNavEntry = CatalogNavEntry
 
-    override fun getNavEntryClass(): KClass<HomeNavEntry> = HomeNavEntry::class
+    override fun getNavEntryClass(): KClass<CatalogNavEntry> = CatalogNavEntry::class
 }

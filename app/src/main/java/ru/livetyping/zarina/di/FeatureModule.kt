@@ -7,14 +7,14 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.livetyping.zarina.core.feature.FeatureEntry
 import ru.livetyping.zarina.di.key.FeatureEntryKey
-import ru.livetyping.zarina.feature.catalog.ui.CatalogFeatureEntry
-import ru.livetyping.zarina.feature.catalog.ui.impl.CatalogFeatureEntryImpl
-import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
-import ru.livetyping.zarina.feature.home.ui.impl.HomeFeatureEntryImpl
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
-import ru.livetyping.zarina.feature.onboarding.ui.impl.OnboardingFeatureEntryImpl
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeatureEntry
-import ru.livetyping.zarina.feature.wishlist.ui.impl.WishlistFeatureEntryImpl
+import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
+import ru.livetyping.zarina.feature.catalog.ui.impl.CatalogFeatureImpl
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
+import ru.livetyping.zarina.feature.home.ui.impl.HomeFeatureImpl
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.onboarding.ui.impl.OnboardingFeatureImpl
+import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
+import ru.livetyping.zarina.feature.wishlist.ui.impl.WishlistFeatureImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,21 +22,21 @@ internal class FeatureModule {
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(HomeFeatureEntry::class)
-    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureEntryImpl()
+    @FeatureEntryKey(HomeFeature::class)
+    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureImpl()
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(OnboardingFeatureEntry::class)
-    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureEntryImpl()
+    @FeatureEntryKey(OnboardingFeature::class)
+    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureImpl()
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(CatalogFeatureEntry::class)
-    fun provideCatalogFeatureEntry(): FeatureEntry<*, *, *> = CatalogFeatureEntryImpl()
+    @FeatureEntryKey(CatalogFeature::class)
+    fun provideCatalogFeatureEntry(): FeatureEntry<*, *, *> = CatalogFeatureImpl()
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(WishlistFeatureEntry::class)
-    fun provideWishlistFeatureEntry(): FeatureEntry<*, *, *> = WishlistFeatureEntryImpl()
+    @FeatureEntryKey(WishlistFeature::class)
+    fun provideWishlistFeatureEntry(): FeatureEntry<*, *, *> = WishlistFeatureImpl()
 }

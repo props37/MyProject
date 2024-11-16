@@ -7,13 +7,13 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
 import kotlin.reflect.KClass
 
-public class OnboardingFeatureEntryImpl : OnboardingFeatureEntry {
+public class OnboardingFeatureImpl : OnboardingFeature {
     override fun NavGraphBuilder.composable(
         actions: OnboardingNavActions,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,

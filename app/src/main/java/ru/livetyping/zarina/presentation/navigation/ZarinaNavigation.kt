@@ -11,10 +11,10 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTra
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
-import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
 import ru.livetyping.zarina.presentation.feature.Features
@@ -31,7 +31,7 @@ fun ZarinaNavigation(
     @Suppress("NAME_SHADOWING")
     val navController by rememberUpdatedState(navController)
 
-    val onboardingFeature = features.find<OnboardingFeatureEntry>()
+    val onboardingFeature = features.find<OnboardingFeature>()
     val onboardingNavActions = remember(navController) {
         OnboardingNavActions(
             onboardingCompleted = {
@@ -43,7 +43,7 @@ fun ZarinaNavigation(
         )
     }
 
-    val homeFeature = features.find<HomeFeatureEntry>()
+    val homeFeature = features.find<HomeFeature>()
     val homeNavActions = remember {
         // TODO: [Top] Implement
         HomeNavActions(
