@@ -45,6 +45,8 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.googleplayservices)
 
+    implementation(libs.kotlin.serialization.json)
+
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
