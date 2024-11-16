@@ -12,6 +12,7 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavParams
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
+import kotlin.reflect.KClass
 
 public class CatalogFeatureEntryImpl : CatalogFeatureEntry {
     override fun NavGraphBuilder.composable(
@@ -28,4 +29,6 @@ public class CatalogFeatureEntryImpl : CatalogFeatureEntry {
     }
 
     override fun getNavEntry(params: CatalogNavParams): CatalogNavEntry = CatalogNavEntry
+
+    override fun getNavEntryClass(): KClass<CatalogNavEntry> = CatalogNavEntry::class
 }

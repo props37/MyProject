@@ -12,6 +12,7 @@ import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
 import ru.livetyping.zarina.feature.home.ui.HomeNavParams
 import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
+import kotlin.reflect.KClass
 
 public class HomeFeatureEntryImpl : HomeFeatureEntry {
     override fun NavGraphBuilder.composable(
@@ -28,4 +29,6 @@ public class HomeFeatureEntryImpl : HomeFeatureEntry {
     }
 
     override fun getNavEntry(params: HomeNavParams): HomeNavEntry = HomeNavEntry
+
+    override fun getNavEntryClass(): KClass<HomeNavEntry> = HomeNavEntry::class
 }
