@@ -21,4 +21,5 @@
     <string name="step">Шаг</string>
     <string name="continue_">Продолжить</string>
     <string name="skip">Пропустить</string>
+    <string name="city">Город</string>
 </resources>

@@ -18,7 +18,7 @@ internal fun CitySelectorScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
-    BottomNavBarBehavior(isVisible = true)
+    BottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         val lifecycleSafeNavigator = LifecycleSafeNavigator()
