@@ -39,7 +39,9 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.jetpack.navigation.compose)
     implementation(libs.kotlin.coroutines.core)
+    implementation(libs.kotlin.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
