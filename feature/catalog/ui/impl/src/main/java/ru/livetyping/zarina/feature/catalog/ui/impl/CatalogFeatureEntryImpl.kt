@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeatureEntry
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
+import ru.livetyping.zarina.feature.catalog.ui.CatalogNavParams
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
 
 public class CatalogFeatureEntryImpl : CatalogFeatureEntry {
@@ -25,4 +26,6 @@ public class CatalogFeatureEntryImpl : CatalogFeatureEntry {
             CatalogScreen(navActions = actions)
         }
     }
+
+    override fun getNavEntry(params: CatalogNavParams): CatalogNavEntry = CatalogNavEntry
 }

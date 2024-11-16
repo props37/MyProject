@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeatureEntry
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavEntry
+import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavParams
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
 
 public class WishlistFeatureEntryImpl : WishlistFeatureEntry {
@@ -25,4 +26,6 @@ public class WishlistFeatureEntryImpl : WishlistFeatureEntry {
             WishlistScreen(navActions = actions)
         }
     }
+
+    override fun getNavEntry(params: WishlistNavParams): WishlistNavEntry = WishlistNavEntry
 }

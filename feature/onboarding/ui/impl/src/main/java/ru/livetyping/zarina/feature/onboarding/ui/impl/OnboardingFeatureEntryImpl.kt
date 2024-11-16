@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavParams
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
 
 public class OnboardingFeatureEntryImpl : OnboardingFeatureEntry {
@@ -25,4 +26,6 @@ public class OnboardingFeatureEntryImpl : OnboardingFeatureEntry {
             OnboardingScreen(navActions = actions)
         }
     }
+
+    override fun getNavEntry(params: OnboardingNavParams): OnboardingNavEntry = OnboardingNavEntry
 }

@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.home.ui.HomeFeatureEntry
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
+import ru.livetyping.zarina.feature.home.ui.HomeNavParams
 import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
 
 public class HomeFeatureEntryImpl : HomeFeatureEntry {
@@ -25,4 +26,6 @@ public class HomeFeatureEntryImpl : HomeFeatureEntry {
             HomeScreen(navActions = actions)
         }
     }
+
+    override fun getNavEntry(params: HomeNavParams): HomeNavEntry = HomeNavEntry
 }

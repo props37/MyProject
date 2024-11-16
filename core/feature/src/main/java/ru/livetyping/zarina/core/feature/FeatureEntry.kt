@@ -7,4 +7,7 @@ import ru.livetyping.zarina.core.navigation.NavigationParams
 public interface FeatureEntry<
         NavEntry : NavigationEntry,
         NavParams : NavigationParams,
-        NavActions : NavigationActions>
+        NavActions : NavigationActions> {
+
+    public fun getNavEntry(params: NavParams): NavEntry
+}
