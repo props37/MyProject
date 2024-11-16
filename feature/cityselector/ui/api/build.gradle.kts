@@ -41,6 +41,9 @@ kotlin {
 
 dependencies {
     api(projects.core.feature)
+    api(projects.core.text)
+    api(projects.core.uiModel)
+    implementation(projects.core.navigationUtil)
 
     implementation(libs.kotlin.serialization.json)
 
