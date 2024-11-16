@@ -6,14 +6,9 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import ru.livetyping.zarina.core.navigation.NavigationActions
-import ru.livetyping.zarina.core.navigation.NavigationEntry
-import ru.livetyping.zarina.core.navigation.NavigationParams
 
-public interface SingleFeatureEntry<
-        NavEntry : NavigationEntry,
-        NavParams : NavigationParams,
-        NavActions : NavigationActions> : FeatureEntry<NavEntry, NavParams, NavActions> {
+public interface SingleFeatureEntry<NavEntry : Any, NavParams, NavActions>
+    : FeatureEntry<NavEntry, NavParams, NavActions> {
 
     public fun NavGraphBuilder.composable(
         actions: NavActions,

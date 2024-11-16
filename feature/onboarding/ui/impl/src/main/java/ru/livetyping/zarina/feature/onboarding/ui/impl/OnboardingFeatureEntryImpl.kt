@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeatureEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavParams
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
 import kotlin.reflect.KClass
 
@@ -28,7 +27,7 @@ public class OnboardingFeatureEntryImpl : OnboardingFeatureEntry {
         }
     }
 
-    override fun getNavEntry(params: OnboardingNavParams): OnboardingNavEntry = OnboardingNavEntry
+    override fun getNavEntry(params: Unit): OnboardingNavEntry = OnboardingNavEntry
 
     override fun getNavEntryClass(): KClass<OnboardingNavEntry> = OnboardingNavEntry::class
 }
