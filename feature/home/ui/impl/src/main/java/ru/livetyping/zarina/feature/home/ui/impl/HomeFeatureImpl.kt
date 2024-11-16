@@ -22,7 +22,13 @@ public class HomeFeatureImpl : HomeFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<HomeNavEntry> {
+        composable<HomeNavEntry>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
+        ) {
             HomeScreen(navActions = actions)
         }
     }

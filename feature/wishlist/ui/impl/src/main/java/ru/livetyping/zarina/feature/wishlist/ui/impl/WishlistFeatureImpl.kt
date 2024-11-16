@@ -22,7 +22,13 @@ public class WishlistFeatureImpl : WishlistFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<WishlistNavEntry> {
+        composable<WishlistNavEntry>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
+        ) {
             WishlistScreen(navActions = actions)
         }
     }

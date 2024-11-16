@@ -22,7 +22,13 @@ public class OnboardingFeatureImpl : OnboardingFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<OnboardingNavEntry> {
+        composable<OnboardingNavEntry>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
+        ) {
             OnboardingScreen(navActions = actions)
         }
     }

@@ -22,7 +22,13 @@ public class CatalogFeatureImpl : CatalogFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<CatalogNavEntry> {
+        composable<CatalogNavEntry>(
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
+        ) {
             CatalogScreen(navActions = actions)
         }
     }
