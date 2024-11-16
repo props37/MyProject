@@ -11,6 +11,8 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTra
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
@@ -31,6 +33,7 @@ fun ZarinaNavigation(
     @Suppress("NAME_SHADOWING")
     val navController by rememberUpdatedState(navController)
 
+    // TODO: [Top] Refactor
     val onboardingFeature = features.find<OnboardingFeature>()
     val onboardingNavActions = remember(navController) {
         OnboardingNavActions(
@@ -39,7 +42,12 @@ fun ZarinaNavigation(
                     popUpTo(0)
                 }
                 // TODO: [Top] Show default city dialog?
-            }
+            },
+            selectCityClicked = {
+                val citySelectorParams = CitySelectorNavParams()
+                val navEntry = features.find<CitySelectorFeature>().getNavEntry(citySelectorParams)
+                navController.navigate(navEntry)
+            },
         )
     }
 
