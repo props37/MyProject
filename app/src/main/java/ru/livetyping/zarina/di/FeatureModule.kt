@@ -23,20 +23,20 @@ internal class FeatureModule {
     @Provides
     @IntoMap
     @FeatureEntryKey(HomeFeatureEntry::class)
-    fun provideHomeFeatureEntry(): FeatureEntry<*, *> = HomeFeatureEntryImpl()
+    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureEntryImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(OnboardingFeatureEntry::class)
-    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *> = OnboardingFeatureEntryImpl()
+    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureEntryImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(CatalogFeatureEntry::class)
-    fun provideCatalogFeatureEntry(): FeatureEntry<*, *> = CatalogFeatureEntryImpl()
+    fun provideCatalogFeatureEntry(): FeatureEntry<*, *, *> = CatalogFeatureEntryImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(WishlistFeatureEntry::class)
-    fun provideWishlistFeatureEntry(): FeatureEntry<*, *> = WishlistFeatureEntryImpl()
+    fun provideWishlistFeatureEntry(): FeatureEntry<*, *, *> = WishlistFeatureEntryImpl()
 }
