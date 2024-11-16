@@ -39,8 +39,6 @@ kotlin {
 }
 
 dependencies {
-    api(projects.core.navigation)
-
     api(libs.jetpack.navigation.compose)
 
     testImplementation(libs.junit)
