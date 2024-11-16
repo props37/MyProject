@@ -6,6 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.data.geography.impl.GeographyRepositoryImpl
+import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSource
+import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSourceImpl
+import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApi
+import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -13,4 +17,12 @@ internal abstract class GeographyRepositoryModule {
 
     @Binds
     abstract fun bindGeographyRepository(impl: GeographyRepositoryImpl): GeographyRepository
+
+    @Binds
+    abstract fun bindGeographyRemoteDataSource(
+        impl: GeographyRemoteDataSourceImpl,
+    ): GeographyRemoteDataSource
+
+    @Binds
+    abstract fun bindGeographyApi(impl: GeographyApiImpl): GeographyApi
 }
