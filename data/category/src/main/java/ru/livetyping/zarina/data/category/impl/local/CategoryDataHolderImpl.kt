@@ -16,8 +16,8 @@ internal class CategoryDataHolderImpl @Inject constructor() : CategoryDataHolder
     }
 
     override fun setCategories(categories: Categories) {
-        Timber.tag(TAG).v("Set categories: $categories")
         this.categories.value = categories
+        Timber.tag(TAG).v("Categories set: $categories")
     }
 
     private companion object {
