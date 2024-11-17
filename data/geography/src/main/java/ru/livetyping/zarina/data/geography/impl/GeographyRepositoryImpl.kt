@@ -24,18 +24,6 @@ internal class GeographyRepositoryImpl @Inject constructor(
         return remoteDataSource.getCityByLocationFlow(location)
     }
 
-    override fun getCitiesFlow(nameQuery: String?): Flow<List<City>> {
-        return localDataSource.getCitiesFlow(nameQuery)
-            .onEach { cached ->
-                if (cached == null) {
-                    val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
-                    checkNotNull(cities) { "Failed to fetch cities for query $nameQuery" }
-                    localDataSource.setCities(nameQuery, cities)
-                }
-            }
-            .filterNotNull()
-    }
-
     override fun getCitiesFlow(nameQuery: String?, cachePolicy: CachePolicy): Flow<List<City>> {
         return when (cachePolicy) {
             CachePolicy.LocalOnly -> localDataSource.getCitiesFlow(nameQuery).filterNotNull()
