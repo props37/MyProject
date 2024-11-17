@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.update
 import ru.livetyping.zarina.core.domain.model.product.Product
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder {
     private val wishlistProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
 
