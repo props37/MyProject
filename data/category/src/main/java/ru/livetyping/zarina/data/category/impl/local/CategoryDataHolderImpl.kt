@@ -15,7 +15,7 @@ internal class CategoryDataHolderImpl @Inject constructor() : CategoryDataHolder
         return categories
     }
 
-    override fun setCategories(categories: Categories) {
+    override fun setCategories(categories: Categories?) {
         Timber.tag(TAG).v("Set categories: $categories")
         this.categories.value = categories
     }

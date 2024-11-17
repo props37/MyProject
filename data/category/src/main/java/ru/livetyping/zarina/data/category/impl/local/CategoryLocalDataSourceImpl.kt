@@ -11,7 +11,7 @@ internal class CategoryLocalDataSourceImpl @Inject constructor(
         return dataHolder.getCategoriesFlow()
     }
 
-    override fun setCategories(categories: Categories) {
+    override fun setCategories(categories: Categories?) {
         dataHolder.setCategories(categories)
     }
 }

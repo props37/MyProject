@@ -2,8 +2,14 @@ package ru.livetyping.zarina.data.category.impl
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
+import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSource
@@ -15,6 +21,16 @@ internal class CategoryRepositoryImpl @Inject constructor(
     private val localDataSource: CategoryLocalDataSource,
     private val remoteDataSource: CategoryRemoteDataSource,
 ) : CategoryRepository {
+    override fun getCategoriesFlow(cachePolicy: CachePolicy): Flow<Categories> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getCategoriesFlow().filterNotNull()
+            is CachePolicy.LocalFirstThenRemote -> {
+                getCategoriesFlowLocalFirstThenRemote(cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getCategoriesFlowRemote(cachePolicy)
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getCategoriesFlow(): Flow<Categories> {
@@ -30,6 +46,38 @@ internal class CategoryRepositoryImpl @Inject constructor(
         checkNotNull(categories) { "Failed to fetch categories" }
         localDataSource.setCategories(categories)
         return categories
+    }
+
+    private fun getCategoriesFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<Categories> {
+        // TODO: [Low] Add support for CacheExpirationPolicy
+        Timber.tag(TAG).w("Categories CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
+        return localDataSource.getCategoriesFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
+                checkNotNull(categories) { "Failed to fetch categories" }
+                when (cachePolicy.updatePolicy) {
+                    CacheUpdatePolicy.NONE -> Unit
+                    CacheUpdatePolicy.CLEAR -> localDataSource.setCategories(null)
+                    CacheUpdatePolicy.UPDATE -> localDataSource.setCategories(categories)
+                }
+                categories
+            }
+        }
+    }
+
+    private fun getCategoriesFlowRemote(cachePolicy: CachePolicy.Remote): Flow<Categories> {
+        return remoteDataSource.getCategoriesFlow()
+            .onEach { categories ->
+                when (cachePolicy.updatePolicy) {
+                    CacheUpdatePolicy.NONE -> Unit
+                    CacheUpdatePolicy.CLEAR -> localDataSource.setCategories(null)
+                    CacheUpdatePolicy.UPDATE -> localDataSource.setCategories(categories)
+                }
+            }
     }
 
     private companion object {

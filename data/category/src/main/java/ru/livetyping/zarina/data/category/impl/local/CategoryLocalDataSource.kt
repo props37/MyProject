@@ -6,5 +6,5 @@ import ru.livetyping.zarina.core.domain.model.category.Categories
 internal interface CategoryLocalDataSource {
     fun getCategoriesFlow(): Flow<Categories?>
 
-    fun setCategories(categories: Categories)
+    fun setCategories(categories: Categories?)
 }
