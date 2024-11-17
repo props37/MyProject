@@ -30,10 +30,6 @@ internal class WishlistRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>> {
-        return localDataSource.getWishlistProductIdsFlow()
-    }
-
     override suspend fun fetchWishlistProductIds() {
         val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
         checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }

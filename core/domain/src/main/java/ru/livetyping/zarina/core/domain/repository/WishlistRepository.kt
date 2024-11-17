@@ -9,8 +9,6 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 public interface WishlistRepository {
     public fun getWishlistProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>>
 
-    public fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>>
-
     public suspend fun fetchWishlistProductIds()
 
     public fun isWishlistProductIdsFetched(): Boolean

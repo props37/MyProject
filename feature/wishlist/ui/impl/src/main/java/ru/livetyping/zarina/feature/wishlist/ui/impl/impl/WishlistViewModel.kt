@@ -18,6 +18,9 @@ import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
@@ -52,8 +55,15 @@ internal class WishlistViewModel @Inject constructor(
 
     private var clearWishlistJob: Job? = null
 
+    private val getWishlistProductIdsFlowParams = GetWishlistProductIdsFlowUseCase.Params(
+        cachePolicy = CachePolicy.LocalFirstThenRemote(
+            expirationPolicy = CacheExpirationPolicy.UNLIMITED,
+            updatePolicy = CacheUpdatePolicy.UPDATE,
+        ),
+    )
+
     val topBarState: StateFlow<TopBarState> = combine(
-        getWishlistProductIdsFlow(),
+        getWishlistProductIdsFlow(getWishlistProductIdsFlowParams),
         operationTracker.isOperationOngoing(ClearWishlistOperation),
     ) { wishlistProductIdsResult, isWishlistClearingOngoing ->
         val wishlistProductIds = wishlistProductIdsResult.getOrNull()

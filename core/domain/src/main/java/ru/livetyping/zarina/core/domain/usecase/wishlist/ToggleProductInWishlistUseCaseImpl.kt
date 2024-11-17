@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.wishlist
 
 import kotlinx.coroutines.flow.firstOrNull
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase.Params
 import ru.livetyping.zarina.core.usecase.UseCase
@@ -15,7 +16,8 @@ internal class ToggleProductInWishlistUseCaseImpl(
         val productId = params.productId
 
         val wishlistProductIds =
-            wishlistRepository.getWishlistProductIdsFlow().firstOrNull() ?: emptySet()
+            wishlistRepository.getWishlistProductIdsFlow(CachePolicy.LocalOnly).firstOrNull()
+                ?: emptySet()
         val isProductInWishlist = if (productId in wishlistProductIds) {
             wishlistRepository.removeProductFromWishlist(productId)
             false
