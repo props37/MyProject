@@ -27,7 +27,7 @@ internal class CityDataHolderImpl @Inject constructor() : CityDataHolder {
             val newMap = currentMap + (nameQuery to cities)
             SoftReference(newMap)
         }
-        Timber.tag(TAG).v("Cities $cities set for $nameQuery")
+        Timber.tag(TAG).v("Cities $cities set for \"$nameQuery\"")
         ensureCityCacheSize()
     }
 
@@ -41,7 +41,7 @@ internal class CityDataHolderImpl @Inject constructor() : CityDataHolder {
                     val newMap = currentMap - nameQueryToRemove
                     SoftReference(newMap)
                 }
-                Timber.tag(TAG).v("Cached cities cleared for name query $nameQueryToRemove")
+                Timber.tag(TAG).v("Cached cities cleared for name query \"$nameQueryToRemove\"")
             }
         }
     }
