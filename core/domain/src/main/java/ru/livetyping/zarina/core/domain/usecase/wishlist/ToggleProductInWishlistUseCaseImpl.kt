@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.wishlist
 
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase.Params
 import ru.livetyping.zarina.core.usecase.UseCase
@@ -39,7 +40,8 @@ internal class ToggleProductInWishlistUseCaseImpl(
 
     private suspend fun fetchWishlistProductIds() {
         try {
-            wishlistRepository.fetchWishlistProductIds()
+            val cachePolicy = CachePolicy.RemoteOnly(CacheUpdatePolicy.UPDATE)
+            wishlistRepository.getWishlistProductIdsFlow(cachePolicy).firstOrNull()
         } catch (e: Exception) {
             logger?.e(TAG, e, "Failed to fetch wishlist product IDs")
         }

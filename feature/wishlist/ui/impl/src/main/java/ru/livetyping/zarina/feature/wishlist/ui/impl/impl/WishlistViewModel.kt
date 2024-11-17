@@ -23,7 +23,6 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
-import ru.livetyping.zarina.core.domain.usecase.wishlist.FetchWishlistProductIdsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.paging.updateProducts
@@ -42,7 +41,6 @@ import javax.inject.Inject
 internal class WishlistViewModel @Inject constructor(
     getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     private val wishlistProductPager: WishlistProductPager,
-    private val fetchWishlistProductIds: FetchWishlistProductIdsUseCase,
     private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     private val clearWishlist: ClearWishlistUseCase,
 ) : ViewModel(), SideEffectSource<WishlistSideEffect> by SideEffectSourceImpl() {
@@ -62,6 +60,7 @@ internal class WishlistViewModel @Inject constructor(
         ),
     )
 
+    // TODO: [Top] Make sure that wishlist product IDs get fetched every time topBarState gets collected
     val topBarState: StateFlow<TopBarState> = combine(
         getWishlistProductIdsFlow(getWishlistProductIdsFlowParams),
         operationTracker.isOperationOngoing(ClearWishlistOperation),
@@ -93,7 +92,7 @@ internal class WishlistViewModel @Inject constructor(
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
             LifecycleEvent.ON_CREATE -> onScreenOpened()
-            LifecycleEvent.ON_START -> onScreenStarted()
+            LifecycleEvent.ON_START -> Unit
             LifecycleEvent.ON_RESUME -> Unit
         }
     }
@@ -106,12 +105,6 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onScreenOpened() {
         wishlistProductsRequester.request(WishlistProductsRequest)
-    }
-
-    private fun onScreenStarted() {
-        viewModelScope.launch {
-            fetchWishlistProductIds()
-        }
     }
 
     private fun onClearWishlistClicked() {
