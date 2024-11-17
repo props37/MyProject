@@ -39,7 +39,7 @@ internal class ToggleProductInWishlistUseCaseImpl(
 
     private suspend fun fetchWishlistProductIds() {
         try {
-            val cachePolicy = CachePolicy.RemoteOnly()
+            val cachePolicy = CachePolicy.Remote()
             wishlistRepository.getWishlistProductIdsFlow(cachePolicy).firstOrNull()
         } catch (e: Exception) {
             logger?.e(TAG, e, "Failed to fetch wishlist product IDs")

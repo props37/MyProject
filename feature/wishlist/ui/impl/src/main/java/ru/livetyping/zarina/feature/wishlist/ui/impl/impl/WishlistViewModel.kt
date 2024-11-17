@@ -104,7 +104,7 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onScreenStarted() {
         viewModelScope.launch {
-            val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.RemoteOnly())
+            val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.Remote())
             getWishlistProductIdsFlow(params).firstOrNull()
         }
     }

@@ -8,7 +8,7 @@ public sealed class CachePolicy {
         val updatePolicy: CacheUpdatePolicy = CacheUpdatePolicy.UPDATE,
     ) : CachePolicy()
 
-    public data class RemoteOnly(
+    public data class Remote(
         val updatePolicy: CacheUpdatePolicy = CacheUpdatePolicy.UPDATE,
     ) : CachePolicy()
 }

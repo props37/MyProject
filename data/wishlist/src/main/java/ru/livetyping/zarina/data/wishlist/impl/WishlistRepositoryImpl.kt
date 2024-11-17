@@ -26,7 +26,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
                 getWishlistProductIdsFlowLocalFirstThenRemote(cachePolicy)
             }
 
-            is CachePolicy.RemoteOnly -> getWishlistProductIdsFlowRemoteOnly(cachePolicy)
+            is CachePolicy.Remote -> getWishlistProductIdsFlowRemote(cachePolicy)
         }
     }
 
@@ -75,8 +75,8 @@ internal class WishlistRepositoryImpl @Inject constructor(
             }
     }
 
-    private fun getWishlistProductIdsFlowRemoteOnly(
-        cachePolicy: CachePolicy.RemoteOnly,
+    private fun getWishlistProductIdsFlowRemote(
+        cachePolicy: CachePolicy.Remote,
     ): Flow<Set<Product.Id>> {
         return remoteDataSource.getWishlistProductIdsFlow()
             .onEach { productIds ->
