@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.pagination.Page
@@ -57,7 +58,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
     private fun getWishlistProductIdsFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<Set<Product.Id>> {
-        Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported")
+        Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getWishlistProductIdsFlow()
             .map { cached ->
                 if (!localDataSource.isWishlistProductIdsFetched()) {
