@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import ru.livetyping.zarina.core.domain.model.product.Product
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder {
     private val wishlistProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
 
-    private var isWishlistProductIdsFetched = false
+    private var isWishlistProductIdsFetched = AtomicBoolean(false)
 
     override fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>> {
         return wishlistProductIds
@@ -24,11 +25,14 @@ internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder
     }
 
     override fun isWishlistProductIdsFetched(): Boolean {
-        return isWishlistProductIdsFetched
+        return isWishlistProductIdsFetched.get()
     }
 
     override fun setIsWishlistProductIdsFetched(isFetched: Boolean) {
-        isWishlistProductIdsFetched = isFetched
+        isWishlistProductIdsFetched.compareAndSet(
+            /* expectedValue = */ isWishlistProductIdsFetched.get(),
+            /* newValue = */ isFetched,
+        )
         Timber.tag(TAG).v("Wishlist product IDs fetched set to $isFetched")
     }
 
