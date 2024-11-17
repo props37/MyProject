@@ -4,11 +4,11 @@ public sealed class CachePolicy {
     public data object LocalOnly : CachePolicy()
 
     public data class LocalFirstThenRemote(
-        val expirationPolicy: CacheExpirationPolicy,
-        val updatePolicy: CacheUpdatePolicy,
+        val expirationPolicy: CacheExpirationPolicy = CacheExpirationPolicy.UNLIMITED,
+        val updatePolicy: CacheUpdatePolicy = CacheUpdatePolicy.UPDATE,
     ) : CachePolicy()
 
     public data class RemoteOnly(
-        val updatePolicy: CacheUpdatePolicy,
+        val updatePolicy: CacheUpdatePolicy = CacheUpdatePolicy.UPDATE,
     ) : CachePolicy()
 }
