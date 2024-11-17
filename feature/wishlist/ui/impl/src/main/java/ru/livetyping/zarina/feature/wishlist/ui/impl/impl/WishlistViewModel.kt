@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -37,7 +38,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class WishlistViewModel @Inject constructor(
-    getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
+    private val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     private val wishlistProductPager: WishlistProductPager,
     private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     private val clearWishlist: ClearWishlistUseCase,
@@ -51,13 +52,12 @@ internal class WishlistViewModel @Inject constructor(
 
     private var clearWishlistJob: Job? = null
 
-    private val getWishlistProductIdsFlowParams = GetWishlistProductIdsFlowUseCase.Params(
+    private val wishlistProductIdsParams = GetWishlistProductIdsFlowUseCase.Params(
         cachePolicy = CachePolicy.LocalFirstThenRemote(),
     )
 
-    // TODO: [Top] Make sure that wishlist product IDs get fetched every time topBarState gets collected
     val topBarState: StateFlow<TopBarState> = combine(
-        getWishlistProductIdsFlow(getWishlistProductIdsFlowParams),
+        getWishlistProductIdsFlow(wishlistProductIdsParams),
         operationTracker.isOperationOngoing(ClearWishlistOperation),
     ) { wishlistProductIdsResult, isWishlistClearingOngoing ->
         val wishlistProductIds = wishlistProductIdsResult.getOrNull()
@@ -87,7 +87,7 @@ internal class WishlistViewModel @Inject constructor(
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
             LifecycleEvent.ON_CREATE -> onScreenOpened()
-            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_START -> onScreenStarted()
             LifecycleEvent.ON_RESUME -> Unit
         }
     }
@@ -100,6 +100,13 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onScreenOpened() {
         wishlistProductsRequester.request(WishlistProductsRequest)
+    }
+
+    private fun onScreenStarted() {
+        viewModelScope.launch {
+            val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.RemoteOnly())
+            getWishlistProductIdsFlow(params).firstOrNull()
+        }
     }
 
     private fun onClearWishlistClicked() {
