@@ -2,18 +2,34 @@ package ru.livetyping.zarina.data.wishlist.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.data.wishlist.impl.local.WishlistLocalDataSource
 import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSource
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class WishlistRepositoryImpl @Inject constructor(
     private val remoteDataSource: WishlistRemoteDataSource,
     private val localDataSource: WishlistLocalDataSource,
 ) : WishlistRepository {
+    override fun getWishlistProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getWishlistProductIdsFlow()
+            is CachePolicy.LocalFirstThenRemote -> {
+                getWishlistProductIdsFlowLocalFirstThenRemote(cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getWishlistProductIdsFlowRemote(cachePolicy)
+        }
+    }
+
     override fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>> {
         return localDataSource.getWishlistProductIdsFlow()
     }
@@ -47,5 +63,53 @@ internal class WishlistRepositoryImpl @Inject constructor(
         remoteDataSource.clearWishlist()
         localDataSource.setWishlistProductIds(emptySet())
         localDataSource.setIsWishlistProductIdsFetched(false)
+    }
+
+    private fun getWishlistProductIdsFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<Set<Product.Id>> {
+        Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported")
+        return localDataSource.getWishlistProductIdsFlow()
+            .map { cached ->
+                if (!localDataSource.isWishlistProductIdsFetched()) {
+                    val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
+                    checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }
+                    when (cachePolicy.updatePolicy) {
+                        CacheUpdatePolicy.NONE -> Unit
+                        CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
+                        CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
+                    }
+                    productIds
+                } else {
+                    cached
+                }
+            }
+    }
+
+    private fun getWishlistProductIdsFlowRemote(
+        cachePolicy: CachePolicy.Remote,
+    ): Flow<Set<Product.Id>> {
+        return remoteDataSource.getWishlistProductIdsFlow()
+            .onEach { productIds ->
+                when (cachePolicy.updatePolicy) {
+                    CacheUpdatePolicy.NONE -> Unit
+                    CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
+                    CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
+                }
+            }
+    }
+
+    private fun setLocalFetchedWishlistProductIds(productIds: Set<Product.Id>) {
+        localDataSource.setWishlistProductIds(productIds)
+        localDataSource.setIsWishlistProductIdsFetched(true)
+    }
+
+    private fun clearLocalWishlistProductIds() {
+        localDataSource.setWishlistProductIds(emptySet())
+        localDataSource.setIsWishlistProductIdsFetched(false)
+    }
+
+    private companion object {
+        private const val TAG = "WishlistRepositoryImpl"
     }
 }

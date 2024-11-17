@@ -1,11 +1,14 @@
 package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 
 public interface WishlistRepository {
+    public fun getWishlistProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>>
+
     public fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>>
 
     public suspend fun fetchWishlistProductIds()
