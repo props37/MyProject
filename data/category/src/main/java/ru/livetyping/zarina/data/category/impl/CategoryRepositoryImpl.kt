@@ -1,11 +1,9 @@
 package ru.livetyping.zarina.data.category.impl
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
@@ -30,22 +28,6 @@ internal class CategoryRepositoryImpl @Inject constructor(
 
             is CachePolicy.Remote -> getCategoriesFlowRemote(cachePolicy)
         }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getCategoriesFlow(): Flow<Categories> {
-        return localDataSource.getCategoriesFlow()
-            .mapLatest { cached ->
-                Timber.tag(TAG).v("Cached categories: $cached")
-                cached ?: fetchCategories()
-            }
-    }
-
-    private suspend fun fetchCategories(): Categories {
-        val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
-        checkNotNull(categories) { "Failed to fetch categories" }
-        localDataSource.setCategories(categories)
-        return categories
     }
 
     private fun getCategoriesFlowLocalFirstThenRemote(

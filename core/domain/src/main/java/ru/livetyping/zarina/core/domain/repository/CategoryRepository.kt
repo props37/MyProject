@@ -6,6 +6,4 @@ import ru.livetyping.zarina.core.domain.model.category.Categories
 
 public interface CategoryRepository {
     public fun getCategoriesFlow(cachePolicy: CachePolicy): Flow<Categories>
-
-    public fun getCategoriesFlow(): Flow<Categories>
 }

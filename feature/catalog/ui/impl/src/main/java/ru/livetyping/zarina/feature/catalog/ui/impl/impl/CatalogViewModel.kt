@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.withFlattenedChildren
@@ -63,7 +64,8 @@ internal class CatalogViewModel @Inject constructor(
     }
 
     private val categoriesRequester = FlowRequester(CategoriesRequest) {
-        getCategoriesFlow()
+        val params = GetCategoriesFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+        getCategoriesFlow(params)
     }
 
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesRequester.flow
