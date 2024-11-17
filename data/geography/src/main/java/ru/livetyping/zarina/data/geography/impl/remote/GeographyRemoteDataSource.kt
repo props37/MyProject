@@ -6,4 +6,6 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 
 internal interface GeographyRemoteDataSource {
     fun getCityByLocationFlow(location: Location): Flow<City>
+
+    fun getCitiesFlow(nameQuery: String?): Flow<List<City>>
 }

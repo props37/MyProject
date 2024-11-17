@@ -6,4 +6,6 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 
 public interface GeographyRepository {
     public fun getCityByLocationFlow(location: Location): Flow<City>
+
+    public fun getCitiesFlow(nameQuery: String?): Flow<List<City>>
 }

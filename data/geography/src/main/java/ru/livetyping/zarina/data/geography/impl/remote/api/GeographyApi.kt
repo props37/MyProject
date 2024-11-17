@@ -5,4 +5,6 @@ import ru.livetyping.zarina.data.geography.impl.remote.api.dto.CityDto
 
 internal interface GeographyApi {
     suspend fun getCityByLocation(location: Location): CityDto
+
+    suspend fun getCities(nameQuery: String?): List<CityDto>
 }

@@ -15,4 +15,9 @@ internal class GeographyRemoteDataSourceImpl @Inject constructor(
         checkNotNull(city) { "city is null" }
         emit(city)
     }
+
+    override fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {
+        val cities = api.getCities(nameQuery).mapNotNull { it.toCity() }
+        emit(cities)
+    }
 }
