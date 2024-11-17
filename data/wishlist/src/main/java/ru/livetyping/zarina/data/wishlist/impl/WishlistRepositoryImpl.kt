@@ -58,6 +58,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
     private fun getWishlistProductIdsFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<Set<Product.Id>> {
+        // TODO: [Low] Add support for CacheExpirationPolicy
         Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getWishlistProductIdsFlow()
             .map { cached ->
