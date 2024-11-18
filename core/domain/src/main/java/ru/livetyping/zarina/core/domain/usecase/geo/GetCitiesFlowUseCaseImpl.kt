@@ -13,7 +13,7 @@ internal class GetCitiesFlowUseCaseImpl(
 ) : FlowUseCase<Params, List<City>>(logger), GetCitiesFlowUseCase {
 
     override fun execute(params: Params): Flow<List<City>> {
-        val nameQuery = params.nameQuery?.trim()
+        val nameQuery = params.nameQuery?.trim()?.takeIf { it.isNotBlank() }
         return geographyRepository.getCitiesFlow(nameQuery)
     }
 
