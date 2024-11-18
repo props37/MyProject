@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
@@ -233,6 +234,17 @@ internal class UseCaseModule {
     ): SetLocalUserCityUseCase {
         return SetLocalUserCityUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCitiesFlowUseCase(
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetCitiesFlowUseCase {
+        return GetCitiesFlowUseCase.getInstance(
+            geographyRepository = geographyRepository,
             logger = logger,
         )
     }
