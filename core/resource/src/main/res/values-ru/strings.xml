@@ -22,4 +22,5 @@
     <string name="continue_">Продолжить</string>
     <string name="skip">Пропустить</string>
     <string name="city">Город</string>
+    <string name="change">Изменить</string>
 </resources>

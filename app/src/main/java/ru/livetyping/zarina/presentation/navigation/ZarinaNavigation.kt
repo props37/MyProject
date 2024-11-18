@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTran
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
@@ -51,6 +52,8 @@ fun ZarinaNavigation(
         )
     }
 
+    val citySelectorFeature = features.find<CitySelectorFeature>()
+
     val homeFeature = features.find<HomeFeature>()
     val homeNavActions = remember {
         // TODO: [Top] Implement
@@ -70,6 +73,10 @@ fun ZarinaNavigation(
     ) {
         with(onboardingFeature) {
             composable(onboardingNavActions)
+        }
+
+        with(citySelectorFeature) {
+            composable(CitySelectorNavActions())
         }
 
         with(homeFeature) {
