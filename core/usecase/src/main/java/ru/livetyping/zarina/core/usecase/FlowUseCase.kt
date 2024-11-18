@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
+import kotlin.coroutines.cancellation.CancellationException
 
 public abstract class FlowUseCase<in P, out R>(private val logger: UseCaseLogger?) {
     private val className by lazy { this.javaClass.simpleName ?: TAG }
@@ -11,11 +12,18 @@ public abstract class FlowUseCase<in P, out R>(private val logger: UseCaseLogger
     public fun call(params: P): Flow<Result<R>> = execute(params)
         .map { Result.success(it) }
         .retryWhen { t, attempt ->
-            logError(t, params)
-            emit(Result.failure(t))
-            shouldRetry(t, attempt)
+            if (t is CancellationException) throw t
+
+            val shouldRetry = shouldRetry(t, attempt)
+            if (shouldRetry) {
+                logError(t, params)
+                emit(Result.failure(t))
+            }
+            shouldRetry
         }
         .catch { t ->
+            if (t is CancellationException) throw t
+
             logError(t, params)
             emit(Result.failure(t))
         }
