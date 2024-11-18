@@ -14,11 +14,10 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
+import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.feature.find
-import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
@@ -34,7 +33,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
 fun ZarinaNavigation(
     features: Features,
     navController: NavHostController,
-    startDestination: Destination<Unit>,
+    startFeature: AppStartFeature,
     modifier: Modifier = Modifier,
 ) {
     @Suppress("NAME_SHADOWING")
@@ -56,9 +55,14 @@ fun ZarinaNavigation(
     val wishlistFeature = features.find<WishlistFeature>()
     val wishlistNavActions = rememberWishlistNavActions(features, navController)
 
+    val startDestination = when (startFeature) {
+        AppStartFeature.ONBOARDING -> onboardingFeature.getNavEntry(Unit)
+        AppStartFeature.HOME -> homeFeature.getNavEntry(Unit)
+    }
+
     NavHost(
         navController = navController,
-        startDestination = OnboardingNavEntry, // TODO: [Top] Implement
+        startDestination = startDestination,
         enterTransition = { zarinaEnterSlideTransition() },
         exitTransition = { zarinaExitSlideTransition() },
         popEnterTransition = { zarinaPopEnterSlideTransition() },
