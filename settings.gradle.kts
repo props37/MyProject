@@ -33,6 +33,7 @@ include(":feature:wishlist:ui:api")
 include(":feature:wishlist:ui:impl")
 
 include(":feature:profile:ui:api")
+include(":feature:profile:ui:impl")
 
 include(":feature:cityselector:ui:api")
 include(":feature:cityselector:ui:impl")
