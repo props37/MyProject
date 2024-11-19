@@ -14,7 +14,7 @@ internal class GetCitiesFlowUseCaseImpl(
 
     override fun execute(params: Params): Flow<List<City>> {
         val nameQuery = params.nameQuery?.trim()?.takeIf { it.isNotBlank() }
-        return geographyRepository.getCitiesFlow(nameQuery)
+        return geographyRepository.getCitiesFlow(nameQuery, params.cachePolicy)
     }
 
     override fun invoke(params: Params): Flow<Result<List<City>>> {
