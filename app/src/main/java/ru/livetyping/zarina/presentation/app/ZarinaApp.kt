@@ -33,7 +33,6 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZari
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.rememberZarinaToastController
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
-import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @Composable
@@ -47,13 +46,10 @@ fun ZarinaApp(
 
     val toastController = rememberToastController()
 
-    val defaultBottomNavBarBehavior = remember(viewModel.startDestination) {
-        when (viewModel.startDestination.routeSchema) {
-            UnscopedDestinations.Onboarding.routeSchema -> {
-                BottomNavBarBehavior.Hidden(isAnimated = false)
-            }
-
-            else -> BottomNavBarBehavior.Visible(isAnimated = false)
+    val defaultBottomNavBarBehavior = remember(viewModel.startFeature) {
+        when (viewModel.startFeature) {
+            AppStartFeature.ONBOARDING -> BottomNavBarBehavior.Hidden(isAnimated = false)
+            AppStartFeature.HOME -> BottomNavBarBehavior.Visible(isAnimated = false)
         }
     }
     val bottomNavBarBehaviorController =
@@ -97,7 +93,7 @@ fun ZarinaApp(
                     ZarinaNavigation(
                         features = features,
                         navController = navController,
-                        startDestination = viewModel.startDestination,
+                        startFeature = viewModel.startFeature,
                         modifier = Modifier.fillMaxSize(),
                     )
 

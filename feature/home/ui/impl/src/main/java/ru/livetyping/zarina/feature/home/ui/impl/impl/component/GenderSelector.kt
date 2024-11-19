@@ -58,7 +58,7 @@ internal fun GenderSelector(
 
                     val isSelected = gender == genderSelectorState.currentTab
                     ZarinaTab(
-                        text = stringResource(textResId),
+                        text = stringResource(textResId).uppercase(),
                         onClick = {
                             if (!isSelected) {
                                 onGenderSelectorEvent(TabRowEvent.TabChanged(gender))
@@ -67,6 +67,10 @@ internal fun GenderSelector(
                             }
                         },
                         isSelected = isSelected,
+                        selectedTextStyle = UiKitTheme.typography.tertiary.regular,
+                        unselectedTextStyle = UiKitTheme.typography.tertiary.light,
+                        selectedContentColor = contentColor,
+                        unselectedContentColor = contentColor,
                     )
                 }
             }

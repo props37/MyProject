@@ -152,6 +152,7 @@ dependencies {
     implementation(projects.feature.onboarding.ui.impl)
 
     implementation(projects.feature.cityselector.ui.api)
+    implementation(projects.feature.cityselector.ui.impl)
 
     implementation(projects.data.content)
     implementation(projects.data.auth)
