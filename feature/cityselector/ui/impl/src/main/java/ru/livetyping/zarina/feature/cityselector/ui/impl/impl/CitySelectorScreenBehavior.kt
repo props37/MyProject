@@ -41,6 +41,7 @@ internal fun CitySelectorScreenBehavior(
 }
 
 private fun navigate(navActions: CitySelectorNavActions, action: CitySelectorScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        CitySelectorScreenAction.ScreenClosed -> navActions.backClicked()
+    }
 }

@@ -58,6 +58,8 @@ fun rememberCitySelectorNavActions(
     navController: NavHostController
 ): CitySelectorNavActions {
     return remember(features, navController) {
-        CitySelectorNavActions()
+        CitySelectorNavActions(
+            backClicked = { navController.navigateUp() },
+        )
     }
 }
