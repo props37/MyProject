@@ -11,6 +11,8 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideT
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.citySelectorFeature(
     feature: CitySelectorFeature,
@@ -22,7 +24,7 @@ fun NavGraphBuilder.citySelectorFeature(
             enterTransition = {
                 val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
                 when {
-                    initialState.destination.hasRoute(onboardingNavEntryClass) -> {
+                    initialDestination.hasRoute(onboardingNavEntryClass) -> {
                         zarinaEnterSlideTransition(
                             towards = AnimatedContentTransitionScope.SlideDirection.Up,
                         )
@@ -34,7 +36,7 @@ fun NavGraphBuilder.citySelectorFeature(
             popExitTransition = {
                 val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
                 when {
-                    targetState.destination.hasRoute(onboardingNavEntryClass) -> {
+                    targetDestination.hasRoute(onboardingNavEntryClass) -> {
                         zarinaPopExitSlideTransition(
                             towards = AnimatedContentTransitionScope.SlideDirection.Down,
                         )

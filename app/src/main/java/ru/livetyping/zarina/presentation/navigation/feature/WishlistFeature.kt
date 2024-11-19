@@ -10,6 +10,8 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTr
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.wishlistFeature(
     feature: WishlistFeature,
@@ -19,7 +21,6 @@ fun NavGraphBuilder.wishlistFeature(
         composable(
             actions = actions,
             enterTransition = {
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
@@ -29,7 +30,6 @@ fun NavGraphBuilder.wishlistFeature(
                 }
             },
             exitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()
@@ -39,7 +39,6 @@ fun NavGraphBuilder.wishlistFeature(
                 }
             },
             popEnterTransition = {
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
@@ -49,7 +48,6 @@ fun NavGraphBuilder.wishlistFeature(
                 }
             },
             popExitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()

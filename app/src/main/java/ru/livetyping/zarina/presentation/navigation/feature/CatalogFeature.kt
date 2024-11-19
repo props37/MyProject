@@ -10,6 +10,8 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTr
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.catalogFeature(
     feature: CatalogFeature,
@@ -19,7 +21,6 @@ fun NavGraphBuilder.catalogFeature(
         composable(
             actions = actions,
             enterTransition = {
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
@@ -29,7 +30,6 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             exitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()

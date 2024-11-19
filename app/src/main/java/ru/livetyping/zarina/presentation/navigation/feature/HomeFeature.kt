@@ -13,6 +13,8 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.homeFeature(
     feature: HomeFeature,
@@ -23,8 +25,6 @@ fun NavGraphBuilder.homeFeature(
             actions = actions,
             enterTransition = {
                 val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
-
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasRoute(onboardingNavEntryClass) -> {
                         EnterTransition.None
@@ -38,7 +38,6 @@ fun NavGraphBuilder.homeFeature(
                 }
             },
             exitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()
@@ -48,7 +47,6 @@ fun NavGraphBuilder.homeFeature(
                 }
             },
             popEnterTransition = {
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
@@ -58,7 +56,6 @@ fun NavGraphBuilder.homeFeature(
                 }
             },
             popExitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()

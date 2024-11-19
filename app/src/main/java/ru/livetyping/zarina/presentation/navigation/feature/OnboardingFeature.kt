@@ -12,6 +12,8 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.onboardingFeature(
     feature: OnboardingFeature,
@@ -23,7 +25,7 @@ fun NavGraphBuilder.onboardingFeature(
             exitTransition = {
                 val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
                 when {
-                    targetState.destination.hasRoute(citySelectorNavEntryClass) -> {
+                    targetDestination.hasRoute(citySelectorNavEntryClass) -> {
                         ExitTransition.KeepUntilTransitionsFinished
                     }
 
@@ -33,7 +35,7 @@ fun NavGraphBuilder.onboardingFeature(
             popEnterTransition = {
                 val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
                 when {
-                    initialState.destination.hasRoute(citySelectorNavEntryClass) -> {
+                    initialDestination.hasRoute(citySelectorNavEntryClass) -> {
                         EnterTransition.None
                     }
 
