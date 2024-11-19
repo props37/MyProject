@@ -8,6 +8,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.feature.NavigationEntry
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
+import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import kotlin.reflect.KClass
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -50,7 +51,7 @@ fun BottomNavBarItem.toFeatureNavEntry(): NavigationEntry {
         BottomNavBarItem.Catalog -> CatalogFeature.getNavEntry()
         BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getNavEntry()
-        BottomNavBarItem.Profile -> HomeFeature.getNavEntry() // TODO: [Top] Implement
+        BottomNavBarItem.Profile -> ProfileFeature.getNavEntry()
         BottomNavBarItem.Cart -> HomeFeature.getNavEntry() // TODO: [Top] Implement
     }
 }

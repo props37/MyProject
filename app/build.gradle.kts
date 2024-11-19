@@ -139,14 +139,14 @@ dependencies {
     implementation(projects.feature.home.domain)
     implementation(projects.feature.home.data)
 
-    implementation(projects.feature.onboarding.ui.api)
-    implementation(projects.feature.onboarding.ui.impl)
-
     implementation(projects.feature.catalog.ui.api)
     implementation(projects.feature.catalog.ui.impl)
 
     implementation(projects.feature.wishlist.ui.api)
     implementation(projects.feature.wishlist.ui.impl)
+
+    implementation(projects.feature.profile.ui.api)
+    implementation(projects.feature.profile.ui.impl)
 
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.feature.onboarding.ui.impl)

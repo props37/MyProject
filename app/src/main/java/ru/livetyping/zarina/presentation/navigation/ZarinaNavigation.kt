@@ -14,6 +14,7 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.feature.Features
@@ -26,6 +27,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberCatalogNavAc
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelectorNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
 
@@ -40,12 +42,6 @@ fun ZarinaNavigation(
     val navController by rememberUpdatedState(navController)
 
     // TODO: [Top] Refactor
-    val onboardingFeature = features.find<OnboardingFeature>()
-    val onboardingNavActions = rememberOnboardingNavActions(navController)
-
-    val citySelectorFeature = features.find<CitySelectorFeature>()
-    val citySelectorNavActions = rememberCitySelectorNavActions(navController)
-
     val homeFeature = features.find<HomeFeature>()
     val homeNavActions = rememberHomeNavActions(navController)
 
@@ -54,6 +50,15 @@ fun ZarinaNavigation(
 
     val wishlistFeature = features.find<WishlistFeature>()
     val wishlistNavActions = rememberWishlistNavActions(navController)
+
+    val profileFeature = features.find<ProfileFeature>()
+    val profileNavActions = rememberProfileNavActions(navController)
+
+    val onboardingFeature = features.find<OnboardingFeature>()
+    val onboardingNavActions = rememberOnboardingNavActions(navController)
+
+    val citySelectorFeature = features.find<CitySelectorFeature>()
+    val citySelectorNavActions = rememberCitySelectorNavActions(navController)
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
