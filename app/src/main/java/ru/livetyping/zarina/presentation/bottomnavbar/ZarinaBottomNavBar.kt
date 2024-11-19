@@ -29,9 +29,8 @@ fun ZarinaBottomNavBar(
         // TODO: [Medium] Do not use restricted API
         val backStack by navController.currentBackStack.collectAsStateWithLifecycle()
 
-        val bottomNavBarItems = BottomNavBarItem.ITEMS
-        for (i in bottomNavBarItems.indices) {
-            val item = bottomNavBarItems[i]
+        for (i in BottomNavBarItems.indices) {
+            val item = BottomNavBarItems[i]
             key(item) {
                 val counterValue = when (item) {
                     BottomNavBarItem.Wishlist -> favoriteProductCount
@@ -57,7 +56,7 @@ private fun isItemSelected(
     backStack: List<NavBackStackEntry>,
 ): Boolean {
     val bottomNavBarItemFeatureEntry = bottomNavItem.toFeatureNavEntry()
-    val bottomNavBarItemNavEntries = BottomNavBarItem.ITEMS.map { it.toFeatureNavEntry() }
+    val bottomNavBarItemNavEntries = BottomNavBarItems.map { it.toFeatureNavEntry() }
     val lastBottomNavBarItemBackStackEntry = backStack.lastOrNull { backStackEntry ->
         bottomNavBarItemNavEntries.any { navEntry ->
             backStackEntry.destination.hasRoute(navEntry::class)

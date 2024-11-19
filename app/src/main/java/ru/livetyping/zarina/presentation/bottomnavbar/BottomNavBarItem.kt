@@ -42,10 +42,6 @@ sealed class BottomNavBarItem(
         titleResId = R.string.cart,
         iconResId = R.drawable.ic_shopper_outline_24,
     )
-
-    companion object {
-        val ITEMS: List<BottomNavBarItem> = listOf(Catalog, Wishlist, Home, Profile, Cart)
-    }
 }
 
 fun BottomNavBarItem.toFeatureNavEntry(): Any {
@@ -74,6 +70,14 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
     }
 }
 
-val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = BottomNavBarItem.ITEMS.map { item ->
+val BottomNavBarItems: List<BottomNavBarItem> = listOf(
+    BottomNavBarItem.Catalog,
+    BottomNavBarItem.Wishlist,
+    BottomNavBarItem.Home,
+    BottomNavBarItem.Profile,
+    BottomNavBarItem.Cart,
+)
+
+val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = BottomNavBarItems.map { item ->
     item.toFeatureNavEntry()::class
 }
