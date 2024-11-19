@@ -8,7 +8,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem.Companion.ITEMS
 import kotlin.reflect.KClass
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -75,6 +74,6 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
     }
 }
 
-val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = ITEMS.map { item ->
+val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = BottomNavBarItem.ITEMS.map { item ->
     item.toFeatureNavEntry()::class
 }
