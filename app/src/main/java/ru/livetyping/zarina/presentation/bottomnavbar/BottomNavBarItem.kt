@@ -8,7 +8,8 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.presentation.navigation.destination.graph.HomeGraph
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem.Companion.ITEMS
+import kotlin.reflect.KClass
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Stable
@@ -65,11 +66,15 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items
-        popUpTo(HomeGraph.Home.routeSchema) { saveState = true }
+        popUpTo(HomeFeature.NavEntry) { saveState = true }
         // Avoid multiple copies of the same destination when
         // reselecting the same item
         launchSingleTop = true
         // Restore state when reselecting a previously selected item
         restoreState = true
     }
+}
+
+val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = ITEMS.map { item ->
+    item.toFeatureNavEntry()::class
 }

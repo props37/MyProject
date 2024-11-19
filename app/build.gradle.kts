@@ -168,6 +168,7 @@ dependencies {
     implementation(projects.core.uiKit)
     implementation(projects.core.sharedpreferences)
     implementation(projects.core.permission)
+    implementation(projects.core.navigationUtil)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

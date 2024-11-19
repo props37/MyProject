@@ -4,8 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigationutil.hasAnyRoute
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
 import ru.livetyping.zarina.presentation.feature.Features
 
 fun NavGraphBuilder.wishlistFeature(
@@ -13,7 +17,49 @@ fun NavGraphBuilder.wishlistFeature(
     actions: WishlistNavActions,
 ) {
     with(feature) {
-        composable(actions)
+        composable(
+            actions = actions,
+            enterTransition = {
+                val initialDestination = initialState.destination
+                when {
+                    initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                        zarinaEnterFadeInTransition()
+                    }
+
+                    else -> null
+                }
+            },
+            exitTransition = {
+                val targetDestination = targetState.destination
+                when {
+                    targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                        zarinaExitFadeOutTransition()
+                    }
+
+                    else -> null
+                }
+            },
+            popEnterTransition = {
+                val initialDestination = initialState.destination
+                when {
+                    initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                        zarinaEnterFadeInTransition()
+                    }
+
+                    else -> null
+                }
+            },
+            popExitTransition = {
+                val targetDestination = targetState.destination
+                when {
+                    targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                        zarinaExitFadeOutTransition()
+                    }
+
+                    else -> null
+                }
+            },
+        )
     }
 }
 
