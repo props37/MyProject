@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.core.feature.NavigationEntry
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
@@ -44,7 +45,7 @@ sealed class BottomNavBarItem(
     )
 }
 
-fun BottomNavBarItem.toFeatureNavEntry(): Any {
+fun BottomNavBarItem.toFeatureNavEntry(): NavigationEntry {
     return when (this) {
         BottomNavBarItem.Catalog -> CatalogFeature.getNavEntry()
         BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()

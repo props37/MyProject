@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.cityselector.ui
 
 import androidx.navigation.NavType
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.feature.NavigationEntry
 import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
@@ -12,7 +13,7 @@ import kotlin.reflect.typeOf
 public data class CitySelectorNavEntry(
     val title: Text? = null,
     val currentCity: CityParcelable? = null,
-) {
+) : NavigationEntry {
     public companion object {
         public fun typeMap(): Map<KType, NavType<*>> {
             val textType = object : ParcelableNavType<Text?>(

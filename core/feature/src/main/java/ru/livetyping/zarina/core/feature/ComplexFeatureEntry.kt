@@ -7,7 +7,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 
-public interface ComplexFeatureEntry<NavEntry : Any, NavParams, NavActions> :
+public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions> :
     FeatureEntry<NavEntry, NavParams, NavActions> {
 
     public fun NavGraphBuilder.navigation(
