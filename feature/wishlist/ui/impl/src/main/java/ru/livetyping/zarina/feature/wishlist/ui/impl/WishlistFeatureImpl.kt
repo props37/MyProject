@@ -11,7 +11,6 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavEntry
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
-import kotlin.reflect.KClass
 
 public class WishlistFeatureImpl : WishlistFeature {
     override fun NavGraphBuilder.composable(
@@ -32,8 +31,4 @@ public class WishlistFeatureImpl : WishlistFeature {
             WishlistScreen(navActions = actions)
         }
     }
-
-    override fun getNavEntry(params: Unit): WishlistNavEntry = WishlistNavEntry
-
-    override fun getNavEntryClass(): KClass<WishlistNavEntry> = WishlistNavEntry::class
 }

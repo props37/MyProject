@@ -13,20 +13,16 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
-import ru.livetyping.zarina.presentation.feature.Features
-import ru.livetyping.zarina.presentation.feature.find
 
 fun NavGraphBuilder.homeFeature(
     feature: HomeFeature,
     actions: HomeNavActions,
-    features: Features,
 ) {
     with(feature) {
         composable(
             actions = actions,
             enterTransition = {
-                val onboardingNavEntryClass =
-                    features.find<OnboardingFeature>().getNavEntryClass()
+                val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
 
                 val initialDestination = initialState.destination
                 when {
@@ -77,10 +73,9 @@ fun NavGraphBuilder.homeFeature(
 
 @Composable
 fun rememberHomeNavActions(
-    features: Features,
     navController: NavHostController
 ): HomeNavActions {
-    return remember(features, navController) {
+    return remember(navController) {
         HomeNavActions(
             bannerClicked = {
                 TODO()

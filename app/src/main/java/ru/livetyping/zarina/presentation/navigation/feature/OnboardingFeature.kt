@@ -12,20 +12,16 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
-import ru.livetyping.zarina.presentation.feature.Features
-import ru.livetyping.zarina.presentation.feature.find
 
 fun NavGraphBuilder.onboardingFeature(
     feature: OnboardingFeature,
     actions: OnboardingNavActions,
-    features: Features,
 ) {
     with(feature) {
         composable(
             actions = actions,
             exitTransition = {
-                val citySelectorNavEntryClass =
-                    features.find<CitySelectorFeature>().getNavEntryClass()
+                val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
                 when {
                     targetState.destination.hasRoute(citySelectorNavEntryClass) -> {
                         ExitTransition.KeepUntilTransitionsFinished
@@ -35,8 +31,7 @@ fun NavGraphBuilder.onboardingFeature(
                 }
             },
             popEnterTransition = {
-                val citySelectorNavEntryClass =
-                    features.find<CitySelectorFeature>().getNavEntryClass()
+                val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
                 when {
                     initialState.destination.hasRoute(citySelectorNavEntryClass) -> {
                         EnterTransition.None
@@ -51,10 +46,9 @@ fun NavGraphBuilder.onboardingFeature(
 
 @Composable
 fun rememberOnboardingNavActions(
-    features: Features,
     navController: NavHostController
 ): OnboardingNavActions {
-    return remember(features, navController) {
+    return remember(navController) {
         OnboardingNavActions(
             onboardingCompleted = {
                 navController.navigate(HomeNavEntry) {
@@ -64,8 +58,7 @@ fun rememberOnboardingNavActions(
             },
             selectCityClicked = {
                 val citySelectorParams = CitySelectorNavParams()
-                val citySelectorNavEntry = features.find<CitySelectorFeature>()
-                    .getNavEntry(citySelectorParams)
+                val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
                 navController.navigate(citySelectorNavEntry)
             },
         )

@@ -11,7 +11,6 @@ import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
-import kotlin.reflect.KClass
 
 public class OnboardingFeatureImpl : OnboardingFeature {
     override fun NavGraphBuilder.composable(
@@ -32,8 +31,4 @@ public class OnboardingFeatureImpl : OnboardingFeature {
             OnboardingScreen(navActions = actions)
         }
     }
-
-    override fun getNavEntry(params: Unit): OnboardingNavEntry = OnboardingNavEntry
-
-    override fun getNavEntryClass(): KClass<OnboardingNavEntry> = OnboardingNavEntry::class
 }

@@ -10,7 +10,6 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTr
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
-import ru.livetyping.zarina.presentation.feature.Features
 
 fun NavGraphBuilder.wishlistFeature(
     feature: WishlistFeature,
@@ -65,10 +64,9 @@ fun NavGraphBuilder.wishlistFeature(
 
 @Composable
 fun rememberWishlistNavActions(
-    features: Features,
     navController: NavHostController
 ): WishlistNavActions {
-    return remember(features, navController) {
+    return remember(navController) {
         WishlistNavActions()
     }
 }

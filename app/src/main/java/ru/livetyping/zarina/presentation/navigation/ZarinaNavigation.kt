@@ -41,23 +41,23 @@ fun ZarinaNavigation(
 
     // TODO: [Top] Refactor
     val onboardingFeature = features.find<OnboardingFeature>()
-    val onboardingNavActions = rememberOnboardingNavActions(features, navController)
+    val onboardingNavActions = rememberOnboardingNavActions(navController)
 
     val citySelectorFeature = features.find<CitySelectorFeature>()
-    val citySelectorNavActions = rememberCitySelectorNavActions(features, navController)
+    val citySelectorNavActions = rememberCitySelectorNavActions(navController)
 
     val homeFeature = features.find<HomeFeature>()
-    val homeNavActions = rememberHomeNavActions(features, navController)
+    val homeNavActions = rememberHomeNavActions(navController)
 
     val catalogFeature = features.find<CatalogFeature>()
-    val catalogNavActions = rememberCatalogNavActions(features, navController)
+    val catalogNavActions = rememberCatalogNavActions(navController)
 
     val wishlistFeature = features.find<WishlistFeature>()
-    val wishlistNavActions = rememberWishlistNavActions(features, navController)
+    val wishlistNavActions = rememberWishlistNavActions(navController)
 
     val startDestination = when (startFeature) {
-        AppStartFeature.ONBOARDING -> onboardingFeature.getNavEntry(Unit)
-        AppStartFeature.HOME -> homeFeature.getNavEntry(Unit)
+        AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
+        AppStartFeature.HOME -> HomeFeature.getNavEntry()
     }
 
     NavHost(
@@ -69,10 +69,10 @@ fun ZarinaNavigation(
         popExitTransition = { zarinaPopExitSlideTransition() },
         modifier = modifier,
     ) {
-        onboardingFeature(onboardingFeature, onboardingNavActions, features)
-        homeFeature(homeFeature, homeNavActions, features)
+        onboardingFeature(onboardingFeature, onboardingNavActions)
+        homeFeature(homeFeature, homeNavActions)
         catalogFeature(catalogFeature, catalogNavActions)
         wishlistFeature(wishlistFeature, wishlistNavActions)
-        citySelectorFeature(citySelectorFeature, citySelectorNavActions, features)
+        citySelectorFeature(citySelectorFeature, citySelectorNavActions)
     }
 }

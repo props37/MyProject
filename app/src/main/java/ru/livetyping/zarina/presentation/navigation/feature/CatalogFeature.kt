@@ -10,7 +10,6 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTr
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
-import ru.livetyping.zarina.presentation.feature.Features
 
 fun NavGraphBuilder.catalogFeature(
     feature: CatalogFeature,
@@ -65,10 +64,9 @@ fun NavGraphBuilder.catalogFeature(
 
 @Composable
 fun rememberCatalogNavActions(
-    features: Features,
     navController: NavHostController
 ): CatalogNavActions {
-    return remember(features, navController) {
+    return remember(navController) {
         CatalogNavActions()
     }
 }

@@ -46,11 +46,11 @@ sealed class BottomNavBarItem(
 
 fun BottomNavBarItem.toFeatureNavEntry(): Any {
     return when (this) {
-        BottomNavBarItem.Catalog -> CatalogFeature.NavEntry
-        BottomNavBarItem.Wishlist -> WishlistFeature.NavEntry
-        BottomNavBarItem.Home -> HomeFeature.NavEntry
-        BottomNavBarItem.Profile -> HomeFeature.NavEntry // TODO: [Top] Implement
-        BottomNavBarItem.Cart -> HomeFeature.NavEntry // TODO: [Top] Implement
+        BottomNavBarItem.Catalog -> CatalogFeature.getNavEntry()
+        BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()
+        BottomNavBarItem.Home -> HomeFeature.getNavEntry()
+        BottomNavBarItem.Profile -> HomeFeature.getNavEntry() // TODO: [Top] Implement
+        BottomNavBarItem.Cart -> HomeFeature.getNavEntry() // TODO: [Top] Implement
     }
 }
 
@@ -61,7 +61,7 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items
-        popUpTo(HomeFeature.NavEntry) { saveState = true }
+        popUpTo(HomeFeature.getNavEntry()) { saveState = true }
         // Avoid multiple copies of the same destination when
         // reselecting the same item
         launchSingleTop = true

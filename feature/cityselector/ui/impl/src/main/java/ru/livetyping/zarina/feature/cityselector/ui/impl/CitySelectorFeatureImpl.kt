@@ -10,9 +10,7 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.CitySelectorScreen
-import kotlin.reflect.KClass
 
 public class CitySelectorFeatureImpl : CitySelectorFeature {
     override fun NavGraphBuilder.composable(
@@ -34,10 +32,4 @@ public class CitySelectorFeatureImpl : CitySelectorFeature {
             CitySelectorScreen(actions)
         }
     }
-
-    override fun getNavEntry(params: CitySelectorNavParams): CitySelectorNavEntry {
-        return params.toNavEntry()
-    }
-
-    override fun getNavEntryClass(): KClass<CitySelectorNavEntry> = CitySelectorNavEntry::class
 }

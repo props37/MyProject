@@ -11,20 +11,16 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideT
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.presentation.feature.Features
-import ru.livetyping.zarina.presentation.feature.find
 
 fun NavGraphBuilder.citySelectorFeature(
     feature: CitySelectorFeature,
     actions: CitySelectorNavActions,
-    features: Features,
 ) {
     with(feature) {
         composable(
             actions = actions,
             enterTransition = {
-                val onboardingNavEntryClass =
-                    features.find<OnboardingFeature>().getNavEntryClass()
+                val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
                 when {
                     initialState.destination.hasRoute(onboardingNavEntryClass) -> {
                         zarinaEnterSlideTransition(
@@ -36,8 +32,7 @@ fun NavGraphBuilder.citySelectorFeature(
                 }
             },
             popExitTransition = {
-                val onboardingNavEntryClass =
-                    features.find<OnboardingFeature>().getNavEntryClass()
+                val onboardingNavEntryClass = OnboardingFeature.getNavEntryClass()
                 when {
                     targetState.destination.hasRoute(onboardingNavEntryClass) -> {
                         zarinaPopExitSlideTransition(
@@ -54,10 +49,9 @@ fun NavGraphBuilder.citySelectorFeature(
 
 @Composable
 fun rememberCitySelectorNavActions(
-    features: Features,
     navController: NavHostController
 ): CitySelectorNavActions {
-    return remember(features, navController) {
+    return remember(navController) {
         CitySelectorNavActions(
             backClicked = { navController.navigateUp() },
         )
