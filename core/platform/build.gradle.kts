@@ -41,6 +41,8 @@ kotlin {
 dependencies {
     implementation(projects.core.domain)
 
+    implementation(libs.jetpack.core)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
