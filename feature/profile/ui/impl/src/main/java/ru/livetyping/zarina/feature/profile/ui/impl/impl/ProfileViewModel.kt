@@ -4,10 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
@@ -17,6 +21,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.MenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
 import javax.inject.Inject
@@ -65,7 +70,43 @@ internal class ProfileViewModel @Inject constructor(
             initialValue = null,
         )
 
-    val profileState: StateFlow<ProfileState> = TODO()
+    private val menuItems: StateFlow<ImmutableList<MenuItem>> = userState
+        .map { userState ->
+            val isUserAuthorized = (userState as? UserState.Success)?.user != null
+            if (isUserAuthorized) {
+                MenuItem.entries.toImmutableList()
+            } else {
+                MenuItem.entries.minus(MenuItem.MyOrders).toImmutableList()
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = MenuItem.entries.minus(MenuItem.MyOrders).toImmutableList(),
+        )
+
+    val profileState: StateFlow<ProfileState> = combine(
+        userState,
+        loyaltyCard,
+        userCity,
+        menuItems,
+    ) { userState, loyaltyCard, userCity, menuItems ->
+        ProfileState(
+            userState = userState,
+            loyaltyCard = loyaltyCard,
+            userCity = userCity,
+            menuItems = menuItems,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = ProfileState(
+            userState = UserState.Loading,
+            loyaltyCard = null,
+            userCity = null,
+            menuItems = MenuItem.entries.toImmutableList(),
+        )
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
