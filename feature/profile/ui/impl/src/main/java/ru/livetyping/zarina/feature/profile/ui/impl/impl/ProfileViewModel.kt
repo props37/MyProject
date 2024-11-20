@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -21,6 +23,7 @@ import javax.inject.Inject
 internal class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getUserFlowUseCase: GetUserFlowUseCase,
+    getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -35,6 +38,17 @@ internal class ProfileViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = UserState.Loading,
         )
+
+    private val getLoyaltyCardUseCaseParams =
+        GetLoyaltyCardFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+    private val loyaltyCard: StateFlow<LoyaltyCard?> =
+        getLoyaltyCardFlowUseCase(getLoyaltyCardUseCaseParams)
+            .map { it.getOrNull() }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = null,
+            )
 
     val profileState: StateFlow<ProfileState> = TODO()
 
