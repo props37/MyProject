@@ -24,6 +24,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
@@ -256,6 +257,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetLoyaltyCardFlowUseCase {
         return GetLoyaltyCardFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetUserCityFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetUserCityFlowUseCase {
+        return GetUserCityFlowUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )

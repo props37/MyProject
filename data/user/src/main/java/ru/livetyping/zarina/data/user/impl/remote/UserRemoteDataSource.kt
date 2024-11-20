@@ -8,6 +8,8 @@ import ru.livetyping.zarina.core.domain.model.user.User
 internal interface UserRemoteDataSource {
     fun getUserFlow(): Flow<User>
 
+    fun getUserCityFlow(): Flow<City>
+
     suspend fun setUserCity(city: City)
 
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard>

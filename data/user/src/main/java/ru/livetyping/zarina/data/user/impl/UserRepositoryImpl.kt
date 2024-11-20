@@ -28,6 +28,14 @@ internal class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getUserCityFlow(cachePolicy: CachePolicy): Flow<City?> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getUserCityFlow()
+            is CachePolicy.LocalFirstThenRemote -> getUserCityFlowLocalFirstThenRemote(cachePolicy)
+            is CachePolicy.Remote -> getUserCityFlowRemote(cachePolicy)
+        }
+    }
+
     override suspend fun setUserCity(city: City) {
         remoteDataSource.setUserCity(city)
         localDataSource.setUserCity(city)
@@ -110,6 +118,38 @@ internal class UserRepositoryImpl @Inject constructor(
                     CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
                 }
             }
+    }
+
+    private fun getUserCityFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<City?> {
+        // TODO: [Low] Add support for CacheExpirationPolicy
+        Timber.tag(TAG).w("User city CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
+        return localDataSource.getUserCityFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val city = remoteDataSource.getUserCityFlow().firstOrNull()
+                checkNotNull(city) { "Failed to fetch user city" }
+                userCityCacheUpdatePolicyImpl(city, cachePolicy.updatePolicy)
+                city
+            }
+        }
+    }
+
+    private fun getUserCityFlowRemote(cachePolicy: CachePolicy.Remote): Flow<City?> {
+        return remoteDataSource.getUserCityFlow()
+            .onEach { city ->
+                userCityCacheUpdatePolicyImpl(city, cachePolicy.updatePolicy)
+            }
+    }
+
+    private suspend fun userCityCacheUpdatePolicyImpl(city: City, policy: CacheUpdatePolicy) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setUserCity(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setUserCity(city)
+        }
     }
 
     private companion object {

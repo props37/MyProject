@@ -10,6 +10,8 @@ internal interface UserLocalDataSource {
 
     suspend fun setUser(user: User)
 
+    fun getUserCityFlow(): Flow<City?>
+
     suspend fun setUserCity(city: City?)
 
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard?>
