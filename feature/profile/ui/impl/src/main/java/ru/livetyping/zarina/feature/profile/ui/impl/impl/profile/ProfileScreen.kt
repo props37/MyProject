@@ -25,7 +25,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionDetails
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionInfo
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
@@ -86,7 +86,7 @@ internal fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            VersionDetails(details = profileState.versionDetails)
+            VersionInfo(versionInfos = profileState.versionInfos)
             Spacer(modifier = Modifier.height(16.dp))
 
             Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))

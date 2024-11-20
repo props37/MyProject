@@ -28,7 +28,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEv
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionDetails
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionInfo
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,15 +92,15 @@ internal class ProfileViewModel @Inject constructor(
             initialValue = ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList(),
         )
 
-    private val versionDetails = buildList {
-        val appVersionName = VersionDetails(
+    private val versionInfos = buildList {
+        val appVersionName = VersionInfo(
             title = Text.Resource(R.string.app_version),
             version = Text.String(appVersionName),
         )
         add(appVersionName)
 
         if (appBuildType != BuildType.RELEASE) {
-            val mindboxDeviceUuid = VersionDetails(
+            val mindboxDeviceUuid = VersionInfo(
                 title = Text.Resource(R.string.mindbox_device_uuid),
                 version = Text.String("TODO"), // TODO: [Top] Implement
             )
@@ -119,7 +119,7 @@ internal class ProfileViewModel @Inject constructor(
             loyaltyCard = loyaltyCard,
             userCity = userCity,
             menuItems = menuItems,
-            versionDetails = versionDetails,
+            versionInfos = versionInfos,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -129,7 +129,7 @@ internal class ProfileViewModel @Inject constructor(
             loyaltyCard = null,
             userCity = null,
             menuItems = ProfileMenuItem.entries.toImmutableList(),
-            versionDetails = versionDetails,
+            versionInfos = versionInfos,
         )
     )
 
