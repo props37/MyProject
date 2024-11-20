@@ -4,8 +4,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeout
-import ru.livetyping.zarina.core.domain.exception.MissingPermissionException
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.domain.model.common.exception.MissingPermissionException
 import timber.log.Timber
 import javax.inject.Inject
 
