@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.util.fastForEach
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.MultipleBanners
@@ -26,16 +27,14 @@ internal fun GridBanners(
                 .chunked(BannerRowItemCount)
         }
 
-        for (i in bannerRows.indices) {
+        bannerRows.fastForEach { rowBanners ->
             Row(modifier = Modifier.weight(1f)) {
-                val rowBanners = bannerRows[i]
 
                 val bannerModifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
 
-                for (j in rowBanners.indices) {
-                    val banner = rowBanners[j]
+                rowBanners.fastForEach { banner ->
                     when (banner?.media?.type) {
                         MediaType.IMAGE -> {
                             ImageBanner(

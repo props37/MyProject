@@ -48,8 +48,7 @@ internal fun GenderSelector(
             backgroundColor = Color.Unspecified,
             contentColor = UiKitTheme.colors.background.general.regular.default,
         ) {
-            for (i in genderSelectorState.tabs.indices) {
-                val gender = genderSelectorState.tabs[i]
+            genderSelectorState.tabs.forEach { gender ->
                 key(gender) {
                     val textResId = when (gender) {
                         GenderTab.WOMEN -> R.string.for_women

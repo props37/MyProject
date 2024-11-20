@@ -24,8 +24,7 @@ internal fun GenderSelector(
         selectedTabIndex = selectedTabIndex,
         modifier = modifier,
     ) {
-        for (i in genderSelectorState.tabs.indices) {
-            val gender = genderSelectorState.tabs[i]
+        genderSelectorState.tabs.forEach { gender ->
             key(gender) {
                 val textResId = when (gender) {
                     GenderTab.WOMEN -> R.string.for_women
