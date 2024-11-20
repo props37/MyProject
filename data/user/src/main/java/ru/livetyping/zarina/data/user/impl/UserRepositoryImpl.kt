@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSource
@@ -34,6 +35,11 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun setLocalUserCity(city: City) {
         localDataSource.setUserCity(city)
+    }
+
+    override fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?> {
+        TODO("Not yet implemented")
+        // TODO: [Top] Implement
     }
 
     private fun getUserFlowLocalFirstThenRemote(
