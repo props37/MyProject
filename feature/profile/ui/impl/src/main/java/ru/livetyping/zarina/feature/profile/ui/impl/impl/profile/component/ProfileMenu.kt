@@ -25,13 +25,13 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.MenuItem
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun Menu(
-    items: ImmutableList<MenuItem>,
-    onItemClicked: (MenuItem) -> Unit,
+internal fun ProfileMenu(
+    items: ImmutableList<ProfileMenuItem>,
+    onItemClicked: (ProfileMenuItem) -> Unit,
     city: City?,
     modifier: Modifier = Modifier,
 ) {
@@ -59,17 +59,17 @@ internal fun Menu(
 
 @Composable
 private fun Item(
-    item: MenuItem,
-    onItemClicked: (MenuItem) -> Unit,
+    item: ProfileMenuItem,
+    onItemClicked: (ProfileMenuItem) -> Unit,
     city: City?,
     modifier: Modifier = Modifier,
 ) {
     val itemNameResId = when (item) {
-        MenuItem.MyOrders -> RCommon.string.my_orders
-        MenuItem.City -> RCommon.string.city
-        MenuItem.Stores -> RCommon.string.stores
-        MenuItem.Help -> RCommon.string.help
-        MenuItem.AboutCompany -> RCommon.string.about_company
+        ProfileMenuItem.MyOrders -> RCommon.string.my_orders
+        ProfileMenuItem.City -> RCommon.string.city
+        ProfileMenuItem.Stores -> RCommon.string.stores
+        ProfileMenuItem.Help -> RCommon.string.help
+        ProfileMenuItem.AboutCompany -> RCommon.string.about_company
     }
 
     ZarinaItem(
@@ -82,7 +82,7 @@ private fun Item(
                 color = UiKitTheme.colors.text.general.regular.default,
             )
 
-            if (item == MenuItem.City) {
+            if (item == ProfileMenuItem.City) {
                 Spacer(modifier = Modifier.width(8.dp))
                 AnimatedContent(
                     targetState = city,

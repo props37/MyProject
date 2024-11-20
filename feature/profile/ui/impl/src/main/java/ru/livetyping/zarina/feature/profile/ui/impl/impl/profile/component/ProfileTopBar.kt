@@ -29,7 +29,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun TopBar(
+internal fun ProfileTopBar(
     userFirstName: String?,
     isProfileDetailsButtonVisible: Boolean,
     onProfileDetailsClicked: () -> Unit,

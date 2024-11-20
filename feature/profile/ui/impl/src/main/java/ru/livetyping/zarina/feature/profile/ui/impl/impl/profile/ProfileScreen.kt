@@ -23,12 +23,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.Menu
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.TopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionDetails
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.UserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
 
 @Composable
 internal fun ProfileScreen(
@@ -68,9 +68,9 @@ internal fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         val userState = profileState.userState
-        val user = (userState as? UserState.Success)?.user
+        val user = (userState as? ProfileUserState.Success)?.user
 
-        TopBar(
+        ProfileTopBar(
             userFirstName = user?.firstName,
             isProfileDetailsButtonVisible = user != null,
             onProfileDetailsClicked = { onProfileEvent(ProfileEvent.ProfileDetailsClicked) },
@@ -79,7 +79,7 @@ internal fun ScreenContent(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             // TODO: [Top] Add auth form and loyalty card
 
-            Menu(
+            ProfileMenu(
                 items = profileState.menuItems,
                 onItemClicked = { onProfileEvent(ProfileEvent.MenuItemClicked(it)) },
                 city = profileState.userCity,

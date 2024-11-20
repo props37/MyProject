@@ -5,9 +5,9 @@ import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.domain.model.user.User
 
 @Stable
-internal sealed class UserState {
+internal sealed class ProfileUserState {
     @Immutable
-    data class Success(val user: User?) : UserState()
+    data class Success(val user: User?) : ProfileUserState()
 
-    data object Loading : UserState()
+    data object Loading : ProfileUserState()
 }

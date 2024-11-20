@@ -7,9 +7,9 @@ import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 
 @Immutable
 internal data class ProfileState(
-    val userState: UserState,
+    val userState: ProfileUserState,
     val loyaltyCard: LoyaltyCard?,
     val userCity: City?,
-    val menuItems: ImmutableList<MenuItem>,
+    val menuItems: ImmutableList<ProfileMenuItem>,
     val versionDetails: ImmutableList<VersionDetails>,
 )

@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,16 +24,15 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.MenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.UserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionDetails
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ProfileViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     getUserFlowUseCase: GetUserFlowUseCase,
     getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
     getUserCityFlowUseCase: GetUserCityFlowUseCase,
@@ -46,14 +44,14 @@ internal class ProfileViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val getUserUseCaseParams = GetUserFlowUseCase.Params(CachePolicy.LocalOnly)
-    private val userState: StateFlow<UserState> = getUserFlowUseCase(getUserUseCaseParams)
+    private val userState: StateFlow<ProfileUserState> = getUserFlowUseCase(getUserUseCaseParams)
         .map { result ->
-            UserState.Success(user = result.getOrNull())
+            ProfileUserState.Success(user = result.getOrNull())
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = UserState.Loading,
+            initialValue = ProfileUserState.Loading,
         )
 
     private val getLoyaltyCardUseCaseParams =
@@ -79,19 +77,19 @@ internal class ProfileViewModel @Inject constructor(
             initialValue = null,
         )
 
-    private val menuItems: StateFlow<ImmutableList<MenuItem>> = userState
+    private val menuItems: StateFlow<ImmutableList<ProfileMenuItem>> = userState
         .map { userState ->
-            val isUserAuthorized = (userState as? UserState.Success)?.user != null
+            val isUserAuthorized = (userState as? ProfileUserState.Success)?.user != null
             if (isUserAuthorized) {
-                MenuItem.entries.toImmutableList()
+                ProfileMenuItem.entries.toImmutableList()
             } else {
-                MenuItem.entries.minus(MenuItem.MyOrders).toImmutableList()
+                ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList()
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = MenuItem.entries.minus(MenuItem.MyOrders).toImmutableList(),
+            initialValue = ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList(),
         )
 
     private val versionDetails = buildList {
@@ -127,10 +125,10 @@ internal class ProfileViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = ProfileState(
-            userState = UserState.Loading,
+            userState = ProfileUserState.Loading,
             loyaltyCard = null,
             userCity = null,
-            menuItems = MenuItem.entries.toImmutableList(),
+            menuItems = ProfileMenuItem.entries.toImmutableList(),
             versionDetails = versionDetails,
         )
     )
