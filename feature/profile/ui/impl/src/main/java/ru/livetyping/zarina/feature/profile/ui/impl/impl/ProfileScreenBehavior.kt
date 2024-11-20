@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl
 
-import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -10,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 
 @Composable
 internal fun ProfileScreenBehavior(
@@ -18,7 +18,7 @@ internal fun ProfileScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
-    BottomNavBarBehavior(isVisible =)
+    BottomNavBarBehavior(isVisible = true)
 
     LifecycleStartEffect(sideEffects) {
         val lifecycleSafeNavigator = LifecycleSafeNavigator()
