@@ -6,14 +6,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 import timber.log.Timber
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal class UseCaseLoggerModule {
 
     @Provides
-    @Singleton
     fun provideUseCaseLogger(): UseCaseLogger {
         return getUseCaseLogger()
     }
