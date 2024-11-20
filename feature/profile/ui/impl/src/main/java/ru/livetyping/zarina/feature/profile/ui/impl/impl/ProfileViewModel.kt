@@ -112,10 +112,16 @@ internal class ProfileViewModel @Inject constructor(
     fun onProfileEvent(event: ProfileEvent) {
         when (event) {
             ProfileEvent.ProfileDetailsClicked -> onProfileDetailsClicked()
+            is ProfileEvent.MenuItemClicked -> onMenuItemClicked(event)
         }
     }
 
     private fun onProfileDetailsClicked() {
+        TODO()
+        // TODO: [Top] Implement
+    }
+
+    private fun onMenuItemClicked(event: ProfileEvent.MenuItemClicked) {
         TODO()
         // TODO: [Top] Implement
     }
