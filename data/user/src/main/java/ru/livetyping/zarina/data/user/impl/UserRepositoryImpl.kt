@@ -38,8 +38,14 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?> {
-        TODO("Not yet implemented")
-        // TODO: [Top] Implement
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getLoyaltyCardFlow()
+            is CachePolicy.LocalFirstThenRemote -> {
+                getLoyaltyCardFlowLocalFirstThenRemote(cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getLoyaltyCardFlowRemote(cachePolicy)
+        }
     }
 
     private fun getUserFlowLocalFirstThenRemote(
@@ -70,6 +76,38 @@ internal class UserRepositoryImpl @Inject constructor(
                     CacheUpdatePolicy.NONE -> Unit
                     CacheUpdatePolicy.CLEAR -> TODO()
                     CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
+                }
+            }
+    }
+
+    private fun getLoyaltyCardFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<LoyaltyCard?> {
+        // TODO: [Low] Add support for CacheExpirationPolicy
+        Timber.tag(TAG).w("LoyaltyCard CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
+        return localDataSource.getLoyaltyCardFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val loyaltyCard = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+                checkNotNull(loyaltyCard) { "Failed to fetch loyalty card" }
+                when (cachePolicy.updatePolicy) {
+                    CacheUpdatePolicy.NONE -> Unit
+                    CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
+                    CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
+                }
+                loyaltyCard
+            }
+        }
+    }
+
+    private fun getLoyaltyCardFlowRemote(cachePolicy: CachePolicy.Remote): Flow<LoyaltyCard?> {
+        return remoteDataSource.getLoyaltyCardFlow()
+            .onEach { loyaltyCard ->
+                when (cachePolicy.updatePolicy) {
+                    CacheUpdatePolicy.NONE -> Unit
+                    CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
+                    CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
                 }
             }
     }
