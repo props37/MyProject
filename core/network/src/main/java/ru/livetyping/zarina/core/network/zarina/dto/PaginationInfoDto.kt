@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.core.domain.model.common.pagination.PaginationInfo
+import ru.livetyping.zarina.core.domain.model.pagination.PaginationInfo
 import ru.livetyping.zarina.core.network.util.checkNotNull
 
 @Serializable

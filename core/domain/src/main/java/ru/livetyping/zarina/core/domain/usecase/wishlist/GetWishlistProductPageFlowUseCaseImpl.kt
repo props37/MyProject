@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.wishlist
 
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.common.pagination.Page
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase.Params

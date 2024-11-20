@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
-import ru.livetyping.zarina.core.domain.model.common.pagination.Page
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 

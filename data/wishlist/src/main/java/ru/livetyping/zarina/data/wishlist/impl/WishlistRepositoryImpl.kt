@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
-import ru.livetyping.zarina.core.domain.model.common.pagination.Page
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository

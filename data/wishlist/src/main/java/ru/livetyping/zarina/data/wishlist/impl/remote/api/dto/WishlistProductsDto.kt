@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.wishlist.impl.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.core.domain.model.common.pagination.Page
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.network.util.checkNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
