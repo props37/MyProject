@@ -22,6 +22,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.MenuItem
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
 import javax.inject.Inject
@@ -108,10 +109,14 @@ internal class ProfileViewModel @Inject constructor(
         )
     )
 
-    fun onBackClicked() {
-        navigationThrottler.throttle {
-            val action = ProfileScreenAction.ScreenClosed
-            emitSideEffect(ProfileSideEffect.Navigate(action))
+    fun onProfileEvent(event: ProfileEvent) {
+        when (event) {
+            ProfileEvent.ProfileDetailsClicked -> onProfileDetailsClicked()
         }
+    }
+
+    private fun onProfileDetailsClicked() {
+        TODO()
+        // TODO: [Top] Implement
     }
 }

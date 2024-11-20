@@ -17,7 +17,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
 
 @Composable
 internal fun ProfileScreen(
@@ -28,6 +31,7 @@ internal fun ProfileScreen(
 
     ScreenContent(
         profileState = profileState,
+        onProfileEvent = viewModel::onProfileEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -36,6 +40,7 @@ internal fun ProfileScreen(
 @Composable
 internal fun ScreenContent(
     profileState: ProfileState,
+    onProfileEvent: (ProfileEvent) -> Unit,
     sideEffects: Flow<ProfileSideEffect>,
     navActions: ProfileNavActions,
 ) {
@@ -54,6 +59,13 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
+        val userState = profileState.userState
+        val user = (userState as? UserState.Success)?.user
 
+        TopBar(
+            userFirstName = user?.firstName,
+            isProfileDetailsButtonVisible = user != null,
+            onProfileDetailsClicked = { onProfileEvent(ProfileEvent.ProfileDetailsClicked) },
+        )
     }
 }
