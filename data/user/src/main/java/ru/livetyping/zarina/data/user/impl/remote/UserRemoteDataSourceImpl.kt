@@ -16,8 +16,10 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         emit(user)
     }
 
-    override fun getUserCityFlow(): Flow<City> {
-        TODO("Not yet implemented")
+    override fun getUserCityFlow(): Flow<City> = flow {
+        val city = api.getUserCity().toCity()
+        checkNotNull(city) { "city is null" }
+        emit(city)
     }
 
     override suspend fun setUserCity(city: City) {
