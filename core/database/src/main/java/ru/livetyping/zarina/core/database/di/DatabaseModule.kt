@@ -4,42 +4,50 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase
+import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
+import ru.livetyping.zarina.core.database.transaction.ZarinaDatabaseTransactionManager
 import ru.livetyping.zarina.core.database.user.UserDao
 import javax.inject.Singleton
 
 @Module
 @InstallIn
-internal class DatabaseModule {
+internal abstract class DatabaseModule {
 
-    @Provides
-    @Singleton
-    fun provideZarinaDatabase(
-        @ApplicationContext
-        context: Context,
-    ): ZarinaDatabase {
-        return Room.databaseBuilder(context, ZarinaDatabase::class.java, DATABASE_NAME)
-            .fallbackToDestructiveMigration()
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-                    // TODO: [Top] Implement
-                    super.onDestructiveMigration(db)
-                }
-            })
-            .build()
-    }
+    @Binds
+    abstract fun bindZarinaDatabaseTransactionManager(
+        impl: ZarinaDatabaseTransactionManagerImpl
+    ): ZarinaDatabaseTransactionManager
 
-    @Provides
-    @Singleton
-    fun provideUserDao(database: ZarinaDatabase): UserDao {
-        return database.getUserDao()
-    }
+    companion object {
+        @Provides
+        @Singleton
+        fun provideZarinaDatabase(
+            @ApplicationContext
+            context: Context,
+        ): ZarinaDatabase {
+            return Room.databaseBuilder(context, ZarinaDatabase::class.java, DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                        // TODO: [Top] Implement
+                        super.onDestructiveMigration(db)
+                    }
+                })
+                .build()
+        }
 
-    private companion object {
+        @Provides
+        @Singleton
+        fun provideUserDao(database: ZarinaDatabase): UserDao {
+            return database.getUserDao()
+        }
+
         private const val DATABASE_NAME = "zarina_database"
     }
 }
