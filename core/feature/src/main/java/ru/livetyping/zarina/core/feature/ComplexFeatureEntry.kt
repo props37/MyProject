@@ -6,11 +6,13 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 
 public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions> :
     FeatureEntry<NavEntry, NavParams, NavActions> {
 
     public fun NavGraphBuilder.navigation(
+        navController: NavHostController,
         actions: NavActions,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = null,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = null,
