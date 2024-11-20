@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.core.buildutil.AppVersionName
+import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -18,13 +20,16 @@ import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.MenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.VersionDetails
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +38,9 @@ internal class ProfileViewModel @Inject constructor(
     getUserFlowUseCase: GetUserFlowUseCase,
     getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
     getUserCityFlowUseCase: GetUserCityFlowUseCase,
+    @AppVersionName
+    appVersionName: String,
+    appBuildType: BuildType,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -86,6 +94,22 @@ internal class ProfileViewModel @Inject constructor(
             initialValue = MenuItem.entries.minus(MenuItem.MyOrders).toImmutableList(),
         )
 
+    private val versionDetails = buildList {
+        val appVersionName = VersionDetails(
+            title = Text.Resource(R.string.app_version),
+            version = Text.String(appVersionName),
+        )
+        add(appVersionName)
+
+        if (appBuildType != BuildType.RELEASE) {
+            val mindboxDeviceUuid = VersionDetails(
+                title = Text.Resource(R.string.mindbox_device_uuid),
+                version = Text.String("TODO"), // TODO: [Top] Implement
+            )
+            add(mindboxDeviceUuid)
+        }
+    }.toImmutableList()
+
     val profileState: StateFlow<ProfileState> = combine(
         userState,
         loyaltyCard,
@@ -97,6 +121,7 @@ internal class ProfileViewModel @Inject constructor(
             loyaltyCard = loyaltyCard,
             userCity = userCity,
             menuItems = menuItems,
+            versionDetails = versionDetails,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -106,6 +131,7 @@ internal class ProfileViewModel @Inject constructor(
             loyaltyCard = null,
             userCity = null,
             menuItems = MenuItem.entries.toImmutableList(),
+            versionDetails = versionDetails,
         )
     )
 

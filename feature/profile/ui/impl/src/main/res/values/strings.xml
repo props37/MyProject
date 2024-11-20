@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="edit_profile">Редактировать профиль</string>
+    <string name="app_version">Версия приложения</string>
+    <string name="mindbox_device_uuid">Mindbox device UUID</string>
 </resources>

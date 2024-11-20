@@ -2,9 +2,11 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -13,14 +15,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.Menu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.VersionDetails
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
@@ -79,6 +84,12 @@ internal fun ScreenContent(
                 onItemClicked = { onProfileEvent(ProfileEvent.MenuItemClicked(it)) },
                 city = profileState.userCity,
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            VersionDetails(details = profileState.versionDetails)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
         }
     }
 }

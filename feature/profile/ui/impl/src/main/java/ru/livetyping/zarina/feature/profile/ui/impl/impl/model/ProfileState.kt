@@ -11,4 +11,5 @@ internal data class ProfileState(
     val loyaltyCard: LoyaltyCard?,
     val userCity: City?,
     val menuItems: ImmutableList<MenuItem>,
+    val versionDetails: ImmutableList<VersionDetails>,
 )

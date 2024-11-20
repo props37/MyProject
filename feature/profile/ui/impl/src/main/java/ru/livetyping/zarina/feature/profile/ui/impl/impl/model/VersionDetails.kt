@@ -1,0 +1,10 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.model
+
+import androidx.compose.runtime.Immutable
+import ru.livetyping.zarina.core.text.Text
+
+@Immutable
+internal data class VersionDetails(
+    val title: Text,
+    val version: Text,
+)
