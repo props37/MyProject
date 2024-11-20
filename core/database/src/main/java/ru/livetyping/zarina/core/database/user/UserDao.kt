@@ -16,6 +16,9 @@ public abstract class UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract suspend fun saveUser(user: UserEntity)
 
+    @Query("DELETE FROM ${UserEntity.TABLE_NAME}")
+    public abstract suspend fun clear()
+
     @Query("SELECT * FROM ${UserEntity.TABLE_NAME} LIMIT 1")
     protected abstract fun getUserFlowImpl(): Flow<UserEntity?>
 }
