@@ -30,7 +30,7 @@ internal class UserLocalDataSourceImpl @Inject constructor(
     }
 
     override fun getUserCityFlow(): Flow<City?> {
-        TODO("Not yet implemented")
+        return userCityDataHolder.getUserCityFlow()
     }
 
     override suspend fun setUserCity(city: City?) {
