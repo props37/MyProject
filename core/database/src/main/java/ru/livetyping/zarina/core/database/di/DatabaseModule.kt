@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.livetyping.zarina.core.database.database.ZarinaDatabase
+import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase
 import ru.livetyping.zarina.core.database.user.UserDao
 import javax.inject.Singleton
 

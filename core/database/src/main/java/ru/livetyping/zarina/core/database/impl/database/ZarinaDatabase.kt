@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.database.database
+package ru.livetyping.zarina.core.database.impl.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
