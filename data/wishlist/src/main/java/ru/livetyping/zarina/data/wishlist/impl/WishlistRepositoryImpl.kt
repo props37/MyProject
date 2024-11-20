@@ -65,11 +65,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
                 if (!localDataSource.isWishlistProductIdsFetched()) {
                     val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
                     checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }
-                    when (cachePolicy.updatePolicy) {
-                        CacheUpdatePolicy.NONE -> Unit
-                        CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
-                        CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
-                    }
+                    wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
                     productIds
                 } else {
                     cached
@@ -82,12 +78,19 @@ internal class WishlistRepositoryImpl @Inject constructor(
     ): Flow<Set<Product.Id>> {
         return remoteDataSource.getWishlistProductIdsFlow()
             .onEach { productIds ->
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
-                    CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
-                }
+                wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
             }
+    }
+
+    private fun wishlistProductIdsCacheUpdatePolicyImpl(
+        productIds: Set<Product.Id>,
+        policy: CacheUpdatePolicy,
+    ) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
+            CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
+        }
     }
 
     private fun setLocalFetchedWishlistProductIds(productIds: Set<Product.Id>) {

@@ -41,11 +41,7 @@ internal class CategoryRepositoryImpl @Inject constructor(
             } else {
                 val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
                 checkNotNull(categories) { "Failed to fetch categories" }
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setCategories(null)
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setCategories(categories)
-                }
+                categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
                 categories
             }
         }
@@ -54,12 +50,16 @@ internal class CategoryRepositoryImpl @Inject constructor(
     private fun getCategoriesFlowRemote(cachePolicy: CachePolicy.Remote): Flow<Categories> {
         return remoteDataSource.getCategoriesFlow()
             .onEach { categories ->
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setCategories(null)
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setCategories(categories)
-                }
+                categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
             }
+    }
+
+    private fun categoriesCacheUpdatePolicyImpl(categories: Categories, policy: CacheUpdatePolicy) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setCategories(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setCategories(categories)
+        }
     }
 
     private companion object {

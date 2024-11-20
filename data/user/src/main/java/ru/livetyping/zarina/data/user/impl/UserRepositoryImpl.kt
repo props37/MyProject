@@ -67,11 +67,7 @@ internal class UserRepositoryImpl @Inject constructor(
             } else {
                 val user = remoteDataSource.getUserFlow().firstOrNull()
                 checkNotNull(user) { "Failed to fetch user" }
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> TODO()
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
-                }
+                userCacheUpdatePolicyImpl(user, cachePolicy.updatePolicy)
                 user
             }
         }
@@ -80,11 +76,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private fun getUserFlowRemote(cachePolicy: CachePolicy.Remote): Flow<User?> {
         return remoteDataSource.getUserFlow()
             .onEach { user ->
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> TODO()
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
-                }
+                userCacheUpdatePolicyImpl(user, cachePolicy.updatePolicy)
             }
     }
 
@@ -99,11 +91,7 @@ internal class UserRepositoryImpl @Inject constructor(
             } else {
                 val loyaltyCard = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
                 checkNotNull(loyaltyCard) { "Failed to fetch loyalty card" }
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
-                }
+                loyaltyCardCacheUpdatePolicyImpl(loyaltyCard, cachePolicy.updatePolicy)
                 loyaltyCard
             }
         }
@@ -112,11 +100,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private fun getLoyaltyCardFlowRemote(cachePolicy: CachePolicy.Remote): Flow<LoyaltyCard?> {
         return remoteDataSource.getLoyaltyCardFlow()
             .onEach { loyaltyCard ->
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
-                }
+                loyaltyCardCacheUpdatePolicyImpl(loyaltyCard, cachePolicy.updatePolicy)
             }
     }
 
@@ -142,6 +126,25 @@ internal class UserRepositoryImpl @Inject constructor(
             .onEach { city ->
                 userCityCacheUpdatePolicyImpl(city, cachePolicy.updatePolicy)
             }
+    }
+
+    private suspend fun userCacheUpdatePolicyImpl(user: User, policy: CacheUpdatePolicy) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> TODO()
+            CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
+        }
+    }
+
+    private fun loyaltyCardCacheUpdatePolicyImpl(
+        loyaltyCard: LoyaltyCard,
+        policy: CacheUpdatePolicy,
+    ) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
+        }
     }
 
     private suspend fun userCityCacheUpdatePolicyImpl(city: City, policy: CacheUpdatePolicy) {

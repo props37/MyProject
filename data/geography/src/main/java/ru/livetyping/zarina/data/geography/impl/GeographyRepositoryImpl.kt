@@ -47,11 +47,7 @@ internal class GeographyRepositoryImpl @Inject constructor(
             } else {
                 val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
                 checkNotNull(cities) { "Failed to fetch cities for name query \"$nameQuery\"" }
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setCities(nameQuery, emptyList())
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setCities(nameQuery, cities)
-                }
+                citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
                 cities
             }
         }
@@ -63,12 +59,20 @@ internal class GeographyRepositoryImpl @Inject constructor(
     ): Flow<List<City>> {
         return remoteDataSource.getCitiesFlow(nameQuery)
             .onEach { cities ->
-                when (cachePolicy.updatePolicy) {
-                    CacheUpdatePolicy.NONE -> Unit
-                    CacheUpdatePolicy.CLEAR -> localDataSource.setCities(nameQuery, emptyList())
-                    CacheUpdatePolicy.UPDATE -> localDataSource.setCities(nameQuery, cities)
-                }
+                citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
             }
+    }
+
+    private fun citiesCacheUpdatePolicyImpl(
+        nameQuery: String?,
+        cities: List<City>,
+        policy: CacheUpdatePolicy,
+    ) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setCities(nameQuery, emptyList())
+            CacheUpdatePolicy.UPDATE -> localDataSource.setCities(nameQuery, cities)
+        }
     }
 
     private companion object {
