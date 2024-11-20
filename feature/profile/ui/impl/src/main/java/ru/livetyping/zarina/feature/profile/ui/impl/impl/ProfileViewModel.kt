@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -24,6 +26,7 @@ internal class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getUserFlowUseCase: GetUserFlowUseCase,
     getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
+    getUserCityFlowUseCase: GetUserCityFlowUseCase,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -49,6 +52,18 @@ internal class ProfileViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = null,
             )
+
+    private val getUserCityUseCaseParams =
+        GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+    private val userCity: StateFlow<City?> = getUserCityFlowUseCase(getUserCityUseCaseParams)
+        .map { result ->
+            result.getOrDefault(City.DEFAULT)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val profileState: StateFlow<ProfileState> = TODO()
 
