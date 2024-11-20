@@ -26,4 +26,8 @@
     <string name="city">Город</string>
     <string name="change">Изменить</string>
     <string name="profile">Профиль</string>
+    <string name="my_orders">Мои заказы</string>
+    <string name="stores">Магазины</string>
+    <string name="help">Помощь</string>
+    <string name="about_company">О компании</string>
 </resources>

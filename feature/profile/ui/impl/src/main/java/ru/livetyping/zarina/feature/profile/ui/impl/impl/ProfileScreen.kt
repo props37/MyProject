@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.Menu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
@@ -67,5 +70,15 @@ internal fun ScreenContent(
             isProfileDetailsButtonVisible = user != null,
             onProfileDetailsClicked = { onProfileEvent(ProfileEvent.ProfileDetailsClicked) },
         )
+
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            // TODO: [Top] Add auth form and loyalty card
+
+            Menu(
+                items = profileState.menuItems,
+                onItemClicked = { onProfileEvent(ProfileEvent.MenuItemClicked(it)) },
+                city = profileState.userCity,
+            )
+        }
     }
 }
