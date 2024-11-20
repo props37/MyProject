@@ -8,7 +8,7 @@ import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
-import ru.livetyping.zarina.data.geography.impl.remote.api.dto.CityDto
+import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import javax.inject.Inject
 
 internal class GeographyApiImpl @Inject constructor(

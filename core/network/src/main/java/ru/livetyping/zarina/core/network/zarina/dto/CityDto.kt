@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.geography.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import timber.log.Timber
 
 @Serializable
-internal data class CityDto(
+public data class CityDto(
     @SerialName("name")
     val name: String? = null,
 
@@ -20,7 +20,7 @@ internal data class CityDto(
     @SerialName("region")
     val region: String? = null,
 ) {
-    fun toCity(): City? {
+    public fun toCity(): City? {
         return if (name != null && kladrId != null) {
             return City(
                 name = name,
