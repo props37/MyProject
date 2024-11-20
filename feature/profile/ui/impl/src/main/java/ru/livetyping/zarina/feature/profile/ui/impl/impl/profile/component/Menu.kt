@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.component
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.MenuItem
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.MenuItem
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

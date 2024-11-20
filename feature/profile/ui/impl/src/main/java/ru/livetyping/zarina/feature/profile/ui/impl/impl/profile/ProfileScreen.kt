@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -23,12 +23,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.Menu
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.TopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.component.VersionDetails
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.Menu
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.TopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionDetails
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.UserState
 
 @Composable
 internal fun ProfileScreen(

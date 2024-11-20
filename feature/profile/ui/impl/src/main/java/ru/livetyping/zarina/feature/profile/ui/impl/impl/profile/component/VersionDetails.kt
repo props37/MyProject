@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.component
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.platform.copyTextToClipboard
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.VersionDetails
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionDetails
 
 @Composable
 internal fun VersionDetails(

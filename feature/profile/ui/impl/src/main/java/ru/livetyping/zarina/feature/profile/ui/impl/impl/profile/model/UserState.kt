@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.model
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

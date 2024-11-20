@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -25,11 +25,11 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.MenuItem
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.ProfileState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.UserState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.model.VersionDetails
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.MenuItem
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.UserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionDetails
 import javax.inject.Inject
 
 @HiltViewModel
