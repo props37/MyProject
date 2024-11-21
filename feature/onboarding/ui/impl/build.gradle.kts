@@ -50,6 +50,11 @@ kotlin {
     explicitApi()
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("config/compose/stability_config.txt")
+}
+
 dependencies {
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.core.domain)
