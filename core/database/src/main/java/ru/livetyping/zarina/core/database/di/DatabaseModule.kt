@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase
 import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
 import ru.livetyping.zarina.core.database.transaction.ZarinaDatabaseTransactionManager
@@ -16,7 +17,7 @@ import ru.livetyping.zarina.core.database.user.UserDao
 import javax.inject.Singleton
 
 @Module
-@InstallIn
+@InstallIn(SingletonComponent::class)
 internal abstract class DatabaseModule {
 
     @Binds
