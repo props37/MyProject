@@ -2,7 +2,9 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -42,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -88,7 +91,10 @@ import qrcode.QRCode
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.contains
 import ru.livetyping.zarina.core.domain.model.user.requiredPurchaseSum
+import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
+import ru.livetyping.zarina.core.uicompose.screenbrightness.ForcedScreenBrightnessBehavior
+import ru.livetyping.zarina.core.uicompose.screenbrightness.ScreenBrightness
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
@@ -106,10 +112,42 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun LoyaltyCard(
+    loyaltyCard: LoyaltyCard?,
+    onLoyaltyCardInfoClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    adjustBrightness: Boolean = true,
+    onSideChanged: ((LoyaltyCardSide?) -> Unit)? = null,
+) {
+    AnimatedContent(
+        targetState = loyaltyCard,
+        transitionSpec = {
+            AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+        },
+        contentKey = { it != null },
+        label = "LoyaltyCard",
+        modifier = modifier,
+    ) { card ->
+        if (card != null) {
+            LoyaltyCardImpl(
+                card = card,
+                onInfoClicked = onLoyaltyCardInfoClicked,
+                adjustBrightness = adjustBrightness,
+                onSideChanged = onSideChanged,
+            )
+        } else {
+            SideEffect { onSideChanged?.invoke(null) }
+            LoyaltyCardPlaceholder()
+        }
+    }
+}
+
+@Composable
+private fun LoyaltyCardImpl(
     card: LoyaltyCard,
     onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
     initialSide: LoyaltyCardSide = LoyaltyCardSide.FRONT,
+    adjustBrightness: Boolean = true,
     onSideChanged: ((LoyaltyCardSide) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
@@ -175,6 +213,7 @@ internal fun LoyaltyCard(
             BackSide(
                 card = card,
                 onShowFrontSideClicked = { side = LoyaltyCardSide.FRONT },
+                adjustBrightness = adjustBrightness,
                 modifier = Modifier
                     .height(frontSideHeightDp)
                     .graphicsLayer {
@@ -225,8 +264,13 @@ private fun FrontSide(
 private fun BackSide(
     card: LoyaltyCard,
     onShowFrontSideClicked: () -> Unit,
+    adjustBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    if (adjustBrightness) {
+        ForcedScreenBrightnessBehavior(ScreenBrightness.MAX)
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -588,7 +632,7 @@ internal fun LoyaltyCardPlaceholder(
     }
 
     Box(modifier = modifier) {
-        LoyaltyCard(
+        LoyaltyCardImpl(
             card = placeholderCard,
             onInfoClicked = {},
             modifier = Modifier.alpha(0f),
