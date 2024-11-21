@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose.compiler)
 }
@@ -77,6 +78,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
+    implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.immutableCollections)
 
     implementation(libs.qrcode)

@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.AuthorizationOrLoyaltyCard
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar

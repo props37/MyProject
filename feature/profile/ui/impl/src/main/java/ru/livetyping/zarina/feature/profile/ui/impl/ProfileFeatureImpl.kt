@@ -7,8 +7,13 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
+import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile.profileScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile.ProfileNavEntry as ProfileScreenNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
 
 public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
@@ -20,7 +25,16 @@ public class ProfileFeatureImpl : ProfileFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        TODO("Not yet implemented")
-        // TODO: [Top] Impl
+        navigation<ProfileNavEntry>(
+            startDestination = ProfileScreenNavEntry,
+            enterTransition = enterTransition,
+            exitTransition = exitTransition,
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
+        ) {
+            val profileScreenNavActions = ProfileScreenNavActions()
+            profileScreen(profileScreenNavActions)
+        }
     }
 }
