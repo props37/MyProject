@@ -23,6 +23,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
 import ru.livetyping.zarina.presentation.navigation.feature.onboardingFeature
+import ru.livetyping.zarina.presentation.navigation.feature.profileFeature
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCatalogNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelectorNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
@@ -74,10 +75,12 @@ fun ZarinaNavigation(
         popExitTransition = { zarinaPopExitSlideTransition() },
         modifier = modifier,
     ) {
-        onboardingFeature(onboardingFeature, onboardingNavActions)
-        homeFeature(homeFeature, homeNavActions)
         catalogFeature(catalogFeature, catalogNavActions)
         wishlistFeature(wishlistFeature, wishlistNavActions)
+        homeFeature(homeFeature, homeNavActions)
+        profileFeature(navController, profileFeature, profileNavActions)
+
+        onboardingFeature(onboardingFeature, onboardingNavActions)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
     }
 }
