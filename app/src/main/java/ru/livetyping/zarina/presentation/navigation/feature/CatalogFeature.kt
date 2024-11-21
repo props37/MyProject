@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigationutil.hasAnyRoute
+import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
@@ -21,8 +22,9 @@ fun NavGraphBuilder.catalogFeature(
         composable(
             actions = actions,
             enterTransition = {
+                val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                    initialDestinationWithParent.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
                     }
 
@@ -30,8 +32,9 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             exitTransition = {
+                val targetDestinationWithParent = targetDestination.withParent()
                 when {
-                    targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                    targetDestinationWithParent.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()
                     }
 
@@ -39,8 +42,9 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             popEnterTransition = {
+                val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                    initialDestinationWithParent.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
                     }
 
@@ -48,8 +52,9 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             popExitTransition = {
+                val targetDestinationWithParent = targetDestination.withParent()
                 when {
-                    targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
+                    targetDestinationWithParent.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()
                     }
 
