@@ -30,4 +30,5 @@
     <string name="stores">Магазины</string>
     <string name="help">Помощь</string>
     <string name="about_company">О компании</string>
+    <string name="price_in_rubles">%1$s ₽</string>
 </resources>

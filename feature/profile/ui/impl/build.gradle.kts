@@ -79,6 +79,8 @@ dependencies {
 
     implementation(libs.kotlin.immutableCollections)
 
+    implementation(libs.qrcode)
+
     implementation(libs.timber)
 
     lintChecks(libs.lint.composeChecks)
