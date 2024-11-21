@@ -10,3 +10,15 @@ public fun NavDestination.hasAnyRoute(routes: List<KClass<out Any>>): Boolean {
     }
     return false
 }
+
+public fun NavDestination.withParent(includeTopMostParent: Boolean = false): NavDestinationWithParent {
+    val parent = if (includeTopMostParent) {
+        this.parent
+    } else {
+        this.parent?.takeIf { it.parent != null }
+    }
+    return NavDestinationWithParent(
+        destination = this,
+        parent = parent,
+    )
+}
