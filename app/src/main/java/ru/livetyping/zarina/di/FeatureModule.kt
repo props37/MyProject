@@ -7,6 +7,8 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import ru.livetyping.zarina.core.feature.FeatureEntry
 import ru.livetyping.zarina.di.key.FeatureEntryKey
+import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
+import ru.livetyping.zarina.feature.cart.ui.impl.CartFeatureImpl
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.impl.CatalogFeatureImpl
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
@@ -26,16 +28,6 @@ internal class FeatureModule {
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(HomeFeature::class)
-    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureImpl()
-
-    @Provides
-    @IntoMap
-    @FeatureEntryKey(OnboardingFeature::class)
-    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureImpl()
-
-    @Provides
-    @IntoMap
     @FeatureEntryKey(CatalogFeature::class)
     fun provideCatalogFeatureEntry(): FeatureEntry<*, *, *> = CatalogFeatureImpl()
 
@@ -46,11 +38,26 @@ internal class FeatureModule {
 
     @Provides
     @IntoMap
-    @FeatureEntryKey(CitySelectorFeature::class)
-    fun provideCitySelectorFeature(): FeatureEntry<*, *, *> = CitySelectorFeatureImpl()
+    @FeatureEntryKey(HomeFeature::class)
+    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(ProfileFeature::class)
     fun provideProfileFeature(): FeatureEntry<*, *, *> = ProfileFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(CartFeature::class)
+    fun provideCartFeature(): FeatureEntry<*, *, *> = CartFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(OnboardingFeature::class)
+    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(CitySelectorFeature::class)
+    fun provideCitySelectorFeature(): FeatureEntry<*, *, *> = CitySelectorFeatureImpl()
 }

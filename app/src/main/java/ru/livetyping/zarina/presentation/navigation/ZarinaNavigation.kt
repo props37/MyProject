@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTra
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
@@ -19,11 +20,13 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.feature.find
+import ru.livetyping.zarina.presentation.navigation.feature.cartFeature
 import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
 import ru.livetyping.zarina.presentation.navigation.feature.onboardingFeature
 import ru.livetyping.zarina.presentation.navigation.feature.profileFeature
+import ru.livetyping.zarina.presentation.navigation.feature.rememberCartNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCatalogNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelectorNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
@@ -55,6 +58,9 @@ fun ZarinaNavigation(
     val profileFeature = features.find<ProfileFeature>()
     val profileNavActions = rememberProfileNavActions(navController)
 
+    val cartFeature = features.find<CartFeature>()
+    val cartNavActions = rememberCartNavActions(navController)
+
     val onboardingFeature = features.find<OnboardingFeature>()
     val onboardingNavActions = rememberOnboardingNavActions(navController)
 
@@ -79,6 +85,7 @@ fun ZarinaNavigation(
         wishlistFeature(wishlistFeature, wishlistNavActions)
         homeFeature(homeFeature, homeNavActions)
         profileFeature(navController, profileFeature, profileNavActions)
+        cartFeature(navController, cartFeature, cartNavActions)
 
         onboardingFeature(onboardingFeature, onboardingNavActions)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)

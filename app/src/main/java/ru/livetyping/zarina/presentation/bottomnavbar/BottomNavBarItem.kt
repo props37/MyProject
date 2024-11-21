@@ -6,6 +6,7 @@ import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.feature.NavigationEntry
+import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
@@ -52,7 +53,7 @@ fun BottomNavBarItem.toFeatureNavEntry(): NavigationEntry {
         BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getNavEntry()
         BottomNavBarItem.Profile -> ProfileFeature.getNavEntry()
-        BottomNavBarItem.Cart -> HomeFeature.getNavEntry() // TODO: [Top] Implement
+        BottomNavBarItem.Cart -> CartFeature.getNavEntry()
     }
 }
 
