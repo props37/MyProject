@@ -148,6 +148,9 @@ dependencies {
     implementation(projects.feature.profile.ui.api)
     implementation(projects.feature.profile.ui.impl)
 
+    implementation(projects.feature.cart.ui.api)
+    implementation(projects.feature.cart.ui.impl)
+
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.feature.onboarding.ui.impl)
 
