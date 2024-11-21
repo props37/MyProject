@@ -54,7 +54,7 @@ internal class WishlistViewModel @Inject constructor(
     private var clearWishlistJob: Job? = null
 
     private val wishlistProductIdsParams = GetWishlistProductIdsFlowUseCase.Params(
-        cachePolicy = CachePolicy.LocalFirstThenRemote(),
+        cachePolicy = CachePolicy.LocalOnly,
     )
 
     val topBarState: StateFlow<TopBarState> = combine(
@@ -87,7 +87,7 @@ internal class WishlistViewModel @Inject constructor(
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> onScreenOpened()
+            LifecycleEvent.ON_CREATE -> onScreenCreated()
             LifecycleEvent.ON_START -> onScreenStarted()
             LifecycleEvent.ON_RESUME -> Unit
         }
@@ -99,7 +99,7 @@ internal class WishlistViewModel @Inject constructor(
         }
     }
 
-    private fun onScreenOpened() {
+    private fun onScreenCreated() {
         wishlistProductsRequester.request(WishlistProductsRequest)
     }
 
