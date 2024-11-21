@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -23,6 +24,7 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.AuthorizationOrLoyaltyCard
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionInfo
@@ -77,7 +79,14 @@ internal fun ScreenContent(
         )
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            // TODO: [Top] Add auth form and loyalty card
+            AuthorizationOrLoyaltyCard(
+                userState = profileState.userState,
+                loyaltyCard = profileState.loyaltyCard,
+                onSignInClicked = { onProfileEvent(ProfileEvent.SignInClicked) },
+                onSignUpClicked = { onProfileEvent(ProfileEvent.SignUpClicked) },
+                onLoyaltyCardInfoClicked = { onProfileEvent(ProfileEvent.LoyaltyCardInfoClicked) },
+                modifier = Modifier.fillMaxWidth(),
+            )
 
             ProfileMenu(
                 items = profileState.menuItems,
