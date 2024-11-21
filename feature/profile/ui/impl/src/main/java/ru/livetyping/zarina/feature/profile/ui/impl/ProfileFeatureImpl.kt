@@ -12,8 +12,8 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile.profileScreen
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile.ProfileNavEntry as ProfileScreenNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavEntry as ProfileScreenNavEntry
 
 public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
