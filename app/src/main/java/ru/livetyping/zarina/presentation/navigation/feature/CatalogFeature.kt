@@ -39,7 +39,6 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             popEnterTransition = {
-                val initialDestination = initialState.destination
                 when {
                     initialDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaEnterFadeInTransition()
@@ -49,7 +48,6 @@ fun NavGraphBuilder.catalogFeature(
                 }
             },
             popExitTransition = {
-                val targetDestination = targetState.destination
                 when {
                     targetDestination.hasAnyRoute(BottomNavBarItemNavEntryClasses) -> {
                         zarinaExitFadeOutTransition()
