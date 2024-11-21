@@ -61,7 +61,6 @@ dependencies {
     implementation(projects.core.uiModel)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
-    implementation(projects.core.mediaCompose)
     implementation(projects.core.navigationUtil)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
@@ -76,8 +75,6 @@ dependencies {
     implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
-
-    implementation(libs.coil.compose)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

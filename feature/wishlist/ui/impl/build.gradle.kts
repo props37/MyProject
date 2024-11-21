@@ -77,13 +77,9 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
-    implementation(libs.coil.compose)
-
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
-
-    implementation(libs.kotlin.immutableCollections)
 
     implementation(libs.timber)
 
