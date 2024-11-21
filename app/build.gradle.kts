@@ -165,6 +165,7 @@ dependencies {
 
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
+    implementation(projects.core.database)
     implementation(projects.core.uiKit)
     implementation(projects.core.sharedpreferences)
     implementation(projects.core.permission)
