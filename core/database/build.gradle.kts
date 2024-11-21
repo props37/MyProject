@@ -35,6 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/room_schemas")
+    }
 }
 
 kotlin {
