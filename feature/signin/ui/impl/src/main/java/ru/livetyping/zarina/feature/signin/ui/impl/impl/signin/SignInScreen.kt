@@ -97,12 +97,7 @@ internal fun ScreenContent(
         SignInTypePager(
             signInTypeSelectorState = signInTypeSelectorState,
             pagerState = signInTypePagerState,
-            emailTextFieldState = signInState.emailTextFieldState,
-            isEmailInvalid = signInState.isEmailInvalid,
-            passwordTextFieldState = signInState.passwordTextFieldState,
-            isPasswordInvalid = signInState.isPasswordInvalid,
-            phoneTextFieldState = signInState.phoneTextFieldState,
-            isPhoneInvalid = signInState.isPhoneInvalid,
+            signInState = signInState,
             modifier = Modifier.fillMaxSize(),
         )
     }

@@ -40,6 +40,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -47,12 +48,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun SignInTypePager(
     signInTypeSelectorState: TabRowState<SignInType>,
     pagerState: PagerState,
-    emailTextFieldState: TextFieldState,
-    isEmailInvalid: Boolean,
-    passwordTextFieldState: TextFieldState,
-    isPasswordInvalid: Boolean,
-    phoneTextFieldState: TextFieldState,
-    isPhoneInvalid: Boolean,
+    signInState: SignInState,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
@@ -63,12 +59,12 @@ internal fun SignInTypePager(
         when (signInType) {
             SignInType.EMAIL -> {
                 SignInByEmail(
-                    emailTextFieldState = emailTextFieldState,
-                    isEmailInvalid = isEmailInvalid,
-                    passwordTextFieldState = passwordTextFieldState,
-                    isPasswordInvalid = isPasswordInvalid,
-                    phoneTextFieldState = phoneTextFieldState,
-                    isPhoneInvalid = isPhoneInvalid,
+                    emailTextFieldState = signInState.emailTextFieldState,
+                    isEmailInvalid = signInState.isEmailInvalid,
+                    passwordTextFieldState = signInState.passwordTextFieldState,
+                    isPasswordInvalid = signInState.isPasswordInvalid,
+                    phoneTextFieldState = signInState.phoneTextFieldState,
+                    isPhoneInvalid = signInState.isPhoneInvalid,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
