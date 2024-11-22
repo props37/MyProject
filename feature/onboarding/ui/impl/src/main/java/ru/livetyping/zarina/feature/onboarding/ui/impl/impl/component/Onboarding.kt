@@ -113,7 +113,7 @@ private fun NotificationsSetup(
                 onClick = onRequestNotificationsPermissionClicked,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(RCommon.string.continue_).uppercase())
+                Text(text = stringResource(RCommon.string.res_continue_).uppercase())
             }
         },
         modifier = modifier,
@@ -148,7 +148,7 @@ private fun CityDetection(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ZarinaButtonDefaults.secondaryColors(),
             ) {
-                Text(text = stringResource(RCommon.string.skip).uppercase())
+                Text(text = stringResource(RCommon.string.res_skip).uppercase())
             }
         },
         modifier = modifier,

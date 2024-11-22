@@ -44,7 +44,7 @@ internal fun ProgressIndicator(
             val textStyle = UiKitTheme.typography.tertiary.regular
 
             Text(
-                text = stringResource(R.string.step),
+                text = stringResource(R.string.res_step),
                 style = textStyle,
                 color = UiKitTheme.colors.text.general.regular.default,
             )

@@ -28,7 +28,7 @@ internal fun TopBar(
     ZarinaTopBar(
         centerContent = {
             Text(
-                text = stringResource(R.string.wishlist),
+                text = stringResource(R.string.res_wishlist),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -47,7 +47,7 @@ internal fun TopBar(
                     textStyle = UiKitTheme.typography.caption1.regular,
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
-                    Text(text = stringResource(R.string.clear).uppercase())
+                    Text(text = stringResource(R.string.res_clear).uppercase())
                 }
             }
         },

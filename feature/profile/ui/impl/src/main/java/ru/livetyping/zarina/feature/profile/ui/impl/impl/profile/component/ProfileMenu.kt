@@ -65,11 +65,11 @@ private fun Item(
     modifier: Modifier = Modifier,
 ) {
     val itemNameResId = when (item) {
-        ProfileMenuItem.MyOrders -> RCommon.string.my_orders
-        ProfileMenuItem.City -> RCommon.string.city
-        ProfileMenuItem.Stores -> RCommon.string.stores
-        ProfileMenuItem.Help -> RCommon.string.help
-        ProfileMenuItem.AboutCompany -> RCommon.string.about_company
+        ProfileMenuItem.MyOrders -> RCommon.string.res_my_orders
+        ProfileMenuItem.City -> RCommon.string.res_city
+        ProfileMenuItem.Stores -> RCommon.string.res_stores
+        ProfileMenuItem.Help -> RCommon.string.res_help
+        ProfileMenuItem.AboutCompany -> RCommon.string.res_about_company
     }
 
     ZarinaItem(

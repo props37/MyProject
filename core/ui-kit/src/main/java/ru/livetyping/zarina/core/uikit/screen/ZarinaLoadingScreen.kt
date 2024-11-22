@@ -16,7 +16,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 @Composable
 public fun ZarinaLoadingScreen(
     modifier: Modifier = Modifier,
-    contentDescription: String = stringResource(R.string.loading),
+    contentDescription: String = stringResource(R.string.res_loading),
     logoWidth: Dp = ZarinaLoadingScreenDefaults.LogoWidth,
     logoColor: Color = ZarinaLoadingScreenDefaults.LogoColor,
     animate: Boolean = true,

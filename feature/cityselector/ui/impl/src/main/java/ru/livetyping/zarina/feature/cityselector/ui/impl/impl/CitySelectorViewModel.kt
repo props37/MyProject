@@ -160,7 +160,7 @@ internal class CitySelectorViewModel @Inject constructor(
     }
 
     private companion object {
-        val TITLE_DEFAULT_VALUE: Text get() = Text.Resource(RCommon.string.city)
+        val TITLE_DEFAULT_VALUE: Text get() = Text.Resource(RCommon.string.res_city)
 
         val CITY_SEARCH_DEBOUNCE_DELAY: Duration get() = 200.milliseconds
 

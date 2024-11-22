@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.resource.R
 public fun ZarinaCloseIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String = stringResource(R.string.close),
+    contentDescription: String = stringResource(R.string.res_close),
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     iconSize: Dp = ZarinaIconButtonDefaults.IconSize,

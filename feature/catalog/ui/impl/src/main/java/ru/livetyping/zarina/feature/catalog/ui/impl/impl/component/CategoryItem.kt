@@ -78,7 +78,7 @@ internal fun CategoryItem(
                     label = "CategoryItem Expand icon rotation",
                 )
                 val contentDescriptionResId =
-                    if (isExpanded) R.string.collapse else R.string.expand
+                    if (isExpanded) R.string.res_collapse else R.string.res_expand
 
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),

@@ -38,7 +38,7 @@ internal fun SearchBar(
             isEnabled = false,
             size = ZarinaTextFieldSize.Small,
             placeholder = {
-                Text(text = stringResource(R.string.find_products))
+                Text(text = stringResource(R.string.res_find_products))
             },
             leadingContent = {
                 Icon(

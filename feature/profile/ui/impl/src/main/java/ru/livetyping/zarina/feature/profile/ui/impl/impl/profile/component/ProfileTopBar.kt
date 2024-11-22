@@ -39,7 +39,7 @@ internal fun ProfileTopBar(
         centerContent = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(RCommon.string.profile),
+                    text = stringResource(RCommon.string.res_profile),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

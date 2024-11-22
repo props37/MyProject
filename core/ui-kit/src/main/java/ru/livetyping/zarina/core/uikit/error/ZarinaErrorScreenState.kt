@@ -20,16 +20,16 @@ public data class ZarinaErrorScreenState(
         public val NETWORK: ZarinaErrorScreenState
             get() = ZarinaErrorScreenState(
                 iconResId = R.drawable.ic_wifi_error_64,
-                title = Text.Resource(R.string.internet_connection_error),
-                body = Text.Resource(R.string.check_internet_connection_and_refresh_page),
+                title = Text.Resource(R.string.res_internet_connection_error),
+                body = Text.Resource(R.string.res_check_internet_connection_and_refresh_page),
                 buttonState = ZarinaErrorScreenButtonState(),
             )
 
         public val GENERIC: ZarinaErrorScreenState
             get() = ZarinaErrorScreenState(
                 iconResId = R.drawable.ic_heart_broken_outline_64,
-                title = Text.Resource(R.string.something_went_wrong),
-                body = Text.Resource(R.string.refresh_page_or_come_back_later),
+                title = Text.Resource(R.string.res_something_went_wrong),
+                body = Text.Resource(R.string.res_refresh_page_or_come_back_later),
                 buttonState = ZarinaErrorScreenButtonState(),
             )
 

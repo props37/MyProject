@@ -91,7 +91,7 @@ public fun ZarinaExpandableItem(
                     targetValue = if (isExpanded) 0f else 180f,
                     label = "rotation",
                 )
-                val contentDescResId = if (isExpanded) R.string.collapse else R.string.expand
+                val contentDescResId = if (isExpanded) R.string.res_collapse else R.string.res_expand
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescResId),

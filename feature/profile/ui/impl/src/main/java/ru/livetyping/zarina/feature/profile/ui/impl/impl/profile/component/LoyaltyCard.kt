@@ -438,7 +438,7 @@ private fun FrontSideLevelInfo(
                     nextLevelInfo.requiredPurchaseSum - card.totalPurchaseSum
                 } else 0
                 val formattedRemainingPurchaseSum = stringResource(
-                    id = RCommon.string.price_in_rubles,
+                    id = RCommon.string.res_price_in_rubles,
                     rememberFormattedPrice(remainingPurchaseSum),
                 )
                 Text(

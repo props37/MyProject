@@ -203,7 +203,7 @@ internal class OnboardingViewModel @Inject constructor(
                     emitSideEffect(OnboardingSideEffect.Navigate(action))
                 }
                 .onFailure {
-                    val text = Text.Resource(RCommon.string.something_went_wrong)
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
                     emitSideEffect(OnboardingSideEffect.ShowToast(text))
 
                     val action = OnboardingScreenAction.OnboardingCompleted(selectedCity = null)

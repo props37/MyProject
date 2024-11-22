@@ -51,8 +51,8 @@ internal fun GenderSelector(
             genderSelectorState.tabs.forEach { gender ->
                 key(gender) {
                     val textResId = when (gender) {
-                        GenderTab.WOMEN -> R.string.for_women
-                        GenderTab.MEN -> R.string.for_men
+                        GenderTab.WOMEN -> R.string.res_for_women
+                        GenderTab.MEN -> R.string.res_for_men
                     }
 
                     val isSelected = gender == genderSelectorState.currentTab

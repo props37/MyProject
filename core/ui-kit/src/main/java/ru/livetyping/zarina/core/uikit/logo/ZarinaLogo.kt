@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 @Composable
 public fun ZarinaLogo(
     modifier: Modifier = Modifier,
-    contentDescription: String? = stringResource(R.string.zarina),
+    contentDescription: String? = stringResource(R.string.res_zarina),
     color: Color = ZarinaLogoDefaults.Color,
     animate: Boolean = false,
 ) {

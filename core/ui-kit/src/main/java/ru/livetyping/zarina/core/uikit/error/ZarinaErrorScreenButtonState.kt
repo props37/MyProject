@@ -17,7 +17,7 @@ public data class ZarinaErrorScreenButtonState(
             get() = Text.Resource(REFRESH_TEXT_RES_ID)
 
         val REFRESH_TEXT_RES_ID: Int
-            get() = R.string.refresh
+            get() = R.string.res_refresh
     }
 }
 

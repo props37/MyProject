@@ -37,9 +37,9 @@ internal fun ZarinaAddToCartIconButton(
                 RCommon.drawable.ic_shopper_outline_24
             }
             val contentDescriptionResId = if (isAdded) {
-                RCommon.string.remove_from_cart
+                RCommon.string.res_remove_from_cart
             } else {
-                RCommon.string.add_to_cart
+                RCommon.string.res_add_to_cart
             }
 
             Icon(

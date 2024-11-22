@@ -27,7 +27,7 @@ internal fun ZarinaSubscribeIconButton(
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(RCommon.drawable.ic_bell_24),
-            contentDescription = stringResource(RCommon.string.subscribe_to_product),
+            contentDescription = stringResource(RCommon.string.res_subscribe_to_product),
             tint = UiKitTheme.colors.icon.regular.default,
             modifier = Modifier.size(iconSize),
         )

@@ -39,7 +39,7 @@ public fun ProductPrice(
         val discountColor = UiKitTheme.colors.text.general.accent.red
 
         val originalPrice = stringResource(
-            id = RCommon.string.price_in_rubles,
+            id = RCommon.string.res_price_in_rubles,
             rememberFormattedPrice(price.originalPrice),
         )
         Text(
@@ -55,7 +55,7 @@ public fun ProductPrice(
             Spacer(modifier = Modifier.width(8.dp))
 
             val currentPrice = stringResource(
-                id = RCommon.string.price_in_rubles,
+                id = RCommon.string.res_price_in_rubles,
                 rememberFormattedPrice(price.currentPrice),
             )
             Text(
@@ -67,7 +67,7 @@ public fun ProductPrice(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(RCommon.string.discount_percent, price.discountPercent).uppercase(),
+                text = stringResource(RCommon.string.res_discount_percent, price.discountPercent).uppercase(),
                 style = UiKitTheme.typography.caption2.bold,
                 color = discountColor,
                 maxLines = 1,

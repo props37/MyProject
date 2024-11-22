@@ -225,7 +225,7 @@ private fun CityListSuccessChangeCityButton(
                 .padding(horizontal = 16.dp)
                 .padding(bottom = ChangeCityButtonBottomPadding),
         ) {
-            Text(text = stringResource(RCommon.string.change).uppercase())
+            Text(text = stringResource(RCommon.string.res_change).uppercase())
         }
     }
 }

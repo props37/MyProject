@@ -656,7 +656,7 @@ public object ZarinaTextFieldDefaults {
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_cross_shaped_24),
-                    contentDescription = stringResource(R.string.clear),
+                    contentDescription = stringResource(R.string.res_clear),
                     tint = Color.Unspecified,
                     modifier = Modifier.size(iconSize),
                 )
@@ -676,7 +676,7 @@ public object ZarinaTextFieldDefaults {
             modifier = modifier,
         ) {
             Text(
-                text = stringResource(R.string.cancel).uppercase(),
+                text = stringResource(R.string.res_cancel).uppercase(),
                 style = UiKitTheme.typography.caption1.regular,
             )
         }

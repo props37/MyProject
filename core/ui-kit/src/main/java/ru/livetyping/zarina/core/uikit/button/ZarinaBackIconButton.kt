@@ -19,7 +19,7 @@ import ru.livetyping.zarina.core.resource.R
 public fun ZarinaBackIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentDescription: String = stringResource(R.string.back),
+    contentDescription: String = stringResource(R.string.res_back),
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     iconSize: Dp = ZarinaIconButtonDefaults.IconSize,

@@ -21,7 +21,7 @@ public fun ZarinaLikeIconButton(
     modifier: Modifier = Modifier,
     @Suppress("NAME_SHADOWING")
     contentDescriptionResId: (Boolean) -> Int = { isLiked ->
-        if (isLiked) R.string.remove_from_wishlist else R.string.add_to_wishlist
+        if (isLiked) R.string.res_remove_from_wishlist else R.string.res_add_to_wishlist
     },
     iconSize: Dp = ZarinaIconButtonDefaults.IconSize,
     tint: Color = ZarinaIconButtonDefaults.IconColor,
