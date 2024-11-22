@@ -35,6 +35,8 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.clear
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
+import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
+import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -152,8 +154,46 @@ private fun SignInByEmail(
                     },
                 ),
         )
-
         Spacer(modifier = Modifier.height(16.dp))
+
+        ZarinaPasswordTextField(
+            state = passwordTextFieldState,
+            isError = isPasswordInvalid,
+            label = {
+                val labelResId = if (emailTextFieldState.text.isNotEmpty()) {
+                    stringResource(RCommon.string.res_password)
+                } else ""
+
+                Text(text = labelResId)
+            },
+            placeholder = {
+                Text(text = stringResource(RCommon.string.res_password))
+            },
+            keyboardOptions = remember {
+                ZarinaPasswordTextFieldDefaults.KeyboardOptions.copy(
+                    imeAction = ImeAction.Done,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .focusRequester(passwordFocusRequester)
+                .onFocusChanged {
+                    if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Password
+                }
+                .autofill(
+                    autofillType = AutofillType.Password,
+                    onFilled = {
+                        passwordTextFieldState.edit {
+                            clear()
+                            append(it)
+                            placeCursorAtEnd()
+                        }
+                    },
+                ),
+        )
+
+        // TODO: [Top] Implement
     }
 }
 
