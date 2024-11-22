@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material.Icon
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,13 +63,19 @@ public fun ZarinaPasswordTextField(
     cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     val isPasswordVisibilityButtonVisible = state.text.isNotEmpty()
-    var isPasswordHidden by remember(state.text.isEmpty()) { mutableStateOf(true) }
+    var isPasswordHidden by remember { mutableStateOf(true) }
     val obfuscationMode by remember {
         derivedStateOf {
             if (isPasswordHidden) TextObfuscationMode.RevealLastTyped else TextObfuscationMode.Visible
         }
     }
+
     var focusState by remember { mutableStateOf<FocusState?>(null) }
+
+    DisposableEffect(state.text.isNotEmpty()) {
+        isPasswordHidden = true
+        onDispose {}
+    }
 
     BasicSecureTextField(
         state = state,
@@ -162,7 +169,7 @@ private fun PasswordVisibilityButton(
 }
 
 public object ZarinaPasswordTextFieldDefaults {
-    internal val KeyboardOptions: KeyboardOptions
+    public val KeyboardOptions: KeyboardOptions
         get() = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Password,
