@@ -2,4 +2,6 @@
 <resources>
     <string name="uikit_checkmark_checked_content_description">Выбрано</string>
     <string name="uikit_checkmark_unchecked_content_description">Не выбрано</string>
+    <string name="uikit_show_password">Показать пароль</string>
+    <string name="uikit_hide_password">Спрятать пароль</string>
 </resources>
