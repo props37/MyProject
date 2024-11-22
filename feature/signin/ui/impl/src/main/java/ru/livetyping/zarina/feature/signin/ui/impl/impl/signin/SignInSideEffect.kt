@@ -1,0 +1,7 @@
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
+
+import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
+
+internal sealed interface SignInSideEffect : SideEffect {
+    data class Navigate(val action: SignInScreenAction) : SignInSideEffect
+}

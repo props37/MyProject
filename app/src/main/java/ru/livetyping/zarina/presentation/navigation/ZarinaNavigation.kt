@@ -16,6 +16,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
+import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.feature.Features
@@ -32,7 +33,9 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelector
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
 
 @Composable
@@ -67,6 +70,9 @@ fun ZarinaNavigation(
     val citySelectorFeature = features.find<CitySelectorFeature>()
     val citySelectorNavActions = rememberCitySelectorNavActions(navController)
 
+    val signInFeature = features.find<SignInFeature>()
+    val signInNavActions = rememberSignInNavActions(navController)
+
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
         AppStartFeature.HOME -> HomeFeature.getNavEntry()
@@ -89,5 +95,6 @@ fun ZarinaNavigation(
 
         onboardingFeature(onboardingFeature, onboardingNavActions)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
+        signInFeature(navController, signInFeature, signInNavActions)
     }
 }

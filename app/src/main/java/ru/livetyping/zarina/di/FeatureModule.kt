@@ -19,6 +19,8 @@ import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.impl.OnboardingFeatureImpl
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.impl.ProfileFeatureImpl
+import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
+import ru.livetyping.zarina.feature.signin.ui.impl.SignInFeatureImpl
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.WishlistFeatureImpl
 
@@ -60,4 +62,9 @@ internal class FeatureModule {
     @IntoMap
     @FeatureEntryKey(CitySelectorFeature::class)
     fun provideCitySelectorFeature(): FeatureEntry<*, *, *> = CitySelectorFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(SignInFeature::class)
+    fun provideSignInFeature(): FeatureEntry<*, *, *> = SignInFeatureImpl()
 }

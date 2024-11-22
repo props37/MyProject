@@ -157,6 +157,9 @@ dependencies {
     implementation(projects.feature.cityselector.ui.api)
     implementation(projects.feature.cityselector.ui.impl)
 
+    implementation(projects.feature.signin.ui.api)
+    implementation(projects.feature.signin.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)
