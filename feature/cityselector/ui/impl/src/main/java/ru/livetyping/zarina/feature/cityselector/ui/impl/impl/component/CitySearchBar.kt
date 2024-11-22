@@ -37,7 +37,7 @@ internal fun CitySearchTextField(
     ZarinaTextField(
         state = state,
         placeholder = {
-            Text(text = stringResource(R.string.search_city))
+            Text(text = stringResource(R.string.city_selector_search_city))
         },
         leadingContent = {
             Icon(

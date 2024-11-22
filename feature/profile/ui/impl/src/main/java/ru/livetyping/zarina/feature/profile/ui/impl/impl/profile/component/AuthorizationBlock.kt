@@ -22,13 +22,13 @@ internal fun AuthorizationBlock(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.sign_in_or_sign_up),
+            text = stringResource(R.string.profile_sign_in_or_sign_up),
             style = UiKitTheme.typography.secondary.bold,
             color = UiKitTheme.colors.text.general.regular.default,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.authorization_description),
+            text = stringResource(R.string.profile_authorization_description),
             style = UiKitTheme.typography.tertiary.regular,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -39,7 +39,7 @@ internal fun AuthorizationBlock(
             onClick = onSignInClicked,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = stringResource(R.string.sign_in).uppercase())
+            Text(text = stringResource(R.string.profile_sign_in).uppercase())
         }
         Spacer(modifier = Modifier.height(8.dp))
         ZarinaButton(
@@ -47,7 +47,7 @@ internal fun AuthorizationBlock(
             colors = ZarinaButtonDefaults.outlineColors(),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = stringResource(R.string.sign_up).uppercase())
+            Text(text = stringResource(R.string.profile_sign_up).uppercase())
         }
     }
 }

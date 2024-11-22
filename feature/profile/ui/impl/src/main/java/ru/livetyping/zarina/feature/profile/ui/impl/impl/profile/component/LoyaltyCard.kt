@@ -296,7 +296,7 @@ private fun BackSide(
                 Icon(
                     imageVector = ImageVector.vectorResource(RCommon.drawable.ic_turn_back_24),
                     tint = iconColor,
-                    contentDescription = stringResource(R.string.turn_card),
+                    contentDescription = stringResource(R.string.profile_turn_card),
                     modifier = Modifier.size(iconSize),
                 )
             }
@@ -326,7 +326,7 @@ private fun FrontSideBonuses(
         val topPadding = with(LocalDensity.current) { 6.sp.toDp() }
         Text(
             text = pluralStringResource(
-                id = R.plurals.bonuses,
+                id = R.plurals.profile_bonuses,
                 count = bonuses.bonusCount,
             ),
             style = UiKitTheme.typography.tertiary.regular,
@@ -354,7 +354,7 @@ private fun FrontSideQrCode(
         val qrCodeIconSize = 24.dp
         Icon(
             imageVector = ImageVector.vectorResource(RCommon.drawable.ic_qr_24),
-            contentDescription = stringResource(R.string.qr_code),
+            contentDescription = stringResource(R.string.profile_qr_code),
             modifier = Modifier
                 .size(qrCodeIconSize)
                 .indication(
@@ -371,7 +371,7 @@ private fun FrontSideQrCode(
         Row(verticalAlignment = Alignment.CenterVertically) {
             val textStyle = UiKitTheme.typography.caption1.bold
             Text(
-                text = stringResource(R.string.qr_code).uppercase(),
+                text = stringResource(R.string.profile_qr_code).uppercase(),
                 style = textStyle,
             )
             Spacer(modifier = Modifier.width(2.dp))
@@ -380,7 +380,7 @@ private fun FrontSideQrCode(
             val iconSize = with(LocalDensity.current) { textStyle.fontSize.toDp() * 0.8f }
             Icon(
                 imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
-                contentDescription = stringResource(R.string.qr_code),
+                contentDescription = stringResource(R.string.profile_qr_code),
                 modifier = Modifier
                     .padding(bottom = 2.dp) // Circe font padding
                     .size(iconSize)
@@ -411,7 +411,7 @@ private fun FrontSideLevelInfo(
                 Icon(
                     imageVector = ImageVector.vectorResource(RCommon.drawable.ic_exclamation_mark_shaped_24),
                     tint = iconColor,
-                    contentDescription = stringResource(R.string.show_loyalty_card_info),
+                    contentDescription = stringResource(R.string.profile_show_loyalty_card_info),
                     modifier = Modifier.size(iconSize),
                 )
             }
@@ -442,7 +442,7 @@ private fun FrontSideLevelInfo(
                     rememberFormattedPrice(remainingPurchaseSum),
                 )
                 Text(
-                    text = stringResource(R.string.to_next_level, formattedRemainingPurchaseSum),
+                    text = stringResource(R.string.profile_to_next_level, formattedRemainingPurchaseSum),
                     style = UiKitTheme.typography.tertiary.light,
                     modifier = Modifier.weight(1f),
                 )
@@ -570,12 +570,12 @@ private fun BackSideQrCode(
         if (bitmap != null) {
             Image(
                 bitmap = bitmap.asImageBitmap(),
-                contentDescription = stringResource(R.string.qr_code),
+                contentDescription = stringResource(R.string.profile_qr_code),
                 contentScale = ContentScale.FillHeight,
             )
         } else {
             Text(
-                text = stringResource(R.string.qr_code_generation_error),
+                text = stringResource(R.string.profile_qr_code_generation_error),
                 style = UiKitTheme.typography.secondary.regular,
                 textAlign = TextAlign.Center,
             )
@@ -657,12 +657,12 @@ internal fun LoyaltyCardPlaceholder(
                     .padding(30.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.creating_your_loyalty_card),
+                    text = stringResource(R.string.profile_creating_your_loyalty_card),
                     style = UiKitTheme.typography.tertiary.regular,
                     color = UiKitTheme.colors.text.general.regular.default,
                 )
                 Text(
-                    text = stringResource(R.string.it_will_take_up_to_five_minutes),
+                    text = stringResource(R.string.profile_it_will_take_up_to_five_minutes),
                     style = UiKitTheme.typography.footnote.light,
                     color = UiKitTheme.colors.text.general.regular.default,
                 )

@@ -137,7 +137,7 @@ private fun CityDetection(
                 isLoading = isDetectCityButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(R.string.detect_city).uppercase())
+                Text(text = stringResource(R.string.onboarding_detect_city).uppercase())
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -174,7 +174,7 @@ private fun CityConfirmation(
                 isLoading = isConfirmCityButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(R.string.yes_correct).uppercase())
+                Text(text = stringResource(R.string.onboarding_yes_correct).uppercase())
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -184,7 +184,7 @@ private fun CityConfirmation(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ZarinaButtonDefaults.outlineColors(),
             ) {
-                Text(text = stringResource(R.string.no_change).uppercase())
+                Text(text = stringResource(R.string.onboarding_no_change).uppercase())
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -195,7 +195,7 @@ private fun CityConfirmation(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ZarinaButtonDefaults.secondaryColors(),
             ) {
-                Text(text = stringResource(R.string.configure_later).uppercase())
+                Text(text = stringResource(R.string.onboarding_set_up_later).uppercase())
             }
         },
         modifier = modifier,

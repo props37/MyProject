@@ -94,14 +94,14 @@ internal class ProfileViewModel @Inject constructor(
 
     private val versionInfos = buildList {
         val appVersionName = VersionInfo(
-            title = Text.Resource(R.string.app_version),
+            title = Text.Resource(R.string.profile_app_version),
             version = Text.String(appVersionName),
         )
         add(appVersionName)
 
         if (appBuildType != BuildType.RELEASE) {
             val mindboxDeviceUuid = VersionInfo(
-                title = Text.Resource(R.string.mindbox_device_uuid),
+                title = Text.Resource(R.string.profile_mindbox_device_uuid),
                 version = Text.String("TODO"), // TODO: [Top] Implement
             )
             add(mindboxDeviceUuid)

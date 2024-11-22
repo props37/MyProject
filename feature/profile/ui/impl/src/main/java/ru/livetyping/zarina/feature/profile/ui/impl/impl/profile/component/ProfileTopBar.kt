@@ -78,7 +78,7 @@ internal fun ProfileTopBar(
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(RCommon.drawable.ic_pencil_24),
-                        contentDescription = stringResource(R.string.edit_profile),
+                        contentDescription = stringResource(R.string.profile_edit_profile),
                         modifier = Modifier.size(20.dp),
                     )
                 }

@@ -6,8 +6,8 @@
     <string name="onboarding_city_selection_body">Для актуальной информации об акциях и наличии товаров в розничных магазинах ZARINA.</string>
     <string name="onboarding_city_confirmation_title">Твой город %1$s?</string>
     <string name="onboarding_city_confirmation_body">Ты можешь изменить геолокацию сейчас или настроить её позже.</string>
-    <string name="detect_city">Определить город</string>
-    <string name="yes_correct">Да, верно</string>
-    <string name="no_change">Нет, изменить</string>
-    <string name="configure_later">Настроить позже</string>
+    <string name="onboarding_detect_city">Определить город</string>
+    <string name="onboarding_yes_correct">Да, верно</string>
+    <string name="onboarding_no_change">Нет, изменить</string>
+    <string name="onboarding_set_up_later">Настроить позже</string>
 </resources>

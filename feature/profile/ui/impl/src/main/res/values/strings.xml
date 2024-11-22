@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="edit_profile">Редактировать профиль</string>
-    <string name="app_version">Версия приложения</string>
-    <string name="mindbox_device_uuid">Mindbox device UUID</string>
-    <string name="sign_in_or_sign_up">Войди в аккаунт или зарегистрируйcя</string>
-    <string name="sign_in">Войти</string>
-    <string name="sign_up">Зарегистрироваться</string>
-    <string name="authorization_description">Тебя ждут преимущества бонусной программы и персональные предложения</string>
-    <string name="turn_card">Перевернуть карту</string>
-    <string name="qr_code">QR-код</string>
-    <string name="show_loyalty_card_info">Показать информацию о карте лояльности</string>
-    <string name="loyalty_card_level_prime">Prime</string>
-    <string name="loyalty_card_level_priority">Priority</string>
-    <string name="loyalty_card_level_star">Star</string>
-    <string name="to_next_level">До следующего уровня %1$s</string>
-    <string name="creating_your_loyalty_card">Создаём твою карту лояльности</string>
-    <string name="it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
-    <string name="qr_code_generation_error">Не удалось сгенерировать QR-код</string>
+    <string name="profile_edit_profile">Редактировать профиль</string>
+    <string name="profile_app_version">Версия приложения</string>
+    <string name="profile_mindbox_device_uuid">Mindbox device UUID</string>
+    <string name="profile_sign_in_or_sign_up">Войди в аккаунт или зарегистрируйcя</string>
+    <string name="profile_sign_in">Войти</string>
+    <string name="profile_sign_up">Зарегистрироваться</string>
+    <string name="profile_authorization_description">Тебя ждут преимущества бонусной программы и персональные предложения</string>
+    <string name="profile_turn_card">Перевернуть карту</string>
+    <string name="profile_qr_code">QR-код</string>
+    <string name="profile_show_loyalty_card_info">Показать информацию о карте лояльности</string>
+    <string name="profile_loyalty_card_level_prime">Prime</string>
+    <string name="profile_loyalty_card_level_priority">Priority</string>
+    <string name="profile_loyalty_card_level_star">Star</string>
+    <string name="profile_to_next_level">До следующего уровня %1$s</string>
+    <string name="profile_creating_your_loyalty_card">Создаём твою карту лояльности</string>
+    <string name="profile_it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
+    <string name="profile_qr_code_generation_error">Не удалось сгенерировать QR-код</string>
 
-    <plurals name="bonuses">
+    <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
         <item quantity="one">бонус</item>
         <item quantity="two">бонуса</item>
