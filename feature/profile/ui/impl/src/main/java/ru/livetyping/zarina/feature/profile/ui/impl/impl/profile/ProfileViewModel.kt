@@ -149,8 +149,10 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     private fun onSignInClicked() {
-        TODO()
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.SignInClicked
+            emitSideEffect(ProfileSideEffect.Navigate(action))
+        }
     }
 
     private fun onSignUpClicked() {

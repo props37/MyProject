@@ -40,6 +40,7 @@ internal fun SignInScreenBehavior(
 }
 
 private fun navigate(navActions: SignInNavActions, action: SignInScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        SignInScreenAction.ScreenClosed -> navActions.onBackClicked()
+    }
 }

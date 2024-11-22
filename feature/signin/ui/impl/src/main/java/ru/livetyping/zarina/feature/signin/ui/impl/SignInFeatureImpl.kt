@@ -33,7 +33,9 @@ public class SignInFeatureImpl : SignInFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            val signInScreenNavActions = SignInScreenNavActions()
+            val signInScreenNavActions = SignInScreenNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
             signInScreen(signInScreenNavActions)
         }
     }

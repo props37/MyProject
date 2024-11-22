@@ -33,7 +33,9 @@ public class ProfileFeatureImpl : ProfileFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            val profileScreenNavActions = ProfileScreenNavActions()
+            val profileScreenNavActions = ProfileScreenNavActions(
+                onSignInClicked = actions.onSignInClicked,
+            )
             profileScreen(profileScreenNavActions)
         }
     }

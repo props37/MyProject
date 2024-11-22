@@ -40,6 +40,7 @@ internal fun ProfileScreenBehavior(
 }
 
 private fun navigate(navActions: ProfileNavActions, action: ProfileScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        ProfileScreenAction.SignInClicked -> navActions.onSignInClicked()
+    }
 }

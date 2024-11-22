@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTr
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
+import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
@@ -76,6 +77,11 @@ fun rememberProfileNavActions(
     navController: NavHostController
 ): ProfileNavActions {
     return remember(navController) {
-        ProfileNavActions()
+        ProfileNavActions(
+            onSignInClicked = {
+                val signInNavEntry = SignInFeature.getNavEntry()
+                navController.navigate(signInNavEntry)
+            },
+        )
     }
 }
