@@ -28,9 +28,9 @@ public fun ZarinaCheckmarkIcon(
     @Suppress("NAME_SHADOWING")
     contentDescriptionResId: (Boolean) -> Int = { isVisible ->
         if (isVisible) {
-            R.string.checkmark_checked_content_description
+            R.string.uikit_checkmark_checked_content_description
         } else {
-            R.string.checkmark_unchecked_content_description
+            R.string.uikit_checkmark_unchecked_content_description
         }
     },
     color: Color = ZarinaIconButtonDefaults.IconColor,
