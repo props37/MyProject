@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
@@ -23,6 +24,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTopBar
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypePager
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypeSelector
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
@@ -60,13 +62,16 @@ internal fun ScreenContent(
         navActions = navActions,
     )
 
+    // TODO: [Top] Add YandexCaptcha
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             ),
     ) {
         SignInTopBar(
@@ -87,6 +92,18 @@ internal fun ScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
+        )
+
+        SignInTypePager(
+            signInTypeSelectorState = signInTypeSelectorState,
+            pagerState = signInTypePagerState,
+            emailTextFieldState = signInState.emailTextFieldState,
+            isEmailInvalid = signInState.isEmailInvalid,
+            passwordTextFieldState = signInState.passwordTextFieldState,
+            isPasswordInvalid = signInState.isPasswordInvalid,
+            phoneTextFieldState = signInState.phoneTextFieldState,
+            isPhoneInvalid = signInState.isPhoneInvalid,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
