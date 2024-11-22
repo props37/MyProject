@@ -98,9 +98,6 @@ public fun ZarinaTextField(
 
     BasicTextField(
         state = state,
-        modifier = modifier
-            .drawBehind { drawRect(colors.backgroundColor) }
-            .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
         inputTransformation = inputTransformation,
@@ -131,6 +128,9 @@ public fun ZarinaTextField(
             )
         },
         scrollState = scrollState,
+        modifier = modifier
+            .drawBehind { drawRect(colors.backgroundColor) }
+            .onFocusChanged { focusState = it },
     )
 }
 
@@ -166,9 +166,6 @@ public fun ZarinaTextField(
     BasicTextField(
         value = textFieldValue,
         onValueChange = onValueChanged,
-        modifier = modifier
-            .drawBehind { drawRect(colors.backgroundColor) }
-            .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
         textStyle = textStyle,
@@ -199,6 +196,9 @@ public fun ZarinaTextField(
                 colors = colors,
             )
         },
+        modifier = modifier
+            .drawBehind { drawRect(colors.backgroundColor) }
+            .onFocusChanged { focusState = it },
     )
 }
 
@@ -234,9 +234,6 @@ public fun ZarinaTextField(
     BasicTextField(
         value = value,
         onValueChange = onValueChanged,
-        modifier = modifier
-            .drawBehind { drawRect(colors.backgroundColor) }
-            .onFocusChanged { focusState = it },
         enabled = isEnabled,
         readOnly = isReadOnly,
         textStyle = textStyle,
@@ -267,6 +264,9 @@ public fun ZarinaTextField(
                 colors = colors,
             )
         },
+        modifier = modifier
+            .drawBehind { drawRect(colors.backgroundColor) }
+            .onFocusChanged { focusState = it },
     )
 }
 
