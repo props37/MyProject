@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -50,8 +51,16 @@ public fun ZarinaPasswordTextField(
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
-    label: (@Composable () -> Unit)? = null,
-    placeholder: (@Composable () -> Unit)? = null,
+    label: (@Composable () -> Unit)? = {
+        val labelResId = if (state.text.isNotEmpty()) {
+            stringResource(RCommon.string.res_password)
+        } else ""
+
+        Text(text = labelResId)
+    },
+    placeholder: (@Composable () -> Unit)? = {
+        Text(text = stringResource(RCommon.string.res_password))
+    },
     leadingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,
     description: (@Composable () -> Unit)? = null,

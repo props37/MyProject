@@ -151,16 +151,6 @@ private fun SignInByEmail(
         ZarinaPasswordTextField(
             state = passwordTextFieldState,
             isError = isPasswordInvalid,
-            label = {
-                val labelResId = if (passwordTextFieldState.text.isNotEmpty()) {
-                    stringResource(RCommon.string.res_password)
-                } else ""
-
-                Text(text = labelResId)
-            },
-            placeholder = {
-                Text(text = stringResource(RCommon.string.res_password))
-            },
             keyboardOptions = remember {
                 ZarinaPasswordTextFieldDefaults.KeyboardOptions.copy(
                     imeAction = ImeAction.Done,
