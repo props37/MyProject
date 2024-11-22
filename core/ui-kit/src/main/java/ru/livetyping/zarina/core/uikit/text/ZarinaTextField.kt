@@ -33,12 +33,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,13 +57,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
@@ -78,7 +73,6 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 public fun ZarinaTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
-    onTextChanged: ((String) -> Unit)? = null,
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
@@ -100,13 +94,6 @@ public fun ZarinaTextField(
     outputTransformation: OutputTransformation? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
-    val currentOnTextChanged by rememberUpdatedState(onTextChanged)
-    LaunchedEffect(state) {
-        state.textAsFlow()
-            .onEach { currentOnTextChanged?.invoke(it.toString()) }
-            .launchIn(this)
-    }
-
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
     BasicTextField(
