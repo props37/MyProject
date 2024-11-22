@@ -160,7 +160,7 @@ private fun SignInByEmail(
             state = passwordTextFieldState,
             isError = isPasswordInvalid,
             label = {
-                val labelResId = if (emailTextFieldState.text.isNotEmpty()) {
+                val labelResId = if (passwordTextFieldState.text.isNotEmpty()) {
                     stringResource(RCommon.string.res_password)
                 } else ""
 
