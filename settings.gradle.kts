@@ -42,6 +42,7 @@ include(":feature:cityselector:ui:api")
 include(":feature:cityselector:ui:impl")
 
 include(":feature:signin:ui:api")
+include(":feature:signin:ui:impl")
 
 include(":data:content")
 include(":data:auth")
