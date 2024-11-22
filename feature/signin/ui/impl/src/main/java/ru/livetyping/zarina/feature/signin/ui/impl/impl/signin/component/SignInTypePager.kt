@@ -63,8 +63,6 @@ internal fun SignInTypePager(
                     isEmailInvalid = signInState.isEmailInvalid,
                     passwordTextFieldState = signInState.passwordTextFieldState,
                     isPasswordInvalid = signInState.isPasswordInvalid,
-                    phoneTextFieldState = signInState.phoneTextFieldState,
-                    isPhoneInvalid = signInState.isPhoneInvalid,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -81,8 +79,6 @@ private fun SignInByEmail(
     isEmailInvalid: Boolean,
     passwordTextFieldState: TextFieldState,
     isPasswordInvalid: Boolean,
-    phoneTextFieldState: TextFieldState,
-    isPhoneInvalid: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val emailFocusRequester = remember { FocusRequester() }
