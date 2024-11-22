@@ -31,4 +31,8 @@
     <string name="help">Помощь</string>
     <string name="about_company">О компании</string>
     <string name="price_in_rubles">%1$s ₽</string>
+    <string name="discount_percent">-%1$d%%</string>
+    <string name="add_to_cart">Добавить в корзину</string>
+    <string name="remove_from_cart">Удалить из корзины</string>
+    <string name="subscribe_to_product">Подписаться на товар</string>
 </resources>
