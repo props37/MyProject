@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -80,8 +81,8 @@ internal class WishlistViewModel @Inject constructor(
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
         .updateProducts(
-            wishlistProductIdsFlow = emptyFlow(), // TODO: [Top] Implement
-            cartProductIdsFlow = emptyFlow(), // TODO: [Top] Implement
+            wishlistProductIdsFlow = flowOf(emptySet()), // TODO: [Top] Implement
+            cartProductIdsFlow = flowOf(emptySet()), // TODO: [Top] Implement
         )
         .cachedIn(viewModelScopeDefault)
 
