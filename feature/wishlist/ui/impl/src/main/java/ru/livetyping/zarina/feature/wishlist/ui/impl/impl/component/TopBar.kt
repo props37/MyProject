@@ -18,11 +18,12 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun TopBar(
     state: TopBarState,
-    onEvent: (TopBarEvent) -> Unit,
+    onClearWishlistClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
@@ -40,7 +41,7 @@ internal fun TopBar(
                 exit = remember { AnimatedContentDefaultExitTransition },
             ) {
                 ZarinaButton(
-                    onClick = { onEvent(TopBarEvent.ClearClicked) },
+                    onClick = onClearWishlistClicked,
                     isLoading = state.isClearButtonLoading,
                     size = ZarinaButtonSize.Small,
                     colors = ZarinaButtonDefaults.backlessColors(),

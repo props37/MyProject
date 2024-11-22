@@ -31,8 +31,8 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
 import javax.inject.Inject
 
@@ -93,9 +93,21 @@ internal class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun onTopBarEvent(event: TopBarEvent) {
+    // TODO: [Top] Implement
+    fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
-            TopBarEvent.ClearClicked -> onClearWishlistClicked()
+            WishlistEvent.ClearWishlistClicked -> onClearWishlistClicked()
+            WishlistEvent.GoToCatalogClicked -> TODO()
+        }
+    }
+
+    // TODO: [Top] Implement
+    fun onProductEvent(event: ProductEvent) {
+        when (event) {
+            is ProductEvent.AddToCartClicked -> TODO()
+            is ProductEvent.AddToFavoritesClicked -> TODO()
+            is ProductEvent.ProductClicked -> TODO()
+            is ProductEvent.SubscribeClicked -> TODO()
         }
     }
 

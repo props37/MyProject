@@ -5,22 +5,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlistPlaceholder
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBarState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun WishlistScreen(
@@ -31,7 +39,9 @@ internal fun WishlistScreen(
 
     ScreenContent(
         topBarState = topBarState,
-        onTopBarEvent = viewModel::onTopBarEvent,
+        onWishlistEvent = viewModel::onWishlistEvent,
+        productPagingDataFlow = viewModel.productPagingDataFlow,
+        onProductEvent = viewModel::onProductEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -41,7 +51,9 @@ internal fun WishlistScreen(
 @Composable
 private fun ScreenContent(
     topBarState: TopBarState,
-    onTopBarEvent: (TopBarEvent) -> Unit,
+    onWishlistEvent: (WishlistEvent) -> Unit,
+    productPagingDataFlow: Flow<PagingData<ProductShort>>,
+    onProductEvent: (ProductEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
@@ -64,9 +76,25 @@ private fun ScreenContent(
     ) {
         TopBar(
             state = topBarState,
-            onEvent = onTopBarEvent,
+            onClearWishlistClicked = { onWishlistEvent(WishlistEvent.ClearWishlistClicked) },
         )
 
-        // TODO: [Top] Implement
+        ProductGrid(
+            productPagingDataFlow = productPagingDataFlow,
+            onProductClicked = { onProductEvent(ProductEvent.ProductClicked(it)) },
+            onAddToFavoritesClicked = { onProductEvent(ProductEvent.AddToFavoritesClicked(it)) },
+            onAddToCartClicked = { onProductEvent(ProductEvent.AddToCartClicked(it)) },
+            onSubscribeClicked = { onProductEvent(ProductEvent.SubscribeClicked(it)) },
+            emptyProductsPlaceholder = {
+                EmptyWishlistPlaceholder(
+                    onGoToCatalogClicked = { onWishlistEvent(WishlistEvent.GoToCatalogClicked) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
+                )
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
