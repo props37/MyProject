@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
-import ru.livetyping.zarina.core.uikit.button.AddToCartIconButton
-import ru.livetyping.zarina.core.uikit.button.SubscribeIconButton
+import ru.livetyping.zarina.core.uikit.button.ZarinaAddToCartIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
+import ru.livetyping.zarina.core.uikit.button.ZarinaSubscribeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.IconSize
@@ -108,14 +108,14 @@ public fun ProductCard(
                     .size(28.dp)
 
                 if (product.isAvailable) {
-                    AddToCartIconButton(
+                    ZarinaAddToCartIconButton(
                         isAdded = product.isInCart,
                         onClick = { onAddToCartClicked(product) },
                         iconSize = IconSize,
                         modifier = buttonModifier,
                     )
                 } else {
-                    SubscribeIconButton(
+                    ZarinaSubscribeIconButton(
                         onClick = { onSubscribeClicked(product) },
                         iconSize = IconSize,
                         modifier = buttonModifier,
