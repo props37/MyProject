@@ -14,7 +14,11 @@
     <string name="res_cancel">Отменить</string>
     <string name="res_clear">Очистить</string>
     <string name="res_back">Назад</string>
+    <string name="res_catalog">Каталог</string>
     <string name="res_wishlist">Избранное</string>
+    <string name="res_home_screen">Главная</string>
+    <string name="res_profile">Профиль</string>
+    <string name="res_cart">Корзина</string>
     <string name="res_close">Закрыть</string>
     <string name="res_remove_from_wishlist">Удалить из избранное</string>
     <string name="res_add_to_wishlist">Добавить в избранное</string>
@@ -23,7 +27,6 @@
     <string name="res_skip">Пропустить</string>
     <string name="res_city">Город</string>
     <string name="res_change">Изменить</string>
-    <string name="res_profile">Профиль</string>
     <string name="res_my_orders">Мои заказы</string>
     <string name="res_stores">Магазины</string>
     <string name="res_help">Помощь</string>

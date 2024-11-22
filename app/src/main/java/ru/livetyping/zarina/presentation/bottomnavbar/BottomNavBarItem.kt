@@ -22,27 +22,27 @@ sealed class BottomNavBarItem(
     val iconResId: Int,
 ) {
     data object Catalog : BottomNavBarItem(
-        titleResId = R.string.catalog,
+        titleResId = RCommon.string.res_catalog,
         iconResId = R.drawable.ic_menu_24,
     )
 
     data object Wishlist : BottomNavBarItem(
-        titleResId = RCommon.string.wishlist,
+        titleResId = RCommon.string.res_wishlist,
         iconResId = R.drawable.ic_heart_outline_24,
     )
 
     data object Home : BottomNavBarItem(
-        titleResId = R.string.home,
+        titleResId = RCommon.string.res_home_screen,
         iconResId = R.drawable.ic_building_outline_24,
     )
 
     data object Profile : BottomNavBarItem(
-        titleResId = R.string.profile,
+        titleResId = RCommon.string.res_profile,
         iconResId = R.drawable.ic_human_outline_24,
     )
 
     data object Cart : BottomNavBarItem(
-        titleResId = R.string.cart,
+        titleResId = RCommon.string.res_cart,
         iconResId = R.drawable.ic_shopper_outline_24,
     )
 }
