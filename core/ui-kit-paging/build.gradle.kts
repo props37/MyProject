@@ -54,6 +54,7 @@ composeCompiler {
 
 dependencies {
     api(projects.core.uiKit)
+    api(projects.core.paging)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
@@ -64,6 +65,8 @@ dependencies {
     debugImplementation(libs.jetpack.compose.testManifest)
 
     api(libs.jetpack.paging.compose)
+
+    implementation(libs.timber)
 
     lintChecks(libs.lint.composeChecks)
 

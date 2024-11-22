@@ -42,6 +42,7 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(libs.jetpack.paging)
+    implementation(libs.jetpack.paging.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)

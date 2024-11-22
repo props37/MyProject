@@ -35,4 +35,5 @@
     <string name="res_add_to_cart">Добавить в корзину</string>
     <string name="res_remove_from_cart">Удалить из корзины</string>
     <string name="res_subscribe_to_product">Подписаться на товар</string>
+    <string name="res_scroll_to_top">Вернуться наверх</string>
 </resources>
