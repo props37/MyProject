@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -69,7 +70,7 @@ internal fun ScreenContent(
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
-                WindowInsets.statusBars
+                WindowInsets.systemBars
                     .union(WindowInsets.displayCutout)
                     .union(WindowInsets.ime),
             ),
