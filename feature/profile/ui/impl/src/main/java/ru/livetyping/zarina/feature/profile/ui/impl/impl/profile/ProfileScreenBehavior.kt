@@ -42,5 +42,8 @@ internal fun ProfileScreenBehavior(
 private fun navigate(navActions: ProfileNavActions, action: ProfileScreenAction) {
     when (action) {
         ProfileScreenAction.SignInClicked -> navActions.onSignInClicked()
+        is ProfileScreenAction.ChangeCityClicked -> {
+            navActions.onChangeCityClicked(action.currentCity)
+        }
     }
 }

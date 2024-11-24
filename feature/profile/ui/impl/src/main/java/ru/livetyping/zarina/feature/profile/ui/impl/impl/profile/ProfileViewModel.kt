@@ -166,7 +166,18 @@ internal class ProfileViewModel @Inject constructor(
     }
 
     private fun onMenuItemClicked(event: ProfileEvent.MenuItemClicked) {
-        TODO()
+        when (event.item) {
+            ProfileMenuItem.MyOrders -> TODO()
+            ProfileMenuItem.City -> TODO()
+            ProfileMenuItem.Stores -> {
+                val currentCity = userCity.value
+                val action = ProfileScreenAction.ChangeCityClicked(currentCity)
+                emitSideEffect(ProfileSideEffect.Navigate(action))
+            }
+
+            ProfileMenuItem.Help -> TODO()
+            ProfileMenuItem.AboutCompany -> TODO()
+        }
         // TODO: [Top] Implement
     }
 }

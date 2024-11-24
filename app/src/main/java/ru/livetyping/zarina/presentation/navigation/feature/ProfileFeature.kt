@@ -4,10 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.navigationutil.hasAnyRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
@@ -82,6 +86,14 @@ fun rememberProfileNavActions(
                 val signInNavEntry = SignInFeature.getNavEntry()
                 navController.navigate(signInNavEntry)
             },
+            onChangeCityClicked = { currentCity ->
+                val citySelectorParams = CitySelectorNavParams(
+                    title = Text.Resource(R.string.city_change),
+                    currentCity = currentCity,
+                )
+                val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
+                navController.navigate(citySelectorNavEntry)
+            }
         )
     }
 }
