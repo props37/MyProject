@@ -14,9 +14,9 @@ import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowS
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItemsState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
 
 @Composable
 internal fun CatalogContent(

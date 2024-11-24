@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.category
+package ru.livetyping.zarina.feature.catalog.ui.impl.impl.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableSet

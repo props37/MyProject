@@ -35,10 +35,10 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItem
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItemsState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
 import javax.inject.Inject
 
 @HiltViewModel

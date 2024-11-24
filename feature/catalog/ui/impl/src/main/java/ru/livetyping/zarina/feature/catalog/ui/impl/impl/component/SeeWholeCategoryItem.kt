@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.times
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.catalog.ui.impl.R
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.category.CategoryListItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItem
 
 @Composable
 internal fun SeeWholeCategoryItem(
