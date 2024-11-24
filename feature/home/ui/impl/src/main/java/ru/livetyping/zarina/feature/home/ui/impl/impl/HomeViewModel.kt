@@ -60,7 +60,7 @@ internal class HomeViewModel @Inject constructor(
     private val homeContentResult: StateFlow<Result<HomeContent>?> = homeContentRequester.flow
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileAndroidUiSubscribed,
+            started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
 
