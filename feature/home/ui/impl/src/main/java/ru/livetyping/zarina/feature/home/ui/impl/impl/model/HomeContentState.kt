@@ -6,12 +6,17 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 
 @Stable
-internal sealed class HomeContentState {
-    data object Loading : HomeContentState()
+internal sealed class HomeContentState(
+    open val isRefreshing: Boolean,
+) {
+    data object Loading : HomeContentState(isRefreshing = false)
 
     @Immutable
-    data class Success(val content: HomeContent) : HomeContentState()
+    data class Success(
+        val content: HomeContent,
+        override val isRefreshing: Boolean,
+    ) : HomeContentState(isRefreshing = isRefreshing)
 
     @Immutable
-    data class Error(val state: ZarinaErrorScreenState) : HomeContentState()
+    data class Error(val state: ZarinaErrorScreenState) : HomeContentState(isRefreshing = false)
 }

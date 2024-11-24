@@ -75,13 +75,6 @@ internal class HomeViewModel @Inject constructor(
         initialValue = HomeContentState.Loading,
     )
 
-    val isRefreshing: StateFlow<Boolean> = homeContentRequester.loadingState.mapState(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-    ) { loadingState ->
-        loadingState.isLoading() && loadingState.loadingRequest == HomeContentRequest.REFRESHING
-    }
-
     fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
         when (event) {
             is TabRowEvent.TabChanged -> {
@@ -136,7 +129,9 @@ internal class HomeViewModel @Inject constructor(
         } else {
             result.fold(
                 onSuccess = { homeContent ->
-                    HomeContentState.Success(homeContent)
+                    val isRefreshing = loadingState.isLoading()
+                            && loadingState.loadingRequest == HomeContentRequest.REFRESHING
+                    HomeContentState.Success(homeContent, isRefreshing)
                 },
                 onFailure = { t ->
                     val errorState = ZarinaErrorScreenState.from(t)

@@ -25,14 +25,12 @@ internal fun HomeScreen(
 ) {
     val genderSelectorState by viewModel.genderSelectorState.collectAsStateWithLifecycle()
     val homeContentState by viewModel.homeContentState.collectAsStateWithLifecycle()
-    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     ScreenContent(
         genderSelectorState = genderSelectorState,
         onGenderSelectorEvent = viewModel::onGenderSelectorEvent,
         homeContentState = homeContentState,
         onHomeContentEvent = viewModel::onHomeContentEvent,
-        isRefreshing = isRefreshing,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -44,7 +42,6 @@ private fun ScreenContent(
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
-    isRefreshing: Boolean,
     sideEffects: Flow<HomeSideEffect>,
     navActions: HomeNavActions,
 ) {
@@ -63,7 +60,6 @@ private fun ScreenContent(
             onHomeContentEvent = onHomeContentEvent,
             genderSelectorState = genderSelectorState,
             onGenderSelectorEvent = onGenderSelectorEvent,
-            isRefreshing = isRefreshing,
             modifier = Modifier.fillMaxSize(),
         )
     }

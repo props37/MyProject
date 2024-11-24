@@ -65,7 +65,6 @@ internal fun HomeContent(
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     genderSelectorState: TabRowState<GenderTab>,
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
-    isRefreshing: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -86,7 +85,6 @@ internal fun HomeContent(
                     onHomeContentEvent = onHomeContentEvent,
                     genderSelectorState = genderSelectorState,
                     onGenderSelectorEvent = onGenderSelectorEvent,
-                    isRefreshing = isRefreshing,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -122,7 +120,6 @@ private fun HomeContentSuccess(
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     genderSelectorState: TabRowState<GenderTab>,
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
-    isRefreshing: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -135,7 +132,7 @@ private fun HomeContentSuccess(
         }
 
         val pullRefreshState = rememberPullRefreshState(
-            refreshing = isRefreshing,
+            refreshing = homeContentState.isRefreshing,
             onRefresh = { onHomeContentEvent(HomeContentEvent.RefreshTriggered) },
             refreshingOffset = pullRefreshOffset,
         )
@@ -149,7 +146,7 @@ private fun HomeContentSuccess(
         )
 
         ZarinaPullRefreshIndicator(
-            isRefreshing = isRefreshing,
+            isRefreshing = homeContentState.isRefreshing,
             state = pullRefreshState,
             modifier = Modifier
                 .align(Alignment.TopCenter)
