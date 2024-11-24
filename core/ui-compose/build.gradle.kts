@@ -47,6 +47,7 @@ dependencies {
     implementation(projects.core.domain)
     api(projects.core.text)
     api(projects.core.uiCommon)
+    implementation(projects.core.kotlinUtil)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
