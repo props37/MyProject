@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -69,7 +67,6 @@ public fun ZarinaPasswordTextField(
     onKeyboardAction: KeyboardActionHandler? = null,
     onTextLayout: (Density.(getResult: () -> TextLayoutResult?) -> Unit)? = null,
     interactionSource: MutableInteractionSource? = null,
-    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     val isPasswordVisibilityButtonVisible = state.text.isNotEmpty()
     var isPasswordHidden by remember { mutableStateOf(true) }
@@ -95,7 +92,7 @@ public fun ZarinaPasswordTextField(
         onKeyboardAction = onKeyboardAction,
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
-        cursorBrush = cursorBrush,
+        cursorBrush = remember(colors.cursorColor) { SolidColor(colors.cursorColor) },
         decorator = { innerTextField ->
             ZarinaTextFieldDecoration(
                 value = state.text,

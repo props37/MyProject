@@ -159,7 +159,6 @@ public fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource? = null,
-    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -177,7 +176,7 @@ public fun ZarinaTextField(
         visualTransformation = visualTransformation,
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
-        cursorBrush = cursorBrush,
+        cursorBrush = remember(colors.cursorColor) { SolidColor(colors.cursorColor) },
         decorationBox = { innerTextField ->
             ZarinaTextFieldDecoration(
                 value = textFieldValue.text,
@@ -227,7 +226,6 @@ public fun ZarinaTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource? = null,
-    cursorBrush: Brush = SolidColor(UiKitTheme.colors.text.general.regular.default),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
 
@@ -245,7 +243,7 @@ public fun ZarinaTextField(
         visualTransformation = visualTransformation,
         onTextLayout = onTextLayout,
         interactionSource = interactionSource,
-        cursorBrush = cursorBrush,
+        cursorBrush = remember(colors.cursorColor) { SolidColor(colors.cursorColor) },
         decorationBox = { innerTextField ->
             ZarinaTextFieldDecoration(
                 value = value,
