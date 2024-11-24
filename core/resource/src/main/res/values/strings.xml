@@ -41,4 +41,5 @@
     <string name="res_scroll_to_top">Вернуться наверх</string>
     <string name="res_email">Электронная почта</string>
     <string name="res_password">Пароль</string>
+    <string name="res_phone">Телефон</string>
 </resources>
