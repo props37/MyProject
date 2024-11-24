@@ -27,18 +27,18 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CitySear
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun CitySelectorScreen(
     navActions: CitySelectorNavActions,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
-    val citySelectorState by viewModel.citySelectorState.collectAsStateWithLifecycle()
+    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val cityListState by viewModel.cityListState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        citySelectorState = citySelectorState,
+        topBarState = topBarState,
         cityListState = cityListState,
         onCitySelectorEvent = viewModel::onCitySelectorEvent,
         sideEffects = viewModel.sideEffects,
@@ -48,7 +48,7 @@ internal fun CitySelectorScreen(
 
 @Composable
 internal fun ScreenContent(
-    citySelectorState: CitySelectorState,
+    topBarState: TopBarState,
     cityListState: CityListState,
     onCitySelectorEvent: (CitySelectorEvent) -> Unit,
     sideEffects: Flow<CitySelectorSideEffect>,
@@ -70,13 +70,13 @@ internal fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         TopBar(
-            title = citySelectorState.title,
+            title = topBarState.title,
             onBackClicked = { onCitySelectorEvent(CitySelectorEvent.BackClicked) },
         )
 
         Column {
             CitySearchTextField(
-                state = citySelectorState.citySearchTextFieldState,
+                state = topBarState.citySearchTextFieldState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

@@ -38,7 +38,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListStateBuilder
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.NameQueryCities
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -92,8 +92,8 @@ internal class CitySelectorViewModel @Inject constructor(
             }
     }
 
-    val citySelectorState: StateFlow<CitySelectorState> = ReadOnlyStateFlow(
-        CitySelectorState(
+    val topBarState: StateFlow<TopBarState> = ReadOnlyStateFlow(
+        TopBarState(
             title = navEntry.title ?: TITLE_DEFAULT_VALUE,
             citySearchTextFieldState = citySearchTextFieldState,
         )

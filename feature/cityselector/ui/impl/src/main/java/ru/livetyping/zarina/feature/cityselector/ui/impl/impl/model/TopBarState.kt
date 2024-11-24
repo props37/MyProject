@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.text.Text
 
 @Stable
-internal data class CitySelectorState(
+internal data class TopBarState(
     val title: Text,
     val citySearchTextFieldState: TextFieldState,
 )
