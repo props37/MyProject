@@ -35,11 +35,11 @@ import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitiesForNameQuery
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListStateBuilder
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.NameQueryCities
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -86,7 +86,7 @@ internal class CitySelectorViewModel @Inject constructor(
                 val params = GetCitiesFlowUseCase.Params(nameQueryString, cachePolicy)
                 getCitiesFlowUseCase(params).map { result ->
                     result.map { cities ->
-                        CitiesForNameQuery(nameQueryString, cities)
+                        NameQueryCities(nameQueryString, cities)
                     }
                 }
             }
@@ -108,7 +108,7 @@ internal class CitySelectorViewModel @Inject constructor(
         hasSelectedCityChanged,
     ) { citiesForNameQueryResult, citiesLoadingState, selectedCity, hasSelectedCityChanged ->
         cityListStateBuilder.build(
-            citiesForNameQueryResult = citiesForNameQueryResult,
+            nameQueryCitiesResult = citiesForNameQueryResult,
             citiesLoadingState = citiesLoadingState,
             selectedCity = selectedCity?.toCity(),
             mainCityKladrIds = mainCityKladrIds,

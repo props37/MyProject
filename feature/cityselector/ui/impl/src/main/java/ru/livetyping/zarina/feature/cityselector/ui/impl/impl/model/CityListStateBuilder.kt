@@ -8,14 +8,14 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 internal class CityListStateBuilder {
     fun build(
-        citiesForNameQueryResult: Result<CitiesForNameQuery>,
+        nameQueryCitiesResult: Result<NameQueryCities>,
         citiesLoadingState: FlowRequester.LoadingState,
         selectedCity: City?,
         mainCityKladrIds: List<KladrId>,
         isChangeCityButtonVisible: Boolean,
     ): CityListState {
         return if (!citiesLoadingState.isLoading()) {
-            citiesForNameQueryResult.fold(
+            nameQueryCitiesResult.fold(
                 onSuccess = { citiesForNameQuery ->
                     val cityNameQuery = citiesForNameQuery.cityNameQuery
                     val cities = citiesForNameQuery.cities
