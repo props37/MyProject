@@ -15,8 +15,8 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.impl.impl.component.HomeContent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
+import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentEvent
+import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentState
 
 @Composable
 internal fun HomeScreen(

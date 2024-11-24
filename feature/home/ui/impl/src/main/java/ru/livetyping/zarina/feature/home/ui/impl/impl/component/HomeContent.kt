@@ -55,8 +55,8 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.BannerContainer
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentEvent
-import ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent.HomeContentState
+import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentEvent
+import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentState
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

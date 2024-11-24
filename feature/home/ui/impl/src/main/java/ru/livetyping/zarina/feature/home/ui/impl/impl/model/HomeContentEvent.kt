@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.home.ui.impl.impl.homecontent
+package ru.livetyping.zarina.feature.home.ui.impl.impl.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
