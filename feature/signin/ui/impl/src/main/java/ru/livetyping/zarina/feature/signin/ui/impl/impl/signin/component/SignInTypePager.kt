@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.placeCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,13 +29,15 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
-import ru.livetyping.zarina.core.uicompose.clear
+import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
+import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -67,7 +68,13 @@ internal fun SignInTypePager(
                 )
             }
 
-            SignInType.PHONE -> TODO()
+            SignInType.PHONE -> {
+                SignInByPhone(
+                    phoneTextFieldState = signInState.phoneTextFieldState,
+                    isPhoneInvalid = signInState.isPhoneInvalid,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }
@@ -97,7 +104,7 @@ private fun SignInByEmail(
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(TopPadding))
 
         ZarinaTextField(
             state = emailTextFieldState,
@@ -139,9 +146,7 @@ private fun SignInByEmail(
                     autofillType = AutofillType.EmailAddress,
                     onFilled = {
                         emailTextFieldState.edit {
-                            clear()
-                            append(it)
-                            placeCursorAtEnd()
+                            setTextAndPlaceCursorAtEnd(it)
                         }
                     },
                 ),
@@ -167,9 +172,7 @@ private fun SignInByEmail(
                     autofillType = AutofillType.Password,
                     onFilled = {
                         passwordTextFieldState.edit {
-                            clear()
-                            append(it)
-                            placeCursorAtEnd()
+                            setTextAndPlaceCursorAtEnd(it)
                         }
                     },
                 ),
@@ -178,5 +181,50 @@ private fun SignInByEmail(
         // TODO: [Top] Implement
     }
 }
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun SignInByPhone(
+    phoneTextFieldState: TextFieldState,
+    isPhoneInvalid: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val focusRequester = remember { FocusRequester() }
+    LifecycleStartEffect(Unit) {
+        focusRequester.tryRequestFocus()
+        onStopOrDispose {}
+    }
+
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        Spacer(modifier = Modifier.height(TopPadding))
+
+        ZarinaPhoneTextField(
+            state = phoneTextFieldState,
+            isError = isPhoneInvalid,
+            keyboardOptions = remember {
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Phone,
+                    imeAction = ImeAction.Done,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .focusRequester(focusRequester)
+                .autofill(
+                    autofillType = AutofillType.PhoneNumber,
+                    onFilled = {
+                        phoneTextFieldState.edit {
+                            setTextAndPlaceCursorAtEnd(it)
+                        }
+                    },
+                ),
+        )
+
+        // TODO: [Top] Implement
+    }
+}
+
+private val TopPadding: Dp get() = 32.dp
 
 private enum class SignInByEmailFocusTarget { Email, Password }

@@ -8,3 +8,9 @@ public fun TextFieldBuffer.clear() {
     delete(0, this.length)
     placeCursorAtEnd()
 }
+
+public fun TextFieldBuffer.setTextAndPlaceCursorAtEnd(text: CharSequence) {
+    clear()
+    append(text)
+    placeCursorAtEnd()
+}
