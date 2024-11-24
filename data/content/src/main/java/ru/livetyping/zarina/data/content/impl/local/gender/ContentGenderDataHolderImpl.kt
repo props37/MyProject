@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.datastore.safeData
 import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.kotlinutil.enumValueOfOrNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -34,15 +35,6 @@ internal class ContentGenderDataHolderImpl @Inject constructor(
             data[KEY_LAST_CONTENT_GENDER] = gender.name
         }
         Timber.tag(TAG).v("Content gender set: $gender")
-    }
-
-    // TODO: [High] Extract to :core:kotlin-util module
-    private inline fun <reified T : Enum<T>> enumValueOfOrNull(name: String): T? {
-        return try {
-            enumValueOf<T>(name)
-        } catch (_: Exception) {
-            null
-        }
     }
 
     companion object {
