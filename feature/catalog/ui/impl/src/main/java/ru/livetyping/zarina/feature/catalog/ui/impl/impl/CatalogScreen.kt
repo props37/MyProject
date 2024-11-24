@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -20,13 +22,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.CatalogContent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderCategoryPager
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderSelector
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.SearchBar
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
@@ -90,15 +94,35 @@ private fun ScreenContent(
             .bottomNavBarPadding()
             .clipToBounds(),
     ) { padding ->
-        CatalogContent(
-            genderSelectorState = genderSelectorState,
-            onGenderSelectorEvent = onGenderSelectorEvent,
-            categoryListState = categoryListState,
-            onCategoryListEvent = onCategoryListEvent,
-            categoryListItemsState = categoryListItemsState,
+        Column(
             modifier = Modifier
                 .padding(padding)
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
-        )
+        ) {
+            val genderSelectorPagerState = rememberPagerConnectedToTabRowState(
+                tabs = genderSelectorState.tabs,
+                currentTab = genderSelectorState.currentTab,
+                onTabChanged = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
+                initialPage = remember { genderSelectorState.currentTabIndex },
+                pageCount = { genderSelectorState.tabs.size },
+            )
+
+            GenderSelector(
+                genderSelectorState = genderSelectorState,
+                onGenderSelectorEvent = onGenderSelectorEvent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            GenderCategoryPager(
+                genderSelectorState = genderSelectorState,
+                categoryListState = categoryListState,
+                onCategoryListEvent = onCategoryListEvent,
+                categoryListItemsState = categoryListItemsState,
+                pagerState = genderSelectorPagerState,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
