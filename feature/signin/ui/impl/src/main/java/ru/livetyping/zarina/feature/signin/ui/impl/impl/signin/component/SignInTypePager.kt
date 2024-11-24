@@ -1,7 +1,10 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,14 +36,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
+import ru.livetyping.zarina.core.uicompose.navigationBarsWithIme
 import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
+import ru.livetyping.zarina.core.uikit.button.ZarinaButton
+import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.signin.ui.impl.R
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -50,6 +61,7 @@ internal fun SignInTypePager(
     signInTypeSelectorState: TabRowState<SignInType>,
     pagerState: PagerState,
     signInState: SignInState,
+    onSignInEvent: (SignInEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     HorizontalPager(
@@ -64,6 +76,10 @@ internal fun SignInTypePager(
                     isEmailInvalid = signInState.isEmailInvalid,
                     passwordTextFieldState = signInState.passwordTextFieldState,
                     isPasswordInvalid = signInState.isPasswordInvalid,
+                    onForgotPasswordClicked = { onSignInEvent(SignInEvent.ForgotPasswordClicked) },
+                    isSignInButtonLoading = signInState.isSignInButtonLoading,
+                    onSignInClicked = { onSignInEvent(SignInEvent.SignInClicked) },
+                    onSignUpClicked = { onSignInEvent(SignInEvent.SignUpClicked) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -72,6 +88,9 @@ internal fun SignInTypePager(
                 SignInByPhone(
                     phoneTextFieldState = signInState.phoneTextFieldState,
                     isPhoneInvalid = signInState.isPhoneInvalid,
+                    isSignInButtonLoading = signInState.isSignInButtonLoading,
+                    onSignInClicked = { onSignInEvent(SignInEvent.SignInClicked) },
+                    onSignUpClicked = { onSignInEvent(SignInEvent.SignUpClicked) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -86,6 +105,10 @@ private fun SignInByEmail(
     isEmailInvalid: Boolean,
     passwordTextFieldState: TextFieldState,
     isPasswordInvalid: Boolean,
+    onForgotPasswordClicked: () -> Unit,
+    isSignInButtonLoading: Boolean,
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val emailFocusRequester = remember { FocusRequester() }
@@ -178,7 +201,29 @@ private fun SignInByEmail(
                 ),
         )
 
-        // TODO: [Top] Implement
+        ZarinaButton(
+            onClick = onForgotPasswordClicked,
+            size = ZarinaButtonSize.Medium,
+            colors = ZarinaButtonDefaults.backlessColors(),
+            contentPadding = PaddingValues(vertical = 8.dp),
+            indication = null,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.sign_in_forgot_password_question).uppercase(),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(SignInBottomBlockTopPadding))
+
+        SignInBottomBlock(
+            isSignInButtonLoading = isSignInButtonLoading,
+            onSignInClicked = onSignInClicked,
+            onSignUpClicked = onSignUpClicked,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
+        BottomSpacer()
     }
 }
 
@@ -187,6 +232,9 @@ private fun SignInByEmail(
 private fun SignInByPhone(
     phoneTextFieldState: TextFieldState,
     isPhoneInvalid: Boolean,
+    isSignInButtonLoading: Boolean,
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -221,10 +269,70 @@ private fun SignInByPhone(
                 ),
         )
 
-        // TODO: [Top] Implement
+        Spacer(modifier = Modifier.height(SignInBottomBlockTopPadding))
+
+        SignInBottomBlock(
+            isSignInButtonLoading = isSignInButtonLoading,
+            onSignInClicked = onSignInClicked,
+            onSignUpClicked = onSignUpClicked,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
+        BottomSpacer()
+    }
+}
+
+@Composable
+private fun SignInBottomBlock(
+    isSignInButtonLoading: Boolean,
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        ZarinaButton(
+            onClick = onSignInClicked,
+            isLoading = isSignInButtonLoading,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(text = stringResource(R.string.sign_in_sign_in).uppercase())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // TODO: [Top] Add policies
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Text(
+            text = stringResource(R.string.sign_in_do_not_have_account_yet_question),
+            style = UiKitTheme.typography.tertiary.regular,
+            color = UiKitTheme.colors.text.general.regular.default,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ZarinaButton(
+            onClick = onSignUpClicked,
+            colors = ZarinaButtonDefaults.outlineColors(),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(text = stringResource(R.string.sign_in_sign_up).uppercase())
+        }
+    }
+}
+
+@Composable
+private fun BottomSpacer(
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        val windowInsetsPadding =
+            WindowInsets.navigationBarsWithIme.asPaddingValues().calculateBottomPadding()
+        Spacer(modifier = Modifier.height(windowInsetsPadding))
+        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
     }
 }
 
 private val TopPadding: Dp get() = 32.dp
+private val SignInBottomBlockTopPadding: Dp get() = 32.dp
 
 private enum class SignInByEmailFocusTarget { Email, Password }

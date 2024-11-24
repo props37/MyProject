@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,7 @@ internal fun SignInScreenBehavior(
     navActions: SignInNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -25,6 +27,7 @@ internal fun SignInScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is SignInSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }

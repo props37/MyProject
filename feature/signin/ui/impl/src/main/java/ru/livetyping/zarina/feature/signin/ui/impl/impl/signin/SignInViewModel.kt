@@ -76,6 +76,7 @@ internal class SignInViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid,
+            isSignInButtonLoading = false, // TODO: [Top] Implement
         )
     }.stateIn(
         scope = viewModelScope,
@@ -87,6 +88,7 @@ internal class SignInViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid.value,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid.value,
+            isSignInButtonLoading = false,
         )
     )
 
@@ -100,6 +102,9 @@ internal class SignInViewModel @Inject constructor(
     fun onSignInEvent(event: SignInEvent) {
         when (event) {
             SignInEvent.BackClicked -> onBackClicked()
+            SignInEvent.ForgotPasswordClicked -> TODO()
+            SignInEvent.SignInClicked -> TODO()
+            SignInEvent.SignUpClicked -> TODO()
         }
     }
 

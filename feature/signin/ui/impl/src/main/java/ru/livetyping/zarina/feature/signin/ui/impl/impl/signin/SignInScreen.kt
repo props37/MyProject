@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -71,8 +69,7 @@ internal fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.systemBars
-                    .union(WindowInsets.displayCutout)
-                    .union(WindowInsets.ime),
+                    .union(WindowInsets.displayCutout),
             ),
     ) {
         SignInTopBar(
@@ -99,6 +96,7 @@ internal fun ScreenContent(
             signInTypeSelectorState = signInTypeSelectorState,
             pagerState = signInTypePagerState,
             signInState = signInState,
+            onSignInEvent = onSignInEvent,
             modifier = Modifier.fillMaxSize(),
         )
     }

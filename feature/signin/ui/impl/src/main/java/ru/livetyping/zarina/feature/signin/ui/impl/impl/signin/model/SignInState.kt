@@ -11,4 +11,5 @@ internal data class SignInState(
     val isPasswordInvalid: Boolean,
     val phoneTextFieldState: TextFieldState,
     val isPhoneInvalid: Boolean,
+    val isSignInButtonLoading: Boolean,
 )
