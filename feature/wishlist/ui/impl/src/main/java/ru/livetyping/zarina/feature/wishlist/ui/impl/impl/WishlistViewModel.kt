@@ -31,7 +31,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
@@ -86,40 +86,28 @@ internal class WishlistViewModel @Inject constructor(
         )
         .cachedIn(viewModelScopeDefault)
 
-    fun onLifecycleEvent(event: LifecycleEvent) {
+    fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> onScreenCreated()
-            LifecycleEvent.ON_START -> onScreenStarted()
-            LifecycleEvent.ON_RESUME -> Unit
+            TopBarEvent.ClearWishlistClicked -> onClearWishlistClicked()
         }
     }
 
     // TODO: [Top] Implement
     fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
-            WishlistEvent.ClearWishlistClicked -> onClearWishlistClicked()
+            is WishlistEvent.AddToCartClicked -> TODO()
+            is WishlistEvent.AddToFavoritesClicked -> TODO()
+            is WishlistEvent.ProductClicked -> TODO()
+            is WishlistEvent.SubscribeClicked -> TODO()
             WishlistEvent.GoToCatalogClicked -> TODO()
         }
     }
 
-    // TODO: [Top] Implement
-    fun onProductEvent(event: ProductEvent) {
+    fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            is ProductEvent.AddToCartClicked -> TODO()
-            is ProductEvent.AddToFavoritesClicked -> TODO()
-            is ProductEvent.ProductClicked -> TODO()
-            is ProductEvent.SubscribeClicked -> TODO()
-        }
-    }
-
-    private fun onScreenCreated() {
-        wishlistProductsRequester.request(WishlistProductsRequest)
-    }
-
-    private fun onScreenStarted() {
-        viewModelScope.launch {
-            val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.Remote())
-            getWishlistProductIdsFlow(params).firstOrNull()
+            LifecycleEvent.ON_CREATE -> onScreenCreated()
+            LifecycleEvent.ON_START -> onScreenStarted()
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 
@@ -136,6 +124,17 @@ internal class WishlistViewModel @Inject constructor(
                         // TODO: [Top] Show Zarina toast
                     }
             }
+        }
+    }
+
+    private fun onScreenCreated() {
+        wishlistProductsRequester.request(WishlistProductsRequest)
+    }
+
+    private fun onScreenStarted() {
+        viewModelScope.launch {
+            val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.Remote())
+            getWishlistProductIdsFlow(params).firstOrNull()
         }
     }
 

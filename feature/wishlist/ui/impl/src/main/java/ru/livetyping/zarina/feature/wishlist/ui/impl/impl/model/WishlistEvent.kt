@@ -1,7 +1,15 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model
 
+import ru.livetyping.zarina.core.domain.model.product.Product
+
 internal sealed interface WishlistEvent {
-    data object ClearWishlistClicked : WishlistEvent
+    data class ProductClicked(val product: Product) : WishlistEvent
+
+    data class AddToFavoritesClicked(val product: Product) : WishlistEvent
+
+    data class AddToCartClicked(val product: Product) : WishlistEvent
+
+    data class SubscribeClicked(val product: Product) : WishlistEvent
 
     data object GoToCatalogClicked : WishlistEvent
 }

@@ -27,7 +27,7 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlistPlaceholder
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 
@@ -40,9 +40,9 @@ internal fun WishlistScreen(
 
     ScreenContent(
         topBarState = topBarState,
-        onWishlistEvent = viewModel::onWishlistEvent,
+        onTopBarEvent = viewModel::onTopBarEvent,
         productPagingDataFlow = viewModel.productPagingDataFlow,
-        onProductEvent = viewModel::onProductEvent,
+        onWishlistEvent = viewModel::onWishlistEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -52,9 +52,9 @@ internal fun WishlistScreen(
 @Composable
 private fun ScreenContent(
     topBarState: TopBarState,
-    onWishlistEvent: (WishlistEvent) -> Unit,
+    onTopBarEvent: (TopBarEvent) -> Unit,
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
-    onProductEvent: (ProductEvent) -> Unit,
+    onWishlistEvent: (WishlistEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
@@ -77,15 +77,15 @@ private fun ScreenContent(
     ) {
         TopBar(
             state = topBarState,
-            onClearWishlistClicked = { onWishlistEvent(WishlistEvent.ClearWishlistClicked) },
+            onEvent = onTopBarEvent,
         )
 
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
-            onProductClicked = { onProductEvent(ProductEvent.ProductClicked(it)) },
-            onAddToFavoritesClicked = { onProductEvent(ProductEvent.AddToFavoritesClicked(it)) },
-            onAddToCartClicked = { onProductEvent(ProductEvent.AddToCartClicked(it)) },
-            onSubscribeClicked = { onProductEvent(ProductEvent.SubscribeClicked(it)) },
+            onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
+            onAddToFavoritesClicked = { onWishlistEvent(WishlistEvent.AddToFavoritesClicked(it)) },
+            onAddToCartClicked = { onWishlistEvent(WishlistEvent.AddToCartClicked(it)) },
+            onSubscribeClicked = { onWishlistEvent(WishlistEvent.SubscribeClicked(it)) },
             emptyProductsPlaceholder = {
                 EmptyWishlistPlaceholder(
                     onGoToCatalogClicked = { onWishlistEvent(WishlistEvent.GoToCatalogClicked) },
