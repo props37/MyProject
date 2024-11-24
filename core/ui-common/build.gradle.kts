@@ -43,6 +43,8 @@ dependencies {
 
     api(libs.kotlin.coroutines.core)
 
+    api(libs.libphonenumber)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
