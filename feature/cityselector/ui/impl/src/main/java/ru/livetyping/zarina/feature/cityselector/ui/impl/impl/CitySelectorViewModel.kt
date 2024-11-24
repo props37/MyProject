@@ -35,11 +35,12 @@ import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListStateBuilder
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.NameQueryCities
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -120,12 +121,17 @@ internal class CitySelectorViewModel @Inject constructor(
         initialValue = CityListState.Loading,
     )
 
-    fun onCitySelectorEvent(event: CitySelectorEvent) {
+    fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
-            CitySelectorEvent.BackClicked -> onBackClicked()
-            is CitySelectorEvent.CityClicked -> onCityClicked(event)
-            CitySelectorEvent.ChangeCityClicked -> onChangeCityClicked()
-            CitySelectorEvent.ErrorRefreshClicked -> cityRequester.request(CityRequest)
+            TopBarEvent.BackClicked -> onBackClicked()
+        }
+    }
+
+    fun onCitySelectorEvent(event: CityListEvent) {
+        when (event) {
+            is CityListEvent.CityClicked -> onCityClicked(event)
+            CityListEvent.ChangeCityClicked -> onChangeCityClicked()
+            CityListEvent.ErrorRefreshClicked -> cityRequester.request(CityRequest)
         }
     }
 
@@ -141,7 +147,7 @@ internal class CitySelectorViewModel @Inject constructor(
         // TODO: [Top] Implement
     }
 
-    private fun onCityClicked(event: CitySelectorEvent.CityClicked) {
+    private fun onCityClicked(event: CityListEvent.CityClicked) {
         val cityParcelable = CityParcelable.from(event.city)
         selectedCityValueHolder.set(cityParcelable)
 

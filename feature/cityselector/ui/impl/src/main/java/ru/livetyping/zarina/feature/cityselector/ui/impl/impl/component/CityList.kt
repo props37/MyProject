@@ -51,6 +51,7 @@ import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cityselector.ui.impl.R
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListItem
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -58,9 +59,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun CityList(
     cityListState: CityListState,
-    onCityClicked: (City) -> Unit,
-    onChangeCityClicked: () -> Unit,
-    onCityListErrorRefreshClicked: () -> Unit,
+    onCityListEvent: (CityListEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -78,8 +77,8 @@ internal fun CityList(
             is CityListState.Success -> {
                 CityListSuccess(
                     state = state,
-                    onCityClicked = onCityClicked,
-                    onChangeCityClicked = onChangeCityClicked,
+                    onCityClicked = { onCityListEvent(CityListEvent.CityClicked(it)) },
+                    onChangeCityClicked = { onCityListEvent(CityListEvent.ChangeCityClicked) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -100,7 +99,7 @@ internal fun CityList(
             is CityListState.Error -> {
                 ZarinaErrorScreen(
                     state = state.state,
-                    onButtonClicked = onCityListErrorRefreshClicked,
+                    onButtonClicked = { onCityListEvent(CityListEvent.ErrorRefreshClicked) },
                     modifier = Modifier
                         .fillMaxSize()
                         .safeDrawingPadding()

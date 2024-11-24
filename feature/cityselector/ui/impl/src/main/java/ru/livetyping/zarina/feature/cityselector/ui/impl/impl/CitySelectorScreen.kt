@@ -25,8 +25,9 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CityList
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CitySearchTextField
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 
 @Composable
@@ -39,8 +40,9 @@ internal fun CitySelectorScreen(
 
     ScreenContent(
         topBarState = topBarState,
+        onTopBarEvent = viewModel::onTopBarEvent,
         cityListState = cityListState,
-        onCitySelectorEvent = viewModel::onCitySelectorEvent,
+        onCityListEvent = viewModel::onCitySelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -49,8 +51,9 @@ internal fun CitySelectorScreen(
 @Composable
 internal fun ScreenContent(
     topBarState: TopBarState,
+    onTopBarEvent: (TopBarEvent) -> Unit,
     cityListState: CityListState,
-    onCitySelectorEvent: (CitySelectorEvent) -> Unit,
+    onCityListEvent: (CityListEvent) -> Unit,
     sideEffects: Flow<CitySelectorSideEffect>,
     navActions: CitySelectorNavActions,
 ) {
@@ -71,7 +74,7 @@ internal fun ScreenContent(
     ) {
         TopBar(
             title = topBarState.title,
-            onBackClicked = { onCitySelectorEvent(CitySelectorEvent.BackClicked) },
+            onBackClicked = { onTopBarEvent(TopBarEvent.BackClicked) },
         )
 
         Column {
@@ -85,11 +88,7 @@ internal fun ScreenContent(
 
             CityList(
                 cityListState = cityListState,
-                onCityClicked = { onCitySelectorEvent(CitySelectorEvent.CityClicked(it)) },
-                onChangeCityClicked = { onCitySelectorEvent(CitySelectorEvent.ChangeCityClicked) },
-                onCityListErrorRefreshClicked = {
-                    onCitySelectorEvent(CitySelectorEvent.ErrorRefreshClicked)
-                },
+                onCityListEvent = onCityListEvent,
                 modifier = Modifier.fillMaxSize(),
             )
         }
