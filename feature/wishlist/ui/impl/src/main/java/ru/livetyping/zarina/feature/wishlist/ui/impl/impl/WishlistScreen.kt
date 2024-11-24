@@ -29,6 +29,7 @@ import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlis
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 
 @Composable
 internal fun WishlistScreen(

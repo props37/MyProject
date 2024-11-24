@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -34,6 +33,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
 import javax.inject.Inject
 
