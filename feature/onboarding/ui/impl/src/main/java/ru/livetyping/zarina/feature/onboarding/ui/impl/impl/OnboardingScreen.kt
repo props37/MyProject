@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
@@ -39,12 +38,10 @@ internal fun OnboardingScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
-    val bannerUrl by viewModel.bannerUrl.collectAsStateWithLifecycle()
 
     ScreenContent(
         onboardingState = onboardingState,
         onOnboardingEvent = viewModel::onOnboardingEvent,
-        bannerUrl = bannerUrl,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -54,7 +51,6 @@ internal fun OnboardingScreen(
 private fun ScreenContent(
     onboardingState: OnboardingState,
     onOnboardingEvent: (OnboardingEvent) -> Unit,
-    bannerUrl: Url?,
     sideEffects: Flow<OnboardingSideEffect>,
     navActions: OnboardingNavActions,
 ) {
@@ -69,7 +65,7 @@ private fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default),
     ) {
         Banner(
-            url = bannerUrl,
+            url = onboardingState.bannerUrl,
             modifier = Modifier.fillMaxSize(),
         )
 

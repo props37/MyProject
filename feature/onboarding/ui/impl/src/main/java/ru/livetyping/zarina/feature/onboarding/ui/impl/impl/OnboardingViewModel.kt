@@ -12,7 +12,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
@@ -85,13 +85,23 @@ internal class OnboardingViewModel @Inject constructor(
 
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
 
-    val onboardingState: StateFlow<OnboardingState> = combine(
+    private val bannerUrl: StateFlow<Url?> = flow {
+        val urlFlow = getOnboardingBannerUrlFlow().map { it.getOrNull() }
+        emitAll(urlFlow)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null,
+    )
+
+    val onboardingState: StateFlow<OnboardingState> = combineMore(
         onboardingStepsValueHolder.stateFlow,
         currentOnboardingStepValueHolder.stateFlow,
         cityValueHolder.stateFlow,
         operationTracker.ongoingOperationKeys,
         onboardingCompletionTrigger,
-    ) { onboardingSteps, currentStep, city, ongoingOperations, onboardingCompletionTrigger ->
+        bannerUrl,
+    ) { onboardingSteps, currentStep, city, ongoingOperations, onboardingCompletionTrigger, bannerUrl ->
         val isOnboardingBeingCompleted = Operation.COMPLETE_ONBOARDING in ongoingOperations
         val isSkipCityDetectionButtonLoading = isOnboardingBeingCompleted
                 && onboardingCompletionTrigger == OnboardingCompletionTrigger.CITY_DETECTION_SKIPPED
@@ -104,6 +114,7 @@ internal class OnboardingViewModel @Inject constructor(
             isSkipCityDetectionButtonLoading = isSkipCityDetectionButtonLoading,
             isDetectCityButtonLoading = Operation.DETECT_CITY in ongoingOperations,
             isConfirmCityButtonLoading = isConfirmCityButtonLoading,
+            bannerUrl = bannerUrl,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -115,16 +126,8 @@ internal class OnboardingViewModel @Inject constructor(
             isSkipCityDetectionButtonLoading = false,
             isDetectCityButtonLoading = false,
             isConfirmCityButtonLoading = false,
+            bannerUrl = null,
         ),
-    )
-
-    val bannerUrl: StateFlow<Url?> = flow {
-        val urlFlow = getOnboardingBannerUrlFlow().map { it.getOrNull() }
-        emitAll(urlFlow)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = null,
     )
 
     fun onOnboardingEvent(event: OnboardingEvent) {
