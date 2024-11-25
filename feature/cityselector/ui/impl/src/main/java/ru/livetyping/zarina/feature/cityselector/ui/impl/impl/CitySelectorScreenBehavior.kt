@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.cityselector.ui.impl.impl
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,7 @@ internal fun CitySelectorScreenBehavior(
     navActions: CitySelectorNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -26,6 +28,7 @@ internal fun CitySelectorScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is CitySelectorSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
