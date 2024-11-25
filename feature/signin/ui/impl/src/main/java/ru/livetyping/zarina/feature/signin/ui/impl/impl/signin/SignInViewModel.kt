@@ -17,12 +17,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.credential.CredentialFetchingResult
+import ru.livetyping.zarina.core.credential.CredentialManager
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
+import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
@@ -33,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val credentialManager: CredentialManager,
 ) : ViewModel(), SideEffectSource<SignInSideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
@@ -107,6 +111,8 @@ internal class SignInViewModel @Inject constructor(
         )
     )
 
+    private var showSaveCredentialPrompt = true
+
     fun onSignInTypeSelectorEvent(event: TabRowEvent<SignInType>) {
         when (event) {
             is TabRowEvent.TabChanged -> currentSignInType.value = event.tab
@@ -142,7 +148,18 @@ internal class SignInViewModel @Inject constructor(
         if (credentialManagerJob?.isActive == true) return
         credentialManagerJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
-                // TODO: [Top] Implement
+                val result = credentialManager.getCredential()
+                if (result is CredentialFetchingResult.Success) {
+                    showSaveCredentialPrompt = false
+                    emitSideEffect(SignInSideEffect.FreeFocus)
+                    emailTextFieldState.edit {
+                        setTextAndPlaceCursorAtEnd(result.username)
+                    }
+                    passwordTextFieldState.edit {
+                        setTextAndPlaceCursorAtEnd(result.password)
+                    }
+                    // TODO: [Top] Sign in by email
+                }
             }
         }
     }

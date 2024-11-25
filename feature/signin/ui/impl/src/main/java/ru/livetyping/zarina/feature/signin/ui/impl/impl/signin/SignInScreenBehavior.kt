@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ internal fun SignInScreenBehavior(
     val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val currentFocusManager by rememberUpdatedState(LocalFocusManager.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -38,6 +40,8 @@ internal fun SignInScreenBehavior(
                             navigate(currentNavActions, sideEffect.action)
                         }
                     }
+
+                    SignInSideEffect.FreeFocus -> currentFocusManager.clearFocus()
                 }
             }
         }
