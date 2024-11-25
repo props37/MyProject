@@ -6,7 +6,7 @@ internal class NoOpZarinaToastController : ZarinaToastController {
     override val currentMessage: StateFlow<ZarinaToastMessage?>
         get() = throw NotImplementedError()
 
-    override fun show(message: ZarinaToastMessage) {
+    override fun show(message: ZarinaToastMessage, removePreviousMessage: Boolean) {
         throw NotImplementedError()
     }
 

@@ -11,7 +11,10 @@ internal class ZarinaToastControllerImpl(
 
     override val currentMessage: StateFlow<ZarinaToastMessage?> = messageQueue.currentMessage
 
-    override fun show(message: ZarinaToastMessage) {
+    override fun show(message: ZarinaToastMessage, removePreviousMessage: Boolean) {
+        if (removePreviousMessage) {
+            messageQueue.removeCurrentMessage()
+        }
         messageQueue.addMessage(message)
     }
 
