@@ -119,7 +119,7 @@ private fun HttpClient.loadBearerTokensOnAuthorizationFailure() {
         val status = response.status
         val requestAuthorizationFailed =
             status == HttpStatusCode.Forbidden
-                    && status == HttpStatusCode.Unauthorized
+                    || status == HttpStatusCode.Unauthorized
         if (!isAccessTokenPresent && requestAuthorizationFailed) {
             Timber
                 .tag(HTTP_CLIENT_TAG)
