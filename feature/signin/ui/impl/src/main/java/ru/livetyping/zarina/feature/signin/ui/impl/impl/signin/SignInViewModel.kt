@@ -59,7 +59,7 @@ internal class SignInViewModel @Inject constructor(
 
     private val phoneTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
-        init = { TextFieldState() },
+        init = { TextFieldState(PHONE_INITIAL_TEXT) },
     )
 
     private val isPhoneInvalid = MutableStateFlow(false)
@@ -113,5 +113,9 @@ internal class SignInViewModel @Inject constructor(
             val action = SignInScreenAction.ScreenClosed
             emitSideEffect(SignInSideEffect.Navigate(action))
         }
+    }
+
+    private companion object {
+        private const val PHONE_INITIAL_TEXT = "+7"
     }
 }
