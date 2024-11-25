@@ -73,19 +73,6 @@ public data class UserEntity(
     }
 
     public companion object {
-        internal const val TABLE_NAME = "user"
-
-        internal const val FIELD_ID = "user_id"
-        internal const val FIELD_EMAIL = "user_email"
-        internal const val FIELD_PHONE = "user_phone"
-        internal const val FIELD_FIRST_NAME = "user_first_name"
-        internal const val FIELD_LAST_NAME = "user_last_name"
-        internal const val FIELD_BIRTH_DATE = "user_birth_date"
-        internal const val FIELD_GENDER = "user_gender"
-
-        internal const val FIELD_RECEIVE_SMS = "user_receive_sms"
-        internal const val FIELD_RECEIVE_EMAILS = "user_receive_emails"
-
         public fun from(user: User): UserEntity {
             return UserEntity(
                 id = user.id.value,
@@ -98,5 +85,18 @@ public data class UserEntity(
                 notificationSettings = NotificationSettings.from(user.notificationSettings),
             )
         }
+
+        internal const val TABLE_NAME = "user"
+
+        internal const val FIELD_ID = "user_id"
+        internal const val FIELD_EMAIL = "user_email"
+        internal const val FIELD_PHONE = "user_phone"
+        internal const val FIELD_FIRST_NAME = "user_first_name"
+        internal const val FIELD_LAST_NAME = "user_last_name"
+        internal const val FIELD_BIRTH_DATE = "user_birth_date"
+        internal const val FIELD_GENDER = "user_gender"
+
+        internal const val FIELD_RECEIVE_SMS = "user_receive_sms"
+        internal const val FIELD_RECEIVE_EMAILS = "user_receive_emails"
     }
 }
