@@ -176,6 +176,7 @@ dependencies {
     implementation(projects.core.sharedpreferences)
     implementation(projects.core.permission)
     implementation(projects.core.navigationUtil)
+    implementation(projects.core.credential)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
