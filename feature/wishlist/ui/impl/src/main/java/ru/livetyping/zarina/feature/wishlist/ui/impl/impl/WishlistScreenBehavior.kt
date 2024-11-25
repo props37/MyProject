@@ -47,6 +47,7 @@ internal fun WishlistScreenBehavior(
 }
 
 private fun navigate(navActions: WishlistNavActions, action: WishlistScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
+    }
 }

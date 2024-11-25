@@ -99,7 +99,7 @@ internal class WishlistViewModel @Inject constructor(
             is WishlistEvent.AddToFavoritesClicked -> TODO()
             is WishlistEvent.ProductClicked -> TODO()
             is WishlistEvent.SubscribeClicked -> TODO()
-            WishlistEvent.GoToCatalogClicked -> TODO()
+            WishlistEvent.GoToCatalogClicked -> onGoToCatalogClicked()
         }
     }
 
@@ -124,6 +124,13 @@ internal class WishlistViewModel @Inject constructor(
                         // TODO: [Top] Show Zarina toast
                     }
             }
+        }
+    }
+
+    private fun onGoToCatalogClicked() {
+        navigationThrottler.throttle {
+            val action = WishlistScreenAction.GoToCatalogClicked
+            emitSideEffect(WishlistSideEffect.Navigate(action))
         }
     }
 

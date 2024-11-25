@@ -1,3 +1,5 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
-internal sealed interface WishlistScreenAction
+internal sealed interface WishlistScreenAction {
+    data object GoToCatalogClicked : WishlistScreenAction
+}

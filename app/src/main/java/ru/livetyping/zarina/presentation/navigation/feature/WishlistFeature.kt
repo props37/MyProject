@@ -8,9 +8,12 @@ import ru.livetyping.zarina.core.navigationutil.hasAnyRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
+import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItemNavEntryClasses
+import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
@@ -74,6 +77,14 @@ fun rememberWishlistNavActions(
     navController: NavHostController
 ): WishlistNavActions {
     return remember(navController) {
-        WishlistNavActions()
+        WishlistNavActions(
+            onGoToCatalogClicked = {
+                navController.navigateToBottomNavBarItem(BottomNavBarItem.Catalog)
+                navController.popBackStack(
+                    route = CatalogFeature.getNavEntry(),
+                    inclusive = false,
+                )
+            },
+        )
     }
 }
