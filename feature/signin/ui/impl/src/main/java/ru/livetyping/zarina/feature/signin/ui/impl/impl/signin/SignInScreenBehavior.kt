@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun SignInScreenBehavior(
@@ -24,6 +25,7 @@ internal fun SignInScreenBehavior(
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
     val currentFocusManager by rememberUpdatedState(LocalFocusManager.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -42,6 +44,9 @@ internal fun SignInScreenBehavior(
                     }
 
                     SignInSideEffect.FreeFocus -> currentFocusManager.clearFocus()
+                    is SignInSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
+                    }
                 }
             }
         }

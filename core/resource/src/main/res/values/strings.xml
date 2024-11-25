@@ -48,4 +48,5 @@
     <string name="res_zarina_about_company_url" translatable="false">https://zarina.ru/about/</string>
     <string name="res_zarina_help_url" translatable="false">https://zarina.ru/help/</string>
     <string name="res_yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
+    <string name="res_incorrect_data_entered">Введены некорректные данные</string>
 </resources>

@@ -40,4 +40,5 @@
     <string name="res_email">Электронная почта</string>
     <string name="res_password">Пароль</string>
     <string name="res_phone">Телефон</string>
+    <string name="res_incorrect_data_entered">Введены некорректные данные</string>
 </resources>

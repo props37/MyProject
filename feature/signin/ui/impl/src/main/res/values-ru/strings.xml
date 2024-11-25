@@ -10,4 +10,5 @@
     <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
     <string name="sign_in_policies_yandex_captcha_terms_policy">условия использования</string>
+    <string name="sign_in_by_email_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введи адрес электронной почты и пароль</string>
 </resources>

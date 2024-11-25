@@ -13,12 +13,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.credential.CredentialFetchingResult
 import ru.livetyping.zarina.core.credential.CredentialManager
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
+import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
+import ru.livetyping.zarina.core.domain.validation.SignInValidator
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
@@ -26,12 +37,16 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
+import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.signin.ui.impl.R
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
@@ -113,6 +128,10 @@ internal class SignInViewModel @Inject constructor(
 
     private var showSaveCredentialPrompt = true
 
+    init {
+        makeFieldsValidOnChange()
+    }
+
     fun onSignInTypeSelectorEvent(event: TabRowEvent<SignInType>) {
         when (event) {
             is TabRowEvent.TabChanged -> currentSignInType.value = event.tab
@@ -124,7 +143,7 @@ internal class SignInViewModel @Inject constructor(
         when (event) {
             SignInEvent.BackClicked -> onBackClicked()
             SignInEvent.ForgotPasswordClicked -> TODO()
-            SignInEvent.SignInClicked -> TODO()
+            SignInEvent.SignInClicked -> onSignInClicked()
             SignInEvent.SignUpClicked -> TODO()
         }
     }
@@ -144,6 +163,13 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
+    private fun onSignInClicked() {
+        when (currentSignInType.value) {
+            SignInType.EMAIL -> startSignInByEmail()
+            SignInType.PHONE -> TODO()
+        }
+    }
+
     private fun onScreenStarted() {
         if (credentialManagerJob?.isActive == true) return
         credentialManagerJob = viewModelScope.launch {
@@ -158,10 +184,62 @@ internal class SignInViewModel @Inject constructor(
                     passwordTextFieldState.edit {
                         setTextAndPlaceCursorAtEnd(result.password)
                     }
-                    // TODO: [Top] Sign in by email
+                    startSignInByEmail()
                 }
             }
         }
+    }
+
+    private fun startSignInByEmail() {
+        try {
+            val signInParams = SignInByEmailParams(
+                email = Email.create(emailTextFieldState.text.toString()),
+                password = passwordTextFieldState.text.toString(),
+            )
+            val validator = SignInValidator()
+            validator.validate(signInParams)
+
+            // TODO: [Top] Start captcha
+        } catch (e: Exception) {
+            handleSignInException(e)
+        }
+    }
+
+    private fun handleSignInException(e: Exception) {
+        val causes = if (e is CombinedValidationException) e.causes else listOf(e)
+        causes.forEach { cause ->
+            when (cause) {
+                is EmailException -> isEmailInvalid.value = true
+                is PasswordException -> isPasswordInvalid.value = true
+                // TODO: [Top] Handle phone exception
+                // TODO: [Top] Handle other exceptions
+            }
+
+            // TODO: [Top] Handle phone exception
+            val isEmailEmpty = causes.any { it is EmptyEmailException }
+            val isPasswordEmpty = causes.any { it is EmptyPasswordException }
+            val messageText = when {
+                isEmailEmpty || isPasswordEmpty -> {
+                    Text.Resource(R.string.sign_in_by_email_empty_fields_error)
+                }
+
+                else -> Text.Resource(RCommon.string.res_incorrect_data_entered)
+            }
+            val toastMessage = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
+        }
+    }
+
+    private fun makeFieldsValidOnChange() {
+        emailTextFieldState.textAsFlow()
+            .onEach { isEmailInvalid.value = false }
+            .launchIn(viewModelScope)
+        passwordTextFieldState.textAsFlow()
+            .onEach { isPasswordInvalid.value = false }
+            .launchIn(viewModelScope)
+        phoneTextFieldState.textAsFlow()
+            .onEach { isPhoneInvalid.value = false }
+            .launchIn(viewModelScope)
     }
 
     private data object SignInOperation : OperationKey
