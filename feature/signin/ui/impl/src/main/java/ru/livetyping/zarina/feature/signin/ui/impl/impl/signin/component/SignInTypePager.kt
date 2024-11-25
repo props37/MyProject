@@ -36,7 +36,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.navigationBarsWithIme
@@ -122,11 +127,14 @@ private fun SignInByEmail(
     }
 
     LifecycleStartEffect(Unit) {
-        val focusRequester = when (lastFocusTarget) {
-            SignInByEmailFocusTarget.Email -> emailFocusRequester
-            SignInByEmailFocusTarget.Password -> passwordFocusRequester
+        lifecycleScope.launch {
+            delay(FocusRequesterDelayMillis)
+            val focusRequester = when (lastFocusTarget) {
+                SignInByEmailFocusTarget.Email -> emailFocusRequester
+                SignInByEmailFocusTarget.Password -> passwordFocusRequester
+            }
+            focusRequester.tryRequestFocus()
         }
-        focusRequester.tryRequestFocus()
         onStopOrDispose {}
     }
 
@@ -243,7 +251,10 @@ private fun SignInByPhone(
 ) {
     val focusRequester = remember { FocusRequester() }
     LifecycleStartEffect(Unit) {
-        focusRequester.tryRequestFocus()
+        lifecycleScope.launch {
+            delay(FocusRequesterDelayMillis)
+            focusRequester.tryRequestFocus()
+        }
         onStopOrDispose {}
     }
 
@@ -377,5 +388,7 @@ private fun BottomSpacer(
 
 private val TopPadding: Dp get() = 32.dp
 private val SignInBottomBlockTopPadding: Dp get() = 32.dp
+
+private const val FocusRequesterDelayMillis = 100L
 
 private enum class SignInByEmailFocusTarget { Email, Password }
