@@ -7,4 +7,7 @@
     <string name="sign_in_sign_in">Войти</string>
     <string name="sign_in_do_not_have_account_yet_question">У тебя ещё нет аккаунта?</string>
     <string name="sign_in_sign_up">Зарегистрироваться</string>
+    <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама Yandex SmartCaptcha: условия использования</string>
+    <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
+    <string name="sign_in_policies_yandex_captcha_terms_policy">условия использования</string>
 </resources>

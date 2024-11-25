@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -29,14 +30,17 @@ import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
+import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.navigationBarsWithIme
+import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
@@ -299,7 +303,7 @@ private fun SignInBottomBlock(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO: [Top] Add policies
+        Policies()
         Spacer(modifier = Modifier.height(48.dp))
 
         Text(
@@ -318,6 +322,45 @@ private fun SignInBottomBlock(
             Text(text = stringResource(R.string.sign_in_sign_up).uppercase())
         }
     }
+}
+
+@Composable
+private fun Policies(
+    modifier: Modifier = Modifier,
+) {
+    val currentContext by rememberUpdatedState(LocalContext.current)
+
+    val baseString = stringResource(R.string.sign_in_policies)
+    val privacyPolicy = stringResource(R.string.sign_in_policies_privacy_policy)
+    val yandexCaptchaTermsPolicy = stringResource(R.string.sign_in_policies_yandex_captcha_terms_policy)
+    val privacyPolicyUrl = stringResource(RCommon.string.res_zarina_privacy_policy_url)
+    val yandexCaptchaTermsPolicyUrl = stringResource(RCommon.string.res_yandex_captcha_terms_policy_url)
+
+    val substringToUrl = remember(
+        privacyPolicy,
+        yandexCaptchaTermsPolicy,
+        privacyPolicyUrl,
+        yandexCaptchaTermsPolicyUrl,
+    ) {
+        mapOf(
+            privacyPolicy to privacyPolicyUrl,
+            yandexCaptchaTermsPolicy to yandexCaptchaTermsPolicyUrl,
+        )
+    }
+
+    val stringWithLinks = rememberAnnotatedStringWithLinks(
+        baseString = baseString,
+        substringToUrl = substringToUrl,
+        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+        onUrlClicked = currentContext::openUrlInCustomTabs,
+    )
+
+    Text(
+        text = stringWithLinks,
+        style = UiKitTheme.typography.footnote.light,
+        color = UiKitTheme.colors.text.general.regular.default,
+        modifier = modifier,
+    )
 }
 
 @Composable

@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
@@ -43,6 +44,7 @@ internal class SignInViewModel @Inject constructor(
         )
     }
 
+    @OptIn(SavedStateHandleSaveableApi::class)
     private val emailTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
@@ -50,6 +52,7 @@ internal class SignInViewModel @Inject constructor(
 
     private val isEmailInvalid = MutableStateFlow(false)
 
+    @OptIn(SavedStateHandleSaveableApi::class)
     private val passwordTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
@@ -57,6 +60,7 @@ internal class SignInViewModel @Inject constructor(
 
     private val isPasswordInvalid = MutableStateFlow(false)
 
+    @OptIn(SavedStateHandleSaveableApi::class)
     private val phoneTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState(PHONE_INITIAL_TEXT) },
