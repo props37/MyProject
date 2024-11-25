@@ -41,6 +41,8 @@ kotlin {
 dependencies {
     api(libs.jetpack.lifecycle.viewModel.savedstate)
 
+    implementation(libs.jetpack.browser)
+
     api(libs.kotlin.coroutines.core)
 
     api(libs.libphonenumber)
