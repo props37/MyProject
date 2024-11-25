@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
@@ -42,6 +43,7 @@ internal fun SignInScreen(
         onSignInTypeSelectorEvent = viewModel::onSignInTypeSelectorEvent,
         signInState = signInState,
         onSignInEvent = viewModel::onSignInEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -53,10 +55,12 @@ internal fun ScreenContent(
     onSignInTypeSelectorEvent: (TabRowEvent<SignInType>) -> Unit,
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SignInSideEffect>,
     navActions: SignInNavActions,
 ) {
     SignInScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )

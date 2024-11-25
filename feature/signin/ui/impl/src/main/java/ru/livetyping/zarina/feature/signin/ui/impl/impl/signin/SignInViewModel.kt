@@ -8,13 +8,18 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.throttler.Throttler
@@ -30,7 +35,11 @@ internal class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), SideEffectSource<SignInSideEffect> by SideEffectSourceImpl() {
 
+    private val operationTracker = OperationTracker()
+
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var credentialManagerJob: Job? = null
 
     private val currentSignInType = MutableStateFlow(SignInType.EMAIL)
 
@@ -72,7 +81,8 @@ internal class SignInViewModel @Inject constructor(
         isEmailInvalid,
         isPasswordInvalid,
         isPhoneInvalid,
-    ) { isEmailInvalid, isPasswordInvalid, isPhoneInvalid ->
+        operationTracker.ongoingOperationKeys,
+    ) { isEmailInvalid, isPasswordInvalid, isPhoneInvalid, ongoingOperations ->
         SignInState(
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = isEmailInvalid,
@@ -80,7 +90,8 @@ internal class SignInViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid,
-            isSignInButtonLoading = false, // TODO: [Top] Implement
+            // TODO: [Top] Depend on yandex captcha state
+            isSignInButtonLoading = SignInOperation in ongoingOperations,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -112,12 +123,31 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> Unit
+            LifecycleEvent.ON_START -> onScreenStarted()
+            LifecycleEvent.ON_RESUME -> Unit
+        }
+    }
+
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignInScreenAction.ScreenClosed
             emitSideEffect(SignInSideEffect.Navigate(action))
         }
     }
+
+    private fun onScreenStarted() {
+        if (credentialManagerJob?.isActive == true) return
+        credentialManagerJob = viewModelScope.launch {
+            operationTracker.track(SignInOperation) {
+                // TODO: [Top] Implement
+            }
+        }
+    }
+
+    private data object SignInOperation : OperationKey
 
     private companion object {
         private const val PHONE_INITIAL_TEXT = "+7"
