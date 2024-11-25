@@ -22,12 +22,16 @@ import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.credential.CredentialFetchingResult
 import ru.livetyping.zarina.core.credential.CredentialManager
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
+import ru.livetyping.zarina.core.domain.model.user.SignInByPhoneParams
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
@@ -166,7 +170,7 @@ internal class SignInViewModel @Inject constructor(
     private fun onSignInClicked() {
         when (currentSignInType.value) {
             SignInType.EMAIL -> startSignInByEmail()
-            SignInType.PHONE -> TODO()
+            SignInType.PHONE -> startSignInByPhone()
         }
     }
 
@@ -205,26 +209,39 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
+    private fun startSignInByPhone() {
+        try {
+            val signInParams = SignInByPhoneParams(
+                phone = PhoneNumber.create(phoneTextFieldState.text.toString())
+            )
+            val validator = SignInValidator()
+            validator.validate(signInParams)
+
+            // TODO: [Top] Start captcha
+        } catch (e: Exception) {
+            handleSignInException(e)
+        }
+    }
+
     private fun handleSignInException(e: Exception) {
         val causes = if (e is CombinedValidationException) e.causes else listOf(e)
         causes.forEach { cause ->
             when (cause) {
                 is EmailException -> isEmailInvalid.value = true
                 is PasswordException -> isPasswordInvalid.value = true
-                // TODO: [Top] Handle phone exception
+                is PhoneException -> isPhoneInvalid.value = true
                 // TODO: [Top] Handle other exceptions
             }
 
-            // TODO: [Top] Handle phone exception
             val isEmailEmpty = causes.any { it is EmptyEmailException }
             val isPasswordEmpty = causes.any { it is EmptyPasswordException }
-            val messageText = when {
-                isEmailEmpty || isPasswordEmpty -> {
-                    Text.Resource(R.string.sign_in_by_email_empty_fields_error)
-                }
-
-                else -> Text.Resource(RCommon.string.res_incorrect_data_entered)
+            val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+            val messageTextResId = when {
+                isEmailEmpty || isPasswordEmpty -> R.string.sign_in_by_email_empty_fields_error
+                isPhoneEmpty -> R.string.sign_in_by_phone_empty_fields_error
+                else -> RCommon.string.res_incorrect_data_entered
             }
+            val messageText = Text.Resource(messageTextResId)
             val toastMessage = ZarinaToastMessage.error(messageText)
             emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
         }
