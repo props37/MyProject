@@ -1,9 +1,13 @@
 package ru.livetyping.zarina.core.domain.validation
 
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidEmailException
 
+/**
+ * @throws EmailException
+ */
 public class EmailValidator : Validator<Email> {
     override fun validate(input: Email) {
         val emailString = input.value
