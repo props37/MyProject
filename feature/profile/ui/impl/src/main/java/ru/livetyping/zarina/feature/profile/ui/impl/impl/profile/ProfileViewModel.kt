@@ -30,6 +30,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileSt
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionInfo
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class ProfileViewModel @Inject constructor(
@@ -175,8 +176,15 @@ internal class ProfileViewModel @Inject constructor(
             }
 
             ProfileMenuItem.Stores -> TODO()
-            ProfileMenuItem.Help -> TODO()
-            ProfileMenuItem.AboutCompany -> TODO()
+            ProfileMenuItem.Help -> {
+                val url = Text.Resource(RCommon.string.res_zarina_help_url)
+                emitSideEffect(ProfileSideEffect.OpenUrl(url))
+            }
+
+            ProfileMenuItem.AboutCompany -> {
+                val url = Text.Resource(RCommon.string.res_zarina_about_company_url)
+                emitSideEffect(ProfileSideEffect.OpenUrl(url))
+            }
         }
         // TODO: [Top] Implement
     }

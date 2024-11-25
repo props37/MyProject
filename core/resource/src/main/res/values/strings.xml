@@ -45,5 +45,7 @@
     <string name="res_zarina_privacy_policy_url" translatable="false">https://zarina.ru/help/privacy-policy/</string>
     <string name="res_zarina_online_store_policy_url" translatable="false">https://zarina.ru/help/conditions/</string>
     <string name="res_zarina_loyalty_policy_url" translatable="false">https://zarina.ru/help/loyalty/</string>
+    <string name="res_zarina_about_company_url" translatable="false">https://zarina.ru/about/</string>
+    <string name="res_zarina_help_url" translatable="false">https://zarina.ru/help/</string>
     <string name="res_yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
 </resources>
