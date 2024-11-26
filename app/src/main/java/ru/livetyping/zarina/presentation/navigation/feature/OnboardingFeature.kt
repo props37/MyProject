@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
-import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
@@ -41,7 +41,7 @@ fun NavGraphBuilder.onboardingFeature(
 
                     else -> null
                 }
-            }
+            },
         )
     }
 }
@@ -53,7 +53,7 @@ fun rememberOnboardingNavActions(
     return remember(navController) {
         OnboardingNavActions(
             onboardingCompleted = {
-                navController.navigate(HomeNavEntry) {
+                navController.navigate(HomeFeature.getNavEntry()) {
                     popUpTo(0)
                 }
                 // TODO: [Top] Show default city dialog?

@@ -1,12 +1,21 @@
 package ru.livetyping.zarina.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTransition
+import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
@@ -19,6 +28,9 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItems
+import ru.livetyping.zarina.presentation.bottomnavbar.toFeatureNavEntry
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.feature.find
 import ru.livetyping.zarina.presentation.navigation.feature.cartFeature
@@ -37,6 +49,8 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavAct
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
+import ru.livetyping.zarina.presentation.navigation.util.initialDestination
+import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 @Composable
 fun ZarinaNavigation(
@@ -81,10 +95,30 @@ fun ZarinaNavigation(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = { zarinaEnterSlideTransition() },
-        exitTransition = { zarinaExitSlideTransition() },
-        popEnterTransition = { zarinaPopEnterSlideTransition() },
-        popExitTransition = { zarinaPopExitSlideTransition() },
+        enterTransition = {
+            enterTransition(
+                defaultTransition = ::zarinaEnterSlideTransition,
+                transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
+            )
+        },
+        exitTransition = {
+            exitTransition(
+                defaultTransition = ::zarinaExitSlideTransition,
+                transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
+            )
+        },
+        popEnterTransition = {
+            enterTransition(
+                defaultTransition = ::zarinaPopEnterSlideTransition,
+                transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
+            )
+        },
+        popExitTransition = {
+            exitTransition(
+                defaultTransition = ::zarinaPopExitSlideTransition,
+                transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
+            )
+        },
         modifier = modifier,
     ) {
         catalogFeature(catalogFeature, catalogNavActions)
@@ -96,5 +130,56 @@ fun ZarinaNavigation(
         onboardingFeature(onboardingFeature, onboardingNavActions)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
+    }
+}
+
+private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(
+    defaultTransition: () -> EnterTransition,
+    transitionBetweenBottomNavBarItems: () -> EnterTransition,
+): EnterTransition {
+    val initialDestinationBottomNavBarItem = initialDestination.findClosestBottomNavBarItem()
+    val targetDestinationBottomNavBarItem = targetDestination.findClosestBottomNavBarItem()
+    return when {
+        initialDestinationBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
+            defaultTransition()
+        }
+
+        initialDestinationBottomNavBarItem == targetDestinationBottomNavBarItem -> {
+            defaultTransition()
+        }
+
+        else -> transitionBetweenBottomNavBarItems()
+    }
+}
+
+private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(
+    defaultTransition: () -> ExitTransition,
+    transitionBetweenBottomNavBarItems: () -> ExitTransition,
+): ExitTransition {
+    val initialDestinationBottomNavBarItem = initialDestination.findClosestBottomNavBarItem()
+    val targetDestinationBottomNavBarItem = targetDestination.findClosestBottomNavBarItem()
+    return when {
+        initialDestinationBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
+            defaultTransition()
+        }
+
+        initialDestinationBottomNavBarItem == targetDestinationBottomNavBarItem -> {
+            defaultTransition()
+        }
+
+        else -> transitionBetweenBottomNavBarItems()
+    }
+}
+
+private fun NavDestination.findClosestBottomNavBarItem(): BottomNavBarItem? {
+    return this.hierarchy.firstNotNullOfOrNull { destination ->
+        var resultItem: BottomNavBarItem? = null
+        for (item in BottomNavBarItems) {
+            if (destination.hasRoute(item.toFeatureNavEntry()::class)) {
+                resultItem = item
+                break
+            }
+        }
+        resultItem
     }
 }
