@@ -49,6 +49,8 @@ dependencies {
 
     api(libs.kotlin.coroutines.android)
 
+    implementation(libs.timber)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
