@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
+import ru.livetyping.zarina.core.usecase.impl.getErrorLogMessage
 import kotlin.coroutines.cancellation.CancellationException
 
 public abstract class FlowUseCase<in P, out R>(private val logger: UseCaseLogger?) {

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.usecase
 
+import ru.livetyping.zarina.core.usecase.impl.getErrorLogMessage
 import kotlin.coroutines.cancellation.CancellationException
 
 public abstract class UseCase<in P, out R>(private val logger: UseCaseLogger?) {
