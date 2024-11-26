@@ -10,6 +10,7 @@ import ru.livetyping.zarina.data.user.local.database.entity.UserEntity
 @Database(
     version = 1,
     entities = [UserEntity::class, ProductSearchHistoryQueryEntity::class],
+    exportSchema = false,
 )
 abstract class ZarinaDatabaseOld : RoomDatabase() {
     abstract fun getUserDao(): UserDao
