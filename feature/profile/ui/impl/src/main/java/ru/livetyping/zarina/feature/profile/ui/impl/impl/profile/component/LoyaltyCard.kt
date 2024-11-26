@@ -118,6 +118,12 @@ internal fun LoyaltyCard(
     adjustBrightness: Boolean = true,
     onSideChanged: ((LoyaltyCardSide?) -> Unit)? = null,
 ) {
+    var screenBrightness by remember { mutableStateOf(ScreenBrightness.DEFAULT) }
+    ForcedScreenBrightnessBehavior(screenBrightness)
+    SideEffect {
+        if (!adjustBrightness) screenBrightness = ScreenBrightness.DEFAULT
+    }
+
     AnimatedContent(
         targetState = loyaltyCard,
         transitionSpec = {
@@ -131,11 +137,21 @@ internal fun LoyaltyCard(
             LoyaltyCardImpl(
                 card = card,
                 onInfoClicked = onLoyaltyCardInfoClicked,
-                adjustBrightness = adjustBrightness,
-                onSideChanged = onSideChanged,
+                onSideChanged = { side ->
+                    onSideChanged?.invoke(side)
+                    screenBrightness = if (adjustBrightness && side == LoyaltyCardSide.BACK) {
+                        ScreenBrightness.MAX
+                    } else {
+                        ScreenBrightness.DEFAULT
+                    }
+                },
             )
         } else {
-            SideEffect { onSideChanged?.invoke(null) }
+            SideEffect {
+                onSideChanged?.invoke(null)
+                screenBrightness = ScreenBrightness.DEFAULT
+            }
+
             LoyaltyCardPlaceholder()
         }
     }
@@ -147,7 +163,6 @@ private fun LoyaltyCardImpl(
     onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
     initialSide: LoyaltyCardSide = LoyaltyCardSide.FRONT,
-    adjustBrightness: Boolean = true,
     onSideChanged: ((LoyaltyCardSide) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
@@ -213,7 +228,6 @@ private fun LoyaltyCardImpl(
             BackSide(
                 card = card,
                 onShowFrontSideClicked = { side = LoyaltyCardSide.FRONT },
-                adjustBrightness = adjustBrightness,
                 modifier = Modifier
                     .height(frontSideHeightDp)
                     .graphicsLayer {
@@ -264,13 +278,8 @@ private fun FrontSide(
 private fun BackSide(
     card: LoyaltyCard,
     onShowFrontSideClicked: () -> Unit,
-    adjustBrightness: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    if (adjustBrightness) {
-        ForcedScreenBrightnessBehavior(ScreenBrightness.MAX)
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
