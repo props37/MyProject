@@ -40,6 +40,6 @@ internal class RefreshBearerTokensUseCaseImpl(
     }
 
     private companion object {
-        private const val TAG = "RefreshBearerTokensUseCase"
+        private const val TAG = "RefreshBearerTokensUseCaseImpl"
     }
 }
