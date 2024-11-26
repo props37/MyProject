@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.database.user.UserDao
 import ru.livetyping.zarina.core.database.user.UserEntity
 
 @Database(
-    version = 2,
+    version = 1,
     entities = [UserEntity::class],
 )
 internal abstract class ZarinaDatabase : RoomDatabase() {
