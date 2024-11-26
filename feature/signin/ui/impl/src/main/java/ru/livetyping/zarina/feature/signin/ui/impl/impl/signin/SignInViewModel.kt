@@ -180,7 +180,7 @@ internal class SignInViewModel @Inject constructor(
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
         when (event) {
-            YandexCaptchaEvent.Dismissed -> visibleYandexCaptcha.value = null
+            YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
             is YandexCaptchaEvent.TokenReceived -> {
                 visibleYandexCaptcha.value = null
                 when (yandexCaptchaTrigger) {

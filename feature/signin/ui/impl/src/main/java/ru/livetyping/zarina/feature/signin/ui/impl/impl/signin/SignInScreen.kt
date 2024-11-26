@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -19,7 +20,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -44,6 +47,7 @@ internal fun SignInScreen(
         signInState = signInState,
         onSignInEvent = viewModel::onSignInEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -56,6 +60,7 @@ internal fun ScreenContent(
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<SignInSideEffect>,
     navActions: SignInNavActions,
 ) {
@@ -65,43 +70,50 @@ internal fun ScreenContent(
         navActions = navActions,
     )
 
-    // TODO: [Top] Add YandexCaptcha
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.systemBars
-                    .union(WindowInsets.displayCutout),
-            ),
-    ) {
-        SignInTopBar(
-            onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
-        )
-
-        val signInTypePagerState = rememberPagerConnectedToTabRowState(
-            tabs = signInTypeSelectorState.tabs,
-            currentTab = signInTypeSelectorState.currentTab,
-            onTabChanged = { onSignInTypeSelectorEvent(TabRowEvent.TabChanged(it)) },
-            initialPage = remember { signInTypeSelectorState.currentTabIndex },
-            pageCount = { signInTypeSelectorState.tabs.size },
-        )
-
-        SignInTypeSelector(
-            state = signInTypeSelectorState,
-            onEvent = onSignInTypeSelectorEvent,
+    Box {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .union(WindowInsets.displayCutout),
+                ),
+        ) {
+            SignInTopBar(
+                onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
+            )
 
-        SignInTypePager(
-            signInTypeSelectorState = signInTypeSelectorState,
-            pagerState = signInTypePagerState,
-            signInState = signInState,
-            onSignInEvent = onSignInEvent,
-            modifier = Modifier.fillMaxSize(),
-        )
+            val signInTypePagerState = rememberPagerConnectedToTabRowState(
+                tabs = signInTypeSelectorState.tabs,
+                currentTab = signInTypeSelectorState.currentTab,
+                onTabChanged = { onSignInTypeSelectorEvent(TabRowEvent.TabChanged(it)) },
+                initialPage = remember { signInTypeSelectorState.currentTabIndex },
+                pageCount = { signInTypeSelectorState.tabs.size },
+            )
+
+            SignInTypeSelector(
+                state = signInTypeSelectorState,
+                onEvent = onSignInTypeSelectorEvent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            SignInTypePager(
+                signInTypeSelectorState = signInTypeSelectorState,
+                pagerState = signInTypePagerState,
+                signInState = signInState,
+                onSignInEvent = onSignInEvent,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        if (signInState.visibleYandexCaptcha != null) {
+            YandexCaptchaDialog(
+                captcha = signInState.visibleYandexCaptcha,
+                onEvent = onYandexCaptchaEvent,
+            )
+        }
     }
 }
