@@ -38,8 +38,8 @@ include(":feature:profile:ui:impl")
 include(":feature:cart:ui:api")
 include(":feature:cart:ui:impl")
 
-include(":feature:cityselector:ui:api")
-include(":feature:cityselector:ui:impl")
+include(":feature:city-selector:ui:api")
+include(":feature:city-selector:ui:impl")
 
 include(":feature:signin:ui:api")
 include(":feature:signin:ui:impl")

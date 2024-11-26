@@ -52,7 +52,7 @@ composeCompiler {
 }
 
 dependencies {
-    implementation(projects.feature.cityselector.ui.api)
+    implementation(projects.feature.citySelector.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)
     implementation(projects.core.uiModel)

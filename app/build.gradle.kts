@@ -154,8 +154,8 @@ dependencies {
     implementation(projects.feature.onboarding.ui.api)
     implementation(projects.feature.onboarding.ui.impl)
 
-    implementation(projects.feature.cityselector.ui.api)
-    implementation(projects.feature.cityselector.ui.impl)
+    implementation(projects.feature.citySelector.ui.api)
+    implementation(projects.feature.citySelector.ui.impl)
 
     implementation(projects.feature.signin.ui.api)
     implementation(projects.feature.signin.ui.impl)
