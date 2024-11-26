@@ -34,6 +34,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordExcept
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
@@ -63,6 +64,7 @@ internal class SignInViewModel @Inject constructor(
     private val credentialManager: CredentialManager,
     private val signInByEmail: SignInByEmailUseCase,
     private val signInByPhone: SignInByPhoneUseCase,
+    private val getYandexCaptcha: GetYandexCaptchaUseCase,
 ) : ViewModel(), SideEffectSource<SignInSideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
@@ -229,7 +231,9 @@ internal class SignInViewModel @Inject constructor(
             val validator = SignInValidator()
             validator.validate(signInParams)
 
-            // TODO: [Top] Start captcha
+            viewModelScope.launch {
+                showYandexCaptcha(YandexCaptchaTrigger.SIGN_IN_BY_EMAIL)
+            }
         } catch (e: Exception) {
             handleSignInException(e)
         }
@@ -243,7 +247,9 @@ internal class SignInViewModel @Inject constructor(
             val validator = SignInValidator()
             validator.validate(signInParams)
 
-            // TODO: [Top] Start captcha
+            viewModelScope.launch {
+                showYandexCaptcha(YandexCaptchaTrigger.SIGN_IN_BY_PHONE)
+            }
         } catch (e: Exception) {
             handleSignInException(e)
         }
@@ -317,6 +323,18 @@ internal class SignInViewModel @Inject constructor(
                 else -> RCommon.string.res_incorrect_data_entered
             }
             val messageText = Text.Resource(messageTextResId)
+            val toastMessage = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
+        }
+    }
+
+    private suspend fun showYandexCaptcha(trigger: YandexCaptchaTrigger) {
+        val captcha = getYandexCaptcha().getOrNull()
+        if (captcha != null) {
+            visibleYandexCaptcha.value = captcha
+            yandexCaptchaTrigger = trigger
+        } else {
+            val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
             val toastMessage = ZarinaToastMessage.error(messageText)
             emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
         }
