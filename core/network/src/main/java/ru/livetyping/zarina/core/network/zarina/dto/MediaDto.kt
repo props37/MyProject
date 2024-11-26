@@ -32,6 +32,8 @@ public data class MediaDto(
             null
         }
     }
-}
 
-private const val TAG = "MediaDto"
+    private companion object {
+        private const val TAG = "MediaDto"
+    }
+}

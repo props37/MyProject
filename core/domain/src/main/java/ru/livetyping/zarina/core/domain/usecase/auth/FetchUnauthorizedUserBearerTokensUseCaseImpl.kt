@@ -29,6 +29,6 @@ internal class FetchUnauthorizedUserBearerTokensUseCaseImpl(
     }
 
     private companion object {
-        private const val TAG = "FetchUnauthorizedUserBearerTokensUseCase"
+        private const val TAG = "FetchUnauthorizedUserBearerTokensUseCaseImpl"
     }
 }

@@ -56,6 +56,8 @@ public data class ProductOfferDto(
             null
         }
     }
-}
 
-private const val TAG = "ProductOfferDto"
+    private companion object {
+        private const val TAG = "ProductOfferDto"
+    }
+}

@@ -40,7 +40,6 @@ internal data class ClickActionDto(
 
     companion object {
         private const val TYPE_PRODUCT_LIST = "products-list"
+        private const val TAG = "ClickActionDto"
     }
 }
-
-private const val TAG = "ClickActionDto"

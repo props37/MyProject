@@ -41,6 +41,8 @@ internal data class CategoryDto(
             null
         }
     }
-}
 
-private const val TAG = "CategoryDto"
+    private companion object {
+        private const val TAG = "CategoryDto"
+    }
+}
