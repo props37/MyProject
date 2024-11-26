@@ -12,6 +12,8 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile.profileScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profiledetails.profileDetailsScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavEntry as ProfileScreenNavEntry
 
@@ -38,6 +40,9 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onChangeCityClicked = actions.onChangeCityClicked,
             )
             profileScreen(profileScreenNavActions)
+
+            val profileDetailsNavActions = ProfileDetailsNavActions()
+            profileDetailsScreen(profileDetailsNavActions)
         }
     }
 }
