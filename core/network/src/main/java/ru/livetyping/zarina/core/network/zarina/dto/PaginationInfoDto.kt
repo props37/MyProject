@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.network.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.pagination.PaginationInfo
-import ru.livetyping.zarina.core.network.util.checkNotNull
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 
 @Serializable
 public data class PaginationInfoDto(
@@ -18,9 +18,9 @@ public data class PaginationInfoDto(
 ) {
     public fun toPaginationInfo(itemTotalCount: Int): PaginationInfo {
         return PaginationInfo(
-            currentPage = checkNotNull(currentPage) { ::currentPage },
-            pageCount = checkNotNull(totalPages) { ::totalPages },
-            pageSize = checkNotNull(pageSize) { ::pageSize },
+            currentPage = checkPropertyNotNull(currentPage) { ::currentPage },
+            pageCount = checkPropertyNotNull(totalPages) { ::totalPages },
+            pageSize = checkPropertyNotNull(pageSize) { ::pageSize },
             itemTotalCount = itemTotalCount,
         )
     }

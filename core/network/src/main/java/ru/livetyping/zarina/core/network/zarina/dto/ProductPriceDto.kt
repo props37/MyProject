@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.network.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
-import ru.livetyping.zarina.core.network.util.checkNotNull
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 
 @Serializable
 public data class ProductPriceDto(
@@ -21,10 +21,10 @@ public data class ProductPriceDto(
 ) {
     public fun toProductPrice(): ProductPrice {
         return ProductPrice(
-            originalPrice = checkNotNull(commonPrice) { ::commonPrice },
-            hasDiscount = checkNotNull(hasDiscount) { ::hasDiscount },
-            discountPrice = checkNotNull(discountPrice) { ::discountPrice },
-            discountPercent = checkNotNull(discount) { ::discount },
+            originalPrice = checkPropertyNotNull(commonPrice) { ::commonPrice },
+            hasDiscount = checkPropertyNotNull(hasDiscount) { ::hasDiscount },
+            discountPrice = checkPropertyNotNull(discountPrice) { ::discountPrice },
+            discountPercent = checkPropertyNotNull(discount) { ::discount },
         )
     }
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
-import ru.livetyping.zarina.core.network.util.checkNotNull
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -39,9 +39,9 @@ internal data class UserDto(
     val receiveSms: Boolean? = null,
 ) {
     fun toUser(): User {
-        checkNotNull(id) { ::id }
-        checkNotNull(email) { ::email }
-        checkNotNull(gender) { ::gender }
+        checkPropertyNotNull(id) { ::id }
+        checkPropertyNotNull(email) { ::email }
+        checkPropertyNotNull(gender) { ::gender }
         val notificationSettings = User.NotificationSettings(
             receiveSms = receiveSms ?: false,
             receiveEmails = receiveEmails ?: false,

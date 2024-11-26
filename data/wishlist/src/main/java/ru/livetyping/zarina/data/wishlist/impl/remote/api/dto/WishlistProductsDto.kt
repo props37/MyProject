@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.network.util.checkNotNull
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
 
@@ -20,9 +20,9 @@ public data class WishlistProductsDto(
     val pagination: PaginationInfoDto? = null,
 ) {
     public fun toProductPage(): Page<List<ProductShort>> {
-        checkNotNull(items) { ::items }
-        checkNotNull(itemCount) { ::itemCount }
-        checkNotNull(pagination) { ::pagination }
+        checkPropertyNotNull(items) { ::items }
+        checkPropertyNotNull(itemCount) { ::itemCount }
+        checkPropertyNotNull(pagination) { ::pagination }
         val data = items.mapNotNull { it.toProductShort() }
         val paginationInfo = pagination.toPaginationInfo(itemCount)
         return Page(

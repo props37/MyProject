@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.user.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
-import ru.livetyping.zarina.core.network.util.checkNotNull
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.BearerTokensDto
 
 @Serializable
@@ -15,8 +15,8 @@ internal data class AuthDto(
     val jwt: BearerTokensDto? = null,
 ) {
     fun toAuthorizationResult(): AuthResult {
-        checkNotNull(jwt) { ::jwt }
-        checkNotNull(user) { ::user }
+        checkPropertyNotNull(jwt) { ::jwt }
+        checkPropertyNotNull(user) { ::user }
         return AuthResult(
             tokens = jwt.toBearerTokens(),
             user = user.toUser(),
