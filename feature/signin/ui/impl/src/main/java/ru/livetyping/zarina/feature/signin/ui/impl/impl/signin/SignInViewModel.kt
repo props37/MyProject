@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
 import ru.livetyping.zarina.core.domain.model.user.SignInByPhoneParams
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
@@ -38,6 +39,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
+import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -65,6 +67,7 @@ internal class SignInViewModel @Inject constructor(
     private val signInByEmail: SignInByEmailUseCase,
     private val signInByPhone: SignInByPhoneUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
+    private val smsCodeRetriever: SmsCodeRetriever,
 ) : ViewModel(), SideEffectSource<SignInSideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
@@ -290,11 +293,10 @@ internal class SignInViewModel @Inject constructor(
 
         signInJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
-                // TODO: [Top] Start SMS code retriever
-//                interactor.smsCodeRetriever.start(
-//                    sender = SmsConstants.SENDER_ZARINA,
-//                    codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
-//                )
+                smsCodeRetriever.start(
+                    sender = ZarinaSms.SENDER,
+                    codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+                )
                 val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
                 val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
                 this@SignInViewModel.signInByPhone(params)
