@@ -30,12 +30,12 @@ import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState

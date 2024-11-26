@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import ru.livetyping.zarina.core.kotlinutil.LocaleUtil
-import ru.livetyping.zarina.core.uicommon.phone.PhoneNumberUtilProvider
+import ru.livetyping.zarina.core.uicommon.PhoneNumberUtilProvider
 
 internal class PhoneOutputTransformation(
     context: Context,

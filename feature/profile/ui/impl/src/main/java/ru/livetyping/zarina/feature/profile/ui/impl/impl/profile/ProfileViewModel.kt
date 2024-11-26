@@ -20,9 +20,9 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem

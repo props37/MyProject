@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicommon.phone
+package ru.livetyping.zarina.core.uicommon
 
 import android.content.Context
 import android.util.Log

@@ -28,10 +28,10 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry

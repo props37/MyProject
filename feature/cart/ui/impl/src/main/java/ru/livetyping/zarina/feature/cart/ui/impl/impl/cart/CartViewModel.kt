@@ -3,9 +3,9 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import javax.inject.Inject
 
 @HiltViewModel

@@ -26,11 +26,11 @@ import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFl
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.paging.updateProducts
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.throttler.Throttler
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent

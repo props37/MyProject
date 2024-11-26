@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicommon.throttler
+package ru.livetyping.zarina.core.uicommon
 
 import android.os.SystemClock
 import kotlin.time.Duration

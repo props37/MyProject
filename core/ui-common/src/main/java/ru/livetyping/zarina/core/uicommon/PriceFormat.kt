@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicommon.price
+package ru.livetyping.zarina.core.uicommon
 
 import android.icu.text.DecimalFormat
 import android.icu.text.DecimalFormatSymbols
