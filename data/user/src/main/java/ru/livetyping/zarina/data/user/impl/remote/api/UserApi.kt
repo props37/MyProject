@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.data.user.impl.remote.api
 
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -17,9 +18,11 @@ internal interface UserApi {
 
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto
 
-    // TODO: [Top] Add yandex captcha token
-    suspend fun signIn(email: Email, password: String): AuthDto
+    suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthDto
 
-    // TODO: [Top] Add yandex captcha token
-    suspend fun signIn(phone: PhoneNumber)
+    suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 }

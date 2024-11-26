@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -22,12 +23,11 @@ public interface UserRepository {
 
     public fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?>
 
-    // TODO: [Top] Add yandex captcha token
     public suspend fun signIn(
         email: Email,
         password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
     ): AuthResult
 
-    // TODO: [Top] Add yandex captcha token
-    public suspend fun signIn(phone: PhoneNumber)
+    public suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 }

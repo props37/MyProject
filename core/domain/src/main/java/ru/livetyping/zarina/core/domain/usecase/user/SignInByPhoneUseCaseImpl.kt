@@ -15,10 +15,11 @@ internal class SignInByPhoneUseCaseImpl(
 
     override suspend fun execute(params: Params) {
         val phone = params.phone
+        val yandexCaptchaToken = params.yandexCaptchaToken
 
         validateFields(phone)
 
-        userRepository.signIn(phone)
+        userRepository.signIn(phone, yandexCaptchaToken)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {

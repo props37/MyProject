@@ -5,6 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -44,11 +45,15 @@ internal class UserApiImpl @Inject constructor(
         return httpClient.get("/api/card").body()
     }
 
-    override suspend fun signIn(email: Email, password: String): AuthDto {
+    override suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthDto {
         val body = SignInRequestBody.Email(
             email = email.value,
             password = password,
-            yandexCaptchaToken = "", // TODO: [Top] Implement
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         return signInApiExceptionConverter {
             httpClient.post("/api/auth/email") {
@@ -57,10 +62,10 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
-    override suspend fun signIn(phone: PhoneNumber) {
+    override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
         val body = SignInRequestBody.Phone(
             phone = phone.value,
-            yandexCaptchaToken = "", // TODO: [Top] Implement
+            yandexCaptchaToken = yandexCaptchaToken.value,
         )
         signInApiExceptionConverter {
             httpClient.post("/api/auth/phone") {

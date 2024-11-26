@@ -19,12 +19,14 @@ internal class SignInByEmailUseCaseImpl(
     override suspend fun execute(params: Params) {
         val email = params.email
         val password = params.password
+        val yandexCaptchaToken = params.yandexCaptchaToken
 
         validateFields(email, password)
 
         val authResult = userRepository.signIn(
             email = email,
             password = password,
+            yandexCaptchaToken = yandexCaptchaToken,
         )
         val tokens = authResult.tokens
         val user = authResult.user

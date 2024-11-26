@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user.impl.remote
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -34,11 +35,15 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         emit(dto.toLoyaltyCard())
     }
 
-    override suspend fun signIn(email: Email, password: String): AuthResult {
-        return api.signIn(email, password).toAuthorizationResult()
+    override suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthResult {
+        return api.signIn(email, password, yandexCaptchaToken).toAuthorizationResult()
     }
 
-    override suspend fun signIn(phone: PhoneNumber) {
-        api.signIn(phone)
+    override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        api.signIn(phone, yandexCaptchaToken)
     }
 }

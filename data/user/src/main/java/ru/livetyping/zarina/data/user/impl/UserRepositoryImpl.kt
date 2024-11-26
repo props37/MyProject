@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -63,12 +64,16 @@ internal class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signIn(email: Email, password: String): AuthResult {
-        return remoteDataSource.signIn(email, password)
+    override suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthResult {
+        return remoteDataSource.signIn(email, password, yandexCaptchaToken)
     }
 
-    override suspend fun signIn(phone: PhoneNumber) {
-        remoteDataSource.signIn(phone)
+    override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        remoteDataSource.signIn(phone, yandexCaptchaToken)
     }
 
     private fun getUserFlowLocalFirstThenRemote(
