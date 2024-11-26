@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.markAsRefreshTokenRequest
-import ru.livetyping.zarina.data.auth.impl.remote.api.dto.BearerTokensDto
+import ru.livetyping.zarina.core.network.zarina.dto.BearerTokensDto
 import javax.inject.Inject
 
 internal class AuthApiImpl @Inject constructor(
