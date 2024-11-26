@@ -9,10 +9,10 @@ import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
-import ru.livetyping.zarina.core.network.auth.BearerTokenCleaner
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
+import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
-import ru.livetyping.zarina.core.network.impl.ZarinaBearerTokenCleaner
+import ru.livetyping.zarina.core.network.impl.ZarinaHttpClientBearerTokenCleanerImpl
 import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaUnauthorizedHttpClient
 import javax.inject.Singleton
@@ -22,9 +22,9 @@ import javax.inject.Singleton
 internal abstract class NetworkModule {
 
     @Binds
-    abstract fun bindBearerTokenCleaner(
-        impl: ZarinaBearerTokenCleaner,
-    ): BearerTokenCleaner
+    abstract fun bindZarinaHttpClientBearerTokenCleaner(
+        impl: ZarinaHttpClientBearerTokenCleanerImpl,
+    ): ZarinaHttpClientBearerTokenCleaner
 
     companion object {
         private val json by lazy {
