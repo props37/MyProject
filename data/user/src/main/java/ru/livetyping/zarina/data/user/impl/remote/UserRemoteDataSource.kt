@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user.impl.remote
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
@@ -17,8 +18,8 @@ internal interface UserRemoteDataSource {
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard>
 
     // TODO: [Top] Add yandex captcha token
-    suspend fun signIn(
-        email: Email,
-        password: String,
-    ): AuthResult
+    suspend fun signIn(email: Email, password: String): AuthResult
+
+    // TODO: [Top] Add yandex captcha token
+    suspend fun signIn(phone: PhoneNumber)
 }

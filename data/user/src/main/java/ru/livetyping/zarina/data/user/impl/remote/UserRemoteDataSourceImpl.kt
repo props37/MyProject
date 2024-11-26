@@ -3,6 +3,7 @@ package ru.livetyping.zarina.data.user.impl.remote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
@@ -35,5 +36,9 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun signIn(email: Email, password: String): AuthResult {
         return api.signIn(email, password).toAuthorizationResult()
+    }
+
+    override suspend fun signIn(phone: PhoneNumber) {
+        api.signIn(phone)
     }
 }

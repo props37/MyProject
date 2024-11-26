@@ -68,7 +68,7 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signIn(phone: PhoneNumber) {
-        TODO("Not yet implemented")
+        remoteDataSource.signIn(phone)
     }
 
     private fun getUserFlowLocalFirstThenRemote(

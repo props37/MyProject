@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
@@ -53,6 +54,18 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/auth/email") {
                 setJsonBody(body)
             }.body()
+        }
+    }
+
+    override suspend fun signIn(phone: PhoneNumber) {
+        val body = SignInRequestBody.Phone(
+            phone = phone.value,
+            yandexCaptchaToken = "", // TODO: [Top] Implement
+        )
+        signInApiExceptionConverter {
+            httpClient.post("/api/auth/phone") {
+                setJsonBody(body)
+            }
         }
     }
 }
