@@ -5,9 +5,12 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
+import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
@@ -25,6 +28,8 @@ internal class UserApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
+    @ZarinaBaseUrl
+    private val baseUrl: String,
 ) : UserApi {
     override suspend fun getUser(): UserDto {
         return httpClient.get("/api/v1/profile").body()
@@ -72,5 +77,10 @@ internal class UserApiImpl @Inject constructor(
                 setJsonBody(body)
             }
         }
+    }
+
+    override fun getYandexCaptcha(): YandexCaptcha {
+        val url = Url.create("$baseUrl/api/v1/smartCaptcha/")
+        return YandexCaptcha(url)
     }
 }

@@ -47,6 +47,7 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.datastore)
     implementation(projects.core.database)
+    implementation(projects.core.buildUtil)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingComple
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
@@ -294,6 +295,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): SignInByPhoneUseCase {
         return SignInByPhoneUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetYandexCaptchaUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetYandexCaptchaUseCase {
+        return GetYandexCaptchaUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )

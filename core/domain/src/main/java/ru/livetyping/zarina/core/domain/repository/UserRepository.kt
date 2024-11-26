@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
@@ -30,4 +31,6 @@ public interface UserRepository {
     ): AuthResult
 
     public suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
+
+    public fun getYandexCaptcha(): YandexCaptcha
 }

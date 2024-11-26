@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.user.impl.remote
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
@@ -25,4 +26,6 @@ internal interface UserRemoteDataSource {
     ): AuthResult
 
     suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
+
+    fun getYandexCaptcha(): YandexCaptcha
 }
