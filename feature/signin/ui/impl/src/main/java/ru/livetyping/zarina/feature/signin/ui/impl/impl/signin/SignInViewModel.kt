@@ -35,6 +35,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordExcept
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
@@ -315,7 +316,17 @@ internal class SignInViewModel @Inject constructor(
                 is EmailException -> isEmailInvalid.value = true
                 is PasswordException -> isPasswordInvalid.value = true
                 is PhoneException -> isPhoneInvalid.value = true
-                // TODO: [Top] Handle other exceptions
+                is UserNotFoundException -> {
+                    val text = Text.Resource(R.string.sign_in_invalid_email_or_password_try_again)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+                }
+
+                else -> {
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                    val message = ZarinaToastMessage.error(text)
+                    emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+                }
             }
 
             val isEmailEmpty = causes.any { it is EmptyEmailException }
