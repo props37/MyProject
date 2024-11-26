@@ -24,10 +24,10 @@ import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.mediacompose.VideoPlayer
+import ru.livetyping.zarina.core.uikit.impl.util.loopingGet
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.core.uikit.util.loopingGet
 
 @Composable
 public fun ZarinaMediaHorizontalPager(

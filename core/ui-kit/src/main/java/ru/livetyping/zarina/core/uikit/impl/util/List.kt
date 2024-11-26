@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.util
+package ru.livetyping.zarina.core.uikit.impl.util
 
 internal fun <T> List<T>.loopingGet(index: Int): T? {
     return if (this.isEmpty()) {
