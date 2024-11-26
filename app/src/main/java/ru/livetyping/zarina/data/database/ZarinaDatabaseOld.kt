@@ -11,7 +11,7 @@ import ru.livetyping.zarina.data.user.local.database.entity.UserEntity
     version = 1,
     entities = [UserEntity::class, ProductSearchHistoryQueryEntity::class],
 )
-abstract class ZarinaDatabase : RoomDatabase() {
+abstract class ZarinaDatabaseOld : RoomDatabase() {
     abstract fun getUserDao(): UserDao
     abstract fun getProductSearchHistoryQueryDao(): ProductSearchHistoryQueryDao
 }
