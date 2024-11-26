@@ -44,9 +44,13 @@ kotlin {
 dependencies {
     api(libs.googlePlayServices.location)
     api(libs.kotlin.coroutines.googlePlayServices)
+    implementation(libs.jetpack.activity)
+    implementation(libs.googlePlayServices.auth.api.phone)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
