@@ -2,9 +2,10 @@ package ru.livetyping.zarina.presentation.navigation.feature
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigationutil.hasRoute
+import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
@@ -19,8 +20,9 @@ fun NavGraphBuilder.homeFeature(
         composable(
             actions = actions,
             enterTransition = {
+                val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestination.hasRoute(OnboardingFeature.getNavEntryClass()) -> {
+                    initialDestinationWithParent.hasRoute(OnboardingFeature.getNavEntryClass()) -> {
                         zarinaEnterFadeInTransition()
                     }
 

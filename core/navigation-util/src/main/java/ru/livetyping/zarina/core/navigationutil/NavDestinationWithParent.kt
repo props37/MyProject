@@ -15,6 +15,11 @@ public inline fun <reified T : Any> NavDestinationWithParent.hasRoute(): Boolean
     return this.parent?.hasRoute<T>() == true
 }
 
+public fun NavDestinationWithParent.hasRoute(route: KClass<out Any>): Boolean {
+    if (this.destination.hasRoute(route)) return true
+    return this.parent?.hasRoute(route) == true
+}
+
 public fun NavDestinationWithParent.hasAnyRoute(routes: List<KClass<out Any>>): Boolean {
     if (this.destination.hasAnyRoute(routes)) return true
     return this.parent?.hasAnyRoute(routes) == true

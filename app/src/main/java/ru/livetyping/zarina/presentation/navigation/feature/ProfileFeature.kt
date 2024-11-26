@@ -32,8 +32,7 @@ fun rememberProfileNavActions(
     return remember(navController) {
         ProfileNavActions(
             onSignInClicked = {
-                val signInNavEntry = SignInFeature.getNavEntry()
-                navController.navigate(signInNavEntry)
+                navController.navigate(SignInFeature.getNavEntry())
             },
             onChangeCityClicked = { currentCity ->
                 val citySelectorParams = CitySelectorNavParams(

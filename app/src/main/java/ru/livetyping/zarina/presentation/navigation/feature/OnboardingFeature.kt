@@ -4,9 +4,10 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigationutil.hasRoute
+import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
@@ -23,9 +24,9 @@ fun NavGraphBuilder.onboardingFeature(
         composable(
             actions = actions,
             exitTransition = {
-                val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
+                val targetDestinationWithParent = targetDestination.withParent()
                 when {
-                    targetDestination.hasRoute(citySelectorNavEntryClass) -> {
+                    targetDestinationWithParent.hasRoute(CitySelectorFeature.getNavEntryClass()) -> {
                         ExitTransition.KeepUntilTransitionsFinished
                     }
 
@@ -33,9 +34,9 @@ fun NavGraphBuilder.onboardingFeature(
                 }
             },
             popEnterTransition = {
-                val citySelectorNavEntryClass = CitySelectorFeature.getNavEntryClass()
+                val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestination.hasRoute(citySelectorNavEntryClass) -> {
+                    initialDestinationWithParent.hasRoute(CitySelectorFeature.getNavEntryClass()) -> {
                         EnterTransition.None
                     }
 
