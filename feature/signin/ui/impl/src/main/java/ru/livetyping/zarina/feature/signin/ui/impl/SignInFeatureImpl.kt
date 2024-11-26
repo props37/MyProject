@@ -35,6 +35,8 @@ public class SignInFeatureImpl : SignInFeature {
         ) {
             val signInScreenNavActions = SignInScreenNavActions(
                 onBackClicked = { navController.navigateUp() },
+                onUserSignedIn = actions.onUserSignedIn,
+                onSignInByPhoneRequested = { TODO() },
             )
             signInScreen(signInScreenNavActions)
         }

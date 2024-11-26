@@ -279,9 +279,8 @@ internal class SignInViewModel @Inject constructor(
                             )
                         }
 
-                        // TODO: [Top] Implement
-//                        val action = SignInScreenAction.UserSignedIn
-//                        emitSideEffect(SideEffect.Navigate(action))
+                        val action = SignInScreenAction.UserSignedIn
+                        emitSideEffect(SignInSideEffect.Navigate(action))
                     }
                     .onFailure(::handleSignInException)
             }
@@ -301,9 +300,8 @@ internal class SignInViewModel @Inject constructor(
                 val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
                 this@SignInViewModel.signInByPhone(params)
                     .onSuccess {
-                        // TODO: [Top] Implement
-//                        val action = SignInScreenAction.SignInByPhoneRequested(phone)
-//                        emitSideEffect(SideEffect.Navigate(action))
+                        val action = SignInScreenAction.SignInByPhoneRequested(phone)
+                        emitSideEffect(SignInSideEffect.Navigate(action))
                     }
                     .onFailure(::handleSignInException)
             }

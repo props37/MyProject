@@ -60,5 +60,9 @@ internal fun SignInScreenBehavior(
 private fun navigate(navActions: SignInNavActions, action: SignInScreenAction) {
     when (action) {
         SignInScreenAction.ScreenClosed -> navActions.onBackClicked()
+        SignInScreenAction.UserSignedIn -> navActions.onUserSignedIn()
+        is SignInScreenAction.SignInByPhoneRequested -> {
+            navActions.onSignInByPhoneRequested(action.phone)
+        }
     }
 }
