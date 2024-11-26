@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
@@ -36,6 +37,10 @@ internal class UserApiImpl @Inject constructor(
         httpClient.put("/api/location/city") {
             setJsonBody(body)
         }
+    }
+
+    override suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
+        return httpClient.get("/api/card").body()
     }
 
     override suspend fun signIn(email: Email, password: String): AuthDto {

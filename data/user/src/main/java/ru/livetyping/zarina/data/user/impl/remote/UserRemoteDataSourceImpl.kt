@@ -28,9 +28,9 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         api.setUserCity(city)
     }
 
-    override fun getLoyaltyCardFlow(): Flow<LoyaltyCard> {
-        TODO("Not yet implemented")
-        // TODO: [Top] Implement
+    override fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
+        val dto = api.getLoyaltyCard()
+        emit(dto.toLoyaltyCard())
     }
 
     override suspend fun signIn(email: Email, password: String): AuthResult {
