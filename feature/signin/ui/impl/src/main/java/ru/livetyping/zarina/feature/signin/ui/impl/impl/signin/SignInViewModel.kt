@@ -117,7 +117,10 @@ internal class SignInViewModel @Inject constructor(
         isPasswordInvalid,
         isPhoneInvalid,
         operationTracker.ongoingOperationKeys,
-    ) { isEmailInvalid, isPasswordInvalid, isPhoneInvalid, ongoingOperations ->
+        visibleYandexCaptcha,
+    ) { isEmailInvalid, isPasswordInvalid, isPhoneInvalid, ongoingOperations, visibleYandexCaptcha ->
+        val isSignInButtonLoading =
+            SignInOperation in ongoingOperations || visibleYandexCaptcha != null
         SignInState(
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = isEmailInvalid,
@@ -125,8 +128,8 @@ internal class SignInViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid,
-            // TODO: [Top] Depend on yandex captcha state
-            isSignInButtonLoading = SignInOperation in ongoingOperations,
+            isSignInButtonLoading = isSignInButtonLoading,
+            visibleYandexCaptcha = visibleYandexCaptcha,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -139,6 +142,7 @@ internal class SignInViewModel @Inject constructor(
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid.value,
             isSignInButtonLoading = false,
+            visibleYandexCaptcha = null,
         )
     )
 
