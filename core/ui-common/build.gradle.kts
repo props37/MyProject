@@ -48,6 +48,8 @@ dependencies {
 
     api(libs.libphonenumber)
 
+    implementation(libs.timber)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)

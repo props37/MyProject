@@ -32,6 +32,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
+import timber.log.Timber
 
 @SuppressLint("ComposeModifierMissing")
 @Suppress("UnusedReceiverParameter")
@@ -94,6 +95,7 @@ public fun BoxScope.YandexCaptchaDialog(
 
                     webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView?, url: String?) {
+                            Timber.tag(TAG).v("onPageFinished: $url")
                             if (url == captchaUrl) isPageLoaded = true
                         }
                     }
@@ -102,20 +104,20 @@ public fun BoxScope.YandexCaptchaDialog(
                     val jsInterface = object : YandexCaptchaJsInterface {
                         @JavascriptInterface
                         override fun onGetToken(token: String) {
-                            Log.v(TAG, "onGetToken")
+                            Timber.tag(TAG).v("onGetToken: $token")
                             val yandexCaptchaToken = YandexCaptchaToken(token)
                             onEvent(YandexCaptchaEvent.TokenReceived(yandexCaptchaToken))
                         }
 
                         @JavascriptInterface
                         override fun onChallengeVisible() {
-                            Log.v(TAG, "onChallengeVisible")
+                            Timber.tag(TAG).v("onChallengeVisible")
                             isUserActionRequired = true
                         }
 
                         @JavascriptInterface
                         override fun onChallengeHidden() {
-                            Log.v(TAG, "onChallengeHidden")
+                            Timber.tag(TAG).v("onChallengeHidden")
                             isUserActionRequired = false
                         }
                     }

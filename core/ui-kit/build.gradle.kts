@@ -73,6 +73,8 @@ dependencies {
 
     api(libs.composeShimmer)
 
+    implementation(libs.timber)
+
     lintChecks(libs.lint.composeChecks)
 
     testImplementation(libs.junit)

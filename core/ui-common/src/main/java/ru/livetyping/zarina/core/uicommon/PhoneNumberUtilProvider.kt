@@ -1,8 +1,8 @@
 package ru.livetyping.zarina.core.uicommon
 
 import android.content.Context
-import android.util.Log
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import timber.log.Timber
 
 public object PhoneNumberUtilProvider {
 
@@ -14,18 +14,18 @@ public object PhoneNumberUtilProvider {
     public fun provide(context: Context): PhoneNumberUtil {
         val currentPhoneNumberUtil = phoneNumberUtil
         return if (currentPhoneNumberUtil != null) {
-            Log.v(TAG, MESSAGE_ALREADY_INITIALIZED)
+            Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
             currentPhoneNumberUtil
         } else {
             synchronized(lock) {
                 phoneNumberUtil?.let {
-                    Log.v(TAG, MESSAGE_ALREADY_INITIALIZED)
+                    Timber.tag(TAG).v(MESSAGE_ALREADY_INITIALIZED)
                     return it
                 }
 
                 val instance = PhoneNumberUtil.createInstance(context.applicationContext)
                 phoneNumberUtil = instance
-                Log.v(TAG, "PhoneNumberUtil initialized")
+                Timber.tag(TAG).v("PhoneNumberUtil initialized")
                 instance
             }
         }
