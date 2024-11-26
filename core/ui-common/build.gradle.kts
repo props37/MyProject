@@ -39,6 +39,7 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.domain)
     api(libs.jetpack.lifecycle.viewModel.savedstate)
 
     implementation(libs.jetpack.browser)

@@ -44,7 +44,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.core.domain)
+    api(projects.core.domain)
     api(projects.core.text)
     api(projects.core.uiCommon)
     implementation(projects.core.kotlinUtil)
