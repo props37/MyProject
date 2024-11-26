@@ -1,0 +1,26 @@
+package ru.livetyping.zarina.core.domain.usecase.user
+
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.repository.UserRepository
+import ru.livetyping.zarina.core.usecase.UseCaseLogger
+
+public interface SignInByPhoneUseCase {
+    public suspend operator fun invoke(params: Params): Result<Unit>
+
+    // TODO: [Top] Add yandex captcha token
+    public data class Params(
+        val phone: PhoneNumber,
+    )
+
+    public companion object {
+        public fun getInstance(
+            userRepository: UserRepository,
+            logger: UseCaseLogger?,
+        ): SignInByPhoneUseCase {
+            return SignInByPhoneUseCaseImpl(
+                userRepository = userRepository,
+                logger = logger,
+            )
+        }
+    }
+}

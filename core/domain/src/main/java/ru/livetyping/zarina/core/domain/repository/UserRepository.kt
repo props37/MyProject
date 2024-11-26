@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.domain.repository
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
@@ -26,4 +27,7 @@ public interface UserRepository {
         email: Email,
         password: String,
     ): AuthResult
+
+    // TODO: [Top] Add yandex captcha token
+    public suspend fun signIn(phone: PhoneNumber)
 }

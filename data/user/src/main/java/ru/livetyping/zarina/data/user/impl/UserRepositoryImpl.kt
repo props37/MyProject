@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
@@ -64,6 +65,10 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(email: Email, password: String): AuthResult {
         return remoteDataSource.signIn(email, password)
+    }
+
+    override suspend fun signIn(phone: PhoneNumber) {
+        TODO("Not yet implemented")
     }
 
     private fun getUserFlowLocalFirstThenRemote(

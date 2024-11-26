@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase
@@ -283,6 +284,17 @@ internal class UseCaseModule {
         return SignInByEmailUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignInByPhoneUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SignInByPhoneUseCase {
+        return SignInByPhoneUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }
