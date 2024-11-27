@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.toast
+package ru.livetyping.zarina.core.uicommon.toast
 
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.message.MessageQueue

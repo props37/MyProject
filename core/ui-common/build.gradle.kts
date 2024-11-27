@@ -40,6 +40,7 @@ kotlin {
 
 dependencies {
     api(projects.core.domain)
+    api(projects.core.text)
     implementation(projects.core.resource)
 
     api(libs.jetpack.lifecycle.viewModel.savedstate)

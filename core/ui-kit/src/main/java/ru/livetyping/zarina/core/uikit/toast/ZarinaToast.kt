@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessageStyle
 import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 

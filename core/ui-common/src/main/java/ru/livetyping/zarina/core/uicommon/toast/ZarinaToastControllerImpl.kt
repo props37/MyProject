@@ -1,10 +1,10 @@
-package ru.livetyping.zarina.core.uikit.toast
+package ru.livetyping.zarina.core.uicommon.toast
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.core.uicommon.message.MessageQueueImpl
 
-internal class ZarinaToastControllerImpl(
+public class ZarinaToastControllerImpl(
     coroutineScope: CoroutineScope,
 ) : ZarinaToastController {
     private val messageQueue = MessageQueueImpl<ZarinaToastMessage>(coroutineScope)
