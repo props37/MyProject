@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -15,13 +16,9 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -56,11 +53,15 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListItem
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
+@SuppressLint("SlotReused")
 @Composable
 internal fun CityList(
     cityListState: CityListState,
     onCityListEvent: (CityListEvent) -> Unit,
     modifier: Modifier = Modifier,
+    windowInsetsProvider: @Composable () -> WindowInsets = {
+        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+    },
 ) {
     Crossfade(
         targetState = cityListState,
@@ -79,6 +80,7 @@ internal fun CityList(
                     state = state,
                     onCityClicked = { onCityListEvent(CityListEvent.CityClicked(it)) },
                     onChangeCityClicked = { onCityListEvent(CityListEvent.ChangeCityClicked) },
+                    windowInsetsProvider = windowInsetsProvider,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -87,13 +89,13 @@ internal fun CityList(
                 CityListEmpty(
                     modifier = Modifier
                         .fillMaxSize()
-                        .safeDrawingPadding()
+                        .windowInsetsPadding(windowInsetsProvider())
                         .padding(horizontal = 24.dp),
                 )
             }
 
             CityListState.Loading -> {
-                CityListLoading()
+                CityListLoading(windowInsetsProvider = windowInsetsProvider)
             }
 
             is CityListState.Error -> {
@@ -102,7 +104,7 @@ internal fun CityList(
                     onButtonClicked = { onCityListEvent(CityListEvent.ErrorRefreshClicked) },
                     modifier = Modifier
                         .fillMaxSize()
-                        .safeDrawingPadding()
+                        .windowInsetsPadding(windowInsetsProvider())
                         .padding(16.dp),
                 )
             }
@@ -115,18 +117,21 @@ private fun CityListSuccess(
     state: CityListState.Success,
     onCityClicked: (City) -> Unit,
     onChangeCityClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         CityListSuccessList(
             state = state,
             onCityClicked = onCityClicked,
+            windowInsetsProvider = windowInsetsProvider,
             modifier = Modifier.fillMaxSize(),
         )
 
         CityListSuccessChangeCityButton(
             isVisible = state.isChangeCityButtonVisible,
             onClick = onChangeCityClicked,
+            windowInsets = windowInsetsProvider(),
             modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
@@ -136,6 +141,7 @@ private fun CityListSuccess(
 private fun CityListSuccessList(
     state: CityListState.Success,
     onCityClicked: (City) -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -151,8 +157,7 @@ private fun CityListSuccessList(
         }
         PaddingValues(top = 8.dp, bottom = bottom + bottomBase)
     }
-    val contentPadding = WindowInsets.safeDrawing
-        .only(WindowInsetsSides.Bottom)
+    val contentPadding = windowInsetsProvider()
         .asPaddingValues()
         .plus(baseContentPadding, LocalLayoutDirection.current)
 
@@ -207,8 +212,8 @@ private fun CityListSuccessList(
 private fun CityListSuccessChangeCityButton(
     isVisible: Boolean,
     onClick: () -> Unit,
+    windowInsets: WindowInsets,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = WindowInsets.navigationBars.union(WindowInsets.ime),
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -257,6 +262,7 @@ private fun CityListEmpty(
 @Suppress("MagicNumber")
 @Composable
 private fun CityListLoading(
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -279,10 +285,10 @@ private fun CityListLoading(
             }
         }
 
-        val safeDrawingBottomPadding =
-            WindowInsets.safeDrawing.asPaddingValues().calculateBottomPadding()
+        val windowInsetsBottomPadding =
+            windowInsetsProvider().asPaddingValues().calculateBottomPadding()
         val scrollableBottomPadding = ZarinaScrollableDefaults.ScrollableBottomPadding
-        Spacer(modifier = Modifier.height(safeDrawingBottomPadding + scrollableBottomPadding))
+        Spacer(modifier = Modifier.height(windowInsetsBottomPadding + scrollableBottomPadding))
     }
 }
 
