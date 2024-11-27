@@ -6,14 +6,15 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import javax.inject.Inject
+import javax.inject.Provider
 
 internal class OrderPager @Inject constructor(
-    private val orderPagingSource: OrderPagingSource,
+    private val orderPagingSource: Provider<OrderPagingSource>,
 ) {
     fun getOrderPagingDataFlow(): Flow<PagingData<OrderShort>> {
         return Pager(
             config = getPagingConfig(),
-            pagingSourceFactory = { orderPagingSource },
+            pagingSourceFactory = { orderPagingSource.get() },
         ).flow
     }
 

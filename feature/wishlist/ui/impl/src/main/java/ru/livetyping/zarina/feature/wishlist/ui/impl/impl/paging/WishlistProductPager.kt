@@ -6,14 +6,15 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import javax.inject.Inject
+import javax.inject.Provider
 
 internal class WishlistProductPager @Inject constructor(
-    private val wishlistProductPagingSource: WishlistProductPagingSource,
+    private val wishlistProductPagingSource: Provider<WishlistProductPagingSource>,
 ) {
     fun getWishlistProductPagingDataFlow(): Flow<PagingData<ProductShort>> {
         return Pager(
             config = getPagingConfig(),
-            pagingSourceFactory = { wishlistProductPagingSource },
+            pagingSourceFactory = { wishlistProductPagingSource.get() },
         ).flow
     }
 
