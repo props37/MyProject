@@ -33,6 +33,7 @@ import ru.livetyping.zarina.core.uikit.order.OrderCardSkeleton
 import ru.livetyping.zarina.core.uikit.paging.ZarinaPagingPullRefreshContainer
 import ru.livetyping.zarina.core.uikit.paging.zarinaPagingAppendItem
 import ru.livetyping.zarina.core.uikit.paging.zarinaPagingPrependItem
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -95,7 +96,7 @@ private fun OrderListImpl(
             val updatedRetry by rememberUpdatedState { orderPagingItems.retry() }
 
             LazyColumn(
-                contentPadding = PaddingValues(bottom = 24.dp),
+                contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 zarinaPagingPrependItem(
@@ -162,7 +163,7 @@ private fun OrderListSkeleton(
     val placeholderShimmer = rememberZarinaSkeletonShimmer(ShimmerBounds.Window)
 
     LazyColumn(
-        contentPadding = PaddingValues(bottom = 24.dp),
+        contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
         modifier = modifier.fillMaxSize(),
     ) {
         items(count = OrderListSkeletonItemCount) { index ->
