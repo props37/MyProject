@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signin
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

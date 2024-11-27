@@ -11,7 +11,7 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signin.signInScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profile
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
