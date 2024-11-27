@@ -44,6 +44,9 @@ include(":feature:city-selector:ui:impl")
 include(":feature:signin:ui:api")
 include(":feature:signin:ui:impl")
 
+include(":feature:signup:ui:api")
+include(":feature:signup:ui:impl")
+
 include(":feature:product-list:ui:api")
 include(":feature:product-list:ui:impl")
 
