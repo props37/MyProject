@@ -158,6 +158,10 @@ internal class SignInViewModel @Inject constructor(
         makeFieldsValidOnChange()
     }
 
+    override fun onCleared() {
+        smsCodeRetriever.stop()
+    }
+
     fun onSignInTypeSelectorEvent(event: TabRowEvent<SignInType>) {
         when (event) {
             is TabRowEvent.TabChanged -> currentSignInType.value = event.tab
