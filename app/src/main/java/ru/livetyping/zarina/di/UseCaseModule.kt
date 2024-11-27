@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
+import ru.livetyping.zarina.core.domain.repository.OrderRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
@@ -23,6 +24,7 @@ import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlow
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
@@ -307,6 +309,17 @@ internal class UseCaseModule {
     ): GetYandexCaptchaUseCase {
         return GetYandexCaptchaUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOrderPageFlowUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): GetOrderPageFlowUseCase {
+        return GetOrderPageFlowUseCase.getInstance(
+            orderRepository = orderRepository,
             logger = logger,
         )
     }
