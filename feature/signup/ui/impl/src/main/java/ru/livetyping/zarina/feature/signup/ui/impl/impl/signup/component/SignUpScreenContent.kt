@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
@@ -100,8 +101,13 @@ internal fun SignUpScreenContent(
         ) {
             Text(text = stringResource(RCommon.string.res_continue).uppercase())
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO: [Top] Implement
+        YandexCaptchaPolicies(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
 
         val windowInsetsBottomPadding =
             windowInsetsProvider().asPaddingValues().calculateBottomPadding()

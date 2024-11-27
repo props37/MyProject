@@ -53,6 +53,8 @@
     <string name="res_repeat">Повторить</string>
     <string name="res_first_name">Имя</string>
     <string name="res_birth_date">Дата рождения</string>
+    <string name="res_yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
+    <string name="res_yandex_captcha_terms_policy">условия использования</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
