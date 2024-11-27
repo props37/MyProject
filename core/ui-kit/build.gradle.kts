@@ -60,6 +60,7 @@ dependencies {
     implementation(projects.core.mediaCompose)
 
     implementation(libs.jetpack.activity.compose)
+    implementation(libs.jetpack.paging)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
