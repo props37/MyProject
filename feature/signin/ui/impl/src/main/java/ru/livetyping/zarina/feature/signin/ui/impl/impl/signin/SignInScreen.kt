@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
+import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
@@ -76,9 +78,10 @@ internal fun ScreenContent(
                 .fillMaxSize()
                 .background(UiKitTheme.colors.background.general.regular.default)
                 .windowInsetsPadding(
-                    WindowInsets.systemBars
+                    WindowInsets.statusBars
                         .union(WindowInsets.displayCutout),
-                ),
+                )
+                .bottomNavBarPadding(),
         ) {
             SignInTopBar(
                 onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
