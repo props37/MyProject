@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
@@ -43,7 +46,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
-import ru.livetyping.zarina.core.uicompose.navigationBarsWithIme
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
@@ -71,6 +73,9 @@ internal fun SignInTypePager(
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
     modifier: Modifier = Modifier,
+    windowInsetsProvider: @Composable () -> WindowInsets = {
+        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+    },
 ) {
     HorizontalPager(
         state = pagerState,
@@ -88,6 +93,7 @@ internal fun SignInTypePager(
                     isSignInButtonLoading = signInState.isSignInButtonLoading,
                     onSignInClicked = { onSignInEvent(SignInEvent.SignInClicked) },
                     onSignUpClicked = { onSignInEvent(SignInEvent.SignUpClicked) },
+                    windowInsetsProvider = windowInsetsProvider,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -99,6 +105,7 @@ internal fun SignInTypePager(
                     isSignInButtonLoading = signInState.isSignInButtonLoading,
                     onSignInClicked = { onSignInEvent(SignInEvent.SignInClicked) },
                     onSignUpClicked = { onSignInEvent(SignInEvent.SignUpClicked) },
+                    windowInsetsProvider = windowInsetsProvider,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -117,6 +124,7 @@ private fun SignInByEmail(
     isSignInButtonLoading: Boolean,
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     val emailFocusRequester = remember { FocusRequester() }
@@ -234,7 +242,7 @@ private fun SignInByEmail(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
-        BottomSpacer()
+        BottomSpacer(windowInsets = windowInsetsProvider())
     }
 }
 
@@ -246,6 +254,7 @@ private fun SignInByPhone(
     isSignInButtonLoading: Boolean,
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -292,7 +301,7 @@ private fun SignInByPhone(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
-        BottomSpacer()
+        BottomSpacer(windowInsets = windowInsetsProvider())
     }
 }
 
@@ -375,11 +384,11 @@ private fun Policies(
 
 @Composable
 private fun BottomSpacer(
+    windowInsets: WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        val windowInsetsPadding =
-            WindowInsets.navigationBarsWithIme.asPaddingValues().calculateBottomPadding()
+        val windowInsetsPadding = windowInsets.asPaddingValues().calculateBottomPadding()
         Spacer(modifier = Modifier.height(windowInsetsPadding))
         Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
     }
