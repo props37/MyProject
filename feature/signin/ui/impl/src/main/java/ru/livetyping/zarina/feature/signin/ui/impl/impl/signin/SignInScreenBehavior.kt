@@ -64,5 +64,7 @@ private fun navigate(navActions: SignInNavActions, action: SignInScreenAction) {
         is SignInScreenAction.SignInByPhoneRequested -> {
             navActions.onSignInByPhoneRequested(action.phone)
         }
+
+        SignInScreenAction.SignUpClicked -> navActions.onSignUpClicked()
     }
 }

@@ -37,6 +37,7 @@ public class SignInFeatureImpl : SignInFeature {
                 onBackClicked = { navController.navigateUp() },
                 onUserSignedIn = actions.onUserSignedIn,
                 onSignInByPhoneRequested = { TODO() },
+                onSignUpClicked = actions.onSignUpClicked,
             )
             signInScreen(signInScreenNavActions)
         }

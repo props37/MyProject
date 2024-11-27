@@ -170,7 +170,7 @@ internal class SignInViewModel @Inject constructor(
             SignInEvent.BackClicked -> onBackClicked()
             SignInEvent.ForgotPasswordClicked -> TODO()
             SignInEvent.SignInClicked -> onSignInClicked()
-            SignInEvent.SignUpClicked -> TODO()
+            SignInEvent.SignUpClicked -> onSignUpClicked()
         }
     }
 
@@ -207,6 +207,13 @@ internal class SignInViewModel @Inject constructor(
         when (currentSignInType.value) {
             SignInType.EMAIL -> startSignInByEmail()
             SignInType.PHONE -> startSignInByPhone()
+        }
+    }
+
+    private fun onSignUpClicked() {
+        navigationThrottler.throttle {
+            val action = SignInScreenAction.SignUpClicked
+            emitSideEffect(SignInSideEffect.Navigate(action))
         }
     }
 

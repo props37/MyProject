@@ -8,4 +8,6 @@ internal sealed interface SignInScreenAction {
     data object UserSignedIn : SignInScreenAction
 
     data class SignInByPhoneRequested(val phone: PhoneNumber) : SignInScreenAction
+
+    data object SignUpClicked : SignInScreenAction
 }
