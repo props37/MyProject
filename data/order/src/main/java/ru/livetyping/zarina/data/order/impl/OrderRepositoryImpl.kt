@@ -1,0 +1,16 @@
+package ru.livetyping.zarina.data.order.impl
+
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.order.OrderShort
+import ru.livetyping.zarina.core.domain.model.pagination.Page
+import ru.livetyping.zarina.core.domain.repository.OrderRepository
+import ru.livetyping.zarina.data.order.impl.remote.OrderRemoteDataSource
+import javax.inject.Inject
+
+internal class OrderRepositoryImpl @Inject constructor(
+    private val remoteDataSource: OrderRemoteDataSource,
+) : OrderRepository {
+    override fun getOrderPageFlow(page: Int): Flow<Page<List<OrderShort>>> {
+        return remoteDataSource.getOrderPageFlow(page)
+    }
+}
