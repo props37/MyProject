@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.signup.ui.impl.impl.signup
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -14,8 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.component.SignUpTopBar
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 
 @Composable
@@ -27,6 +32,8 @@ internal fun SignUpScreen(
 
     ScreenContent(
         signUpState = signUpState,
+        onSignUpEvent = viewModel::onSignUpEvent,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -35,6 +42,8 @@ internal fun SignUpScreen(
 @Composable
 internal fun ScreenContent(
     signUpState: SignUpState,
+    onSignUpEvent: (SignUpEvent) -> Unit,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<SignUpSideEffect>,
     navActions: SignUpNavActions,
 ) {
@@ -43,16 +52,29 @@ internal fun ScreenContent(
         navActions = navActions,
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .bottomNavBarPadding(),
+        ) {
+            SignUpTopBar(
+                onBackClicked = { onSignUpEvent(SignUpEvent.BackClicked) },
             )
-            .bottomNavBarPadding(),
-    ) {
 
+            // TODO: [Top] Implement
+        }
+
+        if (signUpState.visibleYandexCaptcha != null) {
+            YandexCaptchaDialog(
+                captcha = signUpState.visibleYandexCaptcha,
+                onEvent = onYandexCaptchaEvent,
+            )
+        }
     }
 }

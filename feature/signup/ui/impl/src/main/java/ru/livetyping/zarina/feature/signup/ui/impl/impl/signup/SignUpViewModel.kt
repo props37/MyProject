@@ -13,10 +13,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.uicommon.Throttler
+import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 import javax.inject.Inject
 
@@ -76,6 +79,8 @@ internal class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
+    private val visibleYandexCaptcha = MutableStateFlow<YandexCaptcha?>(null)
+
     val signUpState: StateFlow<SignUpState> = combineMore(
         isNameInvalid,
         birthDateEpochMillisValueHolder.stateFlow,
@@ -85,7 +90,10 @@ internal class SignUpViewModel @Inject constructor(
         isPasswordInvalid,
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
-    ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid, isPhoneInvalid, isPasswordInvalid, receiveEmails, receiveSms ->
+        visibleYandexCaptcha,
+    ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
+        isPhoneInvalid, isPasswordInvalid, receiveEmails, receiveSms, visibleYandexCaptcha ->
+
         SignUpState(
             nameTextFieldState = nameTextFieldState,
             isNameInvalid = isNameInvalid,
@@ -99,6 +107,7 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
+            visibleYandexCaptcha = visibleYandexCaptcha,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -116,8 +125,20 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid.value,
             receiveEmails = receiveEmailsValueHolder.get(),
             receiveSms = receiveSmsValueHolder.get(),
+            visibleYandexCaptcha = visibleYandexCaptcha.value,
         ),
     )
+
+    fun onSignUpEvent(event: SignUpEvent) {
+        when (event) {
+            SignUpEvent.BackClicked -> onBackClicked()
+        }
+    }
+
+    fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
+        TODO()
+        // TODO: [Top] Implement
+    }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
