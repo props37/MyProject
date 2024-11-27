@@ -61,7 +61,7 @@
     <string name="res_order_status_refund">Возврат</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
 
-    <plurals name="product_count">
+    <plurals name="res_product_count">
         <item quantity="zero">%1$s товаров</item>
         <item quantity="one">%1$s товар</item>
         <item quantity="two">%1$s товара</item>

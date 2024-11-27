@@ -151,7 +151,7 @@ public fun OrderCard(
 
             Text(
                 text = pluralStringResource(
-                    id = RCommon.plurals.product_count,
+                    id = RCommon.plurals.res_product_count,
                     count = orderProductCount,
                     orderProductCount.toString(),
                 ),
