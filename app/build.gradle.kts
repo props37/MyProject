@@ -160,6 +160,9 @@ dependencies {
     implementation(projects.feature.signin.ui.api)
     implementation(projects.feature.signin.ui.impl)
 
+    implementation(projects.feature.signup.ui.api)
+    implementation(projects.feature.signup.ui.impl)
+
     implementation(projects.feature.productList.ui.api)
     implementation(projects.feature.productList.ui.impl)
 

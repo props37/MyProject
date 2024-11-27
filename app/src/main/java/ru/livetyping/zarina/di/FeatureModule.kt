@@ -21,6 +21,8 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.impl.ProfileFeatureImpl
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.impl.SignInFeatureImpl
+import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
+import ru.livetyping.zarina.feature.signup.ui.impl.SignUpFeatureImpl
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.WishlistFeatureImpl
 
@@ -67,4 +69,9 @@ internal class FeatureModule {
     @IntoMap
     @FeatureEntryKey(SignInFeature::class)
     fun provideSignInFeature(): FeatureEntry<*, *, *> = SignInFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(SignUpFeature::class)
+    fun provideSignUpFeature(): FeatureEntry<*, *, *> = SignUpFeatureImpl()
 }

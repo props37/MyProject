@@ -26,6 +26,7 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
+import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
@@ -46,8 +47,10 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActio
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberSignUpNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
+import ru.livetyping.zarina.presentation.navigation.feature.signUpFeature
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
@@ -86,6 +89,9 @@ fun ZarinaNavigation(
 
     val signInFeature = features.find<SignInFeature>()
     val signInNavActions = rememberSignInNavActions(navController)
+
+    val signUpFeature = features.find<SignUpFeature>()
+    val signUpNavActions = rememberSignUpNavActions(navController)
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
@@ -130,6 +136,7 @@ fun ZarinaNavigation(
         onboardingFeature(onboardingFeature, onboardingNavActions)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
+        signUpFeature(navController, signUpFeature, signUpNavActions)
     }
 }
 
