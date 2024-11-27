@@ -41,4 +41,22 @@
     <string name="res_password">Пароль</string>
     <string name="res_phone">Телефон</string>
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
+
+    <string name="res_order_status_accepted">Принят</string>
+    <string name="res_order_status_confirmed">Подтверждён</string>
+    <string name="res_order_status_on_the_way">В пути</string>
+    <string name="res_order_status_delivered">Доставлен</string>
+    <string name="res_order_status_ready_for_pickup">Готов к выдаче</string>
+    <string name="res_order_status_cancelled">Отменён</string>
+    <string name="res_order_status_refund">Возврат</string>
+    <string name="res_order_status_not_refundable">Не подлежит возврату</string>
+
+    <plurals name="product_count">
+        <item quantity="zero">%1$s товаров</item>
+        <item quantity="one">%1$s товар</item>
+        <item quantity="two">%1$s товара</item>
+        <item quantity="few">%1$s товара</item>
+        <item quantity="many">%1$s товаров</item>
+        <item quantity="other">%1$s товаров</item>
+    </plurals>
 </resources>

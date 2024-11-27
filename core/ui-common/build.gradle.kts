@@ -40,6 +40,8 @@ kotlin {
 
 dependencies {
     api(projects.core.domain)
+    implementation(projects.core.resource)
+
     api(libs.jetpack.lifecycle.viewModel.savedstate)
 
     implementation(libs.jetpack.browser)
