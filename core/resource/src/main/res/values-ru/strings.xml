@@ -41,6 +41,8 @@
     <string name="res_password">Пароль</string>
     <string name="res_phone">Телефон</string>
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
+    <string name="res_loading_error">Ошибка загрузки</string>
+    <string name="res_repeat">Повторить</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

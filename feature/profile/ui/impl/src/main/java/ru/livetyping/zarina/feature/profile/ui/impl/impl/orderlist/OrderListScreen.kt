@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.component.OrderList
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.component.OrderListTopBar
 
 @Composable
@@ -61,6 +62,10 @@ internal fun ScreenContent(
 
         val orderPagingItems = orderPagingDataFlow.collectAsLazyPagingItems()
 
-        // TODO: [Top] Implement
+        OrderList(
+            orderPagingItems = orderPagingItems,
+            onOrderClicked = onOrderClicked,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

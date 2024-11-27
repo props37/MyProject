@@ -17,6 +17,8 @@
     <string name="profile_creating_your_loyalty_card">Создаём твою карту лояльности</string>
     <string name="profile_it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
     <string name="profile_qr_code_generation_error">Не удалось сгенерировать QR-код</string>
+    <string name="profile_no_orders_yet">Заказов пока что нет</string>
+    <string name="profile_create_order_first">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
