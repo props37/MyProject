@@ -15,6 +15,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
@@ -42,6 +43,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onSignInClicked = actions.onSignInClicked,
                 onSignUpClicked = actions.onSignUpClicked,
                 onProfileDetailsClicked = { navController.navigate(ProfileDetailsNavEntry) },
+                onMyOrdersClicked = { navController.navigate(OrderListNavEntry) },
                 onChangeCityClicked = actions.onChangeCityClicked,
             )
             profileScreen(profileScreenNavActions)

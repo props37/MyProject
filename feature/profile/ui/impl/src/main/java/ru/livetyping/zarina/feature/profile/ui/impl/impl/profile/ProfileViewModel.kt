@@ -172,22 +172,34 @@ internal class ProfileViewModel @Inject constructor(
 
     private fun onMenuItemClicked(event: ProfileEvent.MenuItemClicked) {
         when (event.item) {
-            ProfileMenuItem.MyOrders -> TODO()
+            ProfileMenuItem.MyOrders -> {
+                navigationThrottler.throttle {
+                    val action = ProfileScreenAction.MyOrdersClicked
+                    emitSideEffect(ProfileSideEffect.Navigate(action))
+                }
+            }
+
             ProfileMenuItem.City -> {
-                val currentCity = userCity.value
-                val action = ProfileScreenAction.ChangeCityClicked(currentCity)
-                emitSideEffect(ProfileSideEffect.Navigate(action))
+                navigationThrottler.throttle {
+                    val currentCity = userCity.value
+                    val action = ProfileScreenAction.ChangeCityClicked(currentCity)
+                    emitSideEffect(ProfileSideEffect.Navigate(action))
+                }
             }
 
             ProfileMenuItem.Stores -> TODO()
             ProfileMenuItem.Help -> {
-                val url = Text.Resource(RCommon.string.res_zarina_help_url)
-                emitSideEffect(ProfileSideEffect.OpenUrl(url))
+                navigationThrottler.throttle {
+                    val url = Text.Resource(RCommon.string.res_zarina_help_url)
+                    emitSideEffect(ProfileSideEffect.OpenUrl(url))
+                }
             }
 
             ProfileMenuItem.AboutCompany -> {
-                val url = Text.Resource(RCommon.string.res_zarina_about_company_url)
-                emitSideEffect(ProfileSideEffect.OpenUrl(url))
+                navigationThrottler.throttle {
+                    val url = Text.Resource(RCommon.string.res_zarina_about_company_url)
+                    emitSideEffect(ProfileSideEffect.OpenUrl(url))
+                }
             }
         }
         // TODO: [Top] Implement

@@ -9,5 +9,7 @@ internal sealed interface ProfileScreenAction {
 
     data object ProfileDetailsClicked : ProfileScreenAction
 
+    data object MyOrdersClicked : ProfileScreenAction
+
     data class ChangeCityClicked(val currentCity: City?) : ProfileScreenAction
 }
