@@ -296,7 +296,7 @@ private fun ColumnScope.SubscriptionSetup(
     onReceiveSmsChanged: (Boolean) -> Unit,
 ) {
     ZarinaItem(
-        modifier = Modifier.fillMaxWidth(),
+        onClick = { onReceiveEmailsChanged(!receiveEmails) },
         startContent = {
             Text(
                 text = stringResource(R.string.sign_up_receive_news_by_email),
@@ -309,6 +309,7 @@ private fun ColumnScope.SubscriptionSetup(
                 onCheckedChanged = onReceiveEmailsChanged,
             )
         },
+        modifier = Modifier.fillMaxWidth(),
     )
 
     ZarinaDivider(
@@ -318,7 +319,7 @@ private fun ColumnScope.SubscriptionSetup(
     )
 
     ZarinaItem(
-        modifier = Modifier.fillMaxWidth(),
+        onClick = { onReceiveSmsChanged(!receiveSms) },
         startContent = {
             Text(
                 text = stringResource(R.string.sign_up_receive_sms_notifications),
@@ -332,6 +333,7 @@ private fun ColumnScope.SubscriptionSetup(
                 onCheckedChanged = onReceiveSmsChanged,
             )
         },
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
