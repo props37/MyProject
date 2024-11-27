@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.uikit.captcha
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -10,10 +9,12 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -40,6 +41,7 @@ import timber.log.Timber
 public fun BoxScope.YandexCaptchaDialog(
     captcha: YandexCaptcha,
     onEvent: (YandexCaptchaEvent) -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
     val captchaUrl = captcha.url.value
 
@@ -81,7 +83,7 @@ public fun BoxScope.YandexCaptchaDialog(
                     alpha = if (isWebViewVisible) 1f else 0f,
                 )
             }
-            .safeDrawingPadding()
+            .windowInsetsPadding(windowInsetsProvider())
             .then(backgroundClickableModifier),
     ) {
         AndroidView(
