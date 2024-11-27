@@ -3,4 +3,8 @@
     <string name="sign_up_registration">Регистрация</string>
     <string name="sign_up_receive_news_by_email">Получать новости на почту</string>
     <string name="sign_up_receive_sms_notifications">Получать СМС-уведомления</string>
+    <string name="sign_up_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие с правилами бонусной программы</string>
+    <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
+    <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
+    <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
 </resources>

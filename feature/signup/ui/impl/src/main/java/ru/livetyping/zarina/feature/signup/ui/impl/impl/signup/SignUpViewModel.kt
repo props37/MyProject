@@ -73,6 +73,12 @@ internal class SignUpViewModel @Inject constructor(
 
     private val isPasswordInvalid = MutableStateFlow(false)
 
+    private val isPoliciesAcceptedValueHolder = savedStateHandle.createValueHolder(
+        key = Keys.IS_POLICIES_ACCEPTED.key,
+        initialValue = false,
+    )
+    private val isPoliciesInvalid = MutableStateFlow(false)
+
     private val receiveEmailsValueHolder = savedStateHandle.createValueHolder(
         key = Keys.RECEIVE_EMAILS.key,
         initialValue = false,
@@ -92,12 +98,14 @@ internal class SignUpViewModel @Inject constructor(
         isEmailInvalid,
         isPhoneInvalid,
         isPasswordInvalid,
+        isPoliciesAcceptedValueHolder.stateFlow,
+        isPoliciesInvalid,
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
         visibleYandexCaptcha,
         operationTracker.ongoingOperationKeys,
     ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
-        isPhoneInvalid, isPasswordInvalid, receiveEmails, receiveSms,
+        isPhoneInvalid, isPasswordInvalid, isPoliciesAccepted, isPoliciesInvalid, receiveEmails, receiveSms,
         visibleYandexCaptcha, ongoingOperations ->
 
         val isSignUpButtonLoading = SignUpOperation in ongoingOperations
@@ -116,6 +124,8 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
+            isPoliciesAccepted = isPoliciesAccepted,
+            isPoliciesInvalid = isPoliciesInvalid,
             isSignUpButtonLoading = isSignUpButtonLoading,
             visibleYandexCaptcha = visibleYandexCaptcha,
         )
@@ -135,6 +145,8 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid.value,
             receiveEmails = receiveEmailsValueHolder.get(),
             receiveSms = receiveSmsValueHolder.get(),
+            isPoliciesAccepted = false,
+            isPoliciesInvalid = false,
             isSignUpButtonLoading = false,
             visibleYandexCaptcha = visibleYandexCaptcha.value,
         ),
@@ -145,6 +157,10 @@ internal class SignUpViewModel @Inject constructor(
             SignUpEvent.BackClicked -> onBackClicked()
             is SignUpEvent.ReceiveEmailsChanged -> receiveEmailsValueHolder.set(event.receive)
             is SignUpEvent.ReceiveSmsChanged -> receiveSmsValueHolder.set(event.receive)
+            is SignUpEvent.PoliciesAcceptedChanged -> {
+                isPoliciesAcceptedValueHolder.set(event.isAccepted)
+            }
+
             SignUpEvent.SignUpClicked -> TODO()
         }
     }
@@ -166,7 +182,8 @@ internal class SignUpViewModel @Inject constructor(
     private enum class Keys {
         BIRTH_DATE,
         RECEIVE_EMAILS,
-        RECEIVE_SMS;
+        RECEIVE_SMS,
+        IS_POLICIES_ACCEPTED;
 
         val key: String get() = name
     }

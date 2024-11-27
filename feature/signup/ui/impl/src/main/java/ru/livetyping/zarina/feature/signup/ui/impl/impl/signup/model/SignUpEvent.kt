@@ -7,5 +7,7 @@ internal sealed interface SignUpEvent {
 
     data class ReceiveSmsChanged(val receive: Boolean) : SignUpEvent
 
+    data class PoliciesAcceptedChanged(val isAccepted: Boolean) : SignUpEvent
+
     data object SignUpClicked : SignUpEvent
 }
