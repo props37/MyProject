@@ -9,18 +9,24 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 
 @Composable
 internal fun SignUpScreen(
     navActions: SignUpNavActions,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
+    val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        signUpState = signUpState,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +34,7 @@ internal fun SignUpScreen(
 
 @Composable
 internal fun ScreenContent(
+    signUpState: SignUpState,
     sideEffects: Flow<SignUpSideEffect>,
     navActions: SignUpNavActions,
 ) {
