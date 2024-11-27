@@ -11,8 +11,10 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
@@ -46,6 +48,9 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val profileDetailsNavActions = ProfileDetailsNavActions()
             profileDetailsScreen(profileDetailsNavActions)
+
+            val orderListNavActions = OrderListNavActions()
+            orderListScreen(orderListNavActions)
         }
     }
 }
