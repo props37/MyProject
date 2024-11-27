@@ -23,10 +23,10 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBa
 import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
-import ru.livetyping.zarina.presentation.common.component.toast.ZarinaToastContainer
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
 import ru.livetyping.zarina.presentation.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastController
@@ -72,15 +72,14 @@ fun ZarinaApp(
         LocalZarinaToastController provides zarinaToastController,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // TODO: [Top] Move ZarinaToastContainer to :core:ui-kit
-//            ZarinaToastContainer(
-//                controller = zarinaToastController,
-//                shouldPaintStatusBar = true,
-//                modifier = Modifier
-//                    .align(Alignment.TopCenter)
-//                    .zIndex(1f)
-//                    .fillMaxWidth(),
-//            )
+            ZarinaToastContainer(
+                controller = zarinaToastController,
+                shouldPaintStatusBar = true,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f)
+                    .fillMaxWidth(),
+            )
 
             ModalBottomSheetLayout(
                 bottomSheetNavigator = bottomSheetNavigator,
