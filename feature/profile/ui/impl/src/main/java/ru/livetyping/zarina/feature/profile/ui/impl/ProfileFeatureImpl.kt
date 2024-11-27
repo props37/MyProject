@@ -38,6 +38,7 @@ public class ProfileFeatureImpl : ProfileFeature {
         ) {
             val profileScreenNavActions = ProfileScreenNavActions(
                 onSignInClicked = actions.onSignInClicked,
+                onSignUpClicked = actions.onSignUpClicked,
                 onProfileDetailsClicked = { navController.navigate(ProfileDetailsNavEntry) },
                 onChangeCityClicked = actions.onChangeCityClicked,
             )

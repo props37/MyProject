@@ -11,6 +11,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
+import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 
 fun NavGraphBuilder.profileFeature(
     navController: NavHostController,
@@ -31,9 +32,8 @@ fun rememberProfileNavActions(
 ): ProfileNavActions {
     return remember(navController) {
         ProfileNavActions(
-            onSignInClicked = {
-                navController.navigate(SignInFeature.getNavEntry())
-            },
+            onSignInClicked = { navController.navigate(SignInFeature.getNavEntry()) },
+            onSignUpClicked = { navController.navigate(SignUpFeature.getNavEntry()) },
             onChangeCityClicked = { currentCity ->
                 val citySelectorParams = CitySelectorNavParams(
                     title = Text.Resource(R.string.city_change),

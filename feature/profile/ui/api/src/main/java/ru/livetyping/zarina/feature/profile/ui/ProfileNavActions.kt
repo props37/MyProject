@@ -4,5 +4,6 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 
 public class ProfileNavActions(
     public val onSignInClicked: () -> Unit,
+    public val onSignUpClicked: () -> Unit,
     public val onChangeCityClicked: (currentCity: City?) -> Unit,
 )
