@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sign_up_registration">Регистрация</string>
+    <string name="sign_up_receive_news_by_email">Получать новости на почту</string>
+    <string name="sign_up_receive_sms_notifications">Получать СМС-уведомления</string>
 </resources>

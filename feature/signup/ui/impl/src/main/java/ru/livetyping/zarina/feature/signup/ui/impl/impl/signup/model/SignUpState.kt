@@ -18,5 +18,6 @@ internal data class SignUpState(
     val isPasswordInvalid: Boolean,
     val receiveEmails: Boolean,
     val receiveSms: Boolean,
+    val isSignUpButtonLoading: Boolean,
     val visibleYandexCaptcha: YandexCaptcha?,
 )

@@ -113,7 +113,7 @@ private fun NotificationsSetup(
                 onClick = onRequestNotificationsPermissionClicked,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(text = stringResource(RCommon.string.res_continue_).uppercase())
+                Text(text = stringResource(RCommon.string.res_continue).uppercase())
             }
         },
         modifier = modifier,

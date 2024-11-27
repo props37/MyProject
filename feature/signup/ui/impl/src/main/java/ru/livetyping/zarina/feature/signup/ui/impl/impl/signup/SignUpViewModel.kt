@@ -17,6 +17,8 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.createValueHolder
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
@@ -29,6 +31,8 @@ internal class SignUpViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SignUpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val nameTextFieldState by savedStateHandle.saveable(
@@ -91,8 +95,13 @@ internal class SignUpViewModel @Inject constructor(
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
         visibleYandexCaptcha,
+        operationTracker.ongoingOperationKeys,
     ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
-        isPhoneInvalid, isPasswordInvalid, receiveEmails, receiveSms, visibleYandexCaptcha ->
+        isPhoneInvalid, isPasswordInvalid, receiveEmails, receiveSms,
+        visibleYandexCaptcha, ongoingOperations ->
+
+        val isSignUpButtonLoading = SignUpOperation in ongoingOperations
+                || visibleYandexCaptcha != null
 
         SignUpState(
             nameTextFieldState = nameTextFieldState,
@@ -107,6 +116,7 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
+            isSignUpButtonLoading = isSignUpButtonLoading,
             visibleYandexCaptcha = visibleYandexCaptcha,
         )
     }.stateIn(
@@ -125,6 +135,7 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid.value,
             receiveEmails = receiveEmailsValueHolder.get(),
             receiveSms = receiveSmsValueHolder.get(),
+            isSignUpButtonLoading = false,
             visibleYandexCaptcha = visibleYandexCaptcha.value,
         ),
     )
@@ -132,6 +143,9 @@ internal class SignUpViewModel @Inject constructor(
     fun onSignUpEvent(event: SignUpEvent) {
         when (event) {
             SignUpEvent.BackClicked -> onBackClicked()
+            is SignUpEvent.ReceiveEmailsChanged -> receiveEmailsValueHolder.set(event.receive)
+            is SignUpEvent.ReceiveSmsChanged -> receiveSmsValueHolder.set(event.receive)
+            SignUpEvent.SignUpClicked -> TODO()
         }
     }
 
@@ -146,6 +160,8 @@ internal class SignUpViewModel @Inject constructor(
             emitSideEffect(SignUpSideEffect.Navigate(action))
         }
     }
+
+    private data object SignUpOperation : OperationKey
 
     private enum class Keys {
         BIRTH_DATE,

@@ -23,7 +23,7 @@
     <string name="res_remove_from_wishlist">Удалить из избранное</string>
     <string name="res_add_to_wishlist">Добавить в избранное</string>
     <string name="res_step">Шаг</string>
-    <string name="res_continue_">Продолжить</string>
+    <string name="res_continue">Продолжить</string>
     <string name="res_skip">Пропустить</string>
     <string name="res_city">Город</string>
     <string name="res_change">Изменить</string>
@@ -43,6 +43,8 @@
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
     <string name="res_loading_error">Ошибка загрузки</string>
     <string name="res_repeat">Повторить</string>
+    <string name="res_first_name">Имя</string>
+    <string name="res_birth_date">Дата рождения</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

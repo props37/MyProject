@@ -19,6 +19,7 @@ import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.component.SignUpScreenContent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.component.SignUpTopBar
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
@@ -67,7 +68,14 @@ internal fun ScreenContent(
                 onBackClicked = { onSignUpEvent(SignUpEvent.BackClicked) },
             )
 
-            // TODO: [Top] Implement
+            SignUpScreenContent(
+                signUpState = signUpState,
+                onSignUpEvent = onSignUpEvent,
+                onBirthDateClicked = {
+                    // TODO: [Top] Implement
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
 
         if (signUpState.visibleYandexCaptcha != null) {
