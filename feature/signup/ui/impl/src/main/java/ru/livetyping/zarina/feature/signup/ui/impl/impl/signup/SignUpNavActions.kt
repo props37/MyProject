@@ -1,3 +1,5 @@
 package ru.livetyping.zarina.feature.signup.ui.impl.impl.signup
 
-internal class SignUpNavActions
+internal class SignUpNavActions(
+    val onBackClicked: () -> Unit,
+)

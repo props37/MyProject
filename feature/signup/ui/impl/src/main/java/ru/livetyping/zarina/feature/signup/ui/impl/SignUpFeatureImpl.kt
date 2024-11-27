@@ -33,7 +33,9 @@ public class SignUpFeatureImpl : SignUpFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            val signUpScreenNavActions = SignUpScreenNavActions()
+            val signUpScreenNavActions = SignUpScreenNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
             signUpScreen(signUpScreenNavActions)
         }
     }
