@@ -58,6 +58,7 @@ include(":data:location")
 include(":data:onboarding")
 include(":data:user")
 include(":data:geography")
+include(":data:order")
 
 include(":core:domain")
 include(":core:navigation-util")
