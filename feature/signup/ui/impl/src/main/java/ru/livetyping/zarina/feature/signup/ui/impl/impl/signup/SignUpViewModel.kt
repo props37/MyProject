@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
@@ -21,6 +23,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 import javax.inject.Inject
@@ -152,6 +155,10 @@ internal class SignUpViewModel @Inject constructor(
         ),
     )
 
+    init {
+        makeFieldsValidOnChange()
+    }
+
     fun onSignUpEvent(event: SignUpEvent) {
         when (event) {
             SignUpEvent.BackClicked -> onBackClicked()
@@ -175,6 +182,21 @@ internal class SignUpViewModel @Inject constructor(
             val action = SignUpScreenAction.ScreenClosed
             emitSideEffect(SignUpSideEffect.Navigate(action))
         }
+    }
+
+    private fun makeFieldsValidOnChange() {
+        nameTextFieldState.textAsFlow()
+            .onEach { isNameInvalid.value = false }
+            .launchIn(viewModelScope)
+        emailTextFieldState.textAsFlow()
+            .onEach { isEmailInvalid.value = false }
+            .launchIn(viewModelScope)
+        phoneTextFieldState.textAsFlow()
+            .onEach { isPhoneInvalid.value = false }
+            .launchIn(viewModelScope)
+        passwordTextFieldState.textAsFlow()
+            .onEach { isPasswordInvalid.value = false }
+            .launchIn(viewModelScope)
     }
 
     private data object SignUpOperation : OperationKey
