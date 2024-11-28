@@ -31,6 +31,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyFirstNameExcep
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
+import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
@@ -264,7 +265,15 @@ internal class SignUpViewModel @Inject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
             }
+
             // TODO: [Top] Add PhoneNumberAlreadyUsedException
+
+            is OtpTimeoutException -> {
+                val text = Text.Resource(R.string.sign_up_otp_timeout_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+            }
+
             else -> {
                 val text = Text.Resource(RCommon.string.res_incorrect_data_entered)
                 val message = ZarinaToastMessage.error(text)
