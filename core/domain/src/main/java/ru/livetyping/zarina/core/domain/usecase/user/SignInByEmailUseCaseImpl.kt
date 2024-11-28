@@ -2,7 +2,6 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.impl.UserWithBearerTokensSetter
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase.Params
@@ -40,7 +39,7 @@ internal class SignInByEmailUseCaseImpl(
 
     private fun validateFields(email: Email, password: String) {
         val validator = SignInValidator()
-        val singInParams = SignInByEmailParams(email, password)
+        val singInParams = SignInValidator.SignInByEmailParams(email, password)
         validator.validate(singInParams)
     }
 

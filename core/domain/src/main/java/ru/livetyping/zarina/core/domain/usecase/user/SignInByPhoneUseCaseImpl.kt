@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.user.SignInByPhoneParams
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase.Params
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
@@ -28,7 +27,7 @@ internal class SignInByPhoneUseCaseImpl(
 
     private fun validateFields(phone: PhoneNumber) {
         val validator = SignInValidator()
-        val signInParams = SignInByPhoneParams(phone)
+        val signInParams = SignInValidator.SignInByPhoneParams(phone)
         validator.validate(signInParams)
     }
 

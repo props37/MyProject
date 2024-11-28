@@ -27,8 +27,6 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
-import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
-import ru.livetyping.zarina.core.domain.model.user.SignInByPhoneParams
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
@@ -245,7 +243,7 @@ internal class SignInViewModel @Inject constructor(
         if (signInJob?.isActive == true) return
 
         try {
-            val signInParams = SignInByEmailParams(
+            val signInParams = SignInValidator.SignInByEmailParams(
                 email = Email.create(emailTextFieldState.text.toString()),
                 password = passwordTextFieldState.text.toString(),
             )
@@ -264,7 +262,7 @@ internal class SignInViewModel @Inject constructor(
         if (signInJob?.isActive == true) return
 
         try {
-            val signInParams = SignInByPhoneParams(
+            val signInParams = SignInValidator.SignInByPhoneParams(
                 phone = PhoneNumber.create(phoneTextFieldState.text.toString())
             )
             val validator = SignInValidator()

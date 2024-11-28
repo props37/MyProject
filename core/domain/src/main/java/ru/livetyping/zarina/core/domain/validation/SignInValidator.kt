@@ -1,9 +1,8 @@
 package ru.livetyping.zarina.core.domain.validation
 
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
-import ru.livetyping.zarina.core.domain.model.user.SignInByEmailParams
-import ru.livetyping.zarina.core.domain.model.user.SignInByPhoneParams
-import ru.livetyping.zarina.core.domain.model.user.SignInParams
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
@@ -14,8 +13,8 @@ import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
  * @throws PhoneException
  * @throws CombinedValidationException
  */
-public class SignInValidator : Validator<SignInParams> {
-    override fun validate(input: SignInParams) {
+public class SignInValidator : Validator<SignInValidator.Params> {
+    override fun validate(input: Params) {
         when (input) {
             is SignInByEmailParams -> validateSignInByEmail(input)
             is SignInByPhoneParams -> validateSignInByPhone(input)
@@ -49,4 +48,13 @@ public class SignInValidator : Validator<SignInParams> {
         val phoneValidator = PhoneValidator()
         phoneValidator.validate(params.phone)
     }
+
+    public sealed class Params
+
+    public data class SignInByEmailParams(
+        val email: Email,
+        val password: String,
+    ) : Params()
+
+    public data class SignInByPhoneParams(val phone: PhoneNumber) : Params()
 }
