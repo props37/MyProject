@@ -102,9 +102,9 @@ internal fun SignUpScreenContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Policies(
-            isAccepted = signUpState.isPoliciesAccepted,
+            areAccepted = signUpState.arePoliciesAccepted,
             onAcceptedChanged = { onSignUpEvent(SignUpEvent.PoliciesAcceptedChanged(it)) },
-            isError = signUpState.isPoliciesInvalid,
+            isError = signUpState.arePoliciesInvalid,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -359,7 +359,7 @@ private fun ColumnScope.SubscriptionSetup(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Policies(
-    isAccepted: Boolean,
+    areAccepted: Boolean,
     onAcceptedChanged: (Boolean) -> Unit,
     isError: Boolean,
     modifier: Modifier = Modifier,
@@ -371,7 +371,7 @@ private fun Policies(
 
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             ZarinaCheckbox(
-                isChecked = isAccepted,
+                isChecked = areAccepted,
                 onCheckedChanged = onAcceptedChanged,
                 isError = isError,
             )

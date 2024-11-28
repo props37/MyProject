@@ -82,11 +82,11 @@ internal class SignUpViewModel @Inject constructor(
 
     private val isPasswordInvalid = MutableStateFlow(false)
 
-    private val isPoliciesAcceptedValueHolder = savedStateHandle.createValueHolder(
+    private val arePoliciesAcceptedValueHolder = savedStateHandle.createValueHolder(
         key = Keys.IS_POLICIES_ACCEPTED.key,
         initialValue = false,
     )
-    private val isPoliciesInvalid = MutableStateFlow(false)
+    private val arePoliciesInvalid = MutableStateFlow(false)
 
     private val receiveEmailsValueHolder = savedStateHandle.createValueHolder(
         key = Keys.RECEIVE_EMAILS.key,
@@ -107,15 +107,15 @@ internal class SignUpViewModel @Inject constructor(
         isEmailInvalid,
         isPhoneInvalid,
         isPasswordInvalid,
-        isPoliciesAcceptedValueHolder.stateFlow,
-        isPoliciesInvalid,
+        arePoliciesAcceptedValueHolder.stateFlow,
+        arePoliciesInvalid,
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
         visibleYandexCaptcha,
         operationTracker.ongoingOperationKeys,
     ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
-        isPhoneInvalid, isPasswordInvalid, isPoliciesAccepted, isPoliciesInvalid, receiveEmails, receiveSms,
-        visibleYandexCaptcha, ongoingOperations ->
+        isPhoneInvalid, isPasswordInvalid, arePoliciesAccepted, arePoliciesInvalid,
+        receiveEmails, receiveSms, visibleYandexCaptcha, ongoingOperations ->
 
         val isSignUpButtonLoading = SignUpOperation in ongoingOperations
                 || visibleYandexCaptcha != null
@@ -133,8 +133,8 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid,
             receiveEmails = receiveEmails,
             receiveSms = receiveSms,
-            isPoliciesAccepted = isPoliciesAccepted,
-            isPoliciesInvalid = isPoliciesInvalid,
+            arePoliciesAccepted = arePoliciesAccepted,
+            arePoliciesInvalid = arePoliciesInvalid,
             isSignUpButtonLoading = isSignUpButtonLoading,
             visibleYandexCaptcha = visibleYandexCaptcha,
         )
@@ -154,8 +154,8 @@ internal class SignUpViewModel @Inject constructor(
             isPasswordInvalid = isPasswordInvalid.value,
             receiveEmails = receiveEmailsValueHolder.get(),
             receiveSms = receiveSmsValueHolder.get(),
-            isPoliciesAccepted = false,
-            isPoliciesInvalid = false,
+            arePoliciesAccepted = false,
+            arePoliciesInvalid = false,
             isSignUpButtonLoading = false,
             visibleYandexCaptcha = visibleYandexCaptcha.value,
         ),
@@ -171,7 +171,7 @@ internal class SignUpViewModel @Inject constructor(
             is SignUpEvent.ReceiveEmailsChanged -> receiveEmailsValueHolder.set(event.receive)
             is SignUpEvent.ReceiveSmsChanged -> receiveSmsValueHolder.set(event.receive)
             is SignUpEvent.PoliciesAcceptedChanged -> {
-                isPoliciesAcceptedValueHolder.set(event.isAccepted)
+                arePoliciesAcceptedValueHolder.set(event.isAccepted)
             }
 
             SignUpEvent.SignUpClicked -> startSignUp()
@@ -186,7 +186,7 @@ internal class SignUpViewModel @Inject constructor(
     private fun startSignUp() {
         if (signUpJob?.isActive == true) return
 
-        if (!isPoliciesAcceptedValueHolder.get()) {
+        if (!arePoliciesAcceptedValueHolder.get()) {
             showPoliciesNotAcceptedError()
             return
         }
@@ -203,7 +203,7 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     private fun showPoliciesNotAcceptedError() {
-        isPoliciesInvalid.value = true
+        arePoliciesInvalid.value = true
         val text = Text.Resource(R.string.sign_up_policies_error)
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
