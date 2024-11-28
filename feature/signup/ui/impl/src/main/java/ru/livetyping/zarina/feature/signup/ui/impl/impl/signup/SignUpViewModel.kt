@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -23,7 +25,9 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 import javax.inject.Inject
@@ -36,6 +40,8 @@ internal class SignUpViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
+
+    private var signUpJob: Job? = null
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val nameTextFieldState by savedStateHandle.saveable(
@@ -168,11 +174,23 @@ internal class SignUpViewModel @Inject constructor(
                 isPoliciesAcceptedValueHolder.set(event.isAccepted)
             }
 
-            SignUpEvent.SignUpClicked -> TODO()
+            SignUpEvent.SignUpClicked -> startSignUp()
         }
     }
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
+        TODO()
+        // TODO: [Top] Implement
+    }
+
+    private fun startSignUp() {
+        if (signUpJob?.isActive == true) return
+
+        if (!isPoliciesAcceptedValueHolder.get()) {
+            showPoliciesNotAcceptedError()
+            return
+        }
+
         TODO()
         // TODO: [Top] Implement
     }
@@ -182,6 +200,13 @@ internal class SignUpViewModel @Inject constructor(
             val action = SignUpScreenAction.ScreenClosed
             emitSideEffect(SignUpSideEffect.Navigate(action))
         }
+    }
+
+    private fun showPoliciesNotAcceptedError() {
+        isPoliciesInvalid.value = true
+        val text = Text.Resource(R.string.sign_up_policies_error)
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
     }
 
     private fun makeFieldsValidOnChange() {
