@@ -33,6 +33,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase
@@ -320,6 +321,17 @@ internal class UseCaseModule {
     ): GetOrderPageFlowUseCase {
         return GetOrderPageFlowUseCase.getInstance(
             orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignUpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SignUpUseCase {
+        return SignUpUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }
