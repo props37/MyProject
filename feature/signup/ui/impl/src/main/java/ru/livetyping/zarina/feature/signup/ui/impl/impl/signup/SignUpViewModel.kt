@@ -14,10 +14,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmailAlreadyUsedException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyBirthDateException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyFirstNameException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
+import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.validation.SignUpValidator
+import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
@@ -32,10 +50,12 @@ import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val getYandexCaptcha: GetYandexCaptchaUseCase,
 ) : ViewModel(), SideEffectSource<SignUpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -189,6 +209,13 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
+    private fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = SignUpScreenAction.ScreenClosed
+            emitSideEffect(SignUpSideEffect.Navigate(action))
+        }
+    }
+
     private fun startSignUp() {
         if (signUpJob?.isActive == true) return
 
@@ -197,8 +224,24 @@ internal class SignUpViewModel @Inject constructor(
             return
         }
 
-        TODO()
-        // TODO: [Top] Implement
+        try {
+            val signUpParams = SignUpValidator.Params(
+                firstName = nameTextFieldState.text.toString(),
+                birthDate = birthDateEpochMillisValueHolder.get()?.let {
+                    LocalDateUtil.fromMillis(it)
+                },
+                email = Email.create(emailTextFieldState.text.toString()),
+                phone = PhoneNumber.create(phoneTextFieldState.text.toString()),
+                password = passwordTextFieldState.text.toString(),
+            )
+            SignUpValidator().validate(signUpParams)
+
+            viewModelScope.launch {
+                showYandexCaptcha()
+            }
+        } catch (e: Exception) {
+            handleSignUpException(e)
+        }
     }
 
     private fun signUp(yandexCaptchaToken: YandexCaptchaToken) {
@@ -209,14 +252,52 @@ internal class SignUpViewModel @Inject constructor(
             return
         }
 
-
+        // TODO: [Top] Implement
     }
 
-    private fun onBackClicked() {
-        navigationThrottler.throttle {
-            val action = SignUpScreenAction.ScreenClosed
-            emitSideEffect(SignUpSideEffect.Navigate(action))
+    private fun handleSignUpException(t: Throwable) {
+        when (t) {
+            is CombinedValidationException -> handleSignUpCombinedValidationException(t)
+            is EmailAlreadyUsedException -> {
+                isEmailInvalid.value = true
+                val text = Text.Resource(R.string.sign_up_email_already_in_use_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+            }
+            // TODO: [Top] Add PhoneNumberAlreadyUsedException
+            else -> {
+                val text = Text.Resource(RCommon.string.res_incorrect_data_entered)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+            }
         }
+    }
+
+    private fun handleSignUpCombinedValidationException(e: CombinedValidationException) {
+        val causes = e.causes
+        causes.forEach { cause ->
+            when (cause) {
+                is FirstNameException -> isNameInvalid.value = true
+                is BirthDateException -> isBirthDateInvalid.value = true
+                is EmailException -> isEmailInvalid.value = true
+                is PhoneException -> isPhoneInvalid.value = true
+                is PasswordException -> isPasswordInvalid.value = true
+            }
+        }
+
+        val isNameEmpty = causes.any { it is EmptyFirstNameException }
+        val isBirthDateEmpty = causes.any { it is EmptyBirthDateException }
+        val isEmailEmpty = causes.any { it is EmptyEmailException }
+        val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+        val isPasswordEmpty = causes.any { it is EmptyPasswordException }
+
+        val textResId = if (isNameEmpty || isBirthDateEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty) {
+            R.string.sign_up_empty_fields_error
+        } else {
+            RCommon.string.res_incorrect_data_entered
+        }
+        val message = ZarinaToastMessage.error(Text.Resource(textResId))
+        emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
     }
 
     private fun showPoliciesNotAcceptedError() {
@@ -224,6 +305,17 @@ internal class SignUpViewModel @Inject constructor(
         val text = Text.Resource(R.string.sign_up_policies_error)
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+    }
+
+    private suspend fun showYandexCaptcha() {
+        val captcha = getYandexCaptcha().getOrNull()
+        if (captcha != null) {
+            visibleYandexCaptcha.value = captcha
+        } else {
+            val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
+            val toastMessage = ZarinaToastMessage.error(messageText)
+            emitSideEffect(SignUpSideEffect.ShowZarinaToast(toastMessage))
+        }
     }
 
     private fun makeFieldsValidOnChange() {

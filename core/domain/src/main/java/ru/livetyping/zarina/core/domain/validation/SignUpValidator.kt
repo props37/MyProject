@@ -5,6 +5,7 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyBirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
@@ -27,6 +28,7 @@ public class SignUpValidator : Validator<SignUpValidator.Params> {
             e
         }
         val birthDateException = try {
+            if (input.birthDate == null) throw EmptyBirthDateException()
             BirthDateValidator().validate(input.birthDate)
             null
         } catch (e: BirthDateException) {
@@ -66,7 +68,7 @@ public class SignUpValidator : Validator<SignUpValidator.Params> {
 
     public data class Params(
         val firstName: String,
-        val birthDate: LocalDate,
+        val birthDate: LocalDate?,
         val email: Email,
         val phone: PhoneNumber,
         val password: String,
