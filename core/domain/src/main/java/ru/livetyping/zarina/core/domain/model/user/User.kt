@@ -24,7 +24,7 @@ public data class User(
     )
 
     public companion object {
-        public val BIRTH_DATE_DEFAULT: LocalDate
+        public val BIRTH_DATE_MIN_VALUE: LocalDate
             get() = LocalDate.of(1900, 1, 1)
     }
 }
