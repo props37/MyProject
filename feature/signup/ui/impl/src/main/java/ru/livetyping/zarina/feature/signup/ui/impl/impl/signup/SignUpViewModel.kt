@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
@@ -179,8 +180,13 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
-        TODO()
-        // TODO: [Top] Implement
+        when (event) {
+            YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
+            is YandexCaptchaEvent.TokenReceived -> {
+                visibleYandexCaptcha.value = null
+                signUp(event.token)
+            }
+        }
     }
 
     private fun startSignUp() {
@@ -193,6 +199,17 @@ internal class SignUpViewModel @Inject constructor(
 
         TODO()
         // TODO: [Top] Implement
+    }
+
+    private fun signUp(yandexCaptchaToken: YandexCaptchaToken) {
+        if (signUpJob?.isActive == true) return
+
+        if (!arePoliciesAcceptedValueHolder.get()) {
+            showPoliciesNotAcceptedError()
+            return
+        }
+
+
     }
 
     private fun onBackClicked() {
