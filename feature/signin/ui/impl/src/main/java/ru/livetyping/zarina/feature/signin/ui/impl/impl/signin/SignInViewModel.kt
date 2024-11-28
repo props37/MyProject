@@ -322,8 +322,8 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignInException(e: Throwable) {
-        val causes = if (e is CombinedValidationException) e.causes else listOf(e)
+    private fun handleSignInException(t: Throwable) {
+        val causes = if (t is CombinedValidationException) t.causes else listOf(t)
         causes.forEach { cause ->
             when (cause) {
                 is EmailException -> isEmailInvalid.value = true
