@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
+import ru.livetyping.zarina.core.credential.CredentialManager
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -35,6 +36,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.validation.SignUpValidator
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.text.Text
@@ -56,7 +58,9 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val signUp: SignUpUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
+    private val credentialManager: CredentialManager,
 ) : ViewModel(), SideEffectSource<SignUpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -253,7 +257,37 @@ internal class SignUpViewModel @Inject constructor(
             return
         }
 
-        // TODO: [Top] Implement
+        // TODO: [Top] Start SmsCodeRetriever
+
+        signUpJob = viewModelScope.launch {
+            operationTracker.track(SignUpOperation) {
+                val birthDate = birthDateEpochMillisValueHolder.get()?.let {
+                    LocalDateUtil.fromMillis(it)
+                }
+                val email = Email.create(emailTextFieldState.text.toString())
+                val password = passwordTextFieldState.text.toString()
+                val params = SignUpUseCase.Params(
+                    name = nameTextFieldState.text.toString(),
+                    birthDate = birthDate,
+                    email = email,
+                    phone = PhoneNumber.create(phoneTextFieldState.text.toString()),
+                    password = password,
+                    receiveEmails = receiveEmailsValueHolder.get(),
+                    receiveSms = receiveSmsValueHolder.get(),
+                    yandexCaptchaToken = yandexCaptchaToken,
+                )
+                this@SignUpViewModel.signUp(params)
+                    .onSuccess {
+                        credentialManager.createCredential(
+                            username = email.value,
+                            password = password,
+                        )
+
+                        // TODO: [Top] Implement
+                    }
+                    .onFailure(::handleSignUpException)
+            }
+        }
     }
 
     private fun handleSignUpException(t: Throwable) {
