@@ -330,6 +330,7 @@ internal class SignInViewModel @Inject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
             }
+
             else -> {
                 val text = Text.Resource(RCommon.string.res_something_went_wrong)
                 val message = ZarinaToastMessage.error(text)
