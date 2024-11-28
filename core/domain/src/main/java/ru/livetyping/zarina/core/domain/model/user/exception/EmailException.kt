@@ -7,4 +7,4 @@ public open class InvalidEmailException(message: String = "Invalid email") : Ema
 public class EmptyEmailException(message: String = "Email can not be empty") :
     InvalidEmailException(message)
 
-public class EmailAlreadyUsed(message: String = "Email is already used") : EmailException(message)
+public class EmailAlreadyUsedException(message: String = "Email is already used") : EmailException(message)
