@@ -25,12 +25,15 @@ import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.paging.updateProducts
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.feature.wishlist.ui.impl.R
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
@@ -121,7 +124,9 @@ internal class WishlistViewModel @Inject constructor(
                         wishlistProductsRequester.request(WishlistProductsRequest)
                     }
                     .onFailure {
-                        // TODO: [Top] Show Zarina toast
+                        val text = Text.Resource(R.string.wishlist_clearing_error)
+                        val message = ZarinaToastMessage.error(text)
+                        emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
                     }
             }
         }

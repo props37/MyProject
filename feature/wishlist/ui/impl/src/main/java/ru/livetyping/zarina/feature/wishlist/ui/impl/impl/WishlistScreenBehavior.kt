@@ -11,6 +11,7 @@ import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 
 @Composable
@@ -21,6 +22,7 @@ internal fun WishlistScreenBehavior(
 ) {
     val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -35,6 +37,10 @@ internal fun WishlistScreenBehavior(
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
+                    }
+
+                    is WishlistSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
