@@ -19,6 +19,7 @@ import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.impl.remote.UserRemoteDataSource
 import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
@@ -75,6 +76,28 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
         remoteDataSource.signIn(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        remoteDataSource.signUp(
+            firstName = firstName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            password = password,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
+            yandexCaptchaToken = yandexCaptchaToken,
+        )
     }
 
     override fun getYandexCaptcha(): YandexCaptcha {

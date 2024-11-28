@@ -11,6 +11,7 @@ import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.data.user.impl.remote.api.UserApi
+import java.time.LocalDate
 import javax.inject.Inject
 
 internal class UserRemoteDataSourceImpl @Inject constructor(
@@ -46,6 +47,28 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
         api.signIn(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        api.signUp(
+            firstName = firstName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            password = password,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
+            yandexCaptchaToken = yandexCaptchaToken,
+        )
     }
 
     override fun getYandexCaptcha(): YandexCaptcha {

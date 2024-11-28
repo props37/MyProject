@@ -20,14 +20,19 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignInApiExceptionConverter
+import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignUpApiExceptionConverter
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 internal class UserApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
+    private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     @ZarinaBaseUrl
     private val baseUrl: String,
 ) : UserApi {
@@ -79,8 +84,39 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        val body = SignUpRequestBody(
+            firstName = firstName,
+            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
+            email = email.value,
+            phone = phone.value,
+            password = password,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
+            yandexCaptchaToken = yandexCaptchaToken.value,
+        )
+        signUpApiExceptionConverter {
+            httpClient.post("/api/register") {
+                setJsonBody(body)
+            }
+        }
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         val url = Url.create("$baseUrl/api/v1/smartCaptcha/")
         return YandexCaptcha(url)
+    }
+
+    private companion object {
+        private const val DATE_PATTERN = "dd.MM.yyyy"
     }
 }

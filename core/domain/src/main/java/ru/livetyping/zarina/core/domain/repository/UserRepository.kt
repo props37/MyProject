@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.User
+import java.time.LocalDate
 
 public interface UserRepository {
     public fun getUserFlow(cachePolicy: CachePolicy): Flow<User?>
@@ -31,6 +32,17 @@ public interface UserRepository {
     ): AuthResult
 
     public suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
+
+    public suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken,
+    )
 
     public fun getYandexCaptcha(): YandexCaptcha
 }

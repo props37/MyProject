@@ -9,6 +9,7 @@ import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
+import java.time.LocalDate
 
 internal interface UserApi {
     suspend fun getUser(): UserDto
@@ -26,6 +27,17 @@ internal interface UserApi {
     ): AuthDto
 
     suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
+
+    suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken,
+    )
 
     fun getYandexCaptcha(): YandexCaptcha
 }
