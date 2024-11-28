@@ -341,19 +341,19 @@ internal class SignInViewModel @Inject constructor(
                     emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
                 }
             }
-
-            val isEmailEmpty = causes.any { it is EmptyEmailException }
-            val isPasswordEmpty = causes.any { it is EmptyPasswordException }
-            val isPhoneEmpty = causes.any { it is EmptyPhoneException }
-            val messageTextResId = when {
-                isEmailEmpty || isPasswordEmpty -> R.string.sign_in_by_email_empty_fields_error
-                isPhoneEmpty -> R.string.sign_in_by_phone_empty_fields_error
-                else -> RCommon.string.res_incorrect_data_entered
-            }
-            val messageText = Text.Resource(messageTextResId)
-            val toastMessage = ZarinaToastMessage.error(messageText)
-            emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
         }
+
+        val isEmailEmpty = causes.any { it is EmptyEmailException }
+        val isPasswordEmpty = causes.any { it is EmptyPasswordException }
+        val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+        val messageTextResId = when {
+            isEmailEmpty || isPasswordEmpty -> R.string.sign_in_by_email_empty_fields_error
+            isPhoneEmpty -> R.string.sign_in_by_phone_empty_fields_error
+            else -> RCommon.string.res_incorrect_data_entered
+        }
+        val messageText = Text.Resource(messageTextResId)
+        val toastMessage = ZarinaToastMessage.error(messageText)
+        emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
     }
 
     private suspend fun showYandexCaptcha(trigger: YandexCaptchaTrigger) {
