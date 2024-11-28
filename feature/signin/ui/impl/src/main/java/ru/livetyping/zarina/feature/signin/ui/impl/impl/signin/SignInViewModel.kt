@@ -242,6 +242,8 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun startSignInByEmail() {
+        if (signInJob?.isActive == true) return
+
         try {
             val signInParams = SignInByEmailParams(
                 email = Email.create(emailTextFieldState.text.toString()),
@@ -259,6 +261,8 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun startSignInByPhone() {
+        if (signInJob?.isActive == true) return
+
         try {
             val signInParams = SignInByPhoneParams(
                 phone = PhoneNumber.create(phoneTextFieldState.text.toString())
