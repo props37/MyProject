@@ -11,7 +11,9 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -40,6 +42,9 @@ public class SignInFeatureImpl : SignInFeature {
                 onSignUpClicked = actions.onSignUpClicked,
             )
             signInScreen(signInScreenNavActions)
+
+            val passwordRecoveryNavActions = PasswordRecoveryNavActions()
+            passwordRecoveryScreen(passwordRecoveryNavActions)
         }
     }
 }
