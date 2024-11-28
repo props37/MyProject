@@ -323,29 +323,35 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun handleSignInException(t: Throwable) {
-        val causes = if (t is CombinedValidationException) t.causes else listOf(t)
+        when (t) {
+            is CombinedValidationException -> handleSignInCombinedValidationException(t)
+            is UserNotFoundException -> {
+                val text = Text.Resource(R.string.sign_in_invalid_email_or_password_try_again)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+            }
+            else -> {
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    private fun handleSignInCombinedValidationException(e: CombinedValidationException) {
+        val causes = e.causes
         causes.forEach { cause ->
             when (cause) {
                 is EmailException -> isEmailInvalid.value = true
                 is PasswordException -> isPasswordInvalid.value = true
                 is PhoneException -> isPhoneInvalid.value = true
-                is UserNotFoundException -> {
-                    val text = Text.Resource(R.string.sign_in_invalid_email_or_password_try_again)
-                    val message = ZarinaToastMessage.error(text)
-                    emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
-                }
-
-                else -> {
-                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
-                    val message = ZarinaToastMessage.error(text)
-                    emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
-                }
             }
         }
 
         val isEmailEmpty = causes.any { it is EmptyEmailException }
         val isPasswordEmpty = causes.any { it is EmptyPasswordException }
         val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+
         val messageTextResId = when {
             isEmailEmpty || isPasswordEmpty -> R.string.sign_in_by_email_empty_fields_error
             isPhoneEmpty -> R.string.sign_in_by_phone_empty_fields_error
