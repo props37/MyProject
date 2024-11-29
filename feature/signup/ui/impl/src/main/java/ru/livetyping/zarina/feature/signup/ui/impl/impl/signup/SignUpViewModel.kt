@@ -82,7 +82,7 @@ internal class SignUpViewModel @Inject constructor(
     private val isNameInvalid = MutableStateFlow(false)
 
     private val birthDateEpochMillisValueHolder = savedStateHandle.createValueHolder<Long?>(
-        key = Keys.BIRTH_DATE.key,
+        key = Keys.BIRTH_DATE_EPOCH_MILLIS.key,
         initialValue = null,
     )
 
@@ -434,7 +434,7 @@ internal class SignUpViewModel @Inject constructor(
     private data object SignUpOperation : OperationKey
 
     private enum class Keys {
-        BIRTH_DATE,
+        BIRTH_DATE_EPOCH_MILLIS,
         RECEIVE_EMAILS,
         RECEIVE_SMS,
         IS_POLICIES_ACCEPTED;
