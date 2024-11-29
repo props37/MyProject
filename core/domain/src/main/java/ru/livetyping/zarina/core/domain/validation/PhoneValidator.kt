@@ -13,13 +13,14 @@ public class PhoneValidator : Validator<PhoneNumber> {
         val phoneString = input.value
         when {
             phoneString.isBlank() -> throw EmptyPhoneException()
-            phoneString.all { it.isDigit() || it == PLUS } -> throw InvalidPhoneException()
+            !phoneString.matches(PHONE_REGEX_PATTERN.toRegex()) -> throw InvalidPhoneException()
             phoneString.length < PHONE_MIN_LENGTH -> throw InvalidPhoneException()
         }
     }
 
     private companion object {
-        private const val PLUS = '+'
+        // Source: android.telephony.PhoneNumberUtils.GLOBAL_PHONE_NUMBER_PATTERN
+        private const val PHONE_REGEX_PATTERN = "[\\+]?[0-9.-]+"
         private const val PHONE_MIN_LENGTH = 11
     }
 }
