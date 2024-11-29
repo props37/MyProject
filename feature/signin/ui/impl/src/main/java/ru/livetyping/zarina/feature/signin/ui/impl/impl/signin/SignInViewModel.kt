@@ -332,16 +332,41 @@ internal class SignInViewModel @Inject constructor(
     private fun handleSignInException(t: Throwable) {
         when (t) {
             is CombinedValidationException -> handleSignInCombinedValidationException(t)
+            is EmailException -> {
+                isEmailInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyEmailException -> R.string.sign_in_by_email_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is PasswordException -> {
+                isPasswordInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyPasswordException -> R.string.sign_in_by_email_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is PhoneException -> {
+                isPhoneInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyPhoneException -> R.string.sign_in_by_phone_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
             is UserNotFoundException -> {
                 val text = Text.Resource(R.string.sign_in_invalid_email_or_password_try_again)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+                showZarinaErrorToast(text)
             }
 
             else -> {
                 val text = Text.Resource(RCommon.string.res_something_went_wrong)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SignInSideEffect.ShowZarinaToast(message))
+                showZarinaErrorToast(text)
             }
         }
     }
@@ -366,8 +391,7 @@ internal class SignInViewModel @Inject constructor(
             else -> RCommon.string.res_incorrect_data_entered
         }
         val messageText = Text.Resource(messageTextResId)
-        val toastMessage = ZarinaToastMessage.error(messageText)
-        emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
+        showZarinaErrorToast(messageText)
     }
 
     private suspend fun showYandexCaptcha(trigger: YandexCaptchaTrigger) {
@@ -377,8 +401,7 @@ internal class SignInViewModel @Inject constructor(
             yandexCaptchaTrigger = trigger
         } else {
             val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
-            val toastMessage = ZarinaToastMessage.error(messageText)
-            emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
+            showZarinaErrorToast(messageText)
         }
     }
 
@@ -392,6 +415,11 @@ internal class SignInViewModel @Inject constructor(
         phoneTextFieldState.textAsFlow()
             .onEach { isPhoneInvalid.value = false }
             .launchIn(viewModelScope)
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val toastMessage = ZarinaToastMessage.error(text)
+        emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
     }
 
     private data object SignInOperation : OperationKey
