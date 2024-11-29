@@ -141,8 +141,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
             ProfileDetailsEvent.EmailClicked -> TODO()
             ProfileDetailsEvent.PhoneClicked -> TODO()
             ProfileDetailsEvent.ChangePasswordClicked -> TODO()
-            is ProfileDetailsEvent.ReceiveEmailsChanged -> TODO()
-            is ProfileDetailsEvent.ReceiveSmsChanged -> TODO()
+            is ProfileDetailsEvent.ReceiveEmailsChanged -> receiveEmails.value = event.receive
+            is ProfileDetailsEvent.ReceiveSmsChanged -> receiveSms.value = event.receive
             ProfileDetailsEvent.DeleteAccountClicked -> TODO()
             ProfileDetailsEvent.SignOutClicked -> TODO()
             ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
