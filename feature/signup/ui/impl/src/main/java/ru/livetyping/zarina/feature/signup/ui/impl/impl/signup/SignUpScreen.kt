@@ -24,8 +24,6 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
-import ru.livetyping.zarina.core.uikit.date.ZarinaDatePicker
-import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDefaults
 import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.component.SignUpScreenContent
@@ -74,20 +72,15 @@ internal fun ScreenContent(
 
         ZarinaDatePickerDialog(
             onDismissRequest = { isDatePickerVisible = false },
-            confirmButton = {
-                ZarinaDatePickerDefaults.ConfirmButton(
-                    onClick = {
-                        val event = SignUpEvent.BirthDateEpochMillisChanged(
-                            datePickerState.selectedDateMillis,
-                        )
-                        onSignUpEvent(event)
-                        isDatePickerVisible = false
-                    },
+            datePickerState = datePickerState,
+            onDateSelected = {
+                val event = SignUpEvent.BirthDateEpochMillisChanged(
+                    datePickerState.selectedDateMillis,
                 )
+                onSignUpEvent(event)
+                isDatePickerVisible = false
             },
-        ) {
-            ZarinaDatePicker(state = datePickerState)
-        }
+        )
     }
 
     Box {
