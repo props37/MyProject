@@ -170,7 +170,7 @@ internal class SignInViewModel @Inject constructor(
     fun onSignInEvent(event: SignInEvent) {
         when (event) {
             SignInEvent.BackClicked -> onBackClicked()
-            SignInEvent.ForgotPasswordClicked -> TODO()
+            SignInEvent.ForgotPasswordClicked -> onForgotPasswordClicked()
             SignInEvent.SignInClicked -> onSignInClicked()
             SignInEvent.SignUpClicked -> onSignUpClicked()
         }
@@ -201,6 +201,13 @@ internal class SignInViewModel @Inject constructor(
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignInScreenAction.ScreenClosed
+            emitSideEffect(SignInSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onForgotPasswordClicked() {
+        navigationThrottler.throttle {
+            val action = SignInScreenAction.ForgotPasswordClicked
             emitSideEffect(SignInSideEffect.Navigate(action))
         }
     }

@@ -14,6 +14,7 @@ import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -39,6 +40,7 @@ public class SignInFeatureImpl : SignInFeature {
                 onBackClicked = { navController.navigateUp() },
                 onUserSignedIn = actions.onUserSignedIn,
                 onSignInByPhoneRequested = { TODO() },
+                onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
                 onSignUpClicked = actions.onSignUpClicked,
             )
             signInScreen(signInScreenNavActions)

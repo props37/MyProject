@@ -65,6 +65,7 @@ private fun navigate(navActions: SignInNavActions, action: SignInScreenAction) {
             navActions.onSignInByPhoneRequested(action.phone)
         }
 
+        SignInScreenAction.ForgotPasswordClicked -> navActions.onForgotPasswordClicked()
         SignInScreenAction.SignUpClicked -> navActions.onSignUpClicked()
     }
 }

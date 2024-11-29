@@ -6,5 +6,6 @@ internal class SignInNavActions(
     val onBackClicked: () -> Unit,
     val onUserSignedIn: () -> Unit,
     val onSignInByPhoneRequested: (PhoneNumber) -> Unit,
+    val onForgotPasswordClicked: () -> Unit,
     val onSignUpClicked: () -> Unit,
 )
