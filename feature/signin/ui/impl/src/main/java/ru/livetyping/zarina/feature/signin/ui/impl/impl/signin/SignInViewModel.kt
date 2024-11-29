@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -48,7 +49,6 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
-import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -234,12 +234,8 @@ internal class SignInViewModel @Inject constructor(
                 if (result is CredentialFetchingResult.Success) {
                     showSaveCredentialPrompt = false
                     emitSideEffect(SignInSideEffect.FreeFocus)
-                    emailTextFieldState.edit {
-                        setTextAndPlaceCursorAtEnd(result.username)
-                    }
-                    passwordTextFieldState.edit {
-                        setTextAndPlaceCursorAtEnd(result.password)
-                    }
+                    emailTextFieldState.setTextAndPlaceCursorAtEnd(result.username)
+                    passwordTextFieldState.setTextAndPlaceCursorAtEnd(result.password)
                     startSignInByEmail()
                 }
             }

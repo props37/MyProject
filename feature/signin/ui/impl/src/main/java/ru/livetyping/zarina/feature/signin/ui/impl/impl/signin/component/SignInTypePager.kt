@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +48,6 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
-import ru.livetyping.zarina.core.uicompose.setTextAndPlaceCursorAtEnd
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
@@ -187,9 +187,7 @@ private fun SignInByEmail(
                 .autofill(
                     autofillType = AutofillType.EmailAddress,
                     onFilled = {
-                        emailTextFieldState.edit {
-                            setTextAndPlaceCursorAtEnd(it)
-                        }
+                        emailTextFieldState.setTextAndPlaceCursorAtEnd(it)
                     },
                 ),
         )
@@ -217,9 +215,7 @@ private fun SignInByEmail(
                 .autofill(
                     autofillType = AutofillType.Password,
                     onFilled = {
-                        passwordTextFieldState.edit {
-                            setTextAndPlaceCursorAtEnd(it)
-                        }
+                        passwordTextFieldState.setTextAndPlaceCursorAtEnd(it)
                     },
                 ),
         )
@@ -293,9 +289,7 @@ private fun SignInByPhone(
                 .autofill(
                     autofillType = AutofillType.PhoneNumber,
                     onFilled = {
-                        phoneTextFieldState.edit {
-                            setTextAndPlaceCursorAtEnd(it)
-                        }
+                        phoneTextFieldState.setTextAndPlaceCursorAtEnd(it)
                     },
                 ),
         )
