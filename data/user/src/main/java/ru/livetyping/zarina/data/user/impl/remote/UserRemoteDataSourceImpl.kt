@@ -71,6 +71,10 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         )
     }
 
+    override suspend fun requestPasswordReset(email: Email) {
+        api.requestPasswordReset(email)
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         return api.getYandexCaptcha()
     }

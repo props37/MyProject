@@ -18,10 +18,12 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
+import ru.livetyping.zarina.data.user.impl.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignUpApiExceptionConverter
 import java.time.LocalDate
@@ -33,6 +35,7 @@ internal class UserApiImpl @Inject constructor(
     private val httpClient: HttpClient,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
+    private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
     @ZarinaBaseUrl
     private val baseUrl: String,
 ) : UserApi {
@@ -106,6 +109,15 @@ internal class UserApiImpl @Inject constructor(
         )
         signUpApiExceptionConverter {
             httpClient.post("/api/register") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    override suspend fun requestPasswordReset(email: Email) {
+        val body = RequestPasswordResetRequestBody(email.value)
+        requestPasswordResetApiExceptionConverter {
+            httpClient.post("/api/auth/password") {
                 setJsonBody(body)
             }
         }

@@ -39,5 +39,7 @@ internal interface UserApi {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    suspend fun requestPasswordReset(email: Email)
+
     fun getYandexCaptcha(): YandexCaptcha
 }

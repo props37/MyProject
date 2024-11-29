@@ -44,5 +44,7 @@ public interface UserRepository {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    public suspend fun requestPasswordReset(email: Email)
+
     public fun getYandexCaptcha(): YandexCaptcha
 }

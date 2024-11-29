@@ -39,5 +39,7 @@ internal interface UserRemoteDataSource {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    suspend fun requestPasswordReset(email: Email)
+
     fun getYandexCaptcha(): YandexCaptcha
 }
