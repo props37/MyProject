@@ -64,7 +64,6 @@ internal fun ScreenContent(
 
     var isDatePickerVisible by remember { mutableStateOf(false) }
     if (isDatePickerVisible) {
-        signUpState.birthDateEpochMillis
         val currentMillis = remember(signUpState.birthDateEpochMillis) {
             signUpState.birthDateEpochMillis ?: System.currentTimeMillis()
         }
