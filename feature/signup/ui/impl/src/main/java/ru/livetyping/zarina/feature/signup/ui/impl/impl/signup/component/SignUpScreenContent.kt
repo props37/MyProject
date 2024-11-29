@@ -38,7 +38,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
@@ -153,9 +156,12 @@ private fun ColumnScope.PersonalDataFields(
 ) {
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        delay(FocusRequesterDelayMillis)
-        nameFocusRequester.tryRequestFocus()
+    LifecycleResumeEffect(Unit) {
+        lifecycleScope.launch {
+            delay(FocusRequesterDelayMillis)
+            nameFocusRequester.tryRequestFocus()
+        }
+        onPauseOrDispose {}
     }
 
     ZarinaTextField(

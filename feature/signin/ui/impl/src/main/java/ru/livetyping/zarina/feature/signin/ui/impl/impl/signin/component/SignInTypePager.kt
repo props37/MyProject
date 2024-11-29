@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -133,7 +133,7 @@ private fun SignInByEmail(
         mutableStateOf(SignInByEmailFocusTarget.Email)
     }
 
-    LifecycleStartEffect(Unit) {
+    LifecycleResumeEffect(Unit) {
         lifecycleScope.launch {
             delay(FocusRequesterDelayMillis)
             val focusRequester = when (lastFocusTarget) {
@@ -142,7 +142,7 @@ private fun SignInByEmail(
             }
             focusRequester.tryRequestFocus()
         }
-        onStopOrDispose {}
+        onPauseOrDispose {}
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -258,12 +258,12 @@ private fun SignInByPhone(
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
-    LifecycleStartEffect(Unit) {
+    LifecycleResumeEffect(Unit) {
         lifecycleScope.launch {
             delay(FocusRequesterDelayMillis)
             focusRequester.tryRequestFocus()
         }
-        onStopOrDispose {}
+        onPauseOrDispose {}
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
