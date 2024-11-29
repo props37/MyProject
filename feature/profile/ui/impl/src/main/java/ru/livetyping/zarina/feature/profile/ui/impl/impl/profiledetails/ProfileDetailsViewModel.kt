@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.kotlinutil.toEpochMillis
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -90,18 +91,27 @@ internal class ProfileDetailsViewModel @Inject constructor(
     val profileDetailsState: StateFlow<ProfileDetailsState> = combine(
         userResultFlow,
         userRequester.loadingState,
-    ) { userResult, loadingState ->
+        birthDateEpochMillisValueHolder.stateFlow,
+    ) { userResult, loadingState, birthDateEpochMillis ->
         val isLoading = loadingState is FlowRequester.LoadingState.Loading
                 && loadingState.request == UserRequest.LOADING
         if (isLoading) {
             ProfileDetailsState.Loading
         } else {
             userResult.fold(
-                onSuccess = {
+                onSuccess = { user ->
+                    val isBirthDateChangeable = if (birthDateEpochMillis != null) {
+                        val currentBirthDate = LocalDateUtil.fromMillis(birthDateEpochMillis)
+                        currentBirthDate == User.BIRTH_DATE_MIN_VALUE || currentBirthDate != user?.birthDate
+                    } else {
+                        false
+                    }
+
                     ProfileDetailsState.Success(
                         firstNameTextFieldState = firstNameTextFieldState,
                         lastNameTextFieldState = lastNameTextFieldState,
-                        birthDateEpochMillis = birthDateEpochMillisValueHolder.stateFlow.value,
+                        birthDateEpochMillis = birthDateEpochMillis,
+                        isBirthDateChangeable = isBirthDateChangeable,
                         phoneTextFieldState = phoneTextFieldState,
                         emailTextFieldState = emailTextFieldState,
                         receiveEmails = receiveEmails.value,
@@ -132,6 +142,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
     fun onProfileDetailsEvent(event: ProfileDetailsEvent) {
         when (event) {
             is ProfileDetailsEvent.BirthDateEpochMillisChanged -> TODO()
+            ProfileDetailsEvent.ErrorRefreshClicked -> TODO()
         }
     }
 

@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsContent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
@@ -101,6 +102,13 @@ internal fun ScreenContent(
         ProfileDetailsTopBar(
             state = topBarState,
             onEvent = onTopBarEvent,
+        )
+
+        ProfileDetailsContent(
+            state = profileDetailsState,
+            onEvent = onProfileDetailsEvent,
+            onBirthDateClicked = { isDatePickerVisible = true },
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }

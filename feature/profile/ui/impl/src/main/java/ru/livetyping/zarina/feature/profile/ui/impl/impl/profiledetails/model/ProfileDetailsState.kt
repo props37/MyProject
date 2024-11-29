@@ -12,6 +12,7 @@ internal sealed class ProfileDetailsState {
         val firstNameTextFieldState: TextFieldState,
         val lastNameTextFieldState: TextFieldState,
         val birthDateEpochMillis: Long?,
+        val isBirthDateChangeable: Boolean,
         val phoneTextFieldState: TextFieldState,
         val emailTextFieldState: TextFieldState,
         val receiveEmails: Boolean,
