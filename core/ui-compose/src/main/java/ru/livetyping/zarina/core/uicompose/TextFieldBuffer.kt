@@ -10,7 +10,6 @@ public fun TextFieldBuffer.clear() {
 }
 
 public fun TextFieldBuffer.setTextAndPlaceCursorAtEnd(text: CharSequence) {
-    clear()
-    append(text)
+    replace(0, length, text)
     placeCursorAtEnd()
 }
