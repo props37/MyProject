@@ -52,6 +52,7 @@ import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
+import timber.log.Timber
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -296,25 +297,63 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     private fun handleSignUpException(t: Throwable) {
+        Timber.tag(TAG).e(t)
         when (t) {
             is CombinedValidationException -> handleSignUpCombinedValidationException(t)
-            is EmailAlreadyUsedException -> {
+            is FirstNameException -> {
+                isNameInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyFirstNameException -> R.string.sign_up_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is BirthDateException -> {
+                isBirthDateInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyBirthDateException -> R.string.sign_up_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is EmailException -> {
                 isEmailInvalid.value = true
-                val text = Text.Resource(R.string.sign_up_email_already_in_use_error)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+                val textResId = when (t) {
+                    is EmptyEmailException -> R.string.sign_up_empty_fields_error
+                    is EmailAlreadyUsedException -> R.string.sign_up_email_already_in_use_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is PhoneException -> {
+                isPhoneInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyPhoneException -> R.string.sign_up_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
+            }
+
+            is PasswordException -> {
+                isPasswordInvalid.value = true
+                val textResId = when (t) {
+                    is EmptyPasswordException -> R.string.sign_up_empty_fields_error
+                    else -> RCommon.string.res_incorrect_data_entered
+                }
+                showZarinaErrorToast(Text.Resource(textResId))
             }
 
             is OtpTimeoutException -> {
                 val text = Text.Resource(R.string.sign_up_otp_timeout_error)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+                showZarinaErrorToast(text)
             }
 
             else -> {
                 val text = Text.Resource(RCommon.string.res_incorrect_data_entered)
-                val message = ZarinaToastMessage.error(text)
-                emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+                showZarinaErrorToast(text)
             }
         }
     }
@@ -342,15 +381,13 @@ internal class SignUpViewModel @Inject constructor(
         } else {
             RCommon.string.res_incorrect_data_entered
         }
-        val message = ZarinaToastMessage.error(Text.Resource(textResId))
-        emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+        showZarinaErrorToast(Text.Resource(textResId))
     }
 
     private fun showPoliciesNotAcceptedError() {
         arePoliciesInvalid.value = true
         val text = Text.Resource(R.string.sign_up_policies_error)
-        val message = ZarinaToastMessage.error(text)
-        emitSideEffect(SignUpSideEffect.ShowZarinaToast(message))
+        showZarinaErrorToast(text)
     }
 
     private suspend fun showYandexCaptcha() {
@@ -358,9 +395,8 @@ internal class SignUpViewModel @Inject constructor(
         if (captcha != null) {
             visibleYandexCaptcha.value = captcha
         } else {
-            val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
-            val toastMessage = ZarinaToastMessage.error(messageText)
-            emitSideEffect(SignUpSideEffect.ShowZarinaToast(toastMessage))
+            val text = Text.Resource(RCommon.string.res_something_went_wrong)
+            showZarinaErrorToast(text)
         }
     }
 
@@ -379,6 +415,11 @@ internal class SignUpViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private fun showZarinaErrorToast(text: Text) {
+        val toastMessage = ZarinaToastMessage.error(text)
+        emitSideEffect(SignUpSideEffect.ShowZarinaToast(toastMessage))
+    }
+
     private data object SignUpOperation : OperationKey
 
     private enum class Keys {
@@ -392,5 +433,7 @@ internal class SignUpViewModel @Inject constructor(
 
     private companion object {
         private const val PHONE_INITIAL_TEXT = "+7"
+
+        private const val TAG = "SignUpViewModel"
     }
 }
