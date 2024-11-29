@@ -195,6 +195,11 @@ internal class SignUpViewModel @Inject constructor(
     fun onSignUpEvent(event: SignUpEvent) {
         when (event) {
             SignUpEvent.BackClicked -> onBackClicked()
+            is SignUpEvent.BirthDateEpochMillisChanged -> {
+                birthDateEpochMillisValueHolder.set(event.millis)
+                isBirthDateInvalid.value = false
+            }
+
             is SignUpEvent.ReceiveEmailsChanged -> receiveEmailsValueHolder.set(event.receive)
             is SignUpEvent.ReceiveSmsChanged -> receiveSmsValueHolder.set(event.receive)
             is SignUpEvent.PoliciesAcceptedChanged -> {
