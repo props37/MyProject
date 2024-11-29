@@ -64,7 +64,10 @@ internal fun ScreenContent(
 
     var isDatePickerVisible by remember { mutableStateOf(false) }
     if (isDatePickerVisible) {
-        val currentMillis = remember { System.currentTimeMillis() }
+        signUpState.birthDateEpochMillis
+        val currentMillis = remember(signUpState.birthDateEpochMillis) {
+            signUpState.birthDateEpochMillis ?: System.currentTimeMillis()
+        }
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = currentMillis,
             yearRange = remember { User.BIRTH_DATE_MIN_VALUE.year..LocalDate.now().year },
@@ -101,9 +104,7 @@ internal fun ScreenContent(
             SignUpScreenContent(
                 signUpState = signUpState,
                 onSignUpEvent = onSignUpEvent,
-                onBirthDateClicked = {
-                    // TODO: [Top] Implement
-                },
+                onBirthDateClicked = { isDatePickerVisible = true },
                 modifier = Modifier.fillMaxSize(),
             )
         }
