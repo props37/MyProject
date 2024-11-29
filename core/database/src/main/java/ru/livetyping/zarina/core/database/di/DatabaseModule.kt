@@ -37,6 +37,7 @@ internal abstract class DatabaseModule {
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
                         // TODO: [Top] Implement
+                        TODO()
                         super.onDestructiveMigration(db)
                     }
                 })

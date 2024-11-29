@@ -264,6 +264,7 @@ internal class SignUpViewModel @Inject constructor(
         }
 
         // TODO: [Top] Start SmsCodeRetriever
+        TODO()
 
         signUpJob = viewModelScope.launch {
             operationTracker.track(SignUpOperation) {
@@ -290,6 +291,7 @@ internal class SignUpViewModel @Inject constructor(
                         )
 
                         // TODO: [Top] Implement
+                        TODO()
                     }
                     .onFailure(::handleSignUpException)
             }

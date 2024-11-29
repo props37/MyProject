@@ -187,6 +187,7 @@ internal class ProfileViewModel @Inject constructor(
                 }
             }
 
+            // TODO: [Top] Implement
             ProfileMenuItem.Stores -> TODO()
             ProfileMenuItem.Help -> {
                 navigationThrottler.throttle {
@@ -202,6 +203,5 @@ internal class ProfileViewModel @Inject constructor(
                 }
             }
         }
-        // TODO: [Top] Implement
     }
 }

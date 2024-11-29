@@ -86,7 +86,6 @@ internal class HomeViewModel @Inject constructor(
                 }
             }
 
-            // TODO: [Low] Implement
             is TabRowEvent.TabReselected -> Unit
         }
     }
