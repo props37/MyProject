@@ -18,6 +18,8 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
@@ -64,17 +66,9 @@ internal class ProfileDetailsViewModel @Inject constructor(
         initialValue = null,
     )
 
-    @OptIn(SavedStateHandleSaveableApi::class)
-    private val phoneTextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-        init = { TextFieldState() },
-    )
+    private val phone = MutableStateFlow<PhoneNumber?>(null)
 
-    @OptIn(SavedStateHandleSaveableApi::class)
-    private val emailTextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-        init = { TextFieldState() },
-    )
+    private val email = MutableStateFlow<Email?>(null)
 
     private val receiveEmails = MutableStateFlow(false)
 
@@ -92,7 +86,9 @@ internal class ProfileDetailsViewModel @Inject constructor(
         userResultFlow,
         userRequester.loadingState,
         birthDateEpochMillisValueHolder.stateFlow,
-    ) { userResult, loadingState, birthDateEpochMillis ->
+        phone,
+        email,
+    ) { userResult, loadingState, birthDateEpochMillis, phone, email ->
         val isLoading = loadingState is FlowRequester.LoadingState.Loading
                 && loadingState.request == UserRequest.LOADING
         if (isLoading) {
@@ -112,8 +108,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
                         lastNameTextFieldState = lastNameTextFieldState,
                         birthDateEpochMillis = birthDateEpochMillis,
                         isBirthDateChangeable = isBirthDateChangeable,
-                        phoneTextFieldState = phoneTextFieldState,
-                        emailTextFieldState = emailTextFieldState,
+                        phone = phone,
+                        email = email ?: Email.create(""),
                         receiveEmails = receiveEmails.value,
                         receiveSms = receiveSms.value,
                     )
@@ -142,6 +138,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
     fun onProfileDetailsEvent(event: ProfileDetailsEvent) {
         when (event) {
             is ProfileDetailsEvent.BirthDateEpochMillisChanged -> TODO()
+            ProfileDetailsEvent.EmailClicked -> TODO()
+            ProfileDetailsEvent.PhoneClicked -> TODO()
             ProfileDetailsEvent.ErrorRefreshClicked -> TODO()
         }
     }
@@ -166,8 +164,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
         lastNameTextFieldState.setTextAndPlaceCursorAtEnd(user.lastName.orEmpty())
         val birthDateEpochMillis = user.birthDate?.toEpochMillis()
         birthDateEpochMillisValueHolder.set(birthDateEpochMillis)
-        phoneTextFieldState.setTextAndPlaceCursorAtEnd(user.phone?.value.orEmpty())
-        emailTextFieldState.setTextAndPlaceCursorAtEnd(user.email.value)
+        phone.value = user.phone
+        email.value = user.email
         receiveEmails.value = user.notificationSettings.receiveEmails
         receiveSms.value = user.notificationSettings.receiveSms
     }

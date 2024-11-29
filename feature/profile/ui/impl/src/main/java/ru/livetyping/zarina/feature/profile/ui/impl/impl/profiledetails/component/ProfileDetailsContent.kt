@@ -16,21 +16,31 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
+import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
@@ -111,6 +121,17 @@ private fun ProfileDetailsImpl(
             onBirthDateClicked = onBirthDateClicked,
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ContactInfo(
+            phone = state.phone,
+            onPhoneClicked = { onEvent(ProfileDetailsEvent.PhoneClicked) },
+            email = state.email,
+            onEmailClicked = { onEvent(ProfileDetailsEvent.EmailClicked) },
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // TODO: [Top] Implement
         TODO()
     }
@@ -141,6 +162,7 @@ private fun PersonalData(
 
         ZarinaTextField(
             state = lastNameTextFieldState,
+            textStyle = ItemBodyTextStyle,
             label = {
                 val label = if (lastNameTextFieldState.text.isNotEmpty()) {
                     stringResource(RCommon.string.res_last_name)
@@ -170,6 +192,7 @@ private fun PersonalData(
 
         ZarinaTextField(
             state = firstNameTextFieldState,
+            textStyle = ItemBodyTextStyle,
             label = {
                 val label = if (firstNameTextFieldState.text.isNotEmpty()) {
                     stringResource(RCommon.string.res_first_name)
@@ -210,6 +233,7 @@ private fun PersonalData(
             value = formattedDate,
             onValueChanged = {},
             isEnabled = false,
+            textStyle = ItemBodyTextStyle,
             label = {
                 val label = if (formattedDate.isNotEmpty()) {
                     stringResource(RCommon.string.res_birth_date)
@@ -233,6 +257,57 @@ private fun PersonalData(
 }
 
 @Composable
+private fun ContactInfo(
+    phone: PhoneNumber?,
+    onPhoneClicked: () -> Unit,
+    email: Email,
+    onEmailClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+
+        BlockTitle(
+            text = stringResource(R.string.profile_contacts),
+            modifier = itemModifier,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val phoneTitle = if (phone != null) stringResource(RCommon.string.res_phone) else null
+        val phoneBody = if (phone != null) {
+            rememberFormattedPhoneNumber(phone.value) ?: phone.value
+        } else {
+            stringResource(RCommon.string.res_phone)
+        }
+        BlockItem(
+            title = phoneTitle,
+            body = phoneBody,
+            onClick = onPhoneClicked,
+            endContent = {
+                BlockItemEndArrow()
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        ZarinaDivider(modifier = itemModifier)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BlockItem(
+            title = stringResource(RCommon.string.res_email),
+            body = email.value,
+            onClick = onEmailClicked,
+            endContent = {
+                BlockItemEndArrow()
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
 private fun BlockTitle(
     text: String,
     modifier: Modifier = Modifier,
@@ -248,5 +323,73 @@ private fun BlockTitle(
         )
     }
 }
+
+@Composable
+private fun BlockItem(
+    title: String?,
+    body: String,
+    endContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    description: String? = null,
+    onClick: (() -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+) {
+    ZarinaItem(
+        onClick = onClick,
+        startContent = {
+            Column {
+                if (title != null) {
+                    Text(
+                        text = title,
+                        style = UiKitTheme.typography.footnote.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+
+                Text(
+                    text = body,
+                    style = ItemBodyTextStyle,
+                    color = UiKitTheme.colors.text.general.regular.default,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                if (description != null) {
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = description,
+                        style = UiKitTheme.typography.footnote.light,
+                        color = UiKitTheme.colors.text.general.regular.muted,
+                    )
+                }
+            }
+        },
+        endContent = {
+            endContent()
+        },
+        contentPadding = contentPadding,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun BlockItemEndArrow(
+    modifier: Modifier = Modifier,
+) {
+    Icon(
+        imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
+        contentDescription = null,
+        modifier = modifier
+            .size(16.dp)
+            .rotate(degrees = 90f),
+    )
+}
+
+private val ItemBodyTextStyle: TextStyle
+    @Composable
+    get() = UiKitTheme.typography.secondary.light
 
 private enum class ProfileDetailsContentKey { Success }

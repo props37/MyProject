@@ -21,6 +21,7 @@
     <string name="profile_create_order_first">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
     <string name="profile_account_details">Данные аккаунта</string>
     <string name="profile_personal_data">Личные данные</string>
+    <string name="profile_contacts">Контакты</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
