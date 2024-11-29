@@ -8,16 +8,21 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 
 @Composable
 internal fun ProfileDetailsScreenBehavior(
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProfileDetailsSideEffect>,
     navActions: ProfileDetailsNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
     BottomNavBarBehavior(isVisible = true)
+
+    LifecycleEventEffect(onLifecycleEvent = onLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
         val lifecycleSafeNavigator = LifecycleSafeNavigator()

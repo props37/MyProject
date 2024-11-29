@@ -19,6 +19,7 @@
     <string name="profile_qr_code_generation_error">Не удалось сгенерировать QR-код</string>
     <string name="profile_no_orders_yet">Заказов пока что нет</string>
     <string name="profile_create_order_first">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
+    <string name="profile_account_details">Данные аккаунта</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

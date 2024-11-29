@@ -27,7 +27,10 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -116,6 +119,21 @@ internal class ProfileDetailsViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = ProfileDetailsState.Loading,
     )
+
+    val topBarState: StateFlow<ProfileDetailsTopBarState> = TODO()
+
+    fun onTopBarEvent(event: ProfileDetailsTopBarEvent) {
+        when (event) {
+            ProfileDetailsTopBarEvent.BackClicked -> onBackClicked()
+            ProfileDetailsTopBarEvent.SaveClicked -> TODO()
+        }
+    }
+
+    fun onProfileDetailsEvent(event: ProfileDetailsEvent) {
+        when (event) {
+            is ProfileDetailsEvent.BirthDateEpochMillisChanged -> TODO()
+        }
+    }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
