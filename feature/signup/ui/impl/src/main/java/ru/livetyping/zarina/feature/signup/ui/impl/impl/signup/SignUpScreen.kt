@@ -76,9 +76,7 @@ internal fun ScreenContent(
             onDismissRequest = { isDatePickerVisible = false },
             datePickerState = datePickerState,
             onDateSelected = {
-                val event = SignUpEvent.BirthDateEpochMillisChanged(
-                    datePickerState.selectedDateMillis,
-                )
+                val event = SignUpEvent.BirthDateEpochMillisChanged(it)
                 onSignUpEvent(event)
                 isDatePickerVisible = false
             },
