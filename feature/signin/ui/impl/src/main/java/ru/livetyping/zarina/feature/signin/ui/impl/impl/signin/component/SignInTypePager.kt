@@ -203,6 +203,10 @@ private fun SignInByEmail(
                     imeAction = ImeAction.Done,
                 )
             },
+            onKeyboardAction = { defaultAction ->
+                defaultAction()
+                onSignInClicked()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -277,6 +281,10 @@ private fun SignInByPhone(
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Done,
                 )
+            },
+            onKeyboardAction = { defaultAction ->
+                defaultAction()
+                onSignInClicked()
             },
             modifier = Modifier
                 .fillMaxWidth()

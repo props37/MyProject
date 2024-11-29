@@ -104,6 +104,10 @@ internal fun PasswordRecoveryContent(
                     imeAction = ImeAction.Done,
                 )
             },
+            onKeyboardAction = { defaultAction ->
+                defaultAction()
+                onRequestPasswordRecoveryClicked()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
