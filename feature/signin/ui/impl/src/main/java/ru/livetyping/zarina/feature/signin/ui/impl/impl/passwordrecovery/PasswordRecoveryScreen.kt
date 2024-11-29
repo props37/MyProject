@@ -9,18 +9,28 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.component.PasswordRecoveryContent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.component.PasswordRecoveryTopBar
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.model.PasswordRecoveryState
 
 @Composable
 internal fun PasswordRecoveryScreen(
     navActions: PasswordRecoveryNavActions,
     viewModel: PasswordRecoveryViewModel = hiltViewModel(),
 ) {
+    val passwordRecoveryState by viewModel.passwordRecoveryState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        passwordRecoveryState = passwordRecoveryState,
+        onRequestPasswordRecoveryClicked = viewModel::onRequestPasswordRecoveryClicked,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +38,9 @@ internal fun PasswordRecoveryScreen(
 
 @Composable
 internal fun ScreenContent(
+    passwordRecoveryState: PasswordRecoveryState,
+    onRequestPasswordRecoveryClicked: () -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<PasswordRecoverySideEffect>,
     navActions: PasswordRecoveryNavActions,
 ) {
@@ -46,6 +59,12 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
+        PasswordRecoveryTopBar(onBackClicked = onBackClicked)
 
+        PasswordRecoveryContent(
+            state = passwordRecoveryState,
+            onRequestPasswordRecoveryClicked = onRequestPasswordRecoveryClicked,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

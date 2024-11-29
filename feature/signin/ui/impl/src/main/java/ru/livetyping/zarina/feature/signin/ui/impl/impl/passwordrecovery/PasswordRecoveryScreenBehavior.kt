@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +17,7 @@ internal fun PasswordRecoveryScreenBehavior(
     navActions: PasswordRecoveryNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -25,6 +27,7 @@ internal fun PasswordRecoveryScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is PasswordRecoverySideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
@@ -40,6 +43,7 @@ internal fun PasswordRecoveryScreenBehavior(
 }
 
 private fun navigate(navActions: PasswordRecoveryNavActions, action: PasswordRecoveryScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        PasswordRecoveryScreenAction.ScreenClosed -> navActions.onBackClicked()
+    }
 }

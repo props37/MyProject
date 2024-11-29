@@ -13,4 +13,7 @@
     <string name="sign_in_by_email_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введи адрес электронной почты и пароль</string>
     <string name="sign_in_by_phone_empty_fields_error">Для входа в аккаунт введи номер телефона</string>
     <string name="sign_in_invalid_email_or_password_try_again">Неправильный адрес электронной почты или пароль. Повтори попытку</string>
+    <string name="sign_in_password_recovery">Восстановление пароля</string>
+    <string name="sign_in_enter_email_specified_during_registration">Введи адрес электронной почты, указанный при регистрации</string>
+    <string name="sign_in_we_will_send_link_to_reset_password_to_specified_email">Мы отправим ссылку для восстановления пароля на указанный адрес</string>
 </resources>

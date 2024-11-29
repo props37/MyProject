@@ -45,7 +45,9 @@ public class SignInFeatureImpl : SignInFeature {
             )
             signInScreen(signInScreenNavActions)
 
-            val passwordRecoveryNavActions = PasswordRecoveryNavActions()
+            val passwordRecoveryNavActions = PasswordRecoveryNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
             passwordRecoveryScreen(passwordRecoveryNavActions)
         }
     }
