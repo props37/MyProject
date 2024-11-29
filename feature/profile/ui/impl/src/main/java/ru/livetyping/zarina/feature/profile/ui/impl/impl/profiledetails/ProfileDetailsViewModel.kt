@@ -17,7 +17,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = ProfileDetailsScreenAction.ScreenClosed
+            val action = ProfileDetailsScreenAction.BackClicked
             emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
         }
     }

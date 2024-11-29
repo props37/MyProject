@@ -17,7 +17,7 @@ internal class CartViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = CartScreenAction.ScreenClosed
+            val action = CartScreenAction.BackClicked
             emitSideEffect(CartSideEffect.Navigate(action))
         }
     }

@@ -59,7 +59,7 @@ internal class PasswordRecoveryViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = PasswordRecoveryScreenAction.ScreenClosed
+            val action = PasswordRecoveryScreenAction.BackClicked
             emitSideEffect(PasswordRecoverySideEffect.Navigate(action))
         }
     }

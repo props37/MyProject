@@ -50,6 +50,6 @@ internal fun SignUpScreenBehavior(
 
 private fun navigate(navActions: SignUpNavActions, action: SignUpScreenAction) {
     when (action) {
-        SignUpScreenAction.ScreenClosed -> navActions.onBackClicked()
+        SignUpScreenAction.BackClicked -> navActions.onBackClicked()
     }
 }

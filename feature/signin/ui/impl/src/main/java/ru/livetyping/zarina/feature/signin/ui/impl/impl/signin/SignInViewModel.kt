@@ -200,7 +200,7 @@ internal class SignInViewModel @Inject constructor(
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = SignInScreenAction.ScreenClosed
+            val action = SignInScreenAction.BackClicked
             emitSideEffect(SignInSideEffect.Navigate(action))
         }
     }

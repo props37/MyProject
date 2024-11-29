@@ -27,7 +27,7 @@ internal class OrderListViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = OrderListScreenAction.ScreenClosed
+            val action = OrderListScreenAction.BackClicked
             emitSideEffect(OrderListSideEffect.Navigate(action))
         }
     }

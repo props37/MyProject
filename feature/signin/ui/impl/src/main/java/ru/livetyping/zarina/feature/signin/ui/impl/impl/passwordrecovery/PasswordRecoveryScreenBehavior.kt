@@ -44,6 +44,6 @@ internal fun PasswordRecoveryScreenBehavior(
 
 private fun navigate(navActions: PasswordRecoveryNavActions, action: PasswordRecoveryScreenAction) {
     when (action) {
-        PasswordRecoveryScreenAction.ScreenClosed -> navActions.onBackClicked()
+        PasswordRecoveryScreenAction.BackClicked -> navActions.onBackClicked()
     }
 }

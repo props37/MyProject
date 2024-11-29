@@ -35,7 +35,6 @@ import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.validation.SignUpValidator
@@ -222,7 +221,7 @@ internal class SignUpViewModel @Inject constructor(
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = SignUpScreenAction.ScreenClosed
+            val action = SignUpScreenAction.BackClicked
             emitSideEffect(SignUpSideEffect.Navigate(action))
         }
     }

@@ -137,7 +137,7 @@ internal class CitySelectorViewModel @Inject constructor(
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = CitySelectorScreenAction.ScreenClosed
+            val action = CitySelectorScreenAction.BackClicked
             emitSideEffect(CitySelectorSideEffect.Navigate(action))
         }
     }
