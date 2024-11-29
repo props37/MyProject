@@ -23,6 +23,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailAlreadyUsedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
@@ -38,6 +39,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.validation.SignUpValidator
+import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -62,6 +64,7 @@ internal class SignUpViewModel @Inject constructor(
     private val signUp: SignUpUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
     private val credentialManager: CredentialManager,
+    private val smsCodeRetriever: SmsCodeRetriever,
 ) : ViewModel(), SideEffectSource<SignUpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -192,6 +195,10 @@ internal class SignUpViewModel @Inject constructor(
         makeFieldsValidOnChange()
     }
 
+    override fun onCleared() {
+        smsCodeRetriever.stop()
+    }
+
     fun onSignUpEvent(event: SignUpEvent) {
         when (event) {
             SignUpEvent.BackClicked -> onBackClicked()
@@ -263,8 +270,10 @@ internal class SignUpViewModel @Inject constructor(
             return
         }
 
-        // TODO: [Top] Start SmsCodeRetriever
-        TODO()
+        smsCodeRetriever.start(
+            sender = ZarinaSms.SENDER,
+            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+        )
 
         signUpJob = viewModelScope.launch {
             operationTracker.track(SignUpOperation) {

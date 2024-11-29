@@ -66,6 +66,7 @@ dependencies {
     implementation(projects.core.navigationUtil)
     implementation(projects.core.credential)
     implementation(projects.core.kotlinUtil)
+    implementation(projects.core.googleplayservices)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
