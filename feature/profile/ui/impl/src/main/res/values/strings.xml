@@ -22,6 +22,14 @@
     <string name="profile_account_details">Данные аккаунта</string>
     <string name="profile_personal_data">Личные данные</string>
     <string name="profile_contacts">Контакты</string>
+    <string name="profile_change_password">Изменить пароль</string>
+    <string name="profile_receive_news_by_email">Получать новости на почту</string>
+    <string name="profile_receive_sms_notifications">Получать СМС-уведомления</string>
+    <string name="profile_notifications_about_order_statuses_will_continue_to_arrive">Оповещения о статусах заказов продолжат поступать</string>
+    <string name="profile_newsletter_subscription_policies">Подписываясь на рассылку, ты соглашаешься с политикой обработки персональных данных</string>
+    <string name="profile_newsletter_subscription_privacy_policy">политикой обработки персональных данных</string>
+    <string name="profile_sign_out">Выйти из аккаунта</string>
+    <string name="profile_delete_account">Удалить аккаунт</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

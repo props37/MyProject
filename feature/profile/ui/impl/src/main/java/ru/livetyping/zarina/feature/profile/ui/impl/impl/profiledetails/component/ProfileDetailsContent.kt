@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -36,14 +37,20 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
+import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.Crossfade
+import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
 import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
+import ru.livetyping.zarina.core.uikit.button.ZarinaButton
+import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.switchh.ZarinaSwitch
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -128,12 +135,49 @@ private fun ProfileDetailsImpl(
             onPhoneClicked = { onEvent(ProfileDetailsEvent.PhoneClicked) },
             email = state.email,
             onEmailClicked = { onEvent(ProfileDetailsEvent.EmailClicked) },
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO: [Top] Implement
-        TODO()
+        Settings(
+            onChangePasswordClicked = { onEvent(ProfileDetailsEvent.ChangePasswordClicked) },
+            receiveEmails = state.receiveEmails,
+            onReceiveEmailsChanged = { onEvent(ProfileDetailsEvent.ReceiveEmailsChanged(it)) },
+            receiveSms = state.receiveSms,
+            onReceiveSmsChanged = { onEvent(ProfileDetailsEvent.ReceiveSmsChanged(it)) },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Policies()
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        ZarinaButton(
+            onClick = { onEvent(ProfileDetailsEvent.SignOutClicked) },
+            colors = ZarinaButtonDefaults.outlineColors(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(text = stringResource(R.string.profile_sign_out).uppercase())
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ZarinaButton(
+            onClick = { onEvent(ProfileDetailsEvent.DeleteAccountClicked) },
+            colors = ZarinaButtonDefaults.backlessErrorColors(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(text = stringResource(R.string.profile_delete_account).uppercase())
+        }
+
+        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
     }
 }
 
@@ -305,6 +349,99 @@ private fun ContactInfo(
             modifier = Modifier.fillMaxWidth(),
         )
     }
+}
+
+@Composable
+private fun Settings(
+    onChangePasswordClicked: () -> Unit,
+    receiveEmails: Boolean,
+    onReceiveEmailsChanged: (Boolean) -> Unit,
+    receiveSms: Boolean,
+    onReceiveSmsChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier) {
+        val itemModifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+
+        BlockTitle(
+            text = stringResource(RCommon.string.res_settings),
+            modifier = itemModifier,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        BlockItem(
+            title = null,
+            body = stringResource(R.string.profile_change_password),
+            onClick = onChangePasswordClicked,
+            endContent = {
+                BlockItemEndArrow()
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ZarinaDivider(modifier = itemModifier)
+
+        BlockItem(
+            title = null,
+            body = stringResource(R.string.profile_receive_news_by_email),
+            onClick = { onReceiveEmailsChanged(!receiveEmails) },
+            endContent = {
+                ZarinaSwitch(
+                    isChecked = receiveEmails,
+                    onCheckedChanged = onReceiveEmailsChanged,
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ZarinaDivider(modifier = itemModifier)
+
+        BlockItem(
+            title = null,
+            body = stringResource(R.string.profile_receive_sms_notifications),
+            description = stringResource(
+                id = R.string.profile_notifications_about_order_statuses_will_continue_to_arrive,
+            ),
+            onClick = { onReceiveSmsChanged(!receiveSms) },
+            endContent = {
+                ZarinaSwitch(
+                    isChecked = receiveSms,
+                    onCheckedChanged = onReceiveSmsChanged,
+                )
+            },
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun Policies(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    val personalDataPolicyText =
+        stringResource(R.string.profile_newsletter_subscription_privacy_policy)
+    val personalDataPolicyUrl = stringResource(RCommon.string.res_zarina_privacy_policy_url)
+
+    val substringToUrl = remember(personalDataPolicyText, personalDataPolicyUrl) {
+        mapOf(personalDataPolicyText to personalDataPolicyUrl)
+    }
+
+    val text = rememberAnnotatedStringWithLinks(
+        baseString = stringResource(R.string.profile_newsletter_subscription_policies),
+        substringToUrl = substringToUrl,
+        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+        onUrlClicked = context::openUrlInCustomTabs,
+    )
+
+    Text(
+        text = text,
+        style = UiKitTheme.typography.footnote.light,
+        color = UiKitTheme.colors.text.general.regular.default,
+        modifier = modifier,
+    )
 }
 
 @Composable

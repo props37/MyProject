@@ -140,7 +140,12 @@ internal class ProfileDetailsViewModel @Inject constructor(
             is ProfileDetailsEvent.BirthDateEpochMillisChanged -> TODO()
             ProfileDetailsEvent.EmailClicked -> TODO()
             ProfileDetailsEvent.PhoneClicked -> TODO()
-            ProfileDetailsEvent.ErrorRefreshClicked -> TODO()
+            ProfileDetailsEvent.ChangePasswordClicked -> TODO()
+            is ProfileDetailsEvent.ReceiveEmailsChanged -> TODO()
+            is ProfileDetailsEvent.ReceiveSmsChanged -> TODO()
+            ProfileDetailsEvent.DeleteAccountClicked -> TODO()
+            ProfileDetailsEvent.SignOutClicked -> TODO()
+            ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
         }
     }
 
