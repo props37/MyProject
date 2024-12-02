@@ -7,4 +7,6 @@ internal interface ContentGenderDataHolder {
     fun getLastContentGenderFlow(): Flow<Gender?>
 
     suspend fun setLastContentGender(gender: Gender)
+
+    suspend fun clear()
 }

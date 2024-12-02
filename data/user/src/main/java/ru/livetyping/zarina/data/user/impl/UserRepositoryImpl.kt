@@ -108,6 +108,10 @@ internal class UserRepositoryImpl @Inject constructor(
         return remoteDataSource.getYandexCaptcha()
     }
 
+    override suspend fun clear() {
+        localDataSource.clear()
+    }
+
     private fun getUserFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<User?> {

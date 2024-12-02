@@ -15,4 +15,6 @@ internal interface WishlistLocalDataSource {
     fun addProductToWishlist(productId: Product.Id)
 
     fun removeProductFromWishlist(productId: Product.Id)
+
+    fun clear()
 }

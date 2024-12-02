@@ -37,6 +37,13 @@ internal class ContentGenderDataHolderImpl @Inject constructor(
         Timber.tag(TAG).v("Content gender set: $gender")
     }
 
+    override suspend fun clear() {
+        preferencesDataStore.edit { data ->
+            data.remove(KEY_LAST_CONTENT_GENDER)
+        }
+        Timber.tag(TAG).v("Content gender cleared")
+    }
+
     companion object {
         private val KEY_LAST_CONTENT_GENDER = stringPreferencesKey("last_content_gender")
 

@@ -18,8 +18,8 @@ internal class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setBearerTokens(tokens: BearerTokens?) {
-        zarinaHttpClientBearerTokenCleaner.clearBearerTokens()
         localDataSource.setBearerTokens(tokens)
+        zarinaHttpClientBearerTokenCleaner.clearBearerTokens()
     }
 
     override suspend fun refreshBearerTokens(oldTokens: BearerTokens): BearerTokens {
@@ -28,5 +28,10 @@ internal class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getNewUnauthorizedUserBearerTokens(): BearerTokens {
         return remoteDataSource.getNewUnauthorizedUserBearerTokens()
+    }
+
+    override suspend fun clear() {
+        localDataSource.clear()
+        zarinaHttpClientBearerTokenCleaner.clearBearerTokens()
     }
 }

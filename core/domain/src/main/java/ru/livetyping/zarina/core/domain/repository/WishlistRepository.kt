@@ -18,4 +18,6 @@ public interface WishlistRepository {
     public suspend fun removeProductFromWishlist(productId: Product.Id)
 
     public suspend fun clearWishlist()
+
+    public fun clear()
 }

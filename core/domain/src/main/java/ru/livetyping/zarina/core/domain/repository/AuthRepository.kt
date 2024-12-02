@@ -11,4 +11,6 @@ public interface AuthRepository {
     public suspend fun refreshBearerTokens(oldTokens: BearerTokens): BearerTokens
 
     public suspend fun getNewUnauthorizedUserBearerTokens(): BearerTokens
+
+    public suspend fun clear()
 }

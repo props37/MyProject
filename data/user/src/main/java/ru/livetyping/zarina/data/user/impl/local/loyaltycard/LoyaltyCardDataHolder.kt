@@ -7,4 +7,6 @@ internal interface LoyaltyCardDataHolder {
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard?>
 
     fun setLoyaltyCard(card: LoyaltyCard?)
+
+    fun clear()
 }

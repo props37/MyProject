@@ -7,4 +7,6 @@ internal interface AuthEncryptedStorage {
     fun getBearerTokensFlow(): Flow<BearerTokens?>
 
     suspend fun setBearerTokens(tokens: BearerTokens?)
+
+    suspend fun clear()
 }

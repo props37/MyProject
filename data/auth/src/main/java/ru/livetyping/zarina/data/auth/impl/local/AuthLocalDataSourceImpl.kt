@@ -15,4 +15,8 @@ internal class AuthLocalDataSourceImpl @Inject constructor(
     override suspend fun setBearerTokens(tokens: BearerTokens?) {
         authEncryptedStorage.setBearerTokens(tokens)
     }
+
+    override suspend fun clear() {
+        authEncryptedStorage.clear()
+    }
 }

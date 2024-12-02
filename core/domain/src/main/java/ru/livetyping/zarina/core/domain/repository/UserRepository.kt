@@ -47,4 +47,6 @@ public interface UserRepository {
     public suspend fun requestPasswordReset(email: Email)
 
     public fun getYandexCaptcha(): YandexCaptcha
+
+    public suspend fun clear()
 }

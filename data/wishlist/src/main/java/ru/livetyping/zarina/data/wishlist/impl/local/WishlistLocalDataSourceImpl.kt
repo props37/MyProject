@@ -30,4 +30,8 @@ internal class WishlistLocalDataSourceImpl @Inject constructor(
     override fun removeProductFromWishlist(productId: Product.Id) {
         dataHolder.removeProductFromWishlist(productId)
     }
+
+    override fun clear() {
+        dataHolder.clear()
+    }
 }

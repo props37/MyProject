@@ -7,4 +7,6 @@ public interface ContentRepository {
     public fun getLastContentGenderFlow(): Flow<Gender?>
 
     public suspend fun setLastContentGender(gender: Gender)
+
+    public suspend fun clear()
 }

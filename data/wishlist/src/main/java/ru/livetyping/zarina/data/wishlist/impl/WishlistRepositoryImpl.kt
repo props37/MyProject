@@ -55,6 +55,10 @@ internal class WishlistRepositoryImpl @Inject constructor(
         localDataSource.setIsWishlistProductIdsFetched(false)
     }
 
+    override fun clear() {
+        localDataSource.clear()
+    }
+
     private fun getWishlistProductIdsFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<Set<Product.Id>> {

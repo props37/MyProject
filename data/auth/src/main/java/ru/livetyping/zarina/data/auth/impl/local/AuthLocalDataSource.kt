@@ -7,4 +7,6 @@ internal interface AuthLocalDataSource {
     fun getBearerTokensFlow(): Flow<BearerTokens?>
 
     suspend fun setBearerTokens(tokens: BearerTokens?)
+
+    suspend fun clear()
 }

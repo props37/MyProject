@@ -15,4 +15,8 @@ internal class ContentLocalDataSourceImpl @Inject constructor(
     override suspend fun setLastContentGender(gender: Gender) {
         contentGenderDataHolder.setLastContentGender(gender)
     }
+
+    override suspend fun clear() {
+        contentGenderDataHolder.clear()
+    }
 }

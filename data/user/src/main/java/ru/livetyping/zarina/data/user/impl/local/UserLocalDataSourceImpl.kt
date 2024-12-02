@@ -44,4 +44,9 @@ internal class UserLocalDataSourceImpl @Inject constructor(
     override fun setLoyaltyCard(card: LoyaltyCard?) {
         loyaltyCardDataHolder.setLoyaltyCard(card)
     }
+
+    override suspend fun clear() {
+        userDao.clear()
+        loyaltyCardDataHolder.clear()
+    }
 }

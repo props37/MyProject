@@ -17,4 +17,6 @@ internal interface UserLocalDataSource {
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard?>
 
     fun setLoyaltyCard(card: LoyaltyCard?)
+
+    suspend fun clear()
 }

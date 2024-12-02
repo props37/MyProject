@@ -57,6 +57,11 @@ internal class AuthEncryptedStorageImpl @Inject constructor(
         Timber.tag(TAG).v("Bearer tokens set: $tokens")
     }
 
+    override suspend fun clear() {
+        setBearerTokens(null)
+        Timber.tag(TAG).v("Bearer tokens cleared")
+    }
+
     private fun SharedPreferences.getBearerTokens(): BearerTokens? {
         val accessToken = this.getString(KEY_ACCESS_TOKEN, null)
         val refreshToken = this.getString(KEY_REFRESH_TOKEN, null)

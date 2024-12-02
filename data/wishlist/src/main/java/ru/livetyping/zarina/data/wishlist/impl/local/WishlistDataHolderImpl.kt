@@ -44,6 +44,12 @@ internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder
         Timber.tag(TAG).v("Product $productId removed from wishlist")
     }
 
+    override fun clear() {
+        wishlistProductIds.value = emptySet()
+        isWishlistProductIdsFetched.set(false)
+        Timber.tag(TAG).v("Wishlist product IDs cleared")
+    }
+
     private companion object {
         private const val TAG = "WishlistDataHolderImpl"
     }
