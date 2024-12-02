@@ -12,7 +12,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.repository.UserRepository
+import ru.livetyping.zarina.data.user.impl.ForcedSignOutCoordinatorImpl
 import ru.livetyping.zarina.data.user.impl.UserRepositoryImpl
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSourceImpl
@@ -30,6 +32,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class UserRepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindForcedSignOutCoordinator(
+        impl: ForcedSignOutCoordinatorImpl,
+    ): ForcedSignOutCoordinator
 
     @Binds
     abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
