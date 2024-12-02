@@ -17,5 +17,6 @@ kotlin {
 }
 
 dependencies {
+    api(libs.kotlin.coroutines.core)
     implementation(libs.java.inject)
 }
