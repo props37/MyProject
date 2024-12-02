@@ -50,7 +50,7 @@ kotlin {
 
 composeCompiler {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
-    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose/stability_config.txt"))
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("config/compose/stability_config.txt")
 }
 
 dependencies {
