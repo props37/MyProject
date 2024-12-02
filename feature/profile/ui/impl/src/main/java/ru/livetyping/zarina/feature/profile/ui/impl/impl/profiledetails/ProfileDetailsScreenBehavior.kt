@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,7 @@ internal fun ProfileDetailsScreenBehavior(
     navActions: ProfileDetailsNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -30,6 +32,7 @@ internal fun ProfileDetailsScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is ProfileDetailsSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
