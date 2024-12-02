@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
@@ -74,10 +75,13 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private val receiveSms = MutableStateFlow(false)
 
+    private val currentUser = MutableStateFlow<User?>(null)
+
     private val userResultFlow = userRequester.flow
         .onEach { result ->
             val user = result.getOrNull()
             if (user != null) {
+                currentUser.value = user
                 updateFieldsWithUser(user)
             }
         }
@@ -126,7 +130,30 @@ internal class ProfileDetailsViewModel @Inject constructor(
         initialValue = ProfileDetailsState.Loading,
     )
 
-    val topBarState: StateFlow<ProfileDetailsTopBarState> = TODO()
+    val topBarState: StateFlow<ProfileDetailsTopBarState> = combine(
+        currentUser,
+        firstNameTextFieldState.textAsFlow(),
+        lastNameTextFieldState.textAsFlow(),
+        birthDateEpochMillisValueHolder.stateFlow,
+    ) { currentUser, firstName, lastName, birthDateEpochMillis ->
+        val isSaveButtonVisible = if (currentUser != null) {
+            val firstNameChanged = firstName.toString().trim() != currentUser.firstName
+            val lastNameChanged = lastName.toString().trim() != currentUser.lastName
+            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromMillis(it) }
+            val birthDateChanged = birthDate != currentUser.birthDate
+            (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
+                    && (firstNameChanged || lastNameChanged || birthDateChanged)
+        } else {
+            false
+        }
+        ProfileDetailsTopBarState(
+            isSaveButtonVisible = isSaveButtonVisible,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = ProfileDetailsTopBarState(isSaveButtonVisible = false),
+    )
 
     fun onTopBarEvent(event: ProfileDetailsTopBarEvent) {
         when (event) {
