@@ -5,10 +5,10 @@ import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.usecase.FlowUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class GetForcedSignOutRequestFlowUseCaseImpl(
+internal class GetForcedSignOutRequestsFlowUseCaseImpl(
     private val forcedSignOutCoordinator: ForcedSignOutCoordinator,
     logger: UseCaseLogger?,
-) : FlowUseCase<Unit, Unit>(logger), GetForcedSignOutRequestFlowUseCase {
+) : FlowUseCase<Unit, Unit>(logger), GetForcedSignOutRequestsFlowUseCase {
 
     override fun execute(params: Unit): Flow<Unit> {
         return forcedSignOutCoordinator.getForcedSignOutRequests()

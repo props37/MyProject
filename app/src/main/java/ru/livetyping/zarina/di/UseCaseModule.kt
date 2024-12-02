@@ -26,7 +26,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
@@ -353,11 +353,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetForcedSignOutRequestFlowUseCase(
+    fun provideGetForcedSignOutRequestsFlowUseCase(
         forcedSignOutCoordinator: ForcedSignOutCoordinator,
         logger: UseCaseLogger,
-    ): GetForcedSignOutRequestFlowUseCase {
-        return GetForcedSignOutRequestFlowUseCase.getInstance(
+    ): GetForcedSignOutRequestsFlowUseCase {
+        return GetForcedSignOutRequestsFlowUseCase.getInstance(
             forcedSignOutCoordinator = forcedSignOutCoordinator,
             logger = logger,
         )
