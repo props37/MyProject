@@ -8,7 +8,6 @@ import ru.livetyping.zarina.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.GetFavoriteProductIdsFlowUseCase
 import ru.livetyping.zarina.usecase.user.ForcedSignOutUseCase
-import ru.livetyping.zarina.usecase.user.GetForcedSignOutRequestFlowUseCase
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
@@ -18,6 +17,5 @@ class AppInteractor @Inject constructor(
     val getCartProductCountFlow: GetCartProductCountFlowUseCase,
     val exoPlayerCache: Cache,
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory,
-    val getForcedSignOutRequestFlow: GetForcedSignOutRequestFlowUseCase,
     val forcedSignOut: ForcedSignOutUseCase,
 )
