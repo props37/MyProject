@@ -45,6 +45,7 @@ internal fun ProfileDetailsScreenBehavior(
 }
 
 private fun navigate(navActions: ProfileDetailsNavActions, action: ProfileDetailsScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        ProfileDetailsScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

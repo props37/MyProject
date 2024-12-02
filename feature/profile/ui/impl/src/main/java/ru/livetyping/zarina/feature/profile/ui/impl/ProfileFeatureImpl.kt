@@ -48,7 +48,9 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             profileScreen(profileScreenNavActions)
 
-            val profileDetailsNavActions = ProfileDetailsNavActions()
+            val profileDetailsNavActions = ProfileDetailsNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
             profileDetailsScreen(profileDetailsNavActions)
 
             val orderListNavActions = OrderListNavActions()
