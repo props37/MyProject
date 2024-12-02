@@ -11,12 +11,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.googleplayservices.impl.sms.SmsCodeRetrieverImpl
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class GooglePlayServicesModule {
 
     @Binds
+    @Singleton
     abstract fun bindSmsCodeRetriever(
         impl: SmsCodeRetrieverImpl,
     ): SmsCodeRetriever

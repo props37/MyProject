@@ -21,9 +21,7 @@ import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class SmsCodeRetrieverImpl @Inject constructor(
     @ApplicationContext
     private val context: Context,
