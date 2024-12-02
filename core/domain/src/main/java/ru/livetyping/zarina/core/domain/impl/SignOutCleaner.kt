@@ -15,8 +15,8 @@ internal class SignOutCleaner(
         authRepository.clear()
         userRepository.clear()
         contentRepository.clear()
-        // TODO: [Top] Clear CartRepository
         wishlistRepository.clear()
+        // TODO: [Top] Clear CartRepository
         // TODO: [Top] Clear ProductSearchRepository
         // TODO: [Top] Clear StoreRepository
         // TODO: [Top] Clear CheckoutRepository
