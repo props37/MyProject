@@ -50,7 +50,7 @@ internal fun ProfileDetailsTopBar(
                 exit = AnimatedContentDefaultExitTransition,
             ) {
                 ZarinaButton(
-                    onClick = { onEvent(ProfileDetailsTopBarEvent.SaveClicked) },
+                    onClick = { onEvent(ProfileDetailsTopBarEvent.SaveChangesClicked) },
                     size = ZarinaButtonSize.Medium,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     modifier = Modifier

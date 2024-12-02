@@ -168,7 +168,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
     fun onTopBarEvent(event: ProfileDetailsTopBarEvent) {
         when (event) {
             ProfileDetailsTopBarEvent.BackClicked -> onBackClicked()
-            ProfileDetailsTopBarEvent.SaveClicked -> TODO()
+            ProfileDetailsTopBarEvent.SaveChangesClicked -> onSaveChangesClicked()
         }
     }
 
@@ -178,13 +178,13 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 birthDateEpochMillisValueHolder.set(event.millis)
             }
 
-            ProfileDetailsEvent.EmailClicked -> TODO()
-            ProfileDetailsEvent.PhoneClicked -> TODO()
-            ProfileDetailsEvent.ChangePasswordClicked -> TODO()
+            ProfileDetailsEvent.EmailClicked -> onEmailClicked()
+            ProfileDetailsEvent.PhoneClicked -> onPhoneClicked()
+            ProfileDetailsEvent.ChangePasswordClicked -> onChangePasswordClicked()
             is ProfileDetailsEvent.ReceiveEmailsChanged -> onReceiveEmailsChanged(event)
             is ProfileDetailsEvent.ReceiveSmsChanged -> onReceiveSmsChanged(event)
-            ProfileDetailsEvent.DeleteAccountClicked -> TODO()
-            ProfileDetailsEvent.SignOutClicked -> TODO()
+            ProfileDetailsEvent.SignOutClicked -> onSignOutClicked()
+            ProfileDetailsEvent.DeleteAccountClicked -> onDeleteAccountClicked()
             ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
         }
     }
@@ -201,6 +201,32 @@ internal class ProfileDetailsViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = ProfileDetailsScreenAction.BackClicked
             emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onSaveChangesClicked() {
+        // TODO: [Top] Implement
+        TODO()
+    }
+
+    private fun onEmailClicked() {
+        navigationThrottler.throttle {
+            // TODO: [Top] Implement
+            TODO()
+        }
+    }
+
+    private fun onPhoneClicked() {
+        navigationThrottler.throttle {
+            // TODO: [Top] Implement
+            TODO()
+        }
+    }
+
+    private fun onChangePasswordClicked() {
+        navigationThrottler.throttle {
+            // TODO: [Top] Implement
+            TODO()
         }
     }
 
@@ -224,6 +250,16 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 receiveSms.value = !event.receiveSms
             },
         )
+    }
+
+    private fun onSignOutClicked() {
+        // TODO: [Top] Implement
+        TODO()
+    }
+
+    private fun onDeleteAccountClicked() {
+        // TODO: [Top] Implement
+        TODO()
     }
 
     private fun updateNotificationsSettings(
