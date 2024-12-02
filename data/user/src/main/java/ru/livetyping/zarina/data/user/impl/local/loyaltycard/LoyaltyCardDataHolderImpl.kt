@@ -4,9 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class LoyaltyCardDataHolderImpl @Inject constructor() : LoyaltyCardDataHolder {
     private val loyaltyCard = MutableStateFlow<LoyaltyCard?>(null)
 

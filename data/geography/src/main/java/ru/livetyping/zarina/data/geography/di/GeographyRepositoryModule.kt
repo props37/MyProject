@@ -14,6 +14,7 @@ import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSource
 import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSourceImpl
 import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApi
 import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApiImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,6 +37,7 @@ internal abstract class GeographyRepositoryModule {
     ): GeographyLocalDataSource
 
     @Binds
+    @Singleton
     abstract fun bindCityDataHolder(
         impl: CityDataHolderImpl,
     ): CityDataHolder

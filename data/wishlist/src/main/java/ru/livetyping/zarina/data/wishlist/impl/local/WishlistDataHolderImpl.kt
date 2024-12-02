@@ -7,9 +7,7 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder {
     private val wishlistProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
 

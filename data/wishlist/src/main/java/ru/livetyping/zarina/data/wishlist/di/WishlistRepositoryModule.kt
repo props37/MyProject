@@ -14,6 +14,7 @@ import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSource
 import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSourceImpl
 import ru.livetyping.zarina.data.wishlist.impl.remote.api.WishlistApi
 import ru.livetyping.zarina.data.wishlist.impl.remote.api.WishlistApiImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,6 +39,7 @@ internal abstract class WishlistRepositoryModule {
     ): WishlistLocalDataSource
 
     @Binds
+    @Singleton
     abstract fun bindWishlistDataHolder(
         impl: WishlistDataHolderImpl,
     ): WishlistDataHolder

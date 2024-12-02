@@ -14,6 +14,7 @@ import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSource
 import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSourceImpl
 import ru.livetyping.zarina.data.category.impl.remote.api.CategoryApi
 import ru.livetyping.zarina.data.category.impl.remote.api.CategoryApiImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,5 +37,6 @@ internal abstract class CategoryRepositoryModule {
     ): CategoryLocalDataSource
 
     @Binds
+    @Singleton
     abstract fun bindCategoryDataHolder(impl: CategoryDataHolderImpl): CategoryDataHolder
 }

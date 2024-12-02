@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class CategoryDataHolderImpl @Inject constructor() : CategoryDataHolder {
     private val categories = MutableStateFlow<Categories?>(null)
 

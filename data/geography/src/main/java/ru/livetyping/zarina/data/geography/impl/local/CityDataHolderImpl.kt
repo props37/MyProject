@@ -8,9 +8,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import timber.log.Timber
 import java.lang.ref.SoftReference
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 internal class CityDataHolderImpl @Inject constructor() : CityDataHolder {
     private val nameQueryToCities = MutableStateFlow<SoftReference<Map<String?, List<City>>>?>(null)
 

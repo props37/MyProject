@@ -61,6 +61,7 @@ internal abstract class UserRepositoryModule {
     ): UserCityDataHolder
 
     @Binds
+    @Singleton
     abstract fun bindLoyaltyCardDataHolder(
         impl: LoyaltyCardDataHolderImpl,
     ): LoyaltyCardDataHolder
