@@ -75,6 +75,13 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         api.requestPasswordReset(email)
     }
 
+    override suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean
+    ) {
+        api.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         return api.getYandexCaptcha()
     }

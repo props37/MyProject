@@ -46,6 +46,11 @@ public interface UserRepository {
 
     public suspend fun requestPasswordReset(email: Email)
 
+    public suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    )
+
     public fun getYandexCaptcha(): YandexCaptcha
 
     public suspend fun clear()

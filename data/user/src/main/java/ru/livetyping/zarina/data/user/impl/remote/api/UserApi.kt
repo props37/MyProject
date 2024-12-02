@@ -41,5 +41,10 @@ internal interface UserApi {
 
     suspend fun requestPasswordReset(email: Email)
 
+    suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+    )
+
     fun getYandexCaptcha(): YandexCaptcha
 }

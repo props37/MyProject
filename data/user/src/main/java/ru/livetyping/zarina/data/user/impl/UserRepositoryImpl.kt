@@ -104,6 +104,13 @@ internal class UserRepositoryImpl @Inject constructor(
         remoteDataSource.requestPasswordReset(email)
     }
 
+    override suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean
+    ) {
+        remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         return remoteDataSource.getYandexCaptcha()
     }

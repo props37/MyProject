@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
@@ -120,6 +121,25 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/auth/password") {
                 setJsonBody(body)
             }
+        }
+    }
+
+    override suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean
+    ) {
+        val body = listOf(
+            NotificationSettingsDto(
+                name = NotificationSettingsDto.NAME_RECEIVE_SMS,
+                receiveSms,
+            ),
+            NotificationSettingsDto(
+                name = NotificationSettingsDto.NAME_RECEIVE_EMAILS,
+                receiveEmails,
+            ),
+        )
+        httpClient.post("/api/notifications") {
+            setJsonBody(body)
         }
     }
 
