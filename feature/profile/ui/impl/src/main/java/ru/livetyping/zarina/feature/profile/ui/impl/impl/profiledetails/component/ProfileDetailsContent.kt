@@ -313,6 +313,8 @@ private fun ContactInfo(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
 
+        val itemContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
         BlockTitle(
             text = stringResource(R.string.profile_contacts),
             modifier = itemModifier,
@@ -332,12 +334,11 @@ private fun ContactInfo(
             endContent = {
                 BlockItemEndArrow()
             },
+            contentPadding = itemContentPadding,
             modifier = Modifier.fillMaxWidth(),
         )
 
         ZarinaDivider(modifier = itemModifier)
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         BlockItem(
             title = stringResource(RCommon.string.res_email),
@@ -346,6 +347,7 @@ private fun ContactInfo(
             endContent = {
                 BlockItemEndArrow()
             },
+            contentPadding = itemContentPadding,
             modifier = Modifier.fillMaxWidth(),
         )
     }
