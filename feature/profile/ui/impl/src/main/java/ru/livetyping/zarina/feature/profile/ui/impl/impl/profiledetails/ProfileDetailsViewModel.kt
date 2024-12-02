@@ -164,7 +164,10 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     fun onProfileDetailsEvent(event: ProfileDetailsEvent) {
         when (event) {
-            is ProfileDetailsEvent.BirthDateEpochMillisChanged -> TODO()
+            is ProfileDetailsEvent.BirthDateEpochMillisChanged -> {
+                birthDateEpochMillisValueHolder.set(event.millis)
+            }
+
             ProfileDetailsEvent.EmailClicked -> TODO()
             ProfileDetailsEvent.PhoneClicked -> TODO()
             ProfileDetailsEvent.ChangePasswordClicked -> TODO()
