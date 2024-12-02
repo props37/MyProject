@@ -104,6 +104,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.Loyal
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.ProgressBarDotSize
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.ProgressBarTrackWidth
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.RotationBackSide
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.RotationFrontSide
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.RotationTurnThreshold
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.util.nameResId
 import timber.log.Timber
@@ -175,8 +176,8 @@ private fun LoyaltyCardImpl(
     var side by rememberSaveable { mutableStateOf(initialSide) }
     val rotation = animateFloatAsState(
         targetValue = when (side) {
-            LoyaltyCardSide.FRONT -> LoyaltyCardDefaults.RotationFrontSide
-            LoyaltyCardSide.BACK -> LoyaltyCardDefaults.RotationFrontSide
+            LoyaltyCardSide.FRONT -> RotationFrontSide
+            LoyaltyCardSide.BACK -> RotationBackSide
         },
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
         label = "rotation",
