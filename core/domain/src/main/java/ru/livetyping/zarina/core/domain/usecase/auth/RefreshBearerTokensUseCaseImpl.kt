@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.auth
 
+import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase.Params
@@ -8,6 +9,7 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 internal class RefreshBearerTokensUseCaseImpl(
     private val authRepository: AuthRepository,
+    private val forcedSignOutCoordinator: ForcedSignOutCoordinator,
     private val logger: UseCaseLogger?,
 ) : UseCase<Params, BearerTokens>(logger), RefreshBearerTokensUseCase {
 
@@ -34,7 +36,7 @@ internal class RefreshBearerTokensUseCaseImpl(
             newTokens
         } catch (e: Exception) {
             logger?.e(TAG, e, "Failed to refresh Bearer tokens, request force signout")
-            // TODO: [Top] Implement
+            forcedSignOutCoordinator.requestForcedSignOut()
             throw e
         }
     }

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
@@ -72,10 +73,12 @@ internal class UseCaseModule {
     @Provides
     fun provideRefreshBearerTokensUseCase(
         authRepository: AuthRepository,
+        forcedSignOutCoordinator: ForcedSignOutCoordinator,
         logger: UseCaseLogger,
     ): RefreshBearerTokensUseCase {
         return RefreshBearerTokensUseCase.getInstance(
             authRepository = authRepository,
+            forcedSignOutCoordinator = forcedSignOutCoordinator,
             logger = logger,
         )
     }
