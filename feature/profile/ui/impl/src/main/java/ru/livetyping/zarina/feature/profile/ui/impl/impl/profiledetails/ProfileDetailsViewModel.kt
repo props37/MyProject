@@ -8,29 +8,36 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.kotlinutil.toEpochMillis
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
@@ -41,6 +48,7 @@ import javax.inject.Inject
 internal class ProfileDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getUserFlow: GetUserFlowUseCase,
+    private val updateUserNotificationsSettings: UpdateUserNotificationsSettingsUseCase,
 ) : ViewModel(), SideEffectSource<ProfileDetailsSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -86,13 +94,15 @@ internal class ProfileDetailsViewModel @Inject constructor(
             }
         }
 
-    val profileDetailsState: StateFlow<ProfileDetailsState> = combine(
+    val profileDetailsState: StateFlow<ProfileDetailsState> = combineMore(
         userResultFlow,
         userRequester.loadingState,
         birthDateEpochMillisValueHolder.stateFlow,
         phone,
         email,
-    ) { userResult, loadingState, birthDateEpochMillis, phone, email ->
+        receiveEmails,
+        receiveSms,
+    ) { userResult, loadingState, birthDateEpochMillis, phone, email, receiveEmails, receiveSms ->
         val isLoading = loadingState is FlowRequester.LoadingState.Loading
                 && loadingState.request == UserRequest.LOADING
         if (isLoading) {
@@ -114,8 +124,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
                         isBirthDateChangeable = isBirthDateChangeable,
                         phone = phone,
                         email = email ?: Email.create(""),
-                        receiveEmails = receiveEmails.value,
-                        receiveSms = receiveSms.value,
+                        receiveEmails = receiveEmails,
+                        receiveSms = receiveSms,
                     )
                 },
                 onFailure = {
@@ -171,8 +181,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
             ProfileDetailsEvent.EmailClicked -> TODO()
             ProfileDetailsEvent.PhoneClicked -> TODO()
             ProfileDetailsEvent.ChangePasswordClicked -> TODO()
-            is ProfileDetailsEvent.ReceiveEmailsChanged -> receiveEmails.value = event.receive
-            is ProfileDetailsEvent.ReceiveSmsChanged -> receiveSms.value = event.receive
+            is ProfileDetailsEvent.ReceiveEmailsChanged -> onReceiveEmailsChanged(event)
+            is ProfileDetailsEvent.ReceiveSmsChanged -> onReceiveSmsChanged(event)
             ProfileDetailsEvent.DeleteAccountClicked -> TODO()
             ProfileDetailsEvent.SignOutClicked -> TODO()
             ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
@@ -194,6 +204,52 @@ internal class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun onReceiveEmailsChanged(event: ProfileDetailsEvent.ReceiveEmailsChanged) {
+        updateNotificationsSettings(
+            receiveEmails = event.receiveEmails,
+            receiveSms = receiveSms.value,
+            onFailure = {
+                delay(NOTIFICATIONS_SETTINGS_RESET_DELAY_MILLIS)
+                receiveEmails.value = !event.receiveEmails
+            },
+        )
+    }
+
+    private fun onReceiveSmsChanged(event: ProfileDetailsEvent.ReceiveSmsChanged) {
+        updateNotificationsSettings(
+            receiveEmails = receiveEmails.value,
+            receiveSms = event.receiveSms,
+            onFailure = {
+                delay(NOTIFICATIONS_SETTINGS_RESET_DELAY_MILLIS)
+                receiveSms.value = !event.receiveSms
+            },
+        )
+    }
+
+    private fun updateNotificationsSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean,
+        onFailure: suspend () -> Unit,
+    ) {
+        if (receiveSms == this.receiveSms.value && receiveEmails == this.receiveEmails.value) return
+
+        this.receiveSms.value = receiveSms
+        this.receiveEmails.value = receiveEmails
+
+        viewModelScope.launch {
+            val params = UpdateUserNotificationsSettingsUseCase.Params(
+                receiveSms = receiveSms,
+                receiveEmails = receiveEmails,
+            )
+            updateUserNotificationsSettings(params)
+                .onFailure {
+                    val text = Text.Resource(R.string.profile_notification_settings_updating_error)
+                    showZarinaErrorToast(text)
+                    onFailure()
+                }
+        }
+    }
+
     private fun updateFieldsWithUser(user: User) {
         firstNameTextFieldState.setTextAndPlaceCursorAtEnd(user.firstName.orEmpty())
         lastNameTextFieldState.setTextAndPlaceCursorAtEnd(user.lastName.orEmpty())
@@ -205,11 +261,20 @@ internal class ProfileDetailsViewModel @Inject constructor(
         receiveSms.value = user.notificationSettings.receiveSms
     }
 
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(ProfileDetailsSideEffect.ShowZarinaToast(message))
+    }
+
     private enum class UserRequest : FlowRequest { LOADING, REFRESHING }
 
     private enum class Keys {
         BIRTH_DATE_EPOCH_MILLIS;
 
         val key: String = name
+    }
+
+    private companion object {
+        private const val NOTIFICATIONS_SETTINGS_RESET_DELAY_MILLIS = 50L
     }
 }

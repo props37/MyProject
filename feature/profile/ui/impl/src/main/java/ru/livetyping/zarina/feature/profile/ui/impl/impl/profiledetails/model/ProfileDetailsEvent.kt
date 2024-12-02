@@ -9,9 +9,9 @@ internal sealed interface ProfileDetailsEvent {
 
     data object ChangePasswordClicked : ProfileDetailsEvent
 
-    data class ReceiveEmailsChanged(val receive: Boolean) : ProfileDetailsEvent
+    data class ReceiveEmailsChanged(val receiveEmails: Boolean) : ProfileDetailsEvent
 
-    data class ReceiveSmsChanged(val receive: Boolean) : ProfileDetailsEvent
+    data class ReceiveSmsChanged(val receiveSms: Boolean) : ProfileDetailsEvent
 
     data object SignOutClicked : ProfileDetailsEvent
 

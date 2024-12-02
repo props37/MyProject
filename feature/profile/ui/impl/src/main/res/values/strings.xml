@@ -30,6 +30,7 @@
     <string name="profile_newsletter_subscription_privacy_policy">политикой обработки персональных данных</string>
     <string name="profile_sign_out">Выйти из аккаунта</string>
     <string name="profile_delete_account">Удалить аккаунт</string>
+    <string name="profile_notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun ProfileDetailsScreenBehavior(
@@ -21,6 +22,7 @@ internal fun ProfileDetailsScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -36,6 +38,10 @@ internal fun ProfileDetailsScreenBehavior(
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
+                    }
+
+                    is ProfileDetailsSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
