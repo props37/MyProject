@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
+import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     private val interactor: AppInteractor,
     private val getForcedSignOutRequestsFlow: GetForcedSignOutRequestsFlowUseCase,
+    private val forcedSignOut: ForcedSignOutUseCase,
 ) : ViewModel() {
 
     val startFeature: AppStartFeature = runBlocking {
@@ -70,9 +72,7 @@ class AppViewModel @Inject constructor(
     // TODO: [High] Do something with navigation?
     private fun listenToForcedSignOutRequests() {
         getForcedSignOutRequestsFlow()
-            .onEach {
-                interactor.forcedSignOut()
-            }
+            .onEach { forcedSignOut() }
             .launchIn(viewModelScope)
     }
 }
