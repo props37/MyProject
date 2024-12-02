@@ -151,7 +151,7 @@ private fun ProfileDetailsImpl(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Policies()
+        Policies(modifier = Modifier.padding(horizontal = 16.dp))
 
         Spacer(modifier = Modifier.height(32.dp))
 
