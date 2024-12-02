@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
@@ -347,6 +348,17 @@ internal class UseCaseModule {
     ): RequestPasswordResetUseCase {
         return RequestPasswordResetUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetForcedSignOutRequestFlowUseCase(
+        forcedSignOutCoordinator: ForcedSignOutCoordinator,
+        logger: UseCaseLogger,
+    ): GetForcedSignOutRequestFlowUseCase {
+        return GetForcedSignOutRequestFlowUseCase.getInstance(
+            forcedSignOutCoordinator = forcedSignOutCoordinator,
             logger = logger,
         )
     }
