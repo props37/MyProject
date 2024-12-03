@@ -2,10 +2,12 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,6 +16,8 @@ internal class ProductListViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val navEntry = savedStateHandle.toRoute<ProductListNavEntry>()
 
     fun onBackClicked() {
         navigationThrottler.throttle {
