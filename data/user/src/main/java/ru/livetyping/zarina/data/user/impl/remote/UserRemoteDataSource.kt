@@ -49,5 +49,7 @@ internal interface UserRemoteDataSource {
 
     suspend fun signOut(): BearerTokens
 
+    suspend fun deleteAccount()
+
     fun getYandexCaptcha(): YandexCaptcha
 }

@@ -149,6 +149,10 @@ internal class UserApiImpl @Inject constructor(
         return httpClient.delete("/api/auth").body()
     }
 
+    override suspend fun deleteAccount() {
+        httpClient.post("/api/profile/delete")
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         val url = Url.create("$baseUrl/api/v1/smartCaptcha/")
         return YandexCaptcha(url)

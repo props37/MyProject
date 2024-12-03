@@ -49,5 +49,7 @@ internal interface UserApi {
 
     suspend fun signOut(): SignOutDto
 
+    suspend fun deleteAccount()
+
     fun getYandexCaptcha(): YandexCaptcha
 }

@@ -116,6 +116,10 @@ internal class UserRepositoryImpl @Inject constructor(
         return remoteDataSource.signOut()
     }
 
+    override suspend fun deleteAccount() {
+        remoteDataSource.deleteAccount()
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         return remoteDataSource.getYandexCaptcha()
     }

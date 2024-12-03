@@ -87,6 +87,10 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         return api.signOut().toBearerTokens()
     }
 
+    override suspend fun deleteAccount() {
+        api.deleteAccount()
+    }
+
     override fun getYandexCaptcha(): YandexCaptcha {
         return api.getYandexCaptcha()
     }

@@ -54,6 +54,8 @@ public interface UserRepository {
 
     public suspend fun signOut(): BearerTokens
 
+    public suspend fun deleteAccount()
+
     public fun getYandexCaptcha(): YandexCaptcha
 
     public suspend fun clear()
