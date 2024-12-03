@@ -36,6 +36,9 @@
     <string name="profile_stay">Остаться</string>
     <string name="profile_sign_out_short">Выйти</string>
     <string name="profile_sign_out_error">Не удалось выйти из аккаунта</string>
+    <string name="profile_delete_account_question">Удалить аккаунт?</string>
+    <string name="profile_account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
+    <string name="profile_keep">Оставить</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

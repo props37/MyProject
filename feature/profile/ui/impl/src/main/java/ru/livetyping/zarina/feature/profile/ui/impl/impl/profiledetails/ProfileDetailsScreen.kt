@@ -25,9 +25,12 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.AccountDeletionDialog
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsContent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.SignOutDialog
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
@@ -44,6 +47,7 @@ internal fun ProfileDetailsScreen(
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val profileDetailsState by viewModel.profileDetailsState.collectAsStateWithLifecycle()
     val signOutDialogState by viewModel.signOutDialogState.collectAsStateWithLifecycle()
+    val accountDeletionDialogState by viewModel.accountDeletionDialogState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
@@ -52,6 +56,8 @@ internal fun ProfileDetailsScreen(
         onProfileDetailsEvent = viewModel::onProfileDetailsEvent,
         signOutDialogState = signOutDialogState,
         onSignOutDialogEvent = viewModel::onSignOutDialogEvent,
+        accountDeletionDialogState = accountDeletionDialogState,
+        onAccountDeletionDialogEvent = viewModel::onAccountDeletionDialogEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -67,6 +73,8 @@ internal fun ScreenContent(
     onProfileDetailsEvent: (ProfileDetailsEvent) -> Unit,
     signOutDialogState: SignOutDialogState,
     onSignOutDialogEvent: (SignOutDialogEvent) -> Unit,
+    accountDeletionDialogState: AccountDeletionDialogState,
+    onAccountDeletionDialogEvent: (AccountDeletionDialogEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProfileDetailsSideEffect>,
     navActions: ProfileDetailsNavActions,
@@ -100,6 +108,13 @@ internal fun ScreenContent(
         SignOutDialog(
             state = signOutDialogState,
             onEvent = onSignOutDialogEvent,
+        )
+    }
+
+    if (accountDeletionDialogState is AccountDeletionDialogState.Visible) {
+        AccountDeletionDialog(
+            state = accountDeletionDialogState,
+            onEvent = onAccountDeletionDialogEvent,
         )
     }
 

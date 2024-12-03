@@ -42,6 +42,8 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.profile.ui.impl.R
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
@@ -63,6 +65,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
     private val operationTracker = OperationTracker()
 
     private var signOutJob: Job? = null
+    private var deleteAccountJob: Job? = null
 
     private val userParams = GetUserFlowUseCase.Params(CachePolicy.Remote())
     private val userRequester = FlowRequester<Result<User?>, UserRequest> {
@@ -177,7 +180,6 @@ internal class ProfileDetailsViewModel @Inject constructor(
     )
 
     private val isSignOutDialogVisible = MutableStateFlow(false)
-
     val signOutDialogState: StateFlow<SignOutDialogState> = combine(
         isSignOutDialogVisible,
         operationTracker.ongoingOperationKeys,
@@ -192,6 +194,23 @@ internal class ProfileDetailsViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = SignOutDialogState.Hidden,
+    )
+
+    private val isAccountDeletionDialogVisible = MutableStateFlow(false)
+    val accountDeletionDialogState: StateFlow<AccountDeletionDialogState> = combine(
+        isAccountDeletionDialogVisible,
+        operationTracker.ongoingOperationKeys,
+    ) { isVisible, ongoingOperations ->
+        if (isVisible) {
+            val isDeleteButtonLoading = Operation.DELETE_ACCOUNT in ongoingOperations
+            AccountDeletionDialogState.Visible(isDeleteButtonLoading = isDeleteButtonLoading)
+        } else {
+            AccountDeletionDialogState.Hidden
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = AccountDeletionDialogState.Hidden,
     )
 
     fun onTopBarEvent(event: ProfileDetailsTopBarEvent) {
@@ -213,7 +232,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
             is ProfileDetailsEvent.ReceiveEmailsChanged -> onReceiveEmailsChanged(event)
             is ProfileDetailsEvent.ReceiveSmsChanged -> onReceiveSmsChanged(event)
             ProfileDetailsEvent.SignOutClicked -> isSignOutDialogVisible.value = true
-            ProfileDetailsEvent.DeleteAccountClicked -> TODO()
+            ProfileDetailsEvent.DeleteAccountClicked -> isAccountDeletionDialogVisible.value = true
             ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
         }
     }
@@ -234,6 +253,17 @@ internal class ProfileDetailsViewModel @Inject constructor(
             }
 
             SignOutDialogEvent.SignOutClicked -> performSignOut()
+        }
+    }
+
+    fun onAccountDeletionDialogEvent(event: AccountDeletionDialogEvent) {
+        when (event) {
+            AccountDeletionDialogEvent.DismissRequested -> {
+                if (deleteAccountJob?.isActive == true) return
+                isAccountDeletionDialogVisible.value = false
+            }
+
+            AccountDeletionDialogEvent.DeleteAccountClicked -> performAccountDeletion()
         }
     }
 
@@ -310,6 +340,17 @@ internal class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun performAccountDeletion() {
+        if (deleteAccountJob?.isActive == true) return
+
+        deleteAccountJob = viewModelScope.launch {
+            operationTracker.track(Operation.DELETE_ACCOUNT) {
+                TODO()
+                // TODO: [Top] Implement
+            }
+        }
+    }
+
     private fun updateNotificationsSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,
@@ -352,7 +393,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private enum class UserRequest : FlowRequest { LOADING, REFRESHING }
 
-    private enum class Operation : OperationKey { SIGN_OUT }
+    private enum class Operation : OperationKey { SIGN_OUT, DELETE_ACCOUNT }
 
     private enum class Keys {
         BIRTH_DATE_EPOCH_MILLIS;
