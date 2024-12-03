@@ -1,3 +1,7 @@
 package ru.livetyping.zarina.feature.catalog.ui
 
-public class CatalogNavActions
+import ru.livetyping.zarina.core.domain.model.category.Category
+
+public class CatalogNavActions(
+    public val onCategoryClicked: (Category.Id) -> Unit,
+)

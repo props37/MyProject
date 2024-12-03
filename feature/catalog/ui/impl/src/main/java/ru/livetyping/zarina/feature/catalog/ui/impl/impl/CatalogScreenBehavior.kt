@@ -41,6 +41,8 @@ internal fun CatalogScreenBehavior(
 }
 
 private fun navigate(navActions: CatalogNavActions, action: CatalogScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        CatalogScreenAction.SearchClicked -> TODO()
+        is CatalogScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
+    }
 }
