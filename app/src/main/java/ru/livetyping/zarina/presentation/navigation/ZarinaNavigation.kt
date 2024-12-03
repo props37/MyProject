@@ -24,6 +24,7 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
@@ -39,12 +40,14 @@ import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
 import ru.livetyping.zarina.presentation.navigation.feature.onboardingFeature
+import ru.livetyping.zarina.presentation.navigation.feature.productListFeature
 import ru.livetyping.zarina.presentation.navigation.feature.profileFeature
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCartNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCatalogNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelectorNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberProductListNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignUpNavActions
@@ -93,6 +96,9 @@ fun ZarinaNavigation(
     val signUpFeature = features.find<SignUpFeature>()
     val signUpNavActions = rememberSignUpNavActions(navController)
 
+    val productListFeature = features.find<ProductListFeature>()
+    val productListNavActions = rememberProductListNavActions(navController)
+
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
         AppStartFeature.HOME -> HomeFeature.getNavEntry()
@@ -137,6 +143,7 @@ fun ZarinaNavigation(
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
         signUpFeature(navController, signUpFeature, signUpNavActions)
+        productListFeature(productListFeature, productListNavActions)
     }
 }
 
