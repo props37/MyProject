@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
 import java.time.LocalDate
 
@@ -45,6 +46,8 @@ internal interface UserApi {
         receiveSms: Boolean,
         receiveEmails: Boolean,
     )
+
+    suspend fun signOut(): SignOutDto
 
     fun getYandexCaptcha(): YandexCaptcha
 }

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -50,6 +51,8 @@ public interface UserRepository {
         receiveSms: Boolean,
         receiveEmails: Boolean,
     )
+
+    public suspend fun signOut(): BearerTokens
 
     public fun getYandexCaptcha(): YandexCaptcha
 

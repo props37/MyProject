@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user.impl.remote
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -80,6 +81,10 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         receiveEmails: Boolean
     ) {
         api.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
+    override suspend fun signOut(): BearerTokens {
+        return api.signOut().toBearerTokens()
     }
 
     override fun getYandexCaptcha(): YandexCaptcha {

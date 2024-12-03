@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -109,6 +110,10 @@ internal class UserRepositoryImpl @Inject constructor(
         receiveEmails: Boolean
     ) {
         remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
+    override suspend fun signOut(): BearerTokens {
+        return remoteDataSource.signOut()
     }
 
     override fun getYandexCaptcha(): YandexCaptcha {

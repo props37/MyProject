@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.user.impl.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -22,6 +23,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDt
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.RequestPasswordResetApiExceptionConverter
@@ -141,6 +143,10 @@ internal class UserApiImpl @Inject constructor(
         httpClient.post("/api/notifications") {
             setJsonBody(body)
         }
+    }
+
+    override suspend fun signOut(): SignOutDto {
+        return httpClient.delete("/api/auth").body()
     }
 
     override fun getYandexCaptcha(): YandexCaptcha {

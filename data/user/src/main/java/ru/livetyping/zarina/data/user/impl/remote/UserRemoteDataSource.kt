@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.user.impl.remote
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -45,6 +46,8 @@ internal interface UserRemoteDataSource {
         receiveSms: Boolean,
         receiveEmails: Boolean,
     )
+
+    suspend fun signOut(): BearerTokens
 
     fun getYandexCaptcha(): YandexCaptcha
 }
