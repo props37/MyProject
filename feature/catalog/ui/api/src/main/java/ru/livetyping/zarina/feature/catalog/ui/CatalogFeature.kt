@@ -1,9 +1,9 @@
 package ru.livetyping.zarina.feature.catalog.ui
 
-import ru.livetyping.zarina.core.feature.SingleFeatureEntry
+import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
-public interface CatalogFeature : SingleFeatureEntry<CatalogNavEntry, Unit, CatalogNavActions> {
+public interface CatalogFeature : ComposableFeatureEntry<CatalogNavEntry, Unit, CatalogNavActions> {
     public companion object {
         public fun getNavEntry(): CatalogNavEntry = CatalogNavEntry
 

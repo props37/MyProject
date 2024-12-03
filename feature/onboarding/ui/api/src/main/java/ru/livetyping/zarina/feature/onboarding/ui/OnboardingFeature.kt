@@ -1,10 +1,10 @@
 package ru.livetyping.zarina.feature.onboarding.ui
 
-import ru.livetyping.zarina.core.feature.SingleFeatureEntry
+import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
 public interface OnboardingFeature :
-    SingleFeatureEntry<OnboardingNavEntry, Unit, OnboardingNavActions> {
+    ComposableFeatureEntry<OnboardingNavEntry, Unit, OnboardingNavActions> {
 
     public companion object {
         public fun getNavEntry(): OnboardingNavEntry = OnboardingNavEntry

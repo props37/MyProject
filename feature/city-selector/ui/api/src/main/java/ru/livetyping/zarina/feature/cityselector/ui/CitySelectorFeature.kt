@@ -1,10 +1,10 @@
 package ru.livetyping.zarina.feature.cityselector.ui
 
-import ru.livetyping.zarina.core.feature.SingleFeatureEntry
+import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
 public interface CitySelectorFeature :
-    SingleFeatureEntry<CitySelectorNavEntry, CitySelectorNavParams, CitySelectorNavActions> {
+    ComposableFeatureEntry<CitySelectorNavEntry, CitySelectorNavParams, CitySelectorNavActions> {
 
     public companion object {
         public fun getNavEntry(params: CitySelectorNavParams): CitySelectorNavEntry {

@@ -1,9 +1,10 @@
 package ru.livetyping.zarina.feature.productlist.ui.api
 
-import ru.livetyping.zarina.core.feature.SingleFeatureEntry
+import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
-public interface ProductListFeature : SingleFeatureEntry<ProductListNavEntry, ProductListNavParams, ProductListNavActions> {
+public interface ProductListFeature :
+    ComposableFeatureEntry<ProductListNavEntry, ProductListNavParams, ProductListNavActions> {
 
     public companion object {
         public fun getNavEntry(params: ProductListNavParams): ProductListNavEntry {
