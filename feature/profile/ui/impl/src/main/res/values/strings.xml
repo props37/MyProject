@@ -31,6 +31,11 @@
     <string name="profile_sign_out">Выйти из аккаунта</string>
     <string name="profile_delete_account">Удалить аккаунт</string>
     <string name="profile_notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
+    <string name="profile_sign_out_question">Выйти из аккаунта?</string>
+    <string name="profile_sign_out_confirmation_body">После выхода из аккаунта ты не сможешь отслеживать статус своих заказов и воспользоваться бонусной картой</string>
+    <string name="profile_stay">Остаться</string>
+    <string name="profile_sign_out_short">Выйти</string>
+    <string name="profile_sign_out_error">Не удалось выйти из аккаунта</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

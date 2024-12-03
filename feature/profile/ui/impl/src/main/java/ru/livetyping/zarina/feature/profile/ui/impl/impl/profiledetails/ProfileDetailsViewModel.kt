@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,6 +26,7 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.kotlinutil.toEpochMillis
@@ -32,6 +34,8 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
@@ -42,6 +46,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.Pr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,9 +55,14 @@ internal class ProfileDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getUserFlow: GetUserFlowUseCase,
     private val updateUserNotificationsSettings: UpdateUserNotificationsSettingsUseCase,
+    private val signOut: SignOutUseCase,
 ) : ViewModel(), SideEffectSource<ProfileDetailsSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var signOutJob: Job? = null
 
     private val userParams = GetUserFlowUseCase.Params(CachePolicy.Remote())
     private val userRequester = FlowRequester<Result<User?>, UserRequest> {
@@ -165,6 +176,24 @@ internal class ProfileDetailsViewModel @Inject constructor(
         initialValue = ProfileDetailsTopBarState(isSaveButtonVisible = false),
     )
 
+    private val isSignOutDialogVisible = MutableStateFlow(false)
+
+    val signOutDialogState: StateFlow<SignOutDialogState> = combine(
+        isSignOutDialogVisible,
+        operationTracker.ongoingOperationKeys,
+    ) { isVisible, ongoingOperations ->
+        if (isVisible) {
+            val isSignOutButtonLoading = Operation.SIGN_OUT in ongoingOperations
+            SignOutDialogState.Visible(isSignOutButtonLoading = isSignOutButtonLoading)
+        } else {
+            SignOutDialogState.Hidden
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = SignOutDialogState.Hidden,
+    )
+
     fun onTopBarEvent(event: ProfileDetailsTopBarEvent) {
         when (event) {
             ProfileDetailsTopBarEvent.BackClicked -> onBackClicked()
@@ -183,8 +212,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
             ProfileDetailsEvent.ChangePasswordClicked -> onChangePasswordClicked()
             is ProfileDetailsEvent.ReceiveEmailsChanged -> onReceiveEmailsChanged(event)
             is ProfileDetailsEvent.ReceiveSmsChanged -> onReceiveSmsChanged(event)
-            ProfileDetailsEvent.SignOutClicked -> onSignOutClicked()
-            ProfileDetailsEvent.DeleteAccountClicked -> onDeleteAccountClicked()
+            ProfileDetailsEvent.SignOutClicked -> isSignOutDialogVisible.value = true
+            ProfileDetailsEvent.DeleteAccountClicked -> TODO()
             ProfileDetailsEvent.ErrorRefreshClicked -> userRequester.request(UserRequest.LOADING)
         }
     }
@@ -194,6 +223,17 @@ internal class ProfileDetailsViewModel @Inject constructor(
             LifecycleEvent.ON_CREATE -> Unit
             LifecycleEvent.ON_START -> userRequester.request(UserRequest.LOADING)
             LifecycleEvent.ON_RESUME -> Unit
+        }
+    }
+
+    fun onSignOutDialogEvent(event: SignOutDialogEvent) {
+        when (event) {
+            SignOutDialogEvent.DismissRequested -> {
+                if (signOutJob?.isActive == true) return
+                isSignOutDialogVisible.value = false
+            }
+
+            SignOutDialogEvent.SignOutClicked -> performSignOut()
         }
     }
 
@@ -252,14 +292,22 @@ internal class ProfileDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onSignOutClicked() {
-        // TODO: [Top] Implement
-        TODO()
-    }
+    private fun performSignOut() {
+        if (signOutJob?.isActive == true) return
 
-    private fun onDeleteAccountClicked() {
-        // TODO: [Top] Implement
-        TODO()
+        signOutJob = viewModelScope.launch {
+            operationTracker.track(Operation.SIGN_OUT) {
+                signOut()
+                    .onSuccess {
+                        val action = ProfileDetailsScreenAction.UserSignedOut
+                        emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
+                    }
+                    .onFailure {
+                        val text = Text.Resource(R.string.profile_sign_out_error)
+                        showZarinaErrorToast(text)
+                    }
+            }
+        }
     }
 
     private fun updateNotificationsSettings(
@@ -303,6 +351,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
     }
 
     private enum class UserRequest : FlowRequest { LOADING, REFRESHING }
+
+    private enum class Operation : OperationKey { SIGN_OUT }
 
     private enum class Keys {
         BIRTH_DATE_EPOCH_MILLIS;

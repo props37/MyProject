@@ -39,6 +39,8 @@ public class ProfileFeatureImpl : ProfileFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
+            val navigateUp: () -> Unit = { navController.navigateUp() }
+
             val profileScreenNavActions = ProfileScreenNavActions(
                 onSignInClicked = actions.onSignInClicked,
                 onSignUpClicked = actions.onSignUpClicked,
@@ -49,7 +51,8 @@ public class ProfileFeatureImpl : ProfileFeature {
             profileScreen(profileScreenNavActions)
 
             val profileDetailsNavActions = ProfileDetailsNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateUp,
+                onUserSignedOut = navigateUp,
             )
             profileDetailsScreen(profileDetailsNavActions)
 

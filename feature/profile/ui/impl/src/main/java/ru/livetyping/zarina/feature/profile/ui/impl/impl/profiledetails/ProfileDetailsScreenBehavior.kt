@@ -56,5 +56,6 @@ internal fun ProfileDetailsScreenBehavior(
 private fun navigate(navActions: ProfileDetailsNavActions, action: ProfileDetailsScreenAction) {
     when (action) {
         ProfileDetailsScreenAction.BackClicked -> navActions.onBackClicked()
+        ProfileDetailsScreenAction.UserSignedOut -> navActions.onUserSignedOut()
     }
 }

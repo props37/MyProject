@@ -27,10 +27,13 @@ import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsContent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.SignOutDialog
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogState
 import java.time.LocalDate
 
 @Composable
@@ -40,12 +43,15 @@ internal fun ProfileDetailsScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val profileDetailsState by viewModel.profileDetailsState.collectAsStateWithLifecycle()
+    val signOutDialogState by viewModel.signOutDialogState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         profileDetailsState = profileDetailsState,
         onProfileDetailsEvent = viewModel::onProfileDetailsEvent,
+        signOutDialogState = signOutDialogState,
+        onSignOutDialogEvent = viewModel::onSignOutDialogEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -59,6 +65,8 @@ internal fun ScreenContent(
     onTopBarEvent: (ProfileDetailsTopBarEvent) -> Unit,
     profileDetailsState: ProfileDetailsState,
     onProfileDetailsEvent: (ProfileDetailsEvent) -> Unit,
+    signOutDialogState: SignOutDialogState,
+    onSignOutDialogEvent: (SignOutDialogEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProfileDetailsSideEffect>,
     navActions: ProfileDetailsNavActions,
@@ -85,6 +93,13 @@ internal fun ScreenContent(
                 onProfileDetailsEvent(ProfileDetailsEvent.BirthDateEpochMillisChanged(it))
                 isDatePickerVisible = false
             },
+        )
+    }
+
+    if (signOutDialogState is SignOutDialogState.Visible) {
+        SignOutDialog(
+            state = signOutDialogState,
+            onEvent = onSignOutDialogEvent,
         )
     }
 
