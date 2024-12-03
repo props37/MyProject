@@ -7,9 +7,11 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigationutil.hasRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
+import ru.livetyping.zarina.feature.home.domain.model.ClickAction
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 
 fun NavGraphBuilder.homeFeature(
@@ -39,9 +41,18 @@ fun rememberHomeNavActions(
 ): HomeNavActions {
     return remember(navController) {
         HomeNavActions(
-            bannerClicked = {
-                TODO()
-                // TODO: [Top] Implement
+            bannerClicked = { banner ->
+                when (val clickAction = banner.clickAction) {
+                    is ClickAction.Products -> {
+                        val productListParams = ProductListNavParams(
+                            categoryId = clickAction.categoryId,
+                        )
+                        val productListNavEntry = productListParams.toNavEntry()
+                        navController.navigate(productListNavEntry)
+                    }
+
+                    null -> Unit
+                }
             },
         )
     }
