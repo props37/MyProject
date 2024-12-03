@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
@@ -403,6 +404,23 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): SignOutUseCase {
         return SignOutUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            contentRepository = contentRepository,
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideDeleteAccountUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        contentRepository: ContentRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): DeleteAccountUseCase {
+        return DeleteAccountUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             contentRepository = contentRepository,
