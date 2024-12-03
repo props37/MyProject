@@ -57,5 +57,6 @@ private fun navigate(navActions: ProfileDetailsNavActions, action: ProfileDetail
     when (action) {
         ProfileDetailsScreenAction.BackClicked -> navActions.onBackClicked()
         ProfileDetailsScreenAction.UserSignedOut -> navActions.onUserSignedOut()
+        ProfileDetailsScreenAction.AccountDeleted -> navActions.onAccountDeleted()
     }
 }

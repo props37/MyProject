@@ -52,7 +52,12 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val profileDetailsNavActions = ProfileDetailsNavActions(
                 onBackClicked = navigateUp,
-                onUserSignedOut = navigateUp,
+                onUserSignedOut = {
+                    navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
+                },
+                onAccountDeleted = {
+                    navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
+                }
             )
             profileDetailsScreen(profileDetailsNavActions)
 

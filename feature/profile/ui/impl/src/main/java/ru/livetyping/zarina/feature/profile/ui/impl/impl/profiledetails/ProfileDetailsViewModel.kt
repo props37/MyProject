@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
+import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
@@ -58,6 +59,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
     getUserFlow: GetUserFlowUseCase,
     private val updateUserNotificationsSettings: UpdateUserNotificationsSettingsUseCase,
     private val signOut: SignOutUseCase,
+    private val deleteAccount: DeleteAccountUseCase,
 ) : ViewModel(), SideEffectSource<ProfileDetailsSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -345,8 +347,15 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
         deleteAccountJob = viewModelScope.launch {
             operationTracker.track(Operation.DELETE_ACCOUNT) {
-                TODO()
-                // TODO: [Top] Implement
+                deleteAccount()
+                    .onSuccess {
+                        val action = ProfileDetailsScreenAction.AccountDeleted
+                        emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
+                    }
+                    .onFailure {
+                        val text = Text.Resource(R.string.profile_account_deletion_error)
+                        showZarinaErrorToast(text)
+                    }
             }
         }
     }

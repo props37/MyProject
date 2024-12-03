@@ -4,4 +4,6 @@ internal sealed interface ProfileDetailsScreenAction {
     data object BackClicked : ProfileDetailsScreenAction
 
     data object UserSignedOut : ProfileDetailsScreenAction
+
+    data object AccountDeleted : ProfileDetailsScreenAction
 }

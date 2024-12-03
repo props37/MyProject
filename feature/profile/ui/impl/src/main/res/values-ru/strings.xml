@@ -39,6 +39,7 @@
     <string name="profile_delete_account_question">Удалить аккаунт?</string>
     <string name="profile_account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
     <string name="profile_keep">Оставить</string>
+    <string name="profile_account_deletion_error">Не удалось удалить аккаунт</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
