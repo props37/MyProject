@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -57,12 +58,14 @@ internal class WishlistViewModel @Inject constructor(
 
     private var clearWishlistJob: Job? = null
 
-    private val wishlistProductIdsParams = GetWishlistProductIdsFlowUseCase.Params(
+    private val localWishlistProductIdsParams = GetWishlistProductIdsFlowUseCase.Params(
         cachePolicy = CachePolicy.LocalOnly,
     )
+    private val localWishlistProductIdsResultFlow =
+        getWishlistProductIdsFlow(localWishlistProductIdsParams)
 
     val topBarState: StateFlow<TopBarState> = combine(
-        getWishlistProductIdsFlow(wishlistProductIdsParams),
+        localWishlistProductIdsResultFlow,
         operationTracker.isOperationOngoing(ClearWishlistOperation),
     ) { wishlistProductIdsResult, isWishlistClearingOngoing ->
         val wishlistProductIds = wishlistProductIdsResult.getOrNull()
@@ -84,7 +87,9 @@ internal class WishlistViewModel @Inject constructor(
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
         .updateProducts(
-            wishlistProductIdsFlow = flowOf(emptySet()), // TODO: [Top] Implement
+            wishlistProductIdsFlow = localWishlistProductIdsResultFlow.map {
+                it.getOrDefault(emptySet())
+            },
             cartProductIdsFlow = flowOf(emptySet()), // TODO: [Top] Implement
         )
         .cachedIn(viewModelScopeDefault)
