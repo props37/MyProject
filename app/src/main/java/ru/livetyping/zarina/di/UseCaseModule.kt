@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
@@ -389,6 +390,23 @@ internal class UseCaseModule {
     ): UpdateUserNotificationsSettingsUseCase {
         return UpdateUserNotificationsSettingsUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignOutUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        contentRepository: ContentRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): SignOutUseCase {
+        return SignOutUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            contentRepository = contentRepository,
+            wishlistRepository = wishlistRepository,
             logger = logger,
         )
     }
