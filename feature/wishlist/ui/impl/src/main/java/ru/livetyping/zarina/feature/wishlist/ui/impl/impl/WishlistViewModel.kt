@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -25,7 +25,6 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
-import ru.livetyping.zarina.core.paging.updateProducts
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -86,12 +85,16 @@ internal class WishlistViewModel @Inject constructor(
 
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
-        .updateProducts(
-            wishlistProductIdsFlow = localWishlistProductIdsResultFlow.map {
-                it.getOrDefault(emptySet())
-            },
-            cartProductIdsFlow = flowOf(emptySet()), // TODO: [Top] Implement
-        )
+        .combine(
+            localWishlistProductIdsResultFlow.map { it.getOrDefault(emptySet()) },
+        ) { productPagingData, wishlistProductIds ->
+            productPagingData.map { product ->
+                product.copy(
+                    isInFavorites = product.id in wishlistProductIds,
+                    isInCart = false, // TODO: [Top] Implement
+                )
+            }
+        }
         .cachedIn(viewModelScopeDefault)
 
     fun onTopBarEvent(event: TopBarEvent) {
