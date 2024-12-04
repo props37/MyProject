@@ -9,8 +9,10 @@ import ru.livetyping.zarina.core.navigationutil.hasRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
@@ -58,9 +60,11 @@ fun rememberCitySelectorNavActions(
         CitySelectorNavActions(
             backClicked = { navController.navigateUp() },
             citySelected = { city ->
+                val cityParcelable = CityParcelable.from(city)
+                val result = CitySelectorResult(city = cityParcelable)
                 navController.navigateUp()
-                // TODO: [Top] Implement
-                TODO()
+                navController.currentBackStackEntry?.savedStateHandle
+                    ?.set(CitySelectorResult.KEY, result)
             },
         )
     }
