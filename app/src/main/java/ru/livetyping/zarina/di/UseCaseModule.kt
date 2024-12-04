@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearer
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
@@ -425,6 +426,17 @@ internal class UseCaseModule {
             authRepository = authRepository,
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoryFlowUseCase(
+        categoryRepository: CategoryRepository,
+        logger: UseCaseLogger,
+    ): GetCategoryFlowUseCase {
+        return GetCategoryFlowUseCase.getInstance(
+            categoryRepository = categoryRepository,
             logger = logger,
         )
     }
