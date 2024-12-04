@@ -57,6 +57,11 @@ fun rememberCitySelectorNavActions(
     return remember(navController) {
         CitySelectorNavActions(
             backClicked = { navController.navigateUp() },
+            citySelected = { city ->
+                navController.navigateUp()
+                // TODO: [Top] Implement
+                TODO()
+            },
         )
     }
 }

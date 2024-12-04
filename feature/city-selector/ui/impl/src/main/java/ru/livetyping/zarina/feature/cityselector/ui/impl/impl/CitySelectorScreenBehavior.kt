@@ -46,5 +46,6 @@ internal fun CitySelectorScreenBehavior(
 private fun navigate(navActions: CitySelectorNavActions, action: CitySelectorScreenAction) {
     when (action) {
         CitySelectorScreenAction.BackClicked -> navActions.backClicked()
+        is CitySelectorScreenAction.CitySelected -> navActions.citySelected(action.city)
     }
 }

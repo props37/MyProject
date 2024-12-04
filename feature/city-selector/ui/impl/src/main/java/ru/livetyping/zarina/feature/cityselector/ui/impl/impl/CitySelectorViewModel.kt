@@ -143,8 +143,11 @@ internal class CitySelectorViewModel @Inject constructor(
     }
 
     private fun onChangeCityClicked() {
-        TODO()
-        // TODO: [Top] Implement
+        val city = selectedCityValueHolder.get()?.toCity() ?: return
+        navigationThrottler.throttle {
+            val action = CitySelectorScreenAction.CitySelected(city)
+            emitSideEffect(CitySelectorSideEffect.Navigate(action))
+        }
     }
 
     private fun onCityClicked(event: CityListEvent.CityClicked) {
