@@ -70,7 +70,7 @@ public fun ProductCard(
                 modifier = Modifier.matchParentSize(),
             )
             ZarinaLikeIconButton(
-                isLiked = product.isInFavorites,
+                isLiked = product.isInWishlist,
                 onClick = { onAddToFavoritesClicked(product) },
                 iconSize = IconSize,
                 indication = ripple(bounded = false, radius = IconSize),

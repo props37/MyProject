@@ -51,7 +51,7 @@ public data class ProductShortDto(
                 colors = colors,
                 media = media,
                 // States are not present in the DTO
-                isInFavorites = false,
+                isInWishlist = false,
                 isInCart = false,
             )
         } else {

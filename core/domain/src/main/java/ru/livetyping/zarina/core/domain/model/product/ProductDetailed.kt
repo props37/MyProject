@@ -11,7 +11,7 @@ public data class ProductDetailed(
     override val offers: List<ProductOffer>,
     override val colors: List<ProductColor>,
     override val media: List<Media>,
-    override val isInFavorites: Boolean,
+    override val isInWishlist: Boolean,
     override val isInCart: Boolean,
     val label: Label?,
     val description: List<DescriptionEntry>,
@@ -25,7 +25,7 @@ public data class ProductDetailed(
     offers = offers,
     colors = colors,
     media = media,
-    isInFavorites = isInFavorites,
+    isInWishlist = isInWishlist,
     isInCart = isInCart,
 ) {
     public data class Label(

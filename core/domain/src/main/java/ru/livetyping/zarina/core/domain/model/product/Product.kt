@@ -9,7 +9,7 @@ public sealed class Product(
     public open val offers: List<ProductOffer>,
     public open val colors: List<ProductColor>,
     public open val media: List<Media>,
-    public open val isInFavorites: Boolean,
+    public open val isInWishlist: Boolean,
     public open val isInCart: Boolean,
 ) {
     public val isAvailable: Boolean by lazy {

@@ -90,7 +90,7 @@ internal class WishlistViewModel @Inject constructor(
         ) { productPagingData, wishlistProductIds ->
             productPagingData.map { product ->
                 product.copy(
-                    isInFavorites = product.id in wishlistProductIds,
+                    isInWishlist = product.id in wishlistProductIds,
                     isInCart = false, // TODO: [Top] Implement
                 )
             }
