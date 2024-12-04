@@ -44,6 +44,7 @@ internal fun WishlistScreen(
         productPagingDataFlow = viewModel.productPagingDataFlow,
         onWishlistEvent = viewModel::onWishlistEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -56,11 +57,13 @@ private fun ScreenContent(
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onWishlistEvent: (WishlistEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
     WishlistScreenBehavior(
         onLifecycleEvent = onLifecycleEvent,
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

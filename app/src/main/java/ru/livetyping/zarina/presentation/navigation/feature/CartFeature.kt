@@ -6,6 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.api.CartNavActions
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
+import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 
 fun NavGraphBuilder.cartFeature(
     navController: NavHostController,
@@ -25,6 +27,8 @@ fun rememberCartNavActions(
     navController: NavHostController
 ): CartNavActions {
     return remember(navController) {
-        CartNavActions()
+        CartNavActions(
+            onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
+        )
     }
 }

@@ -21,6 +21,7 @@ internal fun CartScreen(
     viewModel: CartViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,10 +29,12 @@ internal fun CartScreen(
 
 @Composable
 internal fun ScreenContent(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
 ) {
     CartScreenBehavior(
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

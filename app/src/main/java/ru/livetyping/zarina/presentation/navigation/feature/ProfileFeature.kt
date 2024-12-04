@@ -12,6 +12,8 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
+import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
+import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 
 fun NavGraphBuilder.profileFeature(
     navController: NavHostController,
@@ -32,6 +34,7 @@ fun rememberProfileNavActions(
 ): ProfileNavActions {
     return remember(navController) {
         ProfileNavActions(
+            onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onSignInClicked = { navController.navigate(SignInFeature.getNavEntry()) },
             onSignUpClicked = { navController.navigate(SignUpFeature.getNavEntry()) },
             onChangeCityClicked = { currentCity ->

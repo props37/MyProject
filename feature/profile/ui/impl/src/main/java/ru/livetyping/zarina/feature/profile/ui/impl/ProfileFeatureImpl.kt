@@ -42,6 +42,7 @@ public class ProfileFeatureImpl : ProfileFeature {
             val navigateUp: () -> Unit = { navController.navigateUp() }
 
             val profileScreenNavActions = ProfileScreenNavActions(
+                onBackClicked = actions.onBackClicked,
                 onSignInClicked = actions.onSignInClicked,
                 onSignUpClicked = actions.onSignUpClicked,
                 onProfileDetailsClicked = { navController.navigate(ProfileDetailsNavEntry) },

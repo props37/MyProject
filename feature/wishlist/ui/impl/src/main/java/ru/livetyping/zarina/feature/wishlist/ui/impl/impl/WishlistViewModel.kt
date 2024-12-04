@@ -119,6 +119,13 @@ internal class WishlistViewModel @Inject constructor(
         }
     }
 
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = WishlistScreenAction.BackClicked
+            emitSideEffect(WishlistSideEffect.Navigate(action))
+        }
+    }
+
     private fun onClearWishlistClicked() {
         if (clearWishlistJob?.isActive == true) return
 

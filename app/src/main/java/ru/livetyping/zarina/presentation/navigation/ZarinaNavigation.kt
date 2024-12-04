@@ -4,13 +4,16 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
@@ -55,7 +58,6 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavA
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.signUpFeature
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
-import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 @Composable
@@ -104,29 +106,55 @@ fun ZarinaNavigation(
         AppStartFeature.HOME -> HomeFeature.getNavEntry()
     }
 
+    val currentBackStack = navController.currentBackStack
+    var prevDestination by remember { mutableStateOf<NavDestination?>(null) }
+    var currentDestination by remember { mutableStateOf<NavDestination?>(null) }
+    var prevSelectedBottomNavBarItem by remember { mutableStateOf<BottomNavBarItem?>(null) }
+    DisposableEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination != currentDestination) {
+                prevDestination = currentDestination
+                currentDestination = destination
+
+                val backStack = currentBackStack.value
+                prevSelectedBottomNavBarItem =
+                    prevDestination?.findClosestBottomNavBarItem(backStack)
+            }
+        }
+        onDispose {}
+    }
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
         enterTransition = {
             enterTransition(
+                backStack = currentBackStack.value,
+                lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
                 defaultTransition = ::zarinaEnterSlideTransition,
                 transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
             )
         },
         exitTransition = {
             exitTransition(
+                backStack = currentBackStack.value,
+                lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
                 defaultTransition = ::zarinaExitSlideTransition,
                 transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
             )
         },
         popEnterTransition = {
             enterTransition(
+                backStack = currentBackStack.value,
+                lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
                 defaultTransition = ::zarinaPopEnterSlideTransition,
                 transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
             )
         },
         popExitTransition = {
             exitTransition(
+                backStack = currentBackStack.value,
+                lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
                 defaultTransition = ::zarinaPopExitSlideTransition,
                 transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
             )
@@ -148,17 +176,19 @@ fun ZarinaNavigation(
 }
 
 private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(
+    lastSelectedBottomNavBarItem: BottomNavBarItem?,
+    backStack: List<NavBackStackEntry>,
     defaultTransition: () -> EnterTransition,
     transitionBetweenBottomNavBarItems: () -> EnterTransition,
 ): EnterTransition {
-    val initialDestinationBottomNavBarItem = initialDestination.findClosestBottomNavBarItem()
-    val targetDestinationBottomNavBarItem = targetDestination.findClosestBottomNavBarItem()
+    val targetDestinationBottomNavBarItem =
+        targetDestination.findClosestBottomNavBarItem(backStack)
     return when {
-        initialDestinationBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
+        lastSelectedBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
             defaultTransition()
         }
 
-        initialDestinationBottomNavBarItem == targetDestinationBottomNavBarItem -> {
+        lastSelectedBottomNavBarItem == targetDestinationBottomNavBarItem -> {
             defaultTransition()
         }
 
@@ -167,17 +197,19 @@ private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransi
 }
 
 private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(
+    lastSelectedBottomNavBarItem: BottomNavBarItem?,
+    backStack: List<NavBackStackEntry>,
     defaultTransition: () -> ExitTransition,
     transitionBetweenBottomNavBarItems: () -> ExitTransition,
 ): ExitTransition {
-    val initialDestinationBottomNavBarItem = initialDestination.findClosestBottomNavBarItem()
-    val targetDestinationBottomNavBarItem = targetDestination.findClosestBottomNavBarItem()
+    val targetDestinationBottomNavBarItem =
+        targetDestination.findClosestBottomNavBarItem(backStack)
     return when {
-        initialDestinationBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
+        lastSelectedBottomNavBarItem == null || targetDestinationBottomNavBarItem == null -> {
             defaultTransition()
         }
 
-        initialDestinationBottomNavBarItem == targetDestinationBottomNavBarItem -> {
+        lastSelectedBottomNavBarItem == targetDestinationBottomNavBarItem -> {
             defaultTransition()
         }
 
@@ -185,15 +217,22 @@ private inline fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransit
     }
 }
 
-private fun NavDestination.findClosestBottomNavBarItem(): BottomNavBarItem? {
-    return this.hierarchy.firstNotNullOfOrNull { destination ->
-        var resultItem: BottomNavBarItem? = null
+private fun NavDestination.findClosestBottomNavBarItem(
+    backStack: List<NavBackStackEntry>,
+): BottomNavBarItem? {
+    val destinationIndexInBackStack = backStack.indexOfLast { it.destination == this }
+    if (destinationIndexInBackStack == -1) return null
+
+    var resultItem: BottomNavBarItem? = null
+    outer@for (i in destinationIndexInBackStack downTo 0) {
+        val backStackEntry = backStack[i]
+        val destination = backStackEntry.destination
         for (item in BottomNavBarItems) {
             if (destination.hasRoute(item.toFeatureNavEntry()::class)) {
                 resultItem = item
-                break
+                break@outer
             }
         }
-        resultItem
     }
+    return resultItem
 }

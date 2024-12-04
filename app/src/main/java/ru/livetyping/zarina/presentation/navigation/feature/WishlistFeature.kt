@@ -25,6 +25,7 @@ fun rememberWishlistNavActions(
 ): WishlistNavActions {
     return remember(navController) {
         WishlistNavActions(
+            onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onGoToCatalogClicked = {
                 navController.navigateToBottomNavBarItem(BottomNavBarItem.Catalog)
                 navController.popBackStack(

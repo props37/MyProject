@@ -137,6 +137,13 @@ internal class CatalogViewModel @Inject constructor(
         }
     }
 
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = CatalogScreenAction.BackClicked
+            emitSideEffect(CatalogSideEffect.Navigate(action))
+        }
+    }
+
     private fun onCategoryListItemClicked(item: CategoryListItem) {
         when (item) {
             is CategoryListItem.CategoryItem -> onCategoryItemClicked(item)

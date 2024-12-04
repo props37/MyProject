@@ -52,6 +52,7 @@ internal fun CatalogScreen(
         onCategoryListEvent = viewModel::onCategoryListEvent,
         categoryListItemsState = categoryListItemsState,
         onSearchBarClicked = viewModel::onSearchBarClicked,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -65,10 +66,12 @@ private fun ScreenContent(
     onCategoryListEvent: (CategoryListEvent) -> Unit,
     categoryListItemsState: CategoryListItemsState,
     onSearchBarClicked: () -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogNavActions,
 ) {
     CatalogScreenBehavior(
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

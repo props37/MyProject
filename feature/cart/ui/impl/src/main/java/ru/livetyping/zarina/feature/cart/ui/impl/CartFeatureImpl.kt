@@ -33,7 +33,9 @@ public class CartFeatureImpl : CartFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            val cartScreenNavActions = CartScreenNavActions()
+            val cartScreenNavActions = CartScreenNavActions(
+                onBackClicked = actions.onBackClicked,
+            )
             cartScreen(cartScreenNavActions)
         }
     }

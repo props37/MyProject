@@ -11,7 +11,6 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import kotlin.reflect.KClass
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Stable
@@ -80,7 +79,3 @@ val BottomNavBarItems: List<BottomNavBarItem> = listOf(
     BottomNavBarItem.Profile,
     BottomNavBarItem.Cart,
 )
-
-val BottomNavBarItemNavEntryClasses: List<KClass<out Any>> = BottomNavBarItems.map { item ->
-    item.toFeatureNavEntry()::class
-}

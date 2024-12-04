@@ -151,6 +151,13 @@ internal class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.BackClicked
+            emitSideEffect(ProfileSideEffect.Navigate(action))
+        }
+    }
+
     private fun onProfileDetailsClicked() {
         navigationThrottler.throttle {
             val action = ProfileScreenAction.ProfileDetailsClicked

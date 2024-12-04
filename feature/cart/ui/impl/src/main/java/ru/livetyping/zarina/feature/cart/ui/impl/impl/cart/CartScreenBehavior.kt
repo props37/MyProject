@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -12,10 +13,13 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 
 @Composable
 internal fun CartScreenBehavior(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+
+    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -40,6 +44,7 @@ internal fun CartScreenBehavior(
 }
 
 private fun navigate(navActions: CartNavActions, action: CartScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        CartScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

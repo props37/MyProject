@@ -1,3 +1,5 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
-internal class CartNavActions
+internal class CartNavActions(
+    val onBackClicked: () -> Unit,
+)

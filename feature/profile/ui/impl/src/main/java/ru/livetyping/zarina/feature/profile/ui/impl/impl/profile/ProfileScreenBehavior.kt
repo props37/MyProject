@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -14,11 +15,14 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 
 @Composable
 internal fun ProfileScreenBehavior(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<ProfileSideEffect>,
     navActions: ProfileNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentContext by rememberUpdatedState(LocalContext.current)
+
+    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -49,6 +53,7 @@ internal fun ProfileScreenBehavior(
 
 private fun navigate(navActions: ProfileNavActions, action: ProfileScreenAction) {
     when (action) {
+        ProfileScreenAction.BackClicked -> navActions.onBackClicked()
         ProfileScreenAction.SignInClicked -> navActions.onSignInClicked()
         ProfileScreenAction.SignUpClicked -> navActions.onSignUpClicked()
         ProfileScreenAction.ProfileDetailsClicked -> navActions.onProfileDetailsClicked()

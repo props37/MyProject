@@ -41,6 +41,7 @@ internal fun ProfileScreen(
     ScreenContent(
         profileState = profileState,
         onProfileEvent = viewModel::onProfileEvent,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -50,10 +51,12 @@ internal fun ProfileScreen(
 internal fun ScreenContent(
     profileState: ProfileState,
     onProfileEvent: (ProfileEvent) -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<ProfileSideEffect>,
     navActions: ProfileNavActions,
 ) {
     ProfileScreenBehavior(
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

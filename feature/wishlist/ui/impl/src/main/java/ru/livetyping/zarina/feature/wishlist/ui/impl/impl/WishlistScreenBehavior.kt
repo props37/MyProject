@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -17,12 +18,15 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 @Composable
 internal fun WishlistScreenBehavior(
     onLifecycleEvent: (LifecycleEvent) -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistNavActions,
 ) {
     val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+
+    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -54,6 +58,7 @@ internal fun WishlistScreenBehavior(
 
 private fun navigate(navActions: WishlistNavActions, action: WishlistScreenAction) {
     when (action) {
+        WishlistScreenAction.BackClicked -> navActions.onBackClicked()
         WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
     }
 }

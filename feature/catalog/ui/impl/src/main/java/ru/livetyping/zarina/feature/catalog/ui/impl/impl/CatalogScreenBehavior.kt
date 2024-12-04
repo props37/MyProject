@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -13,10 +14,13 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 
 @Composable
 internal fun CatalogScreenBehavior(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+
+    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -42,6 +46,7 @@ internal fun CatalogScreenBehavior(
 
 private fun navigate(navActions: CatalogNavActions, action: CatalogScreenAction) {
     when (action) {
+        CatalogScreenAction.BackClicked -> navActions.onBackClicked()
         CatalogScreenAction.SearchClicked -> TODO()
         is CatalogScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
     }
