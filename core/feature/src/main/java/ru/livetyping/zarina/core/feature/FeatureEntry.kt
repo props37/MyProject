@@ -1,3 +1,5 @@
 package ru.livetyping.zarina.core.feature
 
+import ru.livetyping.zarina.core.navigation.NavigationEntry
+
 public interface FeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions>

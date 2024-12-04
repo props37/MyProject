@@ -2,7 +2,7 @@ package ru.livetyping.zarina.feature.cityselector.ui
 
 import androidx.navigation.NavType
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.core.feature.NavigationEntry
+import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable

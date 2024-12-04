@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.core.feature.NavigationEntry
+import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature

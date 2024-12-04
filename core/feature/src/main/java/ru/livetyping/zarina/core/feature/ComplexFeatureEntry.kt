@@ -7,6 +7,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigation.NavigationEntry
 
 public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions> :
     FeatureEntry<NavEntry, NavParams, NavActions> {
