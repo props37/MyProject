@@ -41,7 +41,7 @@ fun rememberHomeNavActions(
 ): HomeNavActions {
     return remember(navController) {
         HomeNavActions(
-            bannerClicked = { banner ->
+            onBannerClicked = { banner ->
                 when (val clickAction = banner.clickAction) {
                     is ClickAction.Products -> {
                         val productListParams = ProductListNavParams(

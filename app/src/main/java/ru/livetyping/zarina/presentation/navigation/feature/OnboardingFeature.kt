@@ -53,13 +53,13 @@ fun rememberOnboardingNavActions(
 ): OnboardingNavActions {
     return remember(navController) {
         OnboardingNavActions(
-            onboardingCompleted = {
+            onOnboardingCompleted = {
                 navController.navigate(HomeFeature.getNavEntry()) {
                     popUpTo(0)
                 }
                 // TODO: [Top] Show default city dialog?
             },
-            selectCityClicked = {
+            onSelectCityClicked = {
                 val citySelectorParams = CitySelectorNavParams()
                 val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
                 navController.navigate(citySelectorNavEntry)

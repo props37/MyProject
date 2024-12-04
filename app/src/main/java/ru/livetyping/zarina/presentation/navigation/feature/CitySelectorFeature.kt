@@ -58,8 +58,8 @@ fun rememberCitySelectorNavActions(
 ): CitySelectorNavActions {
     return remember(navController) {
         CitySelectorNavActions(
-            backClicked = { navController.navigateUp() },
-            citySelected = { city ->
+            onBackClicked = { navController.navigateUp() },
+            onCitySelected = { city ->
                 val cityParcelable = CityParcelable.from(city)
                 val result = CitySelectorResult(city = cityParcelable)
                 navController.navigateUp()

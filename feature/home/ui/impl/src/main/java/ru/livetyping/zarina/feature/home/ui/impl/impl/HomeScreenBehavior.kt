@@ -43,7 +43,7 @@ internal fun HomeScreenBehavior(
 private fun navigate(navActions: HomeNavActions, action: HomeScreenAction) {
     when (action) {
         is HomeScreenAction.BannerClicked -> {
-            navActions.bannerClicked(action.banner)
+            navActions.onBannerClicked(action.banner)
         }
     }
 }
