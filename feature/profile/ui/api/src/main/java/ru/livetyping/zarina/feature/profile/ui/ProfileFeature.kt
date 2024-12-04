@@ -3,7 +3,7 @@ package ru.livetyping.zarina.feature.profile.ui
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import kotlin.reflect.KClass
 
-public interface ProfileFeature : ComplexFeatureEntry<ProfileNavEntry, Unit, ProfileNavActions> {
+public interface ProfileFeature : ComplexFeatureEntry<ProfileNavEntry, ProfileNavActions> {
     public companion object {
         public fun getNavEntry(): ProfileNavEntry = ProfileNavEntry
 

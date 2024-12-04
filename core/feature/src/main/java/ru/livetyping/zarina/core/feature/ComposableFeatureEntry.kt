@@ -8,8 +8,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
-public interface ComposableFeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions>
-    : FeatureEntry<NavEntry, NavParams, NavActions> {
+public interface ComposableFeatureEntry<NavEntry : NavigationEntry, NavActions>
+    : FeatureEntry<NavEntry, NavActions> {
 
     public fun NavGraphBuilder.composable(
         actions: NavActions,

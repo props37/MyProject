@@ -9,8 +9,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
-public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavParams, NavActions> :
-    FeatureEntry<NavEntry, NavParams, NavActions> {
+public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavActions> :
+    FeatureEntry<NavEntry, NavActions> {
 
     public fun NavGraphBuilder.navigation(
         navController: NavHostController,

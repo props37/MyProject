@@ -4,7 +4,7 @@ import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
 public interface ProductListFeature :
-    ComposableFeatureEntry<ProductListNavEntry, ProductListNavParams, ProductListNavActions> {
+    ComposableFeatureEntry<ProductListNavEntry, ProductListNavActions> {
 
     public companion object {
         public fun getNavEntry(params: ProductListNavParams): ProductListNavEntry {

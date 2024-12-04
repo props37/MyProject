@@ -4,7 +4,7 @@ import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
 public interface OnboardingFeature :
-    ComposableFeatureEntry<OnboardingNavEntry, Unit, OnboardingNavActions> {
+    ComposableFeatureEntry<OnboardingNavEntry, OnboardingNavActions> {
 
     public companion object {
         public fun getNavEntry(): OnboardingNavEntry = OnboardingNavEntry

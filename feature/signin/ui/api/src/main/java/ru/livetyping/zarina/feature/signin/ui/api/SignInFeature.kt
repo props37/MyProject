@@ -3,7 +3,7 @@ package ru.livetyping.zarina.feature.signin.ui.api
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import kotlin.reflect.KClass
 
-public interface SignInFeature : ComplexFeatureEntry<SignInNavEntry, Unit, SignInNavActions> {
+public interface SignInFeature : ComplexFeatureEntry<SignInNavEntry, SignInNavActions> {
     public companion object {
         public fun getNavEntry(): SignInNavEntry = SignInNavEntry
 

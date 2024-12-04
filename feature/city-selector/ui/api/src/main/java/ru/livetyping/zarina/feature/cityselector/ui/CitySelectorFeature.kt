@@ -4,7 +4,7 @@ import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import kotlin.reflect.KClass
 
 public interface CitySelectorFeature :
-    ComposableFeatureEntry<CitySelectorNavEntry, CitySelectorNavParams, CitySelectorNavActions> {
+    ComposableFeatureEntry<CitySelectorNavEntry, CitySelectorNavActions> {
 
     public companion object {
         public fun getNavEntry(params: CitySelectorNavParams): CitySelectorNavEntry {

@@ -35,50 +35,50 @@ internal class FeatureModule {
     @Provides
     @IntoMap
     @FeatureEntryKey(CatalogFeature::class)
-    fun provideCatalogFeatureEntry(): FeatureEntry<*, *, *> = CatalogFeatureImpl()
+    fun provideCatalogFeatureEntry(): FeatureEntry<*, *> = CatalogFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(WishlistFeature::class)
-    fun provideWishlistFeatureEntry(): FeatureEntry<*, *, *> = WishlistFeatureImpl()
+    fun provideWishlistFeatureEntry(): FeatureEntry<*, *> = WishlistFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(HomeFeature::class)
-    fun provideHomeFeatureEntry(): FeatureEntry<*, *, *> = HomeFeatureImpl()
+    fun provideHomeFeatureEntry(): FeatureEntry<*, *> = HomeFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(ProfileFeature::class)
-    fun provideProfileFeature(): FeatureEntry<*, *, *> = ProfileFeatureImpl()
+    fun provideProfileFeature(): FeatureEntry<*, *> = ProfileFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(CartFeature::class)
-    fun provideCartFeature(): FeatureEntry<*, *, *> = CartFeatureImpl()
+    fun provideCartFeature(): FeatureEntry<*, *> = CartFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(OnboardingFeature::class)
-    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *, *> = OnboardingFeatureImpl()
+    fun provideOnboardingFeatureEntry(): FeatureEntry<*, *> = OnboardingFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(CitySelectorFeature::class)
-    fun provideCitySelectorFeature(): FeatureEntry<*, *, *> = CitySelectorFeatureImpl()
+    fun provideCitySelectorFeature(): FeatureEntry<*, *> = CitySelectorFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(SignInFeature::class)
-    fun provideSignInFeature(): FeatureEntry<*, *, *> = SignInFeatureImpl()
+    fun provideSignInFeature(): FeatureEntry<*, *> = SignInFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(SignUpFeature::class)
-    fun provideSignUpFeature(): FeatureEntry<*, *, *> = SignUpFeatureImpl()
+    fun provideSignUpFeature(): FeatureEntry<*, *> = SignUpFeatureImpl()
 
     @Provides
     @IntoMap
     @FeatureEntryKey(ProductListFeature::class)
-    fun provideProductListFeature(): FeatureEntry<*, *, *> = ProductListFeatureImpl()
+    fun provideProductListFeature(): FeatureEntry<*, *> = ProductListFeatureImpl()
 }
