@@ -9,6 +9,8 @@ import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.category.Categories
+import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.find
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSource
 import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSource
@@ -27,6 +29,17 @@ internal class CategoryRepositoryImpl @Inject constructor(
             }
 
             is CachePolicy.Remote -> getCategoriesFlowRemote(cachePolicy)
+        }
+    }
+
+    override fun getCategoryFlow(id: Category.Id, cachePolicy: CachePolicy): Flow<Category?> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getCategoryFlow(id)
+            is CachePolicy.LocalFirstThenRemote -> {
+                getCategoryFlowLocalFirstThenRemote(id, cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getCategoryFlowRemote(id, cachePolicy)
         }
     }
 
@@ -51,6 +64,37 @@ internal class CategoryRepositoryImpl @Inject constructor(
         return remoteDataSource.getCategoriesFlow()
             .onEach { categories ->
                 categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
+            }
+    }
+
+    private fun getCategoryFlowLocalFirstThenRemote(
+        id: Category.Id,
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<Category?> {
+        // TODO: [Low] Add support for CacheExpirationPolicy
+        Timber.tag(TAG).w("Category CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
+        return localDataSource.getCategoryFlow(id).map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
+                checkNotNull(categories) { "Failed to fetch categories" }
+                categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
+                categories.find { it.id == id }
+            }
+        }
+    }
+
+    private fun getCategoryFlowRemote(
+        id: Category.Id,
+        cachePolicy: CachePolicy.Remote,
+    ): Flow<Category?> {
+        return remoteDataSource.getCategoriesFlow()
+            .onEach { categories ->
+                categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
+            }
+            .map { categories ->
+                categories.find { it.id == id }
             }
     }
 
