@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.buildutil.AppVersionName
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
@@ -25,6 +27,7 @@ import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -42,6 +45,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal class ProfileViewModel @AssistedInject constructor(
     @Assisted
     selectedCityResultFlow: Flow<ProfileSelectedCityResult?>,
+    savedStateHandle: SavedStateHandle,
     getUserFlowUseCase: GetUserFlowUseCase,
     getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
     getUserCityFlowUseCase: GetUserCityFlowUseCase,
@@ -50,6 +54,8 @@ internal class ProfileViewModel @AssistedInject constructor(
     appBuildType: BuildType,
     mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -147,6 +153,10 @@ internal class ProfileViewModel @AssistedInject constructor(
         )
     )
 
+    init {
+        handleSelectedCityResult(selectedCityResultFlow)
+    }
+
     fun onProfileEvent(event: ProfileEvent) {
         when (event) {
             ProfileEvent.ProfileDetailsClicked -> onProfileDetailsClicked()
@@ -223,6 +233,28 @@ internal class ProfileViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private fun handleSelectedCityResult(resultFlow: Flow<ProfileSelectedCityResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.SELECTED_CITY_RESULT.key,
+            ) { result ->
+                updateCity(result.city)
+            }
+        }
+    }
+
+    private suspend fun updateCity(city: City) {
+        TODO()
+        // TODO: [Top] Implement
+    }
+
+    private enum class Keys {
+        SELECTED_CITY_RESULT;
+
+        val key: String get() = name
     }
 
     @AssistedFactory
