@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.core.database.ZarinaDatabaseCallback
 import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase
 import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
 import ru.livetyping.zarina.core.database.transaction.ZarinaDatabaseTransactionManager
@@ -31,14 +32,13 @@ internal abstract class DatabaseModule {
         fun provideZarinaDatabase(
             @ApplicationContext
             context: Context,
+            onDestructiveMigration: ZarinaDatabaseCallback,
         ): ZarinaDatabase {
             return Room.databaseBuilder(context, ZarinaDatabase::class.java, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
-                        // TODO: [Top] Implement
-                        TODO()
-                        super.onDestructiveMigration(db)
+                        onDestructiveMigration.onDestructiveMigration()
                     }
                 })
                 .build()
