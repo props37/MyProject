@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -34,7 +33,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUs
 @Composable
 internal fun ProfileScreen(
     navActions: ProfileNavActions,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: ProfileViewModel,
 ) {
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 

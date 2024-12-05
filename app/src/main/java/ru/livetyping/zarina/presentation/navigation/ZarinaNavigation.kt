@@ -53,6 +53,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNa
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductListNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignUpNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
@@ -83,6 +84,7 @@ fun ZarinaNavigation(
 
     val profileFeature = features.find<ProfileFeature>()
     val profileNavActions = rememberProfileNavActions(navController)
+    val profileNavResultRetrievers = rememberProfileNavResultRetrievers()
 
     val cartFeature = features.find<CartFeature>()
     val cartNavActions = rememberCartNavActions(navController)
@@ -166,7 +168,7 @@ fun ZarinaNavigation(
         catalogFeature(catalogFeature, catalogNavActions)
         wishlistFeature(wishlistFeature, wishlistNavActions)
         homeFeature(homeFeature, homeNavActions)
-        profileFeature(navController, profileFeature, profileNavActions)
+        profileFeature(navController, profileFeature, profileNavActions, profileNavResultRetrievers)
         cartFeature(navController, cartFeature, cartNavActions)
 
         onboardingFeature(onboardingFeature, onboardingNavActions, onboardingNavResultRetrievers)

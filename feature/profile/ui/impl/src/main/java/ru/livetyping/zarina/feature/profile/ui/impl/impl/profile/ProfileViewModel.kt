@@ -2,10 +2,14 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -25,17 +29,19 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.feature.profile.ui.ProfileSelectedCityResult
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionInfo
-import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
-@HiltViewModel
-internal class ProfileViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProfileViewModel.Factory::class)
+internal class ProfileViewModel @AssistedInject constructor(
+    @Assisted
+    selectedCityResultFlow: Flow<ProfileSelectedCityResult?>,
     getUserFlowUseCase: GetUserFlowUseCase,
     getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
     getUserCityFlowUseCase: GetUserCityFlowUseCase,
@@ -217,5 +223,10 @@ internal class ProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    @AssistedFactory
+    internal interface Factory {
+        fun create(selectedCityResultFlow: Flow<ProfileSelectedCityResult?>): ProfileViewModel
     }
 }

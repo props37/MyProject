@@ -11,6 +11,7 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
+import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
@@ -25,7 +26,7 @@ public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: ProfileNavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: ProfileNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
@@ -50,7 +51,10 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onMyOrdersClicked = { navController.navigate(OrderListNavEntry) },
                 onChangeCityClicked = actions.onChangeCityClicked,
             )
-            profileScreen(profileScreenNavActions)
+            profileScreen(
+                actions = profileScreenNavActions,
+                selectedCityResultRetriever = resultRetrievers.selectedCityResultRetriever,
+            )
 
             val profileDetailsNavActions = ProfileDetailsNavActions(
                 onBackClicked = navigateUp,
