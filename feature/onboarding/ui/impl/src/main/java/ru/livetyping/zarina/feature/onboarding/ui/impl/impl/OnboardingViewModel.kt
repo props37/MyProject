@@ -6,9 +6,13 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +31,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUr
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
+import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.text.Text
@@ -37,17 +42,19 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
+import ru.livetyping.zarina.feature.onboarding.ui.SelectedCityResult
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStepsBuilder
 import timber.log.Timber
-import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 // TODO: [Low] Refactor
-@HiltViewModel
-internal class OnboardingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = OnboardingViewModel.Factory::class)
+internal class OnboardingViewModel @AssistedInject constructor(
+    @Assisted
+    selectedCityResult: Flow<SelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
     private val permissionManager: PermissionManager,
     onboardingStepsBuilder: OnboardingStepsBuilder,
@@ -57,6 +64,8 @@ internal class OnboardingViewModel @Inject constructor(
     private val setUserCity: SetUserCityUseCase,
     private val setLocalUserCity: SetLocalUserCityUseCase,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -129,6 +138,10 @@ internal class OnboardingViewModel @Inject constructor(
             bannerUrl = null,
         ),
     )
+
+    init {
+        handleSelectedCityResult(selectedCityResult)
+    }
 
     fun onOnboardingEvent(event: OnboardingEvent) {
         when (event) {
@@ -312,6 +325,18 @@ internal class OnboardingViewModel @Inject constructor(
         }
     }
 
+    private fun handleSelectedCityResult(resultFlow: Flow<SelectedCityResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.SELECTED_CITY_RESULT.key,
+            ) { result ->
+                val city = CityParcelable.from(result.city)
+                cityValueHolder.set(city)
+            }
+        }
+    }
+
     private enum class OnboardingCompletionTrigger {
         CITY_DETECTION_SKIPPED,
         CITY_CONFIRMED,
@@ -322,9 +347,17 @@ internal class OnboardingViewModel @Inject constructor(
     private enum class Keys {
         ONBOARDING_STEPS,
         CURRENT_ONBOARDING_STEP,
-        CITY;
+        CITY,
+        SELECTED_CITY_RESULT;
 
         val key: String get() = name
+    }
+
+    @AssistedFactory
+    internal interface Factory {
+        fun create(
+            selectedCityResult: Flow<SelectedCityResult?>,
+        ): OnboardingViewModel
     }
 
     private companion object {
