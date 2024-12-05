@@ -14,7 +14,9 @@ public class PhoneValidator : Validator<PhoneNumber> {
         when {
             phoneString.isBlank() -> throw EmptyPhoneException()
             !phoneString.matches(PHONE_REGEX_PATTERN.toRegex()) -> throw InvalidPhoneException()
-            phoneString.length < PHONE_MIN_LENGTH -> throw InvalidPhoneException()
+            phoneString.length !in PHONE_MIN_LENGTH..PHONE_MAX_LENGTH -> {
+                throw InvalidPhoneException()
+            }
         }
     }
 
@@ -22,5 +24,6 @@ public class PhoneValidator : Validator<PhoneNumber> {
         // Source: android.telephony.PhoneNumberUtils.GLOBAL_PHONE_NUMBER_PATTERN
         private const val PHONE_REGEX_PATTERN = "[\\+]?[0-9.-]+"
         private const val PHONE_MIN_LENGTH = 11
+        private const val PHONE_MAX_LENGTH = 16
     }
 }
