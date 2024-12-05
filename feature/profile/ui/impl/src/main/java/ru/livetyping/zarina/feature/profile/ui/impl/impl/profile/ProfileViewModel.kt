@@ -27,11 +27,13 @@ import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.feature.profile.ui.ProfileSelectedCityResult
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
@@ -53,6 +55,7 @@ internal class ProfileViewModel @AssistedInject constructor(
     appVersionName: String,
     appBuildType: BuildType,
     mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
+    private val setUserCity: SetUserCityUseCase,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
@@ -241,14 +244,19 @@ internal class ProfileViewModel @AssistedInject constructor(
                 resultFlow = resultFlow,
                 key = Keys.SELECTED_CITY_RESULT.key,
             ) { result ->
-                updateCity(result.city)
+                updateUserCity(result.city)
             }
         }
     }
 
-    private suspend fun updateCity(city: City) {
-        TODO()
-        // TODO: [Top] Implement
+    private suspend fun updateUserCity(city: City) {
+        val params = SetUserCityUseCase.Params(city)
+        setUserCity(params)
+            .onFailure {
+                val text = Text.Resource(R.string.profile_city_changing_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(ProfileSideEffect.ShowZarinaToast(message))
+            }
     }
 
     private enum class Keys {
