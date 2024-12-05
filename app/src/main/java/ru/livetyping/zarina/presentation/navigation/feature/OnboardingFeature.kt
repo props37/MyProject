@@ -17,7 +17,7 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavResultRetrievers
-import ru.livetyping.zarina.feature.onboarding.ui.SelectedCityResult
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingSelectedCityResult
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
@@ -83,7 +83,7 @@ fun rememberOnboardingNavResultRetrievers(): OnboardingNavResultRetrievers {
                 .getStateFlow<CitySelectorResult?>(CitySelectorResult.KEY, null)
                 .map { citySelectorResult ->
                     citySelectorResult?.let {
-                        SelectedCityResult(id = it.id, city = it.city.toCity())
+                        OnboardingSelectedCityResult(id = it.id, city = it.city.toCity())
                     }
                 }
         }

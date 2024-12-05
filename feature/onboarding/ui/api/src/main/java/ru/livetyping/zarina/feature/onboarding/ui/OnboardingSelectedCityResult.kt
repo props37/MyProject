@@ -3,8 +3,7 @@ package ru.livetyping.zarina.feature.onboarding.ui
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.navigation.ScreenResult
 
-// TODO: [Top] Rename
-public data class SelectedCityResult(
+public data class OnboardingSelectedCityResult(
     override val id: String,
     val city: City,
 ) : ScreenResult

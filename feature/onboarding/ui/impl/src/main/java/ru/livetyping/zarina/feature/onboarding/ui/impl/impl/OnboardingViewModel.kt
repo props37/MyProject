@@ -42,7 +42,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
-import ru.livetyping.zarina.feature.onboarding.ui.SelectedCityResult
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingSelectedCityResult
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
@@ -54,7 +54,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel(assistedFactory = OnboardingViewModel.Factory::class)
 internal class OnboardingViewModel @AssistedInject constructor(
     @Assisted
-    selectedCityResult: Flow<SelectedCityResult?>,
+    selectedCityResultFlow: Flow<OnboardingSelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
     private val permissionManager: PermissionManager,
     onboardingStepsBuilder: OnboardingStepsBuilder,
@@ -140,7 +140,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
     )
 
     init {
-        handleSelectedCityResult(selectedCityResult)
+        handleSelectedCityResult(selectedCityResultFlow)
     }
 
     fun onOnboardingEvent(event: OnboardingEvent) {
@@ -325,7 +325,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
         }
     }
 
-    private fun handleSelectedCityResult(resultFlow: Flow<SelectedCityResult?>) {
+    private fun handleSelectedCityResult(resultFlow: Flow<OnboardingSelectedCityResult?>) {
         viewModelScope.launch {
             screenResultHandler.handle(
                 resultFlow = resultFlow,
@@ -356,7 +356,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
     @AssistedFactory
     internal interface Factory {
         fun create(
-            selectedCityResult: Flow<SelectedCityResult?>,
+            selectedCityResult: Flow<OnboardingSelectedCityResult?>,
         ): OnboardingViewModel
     }
 
