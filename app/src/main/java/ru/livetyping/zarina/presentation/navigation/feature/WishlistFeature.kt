@@ -15,7 +15,10 @@ fun NavGraphBuilder.wishlistFeature(
     actions: WishlistNavActions,
 ) {
     with(feature) {
-        composable(actions = actions)
+        composable(
+            actions = actions,
+            resultRetrievers = Unit,
+        )
     }
 }
 

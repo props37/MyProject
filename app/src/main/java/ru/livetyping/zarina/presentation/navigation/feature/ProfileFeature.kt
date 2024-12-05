@@ -24,6 +24,7 @@ fun NavGraphBuilder.profileFeature(
         navigation(
             navController = navController,
             actions = actions,
+            resultRetrievers = Unit,
         )
     }
 }

@@ -15,7 +15,10 @@ fun NavGraphBuilder.catalogFeature(
     actions: CatalogNavActions,
 ) {
     with(feature) {
-        composable(actions = actions)
+        composable(
+            actions = actions,
+            resultRetrievers = Unit,
+        )
     }
 }
 

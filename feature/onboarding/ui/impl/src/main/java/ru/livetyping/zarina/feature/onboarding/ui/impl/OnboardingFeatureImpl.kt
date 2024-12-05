@@ -10,11 +10,13 @@ import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavEntry
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavResultRetrievers
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
 
 public class OnboardingFeatureImpl : OnboardingFeature {
     override fun NavGraphBuilder.composable(
         actions: OnboardingNavActions,
+        resultProvider: OnboardingNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,

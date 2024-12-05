@@ -6,23 +6,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.map
+import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.navigationutil.hasRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavResultRetrievers
+import ru.livetyping.zarina.feature.onboarding.ui.SelectedCityResult
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.onboardingFeature(
     feature: OnboardingFeature,
     actions: OnboardingNavActions,
+    resultRetrievers: OnboardingNavResultRetrievers,
 ) {
     with(feature) {
         composable(
             actions = actions,
+            resultRetrievers = resultRetrievers,
             exitTransition = {
                 val targetDestinationWithParent = targetDestination.withParent()
                 when {
@@ -64,6 +71,25 @@ fun rememberOnboardingNavActions(
                 val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
                 navController.navigate(citySelectorNavEntry)
             },
+        )
+    }
+}
+
+@Composable
+fun rememberOnboardingNavResultRetrievers(): OnboardingNavResultRetrievers {
+    return remember {
+        val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
+            navBackStackEntry.savedStateHandle
+                .getStateFlow<CitySelectorResult?>(CitySelectorResult.KEY, null)
+                .map { citySelectorResult ->
+                    citySelectorResult?.let {
+                        SelectedCityResult(id = it.id, city = it.city.toCity())
+                    }
+                }
+        }
+
+        OnboardingNavResultRetrievers(
+            selectedCityResultRetriever = selectedCityResultRetriever,
         )
     }
 }

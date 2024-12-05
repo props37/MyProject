@@ -18,6 +18,7 @@ fun NavGraphBuilder.signInFeature(
         navigation(
             navController = navController,
             actions = actions,
+            resultRetrievers = Unit,
         )
     }
 }

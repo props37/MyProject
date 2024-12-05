@@ -39,6 +39,8 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.navigation)
+
     implementation(libs.jetpack.navigation.compose)
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.kotlin.serialization.json)

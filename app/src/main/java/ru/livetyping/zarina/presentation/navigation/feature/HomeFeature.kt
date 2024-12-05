@@ -21,6 +21,7 @@ fun NavGraphBuilder.homeFeature(
     with(feature) {
         composable(
             actions = actions,
+            resultRetrievers = Unit,
             enterTransition = {
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {

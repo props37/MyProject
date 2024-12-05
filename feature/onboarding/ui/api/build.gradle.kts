@@ -42,6 +42,7 @@ kotlin {
 dependencies {
     api(projects.feature.home.domain)
     api(projects.core.feature)
+    implementation(projects.core.navigationUtil)
 
     implementation(libs.kotlin.serialization.json)
 

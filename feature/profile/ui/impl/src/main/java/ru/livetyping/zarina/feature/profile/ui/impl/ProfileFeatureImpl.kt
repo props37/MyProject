@@ -25,6 +25,7 @@ public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: ProfileNavActions,
+        resultRetrievers: Unit,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,

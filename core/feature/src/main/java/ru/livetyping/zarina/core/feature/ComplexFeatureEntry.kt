@@ -9,12 +9,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
-public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavActions> :
-    FeatureEntry<NavEntry, NavActions> {
+public interface ComplexFeatureEntry<NavEntry : NavigationEntry, NavActions, NavResultRetrievers> :
+    FeatureEntry<NavEntry, NavActions, NavResultRetrievers> {
 
     public fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: NavActions,
+        resultRetrievers: NavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = null,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = null,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,

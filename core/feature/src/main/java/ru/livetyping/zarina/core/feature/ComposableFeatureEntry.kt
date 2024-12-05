@@ -8,11 +8,12 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
-public interface ComposableFeatureEntry<NavEntry : NavigationEntry, NavActions>
-    : FeatureEntry<NavEntry, NavActions> {
+public interface ComposableFeatureEntry<NavEntry : NavigationEntry, NavActions, NavResultRetrievers>
+    : FeatureEntry<NavEntry, NavActions, NavResultRetrievers> {
 
     public fun NavGraphBuilder.composable(
         actions: NavActions,
+        resultRetrievers: NavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = null,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = null,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,

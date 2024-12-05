@@ -16,6 +16,7 @@ fun NavGraphBuilder.signUpFeature(
         navigation(
             navController = navController,
             actions = actions,
+            resultRetrievers = Unit,
         )
     }
 }

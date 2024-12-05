@@ -24,6 +24,7 @@ fun NavGraphBuilder.citySelectorFeature(
     with(feature) {
         composable(
             actions = actions,
+            resultRetrievers = Unit,
             enterTransition = {
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {

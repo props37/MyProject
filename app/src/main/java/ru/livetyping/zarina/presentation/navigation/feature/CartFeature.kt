@@ -18,6 +18,7 @@ fun NavGraphBuilder.cartFeature(
         navigation(
             navController = navController,
             actions = actions,
+            resultRetrievers = Unit,
         )
     }
 }
