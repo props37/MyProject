@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.productlist.ui.impl.impl
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -42,6 +43,12 @@ internal fun ProductListScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
+    val shouldSystemBackBeIntercepted by viewModel.shouldSystemBackBeIntercepted.collectAsStateWithLifecycle()
+
+    BackHandler(
+        enabled = shouldSystemBackBeIntercepted,
+        onBack = viewModel::onSystemBackClicked,
+    )
 
     ScreenContent(
         topBarState = topBarState,

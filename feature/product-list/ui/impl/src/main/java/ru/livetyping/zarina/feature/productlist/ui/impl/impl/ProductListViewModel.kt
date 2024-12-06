@@ -167,6 +167,13 @@ internal class ProductListViewModel @Inject constructor(
         }
         .cachedIn(viewModelScopeDefault)
 
+    val shouldSystemBackBeIntercepted: StateFlow<Boolean> = selectedTagId.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+    ) { selectedTagId ->
+        selectedTagId != null
+    }
+
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()
@@ -204,6 +211,14 @@ internal class ProductListViewModel @Inject constructor(
             ProductEvent.ProductsErrorRefreshClicked -> {
                 if (category.value == null) requestCategory()
             }
+        }
+    }
+
+    fun onSystemBackClicked() {
+        if (selectedTagId.value != null) {
+            selectedTagId.value = null
+        } else {
+            onBackClicked()
         }
     }
 
