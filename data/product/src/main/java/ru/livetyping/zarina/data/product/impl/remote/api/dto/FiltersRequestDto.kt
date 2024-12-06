@@ -1,0 +1,65 @@
+package ru.livetyping.zarina.data.product.impl.remote.api.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+
+@Serializable
+internal data class FiltersRequestDto(
+    @SerialName("price")
+    val price: PriceFilterDto? = null,
+
+    @SerialName("materials")
+    val materials: List<String>? = null,
+
+    @SerialName("sizes")
+    val sizes: List<String>? = null,
+
+    @SerialName("colors")
+    val colors: List<String>? = null,
+
+    @SerialName("available_for_shipping")
+    val isAvailableForDelivery: Boolean? = null,
+
+    @SerialName("available_for_pickup")
+    val isAvailableForStorePickup: Boolean? = null,
+
+    @SerialName("available_for_store_pickup")
+    val pickupStores: List<String>? = null,
+) {
+    companion object {
+        fun from(filters: ProductFilters): FiltersRequestDto? {
+            if (!filters.hasAppliedIgnoringSorting) return null
+
+            val materials = filters.materials?.let { filter ->
+                if (filter.isApplied) filter.selectedItems.map { it.id.value } else null
+            }
+            val sizes = filters.sizes?.let { filter ->
+                if (filter.isApplied) filter.selectedItems.map { it.id.value } else null
+            }
+            val colors = filters.colors?.let { filter ->
+                if (filter.isApplied) filter.selectedItems.map { it.name } else null
+            }
+            val isAvailableForDelivery = filters.deliveryAvailability?.let { filter ->
+                if (filter.isEnabled) true else null
+            }
+            val isAvailableForStorePickup = filters.storePickupAvailability?.let { filter ->
+                if (filter.isEnabled) true else null
+            }
+            val pickupStores = if (isAvailableForStorePickup == true) {
+                filters.pickupStores?.let { filter ->
+                    filter.selectedItems.map { it.id.value }
+                }
+            } else null
+            return FiltersRequestDto(
+                price = filters.price?.let { PriceFilterDto.from(it) },
+                materials = materials,
+                sizes = sizes,
+                colors = colors,
+                isAvailableForDelivery = isAvailableForDelivery,
+                isAvailableForStorePickup = isAvailableForStorePickup,
+                pickupStores = pickupStores,
+            )
+        }
+    }
+}
