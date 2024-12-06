@@ -32,8 +32,8 @@ public fun ZarinaToast(
     modifier: Modifier = Modifier,
     backgroundColor: Color = message.style.backgroundColor,
     contentColor: Color = message.style.contentColor,
-    shape: Shape = RoundedCornerShape(bottomStart = 2.dp, bottomEnd = 2.dp),
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+    shape: Shape = ZarinaToastDefaults.Shape,
+    contentPadding: PaddingValues = ZarinaToastDefaults.ContentPadding,
     windowInsets: WindowInsets = WindowInsets.safeDrawing
         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
 ) {
@@ -53,6 +53,12 @@ public fun ZarinaToast(
             )
         }
     }
+}
+
+public object ZarinaToastDefaults {
+    public val Shape: Shape = RoundedCornerShape(bottomStart = 2.dp, bottomEnd = 2.dp)
+
+    public val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 }
 
 private val ZarinaToastMessageStyle.backgroundColor: Color
