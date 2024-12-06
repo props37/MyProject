@@ -7,9 +7,11 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
 import ru.livetyping.zarina.core.network.KtorApiExceptionConverter
+import ru.livetyping.zarina.core.network.di.NetworkJson
 import javax.inject.Inject
 
 internal class SignInApiExceptionConverter @Inject constructor(
+    @NetworkJson
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 

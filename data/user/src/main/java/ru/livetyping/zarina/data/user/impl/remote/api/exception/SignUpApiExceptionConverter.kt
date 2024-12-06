@@ -12,12 +12,14 @@ import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidatio
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailAlreadyUsedException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.network.KtorApiExceptionConverter
+import ru.livetyping.zarina.core.network.di.NetworkJson
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpErrorDtoSerializer
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpFieldValidationErrorDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpMessageErrorDto
 import javax.inject.Inject
 
 internal class SignUpApiExceptionConverter @Inject constructor(
+    @NetworkJson
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 

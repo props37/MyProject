@@ -27,15 +27,6 @@ internal abstract class NetworkModule {
     ): ZarinaHttpClientBearerTokenCleaner
 
     companion object {
-        private val json by lazy {
-            Json {
-                isLenient = true
-                ignoreUnknownKeys = true
-                encodeDefaults = true
-                explicitNulls = false
-            }
-        }
-
         @Provides
         @Singleton
         @ZarinaApi(ZarinaApiType.AUTHORIZED)
@@ -44,6 +35,8 @@ internal abstract class NetworkModule {
             baseUrl: String,
             bearerTokenService: BearerTokenService,
             buildType: BuildType,
+            @NetworkJson
+            json: Json,
         ): HttpClient {
             return getZarinaAuthorizedHttpClient(
                 json = json,
@@ -61,6 +54,8 @@ internal abstract class NetworkModule {
             @ZarinaBaseUrl
             baseUrl: String,
             buildType: BuildType,
+            @NetworkJson
+            json: Json,
         ): HttpClient {
             return getZarinaUnauthorizedHttpClient(
                 json = json,
@@ -68,6 +63,18 @@ internal abstract class NetworkModule {
                 headerProvider = ZarinaApiHeaderProvider(),
                 buildType = buildType,
             )
+        }
+
+        @Provides
+        @Singleton
+        @NetworkJson
+        fun provideJson(): Json {
+            return Json {
+                isLenient = true
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+                explicitNulls = false
+            }
         }
     }
 }

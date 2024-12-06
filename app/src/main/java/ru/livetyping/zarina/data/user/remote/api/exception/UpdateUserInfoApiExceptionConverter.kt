@@ -5,11 +5,13 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import ru.livetyping.zarina.core.network.di.NetworkJson
 import ru.livetyping.zarina.data.common.remote.api.exception.KtorApiExceptionConverter
 import ru.livetyping.zarina.domain.user.exception.InvalidOldPasswordException
 import javax.inject.Inject
 
 class UpdateUserInfoApiExceptionConverter @Inject constructor(
+    @NetworkJson
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 
