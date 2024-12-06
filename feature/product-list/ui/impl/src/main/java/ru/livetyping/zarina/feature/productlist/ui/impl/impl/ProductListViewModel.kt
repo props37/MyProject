@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
@@ -36,6 +37,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
 import javax.inject.Inject
 
@@ -91,6 +94,23 @@ internal class ProductListViewModel @Inject constructor(
 
     private var availableFilters: ProductFilters? = null
 
+    val topBarState: StateFlow<TopBarState> = combine(
+        category,
+        filters,
+    ) { category, filters ->
+        TopBarState(
+            categoryName = category?.name,
+            appliedFilterCount = filters.appliedFilterCount,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = TopBarState(
+            categoryName = null,
+            appliedFilterCount = filters.value.appliedFilterCount,
+        ),
+    )
+
     private val wishlistProductIdsParams =
         GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
 
@@ -121,6 +141,14 @@ internal class ProductListViewModel @Inject constructor(
             }
         }
         .cachedIn(viewModelScopeDefault)
+
+    fun onTopBarEvent(event: TopBarEvent) {
+        when (event) {
+            TopBarEvent.BackClicked -> TODO()
+            TopBarEvent.SearchClicked -> TODO()
+            TopBarEvent.FiltersClicked -> TODO()
+        }
+    }
 
     fun onBackClicked() {
         navigationThrottler.throttle {

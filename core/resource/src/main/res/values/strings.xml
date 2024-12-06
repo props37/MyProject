@@ -62,6 +62,7 @@
     <string name="res_settings">Настройки</string>
     <string name="res_delete">Удалить</string>
     <string name="res_filters">Фильтры</string>
+    <string name="res_search_noun">Поиск</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
