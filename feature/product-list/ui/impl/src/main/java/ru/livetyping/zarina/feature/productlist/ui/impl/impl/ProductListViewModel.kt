@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
@@ -144,17 +145,37 @@ internal class ProductListViewModel @Inject constructor(
 
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
-            TopBarEvent.BackClicked -> TODO()
+            TopBarEvent.BackClicked -> onBackClicked()
             TopBarEvent.SearchClicked -> TODO()
             TopBarEvent.FiltersClicked -> TODO()
         }
     }
 
-    fun onBackClicked() {
+    fun onProductEvent(event: ProductEvent) {
+        when (event) {
+            is ProductEvent.ProductClicked -> TODO()
+            is ProductEvent.AddToWishlistClicked -> TODO()
+            is ProductEvent.AddToCartClicked -> TODO()
+            is ProductEvent.SubscribeClicked -> TODO()
+            ProductEvent.ProductsRefreshed -> {
+                if (category.value == null) requestCategory()
+            }
+
+            ProductEvent.ProductsErrorRefreshClicked -> {
+                if (category.value == null) requestCategory()
+            }
+        }
+    }
+
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductListScreenAction.BackClicked
             emitSideEffect(ProductListSideEffect.Navigate(action))
         }
+    }
+
+    private fun requestCategory() {
+        categoryRequester.request(CategoryRequest)
     }
 
     private enum class Keys {

@@ -21,6 +21,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 
@@ -35,6 +36,7 @@ internal fun ProductListScreen(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         productPagingDataFlow = viewModel.productPagingDataFlow,
+        onProductEvent = viewModel::onProductEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -45,6 +47,7 @@ internal fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
+    onProductEvent: (ProductEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListNavActions,
 ) {
@@ -69,16 +72,19 @@ internal fun ScreenContent(
         )
 
         // TODO: [Top] Add collapsable tags
-        // TODO: [Top] Implement
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
-            onProductClicked = {},
-            onAddToWishlistClicked = {},
-            onAddToCartClicked = {},
-            onSubscribeClicked = {},
-            onProductsRefreshed = {},
-            onProductsErrorRefreshClicked = {},
-            emptyProductsPlaceholder = {},
+            onProductClicked = { onProductEvent(ProductEvent.ProductClicked(it)) },
+            onAddToWishlistClicked = { onProductEvent(ProductEvent.AddToWishlistClicked(it)) },
+            onAddToCartClicked = { onProductEvent(ProductEvent.AddToCartClicked(it)) },
+            onSubscribeClicked = { onProductEvent(ProductEvent.SubscribeClicked(it)) },
+            onProductsRefreshed = { onProductEvent(ProductEvent.ProductsRefreshed) },
+            onProductsErrorRefreshClicked = {
+                onProductEvent(ProductEvent.ProductsErrorRefreshClicked)
+            },
+            emptyProductsPlaceholder = {
+                // TODO: [Top] Implement
+            },
             modifier = Modifier.fillMaxSize(),
         )
     }
