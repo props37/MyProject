@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 
 fun NavGraphBuilder.productListFeature(
     feature: ProductListFeature,
@@ -24,6 +25,16 @@ fun rememberProductListNavActions(
     navController: NavHostController
 ): ProductListNavActions {
     return remember(navController) {
-        ProductListNavActions()
+        ProductListNavActions(
+            onBackClicked = { navController.navigateUp() },
+            onTagClicked = { category, filters ->
+                val productListParams = ProductListNavParams(
+                    categoryId = category.id,
+                    filters = filters,
+                )
+                val productListNavEntry = ProductListFeature.getNavEntry(productListParams)
+                navController.navigate(productListNavEntry)
+            },
+        )
     }
 }

@@ -41,6 +41,10 @@ internal fun ProductListScreenBehavior(
 }
 
 private fun navigate(navActions: ProductListNavActions, action: ProductListScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        ProductListScreenAction.BackClicked -> navActions.onBackClicked()
+        is ProductListScreenAction.TagClicked -> {
+            navActions.onTagClicked(action.tag, action.filters)
+        }
+    }
 }

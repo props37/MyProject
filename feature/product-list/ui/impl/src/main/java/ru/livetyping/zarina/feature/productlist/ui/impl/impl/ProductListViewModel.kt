@@ -190,7 +190,11 @@ internal class ProductListViewModel @Inject constructor(
                     selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
                 } else {
                     navigationThrottler.throttle {
-                        // TODO: [Top] Navigate to new ProductList instance
+                        val action = ProductListScreenAction.TagClicked(
+                            tag = tag,
+                            filters = filters.value,
+                        )
+                        emitSideEffect(ProductListSideEffect.Navigate(action))
                         selectedTagId.value = null
                     }
                 }
