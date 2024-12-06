@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
+import ru.livetyping.zarina.core.domain.repository.ProductRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
@@ -27,6 +28,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
@@ -437,6 +439,17 @@ internal class UseCaseModule {
     ): GetCategoryFlowUseCase {
         return GetCategoryFlowUseCase.getInstance(
             categoryRepository = categoryRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductsWithFiltersPageFlowUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetProductsWithFiltersPageFlowUseCase {
+        return GetProductsWithFiltersPageFlowUseCase.getInstance(
+            productRepository = productRepository,
             logger = logger,
         )
     }
