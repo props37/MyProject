@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.product.filter.list
 
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilter
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductListFilter<T : ProductListFilterItem>(
     val items: List<T>,
     val isSingleSelection: Boolean,

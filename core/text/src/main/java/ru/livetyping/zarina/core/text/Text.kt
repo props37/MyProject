@@ -9,11 +9,13 @@ import kotlinx.parcelize.RawValue
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
+// Marked as stable on config/compose/stability_config.txt
 @Parcelize
 @Serializable
 public sealed interface Text : Parcelable {
     public fun getString(context: Context): kotlin.String
 
+    // Marked as stable on config/compose/stability_config.txt
     @Parcelize
     @Serializable
     public data object Empty : Text {
@@ -22,6 +24,7 @@ public sealed interface Text : Parcelable {
         override fun toString(): kotlin.String = ""
     }
 
+    // Marked as stable on config/compose/stability_config.txt
     @Parcelize
     @Serializable
     public class Resource(
@@ -56,6 +59,7 @@ public sealed interface Text : Parcelable {
         }
     }
 
+    // Marked as stable on config/compose/stability_config.txt
     @Parcelize
     @Serializable
     public class PluralResource(
@@ -93,6 +97,7 @@ public sealed interface Text : Parcelable {
         }
     }
 
+    // Marked as stable on config/compose/stability_config.txt
     @Parcelize
     @Serializable
     public data class String(val text: kotlin.String) : Text {

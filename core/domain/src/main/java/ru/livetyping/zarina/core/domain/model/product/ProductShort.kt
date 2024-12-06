@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.product
 
 import ru.livetyping.zarina.core.domain.model.media.Media
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductShort(
     override val id: Id,
     override val name: String,

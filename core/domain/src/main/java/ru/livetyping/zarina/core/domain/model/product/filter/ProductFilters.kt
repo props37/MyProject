@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductPickupS
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSizeFilterItem
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSortFilterItem
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductFilters(
     val sorting: ProductListFilter<ProductSortFilterItem>?,
     val price: ProductPriceFilter?,

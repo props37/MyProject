@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.product.filter.list
 
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductSortFilterItem(
     override val id: Id,
     override val name: String,

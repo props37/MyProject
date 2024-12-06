@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.product.filter
 
 import ru.livetyping.zarina.core.domain.model.common.PriceRange
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductPriceFilter(
     val min: Int?,
     val max: Int?,

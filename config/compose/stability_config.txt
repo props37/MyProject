@@ -1,7 +1,9 @@
-// Java
+// Java start
 java.time.LocalDate
+// Java end
 
-// :core:domain
+
+// :core:domain start
 ru.livetyping.zarina.core.domain.model.common.Url
 ru.livetyping.zarina.core.domain.model.common.Color
 ru.livetyping.zarina.core.domain.model.common.Email
@@ -9,15 +11,86 @@ ru.livetyping.zarina.core.domain.model.common.Location
 ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 ru.livetyping.zarina.core.domain.model.common.PriceRange
 ru.livetyping.zarina.core.domain.model.common.Token
+
 ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+
 ru.livetyping.zarina.core.domain.model.category.Category
 ru.livetyping.zarina.core.domain.model.category.Category.Id
 ru.livetyping.zarina.core.domain.model.category.Categories
+
 ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+
 ru.livetyping.zarina.core.domain.model.gender.Gender
+
 ru.livetyping.zarina.core.domain.model.geo.KladrId
 ru.livetyping.zarina.core.domain.model.geo.City
+
 ru.livetyping.zarina.core.domain.model.media.Media
 ru.livetyping.zarina.core.domain.model.media.MediaType
+
+ru.livetyping.zarina.core.domain.model.order.Order
+ru.livetyping.zarina.core.domain.model.order.Order.Id
+ru.livetyping.zarina.core.domain.model.order.Order.Number
+ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
+ru.livetyping.zarina.core.domain.model.order.OrderStatus
+ru.livetyping.zarina.core.domain.model.order.OrderRecipient
+ru.livetyping.zarina.core.domain.model.order.OrderPrice
+ru.livetyping.zarina.core.domain.model.order.OrderShort
+ru.livetyping.zarina.core.domain.model.order.OrderShort.Product
+ru.livetyping.zarina.core.domain.model.order.OrderDetailed
+ru.livetyping.zarina.core.domain.model.order.OrderDetailed.Product
+
+ru.livetyping.zarina.core.domain.model.pagination.PaginationInfo
+ru.livetyping.zarina.core.domain.model.pagination.Page
+
+ru.livetyping.zarina.core.domain.model.product.Barcode
+ru.livetyping.zarina.core.domain.model.product.ProductSorting
+ru.livetyping.zarina.core.domain.model.product.ProductPrice
+ru.livetyping.zarina.core.domain.model.product.ProductOffer
+ru.livetyping.zarina.core.domain.model.product.ProductColor
+ru.livetyping.zarina.core.domain.model.product.ProductColor.Id
+ru.livetyping.zarina.core.domain.model.product.Product
+ru.livetyping.zarina.core.domain.model.product.Product.Id
+ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+ru.livetyping.zarina.core.domain.model.product.ProductDetailed.Label
+ru.livetyping.zarina.core.domain.model.product.ProductDetailed.DescriptionEntry
+ru.livetyping.zarina.core.domain.model.product.ProductShort
+ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+ru.livetyping.zarina.core.domain.model.product.filter.ProductPriceFilter
+ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
+ru.livetyping.zarina.core.domain.model.product.filter.ProductToggleFilter
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductColorFilterItem
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilterItem
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilterItem.Id
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductMaterialFilterItem
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductPickupStoreFilterItem
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSizeFilterItem
+ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSortFilterItem
+
+ru.livetyping.zarina.core.domain.model.user.User
+ru.livetyping.zarina.core.domain.model.user.User.Id
+ru.livetyping.zarina.core.domain.model.user.User.NotificationSettings
+ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Number
+ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Level
+ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.NextLevelInfo
+ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Bonuses
+// :core:domain end
+
+
+// :core:ui-model start
+ru.livetyping.zarina.core.uimodel.tab.GenderTab
+ru.livetyping.zarina.core.uimodel.tab.TabRowState
+// :core:ui-model end
+
+
+// :core:text start
+ru.livetyping.zarina.core.text.Text
+ru.livetyping.zarina.core.text.Text.Empty
+ru.livetyping.zarina.core.text.Text.Resource
+ru.livetyping.zarina.core.text.Text.PluralResource
+ru.livetyping.zarina.core.text.Text.String
+// :core:text end

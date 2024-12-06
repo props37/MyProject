@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 
+// Marked as stable on config/compose/stability_config.txt
 @Serializable
 @Parcelize
 public enum class GenderTab : Parcelable {

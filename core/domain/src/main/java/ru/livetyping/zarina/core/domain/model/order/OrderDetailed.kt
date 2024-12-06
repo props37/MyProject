@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import java.time.LocalDate
 import ru.livetyping.zarina.core.domain.model.product.Product as DomainProduct
 
+// Marked as stable on config/compose/stability_config.txt
 public data class OrderDetailed(
     override val id: Id,
     override val number: Number,
@@ -29,6 +30,7 @@ public data class OrderDetailed(
     status = status,
     totalPrice = price.totalPrice,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     public data class Product(
         val id: DomainProduct.Id,
         val name: String,

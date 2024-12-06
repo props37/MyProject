@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.model.user
 
+// Marked as stable on config/compose/stability_config.txt
 public data class LoyaltyCard(
     val number: Number,
     val level: Level,
@@ -7,20 +8,24 @@ public data class LoyaltyCard(
     val bonuses: Bonuses,
     val totalPurchaseSum: Int,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Number(public val value: String)
 
+    // Marked as stable on config/compose/stability_config.txt
     public enum class Level {
         PRIME,
         PRIORITY,
         STAR,
     }
 
+    // Marked as stable on config/compose/stability_config.txt
     public data class NextLevelInfo(
         val level: Level,
         val requiredPurchaseSum: Int,
     )
 
+    // Marked as stable on config/compose/stability_config.txt
     public data class Bonuses(
         val bonusCount: Int,
         val expectedBonusCount: Int,

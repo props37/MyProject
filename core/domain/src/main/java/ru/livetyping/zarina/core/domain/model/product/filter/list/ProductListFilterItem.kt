@@ -1,10 +1,12 @@
 package ru.livetyping.zarina.core.domain.model.product.filter.list
 
+// Marked as stable on config/compose/stability_config.txt
 public sealed class ProductListFilterItem(
     public open val id: Id,
     public open val name: String,
     public open val isSelected: Boolean,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Id(public val value: String)
 }

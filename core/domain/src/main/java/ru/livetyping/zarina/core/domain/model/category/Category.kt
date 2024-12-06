@@ -11,6 +11,7 @@ public data class Category(
     val isExpandable: Boolean,
     val children: List<Category>?,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Id(public val value: String)
 }

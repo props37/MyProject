@@ -4,6 +4,7 @@ import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.media.Media
 
+// Marked as stable on config/compose/stability_config.txt
 public data class ProductDetailed(
     override val id: Id,
     override val name: String,
@@ -28,11 +29,13 @@ public data class ProductDetailed(
     isInWishlist = isInWishlist,
     isInCart = isInCart,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     public data class Label(
         val name: String,
         val color: Color,
     )
 
+    // Marked as stable on config/compose/stability_config.txt
     public data class DescriptionEntry(
         val title: String,
         val body: String,
