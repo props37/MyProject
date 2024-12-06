@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
@@ -25,6 +26,7 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.EmptyProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TagList
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
@@ -106,7 +108,11 @@ internal fun ScreenContent(
                     onProductEvent(ProductEvent.ProductsErrorRefreshClicked)
                 },
                 emptyProductsPlaceholder = {
-                    // TODO: [Top] Implement
+                    EmptyProductsPlaceholder(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    )
                 },
                 modifier = Modifier
                     .fillMaxSize()
