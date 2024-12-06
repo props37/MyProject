@@ -32,7 +32,9 @@ internal class ProductListViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val navEntry = savedStateHandle.toRoute<ProductListNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<ProductListNavEntry>(
+        typeMap = ProductListNavEntry.typeMap(),
+    )
     private val categoryId = Category.Id(navEntry.categoryId)
 
     private val categoryRequester = FlowRequester(CategoryRequest) {

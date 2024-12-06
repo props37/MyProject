@@ -23,6 +23,7 @@ public class ProductListFeatureImpl : ProductListFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
         composable<ProductListNavEntry>(
+            typeMap = ProductListNavEntry.typeMap(),
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
