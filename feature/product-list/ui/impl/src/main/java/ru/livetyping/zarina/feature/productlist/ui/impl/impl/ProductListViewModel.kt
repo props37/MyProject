@@ -8,6 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
@@ -112,6 +115,27 @@ internal class ProductListViewModel @Inject constructor(
         ),
     )
 
+    val tagListState: StateFlow<TagListState> = combine(
+        category,
+        selectedTagId,
+    ) { category, selectedTagId ->
+        if (category != null) {
+            val children = category.children
+            if (!children.isNullOrEmpty()) {
+                val tags = children.toImmutableList()
+                TagListState.Success(tags, selectedTagId)
+            } else {
+                TagListState.Empty
+            }
+        } else {
+            TagListState.Loading
+        }
+    }.stateIn(
+        scope = viewModelScopeDefault,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = TagListState.Loading,
+    )
+
     private val wishlistProductIdsParams =
         GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
 
@@ -148,6 +172,22 @@ internal class ProductListViewModel @Inject constructor(
             TopBarEvent.BackClicked -> onBackClicked()
             TopBarEvent.SearchClicked -> TODO()
             TopBarEvent.FiltersClicked -> TODO()
+        }
+    }
+
+    fun onTagListEvent(event: TagListEvent) {
+        when (event) {
+            is TagListEvent.TagClicked -> {
+                val tag = event.tag
+                if (tag.children.isNullOrEmpty()) {
+                    selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
+                } else {
+                    navigationThrottler.throttle {
+                        // TODO: [Top] Navigate to new ProductList instance
+                        selectedTagId.value = null
+                    }
+                }
+            }
         }
     }
 
