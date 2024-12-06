@@ -28,8 +28,10 @@ internal class WishlistProductPagingSource @Inject constructor(
             val nextPage = paginationInfo.currentPage + 1
             val prevKey = prevPage.takeIf { it >= 1 }
             val nextKey = nextPage.takeIf { it <= paginationInfo.pageCount }
-            val itemsBefore = (paginationInfo.currentPage - 1) * paginationInfo.pageSize
-            val itemsAfter = paginationInfo.itemTotalCount - (itemsBefore + products.size)
+            val itemsBefore = ((paginationInfo.currentPage - 1) * paginationInfo.pageSize)
+                .coerceAtLeast(0)
+            val itemsAfter = (paginationInfo.itemTotalCount - (itemsBefore + products.size))
+                .coerceAtLeast(0)
             LoadResult.Page(
                 data = products,
                 prevKey = prevKey,
