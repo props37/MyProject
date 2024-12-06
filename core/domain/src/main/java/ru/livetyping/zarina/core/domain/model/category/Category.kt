@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.category
 
 import ru.livetyping.zarina.core.domain.model.common.Color
 
+// Marked as stable on config/compose/stability_config.txt
 public data class Category(
     val id: Id,
     val name: String,

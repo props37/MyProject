@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.model.common
 
+// Marked as stable on config/compose/stability_config.txt
 public data class Location(
     val latitude: Double,
     val longitude: Double,

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.model.category
 
+// Marked as stable on config/compose/stability_config.txt
 public data class Categories(
     val women: List<Category>,
     val men: List<Category>,
