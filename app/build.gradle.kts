@@ -174,6 +174,7 @@ dependencies {
     implementation(projects.data.wishlist)
     implementation(projects.data.geography)
     implementation(projects.data.order)
+    implementation(projects.data.product)
 
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
