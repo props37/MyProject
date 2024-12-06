@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
     implementation(libs.jetpack.navigation.compose)
+    implementation(libs.jetpack.paging.compose)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
