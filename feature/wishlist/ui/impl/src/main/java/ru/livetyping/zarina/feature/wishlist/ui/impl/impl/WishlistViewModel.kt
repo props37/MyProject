@@ -107,7 +107,7 @@ internal class WishlistViewModel @Inject constructor(
     fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
             is WishlistEvent.AddToCartClicked -> TODO()
-            is WishlistEvent.AddToFavoritesClicked -> TODO()
+            is WishlistEvent.AddToWishlistClicked -> TODO()
             is WishlistEvent.ProductClicked -> TODO()
             is WishlistEvent.SubscribeClicked -> TODO()
             WishlistEvent.GoToCatalogClicked -> onGoToCatalogClicked()
