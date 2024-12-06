@@ -86,7 +86,7 @@ private fun ScreenContent(
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
             onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
-            onAddToFavoritesClicked = { onWishlistEvent(WishlistEvent.AddToWishlistClicked(it)) },
+            onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddToWishlistClicked(it)) },
             onAddToCartClicked = { onWishlistEvent(WishlistEvent.AddToCartClicked(it)) },
             onSubscribeClicked = { onWishlistEvent(WishlistEvent.SubscribeClicked(it)) },
             emptyProductsPlaceholder = {

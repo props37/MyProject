@@ -73,7 +73,7 @@ internal fun ScreenContent(
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
             onProductClicked = {},
-            onAddToFavoritesClicked = {},
+            onAddToWishlistClicked = {},
             onAddToCartClicked = {},
             onSubscribeClicked = {},
             onProductsRefreshed = {},

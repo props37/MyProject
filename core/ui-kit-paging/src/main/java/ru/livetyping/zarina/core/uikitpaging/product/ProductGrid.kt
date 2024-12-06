@@ -62,7 +62,7 @@ import timber.log.Timber
 public fun ProductGrid(
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onProductClicked: (Product) -> Unit,
-    onAddToFavoritesClicked: (Product) -> Unit,
+    onAddToWishlistClicked: (Product) -> Unit,
     onAddToCartClicked: (Product) -> Unit,
     onSubscribeClicked: (Product) -> Unit,
     emptyProductsPlaceholder: @Composable () -> Unit,
@@ -162,7 +162,7 @@ public fun ProductGrid(
                             productPagingItems = productPagingItems,
                             gridState = gridState,
                             onProductClicked = onProductClicked,
-                            onAddToFavoritesClicked = onAddToFavoritesClicked,
+                            onAddToFavoritesClicked = onAddToWishlistClicked,
                             onAddToCartClicked = onAddToCartClicked,
                             onSubscribeClicked = onSubscribeClicked,
                             emptyProductsPlaceholder = emptyProductsPlaceholder,
