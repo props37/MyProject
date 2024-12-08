@@ -12,6 +12,8 @@ ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 ru.livetyping.zarina.core.domain.model.common.PriceRange
 ru.livetyping.zarina.core.domain.model.common.Token
 
+ru.livetyping.zarina.core.domain.model.auth.BearerTokens
+
 ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 
