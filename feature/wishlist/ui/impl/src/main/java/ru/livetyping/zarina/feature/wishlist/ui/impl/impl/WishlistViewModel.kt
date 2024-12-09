@@ -9,8 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -21,6 +23,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
@@ -33,6 +36,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.R
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
@@ -97,6 +101,9 @@ internal class WishlistViewModel @Inject constructor(
         }
         .cachedIn(viewModelScopeDefault)
 
+    private val _visibleProductSizeSelector = MutableStateFlow<Product?>(null)
+    val visibleProductSizeSelector: StateFlow<Product?> = _visibleProductSizeSelector.asStateFlow()
+
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.ClearWishlistClicked -> onClearWishlistClicked()
@@ -106,11 +113,21 @@ internal class WishlistViewModel @Inject constructor(
     // TODO: [Top] Implement
     fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
-            is WishlistEvent.AddToCartClicked -> TODO()
+            is WishlistEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is WishlistEvent.AddToWishlistClicked -> TODO()
             is WishlistEvent.ProductClicked -> TODO()
             is WishlistEvent.SubscribeClicked -> TODO()
             WishlistEvent.GoToCatalogClicked -> onGoToCatalogClicked()
+        }
+    }
+
+    fun onSizeSelectorEvent(event: SizeSelectorEvent) {
+        when (event) {
+            SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
+            is SizeSelectorEvent.SizeSelected -> {
+                _visibleProductSizeSelector.value = null
+                // TODO: [Top] Implement
+            }
         }
     }
 
@@ -144,6 +161,15 @@ internal class WishlistViewModel @Inject constructor(
                         emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
                     }
             }
+        }
+    }
+
+    private fun onAddProductToCartClicked(event: WishlistEvent.AddToCartClicked) {
+        val product = event.product
+        if (product.offers.size > 1) {
+            _visibleProductSizeSelector.value = product
+        } else {
+            // TODO: [Top] Add product to cart
         }
     }
 

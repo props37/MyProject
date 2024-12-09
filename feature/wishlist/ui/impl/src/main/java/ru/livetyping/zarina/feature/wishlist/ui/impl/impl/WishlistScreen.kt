@@ -19,9 +19,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
@@ -37,12 +40,15 @@ internal fun WishlistScreen(
     viewModel: WishlistViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
+    val visibleProductSizeSelector by viewModel.visibleProductSizeSelector.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         onWishlistEvent = viewModel::onWishlistEvent,
+        visibleProductSizeSelector = visibleProductSizeSelector,
+        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
@@ -56,6 +62,8 @@ private fun ScreenContent(
     onTopBarEvent: (TopBarEvent) -> Unit,
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onWishlistEvent: (WishlistEvent) -> Unit,
+    visibleProductSizeSelector: Product?,
+    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
@@ -67,6 +75,13 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navActions = navActions,
     )
+
+    if (visibleProductSizeSelector != null) {
+        SizeSelectorModalBottomSheet(
+            product = visibleProductSizeSelector,
+            onEvent = onSizeSelectorEvent,
+        )
+    }
 
     Column(
         modifier = Modifier
