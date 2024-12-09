@@ -43,6 +43,7 @@ import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class WishlistViewModel @Inject constructor(
@@ -113,9 +114,9 @@ internal class WishlistViewModel @Inject constructor(
     // TODO: [Top] Implement
     fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
-            is WishlistEvent.AddToCartClicked -> onAddProductToCartClicked(event)
-            is WishlistEvent.AddToWishlistClicked -> TODO()
             is WishlistEvent.ProductClicked -> TODO()
+            is WishlistEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
+            is WishlistEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is WishlistEvent.SubscribeClicked -> TODO()
             WishlistEvent.GoToCatalogClicked -> onGoToCatalogClicked()
         }
@@ -164,6 +165,30 @@ internal class WishlistViewModel @Inject constructor(
         }
     }
 
+    private fun onAddProductToWishlistClicked(event: WishlistEvent.AddToWishlistClicked) {
+        viewModelScope.launch {
+            val product = event.product
+            val params = ToggleProductInWishlistUseCase.Params(product.id)
+            toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val text = Text.Resource(ru.livetyping.zarina.core.resource.R.string.res_product_added_to_wishlist)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val textResId = if (product.isInWishlist) {
+                        RCommon.string.res_product_removing_from_wishlist_error
+                    } else {
+                        RCommon.string.res_product_adding_to_wishlist_error
+                    }
+                    val text = Text.Resource(textResId)
+                    showZarinaErrorToast(text)
+                }
+        }
+    }
+
     private fun onAddProductToCartClicked(event: WishlistEvent.AddToCartClicked) {
         val product = event.product
         if (product.offers.size > 1) {
@@ -189,6 +214,11 @@ internal class WishlistViewModel @Inject constructor(
             val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.Remote())
             getWishlistProductIdsFlow(params).firstOrNull()
         }
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
     }
 
     private data object WishlistProductsRequest : FlowRequest
