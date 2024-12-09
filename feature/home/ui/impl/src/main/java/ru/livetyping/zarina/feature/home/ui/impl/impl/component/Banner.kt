@@ -15,7 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarHeightAsState
-import ru.livetyping.zarina.core.uikit.screen.ZarinaLoadingScreen
+import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.BannerContainer
@@ -63,7 +63,7 @@ internal fun Banner(
             exit = remember { fadeOut(tween(BannerLoaderAnimationDuration)) },
             modifier = Modifier.matchParentSize(),
         ) {
-            ZarinaLoadingScreen(
+            ZarinaLogoLoadingScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(UiKitTheme.colors.background.general.regular.default)

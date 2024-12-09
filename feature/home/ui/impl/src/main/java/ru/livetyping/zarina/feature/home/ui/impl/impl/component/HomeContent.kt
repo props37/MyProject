@@ -48,7 +48,7 @@ import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
-import ru.livetyping.zarina.core.uikit.screen.ZarinaLoadingScreen
+import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -90,7 +90,7 @@ internal fun HomeContent(
             }
 
             HomeContentState.Loading -> {
-                ZarinaLoadingScreen(modifier = Modifier.fillMaxSize())
+                ZarinaLogoLoadingScreen(modifier = Modifier.fillMaxSize())
             }
 
             is HomeContentState.Error -> {
