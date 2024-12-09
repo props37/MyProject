@@ -11,7 +11,7 @@ import javax.inject.Inject
 internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder {
     private val wishlistProductIds = MutableStateFlow<Set<Product.Id>>(emptySet())
 
-    private var isWishlistProductIdsFetched = AtomicBoolean(false)
+    private var areWishlistProductIdsFetched = AtomicBoolean(false)
 
     override fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>> {
         return wishlistProductIds
@@ -22,16 +22,16 @@ internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder
         Timber.tag(TAG).v("Wishlist product IDs set: $ids")
     }
 
-    override fun isWishlistProductIdsFetched(): Boolean {
-        return isWishlistProductIdsFetched.get()
+    override fun areWishlistProductIdsFetched(): Boolean {
+        return areWishlistProductIdsFetched.get()
     }
 
-    override fun setIsWishlistProductIdsFetched(isFetched: Boolean) {
-        isWishlistProductIdsFetched.compareAndSet(
-            /* expectedValue = */ isWishlistProductIdsFetched.get(),
-            /* newValue = */ isFetched,
+    override fun setAreWishlistProductIdsFetched(fetched: Boolean) {
+        areWishlistProductIdsFetched.compareAndSet(
+            /* expectedValue = */ areWishlistProductIdsFetched.get(),
+            /* newValue = */ fetched,
         )
-        Timber.tag(TAG).v("Wishlist product IDs fetched set to $isFetched")
+        Timber.tag(TAG).v("Wishlist product IDs fetched set to $fetched")
     }
 
     override fun addProductToWishlist(productId: Product.Id) {
@@ -46,7 +46,7 @@ internal class WishlistDataHolderImpl @Inject constructor() : WishlistDataHolder
 
     override fun clear() {
         wishlistProductIds.value = emptySet()
-        isWishlistProductIdsFetched.set(false)
+        areWishlistProductIdsFetched.set(false)
         Timber.tag(TAG).v("Wishlist product IDs cleared")
     }
 

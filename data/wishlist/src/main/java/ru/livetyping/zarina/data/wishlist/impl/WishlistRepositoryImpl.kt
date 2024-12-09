@@ -31,8 +31,8 @@ internal class WishlistRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun isWishlistProductIdsFetched(): Boolean {
-        return localDataSource.isWishlistProductIdsFetched()
+    override fun areWishlistProductIdsFetched(): Boolean {
+        return localDataSource.areWishlistProductIdsFetched()
     }
 
     override fun getWishlistProductPageFlow(page: Int): Flow<Page<List<ProductShort>>> {
@@ -52,7 +52,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
     override suspend fun clearWishlist() {
         remoteDataSource.clearWishlist()
         localDataSource.setWishlistProductIds(emptySet())
-        localDataSource.setIsWishlistProductIdsFetched(false)
+        localDataSource.setAreWishlistProductIdsFetched(false)
     }
 
     override fun clear() {
@@ -66,7 +66,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
         Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getWishlistProductIdsFlow()
             .map { cached ->
-                if (!localDataSource.isWishlistProductIdsFetched()) {
+                if (!localDataSource.areWishlistProductIdsFetched()) {
                     val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
                     checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }
                     wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
@@ -99,12 +99,12 @@ internal class WishlistRepositoryImpl @Inject constructor(
 
     private fun setLocalFetchedWishlistProductIds(productIds: Set<Product.Id>) {
         localDataSource.setWishlistProductIds(productIds)
-        localDataSource.setIsWishlistProductIdsFetched(true)
+        localDataSource.setAreWishlistProductIdsFetched(true)
     }
 
     private fun clearLocalWishlistProductIds() {
         localDataSource.setWishlistProductIds(emptySet())
-        localDataSource.setIsWishlistProductIdsFetched(false)
+        localDataSource.setAreWishlistProductIdsFetched(false)
     }
 
     private companion object {

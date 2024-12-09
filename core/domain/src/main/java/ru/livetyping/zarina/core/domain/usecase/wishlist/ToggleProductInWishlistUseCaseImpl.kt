@@ -26,7 +26,7 @@ internal class ToggleProductInWishlistUseCaseImpl(
             true
         }
 
-        if (!wishlistRepository.isWishlistProductIdsFetched()) {
+        if (!wishlistRepository.areWishlistProductIdsFetched()) {
             fetchWishlistProductIds()
         }
 

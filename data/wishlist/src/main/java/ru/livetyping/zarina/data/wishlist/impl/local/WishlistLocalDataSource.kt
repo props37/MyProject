@@ -8,9 +8,9 @@ internal interface WishlistLocalDataSource {
 
     fun setWishlistProductIds(ids: Set<Product.Id>)
 
-    fun isWishlistProductIdsFetched(): Boolean
+    fun areWishlistProductIdsFetched(): Boolean
 
-    fun setIsWishlistProductIdsFetched(isFetched: Boolean)
+    fun setAreWishlistProductIdsFetched(fetched: Boolean)
 
     fun addProductToWishlist(productId: Product.Id)
 
