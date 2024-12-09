@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
 
 @Composable
@@ -17,6 +18,7 @@ internal fun ProductListScreenBehavior(
     navActions: ProductListNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -29,6 +31,10 @@ internal fun ProductListScreenBehavior(
                         lifecycleSafeNavigator.safeNavigate {
                             navigate(currentNavActions, sideEffect.action)
                         }
+                    }
+
+                    is ProductListSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -32,10 +33,13 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
@@ -45,6 +49,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class ProductListViewModel @Inject constructor(
@@ -52,6 +57,7 @@ internal class ProductListViewModel @Inject constructor(
     productPager: ProductPager,
     getCategoryFlow: GetCategoryFlowUseCase,
     getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
+    private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
     // TODO: [Top] Inject dispatcher
@@ -205,7 +211,7 @@ internal class ProductListViewModel @Inject constructor(
     fun onProductEvent(event: ProductEvent) {
         when (event) {
             is ProductEvent.ProductClicked -> TODO()
-            is ProductEvent.AddToWishlistClicked -> TODO()
+            is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             is ProductEvent.AddToCartClicked -> TODO()
             is ProductEvent.SubscribeClicked -> TODO()
             ProductEvent.ProductsRefreshed -> {
@@ -233,8 +239,37 @@ internal class ProductListViewModel @Inject constructor(
         }
     }
 
+    private fun onAddProductToWishlistClicked(event: ProductEvent.AddToWishlistClicked) {
+        viewModelScope.launch {
+            val product = event.product
+            val params = ToggleProductInWishlistUseCase.Params(product.id)
+            toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val textResId = if (product.isInWishlist) {
+                        RCommon.string.res_product_removing_from_wishlist_error
+                    } else {
+                        RCommon.string.res_product_adding_to_wishlist_error
+                    }
+                    val text = Text.Resource(textResId)
+                    showZarinaErrorToast(text)
+                }
+        }
+    }
+
     private fun requestCategory() {
         categoryRequester.request(CategoryRequest)
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
     }
 
     private enum class Keys {

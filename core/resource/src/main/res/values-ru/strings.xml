@@ -55,6 +55,9 @@
     <string name="res_delete">Удалить</string>
     <string name="res_filters">Фильтры</string>
     <string name="res_search_noun">Поиск</string>
+    <string name="res_product_adding_to_wishlist_error">Не удалось добавить товар в избранное</string>
+    <string name="res_product_removing_from_wishlist_error">Не удалось удалить товар из избранного</string>
+    <string name="res_product_added_to_wishlist">Товар добавлен в избранное</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
