@@ -42,7 +42,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.core.domain)
+    api(projects.core.domain)
     implementation(projects.core.buildUtil)
 
     implementation(libs.hilt)

@@ -37,9 +37,3 @@ android {
 kotlin {
     explicitApi()
 }
-
-dependencies {
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.jetpack.test.junit)
-    androidTestImplementation(libs.jetpack.espresso)
-}
