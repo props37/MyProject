@@ -7,4 +7,8 @@
     <string name="uikit_order_from">Заказ от %1$s</string>
     <string name="uikit_select_date">Выбери дату</string>
     <string name="uikit_selected_date">Выбранная дата</string>
+    <string name="uikit_choose_size">Выбери размер</string>
+    <string name="uikit_choose_height">Выбери рост</string>
+    <string name="uikit_available_heights_cm">Доступно %1$s см</string>
+    <string name="uikit_height_cm">%1$s см</string>
 </resources>
