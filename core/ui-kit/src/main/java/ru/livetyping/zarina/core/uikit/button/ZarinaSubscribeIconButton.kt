@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun ZarinaSubscribeIconButton(
+public fun ZarinaSubscribeIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     iconSize: Dp = ZarinaIconButtonDefaults.IconSize,

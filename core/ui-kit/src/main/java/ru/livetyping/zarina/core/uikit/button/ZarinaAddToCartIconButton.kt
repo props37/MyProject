@@ -14,7 +14,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun ZarinaAddToCartIconButton(
+public fun ZarinaAddToCartIconButton(
     isAdded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
