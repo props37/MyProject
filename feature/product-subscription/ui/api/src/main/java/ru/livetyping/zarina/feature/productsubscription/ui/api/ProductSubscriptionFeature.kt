@@ -1,0 +1,17 @@
+package ru.livetyping.zarina.feature.productsubscription.ui.api
+
+import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
+import kotlin.reflect.KClass
+
+public interface ProductSubscriptionFeature :
+    ComposableFeatureEntry<ProductSubscriptionNavEntry, ProductSubscriptionNavActions, Unit> {
+
+    public companion object {
+        public fun getNavEntry(params: ProductSubscriptionNavParams): ProductSubscriptionNavEntry {
+            return params.toNavEntry()
+        }
+
+        public fun getNavEntryClass(): KClass<ProductSubscriptionNavEntry> =
+            ProductSubscriptionNavEntry::class
+    }
+}
