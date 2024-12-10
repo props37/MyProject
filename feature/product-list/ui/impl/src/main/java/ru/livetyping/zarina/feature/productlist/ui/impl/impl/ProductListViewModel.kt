@@ -296,7 +296,7 @@ internal class ProductListViewModel @Inject constructor(
         if (product.offers.size > 1) {
             _visibleProductSizeSelector.value = product
         } else {
-            val offer = product.offers.firstOrNull { it.isAvailable } ?: return
+            val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
@@ -308,7 +308,7 @@ internal class ProductListViewModel @Inject constructor(
 
     private fun onSubscribeToProductClicked(event: ProductEvent.SubscribeClicked) {
         val product = event.product
-        val offer = product.offers.firstOrNull { it.isAvailable } ?: return
+        val offer = product.offers.firstOrNull() ?: return
         val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
         emitSideEffect(ProductListSideEffect.Navigate(action))
     }
