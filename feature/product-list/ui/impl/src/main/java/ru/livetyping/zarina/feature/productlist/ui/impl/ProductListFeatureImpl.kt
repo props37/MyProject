@@ -7,6 +7,8 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
@@ -24,6 +26,7 @@ public class ProductListFeatureImpl : ProductListFeature {
     ) {
         composable<ProductListNavEntry>(
             typeMap = ProductListNavEntry.typeMap(),
+            deepLinks = DeepLinks,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
@@ -32,5 +35,13 @@ public class ProductListFeatureImpl : ProductListFeature {
         ) {
             ProductListScreen(navActions = actions)
         }
+    }
+}
+
+private val DeepLinks = buildList {
+    val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
+    ZarinaWebLinkUris.forEach { uri ->
+        add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}" })
+        add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}/" })
     }
 }

@@ -14,6 +14,8 @@ public data class ProductListNavEntry(
     val filters: ProductFiltersParcelable? = null,
 ) : NavigationEntry {
     public companion object {
+        public const val CATEGORY_ID_PROPERTY_NAME: String = "categoryId"
+
         public fun typeMap(): Map<KType, NavType<*>> {
             val filtersType = object : ParcelableNavType<ProductFiltersParcelable?>(
                 isNullableAllowed = true,
