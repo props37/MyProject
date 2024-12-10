@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.data.cart.impl.remote.api
 
-internal interface CartApi {
+import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductIdsDto
 
+internal interface CartApi {
+    suspend fun getCartProductIds(): CartProductIdsDto
 }
