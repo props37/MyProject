@@ -11,11 +11,13 @@ import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 
 fun NavGraphBuilder.catalogFeature(
+    navController: NavHostController,
     feature: CatalogFeature,
     actions: CatalogNavActions,
 ) {
     with(feature) {
-        composable(
+        navigation(
+            navController = navController,
             actions = actions,
             resultRetrievers = Unit,
         )

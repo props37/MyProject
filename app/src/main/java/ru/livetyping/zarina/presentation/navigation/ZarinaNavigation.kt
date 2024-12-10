@@ -165,9 +165,9 @@ fun ZarinaNavigation(
         },
         modifier = modifier,
     ) {
-        catalogFeature(catalogFeature, catalogNavActions)
-        wishlistFeature(wishlistFeature, wishlistNavActions)
-        homeFeature(homeFeature, homeNavActions)
+        catalogFeature(navController, catalogFeature, catalogNavActions)
+        wishlistFeature(navController, wishlistFeature, wishlistNavActions)
+        homeFeature(navController, homeFeature, homeNavActions)
         profileFeature(navController, profileFeature, profileNavActions, profileNavResultRetrievers)
         cartFeature(navController, cartFeature, cartNavActions)
 

@@ -15,11 +15,13 @@ import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 
 fun NavGraphBuilder.homeFeature(
+    navController: NavHostController,
     feature: HomeFeature,
     actions: HomeNavActions,
 ) {
     with(feature) {
-        composable(
+        navigation(
+            navController = navController,
             actions = actions,
             resultRetrievers = Unit,
             enterTransition = {

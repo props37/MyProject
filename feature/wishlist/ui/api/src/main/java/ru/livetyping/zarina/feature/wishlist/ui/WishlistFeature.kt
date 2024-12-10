@@ -1,11 +1,9 @@
 package ru.livetyping.zarina.feature.wishlist.ui
 
-import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
+import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import kotlin.reflect.KClass
 
-public interface WishlistFeature :
-    ComposableFeatureEntry<WishlistNavEntry, WishlistNavActions, Unit> {
-
+public interface WishlistFeature : ComplexFeatureEntry<WishlistNavEntry, WishlistNavActions, Unit> {
     public companion object {
         public fun getNavEntry(): WishlistNavEntry = WishlistNavEntry
 

@@ -36,12 +36,14 @@ public class ProductListFeatureImpl : ProductListFeature {
             ProductListScreen(navActions = actions)
         }
     }
-}
 
-private val DeepLinks = buildList {
-    val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
-    ZarinaWebLinkUris.forEach { uri ->
-        add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}" })
-        add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}/" })
+    private companion object {
+        private val DeepLinks = buildList {
+            val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
+            ZarinaWebLinkUris.forEach { uri ->
+                add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}" })
+                add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}/" })
+            }
+        }
     }
 }
