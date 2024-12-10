@@ -7,6 +7,8 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
+import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
@@ -23,6 +25,7 @@ public class CatalogFeatureImpl : CatalogFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
         composable<CatalogNavEntry>(
+            deepLinks = DeepLinks,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
@@ -31,5 +34,12 @@ public class CatalogFeatureImpl : CatalogFeature {
         ) {
             CatalogScreen(navActions = actions)
         }
+    }
+}
+
+private val DeepLinks = buildList {
+    ZarinaWebLinkUris.forEach { uri ->
+        add(navDeepLink { uriPattern = "$uri/catalog" })
+        add(navDeepLink { uriPattern = "$uri/catalog/" })
     }
 }
