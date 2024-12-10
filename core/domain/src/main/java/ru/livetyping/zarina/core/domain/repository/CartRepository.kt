@@ -16,7 +16,7 @@ public interface CartRepository {
         count: Int,
     )
 
-    public suspend fun remoteProductFromCart(
+    public suspend fun removeProductFromCart(
         productId: Product.Id,
         barcode: Barcode,
     )

@@ -41,7 +41,7 @@ internal class CartRepositoryImpl @Inject constructor(
         localDataSource.setCartProductCount(cartProductCount.value)
     }
 
-    override suspend fun remoteProductFromCart(productId: Product.Id, barcode: Barcode) {
+    override suspend fun removeProductFromCart(productId: Product.Id, barcode: Barcode) {
         val cartProductCount = remoteDataSource.remoteProductFromCart(barcode)
         localDataSource.removeProductFromCart(productId)
         localDataSource.setCartProductCount(cartProductCount.value)
