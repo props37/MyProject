@@ -165,6 +165,9 @@ dependencies {
     implementation(projects.feature.productList.ui.api)
     implementation(projects.feature.productList.ui.impl)
 
+    implementation(projects.feature.productSubscription.ui.api)
+    implementation(projects.feature.productSubscription.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)
