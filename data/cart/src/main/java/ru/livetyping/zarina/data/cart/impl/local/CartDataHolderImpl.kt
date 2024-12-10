@@ -24,13 +24,13 @@ internal class CartDataHolderImpl @Inject constructor() : CartDataHolder {
         Timber.tag(TAG).v("Cart product IDs set: $ids")
     }
 
+    override fun getCartProductCountFlow(): Flow<Int> {
+        return cartProductCount
+    }
+
     override fun setCartProductCount(count: Int) {
         cartProductCount.value = count
         Timber.tag(TAG).v("Cart product count set to $count")
-    }
-
-    override fun getCartProductCountFlow(): Flow<Int> {
-        return cartProductCount
     }
 
     override fun areCartProductIdsFetched(): Boolean {

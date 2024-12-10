@@ -8,9 +8,9 @@ internal interface CartDataHolder {
 
     fun setCartProductIds(ids: Set<Product.Id>)
 
-    fun setCartProductCount(count: Int)
-
     fun getCartProductCountFlow(): Flow<Int>
+
+    fun setCartProductCount(count: Int)
 
     fun areCartProductIdsFetched(): Boolean
 
