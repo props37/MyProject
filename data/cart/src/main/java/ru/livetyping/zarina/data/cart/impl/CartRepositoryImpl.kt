@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.data.cart.impl.local.CartLocalDataSource
@@ -32,6 +33,18 @@ internal class CartRepositoryImpl @Inject constructor(
 
     override fun areCartProductIdsFetched(): Boolean {
         return localDataSource.areCartProductIdsFetched()
+    }
+
+    override suspend fun addProductToCart(productId: Product.Id, barcode: Barcode, count: Int) {
+        val cartProductCount = remoteDataSource.addProductToCart(barcode, count)
+        localDataSource.addProductToCart(productId)
+        localDataSource.setCartProductCount(cartProductCount.value)
+    }
+
+    override suspend fun remoteProductFromCart(productId: Product.Id, barcode: Barcode) {
+        val cartProductCount = remoteDataSource.remoteProductFromCart(barcode)
+        localDataSource.removeProductFromCart(productId)
+        localDataSource.setCartProductCount(cartProductCount.value)
     }
 
     private fun getCartProductIdsFlowLocalFirstThenRemote(
