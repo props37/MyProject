@@ -24,9 +24,10 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.text.Text
@@ -42,17 +43,12 @@ import ru.livetyping.zarina.feature.wishlist.ui.impl.R
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging.WishlistProductPager
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class WishlistViewModel @Inject constructor(
-    getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
-    private val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
-    private val wishlistProductPager: WishlistProductPager,
-    private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
-    private val clearWishlist: ClearWishlistUseCase,
+    private val deps: WishlistDependencies,
 ) : ViewModel(), SideEffectSource<WishlistSideEffect> by SideEffectSourceImpl() {
 
     // TODO: [High] Inject dispatcher
@@ -68,7 +64,7 @@ internal class WishlistViewModel @Inject constructor(
         cachePolicy = CachePolicy.LocalOnly,
     )
     private val localWishlistProductIdsResultFlow =
-        getWishlistProductIdsFlow(localWishlistProductIdsParams)
+        deps.getWishlistProductIdsFlow(localWishlistProductIdsParams)
 
     val topBarState: StateFlow<TopBarState> = combine(
         localWishlistProductIdsResultFlow,
@@ -87,12 +83,12 @@ internal class WishlistViewModel @Inject constructor(
     )
 
     private val wishlistProductsRequester = FlowRequester<PagingData<ProductShort>, WishlistProductsRequest> {
-        wishlistProductPager.getWishlistProductPagingDataFlow()
+        deps.wishlistProductPager.getWishlistProductPagingDataFlow()
     }
 
     private val cartProductIdsParams =
         GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-    private val cartProductIdsResultFlow = getCartProductIdsFlow(cartProductIdsParams)
+    private val cartProductIdsResultFlow = deps.getCartProductIdsFlow(cartProductIdsParams)
 
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
@@ -136,7 +132,12 @@ internal class WishlistViewModel @Inject constructor(
             SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
             is SizeSelectorEvent.SizeSelected -> {
                 _visibleProductSizeSelector.value = null
-                // TODO: [Top] Implement
+                if (event.offer.isAvailable) {
+                    addProductToCart(event.product, event.offer)
+                } else {
+                    // TODO: [Top] Subscribe to product
+                    TODO()
+                }
             }
         }
     }
@@ -161,7 +162,7 @@ internal class WishlistViewModel @Inject constructor(
 
         clearWishlistJob = viewModelScope.launch {
             operationTracker.track(ClearWishlistOperation) {
-                clearWishlist()
+                deps.clearWishlist()
                     .onSuccess {
                         wishlistProductsRequester.request(WishlistProductsRequest)
                     }
@@ -178,7 +179,7 @@ internal class WishlistViewModel @Inject constructor(
         viewModelScope.launch {
             val product = event.product
             val params = ToggleProductInWishlistUseCase.Params(product.id)
-            toggleProductInWishlist(params)
+            deps.toggleProductInWishlist(params)
                 .onSuccess { isInWishlist ->
                     if (isInWishlist) {
                         val text = Text.Resource(ru.livetyping.zarina.core.resource.R.string.res_product_added_to_wishlist)
@@ -203,7 +204,13 @@ internal class WishlistViewModel @Inject constructor(
         if (product.offers.size > 1) {
             _visibleProductSizeSelector.value = product
         } else {
-            // TODO: [Top] Add product to cart
+            val offer = product.offers.firstOrNull { it.isAvailable }
+            if (offer != null) {
+                addProductToCart(product, offer)
+            } else {
+                // TODO: [Top] Subscribe to product
+                TODO()
+            }
         }
     }
 
@@ -221,7 +228,27 @@ internal class WishlistViewModel @Inject constructor(
     private fun onScreenStarted() {
         viewModelScope.launch {
             val params = GetWishlistProductIdsFlowUseCase.Params(CachePolicy.Remote())
-            getWishlistProductIdsFlow(params).firstOrNull()
+            deps.getWishlistProductIdsFlow(params).firstOrNull()
+        }
+    }
+
+    private fun addProductToCart(product: Product, offer: ProductOffer) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = product.id,
+                barcode = offer.barcode,
+                count = 1,
+            )
+            deps.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(RCommon.string.res_product_added_to_cart)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
+                    showZarinaErrorToast(text)
+                }
         }
     }
 
