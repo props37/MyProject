@@ -15,16 +15,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
@@ -47,6 +48,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class WishlistViewModel @Inject constructor(
+    getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     private val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     private val wishlistProductPager: WishlistProductPager,
     private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
@@ -88,15 +90,22 @@ internal class WishlistViewModel @Inject constructor(
         wishlistProductPager.getWishlistProductPagingDataFlow()
     }
 
+    private val cartProductIdsParams =
+        GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+    private val cartProductIdsResultFlow = getCartProductIdsFlow(cartProductIdsParams)
+
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
         .combine(
-            localWishlistProductIdsResultFlow.map { it.getOrDefault(emptySet()) },
-        ) { productPagingData, wishlistProductIds ->
+            localWishlistProductIdsResultFlow,
+            cartProductIdsResultFlow,
+        ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
+            val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
+            val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
             productPagingData.map { product ->
                 product.copy(
                     isInWishlist = product.id in wishlistProductIds,
-                    isInCart = false, // TODO: [Top] Implement
+                    isInCart = product.id in cartProductIds,
                 )
             }
         }

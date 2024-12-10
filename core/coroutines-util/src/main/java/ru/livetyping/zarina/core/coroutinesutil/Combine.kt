@@ -184,3 +184,13 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R> combineMore(
         args[11] as T12,
     )
 }
+
+public fun <T1, T2, T3, R> Flow<T1>.combine(
+    flow: Flow<T2>,
+    flow2: Flow<T3>,
+    transform: suspend (a: T1, b: T2, c: T3) -> R,
+): Flow<R> {
+    return combine(this, flow, flow2) { a, b, c ->
+        transform(a, b, c)
+    }
+}
