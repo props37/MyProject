@@ -122,7 +122,7 @@ internal class WishlistViewModel @Inject constructor(
             is WishlistEvent.ProductClicked -> TODO()
             is WishlistEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             is WishlistEvent.AddToCartClicked -> onAddProductToCartClicked(event)
-            is WishlistEvent.SubscribeClicked -> TODO()
+            is WishlistEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
             WishlistEvent.GoToCatalogClicked -> onGoToCatalogClicked()
         }
     }
@@ -132,11 +132,13 @@ internal class WishlistViewModel @Inject constructor(
             SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
             is SizeSelectorEvent.SizeSelected -> {
                 _visibleProductSizeSelector.value = null
+                val product = event.product
+                val offer = event.offer
                 if (event.offer.isAvailable) {
-                    addProductToCart(event.product, event.offer)
+                    addProductToCart(product, offer)
                 } else {
-                    // TODO: [Top] Subscribe to product
-                    TODO()
+                    val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(WishlistSideEffect.Navigate(action))
                 }
             }
         }
@@ -204,14 +206,21 @@ internal class WishlistViewModel @Inject constructor(
         if (product.offers.size > 1) {
             _visibleProductSizeSelector.value = product
         } else {
-            val offer = product.offers.firstOrNull { it.isAvailable }
-            if (offer != null) {
+            val offer = product.offers.firstOrNull() ?: return
+            if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                // TODO: [Top] Subscribe to product
-                TODO()
+                val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(WishlistSideEffect.Navigate(action))
             }
         }
+    }
+
+    private fun onSubscribeToProductClicked(event: WishlistEvent.SubscribeClicked) {
+        val product = event.product
+        val offer = product.offers.firstOrNull() ?: return
+        val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+        emitSideEffect(WishlistSideEffect.Navigate(action))
     }
 
     private fun onGoToCatalogClicked() {
