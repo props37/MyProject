@@ -19,6 +19,7 @@ import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
@@ -462,6 +463,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetCartProductIdsFlowUseCase {
         return GetCartProductIdsFlowUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideAddProductToCartUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): AddProductToCartUseCase {
+        return AddProductToCartUseCase.getInstance(
             cartRepository = cartRepository,
             logger = logger,
         )
