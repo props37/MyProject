@@ -25,6 +25,7 @@ import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
@@ -33,6 +34,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
@@ -60,6 +62,7 @@ internal class ProductListViewModel @Inject constructor(
     productPager: ProductPager,
     getCategoryFlow: GetCategoryFlowUseCase,
     getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
+    getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
@@ -148,6 +151,9 @@ internal class ProductListViewModel @Inject constructor(
     private val wishlistProductIdsParams =
         GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
 
+    private val cartProductIdsParams =
+        GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
         selectedTagId,
@@ -165,12 +171,14 @@ internal class ProductListViewModel @Inject constructor(
         .cachedIn(viewModelScopeDefault)
         .combine(
             getWishlistProductIdsFlow(wishlistProductIdsParams),
-        ) { productPagingData, wishlistProductIdsResult ->
+            getCartProductIdsFlow(cartProductIdsParams),
+        ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
             val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
+            val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
             productPagingData.map { product ->
                 product.copy(
                     isInWishlist = product.id in wishlistProductIds,
-                    isInCart = false, // TODO: [Top] Implement
+                    isInCart = product.id in cartProductIds,
                 )
             }
         }
