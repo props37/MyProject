@@ -34,6 +34,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Custom zarina://content deep links start -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="content"
+                    android:scheme="zarina" />
+            </intent-filter>
+            <!-- Custom zarina://content deep links end -->
+
             <!-- Catalog deep links start -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
