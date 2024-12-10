@@ -49,7 +49,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class CitySelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getCitiesFlowUseCase: GetCitiesFlowUseCase,
+    getCitiesFlow: GetCitiesFlowUseCase,
 ) : ViewModel(), SideEffectSource<CitySelectorSideEffect> by SideEffectSourceImpl() {
 
     // TODO: [High] Inject dispatcher
@@ -85,7 +85,7 @@ internal class CitySelectorViewModel @Inject constructor(
                 val nameQueryString = nameQuery.toString()
                 val cachePolicy = CachePolicy.LocalFirstThenRemote()
                 val params = GetCitiesFlowUseCase.Params(nameQueryString, cachePolicy)
-                getCitiesFlowUseCase(params).map { result ->
+                getCitiesFlow(params).map { result ->
                     result.map { cities ->
                         NameQueryCities(nameQueryString, cities)
                     }

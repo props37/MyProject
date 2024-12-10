@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.credential.CredentialFetchingResult
-import ru.livetyping.zarina.core.credential.CredentialManager
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -35,11 +34,9 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
 import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
-import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
-import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -62,11 +59,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class SignInViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val credentialManager: CredentialManager,
-    private val signInByEmail: SignInByEmailUseCase,
-    private val signInByPhone: SignInByPhoneUseCase,
-    private val getYandexCaptcha: GetYandexCaptchaUseCase,
-    private val smsCodeRetriever: SmsCodeRetriever,
+    private val deps: SignInDependencies,
 ) : ViewModel(), SideEffectSource<SignInSideEffect> by SideEffectSourceImpl() {
 
     private val operationTracker = OperationTracker()
@@ -157,7 +150,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        smsCodeRetriever.stop()
+        deps.smsCodeRetriever.stop()
     }
 
     fun onSignInTypeSelectorEvent(event: TabRowEvent<SignInType>) {
@@ -230,7 +223,7 @@ internal class SignInViewModel @Inject constructor(
         if (credentialManagerJob?.isActive == true) return
         credentialManagerJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
-                val result = credentialManager.getCredential()
+                val result = deps.credentialManager.getCredential()
                 if (result is CredentialFetchingResult.Success) {
                     showSaveCredentialPrompt = false
                     emitSideEffect(SignInSideEffect.FreeFocus)
@@ -287,10 +280,10 @@ internal class SignInViewModel @Inject constructor(
                 val email = Email.create(emailTextFieldState.text.toString())
                 val password = passwordTextFieldState.text.toString()
                 val params = SignInByEmailUseCase.Params(email, password, yandexCaptchaToken)
-                this@SignInViewModel.signInByEmail(params)
+                deps.signInByEmail(params)
                     .onSuccess {
                         if (showSaveCredentialPrompt) {
-                            credentialManager.createCredential(
+                            deps.credentialManager.createCredential(
                                 username = email.value,
                                 password = password,
                             )
@@ -309,13 +302,13 @@ internal class SignInViewModel @Inject constructor(
 
         signInJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
-                smsCodeRetriever.start(
+                deps.smsCodeRetriever.start(
                     sender = ZarinaSms.SENDER,
                     codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
                 )
                 val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
                 val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
-                this@SignInViewModel.signInByPhone(params)
+                deps.signInByPhone(params)
                     .onSuccess {
                         val action = SignInScreenAction.SignInByPhoneRequested(phone)
                         emitSideEffect(SignInSideEffect.Navigate(action))
@@ -391,7 +384,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private suspend fun showYandexCaptcha(trigger: YandexCaptchaTrigger) {
-        val captcha = getYandexCaptcha().getOrNull()
+        val captcha = deps.getYandexCaptcha().getOrNull()
         if (captcha != null) {
             visibleYandexCaptcha.value = captcha
             yandexCaptchaTrigger = trigger

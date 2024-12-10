@@ -26,13 +26,10 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
-import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -46,7 +43,6 @@ import ru.livetyping.zarina.feature.onboarding.ui.OnboardingSelectedCityResult
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStepsBuilder
 import timber.log.Timber
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -56,13 +52,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
     @Assisted
     selectedCityResultFlow: Flow<OnboardingSelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
-    private val permissionManager: PermissionManager,
-    onboardingStepsBuilder: OnboardingStepsBuilder,
-    getOnboardingBannerUrlFlow: GetOnboardingBannerUrlFlowUseCase,
-    private val getCurrentCityByLocationFlow: GetCurrentCityByLocationFlowUseCase,
-    private val setIsOnboardingCompleted: SetIsOnboardingCompletedUseCase,
-    private val setUserCity: SetUserCityUseCase,
-    private val setLocalUserCity: SetLocalUserCityUseCase,
+    private val deps: OnboardingDependencies,
 ) : ViewModel(), SideEffectSource<OnboardingSideEffect> by SideEffectSourceImpl() {
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
@@ -76,7 +66,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
 
     private val onboardingStepsValueHolder = savedStateHandle.createValueHolder(
         key = Keys.ONBOARDING_STEPS.key,
-        initialValue = onboardingStepsBuilder.build(
+        initialValue = deps.onboardingStepsBuilder.build(
             isNotificationsPermissionGranted = isNotificationsPermissionGranted(),
         ),
     )
@@ -95,7 +85,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
 
     private val bannerUrl: StateFlow<Url?> = flow {
-        val urlFlow = getOnboardingBannerUrlFlow().map { it.getOrNull() }
+        val urlFlow = deps.getOnboardingBannerUrlFlow().map { it.getOrNull() }
         emitAll(urlFlow)
     }.stateIn(
         scope = viewModelScope,
@@ -169,12 +159,12 @@ internal class OnboardingViewModel @AssistedInject constructor(
 
         detectCityJob = viewModelScope.launch {
             val currentPermissionsState =
-                permissionManager.getMultiplePermissionsState(LOCATION_PERMISSIONS)
+                deps.permissionManager.getMultiplePermissionsState(LOCATION_PERMISSIONS)
             if (currentPermissionsState.any { it.value.isGranted }) {
                 detectCity()
             } else {
                 val newPermissionsState =
-                    permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                    deps.permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
                 if (newPermissionsState != currentPermissionsState) {
                     // User has either granted or denied the permission
                     if (newPermissionsState.any { it.value.isGranted }) {
@@ -187,7 +177,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
                     && newPermissionsState.any { !it.value.shouldShowRequestRationale }
                 ) {
                     val havePermissionsRequiredRequestRationale =
-                        permissionManager
+                        deps.permissionManager
                             .haveMultiplePermissionsRequiredRequestRationale(LOCATION_PERMISSIONS)
                             .firstOrNull() ?: emptyMap()
                     if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
@@ -241,11 +231,11 @@ internal class OnboardingViewModel @AssistedInject constructor(
     private fun onRequestNotificationsPermissionClickedApi33() {
         val permission = Manifest.permission.POST_NOTIFICATIONS
         viewModelScope.launch {
-            val currentPermissionState = permissionManager.getPermissionState(permission)
+            val currentPermissionState = deps.permissionManager.getPermissionState(permission)
             if (currentPermissionState.isGranted) {
                 showOnboardingStep(OnboardingStep.CITY_DETECTION)
             } else {
-                val newPermissionState = permissionManager.requestPermission(permission)
+                val newPermissionState = deps.permissionManager.requestPermission(permission)
                 if (newPermissionState != currentPermissionState) {
                     // User has either granted or denied the permission
                     showOnboardingStep(OnboardingStep.CITY_DETECTION)
@@ -253,7 +243,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
                     newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
                 ) {
                     val hasPermissionRequiredRequestRationale =
-                        permissionManager.hasPermissionRequiredRequestRationale(permission)
+                        deps.permissionManager.hasPermissionRequiredRequestRationale(permission)
                             .firstOrNull() ?: false
                     if (hasPermissionRequiredRequestRationale) {
                         // User has denied the permission permanently
@@ -266,7 +256,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
 
     private suspend fun detectCity() {
         operationTracker.track(Operation.DETECT_CITY) {
-            getCurrentCityByLocationFlow().firstOrNull()
+            deps.getCurrentCityByLocationFlow().firstOrNull()
                 ?.onSuccess { city ->
                     val cityParcelable = city?.let { CityParcelable.from(it) }
                     cityValueHolder.set(cityParcelable)
@@ -298,12 +288,12 @@ internal class OnboardingViewModel @AssistedInject constructor(
         return operationTracker.track(Operation.COMPLETE_ONBOARDING) {
             val setIsOnboardingCompletedParams =
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
-            setIsOnboardingCompleted(setIsOnboardingCompletedParams)
+            deps.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
             val setUserCityParams = SetUserCityUseCase.Params(selectedCity ?: City.DEFAULT)
-            setUserCity(setUserCityParams)
+            deps.setUserCity(setUserCityParams)
                 .onFailure {
-                    setLocalUserCity(SetLocalUserCityUseCase.Params(City.DEFAULT))
+                    deps.setLocalUserCity(SetLocalUserCityUseCase.Params(City.DEFAULT))
                 }
         }
     }
@@ -319,7 +309,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
 
     private fun isNotificationsPermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionManager.isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS)
+            deps.permissionManager.isPermissionGranted(Manifest.permission.POST_NOTIFICATIONS)
         } else {
             true
         }

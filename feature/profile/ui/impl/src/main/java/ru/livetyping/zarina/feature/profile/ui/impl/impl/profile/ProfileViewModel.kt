@@ -17,9 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.buildutil.AppVersionName
 import ru.livetyping.zarina.core.buildutil.BuildType
-import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -48,14 +46,7 @@ internal class ProfileViewModel @AssistedInject constructor(
     @Assisted
     selectedCityResultFlow: Flow<ProfileSelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
-    getUserFlowUseCase: GetUserFlowUseCase,
-    getLoyaltyCardFlowUseCase: GetLoyaltyCardFlowUseCase,
-    getUserCityFlowUseCase: GetUserCityFlowUseCase,
-    @AppVersionName
-    appVersionName: String,
-    appBuildType: BuildType,
-    mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
-    private val setUserCity: SetUserCityUseCase,
+    private val deps: ProfileDependencies,
 ) : ViewModel(), SideEffectSource<ProfileSideEffect> by SideEffectSourceImpl() {
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
@@ -63,7 +54,7 @@ internal class ProfileViewModel @AssistedInject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val getUserUseCaseParams = GetUserFlowUseCase.Params(CachePolicy.LocalOnly)
-    private val userState: StateFlow<ProfileUserState> = getUserFlowUseCase(getUserUseCaseParams)
+    private val userState: StateFlow<ProfileUserState> = deps.getUserFlow(getUserUseCaseParams)
         .map { result ->
             ProfileUserState.Success(user = result.getOrNull())
         }
@@ -76,7 +67,7 @@ internal class ProfileViewModel @AssistedInject constructor(
     private val getLoyaltyCardUseCaseParams =
         GetLoyaltyCardFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
     private val loyaltyCard: StateFlow<LoyaltyCard?> =
-        getLoyaltyCardFlowUseCase(getLoyaltyCardUseCaseParams)
+        deps.getLoyaltyCardFlow(getLoyaltyCardUseCaseParams)
             .map { it.getOrNull() }
             .stateIn(
                 scope = viewModelScope,
@@ -86,7 +77,7 @@ internal class ProfileViewModel @AssistedInject constructor(
 
     private val getUserCityUseCaseParams =
         GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-    private val userCity: StateFlow<City?> = getUserCityFlowUseCase(getUserCityUseCaseParams)
+    private val userCity: StateFlow<City?> = deps.getUserCityFlow(getUserCityUseCaseParams)
         .map { result ->
             result.getOrDefault(City.DEFAULT)
         }
@@ -111,16 +102,16 @@ internal class ProfileViewModel @AssistedInject constructor(
             initialValue = ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList(),
         )
 
-    private val versionInfoFlow = mindboxDeviceUuidProvider.getMindboxDeviceUuidFlow()
+    private val versionInfoFlow = deps.mindboxDeviceUuidProvider.getMindboxDeviceUuidFlow()
         .map { mindboxDeviceUuidValue ->
             buildList {
                 val appVersionName = VersionInfo(
                     title = Text.Resource(R.string.profile_app_version),
-                    version = Text.String(appVersionName),
+                    version = Text.String(deps.appVersionName),
                 )
                 add(appVersionName)
 
-                if (appBuildType != BuildType.RELEASE && mindboxDeviceUuidValue != null) {
+                if (deps.appBuildType != BuildType.RELEASE && mindboxDeviceUuidValue != null) {
                     val mindboxDeviceUuid = VersionInfo(
                         title = Text.Resource(R.string.profile_mindbox_device_uuid),
                         version = Text.String(mindboxDeviceUuidValue),
@@ -251,7 +242,7 @@ internal class ProfileViewModel @AssistedInject constructor(
 
     private suspend fun updateUserCity(city: City) {
         val params = SetUserCityUseCase.Params(city)
-        setUserCity(params)
+        deps.setUserCity(params)
             .onFailure {
                 val text = Text.Resource(R.string.profile_city_changing_error)
                 val message = ZarinaToastMessage.error(text)

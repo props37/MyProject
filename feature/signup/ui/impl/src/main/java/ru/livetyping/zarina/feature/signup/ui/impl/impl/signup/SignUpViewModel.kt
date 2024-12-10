@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
-import ru.livetyping.zarina.core.credential.CredentialManager
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -36,10 +35,8 @@ import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
-import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.validation.SignUpValidator
-import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -61,10 +58,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class SignUpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val signUp: SignUpUseCase,
-    private val getYandexCaptcha: GetYandexCaptchaUseCase,
-    private val credentialManager: CredentialManager,
-    private val smsCodeRetriever: SmsCodeRetriever,
+    private val deps: SignUpDependencies,
 ) : ViewModel(), SideEffectSource<SignUpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -196,7 +190,7 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        smsCodeRetriever.stop()
+        deps.smsCodeRetriever.stop()
     }
 
     fun onSignUpEvent(event: SignUpEvent) {
@@ -270,7 +264,7 @@ internal class SignUpViewModel @Inject constructor(
             return
         }
 
-        smsCodeRetriever.start(
+        deps.smsCodeRetriever.start(
             sender = ZarinaSms.SENDER,
             codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
         )
@@ -292,9 +286,9 @@ internal class SignUpViewModel @Inject constructor(
                     receiveSms = receiveSmsValueHolder.get(),
                     yandexCaptchaToken = yandexCaptchaToken,
                 )
-                this@SignUpViewModel.signUp(params)
+                deps.signUp(params)
                     .onSuccess {
-                        credentialManager.createCredential(
+                        deps.credentialManager.createCredential(
                             username = email.value,
                             password = password,
                         )
@@ -402,7 +396,7 @@ internal class SignUpViewModel @Inject constructor(
     }
 
     private suspend fun showYandexCaptcha() {
-        val captcha = getYandexCaptcha().getOrNull()
+        val captcha = deps.getYandexCaptcha().getOrNull()
         if (captcha != null) {
             visibleYandexCaptcha.value = captcha
         } else {
