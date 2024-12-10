@@ -185,7 +185,7 @@ dependencies {
     implementation(projects.core.permission)
     implementation(projects.core.navigationUtil)
     implementation(projects.core.credential)
-    implementation(projects.core.googleplayservices)
+    implementation(projects.core.googlePlayServices)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

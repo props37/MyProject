@@ -43,7 +43,7 @@ kotlin {
 
 dependencies {
     implementation(projects.core.domain)
-    implementation(projects.core.googleplayservices)
+    implementation(projects.core.googlePlayServices)
 
     implementation(libs.kotlin.serialization.json)
 
