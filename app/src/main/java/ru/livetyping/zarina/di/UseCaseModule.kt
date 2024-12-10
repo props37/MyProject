@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
@@ -18,6 +19,7 @@ import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
@@ -450,6 +452,17 @@ internal class UseCaseModule {
     ): GetProductsWithFiltersPageFlowUseCase {
         return GetProductsWithFiltersPageFlowUseCase.getInstance(
             productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCartProductIdsFlowUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): GetCartProductIdsFlowUseCase {
+        return GetCartProductIdsFlowUseCase.getInstance(
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
