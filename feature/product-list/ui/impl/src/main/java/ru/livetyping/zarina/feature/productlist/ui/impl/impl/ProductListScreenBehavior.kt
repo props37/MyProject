@@ -52,5 +52,9 @@ private fun navigate(navActions: ProductListNavActions, action: ProductListScree
         is ProductListScreenAction.TagClicked -> {
             navActions.onTagClicked(action.tag, action.filters)
         }
+
+        is ProductListScreenAction.SubscribeToProductClicked -> {
+            navActions.onSubscribeToProductClicked(action.product, action.offer)
+        }
     }
 }

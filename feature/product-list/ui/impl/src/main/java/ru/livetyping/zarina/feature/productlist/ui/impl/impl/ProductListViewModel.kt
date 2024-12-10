@@ -224,7 +224,7 @@ internal class ProductListViewModel @Inject constructor(
             is ProductEvent.ProductClicked -> TODO()
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
-            is ProductEvent.SubscribeClicked -> TODO()
+            is ProductEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
             ProductEvent.ProductsRefreshed -> {
                 if (category.value == null) requestCategory()
             }
@@ -240,11 +240,13 @@ internal class ProductListViewModel @Inject constructor(
             SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
             is SizeSelectorEvent.SizeSelected -> {
                 _visibleProductSizeSelector.value = null
+                val product = event.product
+                val offer = event.offer
                 if (event.offer.isAvailable) {
-                    addProductToCart(event.product, event.offer)
+                    addProductToCart(product, offer)
                 } else {
-                    // TODO: [Top] Subscribe to product
-                    TODO()
+                    val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(ProductListSideEffect.Navigate(action))
                 }
             }
         }
@@ -294,14 +296,21 @@ internal class ProductListViewModel @Inject constructor(
         if (product.offers.size > 1) {
             _visibleProductSizeSelector.value = product
         } else {
-            val offer = product.offers.firstOrNull { it.isAvailable }
-            if (offer != null) {
+            val offer = product.offers.firstOrNull { it.isAvailable } ?: return
+            if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                // TODO: [Top] Subscribe to product
-                TODO()
+                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(ProductListSideEffect.Navigate(action))
             }
         }
+    }
+
+    private fun onSubscribeToProductClicked(event: ProductEvent.SubscribeClicked) {
+        val product = event.product
+        val offer = product.offers.firstOrNull { it.isAvailable } ?: return
+        val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+        emitSideEffect(ProductListSideEffect.Navigate(action))
     }
 
     private fun addProductToCart(product: Product, offer: ProductOffer) {

@@ -6,7 +6,6 @@ import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
 import ru.livetyping.zarina.core.uimodel.product.ProductOfferParcelable
 import ru.livetyping.zarina.core.uimodel.product.ProductShortParcelable
-import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -17,7 +16,7 @@ public data class ProductSubscriptionNavEntry(
 ) : NavigationEntry {
     public companion object {
         public fun typeMap(): Map<KType, NavType<*>> {
-            val productType = object : ParcelableNavType<ProductFiltersParcelable?>(
+            val productType = object : ParcelableNavType<ProductShortParcelable?>(
                 isNullableAllowed = true,
                 serializer = kotlinx.serialization.serializer(),
             ) {}
