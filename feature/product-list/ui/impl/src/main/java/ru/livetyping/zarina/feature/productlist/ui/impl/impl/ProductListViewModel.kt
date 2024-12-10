@@ -30,10 +30,12 @@ import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
@@ -52,18 +54,13 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class ProductListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    productPager: ProductPager,
-    getCategoryFlow: GetCategoryFlowUseCase,
-    getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
-    getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
-    private val toggleProductInWishlist: ToggleProductInWishlistUseCase,
+    private val deps: ProductListDependencies,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
     // TODO: [Top] Inject dispatcher
@@ -82,7 +79,7 @@ internal class ProductListViewModel @Inject constructor(
             id = categoryId,
             cachePolicy = CachePolicy.LocalFirstThenRemote(),
         )
-        getCategoryFlow(params)
+        deps.getCategoryFlow(params)
     }
 
     private val category = categoryRequester.flow
@@ -160,7 +157,7 @@ internal class ProductListViewModel @Inject constructor(
         filters,
     ) { selectedTagId, filters ->
         val sorting = filters.sorting?.selected ?: ProductSorting.getDefault()
-        productPager.getProductPagingDataFlow(
+        deps.productPager.getProductPagingDataFlow(
             categoryId = selectedTagId ?: categoryId,
             filters = filters,
             sorting = sorting,
@@ -170,8 +167,8 @@ internal class ProductListViewModel @Inject constructor(
         .flatMapLatest { it }
         .cachedIn(viewModelScopeDefault)
         .combine(
-            getWishlistProductIdsFlow(wishlistProductIdsParams),
-            getCartProductIdsFlow(cartProductIdsParams),
+            deps.getWishlistProductIdsFlow(wishlistProductIdsParams),
+            deps.getCartProductIdsFlow(cartProductIdsParams),
         ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
             val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
             val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
@@ -243,7 +240,12 @@ internal class ProductListViewModel @Inject constructor(
             SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
             is SizeSelectorEvent.SizeSelected -> {
                 _visibleProductSizeSelector.value = null
-                // TODO: [Top] Implement
+                if (event.offer.isAvailable) {
+                    addProductToCart(event.product, event.offer)
+                } else {
+                    // TODO: [Top] Subscribe to product
+                    TODO()
+                }
             }
         }
     }
@@ -267,7 +269,7 @@ internal class ProductListViewModel @Inject constructor(
         viewModelScope.launch {
             val product = event.product
             val params = ToggleProductInWishlistUseCase.Params(product.id)
-            toggleProductInWishlist(params)
+            deps.toggleProductInWishlist(params)
                 .onSuccess { isInWishlist ->
                     if (isInWishlist) {
                         val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
@@ -292,7 +294,33 @@ internal class ProductListViewModel @Inject constructor(
         if (product.offers.size > 1) {
             _visibleProductSizeSelector.value = product
         } else {
-            // TODO: [Top] Add product to cart
+            val offer = product.offers.firstOrNull { it.isAvailable }
+            if (offer != null) {
+                addProductToCart(product, offer)
+            } else {
+                // TODO: [Top] Subscribe to product
+                TODO()
+            }
+        }
+    }
+
+    private fun addProductToCart(product: Product, offer: ProductOffer) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = product.id,
+                barcode = offer.barcode,
+                count = 1,
+            )
+            deps.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(RCommon.string.res_product_added_to_cart)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
+                    showZarinaErrorToast(text)
+                }
         }
     }
 
