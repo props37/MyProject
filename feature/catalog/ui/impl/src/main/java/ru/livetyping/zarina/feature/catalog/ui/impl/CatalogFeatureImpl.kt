@@ -44,6 +44,7 @@ public class CatalogFeatureImpl : CatalogFeature {
 
     private companion object {
         private val DeepLinks = buildList {
+            // TODO: [High] Migrate to navDeepLink<CatalogNavEntry>?
             ZarinaWebLinkUris.forEach { uri ->
                 add(navDeepLink { uriPattern = "$uri/catalog" })
                 add(navDeepLink { uriPattern = "$uri/catalog/" })
