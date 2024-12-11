@@ -33,6 +33,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUr
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
@@ -487,6 +488,17 @@ internal class UseCaseModule {
     ): RemoveProductFromCartUseCase {
         return RemoveProductFromCartUseCase.getInstance(
             cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSubscribeToProductUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): SubscribeToProductUseCase {
+        return SubscribeToProductUseCase.getInstance(
+            productRepository = productRepository,
             logger = logger,
         )
     }
