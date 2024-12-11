@@ -4,6 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.network.di.ZarinaApi
@@ -13,11 +15,14 @@ import ru.livetyping.zarina.data.product.impl.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.GetProductsRequestBody
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductsDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.SortingDto
+import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductRequestBody
+import ru.livetyping.zarina.data.product.impl.remote.api.exception.SubscribeToProductApiExceptionConverter
 import javax.inject.Inject
 
 internal class ProductApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
 ) : ProductApi {
     override suspend fun getProducts(
         categoryId: Category.Id,
@@ -34,5 +39,18 @@ internal class ProductApiImpl @Inject constructor(
         return httpClient.post("/api/v1/products") {
             setJsonBody(body)
         }.body()
+    }
+
+    override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
+        val body = SubscribeToProductRequestBody(
+            barcodes = listOf(barcode.value),
+            email = email.value,
+            firstName = firstName,
+        )
+        subscribeToProductApiExceptionConverter {
+            httpClient.post("/api/subscriptions/subscribe/") {
+                setJsonBody(body)
+            }
+        }
     }
 }
