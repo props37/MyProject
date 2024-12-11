@@ -357,7 +357,7 @@ internal class SignUpViewModel @Inject constructor(
             }
 
             else -> {
-                val text = Text.Resource(RCommon.string.res_incorrect_data_entered)
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
                 showZarinaErrorToast(text)
             }
         }
