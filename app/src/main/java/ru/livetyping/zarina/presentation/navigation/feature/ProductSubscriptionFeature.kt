@@ -24,8 +24,11 @@ fun rememberProductSubscriptionNavActions(
     navController: NavHostController
 ): ProductSubscriptionNavActions {
     return remember(navController) {
+        val navigateUp: () -> Unit = { navController.navigateUp() }
+
         ProductSubscriptionNavActions(
-            onBackClicked = { navController.navigateUp() },
+            onBackClicked = navigateUp,
+            onSubscriptionCompleted = navigateUp,
         )
     }
 }

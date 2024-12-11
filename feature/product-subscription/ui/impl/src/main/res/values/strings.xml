@@ -2,4 +2,6 @@
 <resources>
     <string name="product_subscription_top_bar_title">Подписка на товар</string>
     <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
+    <string name="product_subscription_completed">Подписка на товар оформлена</string>
+    <string name="product_subscription_empty_fields_error">Поля ввода пусты. Для подписки на товар введи имя и адрес электронной почты</string>
 </resources>
