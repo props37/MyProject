@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.rememberScrollState
@@ -390,9 +390,8 @@ private fun BottomSpacer(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        val windowInsetsPadding = windowInsets.asPaddingValues().calculateBottomPadding()
-        Spacer(modifier = Modifier.height(windowInsetsPadding))
         Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsets))
     }
 }
 
