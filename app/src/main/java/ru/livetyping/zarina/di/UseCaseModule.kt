@@ -233,10 +233,12 @@ internal class UseCaseModule {
     @Provides
     fun provideSetUserCityUseCase(
         userRepository: UserRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): SetUserCityUseCase {
         return SetUserCityUseCase.getInstance(
             userRepository = userRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
