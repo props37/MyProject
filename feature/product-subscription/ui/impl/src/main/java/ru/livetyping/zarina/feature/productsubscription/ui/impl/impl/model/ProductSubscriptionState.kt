@@ -13,5 +13,7 @@ internal data class ProductSubscriptionState(
     val isNameInvalid: Boolean,
     val emailTextFieldState: TextFieldState,
     val isEmailInvalid: Boolean,
+    val arePoliciesAccepted: Boolean,
+    val arePoliciesInvalid: Boolean,
     val isSubscribeButtonLoading: Boolean,
 )

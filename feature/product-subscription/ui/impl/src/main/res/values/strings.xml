@@ -4,4 +4,9 @@
     <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
     <string name="product_subscription_completed">Подписка на товар оформлена</string>
     <string name="product_subscription_empty_fields_error">Поля ввода пусты. Для подписки на товар введи имя и адрес электронной почты</string>
+    <string name="product_subscription_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие на обработку персональных данных</string>
+    <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
+    <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
+    <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
+    <string name="product_subscription_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие на обработку персональных данных</string>
 </resources>

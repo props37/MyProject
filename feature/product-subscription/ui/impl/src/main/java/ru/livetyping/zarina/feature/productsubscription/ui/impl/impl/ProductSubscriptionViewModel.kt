@@ -79,11 +79,17 @@ internal class ProductSubscriptionViewModel @Inject constructor(
 
     private val isEmailInvalid = MutableStateFlow(false)
 
+    private val arePoliciesAccepted = MutableStateFlow(false)
+
+    private val arePoliciesInvalid = MutableStateFlow(false)
+
     val state: StateFlow<ProductSubscriptionState> = combine(
         isNameInvalid,
         isEmailInvalid,
+        arePoliciesAccepted,
+        arePoliciesInvalid,
         operationTracker.ongoingOperationKeys,
-    ) { isNameInvalid, isEmailInvalid, ongoingOperations ->
+    ) { isNameInvalid, isEmailInvalid, arePoliciesAccepted, arePoliciesInvalid, ongoingOperations ->
         ProductSubscriptionState(
             product = product,
             productOffer = productOffer,
@@ -91,6 +97,8 @@ internal class ProductSubscriptionViewModel @Inject constructor(
             isNameInvalid = isNameInvalid,
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = isEmailInvalid,
+            arePoliciesAccepted = arePoliciesAccepted,
+            arePoliciesInvalid = arePoliciesInvalid,
             isSubscribeButtonLoading = Operation.SUBSCRIBE in ongoingOperations,
         )
     }.stateIn(
@@ -103,6 +111,8 @@ internal class ProductSubscriptionViewModel @Inject constructor(
             isNameInvalid = isNameInvalid.value,
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = isEmailInvalid.value,
+            arePoliciesAccepted = arePoliciesAccepted.value,
+            arePoliciesInvalid = arePoliciesInvalid.value,
             isSubscribeButtonLoading = false,
         ),
     )
@@ -115,6 +125,7 @@ internal class ProductSubscriptionViewModel @Inject constructor(
     fun onEvent(event: ProductSubscriptionEvent) {
         when (event) {
             ProductSubscriptionEvent.BackClicked -> onBackClicked()
+            is ProductSubscriptionEvent.PoliciesAcceptedChanged -> onPoliciesAcceptedChanged(event)
             ProductSubscriptionEvent.SubscribeClicked -> onSubscribeClicked()
         }
     }
@@ -126,10 +137,24 @@ internal class ProductSubscriptionViewModel @Inject constructor(
         }
     }
 
+    private fun onPoliciesAcceptedChanged(
+        event: ProductSubscriptionEvent.PoliciesAcceptedChanged,
+    ) {
+        arePoliciesAccepted.value = event.accepted
+        if (event.accepted) {
+            arePoliciesInvalid.value = false
+        }
+    }
+
     private fun onSubscribeClicked() {
         if (subscribeJob?.isActive == true) return
 
-        // TODO: [Top] Check are policies accepted
+        if (!arePoliciesAccepted.value) {
+            arePoliciesInvalid.value = true
+            val text = Text.Resource(R.string.product_subscription_agreement_error)
+            showZarinaErrorToast(text)
+            return
+        }
 
         subscribeJob = viewModelScope.launch {
             operationTracker.track(Operation.SUBSCRIBE) {
