@@ -44,6 +44,7 @@ private fun navigate(
     navActions: ProductSubscriptionNavActions,
     action: ProductSubscriptionScreenAction
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        ProductSubscriptionScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

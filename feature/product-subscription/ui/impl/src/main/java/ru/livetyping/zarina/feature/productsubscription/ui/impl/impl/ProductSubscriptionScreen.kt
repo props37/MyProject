@@ -2,32 +2,37 @@ package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.ProductSubscriptionContent
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.TopBar
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
 
 @Composable
 internal fun ProductSubscriptionScreen(
     navActions: ProductSubscriptionNavActions,
     viewModel: ProductSubscriptionViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     ScreenContent(
+        state = state,
+        onEvent = viewModel::onEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -35,6 +40,8 @@ internal fun ProductSubscriptionScreen(
 
 @Composable
 internal fun ScreenContent(
+    state: ProductSubscriptionState,
+    onEvent: (ProductSubscriptionEvent) -> Unit,
     sideEffects: Flow<ProductSubscriptionSideEffect>,
     navActions: ProductSubscriptionNavActions,
 ) {
@@ -53,13 +60,12 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        // TODO: [Top] Implement
-        TopBar(onBackClicked = {})
+        TopBar(onBackClicked = { onEvent(ProductSubscriptionEvent.BackClicked) })
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // TODO: [Top] Implement
-        }
+        ProductSubscriptionContent(
+            state = state,
+            onEvent = onEvent,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
