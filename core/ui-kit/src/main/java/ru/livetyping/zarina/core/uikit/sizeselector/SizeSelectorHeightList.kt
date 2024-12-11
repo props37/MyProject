@@ -55,7 +55,7 @@ private fun Height(
         startContent = {
             val heightValue = height.height
             val text = if (heightValue != null) {
-                stringResource(R.string.uikit_height_cm, heightValue)
+                stringResource(RCommon.string.res_height_cm, heightValue)
             } else ""
             val color = if (height.isAvailable) {
                 UiKitTheme.colors.text.general.regular.default

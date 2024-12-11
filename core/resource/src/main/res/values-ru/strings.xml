@@ -62,6 +62,11 @@
     <string name="res_subscribe">Подписаться</string>
     <string name="res_product_added_to_cart">Товар добавлен в корзину</string>
     <string name="res_product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
+    <string name="res_size">Размер</string>
+    <string name="res_height_cm">%1$s см</string>
+    <string name="res_color">Цвет</string>
+    <string name="res_quantity">Количество</string>
+    <string name="res_price_in_rubles_for_count">%1$s₽ / шт</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
