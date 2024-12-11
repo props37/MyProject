@@ -33,7 +33,7 @@ jetpack-webkit = "1.12.1"
 jetpack-annotation = "1.9.1"
 
 jetpack-compose-bom = "2024.11.00"
-jetpack-compose-material-navigation = "1.7.0-beta01"
+jetpack-compose-material-navigation = "1.7.6"
 
 ktor = "3.0.2"
 
