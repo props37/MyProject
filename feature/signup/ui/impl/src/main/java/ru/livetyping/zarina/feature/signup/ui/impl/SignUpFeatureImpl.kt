@@ -36,6 +36,7 @@ public class SignUpFeatureImpl : SignUpFeature {
         ) {
             val signUpScreenNavActions = SignUpScreenNavActions(
                 onBackClicked = { navController.navigateUp() },
+                onUserCreated = { TODO() },
             )
             signUpScreen(signUpScreenNavActions)
         }

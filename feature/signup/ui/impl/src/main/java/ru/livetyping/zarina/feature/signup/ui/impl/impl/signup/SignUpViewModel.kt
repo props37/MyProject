@@ -275,12 +275,13 @@ internal class SignUpViewModel @Inject constructor(
                     LocalDateUtil.fromMillis(it)
                 }
                 val email = Email.create(emailTextFieldState.text.toString())
+                val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
                 val password = passwordTextFieldState.text.toString()
                 val params = SignUpUseCase.Params(
                     name = nameTextFieldState.text.toString(),
                     birthDate = birthDate,
                     email = email,
-                    phone = PhoneNumber.create(phoneTextFieldState.text.toString()),
+                    phone = phone,
                     password = password,
                     receiveEmails = receiveEmailsValueHolder.get(),
                     receiveSms = receiveSmsValueHolder.get(),
@@ -293,8 +294,8 @@ internal class SignUpViewModel @Inject constructor(
                             password = password,
                         )
 
-                        // TODO: [Top] Implement
-                        TODO()
+                        val action = SignUpScreenAction.UserCreated(phone)
+                        emitSideEffect(SignUpSideEffect.Navigate(action))
                     }
                     .onFailure(::handleSignUpException)
             }

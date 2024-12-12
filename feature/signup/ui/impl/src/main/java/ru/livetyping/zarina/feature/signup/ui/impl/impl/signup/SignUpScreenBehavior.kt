@@ -47,5 +47,6 @@ internal fun SignUpScreenBehavior(
 private fun navigate(navActions: SignUpNavActions, action: SignUpScreenAction) {
     when (action) {
         SignUpScreenAction.BackClicked -> navActions.onBackClicked()
+        is SignUpScreenAction.UserCreated -> navActions.onUserCreated(action.phone)
     }
 }
