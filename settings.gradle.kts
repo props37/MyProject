@@ -50,6 +50,8 @@ include(":feature:signup:ui:impl")
 include(":feature:product-list:ui:api")
 include(":feature:product-list:ui:impl")
 
+include(":feature:product:ui:api")
+
 include(":feature:product-subscription:ui:api")
 include(":feature:product-subscription:ui:impl")
 
