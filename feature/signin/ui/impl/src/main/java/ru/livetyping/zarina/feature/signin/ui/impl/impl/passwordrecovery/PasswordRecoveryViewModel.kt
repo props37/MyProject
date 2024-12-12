@@ -98,8 +98,8 @@ internal class PasswordRecoveryViewModel @Inject constructor(
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(PasswordRecoverySideEffect.ShowZarinaToast(message))
 
-                        // TODO: [Top] Implement
-                        TODO()
+                        val action = PasswordRecoveryScreenAction.PasswordResetRequested
+                        emitSideEffect(PasswordRecoverySideEffect.Navigate(action))
                     }
                     .onFailure(::handlePasswordRecoveryRequestException)
             }

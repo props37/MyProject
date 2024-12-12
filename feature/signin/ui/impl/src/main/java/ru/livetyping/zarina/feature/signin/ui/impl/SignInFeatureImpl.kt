@@ -37,8 +37,10 @@ public class SignInFeatureImpl : SignInFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
+            val navigateUp: () -> Unit = { navController.navigateUp() }
+
             val signInScreenNavActions = SignInScreenNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateUp,
                 onUserSignedIn = actions.onUserSignedIn,
                 onSignInByPhoneRequested = { TODO() },
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
@@ -47,7 +49,8 @@ public class SignInFeatureImpl : SignInFeature {
             signInScreen(signInScreenNavActions)
 
             val passwordRecoveryNavActions = PasswordRecoveryNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateUp,
+                onPasswordResetRequested = navigateUp,
             )
             passwordRecoveryScreen(passwordRecoveryNavActions)
         }
