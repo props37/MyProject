@@ -37,7 +37,7 @@ fun rememberWishlistNavActions(
             onGoToCatalogClicked = {
                 navController.navigateToBottomNavBarItem(BottomNavBarItem.Catalog)
                 navController.popBackStack(
-                    route = CatalogFeature.getNavEntry(),
+                    route = CatalogFeature.getInitialScreenNavEntry(),
                     inclusive = false,
                 )
             },

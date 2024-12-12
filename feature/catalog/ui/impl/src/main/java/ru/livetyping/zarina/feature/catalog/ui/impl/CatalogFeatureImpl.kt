@@ -14,8 +14,8 @@ import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
+import ru.livetyping.zarina.feature.catalog.ui.CatalogScreenNavEntry
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogNavEntry as CatalogScreenNavEntry
 
 public class CatalogFeatureImpl : CatalogFeature {
     override fun NavGraphBuilder.navigation(
