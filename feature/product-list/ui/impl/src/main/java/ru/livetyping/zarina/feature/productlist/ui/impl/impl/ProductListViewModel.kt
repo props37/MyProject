@@ -191,6 +191,7 @@ internal class ProductListViewModel @Inject constructor(
         selectedTagId != null
     }
 
+    // TODO: [Top] Implement
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()

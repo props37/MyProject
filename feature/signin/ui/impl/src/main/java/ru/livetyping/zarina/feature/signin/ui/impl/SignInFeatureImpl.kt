@@ -42,7 +42,7 @@ public class SignInFeatureImpl : SignInFeature {
             val signInScreenNavActions = SignInScreenNavActions(
                 onBackClicked = navigateUp,
                 onUserSignedIn = actions.onUserSignedIn,
-                onSignInByPhoneRequested = { TODO() },
+                onSignInByPhoneRequested = { TODO() }, // TODO: [Top] Implement
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
                 onSignUpClicked = actions.onSignUpClicked,
             )
