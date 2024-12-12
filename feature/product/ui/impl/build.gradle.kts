@@ -58,7 +58,6 @@ dependencies {
     implementation(projects.feature.product.ui.api)
     implementation(projects.core.uiKit)
     implementation(projects.core.coroutinesUtil)
-    implementation(projects.core.navigationUtil)
     implementation(projects.core.resource)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)

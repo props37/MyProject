@@ -27,6 +27,7 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
@@ -44,6 +45,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
 import ru.livetyping.zarina.presentation.navigation.feature.onboardingFeature
+import ru.livetyping.zarina.presentation.navigation.feature.productFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productListFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productSubscriptionFeature
 import ru.livetyping.zarina.presentation.navigation.feature.profileFeature
@@ -54,6 +56,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActio
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductListNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberProductNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductSubscriptionNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavResultRetrievers
@@ -107,6 +110,9 @@ fun ZarinaNavigation(
 
     val productListFeature = features.find<ProductListFeature>()
     val productListNavActions = rememberProductListNavActions(navController)
+
+    val productFeature = features.find<ProductFeature>()
+    val productNavActions = rememberProductNavActions(navController)
 
     val productSubscriptionFeature = features.find<ProductSubscriptionFeature>()
     val productSubscriptionNavActions = rememberProductSubscriptionNavActions(navController)
@@ -182,6 +188,7 @@ fun ZarinaNavigation(
         signInFeature(navController, signInFeature, signInNavActions)
         signUpFeature(navController, signUpFeature, signUpNavActions)
         productListFeature(productListFeature, productListNavActions)
+        productFeature(productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
     }
 }

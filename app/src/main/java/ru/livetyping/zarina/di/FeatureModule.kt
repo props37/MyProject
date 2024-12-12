@@ -17,6 +17,8 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.impl.HomeFeatureImpl
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.impl.OnboardingFeatureImpl
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
+import ru.livetyping.zarina.feature.product.ui.impl.ProductFeatureImpl
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.impl.ProductListFeatureImpl
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
@@ -83,6 +85,11 @@ internal class FeatureModule {
     @IntoMap
     @FeatureEntryKey(ProductListFeature::class)
     fun provideProductListFeature(): FeatureEntry<*, *, *> = ProductListFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(ProductFeature::class)
+    fun provideProductFeature(): FeatureEntry<*, *, *> = ProductFeatureImpl()
 
     @Provides
     @IntoMap
