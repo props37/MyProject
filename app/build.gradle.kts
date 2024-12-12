@@ -97,6 +97,8 @@ android {
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
+
+                matchingFallbacks += buildType.matchingFallbacks
             }
         }
     }

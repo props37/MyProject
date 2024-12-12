@@ -19,6 +19,8 @@ sealed class ZarinaBuildType(val name: String) {
     open val anyQueryKey = "L1WU1VJBYK"
     open val googleMapsKey = "AIzaSyDxodqz9YA48xbw5T7Nc4iQr9n0YDeBxx0"
 
+    val matchingFallbacks by lazy { listOf(Debug.name, Release.name) }
+
     object Debug : ZarinaBuildType("debug") {
         override val isDebuggable = true
         override val isMinifyEnabled = false
