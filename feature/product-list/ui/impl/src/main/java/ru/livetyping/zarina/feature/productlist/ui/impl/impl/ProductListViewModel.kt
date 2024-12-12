@@ -221,7 +221,7 @@ internal class ProductListViewModel @Inject constructor(
 
     fun onProductEvent(event: ProductEvent) {
         when (event) {
-            is ProductEvent.ProductClicked -> TODO()
+            is ProductEvent.ProductClicked -> onProductClicked(event)
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
@@ -263,6 +263,13 @@ internal class ProductListViewModel @Inject constructor(
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductListScreenAction.BackClicked
+            emitSideEffect(ProductListSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onProductClicked(event: ProductEvent.ProductClicked) {
+        navigationThrottler.throttle {
+            val action = ProductListScreenAction.ProductClicked(event.product)
             emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }

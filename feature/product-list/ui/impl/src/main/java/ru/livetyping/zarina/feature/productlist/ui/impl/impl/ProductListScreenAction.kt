@@ -13,6 +13,8 @@ internal sealed interface ProductListScreenAction {
         val filters: ProductFilters?,
     ) : ProductListScreenAction
 
+    data class ProductClicked(val product: Product) : ProductListScreenAction
+
     data class SubscribeToProductClicked(
         val product: Product,
         val offer: ProductOffer,
