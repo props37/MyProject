@@ -8,7 +8,6 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.navigationutil.LifecycleSafeNavigator
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
@@ -29,15 +28,12 @@ internal fun ProfileDetailsScreenBehavior(
     LifecycleEventEffect(onLifecycleEvent = onLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
-        val lifecycleSafeNavigator = LifecycleSafeNavigator()
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is ProfileDetailsSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
-                        lifecycleSafeNavigator.safeNavigate {
-                            navigate(currentNavActions, sideEffect.action)
-                        }
+                        navigate(currentNavActions, sideEffect.action)
                     }
 
                     is ProfileDetailsSideEffect.ShowZarinaToast -> {
