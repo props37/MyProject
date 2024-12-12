@@ -8,6 +8,8 @@ internal sealed interface WishlistScreenAction {
 
     data object GoToCatalogClicked : WishlistScreenAction
 
+    data class ProductClicked(val product: Product) : WishlistScreenAction
+
     data class SubscribeToProductClicked(
         val product: Product,
         val offer: ProductOffer,

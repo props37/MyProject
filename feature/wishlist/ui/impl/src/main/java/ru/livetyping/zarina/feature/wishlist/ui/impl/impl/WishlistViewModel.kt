@@ -116,10 +116,9 @@ internal class WishlistViewModel @Inject constructor(
         }
     }
 
-    // TODO: [Top] Implement
     fun onWishlistEvent(event: WishlistEvent) {
         when (event) {
-            is WishlistEvent.ProductClicked -> TODO()
+            is WishlistEvent.ProductClicked -> onProductClicked(event)
             is WishlistEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             is WishlistEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is WishlistEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
@@ -174,6 +173,13 @@ internal class WishlistViewModel @Inject constructor(
                         emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
                     }
             }
+        }
+    }
+
+    private fun onProductClicked(event: WishlistEvent.ProductClicked) {
+        navigationThrottler.throttle {
+            val action = WishlistScreenAction.ProductClicked(event.product)
+            emitSideEffect(WishlistSideEffect.Navigate(action))
         }
     }
 

@@ -53,6 +53,7 @@ private fun navigate(navActions: WishlistNavActions, action: WishlistScreenActio
     when (action) {
         WishlistScreenAction.BackClicked -> navActions.onBackClicked()
         WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
+        is WishlistScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
         is WishlistScreenAction.SubscribeToProductClicked -> {
             navActions.onSubscribeToProductClicked(action.product, action.offer)
         }
