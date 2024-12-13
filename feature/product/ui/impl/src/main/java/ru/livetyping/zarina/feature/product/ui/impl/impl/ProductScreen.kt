@@ -9,19 +9,25 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 
 @Composable
 internal fun ProductScreen(
     navActions: ProductNavActions,
     viewModel: ProductViewModel = hiltViewModel(),
 ) {
+    val productState by viewModel.productState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        productState = productState,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -29,6 +35,7 @@ internal fun ProductScreen(
 
 @Composable
 internal fun ScreenContent(
+    productState: ProductState,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
