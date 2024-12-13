@@ -24,6 +24,8 @@ fun rememberProductNavActions(
     navController: NavHostController
 ): ProductNavActions {
     return remember(navController) {
-        ProductNavActions()
+        ProductNavActions(
+            onBackClicked = { navController.navigateUp() },
+        )
     }
 }

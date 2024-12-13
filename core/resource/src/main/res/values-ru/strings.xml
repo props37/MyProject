@@ -67,6 +67,7 @@
     <string name="res_color">Цвет</string>
     <string name="res_quantity">Количество</string>
     <string name="res_price_in_rubles_for_count">%1$s₽ / шт</string>
+    <string name="res_share">Поделиться</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

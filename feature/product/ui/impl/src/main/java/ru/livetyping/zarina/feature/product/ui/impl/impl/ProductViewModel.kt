@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -23,6 +26,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,8 +52,27 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
+    private val productResult = productRequester.flow
+        .conflate()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+
+    val topBarState: StateFlow<TopBarState> = productResult
+        .map { result ->
+            val productName = result.getOrNull()?.name
+            TopBarState(productName)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileAndroidUiSubscribed,
+            initialValue = TopBarState(productName = null),
+        )
+
     val productState: StateFlow<ProductState> = combine(
-        productRequester.flow,
+        productResult,
         productRequester.loadingState,
     ) { productResult, productLoadingState ->
         if (productLoadingState.isLoading()) {
@@ -69,6 +93,13 @@ internal class ProductViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = ProductState.Loading,
     )
+
+    fun onTopBarEvent(event: TopBarEvent) {
+        when (event) {
+            TopBarEvent.BackClicked -> onBackClicked()
+            TopBarEvent.ShareClicked -> TODO()
+        }
+    }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {

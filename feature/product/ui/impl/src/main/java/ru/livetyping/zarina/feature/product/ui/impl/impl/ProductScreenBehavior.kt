@@ -37,6 +37,7 @@ internal fun ProductScreenBehavior(
 }
 
 private fun navigate(navActions: ProductNavActions, action: ProductScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        ProductScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }
