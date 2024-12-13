@@ -6,6 +6,8 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
@@ -15,6 +17,7 @@ import javax.inject.Inject
 internal class ProductRemoteDataSourceImpl @Inject constructor(
     private val api: ProductApi,
 ) : ProductRemoteDataSource {
+
     override fun getProductsWithFiltersPageFlow(
         categoryId: Category.Id,
         filters: ProductFilters?,
@@ -28,6 +31,11 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
             page = page,
         ).toProductsWithFiltersPage()
         emit(productsWithFiltersPage)
+    }
+
+    override fun getProductFlow(productId: Product.Id): Flow<ProductDetailed> = flow {
+        val product = api.getProduct(productId).toProductDetailed()
+        emit(product)
     }
 
     override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {

@@ -2,10 +2,12 @@ package ru.livetyping.zarina.data.product.impl.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.product.Barcode
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.network.di.ZarinaApi
@@ -13,6 +15,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.GetProductsRequestBody
+import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductDetailedDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductsDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.SortingDto
 import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductRequestBody
@@ -24,6 +27,7 @@ internal class ProductApiImpl @Inject constructor(
     private val httpClient: HttpClient,
     private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
 ) : ProductApi {
+
     override suspend fun getProducts(
         categoryId: Category.Id,
         filters: ProductFilters?,
@@ -39,6 +43,10 @@ internal class ProductApiImpl @Inject constructor(
         return httpClient.post("/api/v1/products") {
             setJsonBody(body)
         }.body()
+    }
+
+    override suspend fun getProduct(productId: Product.Id): ProductDetailedDto {
+        return httpClient.get("/api/v1/products/${productId.value}").body()
     }
 
     override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
