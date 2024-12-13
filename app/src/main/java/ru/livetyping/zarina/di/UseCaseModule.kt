@@ -32,6 +32,7 @@ import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowU
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
@@ -501,6 +502,21 @@ internal class UseCaseModule {
     ): SubscribeToProductUseCase {
         return SubscribeToProductUseCase.getInstance(
             productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductFlowUseCase(
+        productRepository: ProductRepository,
+        cartRepository: CartRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetProductFlowUseCase {
+        return GetProductFlowUseCase.getInstance(
+            productRepository = productRepository,
+            cartRepository = cartRepository,
+            wishlistRepository = wishlistRepository,
             logger = logger,
         )
     }
