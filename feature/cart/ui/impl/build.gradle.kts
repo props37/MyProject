@@ -70,10 +70,8 @@ dependencies {
     implementation(libs.jetpack.navigation.compose)
 
     implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.foundation)
     implementation(libs.jetpack.compose.ui)
-    implementation(libs.jetpack.compose.material)
-    implementation(libs.jetpack.compose.material.navigation)
-    implementation(libs.jetpack.compose.material3)
     implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
