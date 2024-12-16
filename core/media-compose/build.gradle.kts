@@ -51,17 +51,15 @@ composeCompiler {
 dependencies {
     api(projects.core.media)
 
+    api(libs.jetpack.media3.exoplayer)
+    implementation(libs.jetpack.media3.ui)
+
     implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.foundation)
     implementation(libs.jetpack.compose.ui)
-    implementation(libs.jetpack.compose.material)
-    implementation(libs.jetpack.compose.material.navigation)
-    implementation(libs.jetpack.compose.material3)
     implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
-
-    api(libs.jetpack.media3.exoplayer)
-    implementation(libs.jetpack.media3.ui)
 
     implementation(libs.timber)
 
