@@ -7,6 +7,13 @@ public data class ProductPrice(
     val discountPrice: Int,
     val discountPercent: Int,
 ) {
+    public constructor(originalPrice: Int) : this(
+        originalPrice = originalPrice,
+        hasDiscount = false,
+        discountPercent = 0,
+        discountPrice = 0,
+    )
+
     val currentPrice: Int
         get() = if (hasDiscount) discountPrice else originalPrice
 }
