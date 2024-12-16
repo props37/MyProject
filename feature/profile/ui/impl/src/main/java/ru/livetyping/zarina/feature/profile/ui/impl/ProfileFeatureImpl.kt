@@ -13,8 +13,10 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
@@ -69,6 +71,9 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val orderListNavActions = OrderListNavActions()
             orderListScreen(orderListNavActions)
+
+            val orderNavAction = OrderNavActions()
+            orderScreen(orderNavAction)
         }
     }
 }
