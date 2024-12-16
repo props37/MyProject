@@ -78,6 +78,8 @@ internal fun ScreenContent(
         )
     }
 
+    // TODO: [Top] Add Zarina Club bottom sheet
+
     val lazyListState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
         canScroll = { lazyListState.canScrollForward },
