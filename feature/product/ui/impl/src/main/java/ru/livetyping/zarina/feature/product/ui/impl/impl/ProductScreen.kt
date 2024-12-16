@@ -43,6 +43,8 @@ internal fun ProductScreen(
     )
 }
 
+// TODO: [Top] Add TotalLook and similar products
+
 @Composable
 internal fun ScreenContent(
     topBarState: TopBarState,
