@@ -1,3 +1,5 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.order
 
-internal class OrderNavActions
+internal class OrderNavActions(
+    val onBackClicked: () -> Unit,
+)

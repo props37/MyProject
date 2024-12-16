@@ -36,6 +36,7 @@ internal fun OrderScreenBehavior(
 }
 
 private fun navigate(navActions: OrderNavActions, action: OrderScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        OrderScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

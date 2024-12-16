@@ -41,6 +41,7 @@
     <string name="profile_keep">Оставить</string>
     <string name="profile_account_deletion_error">Не удалось удалить аккаунт</string>
     <string name="profile_city_changing_error">Не удалось изменить город</string>
+    <string name="profile_order_number">Заказ №%1$s</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

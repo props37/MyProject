@@ -80,7 +80,7 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             orderListScreen(orderListNavActions)
 
-            val orderNavAction = OrderNavActions()
+            val orderNavAction = OrderNavActions(onBackClicked = navigateUp)
             orderScreen(orderNavAction)
         }
     }
