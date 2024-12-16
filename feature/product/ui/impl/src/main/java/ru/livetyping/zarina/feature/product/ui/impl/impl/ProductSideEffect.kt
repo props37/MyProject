@@ -4,4 +4,6 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
 
 internal sealed interface ProductSideEffect : SideEffect {
     data class Navigate(val action: ProductScreenAction) : ProductSideEffect
+
+    data class Share(val text: String) : ProductSideEffect
 }

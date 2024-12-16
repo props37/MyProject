@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -97,7 +99,7 @@ internal class ProductViewModel @Inject constructor(
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()
-            TopBarEvent.ShareClicked -> TODO()
+            TopBarEvent.ShareClicked -> shareProduct()
         }
     }
 
@@ -105,6 +107,15 @@ internal class ProductViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = ProductScreenAction.BackClicked
             emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun shareProduct() {
+        viewModelScope.launch {
+            val productShareUrl = productResult.firstOrNull()?.getOrNull()?.shareUrl
+            if (productShareUrl != null) {
+                emitSideEffect(ProductSideEffect.Share(productShareUrl.value))
+            }
         }
     }
 

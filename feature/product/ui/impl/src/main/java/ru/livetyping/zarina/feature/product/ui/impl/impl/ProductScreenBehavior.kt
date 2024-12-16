@@ -3,10 +3,12 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.platform.shareText
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
 
@@ -16,6 +18,7 @@ internal fun ProductScreenBehavior(
     navActions: ProductNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentContext by rememberUpdatedState(LocalContext.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -26,6 +29,8 @@ internal fun ProductScreenBehavior(
                     is ProductSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
+
+                    is ProductSideEffect.Share -> currentContext.shareText(sideEffect.text)
                 }
             }
         }
