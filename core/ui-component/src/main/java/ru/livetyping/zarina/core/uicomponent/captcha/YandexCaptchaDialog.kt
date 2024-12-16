@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.captcha
+package ru.livetyping.zarina.core.uicomponent.captcha
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup

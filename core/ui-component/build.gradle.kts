@@ -59,6 +59,8 @@ dependencies {
     implementation(projects.core.uiCompose)
     implementation(projects.core.resource)
 
+    implementation(libs.jetpack.activity.compose)
+
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
     implementation(libs.jetpack.compose.material)
