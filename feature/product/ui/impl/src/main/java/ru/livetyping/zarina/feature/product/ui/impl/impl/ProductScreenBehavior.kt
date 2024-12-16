@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.platform.shareText
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
 
 @Composable
@@ -19,6 +20,7 @@ internal fun ProductScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentContext by rememberUpdatedState(LocalContext.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -31,6 +33,9 @@ internal fun ProductScreenBehavior(
                     }
 
                     is ProductSideEffect.Share -> currentContext.shareText(sideEffect.text)
+                    is ProductSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
+                    }
                 }
             }
         }

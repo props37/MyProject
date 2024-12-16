@@ -22,9 +22,12 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
@@ -32,6 +35,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class ProductViewModel @Inject constructor(
@@ -114,7 +118,7 @@ internal class ProductViewModel @Inject constructor(
 
             // TODO: [Top] Implement
             is ProductEvent.AddToCartClicked -> TODO()
-            is ProductEvent.AddToWishlistClicked -> TODO()
+            is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.ErrorRefreshClicked -> productRequester.request(ProductRequest)
             ProductEvent.BonusAccrualForPurchaseClicked -> Unit // Handled completely on UI
         }
@@ -134,6 +138,34 @@ internal class ProductViewModel @Inject constructor(
                 emitSideEffect(ProductSideEffect.Share(productShareUrl.value))
             }
         }
+    }
+
+    private fun onAddProductToWishlistClicked(event: ProductEvent.AddToWishlistClicked) {
+        viewModelScope.launch {
+            val product = event.product
+            val params = ToggleProductInWishlistUseCase.Params(product.id)
+            deps.toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (product.isInWishlist) {
+                        RCommon.string.res_product_removing_from_wishlist_error
+                    } else {
+                        RCommon.string.res_product_adding_to_wishlist_error
+                    }
+                    showZarinaErrorToast(Text.Resource(messageResId))
+                }
+        }
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
     }
 
     private data object ProductRequest : FlowRequest
