@@ -46,7 +46,7 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.sizeselector
+package ru.livetyping.zarina.core.uicomponent.sizeselector
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
-import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
