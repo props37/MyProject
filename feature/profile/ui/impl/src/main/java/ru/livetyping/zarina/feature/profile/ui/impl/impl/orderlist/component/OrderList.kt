@@ -30,11 +30,11 @@ import ru.livetyping.zarina.core.uikit.error.rememberZarinaErrorScreenState
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.order.OrderCard
 import ru.livetyping.zarina.core.uikit.order.OrderCardSkeleton
-import ru.livetyping.zarina.core.uikit.paging.ZarinaPagingPullRefreshContainer
-import ru.livetyping.zarina.core.uikit.paging.zarinaPagingAppendItem
-import ru.livetyping.zarina.core.uikit.paging.zarinaPagingPrependItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
+import ru.livetyping.zarina.core.uikitpaging.ZarinaPagingPullRefreshContainer
+import ru.livetyping.zarina.core.uikitpaging.zarinaPagingAppendItem
+import ru.livetyping.zarina.core.uikitpaging.zarinaPagingPrependItem
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 

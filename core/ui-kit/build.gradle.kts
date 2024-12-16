@@ -62,7 +62,6 @@ dependencies {
     implementation(projects.core.platform)
 
     implementation(libs.jetpack.activity.compose)
-    implementation(libs.jetpack.paging)
 
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)

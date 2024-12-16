@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.paging
+package ru.livetyping.zarina.core.uikitpaging
 
 import android.os.Parcelable
 import androidx.compose.foundation.lazy.LazyListScope

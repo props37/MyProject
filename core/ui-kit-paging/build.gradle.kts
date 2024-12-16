@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.compose.compiler)
 }
 
@@ -56,6 +57,8 @@ dependencies {
     api(projects.core.uiKit)
     api(projects.core.paging)
 
+    api(libs.jetpack.paging.compose)
+
     api(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
     api(libs.jetpack.compose.material)
@@ -63,8 +66,6 @@ dependencies {
     api(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
-
-    api(libs.jetpack.paging.compose)
 
     implementation(libs.timber)
 
