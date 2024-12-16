@@ -41,7 +41,6 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 @Composable
 public fun ZarinaExpandableItem(
     header: @Composable RowScope.() -> Unit,
-    content: @Composable AnimatedVisibilityScope.() -> Unit,
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandedChanged: ((Boolean) -> Unit)? = null,
@@ -50,6 +49,7 @@ public fun ZarinaExpandableItem(
     contentColor: Color = ZarinaItemDefaults.ContentColor,
     titleContentPadding: PaddingValues = ZarinaExpandableItemDefaults.TitleContentPadding,
     contentPadding: PaddingValues = ZarinaExpandableItemDefaults.ContentPadding,
+    content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
     @Suppress("NAME_SHADOWING")
     var isExpanded by rememberSaveable(isExpanded) { mutableStateOf(isExpanded) }

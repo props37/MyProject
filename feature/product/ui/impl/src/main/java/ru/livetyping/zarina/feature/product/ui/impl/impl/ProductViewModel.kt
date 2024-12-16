@@ -27,6 +27,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
@@ -100,6 +101,22 @@ internal class ProductViewModel @Inject constructor(
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()
             TopBarEvent.ShareClicked -> shareProduct()
+        }
+    }
+
+    fun onProductEvent(event: ProductEvent) {
+        when (event) {
+            is ProductEvent.ProductColorClicked -> {
+                if (event.color.productId != productId.value) {
+                    productId.value = event.color.productId
+                }
+            }
+
+            // TODO: [Top] Implement
+            is ProductEvent.AddToCartClicked -> TODO()
+            is ProductEvent.AddToWishlistClicked -> TODO()
+            ProductEvent.ErrorRefreshClicked -> productRequester.request(ProductRequest)
+            ProductEvent.BonusAccrualForPurchaseClicked -> Unit // Handled completely on UI
         }
     }
 

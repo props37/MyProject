@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +21,10 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.component.Product
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.topBarModeAsState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarMode
@@ -38,6 +42,7 @@ internal fun ProductScreen(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         productState = productState,
+        onProductEvent = viewModel::onProductEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -50,6 +55,7 @@ internal fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,
+    onProductEvent: (ProductEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
@@ -86,6 +92,20 @@ internal fun ScreenContent(
             .bottomNavBarPadding()
             .clipToBounds(),
     ) { padding ->
+        val paddingModifier = if (productState is ProductState.Error) {
+            Modifier.padding(padding)
+        } else {
+            Modifier
+        }
 
+        Product(
+            productState = productState,
+            onProductEvent = onProductEvent,
+            lazyListState = lazyListState,
+            modifier = Modifier
+                .fillMaxSize()
+                .then(paddingModifier)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+        )
     }
 }

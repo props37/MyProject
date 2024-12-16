@@ -95,8 +95,7 @@ internal fun topBarModeAsState(lazyListState: LazyListState): State<TopBarMode> 
         derivedStateOf {
             val visibleItemsInfo = lazyListState.layoutInfo.visibleItemsInfo
             val firstVisibleItemKey = visibleItemsInfo.firstOrNull()?.key
-            // TODO: [Top] Implement ProductDetailsListKeyMediaPager
-            if (firstVisibleItemKey == "") {
+            if (firstVisibleItemKey == ProductListKey.MediaPager) {
                 TopBarMode.Transparent
             } else {
                 TopBarMode.Filled

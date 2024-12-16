@@ -68,6 +68,9 @@
     <string name="res_quantity">Количество</string>
     <string name="res_price_in_rubles_for_count">%1$s₽ / шт</string>
     <string name="res_share">Поделиться</string>
+    <string name="res_to_cart">В корзину</string>
+    <string name="res_in_cart">В корзине</string>
+    <string name="res_notify_about_product_appearance">Сообщить о поступлении</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
@@ -77,6 +80,7 @@
     <string name="res_order_status_cancelled">Отменён</string>
     <string name="res_order_status_refund">Возврат</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
+    <string name="res_for_zarina_club_members">Для участников Zarina Club</string>
 
     <plurals name="res_product_count">
         <item quantity="zero">%1$s товаров</item>
@@ -85,5 +89,14 @@
         <item quantity="few">%1$s товара</item>
         <item quantity="many">%1$s товаров</item>
         <item quantity="other">%1$s товаров</item>
+    </plurals>
+
+    <plurals name="res_bonus_count">
+        <item quantity="zero">%1$s бонусов</item>
+        <item quantity="one">%1$s бонус</item>
+        <item quantity="two">%1$s бонуса</item>
+        <item quantity="few">%1$s бонуса</item>
+        <item quantity="many">%1$s бонусов</item>
+        <item quantity="other">%1$s бонусов</item>
     </plurals>
 </resources>
