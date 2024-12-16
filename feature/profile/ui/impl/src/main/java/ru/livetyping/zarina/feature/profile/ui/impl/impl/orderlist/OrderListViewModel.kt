@@ -33,7 +33,9 @@ internal class OrderListViewModel @Inject constructor(
     }
 
     fun onOrderClicked(order: Order) {
-        TODO()
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val action = OrderListScreenAction.OrderClicked(order)
+            emitSideEffect(OrderListSideEffect.Navigate(action))
+        }
     }
 }

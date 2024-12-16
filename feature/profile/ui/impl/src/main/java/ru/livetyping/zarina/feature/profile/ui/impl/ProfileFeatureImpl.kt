@@ -17,6 +17,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
@@ -69,7 +70,14 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             profileDetailsScreen(profileDetailsNavActions)
 
-            val orderListNavActions = OrderListNavActions()
+            val orderListNavActions = OrderListNavActions(
+                onBackClicked = navigateUp,
+                onOrderClicked = { order ->
+                    val orderParams = OrderNavParams(order.id)
+                    val orderNavEntry = orderParams.toNavEntry()
+                    navController.navigate(orderNavEntry)
+                },
+            )
             orderListScreen(orderListNavActions)
 
             val orderNavAction = OrderNavActions()
