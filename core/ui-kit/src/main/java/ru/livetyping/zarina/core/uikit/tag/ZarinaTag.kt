@@ -22,8 +22,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
-import ru.livetyping.zarina.core.uicompose.DarkRipple
-import ru.livetyping.zarina.core.uicompose.LightRipple
+import ru.livetyping.zarina.core.uikit.DarkRipple
+import ru.livetyping.zarina.core.uikit.LightRipple
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer

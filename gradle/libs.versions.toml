@@ -103,7 +103,10 @@ jetpack-annotation = { group = "androidx.annotation", name = "annotation", versi
 
 # Jetpack Compose
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }
+jetpack-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+jetpack-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+jetpack-compose-animation = { group = "androidx.compose.animation", name = "animation" }
 jetpack-compose-material = { group = "androidx.compose.material", name = "material" }
 jetpack-compose-material-navigation = { group = "androidx.compose.material", name = "material-navigation", version.ref = "jetpack-compose-material-navigation" }
 jetpack-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
