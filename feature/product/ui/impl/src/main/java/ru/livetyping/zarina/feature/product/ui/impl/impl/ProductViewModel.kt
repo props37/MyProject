@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
@@ -21,6 +22,8 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.text.Text
@@ -28,6 +31,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
@@ -101,6 +105,9 @@ internal class ProductViewModel @Inject constructor(
         initialValue = ProductState.Loading,
     )
 
+    private val _visibleProductSizeSelector = MutableStateFlow<Product?>(null)
+    val visibleProductSizeSelector: StateFlow<Product?> = _visibleProductSizeSelector.asStateFlow()
+
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()
@@ -116,11 +123,27 @@ internal class ProductViewModel @Inject constructor(
                 }
             }
 
-            // TODO: [Top] Implement
-            is ProductEvent.AddToCartClicked -> TODO()
+            is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.ErrorRefreshClicked -> productRequester.request(ProductRequest)
             ProductEvent.BonusAccrualForPurchaseClicked -> Unit // Handled completely on UI
+        }
+    }
+
+    fun onSizeSelectorEvent(event: SizeSelectorEvent) {
+        when (event) {
+            SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
+            is SizeSelectorEvent.SizeSelected -> {
+                _visibleProductSizeSelector.value = null
+                val product = event.product
+                val offer = event.offer
+                if (event.offer.isAvailable) {
+                    addProductToCart(product, offer)
+                } else {
+                    val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(ProductSideEffect.Navigate(action))
+                }
+            }
         }
     }
 
@@ -159,6 +182,41 @@ internal class ProductViewModel @Inject constructor(
                         RCommon.string.res_product_adding_to_wishlist_error
                     }
                     showZarinaErrorToast(Text.Resource(messageResId))
+                }
+        }
+    }
+
+    private fun onAddProductToCartClicked(event: ProductEvent.AddToCartClicked) {
+        val product = event.product
+        if (product.offers.size > 1) {
+            _visibleProductSizeSelector.value = product
+        } else {
+            val offer = product.offers.firstOrNull() ?: return
+            if (offer.isAvailable) {
+                addProductToCart(product, offer)
+            } else {
+                val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(ProductSideEffect.Navigate(action))
+            }
+        }
+    }
+
+    private fun addProductToCart(product: Product, offer: ProductOffer) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = product.id,
+                barcode = offer.barcode,
+                count = 1,
+            )
+            deps.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(RCommon.string.res_product_added_to_cart)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
+                    showZarinaErrorToast(text)
                 }
         }
     }

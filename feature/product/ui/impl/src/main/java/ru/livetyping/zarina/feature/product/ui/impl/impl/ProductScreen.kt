@@ -16,6 +16,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -43,6 +46,8 @@ internal fun ProductScreen(
         onTopBarEvent = viewModel::onTopBarEvent,
         productState = productState,
         onProductEvent = viewModel::onProductEvent,
+        visibleProductSizeSelector = viewModel.visibleProductSizeSelector.collectAsStateWithLifecycle().value,
+        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -56,6 +61,8 @@ internal fun ScreenContent(
     onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
+    visibleProductSizeSelector: Product?,
+    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
@@ -63,6 +70,13 @@ internal fun ScreenContent(
         sideEffects = sideEffects,
         navActions = navActions,
     )
+
+    if (visibleProductSizeSelector != null) {
+        SizeSelectorModalBottomSheet(
+            product = visibleProductSizeSelector,
+            onEvent = onSizeSelectorEvent,
+        )
+    }
 
     val lazyListState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
