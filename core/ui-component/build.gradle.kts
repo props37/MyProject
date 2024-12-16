@@ -55,16 +55,14 @@ composeCompiler {
 
 dependencies {
     api(projects.core.domain)
-    api(projects.core.uiCompose)
-    api(projects.core.uiCommon)
     api(projects.core.uiKit)
     implementation(projects.core.resource)
 
-    api(platform(libs.jetpack.compose.bom))
-    api(libs.jetpack.compose.ui)
-    api(libs.jetpack.compose.material)
-    api(libs.jetpack.compose.material3)
-    api(libs.jetpack.compose.toolingPreview)
+    implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.ui)
+    implementation(libs.jetpack.compose.material)
+    implementation(libs.jetpack.compose.material3)
+    implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
