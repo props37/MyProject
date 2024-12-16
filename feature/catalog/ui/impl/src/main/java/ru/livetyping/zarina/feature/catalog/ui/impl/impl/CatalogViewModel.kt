@@ -25,7 +25,6 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.withFlattenedChildren
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -42,9 +41,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
-    private val getCategoriesFlow: GetCategoriesFlowUseCase,
-    private val setLastContentGender: SetLastContentGenderUseCase,
+    private val deps: CatalogDeps,
 ) : ViewModel(), SideEffectSource<CatalogSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -63,7 +60,7 @@ internal class CatalogViewModel @Inject constructor(
 
     private val categoriesRequester = FlowRequester(CategoriesRequest) {
         val params = GetCategoriesFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-        getCategoriesFlow(params)
+        deps.getCategoriesFlow(params)
     }
 
     private val categoriesResult: StateFlow<Result<Categories>?> = categoriesRequester.flow
@@ -117,7 +114,7 @@ internal class CatalogViewModel @Inject constructor(
                 currentGender.value = genderTab
                 viewModelScope.launch {
                     val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
-                    setLastContentGender(params)
+                    deps.setLastContentGender(params)
                 }
             }
 
@@ -178,7 +175,7 @@ internal class CatalogViewModel @Inject constructor(
 
     private fun getCurrentGenderInitialValue(): GenderTab {
         return runBlocking {
-            val genderResult = getLastContentGenderFlow().firstOrNull()
+            val genderResult = deps.getLastContentGenderFlow().firstOrNull()
             val gender = genderResult?.getOrNull() ?: Gender.getDefault()
             GenderTab.from(gender)
         }

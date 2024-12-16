@@ -25,9 +25,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
-import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.kotlinutil.toEpochMillis
@@ -56,10 +54,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ProfileDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getUserFlow: GetUserFlowUseCase,
-    private val updateUserNotificationsSettings: UpdateUserNotificationsSettingsUseCase,
-    private val signOut: SignOutUseCase,
-    private val deleteAccount: DeleteAccountUseCase,
+    private val deps: ProfileDetailsDeps,
 ) : ViewModel(), SideEffectSource<ProfileDetailsSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -71,7 +66,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private val userParams = GetUserFlowUseCase.Params(CachePolicy.Remote())
     private val userRequester = FlowRequester<Result<User?>, UserRequest> {
-        getUserFlow(userParams)
+        deps.getUserFlow(userParams)
     }
 
     @OptIn(SavedStateHandleSaveableApi::class)
@@ -254,7 +249,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 isSignOutDialogVisible.value = false
             }
 
-            SignOutDialogEvent.SignOutClicked -> performSignOut()
+            SignOutDialogEvent.SignOutClicked -> signOut()
         }
     }
 
@@ -265,7 +260,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 isAccountDeletionDialogVisible.value = false
             }
 
-            AccountDeletionDialogEvent.DeleteAccountClicked -> performAccountDeletion()
+            AccountDeletionDialogEvent.DeleteAccountClicked -> deleteAccount()
         }
     }
 
@@ -324,12 +319,12 @@ internal class ProfileDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun performSignOut() {
+    private fun signOut() {
         if (signOutJob?.isActive == true) return
 
         signOutJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_OUT) {
-                signOut()
+                deps.signOut()
                     .onSuccess {
                         val action = ProfileDetailsScreenAction.UserSignedOut
                         emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
@@ -342,12 +337,12 @@ internal class ProfileDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun performAccountDeletion() {
+    private fun deleteAccount() {
         if (deleteAccountJob?.isActive == true) return
 
         deleteAccountJob = viewModelScope.launch {
             operationTracker.track(Operation.DELETE_ACCOUNT) {
-                deleteAccount()
+                deps.deleteAccount()
                     .onSuccess {
                         val action = ProfileDetailsScreenAction.AccountDeleted
                         emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
@@ -375,7 +370,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 receiveSms = receiveSms,
                 receiveEmails = receiveEmails,
             )
-            updateUserNotificationsSettings(params)
+            deps.updateUserNotificationsSettings(params)
                 .onFailure {
                     val text = Text.Resource(R.string.profile_notification_settings_updating_error)
                     showZarinaErrorToast(text)

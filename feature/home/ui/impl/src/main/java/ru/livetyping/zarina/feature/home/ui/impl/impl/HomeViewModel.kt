@@ -17,7 +17,6 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
-import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -27,16 +26,13 @@ import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
-import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentState
 import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
-    private val setLastContentGender: SetLastContentGenderUseCase,
-    private val getHomeContentFlow: GetHomeContentFlowUseCase,
+    private val deps: HomeDeps,
 ) : ViewModel(), SideEffectSource<HomeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -54,7 +50,7 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private val homeContentRequester = FlowRequester(HomeContentRequest.LOADING) {
-        getHomeContentFlow()
+        deps.getHomeContentFlow()
     }
 
     private val homeContentResult: StateFlow<Result<HomeContent>?> = homeContentRequester.flow
@@ -82,7 +78,7 @@ internal class HomeViewModel @Inject constructor(
                 currentGender.value = genderTab
                 viewModelScope.launch {
                     val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
-                    setLastContentGender(params)
+                    deps.setLastContentGender(params)
                 }
             }
 
@@ -111,7 +107,7 @@ internal class HomeViewModel @Inject constructor(
 
     private fun getCurrentGenderInitialValue(): GenderTab {
         return runBlocking {
-            val genderResult = getLastContentGenderFlow().firstOrNull()
+            val genderResult = deps.getLastContentGenderFlow().firstOrNull()
             val gender = genderResult?.getOrNull() ?: Gender.getDefault()
             GenderTab.from(gender)
         }
