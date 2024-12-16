@@ -59,6 +59,7 @@ composeCompiler {
 dependencies {
     implementation(projects.feature.profile.ui.api)
     implementation(projects.core.domain)
+    implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
     implementation(projects.core.uiKitPaging)
     implementation(projects.core.uiModel)

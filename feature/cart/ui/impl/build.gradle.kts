@@ -58,6 +58,7 @@ composeCompiler {
 
 dependencies {
     implementation(projects.feature.cart.ui.api)
+    implementation(projects.core.uiCommon)
     implementation(projects.core.uiKit)
     implementation(projects.core.uiModel)
     implementation(projects.core.coroutinesUtil)

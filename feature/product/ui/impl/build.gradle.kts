@@ -57,6 +57,7 @@ composeCompiler {
 
 dependencies {
     implementation(projects.feature.product.ui.api)
+    implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.resource)
