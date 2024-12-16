@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarHeightAsState
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.bottomNavBarHeightAsState
 import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.domain.model.Banner

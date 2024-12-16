@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme

@@ -42,10 +42,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
 import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CityList

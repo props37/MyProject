@@ -10,9 +10,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.core.uikit.bottomnavbar.ZarinaBottomNavBar
-import ru.livetyping.zarina.core.uikit.bottomnavbar.ZarinaBottomNavBarDefaults
-import ru.livetyping.zarina.core.uikit.bottomnavbar.ZarinaBottomNavBarItem
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.ZarinaBottomNavBar
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.ZarinaBottomNavBarDefaults
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.ZarinaBottomNavBarItem
 
 @Composable
 fun ZarinaBottomNavBar(

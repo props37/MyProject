@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.platform.shareText
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uicomponent.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
 
 @Composable
