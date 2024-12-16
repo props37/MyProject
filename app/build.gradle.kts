@@ -189,7 +189,6 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.database)
     implementation(projects.core.uiKit)
-    implementation(projects.core.uiComponent)
     implementation(projects.core.sharedpreferences)
     implementation(projects.core.permission)
     implementation(projects.core.navigationUtil)

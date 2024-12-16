@@ -59,7 +59,6 @@ dependencies {
     implementation(projects.feature.wishlist.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)
-    implementation(projects.core.uiComponent)
     implementation(projects.core.uiKitPaging)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)

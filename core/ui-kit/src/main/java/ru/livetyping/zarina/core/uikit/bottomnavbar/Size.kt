@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.bottomnavbar
+package ru.livetyping.zarina.core.uikit.bottomnavbar
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.offset
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
 
 @Composable
 public fun bottomNavBarHeightAsState(): State<Dp> {

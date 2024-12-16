@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.bottomnavbar
+package ru.livetyping.zarina.core.uikit.bottomnavbar
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent

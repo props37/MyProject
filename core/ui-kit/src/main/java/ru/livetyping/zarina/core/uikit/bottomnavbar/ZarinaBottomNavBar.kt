@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.bottomnavbar
+package ru.livetyping.zarina.core.uikit.bottomnavbar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -43,9 +43,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable

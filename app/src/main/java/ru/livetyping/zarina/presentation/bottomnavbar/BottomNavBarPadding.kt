@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.constrainWidth
 import androidx.compose.ui.unit.offset
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
 
 @Composable
 fun bottomNavBarHeightAsState(): State<Dp> {
@@ -74,7 +74,7 @@ private class BottomNavBarPaddingNode(
         measurable: Measurable,
         constraints: Constraints,
     ): MeasureResult {
-        val bottomNavBarSizeTracker = currentValueOf(ru.livetyping.zarina.core.uicomponent.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker)
+        val bottomNavBarSizeTracker = currentValueOf(LocalBottomNavBarSizeTracker)
         val bottomNavBarHeight = bottomNavBarSizeTracker.sizePx.value.height
 
         val bottomPadding = windowInsets?.let {

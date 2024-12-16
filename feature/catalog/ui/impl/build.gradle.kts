@@ -58,7 +58,6 @@ dependencies {
     implementation(projects.feature.catalog.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiKit)
-    implementation(projects.core.uiComponent)
     implementation(projects.core.uiModel)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)

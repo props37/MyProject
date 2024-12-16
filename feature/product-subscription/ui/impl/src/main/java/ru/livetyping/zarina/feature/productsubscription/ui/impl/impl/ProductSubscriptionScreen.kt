@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicomponent.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.ProductSubscriptionContent
