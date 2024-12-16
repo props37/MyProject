@@ -60,11 +60,10 @@ dependencies {
 
     api(libs.jetpack.paging.compose)
 
-    api(platform(libs.jetpack.compose.bom))
-    api(libs.jetpack.compose.ui)
-    api(libs.jetpack.compose.material)
-    api(libs.jetpack.compose.material3)
-    api(libs.jetpack.compose.toolingPreview)
+    implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.ui)
+    implementation(libs.jetpack.compose.material)
+    implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
