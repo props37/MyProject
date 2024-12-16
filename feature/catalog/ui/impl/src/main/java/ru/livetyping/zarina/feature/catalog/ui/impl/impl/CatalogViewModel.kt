@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +42,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
     private val getCategoriesFlow: GetCategoriesFlowUseCase,
     private val setLastContentGender: SetLastContentGenderUseCase,

@@ -109,6 +109,7 @@ internal fun ScreenContent(
         )
 
         val tagListScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+
         CollapsingTopBarLayout(
             topBar = {
                 TagList(

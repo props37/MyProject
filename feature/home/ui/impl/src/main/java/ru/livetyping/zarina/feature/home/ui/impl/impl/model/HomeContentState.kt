@@ -9,13 +9,13 @@ import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 internal sealed class HomeContentState(
     open val isRefreshing: Boolean,
 ) {
-    data object Loading : HomeContentState(isRefreshing = false)
-
     @Immutable
     data class Success(
         val content: HomeContent,
         override val isRefreshing: Boolean,
     ) : HomeContentState(isRefreshing = isRefreshing)
+
+    data object Loading : HomeContentState(isRefreshing = false)
 
     @Immutable
     data class Error(val state: ZarinaErrorScreenState) : HomeContentState(isRefreshing = false)

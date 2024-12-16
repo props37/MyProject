@@ -77,6 +77,7 @@ private fun ScreenContent(
     )
 
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+
     CollapsingTopBarLayout(
         topBar = {
             SearchBar(
