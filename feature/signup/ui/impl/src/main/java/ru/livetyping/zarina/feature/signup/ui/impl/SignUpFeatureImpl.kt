@@ -11,7 +11,10 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavEntry
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.otpScreen
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpScreen
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.OtpNavActions
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.OtpNavParams
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavActions as SignUpScreenNavActions
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
 
@@ -36,9 +39,16 @@ public class SignUpFeatureImpl : SignUpFeature {
         ) {
             val signUpScreenNavActions = SignUpScreenNavActions(
                 onBackClicked = { navController.navigateUp() },
-                onUserCreated = { TODO() }, // TODO: [Top] Implement
+                onUserCreated = { phone ->
+                    val otpParams = OtpNavParams(phone)
+                    val otpNavEntry = otpParams.toNavEntry()
+                    navController.navigate(otpNavEntry)
+                },
             )
             signUpScreen(signUpScreenNavActions)
+
+            val otpNavActions = OtpNavActions()
+            otpScreen(otpNavActions)
         }
     }
 }
