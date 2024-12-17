@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
@@ -20,7 +23,10 @@ internal fun OtpScreen(
     navActions: OtpNavActions,
     viewModel: OtpViewModel = hiltViewModel(),
 ) {
+    val otpState by viewModel.otpState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        otpState = otpState,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +34,7 @@ internal fun OtpScreen(
 
 @Composable
 internal fun ScreenContent(
+    otpState: TextFieldOtpState,
     sideEffects: Flow<OtpSideEffect>,
     navActions: OtpNavActions,
 ) {

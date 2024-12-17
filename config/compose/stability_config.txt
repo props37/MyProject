@@ -96,3 +96,11 @@ ru.livetyping.zarina.core.text.Text.Resource
 ru.livetyping.zarina.core.text.Text.PluralResource
 ru.livetyping.zarina.core.text.Text.String
 // :core:text end
+
+
+// :core:ui-common start
+ru.livetyping.zarina.core.uicommon.otp.OtpState
+ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
+ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState.Available
+ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState.Unavailable
+// :core:ui-common end
