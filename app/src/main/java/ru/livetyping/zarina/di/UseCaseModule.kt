@@ -44,6 +44,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestPasswordResetUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
@@ -543,6 +544,17 @@ internal class UseCaseModule {
         return ConfirmSignUpUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestNewAuthOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewAuthOtpUseCase {
+        return RequestNewAuthOtpUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }
