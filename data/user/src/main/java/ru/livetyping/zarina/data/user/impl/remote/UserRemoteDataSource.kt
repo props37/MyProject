@@ -42,6 +42,8 @@ internal interface UserRemoteDataSource {
 
     suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
 
+    suspend fun requestNewAuthOtp(phone: PhoneNumber)
+
     suspend fun requestPasswordReset(email: Email)
 
     suspend fun updateUserNotificationSettings(

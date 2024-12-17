@@ -42,6 +42,8 @@ internal interface UserApi {
 
     suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthDto
 
+    suspend fun requestNewAuthOtp(phone: PhoneNumber)
+
     suspend fun requestPasswordReset(email: Email)
 
     suspend fun updateUserNotificationSettings(

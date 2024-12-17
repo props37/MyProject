@@ -47,6 +47,8 @@ public interface UserRepository {
 
     public suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
 
+    public suspend fun requestNewAuthOtp(phone: PhoneNumber)
+
     public suspend fun requestPasswordReset(email: Email)
 
     public suspend fun updateUserNotificationSettings(

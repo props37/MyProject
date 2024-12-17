@@ -21,6 +21,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewAuthOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
@@ -126,6 +127,13 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/register/phone/sms/confirmation") {
                 setJsonBody(body)
             }.body()
+        }
+    }
+
+    override suspend fun requestNewAuthOtp(phone: PhoneNumber) {
+        val body = RequestNewAuthOtpRequestBody(phone.value)
+        httpClient.post("/api/auth/phone/sms") {
+            setJsonBody(body)
         }
     }
 
