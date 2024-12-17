@@ -101,6 +101,10 @@ internal class UserRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult {
+        return remoteDataSource.confirmSignUp(phone, otp)
+    }
+
     override suspend fun requestPasswordReset(email: Email) {
         remoteDataSource.requestPasswordReset(email)
     }

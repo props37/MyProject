@@ -14,7 +14,7 @@ internal data class AuthDto(
     @SerialName("jwt")
     val jwt: BearerTokensDto? = null,
 ) {
-    fun toAuthorizationResult(): AuthResult {
+    fun toAuthResult(): AuthResult {
         checkPropertyNotNull(jwt) { ::jwt }
         checkPropertyNotNull(user) { ::user }
         return AuthResult(

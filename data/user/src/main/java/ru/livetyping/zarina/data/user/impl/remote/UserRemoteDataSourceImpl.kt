@@ -43,7 +43,7 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         password: String,
         yandexCaptchaToken: YandexCaptchaToken,
     ): AuthResult {
-        return api.signIn(email, password, yandexCaptchaToken).toAuthorizationResult()
+        return api.signIn(email, password, yandexCaptchaToken).toAuthResult()
     }
 
     override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
@@ -70,6 +70,10 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
             receiveSms = receiveSms,
             yandexCaptchaToken = yandexCaptchaToken,
         )
+    }
+
+    override suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult {
+        return api.confirmSignUp(phone, otp).toAuthResult()
     }
 
     override suspend fun requestPasswordReset(email: Email) {

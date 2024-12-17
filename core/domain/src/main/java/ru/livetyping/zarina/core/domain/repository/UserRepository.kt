@@ -45,6 +45,8 @@ public interface UserRepository {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    public suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
+
     public suspend fun requestPasswordReset(email: Email)
 
     public suspend fun updateUserNotificationSettings(

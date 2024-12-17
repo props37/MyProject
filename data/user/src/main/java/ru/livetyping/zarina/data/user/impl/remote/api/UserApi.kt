@@ -40,6 +40,8 @@ internal interface UserApi {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthDto
+
     suspend fun requestPasswordReset(email: Email)
 
     suspend fun updateUserNotificationSettings(

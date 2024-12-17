@@ -40,6 +40,8 @@ internal interface UserRemoteDataSource {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
+
     suspend fun requestPasswordReset(email: Email)
 
     suspend fun updateUserNotificationSettings(

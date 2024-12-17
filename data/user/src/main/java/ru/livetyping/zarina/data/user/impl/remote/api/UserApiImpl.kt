@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
@@ -26,6 +27,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
+import ru.livetyping.zarina.data.user.impl.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignUpApiExceptionConverter
@@ -38,6 +40,7 @@ internal class UserApiImpl @Inject constructor(
     private val httpClient: HttpClient,
     private val signInApiExceptionConverter: SignInApiExceptionConverter,
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
+    private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
     @ZarinaBaseUrl
     private val baseUrl: String,
@@ -114,6 +117,15 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/register") {
                 setJsonBody(body)
             }
+        }
+    }
+
+    override suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthDto {
+        val body = ConfirmSignUpRequestBody(phone.value, otp)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/register/phone/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
         }
     }
 
