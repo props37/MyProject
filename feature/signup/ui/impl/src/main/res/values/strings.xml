@@ -12,4 +12,5 @@
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
     <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуй снова позже</string>
+    <string name="sign_up_invalid_otp_error">Неправильный код. Повтори попытку</string>
 </resources>

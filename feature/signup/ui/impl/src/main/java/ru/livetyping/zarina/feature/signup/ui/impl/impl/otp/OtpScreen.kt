@@ -1,10 +1,12 @@
 package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
 
+import android.view.Window
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.OtpEvent
 
 @Composable
 internal fun OtpScreen(
@@ -27,6 +30,7 @@ internal fun OtpScreen(
 
     ScreenContent(
         otpState = otpState,
+        onOtpEvent = viewModel::onOtpEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -35,6 +39,7 @@ internal fun OtpScreen(
 @Composable
 internal fun ScreenContent(
     otpState: TextFieldOtpState,
+    onOtpEvent: (OtpEvent) -> Unit,
     sideEffects: Flow<OtpSideEffect>,
     navActions: OtpNavActions,
 ) {
@@ -49,9 +54,10 @@ internal fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             )
-            .bottomNavBarPadding(),
+            .bottomNavBarPadding(WindowInsets.ime),
     ) {
 
     }

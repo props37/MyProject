@@ -1,3 +1,6 @@
 package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
 
-internal class OtpNavActions
+internal class OtpNavActions(
+    val onBackClicked: () -> Unit,
+    val onSignUpConfirmed: () -> Unit,
+)

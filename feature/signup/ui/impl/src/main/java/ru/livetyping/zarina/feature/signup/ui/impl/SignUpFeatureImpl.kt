@@ -37,8 +37,10 @@ public class SignUpFeatureImpl : SignUpFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
+            val navigateUp: () -> Unit = { navController.navigateUp() }
+
             val signUpScreenNavActions = SignUpScreenNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateUp,
                 onUserCreated = { phone ->
                     val otpParams = OtpNavParams(phone)
                     val otpNavEntry = otpParams.toNavEntry()
@@ -47,7 +49,12 @@ public class SignUpFeatureImpl : SignUpFeature {
             )
             signUpScreen(signUpScreenNavActions)
 
-            val otpNavActions = OtpNavActions()
+            val otpNavActions = OtpNavActions(
+                onBackClicked = navigateUp,
+                onSignUpConfirmed = {
+                    navController.popBackStack<SignUpNavEntry>(inclusive = true)
+                },
+            )
             otpScreen(otpNavActions)
         }
     }

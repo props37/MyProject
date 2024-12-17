@@ -79,6 +79,7 @@
     <string name="res_to_cart">В корзину</string>
     <string name="res_in_cart">В корзине</string>
     <string name="res_notify_about_product_appearance">Сообщить о поступлении</string>
+    <string name="res_new_otp_request_error">Не удалось запросить новый код. Попробуй ещё раз</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

@@ -9,21 +9,36 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.platform.CountDownTimer
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
+import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.signup.ui.impl.R
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.OtpEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class OtpViewModel @Inject constructor(
@@ -32,6 +47,11 @@ internal class OtpViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<OtpSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var confirmSignUpJob: Job? = null
+    private var requestNewOtpJob: Job? = null
 
     private val countDownTimer = CountDownTimer()
 
@@ -44,8 +64,6 @@ internal class OtpViewModel @Inject constructor(
         init = { TextFieldState() },
     )
 
-    private val isOtpLoading = MutableStateFlow(false)
-
     private val isOtpInvalid = MutableStateFlow(false)
 
     private val newOtpRequestState = MutableStateFlow<NewOtpRequestState>(
@@ -53,13 +71,13 @@ internal class OtpViewModel @Inject constructor(
     )
 
     val otpState: StateFlow<TextFieldOtpState> = combine(
-        isOtpLoading,
         isOtpInvalid,
         newOtpRequestState,
-    ) { isOtpLoading, isOtpInvalid, newOtpRequestState ->
+        operationTracker.ongoingOperationKeys,
+    ) { isOtpInvalid, newOtpRequestState, ongoingOperations ->
         TextFieldOtpState(
             textFieldState = otpTextFieldState,
-            isLoading = isOtpLoading,
+            isLoading = Operation.CONFIRM_SIGN_UP in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
         )
@@ -77,21 +95,78 @@ internal class OtpViewModel @Inject constructor(
     init {
         startNewOtpRequestTimeout()
         listenOtpSms()
+        makeFieldsValidOnChange()
     }
 
-    fun onBackClicked() {
+    fun onOtpEvent(event: OtpEvent) {
+        when (event) {
+            OtpEvent.BackClicked -> onBackClicked()
+            OtpEvent.OtpEntered -> onOtpEntered()
+            OtpEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+        }
+    }
+
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = OtpScreenAction.BackClicked
             emitSideEffect(OtpSideEffect.Navigate(action))
         }
     }
 
+    private fun onOtpEntered() {
+        if (confirmSignUpJob?.isActive == true) return
+
+        confirmSignUpJob = viewModelScope.launch {
+            operationTracker.track(Operation.CONFIRM_SIGN_UP) {
+                val params = ConfirmSignUpUseCase.Params(phone, otpTextFieldState.text.toString())
+                deps.confirmSignUp(params)
+                    .onSuccess {
+                        val action = OtpScreenAction.SignUpConfirmed
+                        emitSideEffect(OtpSideEffect.Navigate(action))
+                    }
+                    .onFailure(::handleConfirmSignUpException)
+            }
+        }
+    }
+
+    private fun onRequestNewOtpClicked() {
+        if (requestNewOtpJob?.isActive == true) return
+
+        requestNewOtpJob = viewModelScope.launch {
+            val params = RequestNewAuthOtpUseCase.Params(phone)
+            deps.requestNewOtp(params)
+                .onSuccess { startNewOtpRequestTimeout() }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_new_otp_request_error)
+                    showZarinaErrorToast(text)
+                }
+        }
+    }
+
+    private fun handleConfirmSignUpException(t: Throwable) {
+        if (t is OtpException) {
+            isOtpInvalid.value = true
+        }
+
+        val messageResId = when (t) {
+            is OtpException -> R.string.sign_up_invalid_otp_error
+            else -> RCommon.string.res_something_went_wrong
+        }
+        showZarinaErrorToast(Text.Resource(messageResId))
+    }
+
     private fun listenOtpSms() {
         deps.smsCodeRetriever.addListener { otp ->
             otpTextFieldState.setTextAndPlaceCursorAtEnd(otp)
-            // TODO: [Top] Use OTP
-            // TODO: [Top] Hide keyboard
+            onOtpEntered()
+            emitSideEffect(OtpSideEffect.HideKeyboard)
         }
+    }
+
+    private fun makeFieldsValidOnChange() {
+        otpTextFieldState.textAsFlow()
+            .onEach { isOtpInvalid.value = false }
+            .launchIn(viewModelScope)
     }
 
     private fun startNewOtpRequestTimeout() {
@@ -104,6 +179,15 @@ internal class OtpViewModel @Inject constructor(
                 newOtpRequestState.value = NewOtpRequestState.Available
             },
         )
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(OtpSideEffect.ShowZarinaToast(message))
+    }
+
+    private enum class Operation : OperationKey {
+        CONFIRM_SIGN_UP,
     }
 
     private companion object {
