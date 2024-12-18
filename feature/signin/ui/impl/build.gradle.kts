@@ -67,6 +67,7 @@ dependencies {
     implementation(projects.core.navigationUtil)
     implementation(projects.core.credential)
     implementation(projects.core.googlePlayServices)
+    implementation(projects.core.platform)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
