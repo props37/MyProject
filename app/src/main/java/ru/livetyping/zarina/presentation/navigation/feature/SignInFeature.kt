@@ -6,7 +6,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
-import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 
 fun NavGraphBuilder.signInFeature(
@@ -29,9 +28,6 @@ fun rememberSignInNavActions(
 ): SignInNavActions {
     return remember(navController) {
         SignInNavActions(
-            onUserSignedIn = {
-                navController.popBackStack<SignInNavEntry>(inclusive = true)
-            },
             onSignUpClicked = {
                 navController.navigate(SignUpFeature.getNavEntry()) {
                     popUpTo(SignInFeature.getNavEntry()) { inclusive = true }

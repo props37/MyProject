@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,23 +14,36 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
+import ru.livetyping.zarina.core.platform.CountDownTimer
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
+import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.signin.ui.impl.R
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class PhoneConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val deps: PhoneConfirmationDeps,
 ) : ViewModel(), SideEffectSource<PhoneConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -38,6 +52,8 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private var confirmPhoneJob: Job? = null
     private var requestNewOtpJob: Job? = null
+
+    private val countDownTimer = CountDownTimer()
 
     private val navEntry = savedStateHandle.toRoute<PhoneConfirmationNavEntry>()
 
@@ -77,11 +93,104 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         ),
     )
 
-    fun onBackClicked() {
+    init {
+        startNewOtpRequestTimeout()
+        listenOtpSms()
+        makeFieldsValidOnChange()
+    }
+
+    override fun onCleared() {
+        deps.smsCodeRetriever.release()
+    }
+
+    fun onPhoneConfirmationEvent(event: PhoneConfirmationEvent) {
+        when (event) {
+            PhoneConfirmationEvent.BackClicked -> onBackClicked()
+            PhoneConfirmationEvent.OtpEntered -> onOtpEntered()
+            PhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+        }
+    }
+
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = PhoneConfirmationScreenAction.BackClicked
             emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
         }
+    }
+
+    private fun onOtpEntered() {
+        if (confirmPhoneJob?.isActive == true) return
+
+        confirmPhoneJob = viewModelScope.launch {
+            operationTracker.track(Operation.CONFIRM_PHONE) {
+                val params = ConfirmSignInUseCase.Params(
+                    phone = phone.value,
+                    otp = otpTextFieldState.text.toString(),
+                )
+                deps.confirmSignIn(params)
+                    .onSuccess {
+                        val action = PhoneConfirmationScreenAction.PhoneConfirmed
+                        emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
+                    }
+                    .onFailure(::handlePhoneConfirmationException)
+            }
+        }
+    }
+
+    private fun onRequestNewOtpClicked() {
+        if (requestNewOtpJob?.isActive == true) return
+
+        requestNewOtpJob = viewModelScope.launch {
+            val params = RequestNewAuthOtpUseCase.Params(phone.value)
+            deps.requestNewOtp(params)
+                .onSuccess { startNewOtpRequestTimeout() }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_new_otp_request_error)
+                    showZarinaErrorToast(text)
+                }
+        }
+    }
+
+    private fun handlePhoneConfirmationException(t: Throwable) {
+        if (t is OtpException) {
+            isOtpInvalid.value = true
+        }
+
+        val messageResId = when (t) {
+            is OtpException -> R.string.sign_in_invalid_otp_error
+            else -> RCommon.string.res_something_went_wrong
+        }
+        showZarinaErrorToast(Text.Resource(messageResId))
+    }
+
+    private fun startNewOtpRequestTimeout() {
+        countDownTimer.start(
+            duration = NEW_OTP_REQUEST_TIMEOUT,
+            onTick = { remainingTime ->
+                newOtpRequestState.value = NewOtpRequestState.Unavailable(remainingTime)
+            },
+            onFinish = {
+                newOtpRequestState.value = NewOtpRequestState.Available
+            },
+        )
+    }
+
+    private fun listenOtpSms() {
+        deps.smsCodeRetriever.addListener { otp ->
+            otpTextFieldState.setTextAndPlaceCursorAtEnd(otp)
+            onOtpEntered()
+        }
+    }
+
+    private fun makeFieldsValidOnChange() {
+        otpTextFieldState.textAsFlow()
+            .onEach { isOtpInvalid.value = false }
+            .launchIn(viewModelScope)
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(PhoneConfirmationSideEffect.ShowZarinaToast(message))
     }
 
     private enum class Operation : OperationKey { CONFIRM_PHONE }

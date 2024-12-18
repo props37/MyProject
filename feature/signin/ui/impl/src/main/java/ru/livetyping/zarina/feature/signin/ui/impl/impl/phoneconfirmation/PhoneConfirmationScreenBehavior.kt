@@ -3,11 +3,13 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun PhoneConfirmationScreenBehavior(
@@ -15,6 +17,8 @@ internal fun PhoneConfirmationScreenBehavior(
     navActions: PhoneConfirmationNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -23,7 +27,12 @@ internal fun PhoneConfirmationScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is PhoneConfirmationSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    is PhoneConfirmationSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
@@ -37,8 +46,10 @@ internal fun PhoneConfirmationScreenBehavior(
 
 private fun navigate(
     navActions: PhoneConfirmationNavActions,
-    action: PhoneConfirmationScreenAction
+    action: PhoneConfirmationScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        PhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
+        PhoneConfirmationScreenAction.PhoneConfirmed -> navActions.onPhoneConfirmed()
+    }
 }

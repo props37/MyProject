@@ -17,6 +17,7 @@ import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavParams
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -43,8 +44,12 @@ public class SignInFeatureImpl : SignInFeature {
 
             val signInScreenNavActions = SignInScreenNavActions(
                 onBackClicked = navigateUp,
-                onUserSignedIn = actions.onUserSignedIn,
-                onSignInByPhoneRequested = { TODO() }, // TODO: [Top] Implement
+                onUserSignedIn = { navController.popBackStack<SignInNavEntry>(inclusive = true) },
+                onSignInByPhoneRequested = { phone ->
+                    val phoneConfirmationParams = PhoneConfirmationNavParams(phone)
+                    val phoneConfirmationNavEntry = phoneConfirmationParams.toNavEntry()
+                    navController.navigate(phoneConfirmationNavEntry)
+                },
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
                 onSignUpClicked = actions.onSignUpClicked,
             )
@@ -56,7 +61,10 @@ public class SignInFeatureImpl : SignInFeature {
             )
             passwordRecoveryScreen(passwordRecoveryNavActions)
 
-            val phoneConfirmationNavActions = PhoneConfirmationNavActions()
+            val phoneConfirmationNavActions = PhoneConfirmationNavActions(
+                onBackClicked = navigateUp,
+                onPhoneConfirmed = { navController.popBackStack<SignInNavEntry>(inclusive = true) },
+            )
             phoneConfirmationScreen(phoneConfirmationNavActions)
         }
     }
