@@ -161,7 +161,6 @@ internal class OtpViewModel @Inject constructor(
         deps.smsCodeRetriever.addListener { otp ->
             otpTextFieldState.setTextAndPlaceCursorAtEnd(otp)
             onOtpEntered()
-            emitSideEffect(OtpSideEffect.HideKeyboard)
         }
     }
 

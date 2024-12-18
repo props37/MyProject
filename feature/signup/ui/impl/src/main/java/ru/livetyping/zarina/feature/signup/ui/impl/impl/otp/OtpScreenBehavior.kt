@@ -27,10 +27,10 @@ internal fun OtpScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is OtpSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    OtpSideEffect.HideKeyboard -> currentKeyboardController?.hide()
                     is OtpSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
