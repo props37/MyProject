@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
@@ -56,7 +57,6 @@ internal class OtpViewModel @Inject constructor(
     private val countDownTimer = CountDownTimer()
 
     private val navEntry = savedStateHandle.toRoute<OtpNavEntry>()
-    private val phone = PhoneNumber.create(navEntry.phone)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val otpTextFieldState by savedStateHandle.saveable(
@@ -69,6 +69,8 @@ internal class OtpViewModel @Inject constructor(
     private val newOtpRequestState = MutableStateFlow<NewOtpRequestState>(
         NewOtpRequestState.Unavailable(NEW_OTP_REQUEST_TIMEOUT),
     )
+
+    val phone: StateFlow<PhoneNumber> = ReadOnlyStateFlow(PhoneNumber.create(navEntry.phone))
 
     val otpState: StateFlow<TextFieldOtpState> = combine(
         isOtpInvalid,
@@ -118,7 +120,7 @@ internal class OtpViewModel @Inject constructor(
 
         confirmSignUpJob = viewModelScope.launch {
             operationTracker.track(Operation.CONFIRM_SIGN_UP) {
-                val params = ConfirmSignUpUseCase.Params(phone, otpTextFieldState.text.toString())
+                val params = ConfirmSignUpUseCase.Params(phone.value, otpTextFieldState.text.toString())
                 deps.confirmSignUp(params)
                     .onSuccess {
                         val action = OtpScreenAction.SignUpConfirmed
@@ -133,7 +135,7 @@ internal class OtpViewModel @Inject constructor(
         if (requestNewOtpJob?.isActive == true) return
 
         requestNewOtpJob = viewModelScope.launch {
-            val params = RequestNewAuthOtpUseCase.Params(phone)
+            val params = RequestNewAuthOtpUseCase.Params(phone.value)
             deps.requestNewOtp(params)
                 .onSuccess { startNewOtpRequestTimeout() }
                 .onFailure {
