@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -73,9 +71,7 @@ internal fun SignInTypePager(
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
     modifier: Modifier = Modifier,
-    windowInsetsProvider: @Composable () -> WindowInsets = {
-        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-    },
+    windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
     HorizontalPager(
         state = pagerState,

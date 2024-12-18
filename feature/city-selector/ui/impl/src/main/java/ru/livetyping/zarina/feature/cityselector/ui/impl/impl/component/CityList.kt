@@ -60,9 +60,7 @@ internal fun CityList(
     cityListState: CityListState,
     onCityListEvent: (CityListEvent) -> Unit,
     modifier: Modifier = Modifier,
-    windowInsetsProvider: @Composable () -> WindowInsets = {
-        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-    },
+    windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
     Crossfade(
         targetState = cityListState,

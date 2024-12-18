@@ -3,8 +3,6 @@ package ru.livetyping.zarina.core.uicomponent.sizeselector
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -83,9 +81,7 @@ internal fun HeightSelectorModalBottomSheet(
                 )
 
                 Spacer(
-                    modifier = Modifier.windowInsetsBottomHeight(
-                        WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom),
-                    ),
+                    modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing),
                 )
             }
         }
