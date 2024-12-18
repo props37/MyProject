@@ -123,7 +123,7 @@ public fun BoxScope.YandexCaptchaDialog(
                             isUserActionRequired = false
                         }
                     }
-                    addJavascriptInterface(jsInterface, "NativeClient")
+                    addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
 
                     loadUrl(captchaUrl)
                 }
@@ -134,6 +134,10 @@ public fun BoxScope.YandexCaptchaDialog(
                 if (webView.url != captchaUrl) {
                     webView.loadUrl(captchaUrl)
                 }
+            },
+            onRelease = { webView ->
+                webView.settings.javaScriptEnabled = false
+                webView.removeJavascriptInterface(JS_INTERFACE_NAME)
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -153,5 +157,7 @@ private interface YandexCaptchaJsInterface {
     @JavascriptInterface
     fun onChallengeHidden()
 }
+
+private const val JS_INTERFACE_NAME = "NativeClient"
 
 private const val TAG = "YandexCaptchaDialog"
