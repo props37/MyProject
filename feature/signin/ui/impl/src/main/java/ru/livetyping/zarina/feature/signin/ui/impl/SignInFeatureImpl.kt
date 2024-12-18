@@ -12,9 +12,11 @@ import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.phoneConfirmationScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -53,6 +55,9 @@ public class SignInFeatureImpl : SignInFeature {
                 onPasswordResetRequested = navigateUp,
             )
             passwordRecoveryScreen(passwordRecoveryNavActions)
+
+            val phoneConfirmationNavActions = PhoneConfirmationNavActions()
+            phoneConfirmationScreen(phoneConfirmationNavActions)
         }
     }
 }
