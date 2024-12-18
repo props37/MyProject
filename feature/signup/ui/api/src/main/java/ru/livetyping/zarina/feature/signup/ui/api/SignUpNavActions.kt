@@ -1,3 +1,3 @@
 package ru.livetyping.zarina.feature.signup.ui.api
 
-public class SignUpNavActions
+public data object SignUpNavActions

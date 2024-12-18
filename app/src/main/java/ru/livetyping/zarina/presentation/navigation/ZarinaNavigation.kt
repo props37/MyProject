@@ -33,6 +33,7 @@ import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscripti
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
+import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
@@ -61,7 +62,6 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberProductSubsc
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
-import ru.livetyping.zarina.presentation.navigation.feature.rememberSignUpNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.signUpFeature
@@ -106,7 +106,6 @@ fun ZarinaNavigation(
     val signInNavActions = rememberSignInNavActions(navController)
 
     val signUpFeature = features.find<SignUpFeature>()
-    val signUpNavActions = rememberSignUpNavActions(navController)
 
     val productListFeature = features.find<ProductListFeature>()
     val productListNavActions = rememberProductListNavActions(navController)
@@ -186,7 +185,7 @@ fun ZarinaNavigation(
         onboardingFeature(onboardingFeature, onboardingNavActions, onboardingNavResultRetrievers)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
-        signUpFeature(navController, signUpFeature, signUpNavActions)
+        signUpFeature(navController, signUpFeature, SignUpNavActions)
         productListFeature(productListFeature, productListNavActions)
         productFeature(productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)

@@ -1,7 +1,5 @@
 package ru.livetyping.zarina.presentation.navigation.feature
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
@@ -18,14 +16,5 @@ fun NavGraphBuilder.signUpFeature(
             actions = actions,
             resultRetrievers = Unit,
         )
-    }
-}
-
-@Composable
-fun rememberSignUpNavActions(
-    navController: NavHostController
-): SignUpNavActions {
-    return remember(navController) {
-        SignUpNavActions()
     }
 }
