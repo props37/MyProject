@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
+package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation
 
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage

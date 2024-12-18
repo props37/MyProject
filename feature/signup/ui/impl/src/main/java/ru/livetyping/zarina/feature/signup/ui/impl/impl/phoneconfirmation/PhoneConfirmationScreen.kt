@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
+package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -36,8 +36,8 @@ import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.component.PhoneConfirmationTopBar
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.component.PhoneConfirmationTopBar
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
 
 @Composable
 internal fun PhoneConfirmationScreen(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model
+package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model
 
 internal sealed interface PhoneConfirmationEvent {
     data object BackClicked : PhoneConfirmationEvent

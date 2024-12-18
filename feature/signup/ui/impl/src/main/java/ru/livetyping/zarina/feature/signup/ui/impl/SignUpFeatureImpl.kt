@@ -13,8 +13,8 @@ import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavEntry
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.phoneConfirmationScreen
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpScreen
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.PhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.PhoneConfirmationNavParams
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavParams
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavActions as SignUpScreenNavActions
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
 

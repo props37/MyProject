@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
+package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -36,7 +36,7 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.signup.ui.impl.R
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 import ru.livetyping.zarina.core.resource.R as RCommon

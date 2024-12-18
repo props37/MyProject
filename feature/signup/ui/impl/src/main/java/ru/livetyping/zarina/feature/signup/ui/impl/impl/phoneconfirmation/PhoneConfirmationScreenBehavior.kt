@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signup.ui.impl.impl.otp
+package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
