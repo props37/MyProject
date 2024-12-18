@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="uicomponent_enter_code_from_sms">Введи код из сообщения</string>
+    <string name="uicomponent_we_sent_sms_code_to_phone_number">Мы отправили СМС с кодом на номер %1$s</string>
+    <string name="uicomponent_code_can_be_sent_again_after">Повторно отправить код можно через %1$s</string>
+    <string name="uicomponent_resend_code">Отправить повторно</string>
+</resources>
