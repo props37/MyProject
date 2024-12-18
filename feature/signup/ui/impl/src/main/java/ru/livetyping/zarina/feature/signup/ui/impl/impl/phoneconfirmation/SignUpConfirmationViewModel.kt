@@ -51,7 +51,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
-    private var confirmPhoneJob: Job? = null
+    private var confirmSignUpJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
     private val countDownTimer = CountDownTimer()
@@ -79,7 +79,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
     ) { isOtpInvalid, newOtpRequestState, ongoingOperations ->
         TextFieldOtpState(
             textFieldState = otpTextFieldState,
-            isLoading = Operation.CONFIRM_PHONE in ongoingOperations,
+            isLoading = Operation.CONFIRM_SIGN_UP in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
         )
@@ -104,7 +104,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         deps.smsCodeRetriever.release()
     }
 
-    fun onOtpEvent(event: SignUpConfirmationEvent) {
+    fun onSignUpConfirmationEvent(event: SignUpConfirmationEvent) {
         when (event) {
             SignUpConfirmationEvent.BackClicked -> onBackClicked()
             SignUpConfirmationEvent.OtpEntered -> onOtpEntered()
@@ -120,11 +120,14 @@ internal class SignUpConfirmationViewModel @Inject constructor(
     }
 
     private fun onOtpEntered() {
-        if (confirmPhoneJob?.isActive == true) return
+        if (confirmSignUpJob?.isActive == true) return
 
-        confirmPhoneJob = viewModelScope.launch {
-            operationTracker.track(Operation.CONFIRM_PHONE) {
-                val params = ConfirmSignUpUseCase.Params(phone.value, otpTextFieldState.text.toString())
+        confirmSignUpJob = viewModelScope.launch {
+            operationTracker.track(Operation.CONFIRM_SIGN_UP) {
+                val params = ConfirmSignUpUseCase.Params(
+                    phone = phone.value,
+                    otp = otpTextFieldState.text.toString(),
+                )
                 deps.confirmSignUp(params)
                     .onSuccess {
                         val action = SignUpConfirmationScreenAction.SignUpConfirmed
@@ -191,7 +194,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         emitSideEffect(SignUpConfirmationSideEffect.ShowZarinaToast(message))
     }
 
-    private enum class Operation : OperationKey { CONFIRM_PHONE }
+    private enum class Operation : OperationKey { CONFIRM_SIGN_UP }
 
     private companion object {
         private val NEW_OTP_REQUEST_TIMEOUT get() = 1.minutes

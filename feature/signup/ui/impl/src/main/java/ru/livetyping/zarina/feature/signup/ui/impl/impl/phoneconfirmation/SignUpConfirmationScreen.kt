@@ -50,7 +50,7 @@ internal fun SignUpConfirmationScreen(
     ScreenContent(
         phone = phone,
         otpState = otpState,
-        onOtpEvent = viewModel::onOtpEvent,
+        onEvent = viewModel::onSignUpConfirmationEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -60,7 +60,7 @@ internal fun SignUpConfirmationScreen(
 internal fun ScreenContent(
     phone: PhoneNumber,
     otpState: TextFieldOtpState,
-    onOtpEvent: (SignUpConfirmationEvent) -> Unit,
+    onEvent: (SignUpConfirmationEvent) -> Unit,
     sideEffects: Flow<SignUpConfirmationSideEffect>,
     navActions: SignUpConfirmationNavActions,
 ) {
@@ -79,7 +79,7 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        SignUpConfirmationTopBar(onBackClicked = { onOtpEvent(SignUpConfirmationEvent.BackClicked) })
+        SignUpConfirmationTopBar(onBackClicked = { onEvent(SignUpConfirmationEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -93,9 +93,9 @@ internal fun ScreenContent(
             SmsOtp(
                 otpState = otpState,
                 phone = phone,
-                onOtpEntered = { onOtpEvent(SignUpConfirmationEvent.OtpEntered) },
+                onOtpEntered = { onEvent(SignUpConfirmationEvent.OtpEntered) },
                 onRequestNewOtpClicked = {
-                    onOtpEvent(SignUpConfirmationEvent.RequestNewOtpClicked)
+                    onEvent(SignUpConfirmationEvent.RequestNewOtpClicked)
                 },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
