@@ -100,6 +100,10 @@ internal class OtpViewModel @Inject constructor(
         makeFieldsValidOnChange()
     }
 
+    override fun onCleared() {
+        deps.smsCodeRetriever.release()
+    }
+
     fun onOtpEvent(event: OtpEvent) {
         when (event) {
             OtpEvent.BackClicked -> onBackClicked()
