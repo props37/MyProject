@@ -51,7 +51,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
-    private var confirmSignUpJob: Job? = null
+    private var confirmPhoneJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
     private val countDownTimer = CountDownTimer()
@@ -79,7 +79,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
     ) { isOtpInvalid, newOtpRequestState, ongoingOperations ->
         TextFieldOtpState(
             textFieldState = otpTextFieldState,
-            isLoading = Operation.CONFIRM_SIGN_UP in ongoingOperations,
+            isLoading = Operation.CONFIRM_PHONE in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
         )
@@ -120,10 +120,10 @@ internal class PhoneConfirmationViewModel @Inject constructor(
     }
 
     private fun onOtpEntered() {
-        if (confirmSignUpJob?.isActive == true) return
+        if (confirmPhoneJob?.isActive == true) return
 
-        confirmSignUpJob = viewModelScope.launch {
-            operationTracker.track(Operation.CONFIRM_SIGN_UP) {
+        confirmPhoneJob = viewModelScope.launch {
+            operationTracker.track(Operation.CONFIRM_PHONE) {
                 val params = ConfirmSignUpUseCase.Params(phone.value, otpTextFieldState.text.toString())
                 deps.confirmSignUp(params)
                     .onSuccess {
@@ -191,9 +191,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         emitSideEffect(PhoneConfirmationSideEffect.ShowZarinaToast(message))
     }
 
-    private enum class Operation : OperationKey {
-        CONFIRM_SIGN_UP,
-    }
+    private enum class Operation : OperationKey { CONFIRM_PHONE }
 
     private companion object {
         private val NEW_OTP_REQUEST_TIMEOUT get() = 1.minutes
