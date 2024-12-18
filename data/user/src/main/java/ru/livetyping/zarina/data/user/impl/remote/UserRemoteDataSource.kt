@@ -29,6 +29,8 @@ internal interface UserRemoteDataSource {
 
     suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    suspend fun confirmSignIn(phone: PhoneNumber, otp: String): AuthResult
+
     suspend fun signUp(
         firstName: String,
         birthDate: LocalDate,

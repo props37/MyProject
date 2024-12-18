@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
@@ -91,6 +92,15 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/auth/phone") {
                 setJsonBody(body)
             }
+        }
+    }
+
+    override suspend fun confirmSignIn(phone: PhoneNumber, otp: String): AuthDto {
+        val body = ConfirmSignInRequestBody(phone.value, otp)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/auth/phone/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
         }
     }
 
