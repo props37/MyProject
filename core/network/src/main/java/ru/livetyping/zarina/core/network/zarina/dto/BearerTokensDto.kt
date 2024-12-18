@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.common.Token
+import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 
 @Serializable
 public data class BearerTokensDto(
@@ -14,8 +15,8 @@ public data class BearerTokensDto(
     val refreshToken: String? = null,
 ) {
     public fun toBearerTokens(): BearerTokens {
-        val accessToken = checkNotNull(token) { ::token }
-        val refreshToken = checkNotNull(refreshToken) { ::refreshToken }
+        val accessToken = checkPropertyNotNull(token) { ::token }
+        val refreshToken = checkPropertyNotNull(refreshToken) { ::refreshToken }
         return BearerTokens(
             accessToken = Token(accessToken),
             refreshToken = Token(refreshToken),
