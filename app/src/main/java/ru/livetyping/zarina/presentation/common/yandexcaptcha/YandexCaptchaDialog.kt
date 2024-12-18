@@ -135,6 +135,7 @@ fun BoxScope.YandexCaptchaDialog(
                 onRelease = { webView ->
                     webView.settings.javaScriptEnabled = false
                     webView.removeJavascriptInterface(JS_INTERFACE_NAME)
+                    webView.destroy()
                 },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
