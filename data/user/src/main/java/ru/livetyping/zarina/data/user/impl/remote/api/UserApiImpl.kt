@@ -140,6 +140,13 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    // TODO: [Top] Handle exception
+    /*
+    {
+	    "message": "SmartCaptcha not valid",
+	    "code": "recaptcha_not_valid"
+    }
+     */
     override suspend fun requestNewAuthOtp(phone: PhoneNumber) {
         val body = RequestNewAuthOtpRequestBody(phone.value)
         httpClient.post("/api/auth/phone/sms") {
