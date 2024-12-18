@@ -36,6 +36,7 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
@@ -555,6 +556,19 @@ internal class UseCaseModule {
     ): RequestNewAuthOtpUseCase {
         return RequestNewAuthOtpUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmSignInUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        logger: UseCaseLogger,
+    ): ConfirmSignInUseCase {
+        return ConfirmSignInUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
             logger = logger,
         )
     }
