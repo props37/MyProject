@@ -133,7 +133,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
                         val action = SignUpConfirmationScreenAction.SignUpConfirmed
                         emitSideEffect(SignUpConfirmationSideEffect.Navigate(action))
                     }
-                    .onFailure(::handleConfirmSignUpException)
+                    .onFailure(::handleSignUpConfirmationException)
             }
         }
     }
@@ -152,7 +152,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         }
     }
 
-    private fun handleConfirmSignUpException(t: Throwable) {
+    private fun handleSignUpConfirmationException(t: Throwable) {
         if (t is OtpException) {
             isOtpInvalid.value = true
         }
