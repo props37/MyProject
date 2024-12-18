@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.signup.ui.impl.R
 
 @Composable
-internal fun PhoneConfirmationTopBar(
+internal fun SignUpConfirmationTopBar(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

@@ -36,13 +36,13 @@ import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.component.PhoneConfirmationTopBar
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.component.SignUpConfirmationTopBar
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationEvent
 
 @Composable
-internal fun PhoneConfirmationScreen(
-    navActions: PhoneConfirmationNavActions,
-    viewModel: PhoneConfirmationViewModel = hiltViewModel(),
+internal fun SignUpConfirmationScreen(
+    navActions: SignUpConfirmationNavActions,
+    viewModel: SignUpConfirmationViewModel = hiltViewModel(),
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otpState by viewModel.otpState.collectAsStateWithLifecycle()
@@ -60,11 +60,11 @@ internal fun PhoneConfirmationScreen(
 internal fun ScreenContent(
     phone: PhoneNumber,
     otpState: TextFieldOtpState,
-    onOtpEvent: (PhoneConfirmationEvent) -> Unit,
-    sideEffects: Flow<PhoneConfirmationSideEffect>,
-    navActions: PhoneConfirmationNavActions,
+    onOtpEvent: (SignUpConfirmationEvent) -> Unit,
+    sideEffects: Flow<SignUpConfirmationSideEffect>,
+    navActions: SignUpConfirmationNavActions,
 ) {
-    PhoneConfirmationScreenBehavior(
+    SignUpConfirmationScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -79,7 +79,7 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        PhoneConfirmationTopBar(onBackClicked = { onOtpEvent(PhoneConfirmationEvent.BackClicked) })
+        SignUpConfirmationTopBar(onBackClicked = { onOtpEvent(SignUpConfirmationEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -93,9 +93,9 @@ internal fun ScreenContent(
             SmsOtp(
                 otpState = otpState,
                 phone = phone,
-                onOtpEntered = { onOtpEvent(PhoneConfirmationEvent.OtpEntered) },
+                onOtpEntered = { onOtpEvent(SignUpConfirmationEvent.OtpEntered) },
                 onRequestNewOtpClicked = {
-                    onOtpEvent(PhoneConfirmationEvent.RequestNewOtpClicked)
+                    onOtpEvent(SignUpConfirmationEvent.RequestNewOtpClicked)
                 },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier

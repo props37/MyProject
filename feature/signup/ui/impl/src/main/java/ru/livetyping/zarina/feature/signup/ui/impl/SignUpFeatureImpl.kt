@@ -11,10 +11,10 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavEntry
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.phoneConfirmationScreen
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpConfirmationScreen
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpScreen
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavParams
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavActions
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavParams
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavActions as SignUpScreenNavActions
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
 
@@ -42,20 +42,20 @@ public class SignUpFeatureImpl : SignUpFeature {
             val signUpScreenNavActions = SignUpScreenNavActions(
                 onBackClicked = navigateUp,
                 onUserCreated = { phone ->
-                    val phoneConfirmationParams = PhoneConfirmationNavParams(phone)
-                    val phoneConfirmationNavEntry = phoneConfirmationParams.toNavEntry()
-                    navController.navigate(phoneConfirmationNavEntry)
+                    val signUpConfirmationParams = SignUpConfirmationNavParams(phone)
+                    val signUpConfirmationNavEntry = signUpConfirmationParams.toNavEntry()
+                    navController.navigate(signUpConfirmationNavEntry)
                 },
             )
             signUpScreen(signUpScreenNavActions)
 
-            val phoneConfirmationNavActions = PhoneConfirmationNavActions(
+            val signUpConfirmationNavActions = SignUpConfirmationNavActions(
                 onBackClicked = navigateUp,
                 onPhoneConfirmed = {
                     navController.popBackStack<SignUpNavEntry>(inclusive = true)
                 },
             )
-            phoneConfirmationScreen(phoneConfirmationNavActions)
+            signUpConfirmationScreen(signUpConfirmationNavActions)
         }
     }
 }

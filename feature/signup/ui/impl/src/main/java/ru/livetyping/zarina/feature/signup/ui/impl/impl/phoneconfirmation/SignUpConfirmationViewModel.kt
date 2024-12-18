@@ -36,16 +36,16 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.signup.ui.impl.R
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class PhoneConfirmationViewModel @Inject constructor(
+internal class SignUpConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val deps: PhoneConfirmationDeps,
-) : ViewModel(), SideEffectSource<PhoneConfirmationSideEffect> by SideEffectSourceImpl() {
+    private val deps: SignUpConfirmationDeps,
+) : ViewModel(), SideEffectSource<SignUpConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -56,7 +56,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private val countDownTimer = CountDownTimer()
 
-    private val navEntry = savedStateHandle.toRoute<PhoneConfirmationNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<SignUpConfirmationNavEntry>()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val otpTextFieldState by savedStateHandle.saveable(
@@ -104,18 +104,18 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         deps.smsCodeRetriever.release()
     }
 
-    fun onOtpEvent(event: PhoneConfirmationEvent) {
+    fun onOtpEvent(event: SignUpConfirmationEvent) {
         when (event) {
-            PhoneConfirmationEvent.BackClicked -> onBackClicked()
-            PhoneConfirmationEvent.OtpEntered -> onOtpEntered()
-            PhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+            SignUpConfirmationEvent.BackClicked -> onBackClicked()
+            SignUpConfirmationEvent.OtpEntered -> onOtpEntered()
+            SignUpConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
         }
     }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = PhoneConfirmationScreenAction.BackClicked
-            emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
+            val action = SignUpConfirmationScreenAction.BackClicked
+            emitSideEffect(SignUpConfirmationSideEffect.Navigate(action))
         }
     }
 
@@ -127,8 +127,8 @@ internal class PhoneConfirmationViewModel @Inject constructor(
                 val params = ConfirmSignUpUseCase.Params(phone.value, otpTextFieldState.text.toString())
                 deps.confirmSignUp(params)
                     .onSuccess {
-                        val action = PhoneConfirmationScreenAction.PhoneConfirmed
-                        emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
+                        val action = SignUpConfirmationScreenAction.SignUpConfirmed
+                        emitSideEffect(SignUpConfirmationSideEffect.Navigate(action))
                     }
                     .onFailure(::handleConfirmSignUpException)
             }
@@ -188,7 +188,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(PhoneConfirmationSideEffect.ShowZarinaToast(message))
+        emitSideEffect(SignUpConfirmationSideEffect.ShowZarinaToast(message))
     }
 
     private enum class Operation : OperationKey { CONFIRM_PHONE }

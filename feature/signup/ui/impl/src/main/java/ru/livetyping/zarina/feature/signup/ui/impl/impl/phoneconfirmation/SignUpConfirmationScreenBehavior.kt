@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun PhoneConfirmationScreenBehavior(
-    sideEffects: Flow<PhoneConfirmationSideEffect>,
-    navActions: PhoneConfirmationNavActions,
+internal fun SignUpConfirmationScreenBehavior(
+    sideEffects: Flow<SignUpConfirmationSideEffect>,
+    navActions: SignUpConfirmationNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
@@ -26,12 +26,12 @@ internal fun PhoneConfirmationScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is PhoneConfirmationSideEffect.Navigate -> {
+                    is SignUpConfirmationSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is PhoneConfirmationSideEffect.ShowZarinaToast -> {
+                    is SignUpConfirmationSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,9 +44,9 @@ internal fun PhoneConfirmationScreenBehavior(
     }
 }
 
-private fun navigate(navActions: PhoneConfirmationNavActions, action: PhoneConfirmationScreenAction) {
+private fun navigate(navActions: SignUpConfirmationNavActions, action: SignUpConfirmationScreenAction) {
     when (action) {
-        PhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
-        PhoneConfirmationScreenAction.PhoneConfirmed -> navActions.onPhoneConfirmed()
+        SignUpConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
+        SignUpConfirmationScreenAction.SignUpConfirmed -> navActions.onPhoneConfirmed()
     }
 }
