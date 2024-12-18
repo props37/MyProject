@@ -26,7 +26,7 @@ internal class ConfirmSignUpApiExceptionConverter @Inject constructor(
 
     private fun handleJsonObject(element: JsonObject, originalException: Exception): Nothing {
         val message = element["message"]
-        if (message is JsonPrimitive && message.content == MESSAGE_INVALID_CODE) {
+        if (message is JsonPrimitive && message.content.contains(MESSAGE_INVALID_CODE)) {
             throw InvalidOtpException()
         } else {
             throw originalException
