@@ -36,13 +36,13 @@ import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.component.OtpTopBar
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.OtpEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.component.PhoneConfirmationTopBar
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.PhoneConfirmationEvent
 
 @Composable
-internal fun OtpScreen(
-    navActions: OtpNavActions,
-    viewModel: OtpViewModel = hiltViewModel(),
+internal fun PhoneConfirmationScreen(
+    navActions: PhoneConfirmationNavActions,
+    viewModel: PhoneConfirmationViewModel = hiltViewModel(),
 ) {
     val phone by viewModel.phone.collectAsStateWithLifecycle()
     val otpState by viewModel.otpState.collectAsStateWithLifecycle()
@@ -60,11 +60,11 @@ internal fun OtpScreen(
 internal fun ScreenContent(
     phone: PhoneNumber,
     otpState: TextFieldOtpState,
-    onOtpEvent: (OtpEvent) -> Unit,
-    sideEffects: Flow<OtpSideEffect>,
-    navActions: OtpNavActions,
+    onOtpEvent: (PhoneConfirmationEvent) -> Unit,
+    sideEffects: Flow<PhoneConfirmationSideEffect>,
+    navActions: PhoneConfirmationNavActions,
 ) {
-    OtpScreenBehavior(
+    PhoneConfirmationScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -79,7 +79,7 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        OtpTopBar(onBackClicked = { onOtpEvent(OtpEvent.BackClicked) })
+        PhoneConfirmationTopBar(onBackClicked = { onOtpEvent(PhoneConfirmationEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -93,8 +93,10 @@ internal fun ScreenContent(
             SmsOtp(
                 otpState = otpState,
                 phone = phone,
-                onOtpEntered = { onOtpEvent(OtpEvent.OtpEntered) },
-                onRequestNewOtpClicked = { onOtpEvent(OtpEvent.RequestNewOtpClicked) },
+                onOtpEntered = { onOtpEvent(PhoneConfirmationEvent.OtpEntered) },
+                onRequestNewOtpClicked = {
+                    onOtpEvent(PhoneConfirmationEvent.RequestNewOtpClicked)
+                },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()

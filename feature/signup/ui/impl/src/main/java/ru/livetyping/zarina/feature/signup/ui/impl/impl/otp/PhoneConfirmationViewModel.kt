@@ -36,16 +36,16 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.signup.ui.impl.R
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.OtpEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.otp.model.PhoneConfirmationEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class OtpViewModel @Inject constructor(
+internal class PhoneConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val deps: OtpDeps,
-) : ViewModel(), SideEffectSource<OtpSideEffect> by SideEffectSourceImpl() {
+    private val deps: PhoneConfirmationDeps,
+) : ViewModel(), SideEffectSource<PhoneConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -56,7 +56,7 @@ internal class OtpViewModel @Inject constructor(
 
     private val countDownTimer = CountDownTimer()
 
-    private val navEntry = savedStateHandle.toRoute<OtpNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<PhoneConfirmationNavEntry>()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val otpTextFieldState by savedStateHandle.saveable(
@@ -104,18 +104,18 @@ internal class OtpViewModel @Inject constructor(
         deps.smsCodeRetriever.release()
     }
 
-    fun onOtpEvent(event: OtpEvent) {
+    fun onOtpEvent(event: PhoneConfirmationEvent) {
         when (event) {
-            OtpEvent.BackClicked -> onBackClicked()
-            OtpEvent.OtpEntered -> onOtpEntered()
-            OtpEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+            PhoneConfirmationEvent.BackClicked -> onBackClicked()
+            PhoneConfirmationEvent.OtpEntered -> onOtpEntered()
+            PhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
         }
     }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = OtpScreenAction.BackClicked
-            emitSideEffect(OtpSideEffect.Navigate(action))
+            val action = PhoneConfirmationScreenAction.BackClicked
+            emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
         }
     }
 
@@ -127,8 +127,8 @@ internal class OtpViewModel @Inject constructor(
                 val params = ConfirmSignUpUseCase.Params(phone.value, otpTextFieldState.text.toString())
                 deps.confirmSignUp(params)
                     .onSuccess {
-                        val action = OtpScreenAction.SignUpConfirmed
-                        emitSideEffect(OtpSideEffect.Navigate(action))
+                        val action = PhoneConfirmationScreenAction.PhoneConfirmed
+                        emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
                     }
                     .onFailure(::handleConfirmSignUpException)
             }
@@ -188,7 +188,7 @@ internal class OtpViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(OtpSideEffect.ShowZarinaToast(message))
+        emitSideEffect(PhoneConfirmationSideEffect.ShowZarinaToast(message))
     }
 
     private enum class Operation : OperationKey {

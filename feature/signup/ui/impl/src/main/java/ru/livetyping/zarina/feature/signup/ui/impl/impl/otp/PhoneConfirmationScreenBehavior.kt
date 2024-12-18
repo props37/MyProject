@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun OtpScreenBehavior(
-    sideEffects: Flow<OtpSideEffect>,
-    navActions: OtpNavActions,
+internal fun PhoneConfirmationScreenBehavior(
+    sideEffects: Flow<PhoneConfirmationSideEffect>,
+    navActions: PhoneConfirmationNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
@@ -26,12 +26,12 @@ internal fun OtpScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is OtpSideEffect.Navigate -> {
+                    is PhoneConfirmationSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is OtpSideEffect.ShowZarinaToast -> {
+                    is PhoneConfirmationSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,9 +44,9 @@ internal fun OtpScreenBehavior(
     }
 }
 
-private fun navigate(navActions: OtpNavActions, action: OtpScreenAction) {
+private fun navigate(navActions: PhoneConfirmationNavActions, action: PhoneConfirmationScreenAction) {
     when (action) {
-        OtpScreenAction.BackClicked -> navActions.onBackClicked()
-        OtpScreenAction.SignUpConfirmed -> navActions.onSignUpConfirmed()
+        PhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
+        PhoneConfirmationScreenAction.PhoneConfirmed -> navActions.onPhoneConfirmed()
     }
 }
