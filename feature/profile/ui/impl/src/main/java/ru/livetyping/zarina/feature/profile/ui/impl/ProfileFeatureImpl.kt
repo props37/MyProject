@@ -19,12 +19,15 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.storeListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavEntry as ProfileScreenNavEntry
 
@@ -57,6 +60,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onLoyaltyCardInfoClicked = { navController.navigate(LoyaltyProgramNavEntry) },
                 onMyOrdersClicked = { navController.navigate(OrderListNavEntry) },
                 onChangeCityClicked = actions.onChangeCityClicked,
+                onStoresClicked = { navController.navigate(StoreListNavEntry) },
             )
             profileScreen(
                 actions = profileScreenNavActions,
@@ -89,6 +93,9 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val loyaltyProgramNavActions = LoyaltyProgramNavActions(onBackClicked = navigateUp)
             loyaltyProgramScreen(loyaltyProgramNavActions)
+
+            val storeListNavActions = StoreListNavActions(onBackClicked = navigateUp)
+            storeListScreen(storeListNavActions)
         }
     }
 }

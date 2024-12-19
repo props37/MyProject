@@ -16,4 +16,6 @@ internal sealed interface ProfileScreenAction {
     data object MyOrdersClicked : ProfileScreenAction
 
     data class ChangeCityClicked(val currentCity: City?) : ProfileScreenAction
+
+    data object StoresClicked : ProfileScreenAction
 }

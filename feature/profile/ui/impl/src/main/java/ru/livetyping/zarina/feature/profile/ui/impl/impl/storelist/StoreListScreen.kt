@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,9 +16,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-internal fun LoyaltyProgramScreen(
-    navActions: LoyaltyProgramNavActions,
-    viewModel: LoyaltyProgramViewModel = hiltViewModel(),
+internal fun StoreListScreen(
+    navActions: StoreListNavActions,
+    viewModel: StoreListViewModel = hiltViewModel(),
 ) {
     ScreenContent(
         sideEffects = viewModel.sideEffects,
@@ -28,10 +28,10 @@ internal fun LoyaltyProgramScreen(
 
 @Composable
 internal fun ScreenContent(
-    sideEffects: Flow<LoyaltyProgramSideEffect>,
-    navActions: LoyaltyProgramNavActions,
+    sideEffects: Flow<StoreListSideEffect>,
+    navActions: StoreListNavActions,
 ) {
-    LoyaltyProgramScreenBehavior(
+    StoreListScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )

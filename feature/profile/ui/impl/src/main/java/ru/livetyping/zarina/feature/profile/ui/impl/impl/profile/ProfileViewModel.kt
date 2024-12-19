@@ -213,8 +213,13 @@ internal class ProfileViewModel @AssistedInject constructor(
                 }
             }
 
-            // TODO: [Top] Implement
-            ProfileMenuItem.Stores -> TODO()
+            ProfileMenuItem.Stores -> {
+                navigationThrottler.throttle {
+                    val action = ProfileScreenAction.StoresClicked
+                    emitSideEffect(ProfileSideEffect.Navigate(action))
+                }
+            }
+
             ProfileMenuItem.Help -> {
                 navigationThrottler.throttle {
                     val url = Text.Resource(RCommon.string.res_zarina_help_url)

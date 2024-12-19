@@ -10,4 +10,5 @@ internal class ProfileNavActions(
     val onLoyaltyCardInfoClicked: () -> Unit,
     val onMyOrdersClicked: () -> Unit,
     val onChangeCityClicked: (currentCity: City?) -> Unit,
+    val onStoresClicked: () -> Unit,
 )

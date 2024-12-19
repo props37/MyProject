@@ -64,5 +64,7 @@ private fun navigate(navActions: ProfileNavActions, action: ProfileScreenAction)
         is ProfileScreenAction.ChangeCityClicked -> {
             navActions.onChangeCityClicked(action.currentCity)
         }
+
+        ProfileScreenAction.StoresClicked -> navActions.onStoresClicked()
     }
 }
