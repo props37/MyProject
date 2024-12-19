@@ -16,6 +16,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 internal fun Product(
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
+    onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
@@ -35,6 +36,7 @@ internal fun Product(
                 ProductSuccess(
                     productState = state,
                     onProductEvent = onProductEvent,
+                    onShowZarinaClubDescription = onShowZarinaClubDescription,
                     lazyListState = lazyListState,
                 )
             }

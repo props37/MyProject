@@ -10,7 +10,5 @@ internal sealed interface ProductEvent {
 
     data class AddToWishlistClicked(val product: Product) : ProductEvent
 
-    data object BonusAccrualForPurchaseClicked : ProductEvent
-
     data object ErrorRefreshClicked : ProductEvent
 }

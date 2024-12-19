@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -78,7 +81,10 @@ internal fun ScreenContent(
         )
     }
 
-    // TODO: [Top] Add Zarina Club bottom sheet
+    var isZarinaClubDescriptionVisible by remember { mutableStateOf(false) }
+    if (isZarinaClubDescriptionVisible) {
+        // TODO: [Top] Show Zarina Club bottom sheet
+    }
 
     val lazyListState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
@@ -117,6 +123,7 @@ internal fun ScreenContent(
         Product(
             productState = productState,
             onProductEvent = onProductEvent,
+            onShowZarinaClubDescription = { isZarinaClubDescriptionVisible = true },
             lazyListState = lazyListState,
             modifier = Modifier
                 .fillMaxSize()

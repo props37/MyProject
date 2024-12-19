@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun ProductSuccess(
     productState: ProductState.Success,
     onProductEvent: (ProductEvent) -> Unit,
+    onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
@@ -36,6 +37,7 @@ internal fun ProductSuccess(
         ProductList(
             productState = productState,
             onProductEvent = onProductEvent,
+            onShowZarinaClubDescription = onShowZarinaClubDescription,
             lazyListState = lazyListState,
             modifier = Modifier.weight(1f),
         )
@@ -61,6 +63,7 @@ internal fun ProductSuccess(
 private fun ProductList(
     productState: ProductState.Success,
     onProductEvent: (ProductEvent) -> Unit,
+    onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
@@ -87,9 +90,7 @@ private fun ProductList(
             ProductGeneralInfo(
                 product = product,
                 onProductColorClicked = { onProductEvent(ProductEvent.ProductColorClicked(it)) },
-                onBonusAccrualForPurchaseClicked = {
-                    onProductEvent(ProductEvent.BonusAccrualForPurchaseClicked)
-                },
+                onBonusAccrualForPurchaseClicked = onShowZarinaClubDescription,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp, bottom = 8.dp)

@@ -126,7 +126,6 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.ErrorRefreshClicked -> productRequester.request(ProductRequest)
-            ProductEvent.BonusAccrualForPurchaseClicked -> Unit // Handled completely on UI
         }
     }
 
