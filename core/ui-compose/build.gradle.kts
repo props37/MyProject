@@ -51,9 +51,9 @@ dependencies {
     implementation(projects.core.kotlinUtil)
 
     implementation(platform(libs.jetpack.compose.bom))
-    implementation(libs.jetpack.compose.foundation)
-    implementation(libs.jetpack.compose.ui)
-    implementation(libs.jetpack.compose.animation)
+    api(libs.jetpack.compose.foundation)
+    api(libs.jetpack.compose.ui)
+    api(libs.jetpack.compose.animation)
     implementation(libs.jetpack.compose.toolingPreview)
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
