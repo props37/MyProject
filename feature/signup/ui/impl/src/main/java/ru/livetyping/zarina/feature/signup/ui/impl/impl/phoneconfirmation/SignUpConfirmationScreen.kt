@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -29,28 +30,28 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uicomponent.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uicomponent.otp.SmsOtp
-import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.component.SignUpConfirmationTopBar
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationState
 
 @Composable
 internal fun SignUpConfirmationScreen(
     navActions: SignUpConfirmationNavActions,
     viewModel: SignUpConfirmationViewModel = hiltViewModel(),
 ) {
-    val phone by viewModel.phone.collectAsStateWithLifecycle()
-    val otpState by viewModel.otpState.collectAsStateWithLifecycle()
+    val state by viewModel.signUpConfirmationState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        phone = phone,
-        otpState = otpState,
+        state = state,
         onEvent = viewModel::onSignUpConfirmationEvent,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -58,9 +59,9 @@ internal fun SignUpConfirmationScreen(
 
 @Composable
 internal fun ScreenContent(
-    phone: PhoneNumber,
-    otpState: TextFieldOtpState,
+    state: SignUpConfirmationState,
     onEvent: (SignUpConfirmationEvent) -> Unit,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<SignUpConfirmationSideEffect>,
     navActions: SignUpConfirmationNavActions,
 ) {
@@ -69,42 +70,52 @@ internal fun ScreenContent(
         navActions = navActions,
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
-            )
-            .bottomNavBarPadding(WindowInsets.ime),
-    ) {
-        SignUpConfirmationTopBar(onBackClicked = { onEvent(SignUpConfirmationEvent.BackClicked) })
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme.colors.background.general.regular.default)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .bottomNavBarPadding(WindowInsets.ime),
+        ) {
+            SignUpConfirmationTopBar(onBackClicked = { onEvent(SignUpConfirmationEvent.BackClicked) })
 
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(Unit) {
-                delay(FocusRequestDelay)
-                focusRequester.tryRequestFocus()
+                val focusRequester = remember { FocusRequester() }
+                LaunchedEffect(Unit) {
+                    delay(FocusRequestDelay)
+                    focusRequester.tryRequestFocus()
+                }
+
+                SmsOtp(
+                    otpState = state.otpState,
+                    phone = state.phone,
+                    isRequestNewOtpButtonLoading = state.isRequestNewOtpButtonLoading,
+                    onOtpEntered = { onEvent(SignUpConfirmationEvent.OtpEntered) },
+                    onRequestNewOtpClicked = {
+                        onEvent(SignUpConfirmationEvent.RequestNewOtpClicked)
+                    },
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                )
+
+                Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
+        }
 
-            SmsOtp(
-                otpState = otpState,
-                phone = phone,
-                onOtpEntered = { onEvent(SignUpConfirmationEvent.OtpEntered) },
-                onRequestNewOtpClicked = {
-                    onEvent(SignUpConfirmationEvent.RequestNewOtpClicked)
-                },
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+        if (state.visibleYandexCaptcha != null) {
+            YandexCaptchaDialog(
+                captcha = state.visibleYandexCaptcha,
+                onEvent = onYandexCaptchaEvent,
             )
-
-            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
-            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
         }
     }
 }
