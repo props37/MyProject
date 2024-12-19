@@ -162,8 +162,8 @@ dependencies {
     implementation(projects.feature.signIn.ui.api)
     implementation(projects.feature.signIn.ui.impl)
 
-    implementation(projects.feature.signup.ui.api)
-    implementation(projects.feature.signup.ui.impl)
+    implementation(projects.feature.signUp.ui.api)
+    implementation(projects.feature.signUp.ui.impl)
 
     implementation(projects.feature.productList.ui.api)
     implementation(projects.feature.productList.ui.impl)

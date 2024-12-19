@@ -57,7 +57,7 @@ composeCompiler {
 }
 
 dependencies {
-    implementation(projects.feature.signup.ui.api)
+    implementation(projects.feature.signUp.ui.api)
     implementation(projects.core.domain)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
