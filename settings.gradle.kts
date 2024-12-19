@@ -41,8 +41,8 @@ include(":feature:cart:ui:impl")
 include(":feature:city-selector:ui:api")
 include(":feature:city-selector:ui:impl")
 
-include(":feature:signin:ui:api")
-include(":feature:signin:ui:impl")
+include(":feature:sign-in:ui:api")
+include(":feature:sign-in:ui:impl")
 
 include(":feature:signup:ui:api")
 include(":feature:signup:ui:impl")
