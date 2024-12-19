@@ -11,8 +11,7 @@ internal class RequestNewAuthOtpUseCaseImpl(
 ) : UseCase<Params, Unit>(logger), RequestNewAuthOtpUseCase {
 
     override suspend fun execute(params: Params) {
-        // TODO: [Top] Add YandexCaptchaToken
-        userRepository.requestNewAuthOtp(params.phone, TODO())
+        userRepository.requestNewAuthOtp(params.phone, params.yandexCaptchaToken)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {

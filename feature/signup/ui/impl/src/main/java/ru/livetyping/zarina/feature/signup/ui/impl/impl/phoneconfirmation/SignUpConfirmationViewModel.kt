@@ -196,7 +196,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
 
         requestNewOtpJob = viewModelScope.launch {
             operationTracker.track(Operation.REQUEST_NEW_OTP) {
-                val params = RequestNewAuthOtpUseCase.Params(phone)
+                val params = RequestNewAuthOtpUseCase.Params(phone, yandexCaptchaToken)
                 deps.requestNewOtp(params)
                     .onSuccess { startNewOtpRequestTimeout() }
                     .onFailure {
