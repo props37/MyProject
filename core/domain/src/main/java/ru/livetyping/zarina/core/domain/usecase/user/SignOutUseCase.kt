@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
@@ -15,6 +16,7 @@ public interface SignOutUseCase {
             authRepository: AuthRepository,
             contentRepository: ContentRepository,
             wishlistRepository: WishlistRepository,
+            cartRepository: CartRepository,
             logger: UseCaseLogger?,
         ): SignOutUseCase {
             return SignOutUseCaseImpl(
@@ -22,6 +24,7 @@ public interface SignOutUseCase {
                 authRepository = authRepository,
                 contentRepository = contentRepository,
                 wishlistRepository = wishlistRepository,
+                cartRepository = cartRepository,
                 logger = logger,
             )
         }

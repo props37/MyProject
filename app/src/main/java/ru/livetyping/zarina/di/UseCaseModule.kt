@@ -388,6 +388,7 @@ internal class UseCaseModule {
         userRepository: UserRepository,
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): ForcedSignOutUseCase {
         return ForcedSignOutUseCase.getInstance(
@@ -395,6 +396,7 @@ internal class UseCaseModule {
             userRepository = userRepository,
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
@@ -416,6 +418,7 @@ internal class UseCaseModule {
         authRepository: AuthRepository,
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): SignOutUseCase {
         return SignOutUseCase.getInstance(
@@ -423,6 +426,7 @@ internal class UseCaseModule {
             authRepository = authRepository,
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
@@ -433,6 +437,7 @@ internal class UseCaseModule {
         authRepository: AuthRepository,
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): DeleteAccountUseCase {
         return DeleteAccountUseCase.getInstance(
@@ -440,6 +445,7 @@ internal class UseCaseModule {
             authRepository = authRepository,
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }

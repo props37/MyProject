@@ -47,6 +47,10 @@ internal class CartRepositoryImpl @Inject constructor(
         localDataSource.setCartProductCount(cartProductCount.value)
     }
 
+    override fun clear() {
+        localDataSource.clear()
+    }
+
     private fun getCartProductIdsFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<Set<Product.Id>> {

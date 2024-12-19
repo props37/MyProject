@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.impl.SignOutCleaner
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
@@ -13,6 +14,7 @@ internal class ForcedSignOutUseCaseImpl(
     private val userRepository: UserRepository,
     private val contentRepository: ContentRepository,
     private val wishlistRepository: WishlistRepository,
+    private val cartRepository: CartRepository,
     logger: UseCaseLogger?,
 ) : UseCase<Unit, Unit>(logger), ForcedSignOutUseCase {
 
@@ -22,6 +24,7 @@ internal class ForcedSignOutUseCaseImpl(
             userRepository = userRepository,
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
         )
         cleaner.performSignOutCleanup()
     }

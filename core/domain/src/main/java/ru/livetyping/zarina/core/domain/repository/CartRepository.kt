@@ -20,4 +20,6 @@ public interface CartRepository {
         productId: Product.Id,
         barcode: Barcode,
     )
+
+    public fun clear()
 }
