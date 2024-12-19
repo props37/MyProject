@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.uicomponent.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
@@ -58,6 +60,7 @@ internal fun ProductScreen(
 
 // TODO: [Top] Add TotalLook and similar products
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScreenContent(
     topBarState: TopBarState,
@@ -83,7 +86,9 @@ internal fun ScreenContent(
 
     var isZarinaClubDescriptionVisible by remember { mutableStateOf(false) }
     if (isZarinaClubDescriptionVisible) {
-        // TODO: [Top] Show Zarina Club bottom sheet
+        ZarinaClubModalBottomSheet(
+            onDismissRequest = { isZarinaClubDescriptionVisible = false },
+        )
     }
 
     val lazyListState = rememberLazyListState()
