@@ -7,4 +7,7 @@ import kotlinx.serialization.Serializable
 internal data class RequestNewAuthOtpRequestBody(
     @SerialName("phone")
     val phone: String,
+
+    @SerialName("smartCaptchaToken")
+    val yandexCaptchaToken: String,
 )

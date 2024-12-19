@@ -112,7 +112,7 @@ internal class UserApiImpl @Inject constructor(
         password: String,
         receiveEmails: Boolean,
         receiveSms: Boolean,
-        yandexCaptchaToken: YandexCaptchaToken
+        yandexCaptchaToken: YandexCaptchaToken,
     ) {
         val body = SignUpRequestBody(
             firstName = firstName,
@@ -140,15 +140,11 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
-    // TODO: [Top] Handle exception
-    /*
-    {
-	    "message": "SmartCaptcha not valid",
-	    "code": "recaptcha_not_valid"
-    }
-     */
-    override suspend fun requestNewAuthOtp(phone: PhoneNumber) {
-        val body = RequestNewAuthOtpRequestBody(phone.value)
+    override suspend fun requestNewAuthOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        val body = RequestNewAuthOtpRequestBody(phone.value, yandexCaptchaToken.value)
         httpClient.post("/api/auth/phone/sms") {
             setJsonBody(body)
         }

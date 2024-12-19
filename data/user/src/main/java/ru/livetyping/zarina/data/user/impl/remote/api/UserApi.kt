@@ -44,7 +44,7 @@ internal interface UserApi {
 
     suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthDto
 
-    suspend fun requestNewAuthOtp(phone: PhoneNumber)
+    suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     suspend fun requestPasswordReset(email: Email)
 

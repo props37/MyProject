@@ -44,7 +44,7 @@ internal interface UserRemoteDataSource {
 
     suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
 
-    suspend fun requestNewAuthOtp(phone: PhoneNumber)
+    suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     suspend fun requestPasswordReset(email: Email)
 

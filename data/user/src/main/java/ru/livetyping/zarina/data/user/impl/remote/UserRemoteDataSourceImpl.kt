@@ -80,8 +80,11 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         return api.confirmSignUp(phone, otp).toAuthResult()
     }
 
-    override suspend fun requestNewAuthOtp(phone: PhoneNumber) {
-        api.requestNewAuthOtp(phone)
+    override suspend fun requestNewAuthOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        api.requestNewAuthOtp(phone, yandexCaptchaToken)
     }
 
     override suspend fun requestPasswordReset(email: Email) {
