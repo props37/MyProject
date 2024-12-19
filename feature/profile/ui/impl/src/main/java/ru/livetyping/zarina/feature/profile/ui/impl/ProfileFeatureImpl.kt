@@ -12,6 +12,9 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
@@ -51,6 +54,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onSignInClicked = actions.onSignInClicked,
                 onSignUpClicked = actions.onSignUpClicked,
                 onProfileDetailsClicked = { navController.navigate(ProfileDetailsNavEntry) },
+                onLoyaltyCardInfoClicked = { navController.navigate(LoyaltyProgramNavEntry) },
                 onMyOrdersClicked = { navController.navigate(OrderListNavEntry) },
                 onChangeCityClicked = actions.onChangeCityClicked,
             )
@@ -80,8 +84,11 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             orderListScreen(orderListNavActions)
 
-            val orderNavAction = OrderNavActions(onBackClicked = navigateUp)
-            orderScreen(orderNavAction)
+            val orderNavActions = OrderNavActions(onBackClicked = navigateUp)
+            orderScreen(orderNavActions)
+
+            val loyaltyProgramNavActions = LoyaltyProgramNavActions(onBackClicked = navigateUp)
+            loyaltyProgramScreen(loyaltyProgramNavActions)
         }
     }
 }

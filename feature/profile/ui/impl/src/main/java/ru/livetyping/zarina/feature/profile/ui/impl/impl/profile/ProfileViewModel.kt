@@ -190,8 +190,10 @@ internal class ProfileViewModel @AssistedInject constructor(
     }
 
     private fun onLoyaltyCardInfoClicked() {
-        TODO()
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val action = ProfileScreenAction.LoyaltyCardInfoClicked
+            emitSideEffect(ProfileSideEffect.Navigate(action))
+        }
     }
 
     private fun onMenuItemClicked(event: ProfileEvent.MenuItemClicked) {

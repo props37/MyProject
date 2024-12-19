@@ -7,6 +7,7 @@ internal class ProfileNavActions(
     val onSignInClicked: () -> Unit,
     val onSignUpClicked: () -> Unit,
     val onProfileDetailsClicked: () -> Unit,
+    val onLoyaltyCardInfoClicked: () -> Unit,
     val onMyOrdersClicked: () -> Unit,
     val onChangeCityClicked: (currentCity: City?) -> Unit,
 )

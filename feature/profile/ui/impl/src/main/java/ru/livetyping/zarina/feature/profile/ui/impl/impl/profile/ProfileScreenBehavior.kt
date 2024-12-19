@@ -59,6 +59,7 @@ private fun navigate(navActions: ProfileNavActions, action: ProfileScreenAction)
         ProfileScreenAction.SignInClicked -> navActions.onSignInClicked()
         ProfileScreenAction.SignUpClicked -> navActions.onSignUpClicked()
         ProfileScreenAction.ProfileDetailsClicked -> navActions.onProfileDetailsClicked()
+        ProfileScreenAction.LoyaltyCardInfoClicked -> navActions.onLoyaltyCardInfoClicked()
         ProfileScreenAction.MyOrdersClicked -> navActions.onMyOrdersClicked()
         is ProfileScreenAction.ChangeCityClicked -> {
             navActions.onChangeCityClicked(action.currentCity)
