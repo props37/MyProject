@@ -8,19 +8,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.component.LoyaltyProgramTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramState
 
 @Composable
 internal fun LoyaltyProgramScreen(
     navActions: LoyaltyProgramNavActions,
     viewModel: LoyaltyProgramViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.loyaltyProgramState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        state = state,
+        onEvent = viewModel::onLoyaltyProgramEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +39,8 @@ internal fun LoyaltyProgramScreen(
 
 @Composable
 internal fun ScreenContent(
+    state: LoyaltyProgramState,
+    onEvent: (LoyaltyProgramEvent) -> Unit,
     sideEffects: Flow<LoyaltyProgramSideEffect>,
     navActions: LoyaltyProgramNavActions,
 ) {
@@ -46,7 +59,10 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        // TODO: [Top] Implement
-        TODO()
+        LoyaltyProgramTopBar(onBackClicked = { onEvent(LoyaltyProgramEvent.BackClicked) })
+
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            // TODO: [Top] Implement
+        }
     }
 }
