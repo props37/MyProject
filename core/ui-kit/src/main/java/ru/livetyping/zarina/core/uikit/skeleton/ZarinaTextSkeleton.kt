@@ -17,6 +17,7 @@ import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 public fun ZarinaTextSkeleton(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
+    useUiKitFontFamily: Boolean = false,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     isShimmerEnabled: Boolean = true,
     color: Color = ZarinaSkeletonDefaults.Color,
@@ -28,10 +29,16 @@ public fun ZarinaTextSkeleton(
             .shimmerToggleable(shimmer = shimmer, isEnabled = isShimmerEnabled)
             .drawBehind { drawRect(color) },
     ) {
-        // Use default font family as theme font family has huge top and bottom paddings
+        val fontFamily = if (useUiKitFontFamily) {
+            textStyle.fontFamily
+        } else {
+            // Use default font family as theme font family has huge top and bottom paddings
+            FontFamily.Default
+        }
+
         Text(
             text = "",
-            style = textStyle.copy(fontFamily = FontFamily.Default),
+            style = textStyle.copy(fontFamily = fontFamily),
         )
     }
 }

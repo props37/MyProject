@@ -43,6 +43,11 @@
     <string name="profile_city_changing_error">Не удалось изменить город</string>
     <string name="profile_order_number">Заказ №%1$s</string>
     <string name="profile_loyalty_program">Программа лояльности</string>
+    <string name="profile_loyalty_program_level">Уровень в программе лояльности</string>
+    <string name="profile_my_bonuses">Мои бонусы</string>
+    <string name="profile_expected_bonuses">Ожидается поступление</string>
+    <string name="profile_loyalty_program_policies">Условия программы лояльности</string>
+    <string name="profile_bonus_account_history">История бонусного счёта</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

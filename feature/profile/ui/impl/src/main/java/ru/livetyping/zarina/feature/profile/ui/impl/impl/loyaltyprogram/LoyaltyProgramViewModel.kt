@@ -65,6 +65,9 @@ internal class LoyaltyProgramViewModel @Inject constructor(
         when (event) {
             LoyaltyProgramEvent.BackClicked -> onBackClicked()
             LoyaltyProgramEvent.BonusHistoryClicked -> TODO() // TODO: [Top] Implement
+            LoyaltyProgramEvent.ErrorRefreshClicked -> {
+                loyaltyCardRequester.request(LoyaltyCardRequest)
+            }
         }
     }
 
