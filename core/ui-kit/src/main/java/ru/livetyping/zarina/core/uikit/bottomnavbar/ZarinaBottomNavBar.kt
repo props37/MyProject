@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDividerDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
@@ -122,11 +123,12 @@ public fun ZarinaBottomNavBar(
                 )
                 .drawBehind {
                     drawRect(backgroundColor)
+
                     drawLine(
                         color = topBorderColor,
                         start = Offset.Zero,
                         end = Offset(size.width, 0f),
-                        strokeWidth = 1.dp.toPx(),
+                        strokeWidth = ZarinaDividerDefaults.Thickness.toPx(),
                     )
                 }
                 .selectableGroup()
