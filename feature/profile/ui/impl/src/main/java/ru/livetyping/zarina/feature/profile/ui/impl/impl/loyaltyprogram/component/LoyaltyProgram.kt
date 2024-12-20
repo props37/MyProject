@@ -52,8 +52,8 @@ internal fun LoyaltyProgram(
         targetState = state,
         contentKey = {
             when (it) {
-                is LoyaltyProgramState.Success -> LoyaltyProgramContentKey.Success
-                LoyaltyProgramState.Loading -> it
+                is LoyaltyProgramState.Success -> LoyaltyProgramContentKey.SuccessAndLoading
+                LoyaltyProgramState.Loading -> LoyaltyProgramContentKey.SuccessAndLoading
                 is LoyaltyProgramState.Error -> it
             }
         },
@@ -262,7 +262,7 @@ private fun LoyaltyProgramInfoItem(
     }
 }
 
-private enum class LoyaltyProgramContentKey { Success }
+private enum class LoyaltyProgramContentKey { SuccessAndLoading }
 
 private val TextStyleDefault: TextStyle
     @Composable
