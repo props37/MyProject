@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 
 @Composable
-internal fun LoyaltyProgramScreenBehavior(
-    sideEffects: Flow<LoyaltyProgramSideEffect>,
-    navActions: LoyaltyProgramNavActions,
+internal fun BonusHistoryScreenBehavior(
+    sideEffects: Flow<BonusHistorySideEffect>,
+    navActions: BonusHistoryNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
@@ -22,7 +22,7 @@ internal fun LoyaltyProgramScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is LoyaltyProgramSideEffect.Navigate -> {
+                    is BonusHistorySideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
                 }
@@ -35,9 +35,7 @@ internal fun LoyaltyProgramScreenBehavior(
     }
 }
 
-private fun navigate(navActions: LoyaltyProgramNavActions, action: LoyaltyProgramScreenAction) {
-    when (action) {
-        LoyaltyProgramScreenAction.BackClicked -> navActions.onBackClicked()
-        LoyaltyProgramScreenAction.BonusHistoryClicked -> navActions.onBonusHistoryClicked()
-    }
+private fun navigate(navActions: BonusHistoryNavActions, action: BonusHistoryScreenAction) {
+    // TODO: [Top] Implement
+    TODO()
 }

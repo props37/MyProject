@@ -64,7 +64,7 @@ internal class LoyaltyProgramViewModel @Inject constructor(
     fun onLoyaltyProgramEvent(event: LoyaltyProgramEvent) {
         when (event) {
             LoyaltyProgramEvent.BackClicked -> onBackClicked()
-            LoyaltyProgramEvent.BonusHistoryClicked -> TODO() // TODO: [Top] Implement
+            LoyaltyProgramEvent.BonusHistoryClicked -> onBonusHistoryClicked()
             LoyaltyProgramEvent.ErrorRefreshClicked -> {
                 loyaltyCardRequester.request(LoyaltyCardRequest)
             }
@@ -74,6 +74,13 @@ internal class LoyaltyProgramViewModel @Inject constructor(
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = LoyaltyProgramScreenAction.BackClicked
+            emitSideEffect(LoyaltyProgramSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onBonusHistoryClicked() {
+        navigationThrottler.throttle {
+            val action = LoyaltyProgramScreenAction.BonusHistoryClicked
             emitSideEffect(LoyaltyProgramSideEffect.Navigate(action))
         }
     }

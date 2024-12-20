@@ -12,8 +12,11 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.bonusHistoryScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
@@ -91,11 +94,17 @@ public class ProfileFeatureImpl : ProfileFeature {
             val orderNavActions = OrderNavActions(onBackClicked = navigateUp)
             orderScreen(orderNavActions)
 
-            val loyaltyProgramNavActions = LoyaltyProgramNavActions(onBackClicked = navigateUp)
+            val loyaltyProgramNavActions = LoyaltyProgramNavActions(
+                onBackClicked = navigateUp,
+                onBonusHistoryClicked = { navController.navigate(BonusHistoryNavEntry) },
+            )
             loyaltyProgramScreen(loyaltyProgramNavActions)
 
             val storeListNavActions = StoreListNavActions(onBackClicked = navigateUp)
             storeListScreen(storeListNavActions)
+
+            val bonusHistoryNavActions = BonusHistoryNavActions(onBackClicked = navigateUp)
+            bonusHistoryScreen(bonusHistoryNavActions)
         }
     }
 }
