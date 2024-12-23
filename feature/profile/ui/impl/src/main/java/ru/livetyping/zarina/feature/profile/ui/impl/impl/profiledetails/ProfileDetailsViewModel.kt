@@ -108,6 +108,31 @@ internal class ProfileDetailsViewModel @Inject constructor(
             }
         }
 
+    val topBarState: StateFlow<ProfileDetailsTopBarState> = combine(
+        currentUser,
+        firstNameTextFieldState.textAsFlow(),
+        lastNameTextFieldState.textAsFlow(),
+        birthDateEpochMillisValueHolder.stateFlow,
+    ) { currentUser, firstName, lastName, birthDateEpochMillis ->
+        val isSaveButtonVisible = if (currentUser != null) {
+            val firstNameChanged = firstName.toString().trim() != currentUser.firstName
+            val lastNameChanged = lastName.toString().trim() != currentUser.lastName
+            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromMillis(it) }
+            val birthDateChanged = birthDate != currentUser.birthDate
+            (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
+                    && (firstNameChanged || lastNameChanged || birthDateChanged)
+        } else {
+            false
+        }
+        ProfileDetailsTopBarState(
+            isSaveButtonVisible = isSaveButtonVisible,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = ProfileDetailsTopBarState(isSaveButtonVisible = false),
+    )
+
     val profileDetailsState: StateFlow<ProfileDetailsState> = combineMore(
         userResultFlow,
         userRequester.loadingState,
@@ -152,31 +177,6 @@ internal class ProfileDetailsViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = ProfileDetailsState.Loading,
-    )
-
-    val topBarState: StateFlow<ProfileDetailsTopBarState> = combine(
-        currentUser,
-        firstNameTextFieldState.textAsFlow(),
-        lastNameTextFieldState.textAsFlow(),
-        birthDateEpochMillisValueHolder.stateFlow,
-    ) { currentUser, firstName, lastName, birthDateEpochMillis ->
-        val isSaveButtonVisible = if (currentUser != null) {
-            val firstNameChanged = firstName.toString().trim() != currentUser.firstName
-            val lastNameChanged = lastName.toString().trim() != currentUser.lastName
-            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromMillis(it) }
-            val birthDateChanged = birthDate != currentUser.birthDate
-            (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
-                    && (firstNameChanged || lastNameChanged || birthDateChanged)
-        } else {
-            false
-        }
-        ProfileDetailsTopBarState(
-            isSaveButtonVisible = isSaveButtonVisible,
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = ProfileDetailsTopBarState(isSaveButtonVisible = false),
     )
 
     private val isSignOutDialogVisible = MutableStateFlow(false)
