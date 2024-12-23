@@ -35,7 +35,7 @@ jetpack-annotation = "1.9.1"
 jetpack-compose-bom = "2024.12.01"
 jetpack-compose-material-navigation = "1.7.6"
 
-ktor = "3.0.2"
+ktor = "3.0.3"
 
 dagger = "2.53.1"
 hilt-navigationCompose = "1.2.0"
