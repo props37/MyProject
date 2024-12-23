@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
@@ -19,6 +20,18 @@ public interface UserRepository {
     public fun getUserFlow(cachePolicy: CachePolicy): Flow<User?>
 
     public suspend fun setUser(user: User)
+
+    public suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    )
 
     public fun getUserCityFlow(cachePolicy: CachePolicy): Flow<City?>
 

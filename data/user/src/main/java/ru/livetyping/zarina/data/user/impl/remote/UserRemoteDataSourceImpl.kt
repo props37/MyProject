@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
@@ -23,6 +24,30 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
     override fun getUserFlow(): Flow<User> = flow {
         val user = api.getUser().toUser()
         emit(user)
+    }
+
+    override suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        api.updateUserInfo(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
     }
 
     override fun getUserCityFlow(): Flow<City> = flow {

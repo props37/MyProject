@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
@@ -21,6 +22,7 @@ import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.GenderDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
@@ -30,11 +32,13 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.UpdateUserInfoRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignInApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignUpApiExceptionConverter
+import ru.livetyping.zarina.data.user.impl.remote.api.exception.UpdateUserInfoApiExceptionConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -46,11 +50,41 @@ internal class UserApiImpl @Inject constructor(
     private val signUpApiExceptionConverter: SignUpApiExceptionConverter,
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
+    private val updateUserInfoApiExceptionConverter: UpdateUserInfoApiExceptionConverter,
     @ZarinaBaseUrl
     private val baseUrl: String,
 ) : UserApi {
     override suspend fun getUser(): UserDto {
         return httpClient.get("/api/v1/profile").body()
+    }
+
+    override suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        val body = UpdateUserInfoRequestBody(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
+            email = email.value,
+            phone = phone.value,
+            gender = GenderDto.from(gender),
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+        updateUserInfoApiExceptionConverter {
+            httpClient.post("/api/profile") {
+                setJsonBody(body)
+            }
+        }
     }
 
     override suspend fun getUserCity(): CityDto {

@@ -4,6 +4,7 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
@@ -15,6 +16,18 @@ import java.time.LocalDate
 
 internal interface UserApi {
     suspend fun getUser(): UserDto
+
+    suspend fun updateUserInfo(
+        firstName: String,
+        middleName: String?,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    )
 
     suspend fun getUserCity(): CityDto
 
