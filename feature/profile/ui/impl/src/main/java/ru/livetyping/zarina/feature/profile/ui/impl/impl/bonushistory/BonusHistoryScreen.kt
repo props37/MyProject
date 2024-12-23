@@ -16,10 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryPager
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTabRow
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.model.BonusHistoryTab
@@ -69,6 +71,19 @@ internal fun ScreenContent(
             state = tabRowState,
             onEvent = onTabRowEvent,
             modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
+        val pagerState = rememberPagerStateWithTabRow(
+            tabs = tabRowState.tabs,
+            currentTab = tabRowState.currentTab,
+            onTabChanged = { onTabRowEvent(TabRowEvent.TabChanged(it)) },
+            pageCount = { tabRowState.tabs.size },
+        )
+
+        BonusHistoryPager(
+            pagerState = pagerState,
+            tabs = tabRowState.tabs,
+            modifier = Modifier.fillMaxSize(),
         )
     }
 }
