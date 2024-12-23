@@ -55,6 +55,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
@@ -598,6 +599,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetLoyaltyProgramExpectedBonusesPageFlowUseCase {
         return GetLoyaltyProgramExpectedBonusesPageFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideUpdateUserInfoUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): UpdateUserInfoUseCase {
+        return UpdateUserInfoUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )
