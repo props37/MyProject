@@ -7,4 +7,6 @@ internal sealed interface ProfileDetailsSideEffect : SideEffect {
     data class Navigate(val action: ProfileDetailsScreenAction) : ProfileDetailsSideEffect
 
     data class ShowZarinaToast(val message: ZarinaToastMessage) : ProfileDetailsSideEffect
+
+    data object HideKeyboard : ProfileDetailsSideEffect
 }

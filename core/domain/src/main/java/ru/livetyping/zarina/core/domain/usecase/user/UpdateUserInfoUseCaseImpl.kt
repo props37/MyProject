@@ -25,8 +25,8 @@ internal class UpdateUserInfoUseCaseImpl(
 ) : UseCase<Params, Unit>(logger), UpdateUserInfoUseCase {
 
     override suspend fun execute(params: Params) {
-        val firstName = params.firstName
-        val lastName = params.lastName
+        val firstName = params.firstName.trim().split(' ').first()
+        val lastName = params.lastName.trim().split(' ').first()
         val birthDate = params.birthDate
         val email = params.email
         val phone = params.phone

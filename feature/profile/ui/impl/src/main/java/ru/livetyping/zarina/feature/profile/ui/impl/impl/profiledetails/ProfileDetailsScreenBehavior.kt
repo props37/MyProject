@@ -39,6 +39,8 @@ internal fun ProfileDetailsScreenBehavior(
                     is ProfileDetailsSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
+
+                    ProfileDetailsSideEffect.HideKeyboard -> currentKeyboardController?.hide()
                 }
             }
         }

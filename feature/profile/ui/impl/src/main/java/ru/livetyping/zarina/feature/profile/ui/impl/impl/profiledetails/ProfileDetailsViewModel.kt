@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.kotlinutil.toEpochMillis
@@ -49,6 +50,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.Pr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogState
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,6 +63,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
+    private var saveChangesJob: Job? = null
     private var signOutJob: Job? = null
     private var deleteAccountJob: Job? = null
 
@@ -272,8 +275,41 @@ internal class ProfileDetailsViewModel @Inject constructor(
     }
 
     private fun onSaveChangesClicked() {
-        // TODO: [Top] Implement
-        TODO()
+        if (saveChangesJob?.isActive == true) return
+
+        val currentUser = currentUser.value
+        if (currentUser == null) {
+            Timber.tag(TAG).e("Current user is null")
+            return
+        }
+
+        emitSideEffect(ProfileDetailsSideEffect.HideKeyboard)
+
+        saveChangesJob = viewModelScope.launch {
+            val birthDate = birthDateEpochMillisValueHolder.get()?.let { millis ->
+                LocalDateUtil.fromMillis(millis)
+            } ?: User.BIRTH_DATE_MIN_VALUE
+            val params = UpdateUserInfoUseCase.Params(
+                firstName = firstNameTextFieldState.text.toString(),
+                lastName = lastNameTextFieldState.text.toString(),
+                birthDate = birthDate,
+                email = email.value ?: currentUser.email,
+                phone = phone.value ?: currentUser.phone ?: PhoneNumber.create(""),
+                gender = currentUser.gender,
+            )
+            deps.updateUserInfo(params)
+                .onSuccess {
+                    val text = Text.Resource(R.string.profile_personal_data_changed)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(ProfileDetailsSideEffect.ShowZarinaToast(message))
+
+                    userRequester.request(UserRequest.REFRESHING)
+                }
+                .onFailure {
+                    val text = Text.Resource(R.string.profile_user_info_updating_error)
+                    showZarinaErrorToast(text)
+                }
+        }
     }
 
     private fun onEmailClicked() {
@@ -407,5 +443,6 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private companion object {
         private const val NOTIFICATIONS_SETTINGS_RESET_DELAY_MILLIS = 50L
+        private const val TAG = "ProfileDetailsViewModel"
     }
 }
