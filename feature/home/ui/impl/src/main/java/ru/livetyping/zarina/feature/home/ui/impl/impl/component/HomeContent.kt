@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
 import ru.livetyping.zarina.core.uicompose.Crossfade
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
@@ -137,7 +137,7 @@ private fun HomeContentSuccess(
             refreshingOffset = pullRefreshOffset,
         )
 
-        val genderSelectorPagerState = rememberPagerConnectedToTabRowState(
+        val genderSelectorPagerState = rememberPagerStateWithTabRow(
             tabs = genderSelectorState.tabs,
             currentTab = genderSelectorState.currentTab,
             onTabChanged = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },

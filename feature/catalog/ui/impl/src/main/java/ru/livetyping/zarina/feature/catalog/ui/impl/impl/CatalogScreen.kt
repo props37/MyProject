@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerConnectedToTabRowState
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
@@ -103,7 +103,7 @@ private fun ScreenContent(
                 .padding(padding)
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         ) {
-            val genderSelectorPagerState = rememberPagerConnectedToTabRowState(
+            val genderSelectorPagerState = rememberPagerStateWithTabRow(
                 tabs = genderSelectorState.tabs,
                 currentTab = genderSelectorState.currentTab,
                 onTabChanged = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
