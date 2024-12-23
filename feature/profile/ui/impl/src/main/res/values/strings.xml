@@ -50,6 +50,12 @@
     <string name="profile_bonus_account_history">История бонусного счёта</string>
     <string name="profile_bonus_history">История бонусов</string>
     <string name="profile_bonus_history_expected_bonuses">Ожидаемые бонусы</string>
+    <string name="profile_accrual">Начисление</string>
+    <string name="profile_write_off">Списание</string>
+    <string name="profile_bonus_history_is_empty">В истории бонусов пусто</string>
+    <string name="profile_expected_bonuses_list_is_empty">В ожидаемых бонусах пусто</string>
+    <string name="profile_bonus_history_will_be_displayed_here">Здесь будут отображаться начисления и списания бонусов при заказах на сайте и в мобильном приложении</string>
+    <string name="profile_expected_bonuses_will_be_displayed_here">Здесь будут отображаться бонусы, которые скоро поступят на твой бонусный счёт</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -36,6 +38,8 @@ internal fun BonusHistoryScreen(
     ScreenContent(
         tabRowState = tabRowState,
         onTabRowEvent = viewModel::onTabRowEvent,
+        bonusHistoryPagingDataFlow = viewModel.bonusHistoryPagingDataFlow,
+        expectedBonusesPagingDataFlow = viewModel.expectedBonusesPagingDataFlow,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -46,6 +50,8 @@ internal fun BonusHistoryScreen(
 internal fun ScreenContent(
     tabRowState: TabRowState<BonusHistoryTab>,
     onTabRowEvent: (TabRowEvent<BonusHistoryTab>) -> Unit,
+    bonusHistoryPagingDataFlow: Flow<PagingData<LoyaltyProgramBonusAction>>,
+    expectedBonusesPagingDataFlow: Flow<PagingData<LoyaltyProgramBonusAction>>,
     onBackClicked: () -> Unit,
     sideEffects: Flow<BonusHistorySideEffect>,
     navActions: BonusHistoryNavActions,
@@ -83,6 +89,8 @@ internal fun ScreenContent(
         BonusHistoryPager(
             pagerState = pagerState,
             tabs = tabRowState.tabs,
+            bonusHistoryPagingDataFlow = bonusHistoryPagingDataFlow,
+            expectedBonusesPagingDataFlow = expectedBonusesPagingDataFlow,
             modifier = Modifier.fillMaxSize(),
         )
     }
