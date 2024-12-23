@@ -42,6 +42,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramBonusHistoryPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
@@ -575,6 +576,17 @@ internal class UseCaseModule {
         return ConfirmSignInUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLoyaltyProgramBonusHistoryPageFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetLoyaltyProgramBonusHistoryPageFlowUseCase {
+        return GetLoyaltyProgramBonusHistoryPageFlowUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }
