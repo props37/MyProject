@@ -8,8 +8,10 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.core.domain.model.user.User
 import java.time.LocalDate
 
@@ -25,6 +27,10 @@ public interface UserRepository {
     public suspend fun setLocalUserCity(city: City)
 
     public fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?>
+
+    public fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
+
+    public fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
 
     public suspend fun signIn(
         email: Email,

@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
@@ -21,6 +22,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewAuthOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
@@ -64,6 +66,20 @@ internal class UserApiImpl @Inject constructor(
 
     override suspend fun getLoyaltyCard(): GetLoyaltyCardDto {
         return httpClient.get("/api/card").body()
+    }
+
+    override suspend fun getLoyaltyCardBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto {
+        return httpClient.get("/api/v1/card/history") {
+            parameter("page", page)
+            parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
+        }.body()
+    }
+
+    override suspend fun getLoyaltyCardExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto {
+        return httpClient.get("/api/v1/card/history/expected") {
+            parameter("page", page)
+            parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
+        }.body()
     }
 
     override suspend fun signIn(
@@ -193,5 +209,6 @@ internal class UserApiImpl @Inject constructor(
 
     private companion object {
         private const val DATE_PATTERN = "dd.MM.yyyy"
+        private const val LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE = 20
     }
 }

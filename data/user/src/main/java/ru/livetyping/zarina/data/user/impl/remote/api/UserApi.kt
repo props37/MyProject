@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
 import java.time.LocalDate
@@ -20,6 +21,10 @@ internal interface UserApi {
     suspend fun setUserCity(city: City)
 
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto
+
+    suspend fun getLoyaltyCardBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto
+
+    suspend fun getLoyaltyCardExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto
 
     suspend fun signIn(
         email: Email,

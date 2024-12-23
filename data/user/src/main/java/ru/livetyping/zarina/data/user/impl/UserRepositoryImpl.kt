@@ -13,8 +13,10 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSource
@@ -65,6 +67,14 @@ internal class UserRepositoryImpl @Inject constructor(
 
             is CachePolicy.Remote -> getLoyaltyCardFlowRemote(cachePolicy)
         }
+    }
+
+    override fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
+    }
+
+    override fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
     }
 
     override suspend fun signIn(

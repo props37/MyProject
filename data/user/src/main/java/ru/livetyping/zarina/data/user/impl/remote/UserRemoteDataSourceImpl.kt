@@ -8,8 +8,10 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.data.user.impl.remote.api.UserApi
 import java.time.LocalDate
@@ -36,6 +38,22 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
     override fun getLoyaltyCardFlow(): Flow<LoyaltyCard> = flow {
         val dto = api.getLoyaltyCard()
         emit(dto.toLoyaltyCard())
+    }
+
+    override fun getLoyaltyCardBonusHistoryPageFlow(
+        page: Int,
+    ): Flow<Page<List<LoyaltyProgramBonusAction>>> = flow {
+        val dto = api.getLoyaltyCardBonusHistory(page)
+        val bonusHistoryPage = dto.toLoyaltyProgramBonusActionPage()
+        emit(bonusHistoryPage)
+    }
+
+    override fun getLoyaltyCardExpectedBonusesFlow(
+        page: Int,
+    ): Flow<Page<List<LoyaltyProgramBonusAction>>> = flow {
+        val dto = api.getLoyaltyCardExpectedBonuses(page)
+        val expectedBonusesPage = dto.toLoyaltyProgramBonusActionPage()
+        emit(expectedBonusesPage)
     }
 
     override suspend fun signIn(
