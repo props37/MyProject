@@ -56,6 +56,7 @@ private fun navigate(navActions: ProfileDetailsNavActions, action: ProfileDetail
         ProfileDetailsScreenAction.BackClicked -> navActions.onBackClicked()
         ProfileDetailsScreenAction.ChangePhoneClicked -> navActions.onChangePhoneClicked()
         ProfileDetailsScreenAction.ChangeEmailClicked -> navActions.onChangeEmailClicked()
+        ProfileDetailsScreenAction.ChangePasswordClicked -> navActions.onChangePasswordClicked()
         ProfileDetailsScreenAction.UserSignedOut -> navActions.onUserSignedOut()
         ProfileDetailsScreenAction.AccountDeleted -> navActions.onAccountDeleted()
     }

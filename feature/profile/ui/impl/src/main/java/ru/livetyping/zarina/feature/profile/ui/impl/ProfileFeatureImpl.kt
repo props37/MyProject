@@ -23,6 +23,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.emailChangin
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.passwordChangingScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangingScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
@@ -31,6 +32,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangingNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangingNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
@@ -80,6 +83,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onBackClicked = navigateUp,
                 onChangePhoneClicked = { navController.navigate(PhoneChangingNavEntry) },
                 onChangeEmailClicked = { navController.navigate(EmailChangingNavEntry) },
+                onChangePasswordClicked = { navController.navigate(PasswordChangingNavEntry) },
                 onUserSignedOut = {
                     navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
                 },
@@ -119,6 +123,9 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val phoneChangingNavActions = PhoneChangingNavActions(onBackClicked = navigateUp)
             phoneChangingScreen(phoneChangingNavActions)
+
+            val passwordChangingNavActions = PasswordChangingNavActions(onBackClicked = navigateUp)
+            passwordChangingScreen(passwordChangingNavActions)
         }
     }
 }

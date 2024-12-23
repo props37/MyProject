@@ -328,8 +328,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private fun onChangePasswordClicked() {
         navigationThrottler.throttle {
-            // TODO: [Top] Implement
-            TODO()
+            val action = ProfileDetailsScreenAction.ChangePasswordClicked
+            emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
         }
     }
 

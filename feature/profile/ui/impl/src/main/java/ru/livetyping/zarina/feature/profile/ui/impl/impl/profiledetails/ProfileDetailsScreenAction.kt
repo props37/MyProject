@@ -7,6 +7,8 @@ internal sealed interface ProfileDetailsScreenAction {
 
     data object ChangeEmailClicked : ProfileDetailsScreenAction
 
+    data object ChangePasswordClicked : ProfileDetailsScreenAction
+
     data object UserSignedOut : ProfileDetailsScreenAction
 
     data object AccountDeleted : ProfileDetailsScreenAction
