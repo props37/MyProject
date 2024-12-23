@@ -321,8 +321,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
     private fun onPhoneClicked() {
         navigationThrottler.throttle {
-            // TODO: [Top] Implement
-            TODO()
+            val action = ProfileDetailsScreenAction.ChangePhoneClicked
+            emitSideEffect(ProfileDetailsSideEffect.Navigate(action))
         }
     }
 
