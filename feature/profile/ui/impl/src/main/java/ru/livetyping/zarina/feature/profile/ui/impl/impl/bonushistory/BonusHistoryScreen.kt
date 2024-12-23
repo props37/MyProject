@@ -5,22 +5,36 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTabRow
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.model.BonusHistoryTab
 
 @Composable
 internal fun BonusHistoryScreen(
     navActions: BonusHistoryNavActions,
     viewModel: BonusHistoryViewModel = hiltViewModel(),
 ) {
+    val tabRowState by viewModel.tabRowState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        tabRowState = tabRowState,
+        onTabRowEvent = viewModel::onTabRowEvent,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +42,9 @@ internal fun BonusHistoryScreen(
 
 @Composable
 internal fun ScreenContent(
+    tabRowState: TabRowState<BonusHistoryTab>,
+    onTabRowEvent: (TabRowEvent<BonusHistoryTab>) -> Unit,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<BonusHistorySideEffect>,
     navActions: BonusHistoryNavActions,
 ) {
@@ -46,6 +63,12 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
+        BonusHistoryTopBar(onBackClicked = onBackClicked)
 
+        BonusHistoryTabRow(
+            state = tabRowState,
+            onEvent = onTabRowEvent,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
     }
 }

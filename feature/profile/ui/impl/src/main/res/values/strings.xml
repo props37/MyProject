@@ -48,6 +48,8 @@
     <string name="profile_expected_bonuses">Ожидается поступление</string>
     <string name="profile_loyalty_program_policies">Условия программы лояльности</string>
     <string name="profile_bonus_account_history">История бонусного счёта</string>
+    <string name="profile_bonus_history">История бонусов</string>
+    <string name="profile_bonus_history_expected_bonuses">Ожидаемые бонусы</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
