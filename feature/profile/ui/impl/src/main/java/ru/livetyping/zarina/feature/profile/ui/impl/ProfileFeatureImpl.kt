@@ -14,9 +14,12 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangingNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangingNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.bonusHistoryScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.emailChangingScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
@@ -72,6 +75,7 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val profileDetailsNavActions = ProfileDetailsNavActions(
                 onBackClicked = navigateUp,
+                onChangeEmailClicked = { navController.navigate(EmailChangingNavEntry) },
                 onUserSignedOut = {
                     navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
                 },
@@ -105,6 +109,9 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val bonusHistoryNavActions = BonusHistoryNavActions(onBackClicked = navigateUp)
             bonusHistoryScreen(bonusHistoryNavActions)
+
+            val emailChangingNavActions = EmailChangingNavActions(onBackClicked = navigateUp)
+            emailChangingScreen(emailChangingNavActions)
         }
     }
 }
