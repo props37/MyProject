@@ -22,9 +22,9 @@ internal interface UserApi {
 
     suspend fun getLoyaltyCard(): GetLoyaltyCardDto
 
-    suspend fun getLoyaltyCardBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto
+    suspend fun getLoyaltyProgramBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto
 
-    suspend fun getLoyaltyCardExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto
+    suspend fun getLoyaltyProgramExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto
 
     suspend fun signIn(
         email: Email,

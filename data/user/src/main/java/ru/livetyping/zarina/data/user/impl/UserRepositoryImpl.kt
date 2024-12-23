@@ -69,12 +69,12 @@ internal class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
-        return remoteDataSource.getLoyaltyCardBonusHistoryPageFlow(page)
+    override fun getLoyaltyProgramBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyProgramBonusHistoryPageFlow(page)
     }
 
-    override fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
-        return remoteDataSource.getLoyaltyCardExpectedBonusesFlow(page)
+    override fun getLoyaltyProgramExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyProgramExpectedBonusesFlow(page)
     }
 
     override suspend fun signIn(

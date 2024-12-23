@@ -28,9 +28,9 @@ public interface UserRepository {
 
     public fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?>
 
-    public fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
+    public fun getLoyaltyProgramBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
 
-    public fun getLoyaltyCardExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
+    public fun getLoyaltyProgramExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
 
     public suspend fun signIn(
         email: Email,

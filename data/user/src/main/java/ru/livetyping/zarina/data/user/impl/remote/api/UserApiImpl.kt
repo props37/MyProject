@@ -68,14 +68,14 @@ internal class UserApiImpl @Inject constructor(
         return httpClient.get("/api/card").body()
     }
 
-    override suspend fun getLoyaltyCardBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto {
+    override suspend fun getLoyaltyProgramBonusHistory(page: Int): LoyaltyProgramBonusHistoryDto {
         return httpClient.get("/api/v1/card/history") {
             parameter("page", page)
             parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)
         }.body()
     }
 
-    override suspend fun getLoyaltyCardExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto {
+    override suspend fun getLoyaltyProgramExpectedBonuses(page: Int): LoyaltyProgramBonusHistoryDto {
         return httpClient.get("/api/v1/card/history/expected") {
             parameter("page", page)
             parameter("page_size", LOYALTY_PROGRAM_BONUS_HISTORY_PAGE_SIZE)

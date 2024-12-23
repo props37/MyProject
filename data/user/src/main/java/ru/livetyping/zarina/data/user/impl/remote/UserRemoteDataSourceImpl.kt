@@ -40,18 +40,18 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         emit(dto.toLoyaltyCard())
     }
 
-    override fun getLoyaltyCardBonusHistoryPageFlow(
+    override fun getLoyaltyProgramBonusHistoryPageFlow(
         page: Int,
     ): Flow<Page<List<LoyaltyProgramBonusAction>>> = flow {
-        val dto = api.getLoyaltyCardBonusHistory(page)
+        val dto = api.getLoyaltyProgramBonusHistory(page)
         val bonusHistoryPage = dto.toLoyaltyProgramBonusActionPage()
         emit(bonusHistoryPage)
     }
 
-    override fun getLoyaltyCardExpectedBonusesFlow(
+    override fun getLoyaltyProgramExpectedBonusesFlow(
         page: Int,
     ): Flow<Page<List<LoyaltyProgramBonusAction>>> = flow {
-        val dto = api.getLoyaltyCardExpectedBonuses(page)
+        val dto = api.getLoyaltyProgramExpectedBonuses(page)
         val expectedBonusesPage = dto.toLoyaltyProgramBonusActionPage()
         emit(expectedBonusesPage)
     }

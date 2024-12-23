@@ -23,9 +23,9 @@ internal interface UserRemoteDataSource {
 
     fun getLoyaltyCardFlow(): Flow<LoyaltyCard>
 
-    fun getLoyaltyCardBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
+    fun getLoyaltyProgramBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
 
-    fun getLoyaltyCardExpectedBonusesFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
+    fun getLoyaltyProgramExpectedBonusesFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>>
 
     suspend fun signIn(
         email: Email,

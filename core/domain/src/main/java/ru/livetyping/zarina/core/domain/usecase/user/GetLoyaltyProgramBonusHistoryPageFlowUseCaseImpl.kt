@@ -15,7 +15,7 @@ internal class GetLoyaltyProgramBonusHistoryPageFlowUseCaseImpl(
     GetLoyaltyProgramBonusHistoryPageFlowUseCase {
 
     override fun execute(params: Params): Flow<Page<List<LoyaltyProgramBonusAction>>> {
-        return userRepository.getLoyaltyCardBonusHistoryPageFlow(params.page)
+        return userRepository.getLoyaltyProgramBonusHistoryPageFlow(params.page)
     }
 
     override fun invoke(params: Params): Flow<Result<Page<List<LoyaltyProgramBonusAction>>>> {
