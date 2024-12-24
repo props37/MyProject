@@ -60,7 +60,6 @@ internal class UserApiImpl @Inject constructor(
 
     override suspend fun updateUserInfo(
         firstName: String,
-        middleName: String?,
         lastName: String,
         birthDate: LocalDate,
         email: Email,
@@ -71,7 +70,6 @@ internal class UserApiImpl @Inject constructor(
     ) {
         val body = UpdateUserInfoRequestBody(
             firstName = firstName,
-            middleName = middleName,
             lastName = lastName,
             birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
             email = email.value,

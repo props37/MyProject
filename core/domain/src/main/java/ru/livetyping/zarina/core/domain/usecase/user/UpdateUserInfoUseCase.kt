@@ -11,12 +11,12 @@ public interface UpdateUserInfoUseCase {
     public suspend operator fun invoke(params: Params): Result<Unit>
 
     public data class Params(
-        val firstName: String,
-        val lastName: String,
-        val birthDate: LocalDate,
-        val email: Email,
-        val phone: PhoneNumber,
-        val gender: Gender,
+        val firstName: String? = null,
+        val lastName: String? = null,
+        val birthDate: LocalDate? = null,
+        val email: Email? = null,
+        val phone: PhoneNumber? = null,
+        val gender: Gender? = null,
         val oldPassword: String? = null,
         val newPassword: String? = null,
     )

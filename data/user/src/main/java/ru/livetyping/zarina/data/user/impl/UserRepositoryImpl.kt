@@ -44,7 +44,6 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun updateUserInfo(
         firstName: String,
-        middleName: String?,
         lastName: String,
         birthDate: LocalDate,
         email: Email,
@@ -55,7 +54,6 @@ internal class UserRepositoryImpl @Inject constructor(
     ) {
         remoteDataSource.updateUserInfo(
             firstName = firstName,
-            middleName = middleName,
             lastName = lastName,
             birthDate = birthDate,
             email = email,

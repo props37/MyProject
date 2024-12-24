@@ -8,9 +8,6 @@ internal data class UpdateUserInfoRequestBody(
     @SerialName("first_name")
     val firstName: String,
 
-    @SerialName("middle_name")
-    val middleName: String?,
-
     @SerialName("last_name")
     val lastName: String,
 

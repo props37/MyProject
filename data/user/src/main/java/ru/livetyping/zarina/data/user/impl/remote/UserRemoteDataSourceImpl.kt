@@ -28,7 +28,6 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun updateUserInfo(
         firstName: String,
-        middleName: String?,
         lastName: String,
         birthDate: LocalDate,
         email: Email,
@@ -39,7 +38,6 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
     ) {
         api.updateUserInfo(
             firstName = firstName,
-            middleName = middleName,
             lastName = lastName,
             birthDate = birthDate,
             email = email,

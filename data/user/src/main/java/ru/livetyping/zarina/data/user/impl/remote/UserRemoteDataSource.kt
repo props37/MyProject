@@ -20,7 +20,6 @@ internal interface UserRemoteDataSource {
 
     suspend fun updateUserInfo(
         firstName: String,
-        middleName: String?,
         lastName: String,
         birthDate: LocalDate,
         email: Email,
