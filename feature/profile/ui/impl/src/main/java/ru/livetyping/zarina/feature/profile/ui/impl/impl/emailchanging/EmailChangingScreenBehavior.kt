@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ internal fun EmailChangingScreenBehavior(
     navActions: EmailChangingNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -23,6 +25,7 @@ internal fun EmailChangingScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is EmailChangingSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
                 }

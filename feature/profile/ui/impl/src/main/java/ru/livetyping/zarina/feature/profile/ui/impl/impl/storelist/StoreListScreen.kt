@@ -47,6 +47,5 @@ internal fun ScreenContent(
             .bottomNavBarPadding(),
     ) {
         // TODO: [Top] Implement
-        TODO()
     }
 }
