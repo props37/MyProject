@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun EmailChangingScreenBehavior(
@@ -17,6 +18,7 @@ internal fun EmailChangingScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -27,6 +29,10 @@ internal fun EmailChangingScreenBehavior(
                     is EmailChangingSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    is EmailChangingSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
@@ -41,5 +47,6 @@ internal fun EmailChangingScreenBehavior(
 private fun navigate(navActions: EmailChangingNavActions, action: EmailChangingScreenAction) {
     when (action) {
         EmailChangingScreenAction.BackClicked -> navActions.onBackClicked()
+        EmailChangingScreenAction.EmailChanged -> navActions.onEmailChanged()
     }
 }

@@ -118,7 +118,10 @@ public class ProfileFeatureImpl : ProfileFeature {
             val bonusHistoryNavActions = BonusHistoryNavActions(onBackClicked = navigateUp)
             bonusHistoryScreen(bonusHistoryNavActions)
 
-            val emailChangingNavActions = EmailChangingNavActions(onBackClicked = navigateUp)
+            val emailChangingNavActions = EmailChangingNavActions(
+                onBackClicked = navigateUp,
+                onEmailChanged = navigateUp,
+            )
             emailChangingScreen(emailChangingNavActions)
 
             val phoneChangingNavActions = PhoneChangingNavActions(onBackClicked = navigateUp)

@@ -17,19 +17,28 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class EmailChangingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val updateUserInfo: UpdateUserInfoUseCase,
 ) : ViewModel(), SideEffectSource<EmailChangingSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -89,10 +98,52 @@ internal class EmailChangingViewModel @Inject constructor(
 
         changeEmailJob = viewModelScope.launch {
             operationTracker.track(ChangeEmailOperation) {
-                TODO()
-                // TODO: [Top] Implement
+                val params = UpdateUserInfoUseCase.Params(
+                    email = Email.create(emailTextFieldState.text.toString()),
+                )
+                updateUserInfo(params)
+                    .onSuccess {
+                        val text = Text.Resource(R.string.profile_email_changed)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(EmailChangingSideEffect.ShowZarinaToast(message))
+
+                        val action = EmailChangingScreenAction.EmailChanged
+                        emitSideEffect(EmailChangingSideEffect.Navigate(action))
+                    }
+                    .onFailure(::onEmailChangingFailure)
             }
         }
+    }
+
+    private fun onEmailChangingFailure(t: Throwable) {
+        when (t) {
+            is CombinedValidationException -> {
+                val causes = t.causes
+                if (causes.any { it is EmailException }) {
+                    handleEmailException()
+                } else {
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                    showZarinaErrorToast(text)
+                }
+            }
+
+            is EmailException -> handleEmailException()
+            else -> {
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                showZarinaErrorToast(text)
+            }
+        }
+    }
+
+    private fun handleEmailException() {
+        isEmailInvalid.value = true
+        val text = Text.Resource(R.string.profile_invalid_email_try_again)
+        showZarinaErrorToast(text)
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(EmailChangingSideEffect.ShowZarinaToast(message))
     }
 
     private fun makeFieldValidOnChange() {
