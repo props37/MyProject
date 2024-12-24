@@ -30,8 +30,8 @@ internal class UpdateUserInfoUseCaseImpl(
 ) : UseCase<Params, Unit>(logger), UpdateUserInfoUseCase {
 
     override suspend fun execute(params: Params) {
-        val firstName = params.firstName?.trim()?.split(' ')?.first()
-        val lastName = params.lastName?.trim()?.split(' ')?.first()
+        val firstName = params.firstName?.trim()?.split(SPACE_SEPARATOR)?.first()
+        val lastName = params.lastName?.trim()?.split(SPACE_SEPARATOR)?.first()
         val birthDate = params.birthDate
         val email = params.email
         val phone = params.phone
@@ -46,8 +46,8 @@ internal class UpdateUserInfoUseCaseImpl(
         checkNotNull(currentUser) { "Failed to get current user" }
 
         userRepository.updateUserInfo(
-            firstName = firstName ?: currentUser.firstName ?: "",
-            lastName = lastName ?: currentUser.lastName ?: "",
+            firstName = firstName ?: currentUser.firstName.orEmpty(),
+            lastName = lastName ?: currentUser.lastName.orEmpty(),
             birthDate = birthDate ?: currentUser.birthDate ?: User.BIRTH_DATE_MIN_VALUE,
             email = email ?: currentUser.email,
             phone = phone ?: currentUser.phone ?: PhoneNumber.create(""),
@@ -133,6 +133,7 @@ internal class UpdateUserInfoUseCaseImpl(
     }
 
     private companion object {
+        private const val SPACE_SEPARATOR = ' '
         private const val TAG = "UpdateUserInfoUseCaseImpl"
     }
 }
