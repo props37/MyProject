@@ -293,9 +293,6 @@ internal class ProfileDetailsViewModel @Inject constructor(
                 firstName = firstNameTextFieldState.text.toString(),
                 lastName = lastNameTextFieldState.text.toString(),
                 birthDate = birthDate,
-                email = email.value ?: currentUser.email,
-                phone = phone.value ?: currentUser.phone ?: PhoneNumber.create(""),
-                gender = currentUser.gender,
             )
             deps.updateUserInfo(params)
                 .onSuccess {
