@@ -12,9 +12,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.user.exception.OldPasswordException
+import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -23,10 +28,12 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class PasswordChangingViewModel @Inject constructor(
@@ -81,6 +88,10 @@ internal class PasswordChangingViewModel @Inject constructor(
         ),
     )
 
+    init {
+        makeFieldsValidOnChange()
+    }
+
     fun onPasswordChangingEvent(event: PasswordChangingEvent) {
         when (event) {
             PasswordChangingEvent.BackClicked -> onBackClicked()
@@ -113,11 +124,56 @@ internal class PasswordChangingViewModel @Inject constructor(
                         val action = PasswordChangingScreenAction.PasswordChanged
                         emitSideEffect(PasswordChangingSideEffect.Navigate(action))
                     }
-                    .onFailure {
-                        // TODO: [Top] Implement
-                    }
+                    .onFailure(::onPasswordChangingFailure)
             }
         }
+    }
+
+    private fun onPasswordChangingFailure(t: Throwable) {
+        when (t) {
+            is CombinedValidationException -> {
+                val causes = t.causes
+                causes.forEach { cause ->
+                    when (cause) {
+                        is OldPasswordException -> handleOldPasswordException()
+                        is PasswordException -> handleNewPasswordException()
+                    }
+                }
+            }
+
+            is OldPasswordException -> handleOldPasswordException()
+            is PasswordException -> handleNewPasswordException()
+            else -> {
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                showZarinaErrorToast(text)
+            }
+        }
+    }
+
+    private fun handleOldPasswordException() {
+        isOldPasswordInvalid.value = true
+        val text = Text.Resource(R.string.profile_invalid_old_password)
+        showZarinaErrorToast(text)
+    }
+
+    private fun handleNewPasswordException() {
+        isNewPasswordInvalid.value = true
+        val text = Text.Resource(R.string.profile_password_does_not_meet_requirements)
+        showZarinaErrorToast(text)
+    }
+
+    private fun makeFieldsValidOnChange() {
+        oldPasswordTextFieldState.textAsFlow()
+            .onEach { isOldPasswordInvalid.value = false }
+            .launchIn(viewModelScope)
+        newPasswordTextFieldState.textAsFlow()
+            .onEach { isNewPasswordInvalid.value = false }
+            .launchIn(viewModelScope)
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(PasswordChangingSideEffect.ShowZarinaToast(message))
     }
 
     private data object ChangePasswordOperation : OperationKey

@@ -64,6 +64,8 @@
     <string name="profile_invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
     <string name="profile_password_change">Смена пароля</string>
     <string name="profile_password_changed">Пароль изменён</string>
+    <string name="profile_invalid_old_password">Неверный старый пароль</string>
+    <string name="profile_password_does_not_meet_requirements">Пароль не соотвествует требованиям</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
