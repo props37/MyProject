@@ -127,7 +127,10 @@ public class ProfileFeatureImpl : ProfileFeature {
             val phoneChangingNavActions = PhoneChangingNavActions(onBackClicked = navigateUp)
             phoneChangingScreen(phoneChangingNavActions)
 
-            val passwordChangingNavActions = PasswordChangingNavActions(onBackClicked = navigateUp)
+            val passwordChangingNavActions = PasswordChangingNavActions(
+                onBackClicked = navigateUp,
+                onPasswordChanged = navigateUp,
+            )
             passwordChangingScreen(passwordChangingNavActions)
         }
     }

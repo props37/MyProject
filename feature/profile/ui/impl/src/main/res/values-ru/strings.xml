@@ -62,6 +62,8 @@
     <string name="profile_enter_new_email">Введи новый адрес электронной почты</string>
     <string name="profile_email_changed">Адрес электронной почты изменён</string>
     <string name="profile_invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
+    <string name="profile_password_change">Смена пароля</string>
+    <string name="profile_password_changed">Пароль изменён</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
