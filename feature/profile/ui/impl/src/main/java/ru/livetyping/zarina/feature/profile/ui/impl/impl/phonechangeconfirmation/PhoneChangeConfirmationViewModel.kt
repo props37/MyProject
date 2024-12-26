@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,9 +17,11 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.platform.CountDownTimer
 import ru.livetyping.zarina.core.text.Text
@@ -35,16 +38,21 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.model.PhoneChangeConfirmationState
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class PhoneChangeConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val smsCodeRetriever: SmsCodeRetriever,
+    private val getYandexCaptcha: GetYandexCaptchaUseCase,
 ) : ViewModel(), SideEffectSource<PhoneChangeConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
+
+    private var confirmPhoneChangeJob: Job? = null
+    private var requestNewOtpJob: Job? = null
 
     private val countDownTimer = CountDownTimer()
 
@@ -122,12 +130,11 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
         smsCodeRetriever.stop()
     }
 
-    // TODO: [Top] Implement
     fun onPhoneChangeConfirmationEvent(event: PhoneChangeConfirmationEvent) {
         when (event) {
             PhoneChangeConfirmationEvent.BackClicked -> onBackClicked()
-            PhoneChangeConfirmationEvent.OtpEntered -> TODO()
-            PhoneChangeConfirmationEvent.RequestNewOtpClicked -> TODO()
+            PhoneChangeConfirmationEvent.OtpEntered -> onOtpEntered()
+            PhoneChangeConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
         }
     }
 
@@ -138,11 +145,35 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
         }
     }
 
+    private fun onOtpEntered() {
+        if (confirmPhoneChangeJob?.isActive == true) return
+
+        viewModelScope.launch {
+            operationTracker.track(Operation.CONFIRM_PHONE_CHANGE) {
+                // TODO: [Top] Implement
+                TODO()
+            }
+        }
+    }
+
     private fun listenOtpSms() {
         smsCodeRetriever.addListener { otp ->
             otpTextFieldState.setTextAndPlaceCursorAtEnd(otp)
-            // TODO: [Top] Implement
-//            onOtpEntered()
+            onOtpEntered()
+        }
+    }
+
+    private fun onRequestNewOtpClicked() {
+        if (requestNewOtpJob?.isActive == true) return
+
+        viewModelScope.launch {
+            val yandexCaptcha = getYandexCaptcha().getOrNull()
+            if (yandexCaptcha != null) {
+                visibleYandexCaptcha.value = yandexCaptcha
+            } else {
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                showZarinaErrorToast(text)
+            }
         }
     }
 
