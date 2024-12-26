@@ -9,7 +9,7 @@ import kotlinx.serialization.json.jsonObject
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidFirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneNumberException
 
 @Serializable
 internal sealed class SignUpErrorDto
@@ -27,7 +27,7 @@ internal data class SignUpFieldValidationErrorDto(
         return when (fieldName) {
             "first_name" -> InvalidFirstNameException()
             "email" -> InvalidEmailException()
-            "phone" -> InvalidPhoneException()
+            "phone" -> InvalidPhoneNumberException()
             "password" -> InvalidPasswordException()
             else -> error("Unknown field name $fieldName")
         }

@@ -8,14 +8,14 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyBirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import java.time.LocalDate
 
 /**
  * @throws FirstNameException
  * @throws BirthDateException
  * @throws EmailException
- * @throws PhoneException
+ * @throws PhoneNumberException
  * @throws PasswordException
  * @throws CombinedValidationException
  */
@@ -43,7 +43,7 @@ public class SignUpValidator : Validator<SignUpValidator.Params> {
         val phoneException = try {
             PhoneValidator().validate(input.phone)
             null
-        } catch (e: PhoneException) {
+        } catch (e: PhoneNumberException) {
             e
         }
         val passwordException = try {

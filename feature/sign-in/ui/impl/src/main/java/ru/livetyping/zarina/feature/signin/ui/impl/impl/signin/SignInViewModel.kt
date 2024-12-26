@@ -30,9 +30,9 @@ import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
@@ -339,10 +339,10 @@ internal class SignInViewModel @Inject constructor(
                 showZarinaErrorToast(Text.Resource(textResId))
             }
 
-            is PhoneException -> {
+            is PhoneNumberException -> {
                 isPhoneInvalid.value = true
                 val textResId = when (t) {
-                    is EmptyPhoneException -> R.string.sign_in_by_phone_empty_fields_error
+                    is EmptyPhoneNumberException -> R.string.sign_in_by_phone_empty_fields_error
                     else -> RCommon.string.res_incorrect_data_entered
                 }
                 showZarinaErrorToast(Text.Resource(textResId))
@@ -366,13 +366,13 @@ internal class SignInViewModel @Inject constructor(
             when (cause) {
                 is EmailException -> isEmailInvalid.value = true
                 is PasswordException -> isPasswordInvalid.value = true
-                is PhoneException -> isPhoneInvalid.value = true
+                is PhoneNumberException -> isPhoneInvalid.value = true
             }
         }
 
         val isEmailEmpty = causes.any { it is EmptyEmailException }
         val isPasswordEmpty = causes.any { it is EmptyPasswordException }
-        val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+        val isPhoneEmpty = causes.any { it is EmptyPhoneNumberException }
 
         val messageTextResId = when {
             isEmailEmpty || isPasswordEmpty -> R.string.sign_in_by_email_empty_fields_error

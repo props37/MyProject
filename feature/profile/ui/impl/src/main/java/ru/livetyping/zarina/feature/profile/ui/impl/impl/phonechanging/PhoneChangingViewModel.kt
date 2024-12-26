@@ -20,9 +20,9 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.validation.PhoneValidator
 import ru.livetyping.zarina.core.text.Text
@@ -131,7 +131,7 @@ internal class PhoneChangingViewModel @Inject constructor(
                     showZarinaErrorToast(text)
                 }
             }
-        } catch (e: PhoneException) {
+        } catch (e: PhoneNumberException) {
             handlePhoneException(e)
         }
     }
@@ -147,7 +147,7 @@ internal class PhoneChangingViewModel @Inject constructor(
         }
     }
 
-    private fun handlePhoneException(e: PhoneException) {
+    private fun handlePhoneException(e: PhoneNumberException) {
         isPhoneInvalid.value = true
 
         val textResId = when (e) {
@@ -155,7 +155,7 @@ internal class PhoneChangingViewModel @Inject constructor(
                 R.string.profile_phone_number_already_in_use_error
             }
 
-            is InvalidPhoneException -> R.string.profile_enter_valid_phone_number
+            is InvalidPhoneNumberException -> R.string.profile_enter_valid_phone_number
             else -> RCommon.string.res_something_went_wrong
         }
         showZarinaErrorToast(Text.Resource(textResId))

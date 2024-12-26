@@ -5,12 +5,12 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 
 /**
  * @throws EmailException
  * @throws PasswordException
- * @throws PhoneException
+ * @throws PhoneNumberException
  * @throws CombinedValidationException
  */
 public class SignInValidator : Validator<SignInValidator.Params> {

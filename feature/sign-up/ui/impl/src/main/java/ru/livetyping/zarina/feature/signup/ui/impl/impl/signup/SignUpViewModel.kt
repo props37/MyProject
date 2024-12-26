@@ -30,11 +30,11 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyBirthDateExcep
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyFirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.validation.SignUpValidator
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
@@ -334,10 +334,10 @@ internal class SignUpViewModel @Inject constructor(
                 showZarinaErrorToast(Text.Resource(textResId))
             }
 
-            is PhoneException -> {
+            is PhoneNumberException -> {
                 isPhoneInvalid.value = true
                 val textResId = when (t) {
-                    is EmptyPhoneException -> R.string.sign_up_empty_fields_error
+                    is EmptyPhoneNumberException -> R.string.sign_up_empty_fields_error
                     else -> RCommon.string.res_incorrect_data_entered
                 }
                 showZarinaErrorToast(Text.Resource(textResId))
@@ -371,7 +371,7 @@ internal class SignUpViewModel @Inject constructor(
                 is FirstNameException -> isNameInvalid.value = true
                 is BirthDateException -> isBirthDateInvalid.value = true
                 is EmailException -> isEmailInvalid.value = true
-                is PhoneException -> isPhoneInvalid.value = true
+                is PhoneNumberException -> isPhoneInvalid.value = true
                 is PasswordException -> isPasswordInvalid.value = true
             }
         }
@@ -379,7 +379,7 @@ internal class SignUpViewModel @Inject constructor(
         val isNameEmpty = causes.any { it is EmptyFirstNameException }
         val isBirthDateEmpty = causes.any { it is EmptyBirthDateException }
         val isEmailEmpty = causes.any { it is EmptyEmailException }
-        val isPhoneEmpty = causes.any { it is EmptyPhoneException }
+        val isPhoneEmpty = causes.any { it is EmptyPhoneNumberException }
         val isPasswordEmpty = causes.any { it is EmptyPasswordException }
 
         val textResId = if (isNameEmpty || isBirthDateEmpty || isEmailEmpty || isPhoneEmpty || isPasswordEmpty) {

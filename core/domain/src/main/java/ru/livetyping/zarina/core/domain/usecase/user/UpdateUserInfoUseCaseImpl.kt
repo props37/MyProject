@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.OldPasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase.Params
 import ru.livetyping.zarina.core.domain.validation.BirthDateValidator
@@ -93,7 +93,7 @@ internal class UpdateUserInfoUseCaseImpl(
             try {
                 PhoneValidator().validate(it)
                 null
-            } catch (e: PhoneException) {
+            } catch (e: PhoneNumberException) {
                 e
             }
         }
