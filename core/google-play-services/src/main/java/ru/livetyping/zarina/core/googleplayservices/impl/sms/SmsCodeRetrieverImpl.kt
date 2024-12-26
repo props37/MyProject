@@ -17,7 +17,6 @@ import ru.livetyping.zarina.core.googleplayservices.impl.BundleCompat
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever.Listener
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -26,8 +25,7 @@ internal class SmsCodeRetrieverImpl @Inject constructor(
     @ApplicationContext
     private val context: Context,
 ) : SmsCodeRetriever {
-    private val activityResultRegistryRef =
-        AtomicReference<WeakReference<ActivityResultRegistry>?>(null)
+    private val activityResultRegistryRef = AtomicReference<ActivityResultRegistry?>(null)
 
     private val listeners = mutableListOf<Listener>()
 
@@ -69,14 +67,13 @@ internal class SmsCodeRetrieverImpl @Inject constructor(
     }
 
     override fun setActivityResultRegistry(registry: ActivityResultRegistry) {
-        activityResultRegistryRef.set(WeakReference(registry))
+        activityResultRegistryRef.set(registry)
         Timber.tag(TAG).v("ActivityResultRegistry set")
     }
 
     override fun unsetActivityResultRegistry(registry: ActivityResultRegistry) {
-        val currentRegistry = activityResultRegistryRef.get()
         val unset = activityResultRegistryRef.compareAndSet(
-            /* expectedValue = */ currentRegistry,
+            /* expectedValue = */ registry,
             /* newValue = */ null,
         )
         Timber.tag(TAG).v("ActivityResultRegistry unset: $unset")
@@ -152,7 +149,7 @@ internal class SmsCodeRetrieverImpl @Inject constructor(
     }
 
     private fun requireActivityResultRegistry(): ActivityResultRegistry {
-        val registry = activityResultRegistryRef.get()?.get()
+        val registry = activityResultRegistryRef.get()
         checkNotNull(registry) {
             "ActivityResultRegistry can not be null. Did you forget to call setActivityResultRegistry?"
         }

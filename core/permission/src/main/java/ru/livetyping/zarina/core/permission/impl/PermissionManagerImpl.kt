@@ -11,7 +11,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.PermissionState
 import timber.log.Timber
-import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -20,7 +19,7 @@ import kotlin.coroutines.resume
 internal class PermissionManagerImpl @Inject constructor(
     private val storage: PermissionManagerStorage,
 ) : PermissionManager {
-    private var activityRef = AtomicReference<WeakReference<ComponentActivity>?>(null)
+    private var activityRef = AtomicReference<ComponentActivity?>(null)
 
     override fun isPermissionGranted(permission: String): Boolean {
         val activity = requireActivity()
@@ -126,14 +125,13 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     override fun setActivity(activity: ComponentActivity) {
-        activityRef.set(WeakReference(activity))
+        activityRef.set(activity)
         Timber.tag(TAG).v("Activity set")
     }
 
     override fun unsetActivity(activity: ComponentActivity) {
-        val currentActivityRef = activityRef.get()
         val unset = activityRef.compareAndSet(
-            /* expectedValue = */ currentActivityRef,
+            /* expectedValue = */ activity,
             /* newValue = */ null,
         )
         Timber.tag(TAG).v("Activity unset: $unset")
@@ -150,7 +148,7 @@ internal class PermissionManagerImpl @Inject constructor(
     }
 
     private fun requireActivity(): ComponentActivity {
-        val activity = activityRef.get()?.get()
+        val activity = activityRef.get()
         checkNotNull(activity) { "Activity can not be null. Did you forget to call setActivity?" }
         return activity
     }
