@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -48,7 +49,7 @@ internal class PhoneChangingViewModel @Inject constructor(
     @OptIn(SavedStateHandleSaveableApi::class)
     private val phoneTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
-        init = { TextFieldState() },
+        init = { TextFieldState(PHONE_INITIAL_VALUE) },
     )
 
     private val isPhoneInvalid = MutableStateFlow(false)
@@ -87,7 +88,7 @@ internal class PhoneChangingViewModel @Inject constructor(
     fun onPhoneChangingEvent(event: PhoneChangingEvent) {
         when (event) {
             PhoneChangingEvent.BackClicked -> onBackClicked()
-            PhoneChangingEvent.RequestPhoneChangeClicked -> onRequestPhoneChangeClicked()
+            PhoneChangingEvent.RequestPhoneChangeClicked -> startPhoneChange()
         }
     }
 
@@ -96,8 +97,7 @@ internal class PhoneChangingViewModel @Inject constructor(
             YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
             is YandexCaptchaEvent.TokenReceived -> {
                 visibleYandexCaptcha.value = null
-                // TODO: [Top] Implement
-                TODO()
+                requestPhoneChange(event.token)
             }
         }
     }
@@ -109,8 +109,10 @@ internal class PhoneChangingViewModel @Inject constructor(
         }
     }
 
-    private fun onRequestPhoneChangeClicked() {
+    private fun startPhoneChange() {
         if (requestPhoneChangeJob?.isActive == true) return
+
+        // TODO: [Top] Validate phone number
 
         viewModelScope.launch {
             val yandexCaptcha = getYandexCaptcha().getOrNull()
@@ -119,6 +121,17 @@ internal class PhoneChangingViewModel @Inject constructor(
             } else {
                 val text = Text.Resource(RCommon.string.res_something_went_wrong)
                 showZarinaErrorToast(text)
+            }
+        }
+    }
+
+    private fun requestPhoneChange(yandexCaptchaToken: YandexCaptchaToken) {
+        if (requestPhoneChangeJob?.isActive == true) return
+
+        requestPhoneChangeJob = viewModelScope.launch {
+            operationTracker.track(RequestPhoneChangeOperation) {
+                // TODO: [Top] Implement
+                TODO()
             }
         }
     }
@@ -135,4 +148,8 @@ internal class PhoneChangingViewModel @Inject constructor(
     }
 
     private data object RequestPhoneChangeOperation : OperationKey
+
+    private companion object {
+        private const val PHONE_INITIAL_VALUE = "+7"
+    }
 }
