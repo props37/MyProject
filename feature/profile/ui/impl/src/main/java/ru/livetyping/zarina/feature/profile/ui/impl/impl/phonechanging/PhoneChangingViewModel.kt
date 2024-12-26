@@ -19,7 +19,12 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneException
+import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.validation.PhoneValidator
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
@@ -29,6 +34,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingState
 import javax.inject.Inject
@@ -112,16 +118,21 @@ internal class PhoneChangingViewModel @Inject constructor(
     private fun startPhoneChange() {
         if (requestPhoneChangeJob?.isActive == true) return
 
-        // TODO: [Top] Validate phone number
+        try {
+            val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
+            PhoneValidator().validate(phone)
 
-        viewModelScope.launch {
-            val yandexCaptcha = getYandexCaptcha().getOrNull()
-            if (yandexCaptcha != null) {
-                visibleYandexCaptcha.value = yandexCaptcha
-            } else {
-                val text = Text.Resource(RCommon.string.res_something_went_wrong)
-                showZarinaErrorToast(text)
+            viewModelScope.launch {
+                val yandexCaptcha = getYandexCaptcha().getOrNull()
+                if (yandexCaptcha != null) {
+                    visibleYandexCaptcha.value = yandexCaptcha
+                } else {
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                    showZarinaErrorToast(text)
+                }
             }
+        } catch (e: PhoneException) {
+            handlePhoneException(e)
         }
     }
 
@@ -134,6 +145,20 @@ internal class PhoneChangingViewModel @Inject constructor(
                 TODO()
             }
         }
+    }
+
+    private fun handlePhoneException(e: PhoneException) {
+        isPhoneInvalid.value = true
+
+        val textResId = when (e) {
+            is PhoneNumberAlreadyUsedException -> {
+                R.string.profile_phone_number_already_in_use_error
+            }
+
+            is InvalidPhoneException -> R.string.profile_enter_valid_phone_number
+            else -> RCommon.string.res_something_went_wrong
+        }
+        showZarinaErrorToast(Text.Resource(textResId))
     }
 
     private fun makeFieldsValidOnChange() {
