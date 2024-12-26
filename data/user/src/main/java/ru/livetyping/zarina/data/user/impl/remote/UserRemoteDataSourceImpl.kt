@@ -26,28 +26,6 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         emit(user)
     }
 
-    override suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    ) {
-        api.updateUserInfo(
-            firstName = firstName,
-            lastName = lastName,
-            birthDate = birthDate,
-            email = email,
-            phone = phone,
-            gender = gender,
-            oldPassword = oldPassword,
-            newPassword = newPassword,
-        )
-    }
-
     override fun getUserCityFlow(): Flow<City> = flow {
         val city = api.getUserCity().toCity()
         checkNotNull(city) { "city is null" }
@@ -128,8 +106,37 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         api.requestNewAuthOtp(phone, yandexCaptchaToken)
     }
 
+    override suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        api.updateUserInfo(
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+    }
+
     override suspend fun requestPasswordReset(email: Email) {
         api.requestPasswordReset(email)
+    }
+
+    override suspend fun changePhoneNumber(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        api.changePhoneNumber(phone, yandexCaptchaToken)
     }
 
     override suspend fun updateUserNotificationSettings(

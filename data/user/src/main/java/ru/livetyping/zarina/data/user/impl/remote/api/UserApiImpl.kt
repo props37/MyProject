@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ChangePhoneNumberRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GenderDto
@@ -34,6 +35,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UpdateUserInfoRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.UserDto
+import ru.livetyping.zarina.data.user.impl.remote.api.exception.ChangePhoneNumberApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.ConfirmSignUpApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.RequestPasswordResetApiExceptionConverter
 import ru.livetyping.zarina.data.user.impl.remote.api.exception.SignInApiExceptionConverter
@@ -51,38 +53,12 @@ internal class UserApiImpl @Inject constructor(
     private val confirmSignUpApiExceptionConverter: ConfirmSignUpApiExceptionConverter,
     private val requestPasswordResetApiExceptionConverter: RequestPasswordResetApiExceptionConverter,
     private val updateUserInfoApiExceptionConverter: UpdateUserInfoApiExceptionConverter,
+    private val changePhoneNumberApiExceptionConverter: ChangePhoneNumberApiExceptionConverter,
     @ZarinaBaseUrl
     private val baseUrl: String,
 ) : UserApi {
     override suspend fun getUser(): UserDto {
         return httpClient.get("/api/v1/profile").body()
-    }
-
-    override suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    ) {
-        val body = UpdateUserInfoRequestBody(
-            firstName = firstName,
-            lastName = lastName,
-            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
-            email = email.value,
-            phone = phone.value,
-            gender = GenderDto.from(gender),
-            oldPassword = oldPassword,
-            newPassword = newPassword,
-        )
-        updateUserInfoApiExceptionConverter {
-            httpClient.post("/api/profile") {
-                setJsonBody(body)
-            }
-        }
     }
 
     override suspend fun getUserCity(): CityDto {
@@ -198,10 +174,49 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        val body = UpdateUserInfoRequestBody(
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
+            email = email.value,
+            phone = phone.value,
+            gender = GenderDto.from(gender),
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+        updateUserInfoApiExceptionConverter {
+            httpClient.post("/api/profile") {
+                setJsonBody(body)
+            }
+        }
+    }
+
     override suspend fun requestPasswordReset(email: Email) {
         val body = RequestPasswordResetRequestBody(email.value)
         requestPasswordResetApiExceptionConverter {
             httpClient.post("/api/auth/password") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    override suspend fun changePhoneNumber(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        val body = ChangePhoneNumberRequestBody(phone.value, yandexCaptchaToken.value)
+        changePhoneNumberApiExceptionConverter {
+            httpClient.post("/api/phone/verification") {
                 setJsonBody(body)
             }
         }

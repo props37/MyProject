@@ -17,17 +17,6 @@ import java.time.LocalDate
 internal interface UserApi {
     suspend fun getUser(): UserDto
 
-    suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    )
-
     suspend fun getUserCity(): CityDto
 
     suspend fun setUserCity(city: City)
@@ -63,7 +52,20 @@ internal interface UserApi {
 
     suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    )
+
     suspend fun requestPasswordReset(email: Email)
+
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,

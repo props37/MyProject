@@ -21,17 +21,6 @@ public interface UserRepository {
 
     public suspend fun setUser(user: User)
 
-    public suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    )
-
     public fun getUserCityFlow(cachePolicy: CachePolicy): Flow<City?>
 
     public suspend fun setUserCity(city: City)
@@ -69,7 +58,20 @@ public interface UserRepository {
 
     public suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    public suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    )
+
     public suspend fun requestPasswordReset(email: Email)
+
+    public suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     public suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,

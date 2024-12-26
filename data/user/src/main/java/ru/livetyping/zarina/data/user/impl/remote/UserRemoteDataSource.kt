@@ -18,17 +18,6 @@ import java.time.LocalDate
 internal interface UserRemoteDataSource {
     fun getUserFlow(): Flow<User>
 
-    suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    )
-
     fun getUserCityFlow(): Flow<City>
 
     suspend fun setUserCity(city: City)
@@ -64,7 +53,20 @@ internal interface UserRemoteDataSource {
 
     suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    )
+
     suspend fun requestPasswordReset(email: Email)
+
+    suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,

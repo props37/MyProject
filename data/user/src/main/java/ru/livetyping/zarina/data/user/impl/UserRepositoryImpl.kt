@@ -42,32 +42,6 @@ internal class UserRepositoryImpl @Inject constructor(
         localDataSource.setUser(user)
     }
 
-    override suspend fun updateUserInfo(
-        firstName: String,
-        lastName: String,
-        birthDate: LocalDate,
-        email: Email,
-        phone: PhoneNumber,
-        gender: Gender,
-        oldPassword: String?,
-        newPassword: String?,
-    ) {
-        remoteDataSource.updateUserInfo(
-            firstName = firstName,
-            lastName = lastName,
-            birthDate = birthDate,
-            email = email,
-            phone = phone,
-            gender = gender,
-            oldPassword = oldPassword,
-            newPassword = newPassword,
-        )
-
-        // TODO: [Backend] Refactor when backend starts to return a user as a response
-        val user = remoteDataSource.getUserFlow().firstOrNull()
-        if (user != null) setUser(user)
-    }
-
     override fun getUserCityFlow(cachePolicy: CachePolicy): Flow<City?> {
         return when (cachePolicy) {
             CachePolicy.LocalOnly -> localDataSource.getUserCityFlow()
@@ -153,8 +127,41 @@ internal class UserRepositoryImpl @Inject constructor(
         remoteDataSource.requestNewAuthOtp(phone, yandexCaptchaToken)
     }
 
+    override suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        remoteDataSource.updateUserInfo(
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+
+        // TODO: [Backend] Refactor when backend starts to return a user as a response
+        val user = remoteDataSource.getUserFlow().firstOrNull()
+        if (user != null) setUser(user)
+    }
+
     override suspend fun requestPasswordReset(email: Email) {
         remoteDataSource.requestPasswordReset(email)
+    }
+
+    override suspend fun changePhoneNumber(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        remoteDataSource.changePhoneNumber(phone, yandexCaptchaToken)
     }
 
     override suspend fun updateUserNotificationSettings(
