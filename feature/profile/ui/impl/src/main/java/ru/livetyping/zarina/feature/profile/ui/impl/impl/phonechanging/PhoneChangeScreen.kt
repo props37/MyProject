@@ -20,21 +20,21 @@ import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicomponent.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.component.PhoneChangingContent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.component.PhoneChangingTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.component.PhoneChangeContent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.component.PhoneChangeTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeState
 
 @Composable
-internal fun PhoneChangingScreen(
-    navActions: PhoneChangingNavActions,
-    viewModel: PhoneChangingViewModel = hiltViewModel(),
+internal fun PhoneChangeScreen(
+    navActions: PhoneChangeNavActions,
+    viewModel: PhoneChangeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.phoneChangingState.collectAsStateWithLifecycle()
+    val state by viewModel.phoneChangeState.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
-        onEvent = viewModel::onPhoneChangingEvent,
+        onEvent = viewModel::onPhoneChangeEvent,
         onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -43,13 +43,13 @@ internal fun PhoneChangingScreen(
 
 @Composable
 internal fun ScreenContent(
-    state: PhoneChangingState,
-    onEvent: (PhoneChangingEvent) -> Unit,
+    state: PhoneChangeState,
+    onEvent: (PhoneChangeEvent) -> Unit,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
-    sideEffects: Flow<PhoneChangingSideEffect>,
-    navActions: PhoneChangingNavActions,
+    sideEffects: Flow<PhoneChangeSideEffect>,
+    navActions: PhoneChangeNavActions,
 ) {
-    PhoneChangingScreenBehavior(
+    PhoneChangeScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -66,11 +66,11 @@ internal fun ScreenContent(
                 )
                 .bottomNavBarPadding(WindowInsets.ime),
         ) {
-            PhoneChangingTopBar(
-                onBackClicked = { onEvent(PhoneChangingEvent.BackClicked) },
+            PhoneChangeTopBar(
+                onBackClicked = { onEvent(PhoneChangeEvent.BackClicked) },
             )
 
-            PhoneChangingContent(
+            PhoneChangeContent(
                 state = state,
                 onEvent = onEvent,
             )

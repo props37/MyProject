@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 
 @Stable
-internal data class PhoneChangingState(
+internal data class PhoneChangeState(
     val phoneTextFieldState: TextFieldState,
     val isPhoneInvalid: Boolean,
     val isRequestPhoneChangeButtonLoading: Boolean,

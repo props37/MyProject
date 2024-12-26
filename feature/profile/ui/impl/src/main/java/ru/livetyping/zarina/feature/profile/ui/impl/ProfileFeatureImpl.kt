@@ -24,7 +24,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.passwordChangingScreen
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangingScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangeScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.storeListScreen
@@ -34,8 +34,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavA
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavEntry
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangingNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangingNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangeNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.PhoneChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavActions
@@ -81,7 +81,7 @@ public class ProfileFeatureImpl : ProfileFeature {
 
             val profileDetailsNavActions = ProfileDetailsNavActions(
                 onBackClicked = navigateUp,
-                onChangePhoneClicked = { navController.navigate(PhoneChangingNavEntry) },
+                onChangePhoneClicked = { navController.navigate(PhoneChangeNavEntry) },
                 onChangeEmailClicked = { navController.navigate(EmailChangeNavEntry) },
                 onChangePasswordClicked = { navController.navigate(PasswordChangingNavEntry) },
                 onUserSignedOut = {
@@ -124,14 +124,14 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             emailChangeScreen(emailChangeNavActions)
 
-            val phoneChangingNavActions = PhoneChangingNavActions(
+            val phoneChangeNavActions = PhoneChangeNavActions(
                 onBackClicked = navigateUp,
                 onPhoneChangeRequested = { phone ->
                     TODO()
                     // TODO: [Top] Implement
                 },
             )
-            phoneChangingScreen(phoneChangingNavActions)
+            phoneChangeScreen(phoneChangeNavActions)
 
             val passwordChangingNavActions = PasswordChangingNavActions(
                 onBackClicked = navigateUp,

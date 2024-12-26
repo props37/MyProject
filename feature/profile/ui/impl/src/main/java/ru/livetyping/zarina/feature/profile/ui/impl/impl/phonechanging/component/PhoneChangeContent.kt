@@ -31,14 +31,14 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeState
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun PhoneChangingContent(
-    state: PhoneChangingState,
-    onEvent: (PhoneChangingEvent) -> Unit,
+internal fun PhoneChangeContent(
+    state: PhoneChangeState,
+    onEvent: (PhoneChangeEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -77,7 +77,7 @@ internal fun PhoneChangingContent(
             isError = state.isPhoneInvalid,
             onKeyboardAction = { defaultAction ->
                 defaultAction()
-                onEvent(PhoneChangingEvent.RequestPhoneChangeClicked)
+                onEvent(PhoneChangeEvent.RequestPhoneChangeClicked)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,7 +92,7 @@ internal fun PhoneChangingContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         ZarinaButton(
-            onClick = { onEvent(PhoneChangingEvent.RequestPhoneChangeClicked) },
+            onClick = { onEvent(PhoneChangeEvent.RequestPhoneChangeClicked) },
             isLoading = state.isRequestPhoneChangeButtonLoading,
             modifier = Modifier
                 .fillMaxWidth()

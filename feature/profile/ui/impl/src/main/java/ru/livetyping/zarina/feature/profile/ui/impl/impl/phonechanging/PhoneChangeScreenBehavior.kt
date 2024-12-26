@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun PhoneChangingScreenBehavior(
-    sideEffects: Flow<PhoneChangingSideEffect>,
-    navActions: PhoneChangingNavActions,
+internal fun PhoneChangeScreenBehavior(
+    sideEffects: Flow<PhoneChangeSideEffect>,
+    navActions: PhoneChangeNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
@@ -26,12 +26,12 @@ internal fun PhoneChangingScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is PhoneChangingSideEffect.Navigate -> {
+                    is PhoneChangeSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is PhoneChangingSideEffect.ShowZarinaToast -> {
+                    is PhoneChangeSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,10 +44,10 @@ internal fun PhoneChangingScreenBehavior(
     }
 }
 
-private fun navigate(navActions: PhoneChangingNavActions, action: PhoneChangingScreenAction) {
+private fun navigate(navActions: PhoneChangeNavActions, action: PhoneChangeScreenAction) {
     when (action) {
-        PhoneChangingScreenAction.BackClicked -> navActions.onBackClicked()
-        is PhoneChangingScreenAction.PhoneChangeRequested -> {
+        PhoneChangeScreenAction.BackClicked -> navActions.onBackClicked()
+        is PhoneChangeScreenAction.PhoneChangeRequested -> {
             navActions.onPhoneChangeRequested(action.phone)
         }
     }

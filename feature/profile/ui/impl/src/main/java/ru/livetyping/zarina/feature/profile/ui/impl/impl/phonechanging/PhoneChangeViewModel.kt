@@ -37,17 +37,17 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class PhoneChangingViewModel @Inject constructor(
+internal class PhoneChangeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val changePhoneNumber: ChangePhoneNumberUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
-) : ViewModel(), SideEffectSource<PhoneChangingSideEffect> by SideEffectSourceImpl() {
+) : ViewModel(), SideEffectSource<PhoneChangeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -65,7 +65,7 @@ internal class PhoneChangingViewModel @Inject constructor(
 
     private val visibleYandexCaptcha = MutableStateFlow<YandexCaptcha?>(null)
 
-    val phoneChangingState: StateFlow<PhoneChangingState> = combine(
+    val phoneChangeState: StateFlow<PhoneChangeState> = combine(
         isPhoneInvalid,
         visibleYandexCaptcha,
         operationTracker.ongoingOperationKeys,
@@ -73,7 +73,7 @@ internal class PhoneChangingViewModel @Inject constructor(
         val isRequestPhoneChangeButtonLoading = RequestPhoneChangeOperation in ongoingOperations
                 || visibleYandexCaptcha != null
 
-        PhoneChangingState(
+        PhoneChangeState(
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid,
             isRequestPhoneChangeButtonLoading = isRequestPhoneChangeButtonLoading,
@@ -82,7 +82,7 @@ internal class PhoneChangingViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = PhoneChangingState(
+        initialValue = PhoneChangeState(
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = false,
             isRequestPhoneChangeButtonLoading = false,
@@ -94,10 +94,10 @@ internal class PhoneChangingViewModel @Inject constructor(
         makeFieldsValidOnChange()
     }
 
-    fun onPhoneChangingEvent(event: PhoneChangingEvent) {
+    fun onPhoneChangeEvent(event: PhoneChangeEvent) {
         when (event) {
-            PhoneChangingEvent.BackClicked -> onBackClicked()
-            PhoneChangingEvent.RequestPhoneChangeClicked -> startPhoneNumberChange()
+            PhoneChangeEvent.BackClicked -> onBackClicked()
+            PhoneChangeEvent.RequestPhoneChangeClicked -> startPhoneNumberChange()
         }
     }
 
@@ -113,8 +113,8 @@ internal class PhoneChangingViewModel @Inject constructor(
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = PhoneChangingScreenAction.BackClicked
-            emitSideEffect(PhoneChangingSideEffect.Navigate(action))
+            val action = PhoneChangeScreenAction.BackClicked
+            emitSideEffect(PhoneChangeSideEffect.Navigate(action))
         }
     }
 
@@ -148,8 +148,8 @@ internal class PhoneChangingViewModel @Inject constructor(
                 val params = ChangePhoneNumberUseCase.Params(phone, yandexCaptchaToken)
                 changePhoneNumber(params)
                     .onSuccess {
-                        val action = PhoneChangingScreenAction.PhoneChangeRequested(phone)
-                        emitSideEffect(PhoneChangingSideEffect.Navigate(action))
+                        val action = PhoneChangeScreenAction.PhoneChangeRequested(phone)
+                        emitSideEffect(PhoneChangeSideEffect.Navigate(action))
                     }
                     .onFailure(::onPhoneNumberChangeFailure)
             }
@@ -201,7 +201,7 @@ internal class PhoneChangingViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(PhoneChangingSideEffect.ShowZarinaToast(message))
+        emitSideEffect(PhoneChangeSideEffect.ShowZarinaToast(message))
     }
 
     private data object RequestPhoneChangeOperation : OperationKey
