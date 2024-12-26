@@ -20,9 +20,11 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
+import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.validation.PhoneValidator
 import ru.livetyping.zarina.core.text.Text
@@ -43,6 +45,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class PhoneChangingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val changePhoneNumber: ChangePhoneNumberUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
 ) : ViewModel(), SideEffectSource<PhoneChangingSideEffect> by SideEffectSourceImpl() {
 
@@ -94,7 +97,7 @@ internal class PhoneChangingViewModel @Inject constructor(
     fun onPhoneChangingEvent(event: PhoneChangingEvent) {
         when (event) {
             PhoneChangingEvent.BackClicked -> onBackClicked()
-            PhoneChangingEvent.RequestPhoneChangeClicked -> startPhoneChange()
+            PhoneChangingEvent.RequestPhoneChangeClicked -> startPhoneNumberChange()
         }
     }
 
@@ -103,7 +106,7 @@ internal class PhoneChangingViewModel @Inject constructor(
             YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
             is YandexCaptchaEvent.TokenReceived -> {
                 visibleYandexCaptcha.value = null
-                requestPhoneChange(event.token)
+                changePhoneNumber(event.token)
             }
         }
     }
@@ -115,7 +118,7 @@ internal class PhoneChangingViewModel @Inject constructor(
         }
     }
 
-    private fun startPhoneChange() {
+    private fun startPhoneNumberChange() {
         if (requestPhoneChangeJob?.isActive == true) return
 
         try {
@@ -136,13 +139,42 @@ internal class PhoneChangingViewModel @Inject constructor(
         }
     }
 
-    private fun requestPhoneChange(yandexCaptchaToken: YandexCaptchaToken) {
+    private fun changePhoneNumber(yandexCaptchaToken: YandexCaptchaToken) {
         if (requestPhoneChangeJob?.isActive == true) return
 
         requestPhoneChangeJob = viewModelScope.launch {
             operationTracker.track(RequestPhoneChangeOperation) {
-                // TODO: [Top] Implement
-                TODO()
+                val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
+                val params = ChangePhoneNumberUseCase.Params(phone, yandexCaptchaToken)
+                changePhoneNumber(params)
+                    .onSuccess {
+                        val action = PhoneChangingScreenAction.PhoneChangeRequested(phone)
+                        emitSideEffect(PhoneChangingSideEffect.Navigate(action))
+                    }
+                    .onFailure(::onPhoneNumberChangeFailure)
+            }
+        }
+    }
+
+    private fun onPhoneNumberChangeFailure(t: Throwable) {
+        when (t) {
+            is CombinedValidationException -> {
+                val causes = t.causes
+                causes.forEach { cause ->
+                    when (cause) {
+                        is PhoneNumberException -> handlePhoneException(cause)
+                        else -> {
+                            val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                            showZarinaErrorToast(text)
+                        }
+                    }
+                }
+            }
+
+            is PhoneNumberException -> handlePhoneException(t)
+            else -> {
+                val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                showZarinaErrorToast(text)
             }
         }
     }

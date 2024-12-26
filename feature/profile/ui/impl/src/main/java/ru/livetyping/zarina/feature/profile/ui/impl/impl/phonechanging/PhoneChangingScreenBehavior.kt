@@ -47,5 +47,8 @@ internal fun PhoneChangingScreenBehavior(
 private fun navigate(navActions: PhoneChangingNavActions, action: PhoneChangingScreenAction) {
     when (action) {
         PhoneChangingScreenAction.BackClicked -> navActions.onBackClicked()
+        is PhoneChangingScreenAction.PhoneChangeRequested -> {
+            navActions.onPhoneChangeRequested(action.phone)
+        }
     }
 }
