@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.platform.CountDownTimer
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
+import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
@@ -135,6 +136,17 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
             PhoneChangeConfirmationEvent.BackClicked -> onBackClicked()
             PhoneChangeConfirmationEvent.OtpEntered -> onOtpEntered()
             PhoneChangeConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+        }
+    }
+
+    fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
+        when (event) {
+            YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
+            is YandexCaptchaEvent.TokenReceived -> {
+                visibleYandexCaptcha.value = null
+                // TODO: [Top] Implement
+                TODO()
+            }
         }
     }
 
