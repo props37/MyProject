@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
@@ -15,7 +14,6 @@ public interface UpdateUserInfoUseCase {
         val lastName: String? = null,
         val birthDate: LocalDate? = null,
         val email: Email? = null,
-        val phone: PhoneNumber? = null,
         val gender: Gender? = null,
         val oldPassword: String? = null,
         val newPassword: String? = null,

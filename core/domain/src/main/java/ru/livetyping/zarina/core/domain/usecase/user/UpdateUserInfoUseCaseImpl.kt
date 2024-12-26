@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.domain.usecase.user
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
@@ -11,7 +10,6 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.model.user.exception.OldPasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
-import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase.Params
 import ru.livetyping.zarina.core.domain.validation.BirthDateValidator
@@ -19,7 +17,6 @@ import ru.livetyping.zarina.core.domain.validation.EmailValidator
 import ru.livetyping.zarina.core.domain.validation.FirstNameValidator
 import ru.livetyping.zarina.core.domain.validation.OldPasswordValidator
 import ru.livetyping.zarina.core.domain.validation.PasswordValidator
-import ru.livetyping.zarina.core.domain.validation.PhoneValidator
 import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 import java.time.LocalDate
@@ -34,13 +31,12 @@ internal class UpdateUserInfoUseCaseImpl(
         val lastName = params.lastName?.trim()?.split(SPACE_SEPARATOR)?.first()
         val birthDate = params.birthDate
         val email = params.email
-        val phone = params.phone
         val gender = params.gender
         val oldPassword = params.oldPassword
         val newPassword = params.newPassword
 
         // TODO: [Medium] Validate last name?
-        validate(firstName, birthDate, email, phone, oldPassword, newPassword)
+        validate(firstName, birthDate, email, oldPassword, newPassword)
 
         val currentUser = userRepository.getUserFlow(CachePolicy.Remote()).firstOrNull()
         checkNotNull(currentUser) { "Failed to get current user" }
@@ -50,7 +46,7 @@ internal class UpdateUserInfoUseCaseImpl(
             lastName = lastName ?: currentUser.lastName.orEmpty(),
             birthDate = birthDate ?: currentUser.birthDate ?: User.BIRTH_DATE_MIN_VALUE,
             email = email ?: currentUser.email,
-            phone = phone ?: currentUser.phone ?: PhoneNumber.create(""),
+            phone = checkNotNull(currentUser.phone) { "Current user's phone is null" },
             gender = gender ?: currentUser.gender,
             oldPassword = oldPassword,
             newPassword = newPassword,
@@ -61,7 +57,6 @@ internal class UpdateUserInfoUseCaseImpl(
         firstName: String?,
         birthDate: LocalDate?,
         email: Email?,
-        phone: PhoneNumber?,
         oldPassword: String?,
         newPassword: String?,
     ) {
@@ -89,14 +84,6 @@ internal class UpdateUserInfoUseCaseImpl(
                 e
             }
         }
-        val phoneException = phone?.let {
-            try {
-                PhoneValidator().validate(it)
-                null
-            } catch (e: PhoneNumberException) {
-                e
-            }
-        }
         val oldPasswordException = oldPassword?.let { password ->
             try {
                 OldPasswordValidator().validate(password)
@@ -118,7 +105,6 @@ internal class UpdateUserInfoUseCaseImpl(
             firstNameException,
             birthDateException,
             emailException,
-            phoneException,
             oldPasswordException,
             newPasswordException,
         )
