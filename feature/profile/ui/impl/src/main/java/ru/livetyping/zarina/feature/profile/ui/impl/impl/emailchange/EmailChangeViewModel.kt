@@ -110,12 +110,12 @@ internal class EmailChangeViewModel @Inject constructor(
                         val action = EmailChangeScreenAction.EmailChanged
                         emitSideEffect(EmailChangeSideEffect.Navigate(action))
                     }
-                    .onFailure(::onEmailChangingFailure)
+                    .onFailure(::onEmailChangeFailure)
             }
         }
     }
 
-    private fun onEmailChangingFailure(t: Throwable) {
+    private fun onEmailChangeFailure(t: Throwable) {
         when (t) {
             is CombinedValidationException -> {
                 val causes = t.causes
