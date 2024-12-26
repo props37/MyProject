@@ -83,6 +83,7 @@ internal class SmsCodeRetrieverImpl @Inject constructor(
     }
 
     override fun release() {
+        stop()
         activityResultRegistryRef.set(null)
         listeners.clear()
         Timber.tag(TAG).v("Released")
