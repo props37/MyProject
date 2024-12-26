@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun PasswordChangingScreenBehavior(
-    sideEffects: Flow<PasswordChangingSideEffect>,
-    navActions: PasswordChangingNavActions,
+internal fun PasswordChangeScreenBehavior(
+    sideEffects: Flow<PasswordChangeSideEffect>,
+    navActions: PasswordChangeNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
@@ -26,12 +26,12 @@ internal fun PasswordChangingScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is PasswordChangingSideEffect.Navigate -> {
+                    is PasswordChangeSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is PasswordChangingSideEffect.ShowZarinaToast -> {
+                    is PasswordChangeSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,9 +44,9 @@ internal fun PasswordChangingScreenBehavior(
     }
 }
 
-private fun navigate(navActions: PasswordChangingNavActions, action: PasswordChangingScreenAction) {
+private fun navigate(navActions: PasswordChangeNavActions, action: PasswordChangeScreenAction) {
     when (action) {
-        PasswordChangingScreenAction.BackClicked -> navActions.onBackClicked()
-        PasswordChangingScreenAction.PasswordChanged -> navActions.onPasswordChanged()
+        PasswordChangeScreenAction.BackClicked -> navActions.onBackClicked()
+        PasswordChangeScreenAction.PasswordChanged -> navActions.onPasswordChanged()
     }
 }

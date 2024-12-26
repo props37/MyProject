@@ -4,7 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
 
 @Stable
-internal data class PasswordChangingState(
+internal data class PasswordChangeState(
     val oldPasswordTextFieldState: TextFieldState,
     val newPasswordTextFieldState: TextFieldState,
     val isOldPasswordInvalid: Boolean,

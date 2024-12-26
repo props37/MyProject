@@ -43,21 +43,21 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.component.PasswordChangingTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.component.PasswordChangeTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun PasswordChangingScreen(
-    navActions: PasswordChangingNavActions,
-    viewModel: PasswordChangingViewModel = hiltViewModel(),
+internal fun PasswordChangeScreen(
+    navActions: PasswordChangeNavActions,
+    viewModel: PasswordChangeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.passwordChangingState.collectAsStateWithLifecycle()
+    val state by viewModel.passwordChangeState.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
-        onEvent = viewModel::onPasswordChangingEvent,
+        onEvent = viewModel::onPasswordChangeEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -66,12 +66,12 @@ internal fun PasswordChangingScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun ScreenContent(
-    state: PasswordChangingState,
-    onEvent: (PasswordChangingEvent) -> Unit,
-    sideEffects: Flow<PasswordChangingSideEffect>,
-    navActions: PasswordChangingNavActions,
+    state: PasswordChangeState,
+    onEvent: (PasswordChangeEvent) -> Unit,
+    sideEffects: Flow<PasswordChangeSideEffect>,
+    navActions: PasswordChangeNavActions,
 ) {
-    PasswordChangingScreenBehavior(
+    PasswordChangeScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -87,8 +87,8 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        PasswordChangingTopBar(
-            onBackClicked = { onEvent(PasswordChangingEvent.BackClicked) },
+        PasswordChangeTopBar(
+            onBackClicked = { onEvent(PasswordChangeEvent.BackClicked) },
         )
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -144,7 +144,7 @@ internal fun ScreenContent(
                 },
                 onKeyboardAction = { defaultAction ->
                     defaultAction()
-                    onEvent(PasswordChangingEvent.ChangePasswordClicked)
+                    onEvent(PasswordChangeEvent.ChangePasswordClicked)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,7 +158,7 @@ internal fun ScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             ZarinaButton(
-                onClick = { onEvent(PasswordChangingEvent.ChangePasswordClicked) },
+                onClick = { onEvent(PasswordChangeEvent.ChangePasswordClicked) },
                 isLoading = state.isChangePasswordButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()

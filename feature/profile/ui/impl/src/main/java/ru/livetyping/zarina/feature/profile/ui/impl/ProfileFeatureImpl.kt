@@ -23,7 +23,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.emailChangeS
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.passwordChangingScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.passwordChangeScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangeScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
@@ -32,8 +32,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangingNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangeNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
@@ -83,7 +83,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onBackClicked = navigateUp,
                 onChangePhoneClicked = { navController.navigate(PhoneChangeNavEntry) },
                 onChangeEmailClicked = { navController.navigate(EmailChangeNavEntry) },
-                onChangePasswordClicked = { navController.navigate(PasswordChangingNavEntry) },
+                onChangePasswordClicked = { navController.navigate(PasswordChangeNavEntry) },
                 onUserSignedOut = {
                     navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
                 },
@@ -133,11 +133,11 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             phoneChangeScreen(phoneChangeNavActions)
 
-            val passwordChangingNavActions = PasswordChangingNavActions(
+            val passwordChangeNavActions = PasswordChangeNavActions(
                 onBackClicked = navigateUp,
                 onPasswordChanged = navigateUp,
             )
-            passwordChangingScreen(passwordChangingNavActions)
+            passwordChangeScreen(passwordChangeNavActions)
         }
     }
 }

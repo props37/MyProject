@@ -30,16 +30,16 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class PasswordChangingViewModel @Inject constructor(
+internal class PasswordChangeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val updateUserInfo: UpdateUserInfoUseCase,
-) : ViewModel(), SideEffectSource<PasswordChangingSideEffect> by SideEffectSourceImpl() {
+) : ViewModel(), SideEffectSource<PasswordChangeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -62,14 +62,14 @@ internal class PasswordChangingViewModel @Inject constructor(
     private val isOldPasswordInvalid = MutableStateFlow(false)
     private val isNewPasswordInvalid = MutableStateFlow(false)
 
-    val passwordChangingState: StateFlow<PasswordChangingState> = combine(
+    val passwordChangeState: StateFlow<PasswordChangeState> = combine(
         isOldPasswordInvalid,
         isNewPasswordInvalid,
         operationTracker.ongoingOperationKeys,
     ) { isOldPasswordInvalid, isNewPasswordInvalid, ongoingOperations ->
         val isChangePasswordButtonLoading = ChangePasswordOperation in ongoingOperations
 
-        PasswordChangingState(
+        PasswordChangeState(
             oldPasswordTextFieldState = oldPasswordTextFieldState,
             newPasswordTextFieldState = newPasswordTextFieldState,
             isOldPasswordInvalid = isOldPasswordInvalid,
@@ -79,7 +79,7 @@ internal class PasswordChangingViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = PasswordChangingState(
+        initialValue = PasswordChangeState(
             oldPasswordTextFieldState = oldPasswordTextFieldState,
             newPasswordTextFieldState = newPasswordTextFieldState,
             isOldPasswordInvalid = false,
@@ -92,17 +92,17 @@ internal class PasswordChangingViewModel @Inject constructor(
         makeFieldsValidOnChange()
     }
 
-    fun onPasswordChangingEvent(event: PasswordChangingEvent) {
+    fun onPasswordChangeEvent(event: PasswordChangeEvent) {
         when (event) {
-            PasswordChangingEvent.BackClicked -> onBackClicked()
-            PasswordChangingEvent.ChangePasswordClicked -> onChangePasswordClicked()
+            PasswordChangeEvent.BackClicked -> onBackClicked()
+            PasswordChangeEvent.ChangePasswordClicked -> onChangePasswordClicked()
         }
     }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = PasswordChangingScreenAction.BackClicked
-            emitSideEffect(PasswordChangingSideEffect.Navigate(action))
+            val action = PasswordChangeScreenAction.BackClicked
+            emitSideEffect(PasswordChangeSideEffect.Navigate(action))
         }
     }
 
@@ -119,17 +119,17 @@ internal class PasswordChangingViewModel @Inject constructor(
                     .onSuccess {
                         val text = Text.Resource(R.string.profile_password_changed)
                         val message = ZarinaToastMessage(text)
-                        emitSideEffect(PasswordChangingSideEffect.ShowZarinaToast(message))
+                        emitSideEffect(PasswordChangeSideEffect.ShowZarinaToast(message))
 
-                        val action = PasswordChangingScreenAction.PasswordChanged
-                        emitSideEffect(PasswordChangingSideEffect.Navigate(action))
+                        val action = PasswordChangeScreenAction.PasswordChanged
+                        emitSideEffect(PasswordChangeSideEffect.Navigate(action))
                     }
-                    .onFailure(::onPasswordChangingFailure)
+                    .onFailure(::onPasswordChangeFailure)
             }
         }
     }
 
-    private fun onPasswordChangingFailure(t: Throwable) {
+    private fun onPasswordChangeFailure(t: Throwable) {
         when (t) {
             is CombinedValidationException -> {
                 val causes = t.causes
@@ -173,7 +173,7 @@ internal class PasswordChangingViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(PasswordChangingSideEffect.ShowZarinaToast(message))
+        emitSideEffect(PasswordChangeSideEffect.ShowZarinaToast(message))
     }
 
     private data object ChangePasswordOperation : OperationKey
