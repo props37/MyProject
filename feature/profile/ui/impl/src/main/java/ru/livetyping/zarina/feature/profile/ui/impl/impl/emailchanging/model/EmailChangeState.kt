@@ -4,7 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
 
 @Stable
-internal data class EmailChangingState(
+internal data class EmailChangeState(
     val emailTextFieldState: TextFieldState,
     val isEmailInvalid: Boolean,
     val isChangeEmailButtonLoading: Boolean,

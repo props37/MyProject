@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 
 @Composable
-internal fun EmailChangingTopBar(
+internal fun EmailChangeTopBar(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

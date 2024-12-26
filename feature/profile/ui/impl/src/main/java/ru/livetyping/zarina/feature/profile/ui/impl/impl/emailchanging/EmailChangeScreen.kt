@@ -45,21 +45,21 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.component.EmailChangingTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.component.EmailChangeTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun EmailChangingScreen(
-    navActions: EmailChangingNavActions,
-    viewModel: EmailChangingViewModel = hiltViewModel(),
+internal fun EmailChangeScreen(
+    navActions: EmailChangeNavActions,
+    viewModel: EmailChangeViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.emailChangingState.collectAsStateWithLifecycle()
+    val state by viewModel.emailChangeState.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
-        onEvent = viewModel::onEmailChangingEvent,
+        onEvent = viewModel::onEmailChangeEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -68,12 +68,12 @@ internal fun EmailChangingScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun ScreenContent(
-    state: EmailChangingState,
-    onEvent: (EmailChangingEvent) -> Unit,
-    sideEffects: Flow<EmailChangingSideEffect>,
-    navActions: EmailChangingNavActions,
+    state: EmailChangeState,
+    onEvent: (EmailChangeEvent) -> Unit,
+    sideEffects: Flow<EmailChangeSideEffect>,
+    navActions: EmailChangeNavActions,
 ) {
-    EmailChangingScreenBehavior(
+    EmailChangeScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -89,7 +89,7 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        EmailChangingTopBar(onBackClicked = { onEvent(EmailChangingEvent.BackClicked) })
+        EmailChangeTopBar(onBackClicked = { onEvent(EmailChangeEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -130,7 +130,7 @@ internal fun ScreenContent(
                 },
                 onKeyboardAction = { defaultAction ->
                     defaultAction()
-                    onEvent(EmailChangingEvent.ChangeEmailClicked)
+                    onEvent(EmailChangeEvent.ChangeEmailClicked)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -145,7 +145,7 @@ internal fun ScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             ZarinaButton(
-                onClick = { onEvent(EmailChangingEvent.ChangeEmailClicked) },
+                onClick = { onEvent(EmailChangeEvent.ChangeEmailClicked) },
                 isLoading = state.isChangeEmailButtonLoading,
                 modifier = Modifier
                     .fillMaxWidth()

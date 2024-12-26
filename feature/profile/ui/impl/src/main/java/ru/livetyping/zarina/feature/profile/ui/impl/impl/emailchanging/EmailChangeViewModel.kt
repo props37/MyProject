@@ -30,16 +30,16 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangingState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class EmailChangingViewModel @Inject constructor(
+internal class EmailChangeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val updateUserInfo: UpdateUserInfoUseCase,
-) : ViewModel(), SideEffectSource<EmailChangingSideEffect> by SideEffectSourceImpl() {
+) : ViewModel(), SideEffectSource<EmailChangeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -55,12 +55,12 @@ internal class EmailChangingViewModel @Inject constructor(
 
     private val isEmailInvalid = MutableStateFlow(false)
 
-    val emailChangingState: StateFlow<EmailChangingState> = combine(
+    val emailChangeState: StateFlow<EmailChangeState> = combine(
         isEmailInvalid,
         operationTracker.ongoingOperationKeys,
     ) { isEmailInvalid, ongoingOperations ->
         val isChangeEmailButtonLoading = ChangeEmailOperation in ongoingOperations
-        EmailChangingState(
+        EmailChangeState(
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = isEmailInvalid,
             isChangeEmailButtonLoading = isChangeEmailButtonLoading,
@@ -68,7 +68,7 @@ internal class EmailChangingViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = EmailChangingState(
+        initialValue = EmailChangeState(
             emailTextFieldState = emailTextFieldState,
             isEmailInvalid = false,
             isChangeEmailButtonLoading = false,
@@ -79,17 +79,17 @@ internal class EmailChangingViewModel @Inject constructor(
         makeFieldValidOnChange()
     }
 
-    fun onEmailChangingEvent(event: EmailChangingEvent) {
+    fun onEmailChangeEvent(event: EmailChangeEvent) {
         when (event) {
-            EmailChangingEvent.BackClicked -> onBackClicked()
-            EmailChangingEvent.ChangeEmailClicked -> onChangeEmailClicked()
+            EmailChangeEvent.BackClicked -> onBackClicked()
+            EmailChangeEvent.ChangeEmailClicked -> onChangeEmailClicked()
         }
     }
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = EmailChangingScreenAction.BackClicked
-            emitSideEffect(EmailChangingSideEffect.Navigate(action))
+            val action = EmailChangeScreenAction.BackClicked
+            emitSideEffect(EmailChangeSideEffect.Navigate(action))
         }
     }
 
@@ -105,10 +105,10 @@ internal class EmailChangingViewModel @Inject constructor(
                     .onSuccess {
                         val text = Text.Resource(R.string.profile_email_changed)
                         val message = ZarinaToastMessage(text)
-                        emitSideEffect(EmailChangingSideEffect.ShowZarinaToast(message))
+                        emitSideEffect(EmailChangeSideEffect.ShowZarinaToast(message))
 
-                        val action = EmailChangingScreenAction.EmailChanged
-                        emitSideEffect(EmailChangingSideEffect.Navigate(action))
+                        val action = EmailChangeScreenAction.EmailChanged
+                        emitSideEffect(EmailChangeSideEffect.Navigate(action))
                     }
                     .onFailure(::onEmailChangingFailure)
             }
@@ -143,7 +143,7 @@ internal class EmailChangingViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(EmailChangingSideEffect.ShowZarinaToast(message))
+        emitSideEffect(EmailChangeSideEffect.ShowZarinaToast(message))
     }
 
     private fun makeFieldValidOnChange() {

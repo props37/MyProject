@@ -14,8 +14,8 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangingNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangingNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangeNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.bonusHistoryScreen
@@ -82,7 +82,7 @@ public class ProfileFeatureImpl : ProfileFeature {
             val profileDetailsNavActions = ProfileDetailsNavActions(
                 onBackClicked = navigateUp,
                 onChangePhoneClicked = { navController.navigate(PhoneChangingNavEntry) },
-                onChangeEmailClicked = { navController.navigate(EmailChangingNavEntry) },
+                onChangeEmailClicked = { navController.navigate(EmailChangeNavEntry) },
                 onChangePasswordClicked = { navController.navigate(PasswordChangingNavEntry) },
                 onUserSignedOut = {
                     navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
@@ -118,11 +118,11 @@ public class ProfileFeatureImpl : ProfileFeature {
             val bonusHistoryNavActions = BonusHistoryNavActions(onBackClicked = navigateUp)
             bonusHistoryScreen(bonusHistoryNavActions)
 
-            val emailChangingNavActions = EmailChangingNavActions(
+            val emailChangeNavActions = EmailChangeNavActions(
                 onBackClicked = navigateUp,
                 onEmailChanged = navigateUp,
             )
-            emailChangingScreen(emailChangingNavActions)
+            emailChangingScreen(emailChangeNavActions)
 
             val phoneChangingNavActions = PhoneChangingNavActions(
                 onBackClicked = navigateUp,

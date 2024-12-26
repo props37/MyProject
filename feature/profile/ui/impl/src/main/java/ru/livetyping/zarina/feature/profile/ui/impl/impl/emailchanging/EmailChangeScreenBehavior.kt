@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun EmailChangingScreenBehavior(
-    sideEffects: Flow<EmailChangingSideEffect>,
-    navActions: EmailChangingNavActions,
+internal fun EmailChangeScreenBehavior(
+    sideEffects: Flow<EmailChangeSideEffect>,
+    navActions: EmailChangeNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
@@ -26,12 +26,12 @@ internal fun EmailChangingScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is EmailChangingSideEffect.Navigate -> {
+                    is EmailChangeSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is EmailChangingSideEffect.ShowZarinaToast -> {
+                    is EmailChangeSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,9 +44,9 @@ internal fun EmailChangingScreenBehavior(
     }
 }
 
-private fun navigate(navActions: EmailChangingNavActions, action: EmailChangingScreenAction) {
+private fun navigate(navActions: EmailChangeNavActions, action: EmailChangeScreenAction) {
     when (action) {
-        EmailChangingScreenAction.BackClicked -> navActions.onBackClicked()
-        EmailChangingScreenAction.EmailChanged -> navActions.onEmailChanged()
+        EmailChangeScreenAction.BackClicked -> navActions.onBackClicked()
+        EmailChangeScreenAction.EmailChanged -> navActions.onEmailChanged()
     }
 }
