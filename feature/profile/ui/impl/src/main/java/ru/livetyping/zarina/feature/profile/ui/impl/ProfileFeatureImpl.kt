@@ -24,6 +24,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.passwordChangeScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangeConfirmationScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.phoneChangeScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetailsScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
@@ -36,6 +37,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.Password
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.PasswordChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.PhoneChangeConfirmationNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.PhoneChangeConfirmationNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavActions
@@ -127,11 +130,20 @@ public class ProfileFeatureImpl : ProfileFeature {
             val phoneChangeNavActions = PhoneChangeNavActions(
                 onBackClicked = navigateUp,
                 onPhoneChangeRequested = { phone ->
-                    TODO()
-                    // TODO: [Top] Implement
+                    val phoneChangeConfirmationParams = PhoneChangeConfirmationNavParams(phone)
+                    val phoneChangeConfirmationNavEntry = phoneChangeConfirmationParams.toNavEntry()
+                    navController.navigate(phoneChangeConfirmationNavEntry)
                 },
             )
             phoneChangeScreen(phoneChangeNavActions)
+
+            val phoneChangeConfirmationNavActions = PhoneChangeConfirmationNavActions(
+                onBackClicked = navigateUp,
+                onPhoneChangeConfirmed = {
+                    navController.popBackStack<PhoneChangeNavEntry>(inclusive = true)
+                },
+            )
+            phoneChangeConfirmationScreen(phoneChangeConfirmationNavActions)
 
             val passwordChangeNavActions = PasswordChangeNavActions(
                 onBackClicked = navigateUp,
