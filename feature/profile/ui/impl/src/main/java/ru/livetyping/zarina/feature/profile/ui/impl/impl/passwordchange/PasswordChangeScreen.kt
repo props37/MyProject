@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -43,9 +43,9 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.component.PasswordChangeTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model.PasswordChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.component.PasswordChangeTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

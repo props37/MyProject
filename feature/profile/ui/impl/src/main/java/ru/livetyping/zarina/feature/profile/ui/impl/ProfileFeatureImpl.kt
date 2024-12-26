@@ -32,8 +32,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangeNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.PasswordChangeNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.PasswordChangeNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.PasswordChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions

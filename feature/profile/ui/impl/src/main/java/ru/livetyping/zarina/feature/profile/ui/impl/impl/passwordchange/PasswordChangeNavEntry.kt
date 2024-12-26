@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.navigation.NavigationEntry

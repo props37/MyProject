@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchanging.model
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
