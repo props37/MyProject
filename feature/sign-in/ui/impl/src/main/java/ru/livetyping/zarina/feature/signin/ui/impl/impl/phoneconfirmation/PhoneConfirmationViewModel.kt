@@ -130,7 +130,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        deps.smsCodeRetriever.release()
+        deps.smsCodeRetriever.stop()
     }
 
     fun onPhoneConfirmationEvent(event: PhoneConfirmationEvent) {

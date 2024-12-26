@@ -130,7 +130,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        deps.smsCodeRetriever.release()
+        deps.smsCodeRetriever.stop()
     }
 
     fun onSignUpConfirmationEvent(event: SignUpConfirmationEvent) {
