@@ -21,12 +21,14 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.validation.PhoneValidator
+import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
@@ -47,6 +49,7 @@ internal class PhoneChangeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val changePhoneNumber: ChangePhoneNumberUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
+    private val smsCodeRetriever: SmsCodeRetriever,
 ) : ViewModel(), SideEffectSource<PhoneChangeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -92,6 +95,10 @@ internal class PhoneChangeViewModel @Inject constructor(
 
     init {
         makeFieldsValidOnChange()
+    }
+
+    override fun onCleared() {
+        smsCodeRetriever.stop()
     }
 
     fun onPhoneChangeEvent(event: PhoneChangeEvent) {
@@ -141,6 +148,11 @@ internal class PhoneChangeViewModel @Inject constructor(
 
     private fun changePhoneNumber(yandexCaptchaToken: YandexCaptchaToken) {
         if (requestPhoneChangeJob?.isActive == true) return
+
+        smsCodeRetriever.start(
+            sender = ZarinaSms.SENDER,
+            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+        )
 
         requestPhoneChangeJob = viewModelScope.launch {
             operationTracker.track(RequestPhoneChangeOperation) {
