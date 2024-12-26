@@ -77,7 +77,8 @@ internal fun ScreenContent(
                 .background(UiKitTheme.colors.background.general.regular.default)
                 .windowInsetsPadding(
                     WindowInsets.statusBars
-                        .union(WindowInsets.displayCutout),
+                        .union(WindowInsets.displayCutout)
+                        .union(WindowInsets.ime),
                 )
                 .bottomNavBarPadding(WindowInsets.ime),
         ) {
