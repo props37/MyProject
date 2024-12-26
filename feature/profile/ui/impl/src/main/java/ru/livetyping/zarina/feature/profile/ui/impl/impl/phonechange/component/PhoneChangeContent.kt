@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.component
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +31,8 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging.model.PhoneChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeState
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange
 
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage

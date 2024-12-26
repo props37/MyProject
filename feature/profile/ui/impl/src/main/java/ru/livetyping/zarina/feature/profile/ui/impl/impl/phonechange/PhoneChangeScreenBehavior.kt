@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
