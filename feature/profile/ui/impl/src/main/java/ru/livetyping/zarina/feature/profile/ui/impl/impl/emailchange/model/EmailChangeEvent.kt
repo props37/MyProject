@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model
 
 internal sealed interface EmailChangeEvent {
     data object BackClicked : EmailChangeEvent

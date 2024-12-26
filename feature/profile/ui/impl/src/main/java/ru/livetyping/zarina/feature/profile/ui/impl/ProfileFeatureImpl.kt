@@ -14,12 +14,12 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangeNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.EmailChangeNavEntry
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.EmailChangeNavActions
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.EmailChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.LoyaltyProgramNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.bonusHistoryScreen
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.emailChangingScreen
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.emailChangeScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.loyaltyProgramScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.orderScreen
@@ -122,7 +122,7 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onBackClicked = navigateUp,
                 onEmailChanged = navigateUp,
             )
-            emailChangingScreen(emailChangeNavActions)
+            emailChangeScreen(emailChangeNavActions)
 
             val phoneChangingNavActions = PhoneChangingNavActions(
                 onBackClicked = navigateUp,

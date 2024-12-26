@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.component
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

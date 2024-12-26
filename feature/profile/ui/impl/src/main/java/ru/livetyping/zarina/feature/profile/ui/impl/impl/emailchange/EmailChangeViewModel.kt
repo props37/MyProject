@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
@@ -30,8 +30,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 

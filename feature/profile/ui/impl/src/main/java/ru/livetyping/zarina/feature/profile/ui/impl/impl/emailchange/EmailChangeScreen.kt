@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging
+package ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -45,9 +45,9 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.component.EmailChangeTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeEvent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchanging.model.EmailChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.component.EmailChangeTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
