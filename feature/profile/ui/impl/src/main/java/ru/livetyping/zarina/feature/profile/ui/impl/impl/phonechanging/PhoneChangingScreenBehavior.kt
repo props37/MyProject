@@ -3,11 +3,13 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechanging
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun PhoneChangingScreenBehavior(
@@ -15,6 +17,8 @@ internal fun PhoneChangingScreenBehavior(
     navActions: PhoneChangingNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -23,7 +27,12 @@ internal fun PhoneChangingScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is PhoneChangingSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    is PhoneChangingSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }

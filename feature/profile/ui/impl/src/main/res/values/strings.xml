@@ -66,6 +66,9 @@
     <string name="profile_password_changed">Пароль изменён</string>
     <string name="profile_invalid_old_password">Неверный старый пароль</string>
     <string name="profile_password_does_not_meet_requirements">Пароль не соотвествует требованиям</string>
+    <string name="profile_phone_change">Смена телефона</string>
+    <string name="profile_enter_new_phone_number">Введи новый номер телефона</string>
+    <string name="profile_we_will_send_code_for_changing_phone_number">Мы отправим СМС-код для смены телефона на указанный номер</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
