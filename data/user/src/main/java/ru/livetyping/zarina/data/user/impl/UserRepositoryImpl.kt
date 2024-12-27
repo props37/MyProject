@@ -120,6 +120,10 @@ internal class UserRepositoryImpl @Inject constructor(
         return remoteDataSource.confirmSignUp(phone, otp)
     }
 
+    override suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String) {
+        remoteDataSource.confirmPhoneNumberChange(phone, otp)
+    }
+
     override suspend fun requestNewAuthOtp(
         phone: PhoneNumber,
         yandexCaptchaToken: YandexCaptchaToken,

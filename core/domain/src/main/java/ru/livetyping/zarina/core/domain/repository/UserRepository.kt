@@ -56,6 +56,8 @@ public interface UserRepository {
 
     public suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult
 
+    public suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
+
     public suspend fun requestNewAuthOtp(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     public suspend fun updateUserInfo(

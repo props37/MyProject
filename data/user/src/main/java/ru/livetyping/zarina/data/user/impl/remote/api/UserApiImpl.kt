@@ -21,6 +21,7 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ChangePhoneNumberRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmPhoneNumberChangeRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GenderDto
@@ -217,6 +218,15 @@ internal class UserApiImpl @Inject constructor(
         val body = ChangePhoneNumberRequestBody(phone.value, yandexCaptchaToken.value)
         changePhoneNumberApiExceptionConverter {
             httpClient.post("/api/phone/verification") {
+                setJsonBody(body)
+            }
+        }
+    }
+
+    override suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String) {
+        val body = ConfirmPhoneNumberChangeRequestBody(phone.value, otp)
+        confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/phone/verification/sms/confirmation") {
                 setJsonBody(body)
             }
         }

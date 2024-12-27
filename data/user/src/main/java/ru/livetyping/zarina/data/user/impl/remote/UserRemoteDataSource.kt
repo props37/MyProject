@@ -68,6 +68,8 @@ internal interface UserRemoteDataSource {
 
     suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
+
     suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean,
