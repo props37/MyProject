@@ -50,6 +50,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestPasswordResetUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
@@ -634,6 +635,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): ConfirmPhoneNumberChangeUseCase {
         return ConfirmPhoneNumberChangeUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestNewPhoneNumberChangeOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewPhoneNumberChangeOtpUseCase {
+        return RequestNewPhoneNumberChangeOtpUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )
