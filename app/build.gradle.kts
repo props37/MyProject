@@ -185,6 +185,7 @@ dependencies {
     implementation(projects.data.order)
     implementation(projects.data.product)
     implementation(projects.data.cart)
+    implementation(projects.data.store)
 
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)

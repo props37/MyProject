@@ -67,6 +67,7 @@ include(":data:geography")
 include(":data:order")
 include(":data:product")
 include(":data:cart")
+include(":data:store")
 
 include(":core:domain")
 include(":core:navigation-util")
