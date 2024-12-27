@@ -69,6 +69,7 @@ internal class SignInViewModel @Inject constructor(
     private var credentialManagerJob: Job? = null
     private var signInJob: Job? = null
 
+    private val signInTypes = SignInType.getAll().toImmutableList()
     private val currentSignInType = MutableStateFlow(SignInType.EMAIL)
 
     val signInTypeSelectorState: StateFlow<TabRowState<SignInType>> = currentSignInType.mapState(
@@ -76,7 +77,7 @@ internal class SignInViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(),
     ) { currentSignInType ->
         TabRowState(
-            tabs = SignInType.entries.toImmutableList(),
+            tabs = signInTypes,
             currentTab = currentSignInType,
         )
     }
