@@ -80,6 +80,10 @@ ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Number
 ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Level
 ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.NextLevelInfo
 ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Bonuses
+
+ru.livetyping.zarina.core.domain.model.store.Store
+ru.livetyping.zarina.core.domain.model.store.Store.Id
+ru.livetyping.zarina.core.domain.model.store.Store.City
 // :core:domain end
 
 
