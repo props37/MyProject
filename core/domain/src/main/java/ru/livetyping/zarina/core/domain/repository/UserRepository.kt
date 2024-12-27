@@ -60,10 +60,7 @@ public interface UserRepository {
 
     public suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
 
-    public suspend fun requestNewPhoneNumberChangeOtp(
-        phone: PhoneNumber,
-        yandexCaptchaToken: YandexCaptchaToken,
-    )
+    public suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 
     public suspend fun updateUserInfo(
         firstName: String,

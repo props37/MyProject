@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -30,8 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
-import ru.livetyping.zarina.core.uicomponent.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uicomponent.otp.SmsOtp
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -51,7 +48,6 @@ internal fun PhoneChangeConfirmationScreen(
     ScreenContent(
         state = state,
         onEvent = viewModel::onPhoneChangeConfirmationEvent,
-        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -61,7 +57,6 @@ internal fun PhoneChangeConfirmationScreen(
 internal fun ScreenContent(
     state: PhoneChangeConfirmationState,
     onEvent: (PhoneChangeConfirmationEvent) -> Unit,
-    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<PhoneChangeConfirmationSideEffect>,
     navActions: PhoneChangeConfirmationNavActions,
 ) {
@@ -70,55 +65,46 @@ internal fun ScreenContent(
         navActions = navActions,
     )
 
-    Box {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(UiKitTheme.colors.background.general.regular.default)
-                .windowInsetsPadding(
-                    WindowInsets.statusBars
-                        .union(WindowInsets.displayCutout)
-                        .union(WindowInsets.ime),
-                )
-                .bottomNavBarPadding(WindowInsets.ime),
-        ) {
-            PhoneChangeConfirmationTopBar(
-                onBackClicked = { onEvent(PhoneChangeConfirmationEvent.BackClicked) },
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme.colors.background.general.regular.default)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             )
+            .bottomNavBarPadding(WindowInsets.ime),
+    ) {
+        PhoneChangeConfirmationTopBar(
+            onBackClicked = { onEvent(PhoneChangeConfirmationEvent.BackClicked) },
+        )
 
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Spacer(modifier = Modifier.height(24.dp))
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-                val focusRequester = remember { FocusRequester() }
-                LaunchedEffect(Unit) {
-                    delay(FocusRequestDelay)
-                    focusRequester.tryRequestFocus()
-                }
-
-                SmsOtp(
-                    otpState = state.otpState,
-                    phone = state.phone,
-                    isRequestNewOtpButtonLoading = state.isRequestNewOtpButtonLoading,
-                    onOtpEntered = { onEvent(PhoneChangeConfirmationEvent.OtpEntered) },
-                    onRequestNewOtpClicked = {
-                        onEvent(PhoneChangeConfirmationEvent.RequestNewOtpClicked)
-                    },
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
-                )
-
-                Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                delay(FocusRequestDelay)
+                focusRequester.tryRequestFocus()
             }
-        }
 
-        if (state.visibleYandexCaptcha != null) {
-            YandexCaptchaDialog(
-                captcha = state.visibleYandexCaptcha,
-                onEvent = onYandexCaptchaEvent,
+            SmsOtp(
+                otpState = state.otpState,
+                phone = state.phone,
+                isRequestNewOtpButtonLoading = state.isRequestNewOtpButtonLoading,
+                onOtpEntered = { onEvent(PhoneChangeConfirmationEvent.OtpEntered) },
+                onRequestNewOtpClicked = {
+                    onEvent(PhoneChangeConfirmationEvent.RequestNewOtpClicked)
+                },
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
             )
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
         }
     }
 }

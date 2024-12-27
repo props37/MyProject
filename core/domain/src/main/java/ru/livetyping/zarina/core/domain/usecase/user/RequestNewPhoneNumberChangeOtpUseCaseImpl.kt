@@ -11,7 +11,7 @@ internal class RequestNewPhoneNumberChangeOtpUseCaseImpl(
 ) : UseCase<Params, Unit>(logger), RequestNewPhoneNumberChangeOtpUseCase {
 
     override suspend fun execute(params: Params) {
-        userRepository.requestNewPhoneNumberChangeOtp(params.phone, params.yandexCaptchaToken)
+        userRepository.requestNewPhoneNumberChangeOtp(params.phone)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {

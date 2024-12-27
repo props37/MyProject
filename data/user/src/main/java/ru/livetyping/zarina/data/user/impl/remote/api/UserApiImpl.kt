@@ -29,6 +29,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewAuthOtpRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewPhoneNumberChangeOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
@@ -232,11 +233,8 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
-    override suspend fun requestNewPhoneNumberChangeOtp(
-        phone: PhoneNumber,
-        yandexCaptchaToken: YandexCaptchaToken
-    ) {
-        val body = RequestNewAuthOtpRequestBody(phone.value, yandexCaptchaToken.value)
+    override suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber) {
+        val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
         httpClient.post("/api/phone/verification/sms") {
             setJsonBody(body)
         }
