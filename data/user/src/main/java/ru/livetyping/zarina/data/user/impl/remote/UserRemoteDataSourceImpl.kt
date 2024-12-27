@@ -143,6 +143,13 @@ internal class UserRemoteDataSourceImpl @Inject constructor(
         api.confirmPhoneNumberChange(phone, otp)
     }
 
+    override suspend fun requestNewPhoneNumberChangeOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        api.requestNewPhoneNumberChangeOtp(phone, yandexCaptchaToken)
+    }
+
     override suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean

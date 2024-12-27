@@ -232,6 +232,16 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun requestNewPhoneNumberChangeOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        val body = RequestNewAuthOtpRequestBody(phone.value, yandexCaptchaToken.value)
+        httpClient.post("/api/phone/verification/sms") {
+            setJsonBody(body)
+        }
+    }
+
     override suspend fun updateUserNotificationSettings(
         receiveSms: Boolean,
         receiveEmails: Boolean
