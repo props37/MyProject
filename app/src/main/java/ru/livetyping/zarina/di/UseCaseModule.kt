@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
@@ -622,6 +623,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): ChangePhoneNumberUseCase {
         return ChangePhoneNumberUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmPhoneNumberChangeUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): ConfirmPhoneNumberChangeUseCase {
+        return ConfirmPhoneNumberChangeUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )
