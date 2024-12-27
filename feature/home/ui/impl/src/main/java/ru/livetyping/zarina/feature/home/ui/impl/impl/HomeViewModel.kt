@@ -37,6 +37,7 @@ internal class HomeViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val genders = GenderTab.getTabs().toImmutableList()
     private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
 
     val genderSelectorState: StateFlow<TabRowState<GenderTab>> = currentGender.mapState(
@@ -44,7 +45,7 @@ internal class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { currentGender ->
         TabRowState(
-            tabs = GenderTab.getTabs().toImmutableList(),
+            tabs = genders,
             currentTab = currentGender,
         )
     }

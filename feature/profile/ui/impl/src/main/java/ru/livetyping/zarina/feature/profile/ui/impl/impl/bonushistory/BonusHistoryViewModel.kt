@@ -29,6 +29,7 @@ internal class BonusHistoryViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val tabs = BonusHistoryTab.getAll().toImmutableList()
     private val currentTab = MutableStateFlow(BonusHistoryTab.BONUS_HISTORY)
 
     val tabRowState: StateFlow<TabRowState<BonusHistoryTab>> = currentTab.mapState(
@@ -36,7 +37,7 @@ internal class BonusHistoryViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { currentTab ->
         TabRowState(
-            tabs = BonusHistoryTab.entries.toImmutableList(),
+            tabs = tabs,
             currentTab = currentTab,
         )
     }
