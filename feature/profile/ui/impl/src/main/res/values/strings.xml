@@ -71,6 +71,8 @@
     <string name="profile_we_will_send_code_for_changing_phone_number">Мы отправим СМС-код для смены телефона на указанный номер</string>
     <string name="profile_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
     <string name="profile_enter_valid_phone_number">Введи действительный номер телефона</string>
+    <string name="profile_invalid_otp_error">Неправильный код. Повтори попытку</string>
+    <string name="profile_phone_number_changed">Номер телефона изменён</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>

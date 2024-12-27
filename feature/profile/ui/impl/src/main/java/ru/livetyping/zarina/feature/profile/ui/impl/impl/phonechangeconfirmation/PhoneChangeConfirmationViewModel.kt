@@ -21,6 +21,9 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.user.exception.InvalidOtpException
+import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.platform.CountDownTimer
@@ -35,6 +38,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.model.PhoneChangeConfirmationState
 import javax.inject.Inject
@@ -45,6 +49,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal class PhoneChangeConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val smsCodeRetriever: SmsCodeRetriever,
+    private val confirmPhoneNumberChange: ConfirmPhoneNumberChangeUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
 ) : ViewModel(), SideEffectSource<PhoneChangeConfirmationSideEffect> by SideEffectSourceImpl() {
 
@@ -52,7 +57,7 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
 
     private val operationTracker = OperationTracker()
 
-    private var confirmPhoneChangeJob: Job? = null
+    private var confirmPhoneNumberChangeJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
     private val countDownTimer = CountDownTimer()
@@ -158,14 +163,35 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
     }
 
     private fun onOtpEntered() {
-        if (confirmPhoneChangeJob?.isActive == true) return
+        if (confirmPhoneNumberChangeJob?.isActive == true) return
 
         viewModelScope.launch {
             operationTracker.track(Operation.CONFIRM_PHONE_CHANGE) {
-                // TODO: [Top] Implement
-                TODO()
+                val params = ConfirmPhoneNumberChangeUseCase.Params(
+                    phone = phone,
+                    otp = otpTextFieldState.text.toString(),
+                )
+                confirmPhoneNumberChange(params)
+                    .onSuccess {
+                        val text = Text.Resource(R.string.profile_phone_number_changed)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(PhoneChangeConfirmationSideEffect.ShowZarinaToast(message))
+
+                        val action = PhoneChangeConfirmationScreenAction.PhoneChangeConfirmed
+                        emitSideEffect(PhoneChangeConfirmationSideEffect.Navigate(action))
+                    }
+                    .onFailure(::onPhoneChangeConfirmationFailure)
             }
         }
+    }
+
+    private fun onPhoneChangeConfirmationFailure(t: Throwable) {
+        if (t is OtpException) isOtpInvalid.value = true
+        val messageResId = when (t) {
+            is InvalidOtpException -> R.string.profile_invalid_otp_error
+            else -> RCommon.string.res_something_went_wrong
+        }
+        showZarinaErrorToast(Text.Resource(messageResId))
     }
 
     private fun listenOtpSms() {
