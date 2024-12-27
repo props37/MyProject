@@ -75,6 +75,8 @@
     <string name="res_for_zarina_club_members">Для участников Zarina Club</string>
     <string name="res_old_password">Cтарый пароль</string>
     <string name="res_new_password">Новый пароль</string>
+    <string name="res_map">Карта</string>
+    <string name="res_list">Список</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

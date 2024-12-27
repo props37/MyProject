@@ -5,22 +5,38 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModeSelector
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListViewMode
 
 @Composable
 internal fun StoreListScreen(
     navActions: StoreListNavActions,
     viewModel: StoreListViewModel = hiltViewModel(),
 ) {
+    val viewModeSelectorState by viewModel.viewModeSelectorState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        onStoreListEvent = viewModel::onStoreListEvent,
+        viewModeSelectorState = viewModeSelectorState,
+        onViewModeSelectorEvent = viewModel::onViewModeSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -28,6 +44,9 @@ internal fun StoreListScreen(
 
 @Composable
 internal fun ScreenContent(
+    onStoreListEvent: (StoreListEvent) -> Unit,
+    viewModeSelectorState: TabRowState<StoreListViewMode>,
+    onViewModeSelectorEvent: (TabRowEvent<StoreListViewMode>) -> Unit,
     sideEffects: Flow<StoreListSideEffect>,
     navActions: StoreListNavActions,
 ) {
@@ -46,6 +65,23 @@ internal fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
+        StoreListTopBar(
+            onBackClicked = { onStoreListEvent(StoreListEvent.BackClicked) },
+        )
+
+        val pagerState = rememberPagerStateWithTabRow(
+            tabs = viewModeSelectorState.tabs,
+            currentTab = viewModeSelectorState.currentTab,
+            onTabChanged = { onViewModeSelectorEvent(TabRowEvent.TabChanged(it)) },
+            pageCount = { viewModeSelectorState.tabs.size }
+        )
+
+        StoreListViewModeSelector(
+            state = viewModeSelectorState,
+            onEvent = onViewModeSelectorEvent,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+
         // TODO: [Top] Implement
     }
 }

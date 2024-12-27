@@ -74,6 +74,7 @@
     <string name="profile_invalid_otp_error">Неправильный код. Повтори попытку</string>
     <string name="profile_phone_number_changed">Номер телефона изменён</string>
     <string name="profile_new_otp_request_error">Не удалось запросить новый код. Попробуй ещё раз</string>
+    <string name="profile_stores">Магазины</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
