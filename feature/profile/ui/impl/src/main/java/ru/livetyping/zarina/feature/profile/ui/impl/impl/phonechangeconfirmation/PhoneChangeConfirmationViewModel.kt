@@ -20,11 +20,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidOtpException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.platform.CountDownTimer
 import ru.livetyping.zarina.core.text.Text
@@ -51,6 +53,7 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
     private val smsCodeRetriever: SmsCodeRetriever,
     private val confirmPhoneNumberChange: ConfirmPhoneNumberChangeUseCase,
     private val getYandexCaptcha: GetYandexCaptchaUseCase,
+    private val requestNewOtp: RequestNewPhoneNumberChangeOtpUseCase,
 ) : ViewModel(), SideEffectSource<PhoneChangeConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -149,8 +152,7 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
             YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
             is YandexCaptchaEvent.TokenReceived -> {
                 visibleYandexCaptcha.value = null
-                // TODO: [Top] Implement
-                TODO()
+                requestNewOtp(event.token)
             }
         }
     }
@@ -211,6 +213,27 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
             } else {
                 val text = Text.Resource(RCommon.string.res_something_went_wrong)
                 showZarinaErrorToast(text)
+            }
+        }
+    }
+
+    private fun requestNewOtp(yandexCaptchaToken: YandexCaptchaToken) {
+        if (requestNewOtpJob?.isActive == true) return
+
+        requestNewOtpJob = viewModelScope.launch {
+            operationTracker.track(Operation.REQUEST_NEW_OTP) {
+                val params = RequestNewPhoneNumberChangeOtpUseCase.Params(
+                    phone = phone,
+                    yandexCaptchaToken = yandexCaptchaToken,
+                )
+                requestNewOtp(params)
+                    .onSuccess {
+                        startNewOtpRequestTimeout()
+                    }
+                    .onFailure {
+                        val text = Text.Resource(R.string.profile_new_otp_request_error)
+                        showZarinaErrorToast(text)
+                    }
             }
         }
     }
