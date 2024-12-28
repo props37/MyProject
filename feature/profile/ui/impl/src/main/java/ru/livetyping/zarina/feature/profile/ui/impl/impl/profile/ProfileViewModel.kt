@@ -21,7 +21,6 @@ import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
@@ -66,14 +65,8 @@ internal class ProfileViewModel @AssistedInject constructor(
 
     private val getLoyaltyCardUseCaseParams =
         GetLoyaltyCardFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-    private val loyaltyCard: StateFlow<LoyaltyCard?> =
-        deps.getLoyaltyCardFlow(getLoyaltyCardUseCaseParams)
-            .map { it.getOrNull() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = null,
-            )
+    private val loyaltyCardFlow = deps.getLoyaltyCardFlow(getLoyaltyCardUseCaseParams)
+        .map { it.getOrNull() }
 
     private val getUserCityUseCaseParams =
         GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
@@ -123,7 +116,7 @@ internal class ProfileViewModel @AssistedInject constructor(
 
     val profileState: StateFlow<ProfileState> = combine(
         userState,
-        loyaltyCard,
+        loyaltyCardFlow,
         userCity,
         menuItems,
         versionInfoFlow,

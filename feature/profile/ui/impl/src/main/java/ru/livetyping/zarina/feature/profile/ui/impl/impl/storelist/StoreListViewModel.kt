@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -56,11 +57,13 @@ internal class StoreListViewModel @Inject constructor(
         deps.getStoresFlow(params)
     }
 
-    private val storeResult = storeRequester.flow.shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1,
-    )
+    private val storeResult = storeRequester.flow
+        .conflate()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
 
     val mapState: StateFlow<StoreListState> = combine(
         storeResult,

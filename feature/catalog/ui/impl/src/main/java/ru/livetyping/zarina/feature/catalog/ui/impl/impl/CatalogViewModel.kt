@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -64,16 +66,17 @@ internal class CatalogViewModel @Inject constructor(
         deps.getCategoriesFlow(params)
     }
 
-    private val categoriesResult: StateFlow<Result<Categories>?> = categoriesRequester.flow
-        .stateIn(
+    private val categoriesResultFlow = categoriesRequester.flow
+        .conflate()
+        .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
+            replay = 1,
         )
 
     val categoryListState: StateFlow<CategoryListState> = combine(
         categoriesRequester.loadingState,
-        categoriesResult,
+        categoriesResultFlow,
     ) { loadingState, result ->
         createCategoryListState(loadingState, result)
     }.stateIn(
@@ -85,7 +88,7 @@ internal class CatalogViewModel @Inject constructor(
     private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
-        categoriesResult,
+        categoriesResultFlow,
         expandedCategories,
     ) { categoriesResult, expandedCategories ->
         createCategoryListItemsState(
@@ -184,9 +187,9 @@ internal class CatalogViewModel @Inject constructor(
 
     private fun createCategoryListState(
         categoryLoadingState: FlowRequester.LoadingState,
-        categoryResult: Result<Categories>?,
+        categoryResult: Result<Categories>,
     ): CategoryListState {
-        return if (categoryLoadingState.isLoading() || categoryResult == null) {
+        return if (categoryLoadingState.isLoading()) {
             CategoryListState.Loading
         } else {
             categoryResult.fold(
@@ -208,10 +211,10 @@ internal class CatalogViewModel @Inject constructor(
     }
 
     private fun createCategoryListItemsState(
-        categoriesResult: Result<Categories>?,
+        categoriesResult: Result<Categories>,
         expandedCategories: Set<Category>,
     ): CategoryListItemsState {
-        val categories = categoriesResult?.getOrNull()
+        val categories = categoriesResult.getOrNull()
         val expandedCategoryChildrenIds = expandedCategories.flatMap { category ->
             category.children?.map { it.id } ?: emptyList()
         }

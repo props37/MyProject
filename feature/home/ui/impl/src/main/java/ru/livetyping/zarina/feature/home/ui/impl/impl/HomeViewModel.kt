@@ -54,18 +54,11 @@ internal class HomeViewModel @Inject constructor(
         deps.getHomeContentFlow()
     }
 
-    private val homeContentResult: StateFlow<Result<HomeContent>?> = homeContentRequester.flow
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
-
     val homeContentState: StateFlow<HomeContentState> = combine(
+        homeContentRequester.flow,
         homeContentRequester.loadingState,
-        homeContentResult,
-    ) { loadingState, result ->
-        createHomeContentState(loadingState, result)
+    ) { result, loadingState ->
+        createHomeContentState(result, loadingState)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
@@ -115,12 +108,12 @@ internal class HomeViewModel @Inject constructor(
     }
 
     private fun createHomeContentState(
+        result: Result<HomeContent>,
         loadingState: FlowRequester.LoadingState,
-        result: Result<HomeContent>?,
     ): HomeContentState {
         val isLoading =
             loadingState.isLoading() && loadingState.loadingRequest == HomeContentRequest.LOADING
-        return if (isLoading || result == null) {
+        return if (isLoading) {
             HomeContentState.Loading
         } else {
             result.fold(
