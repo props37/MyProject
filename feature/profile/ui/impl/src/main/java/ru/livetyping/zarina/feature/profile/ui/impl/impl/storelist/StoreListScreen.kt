@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -24,6 +25,7 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModeSelector
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListViewMode
 
 @Composable
@@ -32,11 +34,17 @@ internal fun StoreListScreen(
     viewModel: StoreListViewModel = hiltViewModel(),
 ) {
     val viewModeSelectorState by viewModel.viewModeSelectorState.collectAsStateWithLifecycle()
+    val mapState by viewModel.mapState.collectAsStateWithLifecycle()
+    val listState by viewModel.listState.collectAsStateWithLifecycle()
+    val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
 
     ScreenContent(
         onStoreListEvent = viewModel::onStoreListEvent,
         viewModeSelectorState = viewModeSelectorState,
         onViewModeSelectorEvent = viewModel::onViewModeSelectorEvent,
+        mapStateProvider = { mapState },
+        listStateProvider = { listState },
+        currentLocationProvider = { currentLocation },
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -47,6 +55,9 @@ internal fun ScreenContent(
     onStoreListEvent: (StoreListEvent) -> Unit,
     viewModeSelectorState: TabRowState<StoreListViewMode>,
     onViewModeSelectorEvent: (TabRowEvent<StoreListViewMode>) -> Unit,
+    mapStateProvider: () -> StoreListState,
+    listStateProvider: () -> StoreListState,
+    currentLocationProvider: () -> Location?,
     sideEffects: Flow<StoreListSideEffect>,
     navActions: StoreListNavActions,
 ) {

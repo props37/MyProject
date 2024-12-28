@@ -7,28 +7,33 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
-import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListViewMode
 import javax.inject.Inject
 
 @HiltViewModel
 internal class StoreListViewModel @Inject constructor(
-    getStoresFlow: GetStoresFlowUseCase,
-    getCurrentLocationFlow: GetCurrentLocationFlowUseCase,
+    private val deps: StoreListDeps,
 ) : ViewModel(), SideEffectSource<StoreListSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -48,14 +53,46 @@ internal class StoreListViewModel @Inject constructor(
 
     private val storeRequester = FlowRequester(StoreRequest) {
         val params = GetStoresFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-        getStoresFlow(params)
+        deps.getStoresFlow(params)
     }
+
+    private val storeResult = storeRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
+
+    val mapState: StateFlow<StoreListState> = combine(
+        storeResult,
+        storeRequester.loadingState,
+    ) { storeResult, storeLoadingState ->
+        createMapState(storeResult, storeLoadingState)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = StoreListState.Loading,
+    )
+
+    private val userCityResultFlow =
+        deps.getUserCityFlow(GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote()))
+
+    val listState: StateFlow<StoreListState> = combine(
+        storeResult,
+        storeRequester.loadingState,
+        userCityResultFlow,
+    ) { storeResult, storeLoadingState, userCityResult ->
+        createListState(storeResult, storeLoadingState, userCityResult)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = StoreListState.Loading,
+    )
 
     private val currentLocationRequester = FlowRequester(LocationRequest) {
-        getCurrentLocationFlow()
+        deps.getCurrentLocationFlow()
     }
 
-    private val currentLocation = currentLocationRequester.flow
+    val currentLocation = currentLocationRequester.flow
         .map { it.getOrNull() }
         .stateIn(
             scope = viewModelScope,
@@ -80,6 +117,51 @@ internal class StoreListViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = StoreListScreenAction.BackClicked
             emitSideEffect(StoreListSideEffect.Navigate(action))
+        }
+    }
+
+    private fun createMapState(
+        storeResult: Result<List<Store>>,
+        storeLoadingState: FlowRequester.LoadingState,
+    ): StoreListState {
+        return if (storeLoadingState.isLoading()) {
+            StoreListState.Loading
+        } else {
+            storeResult.fold(
+                onSuccess = { stores ->
+                    StoreListState.Success(stores.toImmutableList())
+                },
+                onFailure = {
+                    val errorState = ZarinaErrorScreenState.from(it)
+                    StoreListState.Error(errorState)
+                },
+            )
+        }
+    }
+
+    private fun createListState(
+        storeResult: Result<List<Store>>,
+        storeLoadingState: FlowRequester.LoadingState,
+        userCityResult: Result<City?>,
+    ): StoreListState {
+        return if (storeLoadingState.isLoading()) {
+            StoreListState.Loading
+        } else {
+            storeResult.fold(
+                onSuccess = { stores ->
+                    val userCity = userCityResult.getOrNull()
+                    val cityStores = if (userCity != null) {
+                        stores.filter { it.city?.kladrId == userCity.id }
+                    } else {
+                        stores
+                    }
+                    StoreListState.Success(cityStores.toImmutableList())
+                },
+                onFailure = {
+                    val errorState = ZarinaErrorScreenState.from(it)
+                    StoreListState.Error(errorState)
+                },
+            )
         }
     }
 
