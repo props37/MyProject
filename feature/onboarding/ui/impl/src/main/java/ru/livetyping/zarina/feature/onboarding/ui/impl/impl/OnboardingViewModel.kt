@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
-import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
@@ -84,14 +83,10 @@ internal class OnboardingViewModel @AssistedInject constructor(
 
     private val onboardingCompletionTrigger = MutableStateFlow<OnboardingCompletionTrigger?>(null)
 
-    private val bannerUrl: StateFlow<Url?> = flow {
+    private val bannerUrlFlow = flow {
         val urlFlow = deps.getOnboardingBannerUrlFlow().map { it.getOrNull() }
         emitAll(urlFlow)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = null,
-    )
+    }
 
     val onboardingState: StateFlow<OnboardingState> = combineMore(
         onboardingStepsValueHolder.stateFlow,
@@ -99,7 +94,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
         cityValueHolder.stateFlow,
         operationTracker.ongoingOperationKeys,
         onboardingCompletionTrigger,
-        bannerUrl,
+        bannerUrlFlow,
     ) { onboardingSteps, currentStep, city, ongoingOperations, onboardingCompletionTrigger, bannerUrl ->
         val isOnboardingBeingCompleted = Operation.COMPLETE_ONBOARDING in ongoingOperations
         val isSkipCityDetectionButtonLoading = isOnboardingBeingCompleted
