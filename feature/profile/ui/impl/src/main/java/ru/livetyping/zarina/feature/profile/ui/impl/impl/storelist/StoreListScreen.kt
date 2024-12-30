@@ -101,6 +101,7 @@ internal fun ScreenContent(
             mapStateProvider = mapStateProvider,
             listStateProvider = listStateProvider,
             currentLocationProvider = currentLocationProvider,
+            onStoreClicked = { TODO() }, // TODO: [Top] Implement
             modifier = Modifier.fillMaxSize(),
         )
     }

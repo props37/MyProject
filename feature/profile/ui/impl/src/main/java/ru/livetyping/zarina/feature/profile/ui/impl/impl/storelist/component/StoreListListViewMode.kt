@@ -31,8 +31,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreLi
 
 @Composable
 internal fun StoreListListViewMode(
-    listStateProvider: () -> StoreListState,
     onStoreListEvent: (StoreListEvent) -> Unit,
+    listStateProvider: () -> StoreListState,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
