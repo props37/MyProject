@@ -103,7 +103,7 @@ internal fun ScreenContent(
             )
 
             SignInTypePager(
-                signInTypeSelectorState = signInTypeSelectorState,
+                signInTypes = signInTypeSelectorState.tabs,
                 pagerState = signInTypePagerState,
                 signInState = signInState,
                 onSignInEvent = onSignInEvent,

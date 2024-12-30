@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
@@ -171,7 +172,7 @@ private fun HomeContentSuccess(
         )
 
         GenderContentPager(
-            genderSelectorState = genderSelectorState,
+            genderTabs = genderSelectorState.tabs,
             homeContent = homeContentState.content,
             onHomeContentEvent = onHomeContentEvent,
             pagerState = genderSelectorPagerState,
@@ -186,7 +187,7 @@ private fun HomeContentSuccess(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun GenderContentPager(
-    genderSelectorState: TabRowState<GenderTab>,
+    genderTabs: ImmutableList<GenderTab>,
     homeContent: HomeContent,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     pagerState: PagerState,
@@ -195,9 +196,10 @@ private fun GenderContentPager(
     CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
         HorizontalPager(
             state = pagerState,
+            key = { page -> genderTabs[page] },
             modifier = modifier,
         ) { page ->
-            val banners = when (genderSelectorState.tabs[page]) {
+            val banners = when (genderTabs[page]) {
                 GenderTab.WOMEN -> homeContent.womenBanners
                 GenderTab.MEN -> homeContent.menBanners
             }

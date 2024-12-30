@@ -24,6 +24,7 @@ internal fun BonusHistoryPager(
 ) {
     HorizontalPager(
         state = pagerState,
+        key = { page -> tabs[page] },
         modifier = modifier,
     ) { page ->
         val tab = tabs[page]

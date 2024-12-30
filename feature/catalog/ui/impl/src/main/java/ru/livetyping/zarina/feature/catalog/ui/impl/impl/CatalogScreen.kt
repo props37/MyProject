@@ -120,7 +120,7 @@ private fun ScreenContent(
             )
 
             GenderCategoryPager(
-                genderSelectorState = genderSelectorState,
+                genderTabs = genderSelectorState.tabs,
                 categoryListState = categoryListState,
                 onCategoryListEvent = onCategoryListEvent,
                 categoryListItemsState = categoryListItemsState,

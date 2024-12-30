@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.lifecycleScope
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
@@ -57,7 +58,6 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.R
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
@@ -66,7 +66,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun SignInTypePager(
-    signInTypeSelectorState: TabRowState<SignInType>,
+    signInTypes: ImmutableList<SignInType>,
     pagerState: PagerState,
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
@@ -75,9 +75,10 @@ internal fun SignInTypePager(
 ) {
     HorizontalPager(
         state = pagerState,
+        key = { page -> signInTypes[page] },
         modifier = modifier,
     ) { page ->
-        val signInType = signInTypeSelectorState.tabs[page]
+        val signInType = signInTypes[page]
         when (signInType) {
             SignInType.EMAIL -> {
                 SignInByEmail(

@@ -5,15 +5,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
-import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
 
 @Composable
 internal fun GenderCategoryPager(
-    genderSelectorState: TabRowState<GenderTab>,
+    genderTabs: ImmutableList<GenderTab>,
     categoryListState: CategoryListState,
     onCategoryListEvent: (CategoryListEvent) -> Unit,
     categoryListItemsState: CategoryListItemsState,
@@ -22,9 +22,10 @@ internal fun GenderCategoryPager(
 ) {
     HorizontalPager(
         state = pagerState,
+        key = { page -> genderTabs[page] },
         modifier = modifier,
     ) { page ->
-        val gender = genderSelectorState.tabs[page]
+        val gender = genderTabs[page]
 
         CategoryList(
             gender = gender,
