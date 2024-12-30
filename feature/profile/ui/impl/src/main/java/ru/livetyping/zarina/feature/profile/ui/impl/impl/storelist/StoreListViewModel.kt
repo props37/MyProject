@@ -106,6 +106,7 @@ internal class StoreListViewModel @Inject constructor(
     fun onStoreListEvent(event: StoreListEvent) {
         when (event) {
             StoreListEvent.BackClicked -> onBackClicked()
+            StoreListEvent.ErrorRefreshClicked -> storeRequester.request(StoreRequest)
         }
     }
 

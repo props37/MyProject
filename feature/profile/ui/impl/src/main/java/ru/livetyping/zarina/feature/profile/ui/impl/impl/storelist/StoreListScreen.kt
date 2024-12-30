@@ -23,6 +23,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModePager
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModeSelector
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
@@ -93,6 +94,14 @@ internal fun ScreenContent(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
-        // TODO: [Top] Implement
+        StoreListViewModePager(
+            viewModes = viewModeSelectorState.tabs,
+            pagerState = pagerState,
+            onStoreListEvent = onStoreListEvent,
+            mapStateProvider = mapStateProvider,
+            listStateProvider = listStateProvider,
+            currentLocationProvider = currentLocationProvider,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
