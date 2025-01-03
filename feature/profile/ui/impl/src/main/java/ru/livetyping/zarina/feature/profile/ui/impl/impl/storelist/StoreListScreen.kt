@@ -9,19 +9,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListStoreModalBottomSheet
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModePager
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModeSelector
@@ -51,6 +57,7 @@ internal fun StoreListScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScreenContent(
     onStoreListEvent: (StoreListEvent) -> Unit,
@@ -66,6 +73,14 @@ internal fun ScreenContent(
         sideEffects = sideEffects,
         navActions = navActions,
     )
+
+    var visibleStoreModalBottomSheet by remember { mutableStateOf<Store?>(null) }
+    visibleStoreModalBottomSheet?.let { store ->
+        StoreListStoreModalBottomSheet(
+            store = store,
+            onDismissRequest = { visibleStoreModalBottomSheet = null },
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -101,7 +116,7 @@ internal fun ScreenContent(
             mapStateProvider = mapStateProvider,
             listStateProvider = listStateProvider,
             currentLocationProvider = currentLocationProvider,
-            onStoreClicked = { TODO() }, // TODO: [Top] Implement
+            onStoreClicked = { visibleStoreModalBottomSheet = it },
             modifier = Modifier.fillMaxSize(),
         )
     }
