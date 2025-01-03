@@ -16,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -126,8 +127,10 @@ public fun ZarinaGoogleMap(
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
+                .padding(end = MyLocationButtonPadding, bottom = MyLocationButtonPadding)
                 .windowInsetsPadding(myLocationButtonWindowInsetsProvider()),
         )
     }
 }
+
+private val MyLocationButtonPadding: Dp get() = 16.dp
