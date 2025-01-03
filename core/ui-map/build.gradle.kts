@@ -54,6 +54,7 @@ composeCompiler {
 
 dependencies {
     implementation(projects.core.uiKit)
+    implementation(projects.core.uiCompose)
     implementation(projects.core.resource)
 
     implementation(platform(libs.jetpack.compose.bom))
@@ -65,6 +66,8 @@ dependencies {
 
     implementation(libs.googlePlayServices.maps.compose)
     implementation(libs.googlePlayServices.maps.compose.utils)
+
+    implementation(libs.accompanist.permissions)
 
     implementation(libs.timber)
 
