@@ -35,39 +35,23 @@ internal fun HeightSelectorModalBottomSheet(
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val onCloseClicked: () -> Unit = {
+        coroutineScope
+            .launch { sheetState.hide() }
+            .invokeOnCompletion { onDismissRequest() }
+    }
+
     ZarinaModalBottomSheet(
-        onDismissRequest = {
-            coroutineScope.launch {
-                sheetState.hide()
-                onDismissRequest()
-            }
-        },
+        onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         backgroundColor = Color.Unspecified,
         windowInsets = WindowInsets.none,
     ) {
-        SizeSelectorScaffold(
-            onDismissRequest = {
-                coroutineScope.launch {
-                    sheetState.hide()
-                    onDismissRequest()
-                }
-            },
-        ) {
+        SizeSelectorScaffold(onCloseClicked = onCloseClicked) {
             Column {
                 HeightSelectorHeader(
-                    onBackClicked = {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            onDismissRequest()
-                        }
-                    },
-                    onCloseClicked = {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            onDismissRequest()
-                        }
-                    },
+                    onBackClicked = onCloseClicked,
+                    onCloseClicked = onCloseClicked,
                 )
 
                 SizeSelectorHeightList(
@@ -80,9 +64,7 @@ internal fun HeightSelectorModalBottomSheet(
                     },
                 )
 
-                Spacer(
-                    modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing),
-                )
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }

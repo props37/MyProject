@@ -28,7 +28,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun SizeSelectorScaffold(
-    onDismissRequest: () -> Unit,
+    onCloseClicked: () -> Unit,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
     content: @Composable () -> Unit,
@@ -38,7 +38,7 @@ internal fun SizeSelectorScaffold(
             .clickable(
                 interactionSource = null,
                 indication = null,
-                onClick = onDismissRequest,
+                onClick = onCloseClicked,
             )
             .windowInsetsPadding(windowInsets),
     ) {

@@ -92,29 +92,21 @@ private fun SizeSelectorModalBottomSheetImpl(
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val onCloseClicked: () -> Unit = {
+        coroutineScope
+            .launch { sheetState.hide() }
+            .invokeOnCompletion { onDismissRequest() }
+    }
+
     ZarinaModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         backgroundColor = Color.Unspecified,
         windowInsets = WindowInsets.none,
     ) {
-        SizeSelectorScaffold(
-            onDismissRequest = {
-                coroutineScope.launch {
-                    sheetState.hide()
-                    onDismissRequest()
-                }
-            },
-        ) {
+        SizeSelectorScaffold(onCloseClicked = onCloseClicked) {
             Column {
-                SizeSelectorHeader(
-                    onCloseClicked = {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            onDismissRequest()
-                        }
-                    },
-                )
+                SizeSelectorHeader(onCloseClicked = onCloseClicked)
 
                 SizeSelectorSizeList(
                     sizes = sizes,
