@@ -31,6 +31,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicompose.none
+import ru.livetyping.zarina.core.uikit.map.ZarinaMapMyLocationButton
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -97,7 +98,7 @@ public fun ZarinaGoogleMap(
             modifier = Modifier.fillMaxSize(),
         )
 
-        MapMyLocationButton(
+        ZarinaMapMyLocationButton(
             onClick = {
                 onMyLocationClicked()
 

@@ -21,9 +21,9 @@ import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
+import ru.livetyping.zarina.core.uikit.map.ZarinaMapCluster
+import ru.livetyping.zarina.core.uikit.map.ZarinaMapMarker
 import ru.livetyping.zarina.core.uimap.GoogleMapsDefaults
-import ru.livetyping.zarina.core.uimap.MapCluster
-import ru.livetyping.zarina.core.uimap.MapMarker
 import ru.livetyping.zarina.core.uimap.ZarinaGoogleMap
 import ru.livetyping.zarina.core.uimap.toLatLng
 import ru.livetyping.zarina.feature.profile.ui.impl.R
@@ -110,10 +110,10 @@ private fun StoreMapSuccess(
                 false
             },
             clusterContent = { cluster ->
-                MapCluster(itemCount = cluster.size)
+                ZarinaMapCluster(clusterSize = cluster.size)
             },
             clusterItemContent = { item ->
-                MapMarker(
+                ZarinaMapMarker(
                     contentDescription = stringResource(
                         id = R.string.profile_map_store_content_description,
                         item.store.name,

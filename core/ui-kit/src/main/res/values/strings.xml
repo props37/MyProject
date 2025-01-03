@@ -11,4 +11,5 @@
     <string name="uikit_choose_height">Выбери рост</string>
     <string name="uikit_available_heights_cm">Доступно %1$s см</string>
     <string name="uikit_item_count">%1$s шт</string>
+    <string name="uikit_show_my_location">Показать моё местоположение</string>
 </resources>

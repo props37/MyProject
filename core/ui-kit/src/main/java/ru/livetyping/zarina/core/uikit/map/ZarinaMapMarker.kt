@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uimap
+package ru.livetyping.zarina.core.uikit.map
 
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.material.Icon
@@ -12,7 +12,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-public fun MapMarker(
+public fun ZarinaMapMarker(
     contentDescription: String,
     modifier: Modifier = Modifier,
 ) {

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uimap
+package ru.livetyping.zarina.core.uikit.map
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-public fun MapCluster(
-    itemCount: Int,
+public fun ZarinaMapCluster(
+    clusterSize: Int,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -32,10 +32,10 @@ public fun MapCluster(
                 shape = CircleShape,
             ),
     ) {
-        val text = if (itemCount <= MaxItemCount) {
-            itemCount.toString()
+        val text = if (clusterSize <= MaxClusterSize) {
+            clusterSize.toString()
         } else {
-            "$MaxItemCount+"
+            "$MaxClusterSize+"
         }
         Text(
             text = text,
@@ -48,4 +48,4 @@ public fun MapCluster(
 
 private val Size: Dp get() = 52.dp
 
-private const val MaxItemCount = 99
+private const val MaxClusterSize = 99
