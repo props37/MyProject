@@ -4,4 +4,6 @@ internal sealed interface StoreListEvent {
     data object BackClicked : StoreListEvent
 
     data object ErrorRefreshClicked : StoreListEvent
+
+    data object MyLocationClicked : StoreListEvent
 }

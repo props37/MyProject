@@ -35,7 +35,7 @@ import ru.livetyping.zarina.core.uicompose.none
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 public fun ZarinaGoogleMap(
-    currentLocationProvider: () -> Location?,
+    currentLocation: Location?,
     onMyLocationClicked: () -> Unit,
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
@@ -74,7 +74,6 @@ public fun ZarinaGoogleMap(
         )
     }
 
-    val currentLocation = currentLocationProvider()
     var previousLocation by remember { mutableStateOf<Location?>(null) }
     DisposableEffect(currentLocation) {
         if (currentLocation != null && previousLocation == null) {

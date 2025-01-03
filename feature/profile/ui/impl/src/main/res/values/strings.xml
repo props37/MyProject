@@ -75,6 +75,7 @@
     <string name="profile_phone_number_changed">Номер телефона изменён</string>
     <string name="profile_new_otp_request_error">Не удалось запросить новый код. Попробуй ещё раз</string>
     <string name="profile_stores">Магазины</string>
+    <string name="profile_map_store_content_description">Магазин %1%s</string>
 
     <plurals name="profile_bonuses">
         <item quantity="zero">бонусов</item>
