@@ -64,8 +64,8 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
-    implementation(libs.googlePlayServices.maps.compose)
-    implementation(libs.googlePlayServices.maps.compose.utils)
+    api(libs.googlePlayServices.maps.compose)
+    api(libs.googlePlayServices.maps.compose.utils)
 
     implementation(libs.accompanist.permissions)
 

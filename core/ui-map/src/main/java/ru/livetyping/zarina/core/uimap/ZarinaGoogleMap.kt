@@ -22,7 +22,6 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GoogleMapComposable
@@ -36,7 +35,7 @@ import ru.livetyping.zarina.core.uicompose.none
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 public fun ZarinaGoogleMap(
-    currentLocation: Location?,
+    currentLocationProvider: () -> Location?,
     onMyLocationClicked: () -> Unit,
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
@@ -75,6 +74,7 @@ public fun ZarinaGoogleMap(
         )
     }
 
+    val currentLocation = currentLocationProvider()
     var previousLocation by remember { mutableStateOf<Location?>(null) }
     DisposableEffect(currentLocation) {
         if (currentLocation != null && previousLocation == null) {
@@ -131,5 +131,3 @@ public fun ZarinaGoogleMap(
         )
     }
 }
-
-internal fun Location.toLatLng(): LatLng = LatLng(latitude, longitude)
