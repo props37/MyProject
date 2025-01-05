@@ -44,6 +44,7 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 import ru.livetyping.zarina.core.resource.R as RCommon
 
+// TODO: [High] Refactor. Follow DRY. Extract common code and reuse it.
 @HiltViewModel
 internal class PhoneConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
