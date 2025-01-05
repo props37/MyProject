@@ -51,7 +51,7 @@ internal class WishlistViewModel @Inject constructor(
     private val deps: WishlistDependencies,
 ) : ViewModel(), SideEffectSource<WishlistSideEffect> by SideEffectSourceImpl() {
 
-    // TODO: [High] Inject dispatcher
+    // TODO: [Medium] Inject dispatcher
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

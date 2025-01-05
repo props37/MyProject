@@ -19,7 +19,7 @@ internal class CategoryDataHolderImpl @Inject constructor() : CategoryDataHolder
     }
 
     override fun getCategoryFlow(id: Category.Id): Flow<Category?> {
-        // TODO: [High] Inject dispatcher
+        // TODO: [Medium] Inject dispatcher
         return categories.map { categories ->
             categories?.find { it.id == id }
         }.flowOn(Dispatchers.Default)

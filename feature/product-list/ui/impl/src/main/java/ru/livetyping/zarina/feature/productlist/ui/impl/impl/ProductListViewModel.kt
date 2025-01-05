@@ -63,7 +63,7 @@ internal class ProductListViewModel @Inject constructor(
     private val deps: ProductListDependencies,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
-    // TODO: [Top] Inject dispatcher
+    // TODO: [Medium] Inject dispatcher
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
