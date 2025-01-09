@@ -56,6 +56,8 @@ include(":feature:product:ui:impl")
 include(":feature:product-subscription:ui:api")
 include(":feature:product-subscription:ui:impl")
 
+include(":feature:detected-city:ui:api")
+
 include(":data:content")
 include(":data:auth")
 include(":data:category")
