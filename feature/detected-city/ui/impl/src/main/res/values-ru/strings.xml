@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="detected_city_title">Мы определили твой город</string>
+    <string name="detected_city_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+</resources>

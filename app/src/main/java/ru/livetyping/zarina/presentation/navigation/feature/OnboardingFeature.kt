@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
+import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
@@ -60,11 +61,14 @@ fun rememberOnboardingNavActions(
 ): OnboardingNavActions {
     return remember(navController) {
         OnboardingNavActions(
-            onOnboardingCompleted = {
+            onOnboardingCompleted = { selectedCity ->
                 navController.navigate(HomeFeature.getNavEntry()) {
                     popUpTo(0)
                 }
-                // TODO: [Top] Show default city dialog?
+
+                if (selectedCity == null) {
+                    navController.navigate(DetectedCityFeature.getNavEntry())
+                }
             },
             onSelectCityClicked = {
                 val citySelectorParams = CitySelectorNavParams()

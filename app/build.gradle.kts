@@ -174,6 +174,9 @@ dependencies {
     implementation(projects.feature.productSubscription.ui.api)
     implementation(projects.feature.productSubscription.ui.impl)
 
+    implementation(projects.feature.detectedCity.ui.api)
+    implementation(projects.feature.detectedCity.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)

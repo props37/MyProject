@@ -49,7 +49,10 @@ internal fun OnboardingScreenBehavior(
 
 private fun navigate(navActions: OnboardingNavActions, action: OnboardingScreenAction) {
     when (action) {
-        is OnboardingScreenAction.OnboardingCompleted -> navActions.onOnboardingCompleted()
+        is OnboardingScreenAction.OnboardingCompleted -> {
+            navActions.onOnboardingCompleted(action.selectedCity)
+        }
+
         is OnboardingScreenAction.SelectCityClicked -> navActions.onSelectCityClicked()
     }
 }

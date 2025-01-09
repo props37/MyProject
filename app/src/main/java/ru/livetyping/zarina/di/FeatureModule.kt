@@ -13,6 +13,8 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.impl.CatalogFeatureImpl
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.impl.CitySelectorFeatureImpl
+import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
+import ru.livetyping.zarina.feature.detectedcity.ui.impl.DetectedCityFeatureImpl
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.impl.HomeFeatureImpl
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
@@ -96,4 +98,9 @@ internal class FeatureModule {
     @FeatureEntryKey(ProductSubscriptionFeature::class)
     fun provideProductSubscriptionFeature(): FeatureEntry<*, *, *> =
         ProductSubscriptionFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(DetectedCityFeature::class)
+    fun provideDetectedCityFeature(): FeatureEntry<*, *, *> = DetectedCityFeatureImpl()
 }
