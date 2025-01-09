@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.runBlocking
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import javax.inject.Inject
@@ -38,16 +40,20 @@ class AppViewModel @Inject constructor(
         }
     }
 
-    val favoriteProductCount: StateFlow<Int> = interactor.getFavoriteProductIdsFlow()
-        .map { result ->
-            result.getOrDefault(emptySet()).size
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
-            initialValue = 0,
-        )
+    private val getWishlistProductIdsParams =
+        GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalOnly)
 
+    val wishlistProductCount: StateFlow<Int> =
+        interactor.getWishlistProductIdsFlow(getWishlistProductIdsParams)
+            .map { result ->
+                result.getOrNull()?.size ?: 0
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileUiSubscribed,
+                initialValue = 0,
+            )
+
+    // TODO: [Top] Migrate to new components
     val cartProductCount: StateFlow<Int> = interactor.getCartProductCountFlow()
         .map { result ->
             result.getOrDefault(0)

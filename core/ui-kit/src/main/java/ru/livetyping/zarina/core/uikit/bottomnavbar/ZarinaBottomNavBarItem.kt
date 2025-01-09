@@ -37,7 +37,7 @@ public fun ZarinaBottomNavBarItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    counterValue: Int? = null,
+    counterValueProvider: (() -> Int?)? = null,
 ) {
     val selectedColor = UiKitTheme.colors.text.general.regular.default
 
@@ -74,7 +74,7 @@ public fun ZarinaBottomNavBarItem(
             )
 
             ItemCounter(
-                count = counterValue,
+                count = counterValueProvider?.invoke(),
                 modifier = Modifier.align(Alignment.TopEnd),
             )
         }

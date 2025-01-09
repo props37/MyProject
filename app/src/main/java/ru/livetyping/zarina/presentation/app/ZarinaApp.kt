@@ -97,12 +97,12 @@ fun ZarinaApp(
                         modifier = Modifier.fillMaxSize(),
                     )
 
-                    val favoriteProductCount by viewModel.favoriteProductCount.collectAsStateWithLifecycle()
+                    val wishlistProductCount by viewModel.wishlistProductCount.collectAsStateWithLifecycle()
                     val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
                     ZarinaBottomNavBar(
                         navController = navController,
-                        favoriteProductCount = favoriteProductCount,
-                        cartProductCount = cartProductCount,
+                        wishlistProductCountProvider = { wishlistProductCount },
+                        cartProductCountProvider = { cartProductCount },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth(),

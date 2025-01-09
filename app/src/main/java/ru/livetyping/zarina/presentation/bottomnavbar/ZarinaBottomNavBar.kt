@@ -17,8 +17,8 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.ZarinaBottomNavBarItem
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
-    favoriteProductCount: Int,
-    cartProductCount: Int,
+    wishlistProductCountProvider: () -> Int,
+    cartProductCountProvider: () -> Int,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = ZarinaBottomNavBarDefaults.DefaultWindowInsets,
 ) {
@@ -32,9 +32,9 @@ fun ZarinaBottomNavBar(
         for (i in BottomNavBarItems.indices) {
             val item = BottomNavBarItems[i]
             key(item) {
-                val counterValue = when (item) {
-                    BottomNavBarItem.Wishlist -> favoriteProductCount
-                    BottomNavBarItem.Cart -> cartProductCount
+                val counterValueProvider = when (item) {
+                    BottomNavBarItem.Wishlist -> wishlistProductCountProvider
+                    BottomNavBarItem.Cart -> cartProductCountProvider
                     else -> null
                 }
 
@@ -43,7 +43,7 @@ fun ZarinaBottomNavBar(
                     iconResId = item.iconResId,
                     isSelected = isItemSelected(item, backStack),
                     onClick = { navController.navigateToBottomNavBarItem(item) },
-                    counterValue = counterValue,
+                    counterValueProvider = counterValueProvider,
                     modifier = Modifier.weight(1f),
                 )
             }
