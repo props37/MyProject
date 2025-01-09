@@ -5,19 +5,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import ru.livetyping.zarina.usecase.user.GetUserFlowUseCase
-import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import javax.inject.Inject
 
 class UserFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
-    private val getUserFlowUseCase: GetUserFlowUseCase,
+    private val getUserFlow: GetUserFlowUseCase,
 ) : ApplicationExtension {
 
     override fun install(application: Application) {
         coroutineScope.launch {
-            getUserFlowUseCase().firstOrNull()
+            val params = GetUserFlowUseCase.Params(CachePolicy.Remote())
+            getUserFlow(params).firstOrNull()
         }
-        // TODO: [High] Fetch updated user
     }
 }

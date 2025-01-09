@@ -8,7 +8,7 @@ class ApplicationExtensionManager @Inject constructor(
     coil: CoilApplicationExtension,
     userFetcher: UserFetcherApplicationExtension,
     userCityFetcher: UserCityFetcherApplicationExtension,
-    authorizationTokenFetcher: AuthorizationTokenFetcherApplicationExtension,
+    bearerTokenFetcher: BearerTokenFetcherApplicationExtension,
     favoriteProductIdsFetcher: FavoriteProductIdsFetcherApplicationExtension,
     cartProductIdsFetcher: CartProductIdsFetcherApplicationExtension,
 ) {
@@ -18,7 +18,7 @@ class ApplicationExtensionManager @Inject constructor(
         coil,
         userFetcher,
         userCityFetcher,
-        authorizationTokenFetcher,
+        bearerTokenFetcher,
         favoriteProductIdsFetcher,
         cartProductIdsFetcher,
     )

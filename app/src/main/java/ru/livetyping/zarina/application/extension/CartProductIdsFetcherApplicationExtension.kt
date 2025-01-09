@@ -5,36 +5,38 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transformLatest
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
-import ru.livetyping.zarina.usecase.authorization.GetAuthorizationTokensFlowUseCase
-import ru.livetyping.zarina.usecase.cart.FetchCartProductIdsUseCase
-import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
+import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class CartProductIdsFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
-    private val getAuthorizationTokensFlowUseCase: GetAuthorizationTokensFlowUseCase,
-    private val fetchCartProductIdsUseCase: FetchCartProductIdsUseCase,
+    private val getBearerTokensFlow: GetBearerTokensFlowUseCase,
+    private val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
 ) : ApplicationExtension {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun install(application: Application) {
-        getAuthorizationTokensFlowUseCase()
+        getBearerTokensFlow()
             .map { it.getOrNull() }
             .distinctUntilChanged()
-            .transformLatest<AuthorizationTokens?, Unit> {
+            .transformLatest<BearerTokens?, Unit> { tokens ->
                 // TODO: [High] Find a better way
                 // Delay is used to prevent making requests with old authorization tokens
                 // as tokens stored on the disk get updated earlier than HttpClient tokens
                 delay(DELAY)
-                if (it != null) {
-                    fetchCartProductIdsUseCase()
+                if (tokens != null) {
+                    val params = GetCartProductIdsFlowUseCase.Params(CachePolicy.Remote())
+                    getCartProductIdsFlow(params).firstOrNull()
                 }
             }
             .launchIn(coroutineScope)

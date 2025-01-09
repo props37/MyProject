@@ -4,18 +4,17 @@ import android.app.Application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import ru.livetyping.zarina.usecase.authorization.FetchUnauthorizedUserAuthorizationTokensUseCase
-import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
 import javax.inject.Inject
 
-class AuthorizationTokenFetcherApplicationExtension @Inject constructor(
+class BearerTokenFetcherApplicationExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
-    private val fetchUnauthorizedUserAuthorizationTokens: FetchUnauthorizedUserAuthorizationTokensUseCase,
+    private val fetchUnauthorizedUserBearerTokens: FetchUnauthorizedUserBearerTokensUseCase,
 ) : ApplicationExtension {
 
     override fun install(application: Application) {
         coroutineScope.launch {
-            fetchUnauthorizedUserAuthorizationTokens()
+            fetchUnauthorizedUserBearerTokens()
         }
     }
 }
