@@ -107,6 +107,7 @@ internal class StoreListViewModel @Inject constructor(
         when (event) {
             StoreListEvent.BackClicked -> onBackClicked()
             StoreListEvent.ErrorRefreshClicked -> storeRequester.request(StoreRequest)
+            StoreListEvent.MyLocationClicked -> currentLocationRequester.request(LocationRequest)
         }
     }
 
