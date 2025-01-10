@@ -46,7 +46,7 @@ fun rememberHomeNavActions(
         HomeNavActions(
             onBannerClicked = { banner ->
                 when (val clickAction = banner.clickAction) {
-                    is ClickAction.Products -> {
+                    is ClickAction.ProductList -> {
                         val productListParams = ProductListNavParams(
                             categoryId = clickAction.categoryId,
                         )
