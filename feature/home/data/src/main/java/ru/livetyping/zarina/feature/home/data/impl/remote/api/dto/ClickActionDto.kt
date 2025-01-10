@@ -31,9 +31,9 @@ internal data class ClickActionDto(
         }
     }
 
-    private fun toClickActionProductList(): ClickAction.ProductList? {
+    private fun toClickActionProductList(): ClickAction.OpenProductList? {
         if (payload?.categoryId == null) return null
-        return ClickAction.ProductList(
+        return ClickAction.OpenProductList(
             categoryId = Category.Id(payload.categoryId.toString()),
         )
     }
