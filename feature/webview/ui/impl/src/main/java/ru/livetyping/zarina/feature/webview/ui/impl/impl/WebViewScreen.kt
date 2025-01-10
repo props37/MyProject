@@ -34,6 +34,7 @@ internal fun WebViewScreen(
 
     ScreenContent(
         url = url,
+        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -42,6 +43,7 @@ internal fun WebViewScreen(
 @Composable
 internal fun ScreenContent(
     url: String,
+    onBackClicked: () -> Unit,
     sideEffects: Flow<WebViewSideEffect>,
     navActions: WebViewFeature.NavActions,
 ) {
@@ -66,7 +68,7 @@ internal fun ScreenContent(
         ZarinaTopBar(
             startContent = {
                 ZarinaBackIconButton(
-                    onClick = {}, // TODO: [Top] Implement
+                    onClick = onBackClicked,
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
