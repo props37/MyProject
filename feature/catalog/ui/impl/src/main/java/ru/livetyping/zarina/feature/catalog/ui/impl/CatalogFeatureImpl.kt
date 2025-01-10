@@ -14,7 +14,6 @@ import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
-import ru.livetyping.zarina.feature.catalog.ui.CatalogScreenNavEntry
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
 
 public class CatalogFeatureImpl : CatalogFeature {
@@ -29,14 +28,14 @@ public class CatalogFeatureImpl : CatalogFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
         navigation<CatalogNavEntry>(
-            startDestination = CatalogScreenNavEntry,
+            startDestination = CatalogNavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<CatalogScreenNavEntry>(deepLinks = DeepLinks) {
+            composable<CatalogNavEntry.StartNavEntry>(deepLinks = DeepLinks) {
                 CatalogScreen(navActions = actions)
             }
         }

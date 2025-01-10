@@ -4,4 +4,8 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
 @Serializable
-public object ProfileNavEntry : NavigationEntry
+public object ProfileNavEntry : NavigationEntry {
+
+    @Serializable
+    public data object StartNavEntry : NavigationEntry
+}

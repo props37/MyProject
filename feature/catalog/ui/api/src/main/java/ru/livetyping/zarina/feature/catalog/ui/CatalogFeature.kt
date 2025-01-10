@@ -10,6 +10,6 @@ public interface CatalogFeature : ComplexFeatureEntry<CatalogNavEntry, CatalogNa
 
         public fun getNavEntryClass(): KClass<CatalogNavEntry> = CatalogNavEntry::class
 
-        public fun getInitialScreenNavEntry(): NavigationEntry = CatalogScreenNavEntry
+        public fun getStartNavEntry(): NavigationEntry = CatalogNavEntry.StartNavEntry
     }
 }

@@ -32,6 +32,8 @@ fun ZarinaBottomNavBar(
         for (i in BottomNavBarItems.indices) {
             val item = BottomNavBarItems[i]
             key(item) {
+                val isSelected = isItemSelected(item, backStack)
+
                 val counterValueProvider = when (item) {
                     BottomNavBarItem.Wishlist -> wishlistProductCountProvider
                     BottomNavBarItem.Cart -> cartProductCountProvider
@@ -41,8 +43,14 @@ fun ZarinaBottomNavBar(
                 ZarinaBottomNavBarItem(
                     title = stringResource(item.titleResId),
                     iconResId = item.iconResId,
-                    isSelected = isItemSelected(item, backStack),
-                    onClick = { navController.navigateToBottomNavBarItem(item) },
+                    isSelected = isSelected,
+                    onClick = {
+                        if (!isSelected) {
+                            navController.navigateToBottomNavBarItem(item)
+                        } else {
+                            navController.popBackStackToBottomNavBarItem(item)
+                        }
+                    },
                     counterValueProvider = counterValueProvider,
                     modifier = Modifier.weight(1f),
                 )

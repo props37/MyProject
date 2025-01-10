@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavParams
@@ -12,6 +11,7 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
+import ru.livetyping.zarina.presentation.bottomnavbar.popBackStackToBottomNavBarItem
 
 fun NavGraphBuilder.wishlistFeature(
     navController: NavHostController,
@@ -35,11 +35,9 @@ fun rememberWishlistNavActions(
         WishlistNavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onGoToCatalogClicked = {
-                navController.navigateToBottomNavBarItem(BottomNavBarItem.Catalog)
-                navController.popBackStack(
-                    route = CatalogFeature.getInitialScreenNavEntry(),
-                    inclusive = false,
-                )
+                val bottomNavBarItem = BottomNavBarItem.Catalog
+                navController.navigateToBottomNavBarItem(bottomNavBarItem)
+                navController.popBackStackToBottomNavBarItem(bottomNavBarItem)
             },
             onProductClicked = { product ->
                 val productParams = ProductNavParams(product.id)

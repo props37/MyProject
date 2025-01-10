@@ -13,7 +13,6 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavEntry
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistNavEntry as WishlistScreenNavEntry
 
 public class WishlistFeatureImpl : WishlistFeature {
     override fun NavGraphBuilder.navigation(
@@ -27,14 +26,14 @@ public class WishlistFeatureImpl : WishlistFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
         navigation<WishlistNavEntry>(
-            startDestination = WishlistScreenNavEntry,
+            startDestination = WishlistNavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<WishlistScreenNavEntry> {
+            composable<WishlistNavEntry.StartNavEntry> {
                 WishlistScreen(navActions = actions)
             }
         }

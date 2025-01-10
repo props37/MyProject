@@ -44,7 +44,6 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileD
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActions as ProfileScreenNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavEntry as ProfileScreenNavEntry
 
 public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
@@ -58,7 +57,7 @@ public class ProfileFeatureImpl : ProfileFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
         navigation<ProfileNavEntry>(
-            startDestination = ProfileScreenNavEntry,
+            startDestination = ProfileNavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
@@ -88,10 +87,10 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onChangeEmailClicked = { navController.navigate(EmailChangeNavEntry) },
                 onChangePasswordClicked = { navController.navigate(PasswordChangeNavEntry) },
                 onUserSignedOut = {
-                    navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
+                    navController.popBackStack<ProfileNavEntry.StartNavEntry>(inclusive = false)
                 },
                 onAccountDeleted = {
-                    navController.popBackStack<ProfileScreenNavEntry>(inclusive = false)
+                    navController.popBackStack<ProfileNavEntry.StartNavEntry>(inclusive = false)
                 }
             )
             profileDetailsScreen(profileDetailsNavActions)

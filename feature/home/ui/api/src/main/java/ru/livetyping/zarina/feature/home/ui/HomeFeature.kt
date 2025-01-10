@@ -10,6 +10,6 @@ public interface HomeFeature : ComplexFeatureEntry<HomeNavEntry, HomeNavActions,
 
         public fun getNavEntryClass(): KClass<HomeNavEntry> = HomeNavEntry::class
 
-        public fun getInitialScreenNavEntry(): NavigationEntry = HomeScreenNavEntry
+        public fun getStartNavEntry(): NavigationEntry = HomeNavEntry.StartNavEntry
     }
 }

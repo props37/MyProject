@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.profile.ui
 
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
+import ru.livetyping.zarina.core.navigation.NavigationEntry
 import kotlin.reflect.KClass
 
 public interface ProfileFeature :
@@ -10,5 +11,7 @@ public interface ProfileFeature :
         public fun getNavEntry(): ProfileNavEntry = ProfileNavEntry
 
         public fun getNavEntryClass(): KClass<ProfileNavEntry> = ProfileNavEntry::class
+
+        public fun getStartNavEntry(): NavigationEntry = ProfileNavEntry.StartNavEntry
     }
 }

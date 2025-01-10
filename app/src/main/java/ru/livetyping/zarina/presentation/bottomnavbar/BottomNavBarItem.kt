@@ -63,13 +63,24 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items
-        popUpTo(HomeFeature.getInitialScreenNavEntry()) { saveState = true }
+        popUpTo(HomeFeature.getStartNavEntry()) { saveState = true }
         // Avoid multiple copies of the same destination when
         // reselecting the same item
         launchSingleTop = true
         // Restore state when reselecting a previously selected item
         restoreState = true
     }
+}
+
+fun NavHostController.popBackStackToBottomNavBarItem(bottomNavItem: BottomNavBarItem) {
+    val initialScreenNavEntry = when (bottomNavItem) {
+        BottomNavBarItem.Catalog -> CatalogFeature.getStartNavEntry()
+        BottomNavBarItem.Wishlist -> WishlistFeature.getStartNavEntry()
+        BottomNavBarItem.Home -> HomeFeature.getStartNavEntry()
+        BottomNavBarItem.Profile -> ProfileFeature.getStartNavEntry()
+        BottomNavBarItem.Cart -> CartFeature.getStartNavEntry()
+    }
+    this.popBackStack(route = initialScreenNavEntry, inclusive = false)
 }
 
 val BottomNavBarItems: List<BottomNavBarItem> = listOf(

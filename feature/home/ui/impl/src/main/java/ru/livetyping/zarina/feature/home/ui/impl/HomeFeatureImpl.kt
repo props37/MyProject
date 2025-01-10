@@ -12,7 +12,6 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
-import ru.livetyping.zarina.feature.home.ui.HomeScreenNavEntry
 import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
 
 public class HomeFeatureImpl : HomeFeature {
@@ -27,14 +26,14 @@ public class HomeFeatureImpl : HomeFeature {
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
         navigation<HomeNavEntry>(
-            startDestination = HomeScreenNavEntry,
+            startDestination = HomeNavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<HomeScreenNavEntry> {
+            composable<HomeNavEntry.StartNavEntry> {
                 HomeScreen(navActions = actions)
             }
         }
