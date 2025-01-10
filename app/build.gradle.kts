@@ -177,6 +177,9 @@ dependencies {
     implementation(projects.feature.detectedCity.ui.api)
     implementation(projects.feature.detectedCity.ui.impl)
 
+    implementation(projects.feature.webview.ui.api)
+    implementation(projects.feature.webview.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)

@@ -60,6 +60,7 @@ include(":feature:detected-city:ui:api")
 include(":feature:detected-city:ui:impl")
 
 include(":feature:webview:ui:api")
+include(":feature:webview:ui:impl")
 
 include(":data:content")
 include(":data:auth")

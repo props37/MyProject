@@ -31,6 +31,8 @@ import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.impl.SignInFeatureImpl
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.signup.ui.impl.SignUpFeatureImpl
+import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
+import ru.livetyping.zarina.feature.webview.ui.impl.WebViewFeatureImpl
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.WishlistFeatureImpl
 
@@ -103,4 +105,9 @@ internal class FeatureModule {
     @IntoMap
     @FeatureEntryKey(DetectedCityFeature::class)
     fun provideDetectedCityFeature(): FeatureEntry<*, *, *> = DetectedCityFeatureImpl()
+
+    @Provides
+    @IntoMap
+    @FeatureEntryKey(WebViewFeature::class)
+    fun provideWebViewFeature(): FeatureEntry<*, *, *> = WebViewFeatureImpl()
 }

@@ -12,6 +12,7 @@ import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
+import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 
 fun NavGraphBuilder.homeFeature(
@@ -55,7 +56,8 @@ fun rememberHomeNavActions(
                     }
 
                     is ClickAction.OpenUrl -> {
-                        // TODO: [Top] Implement
+                        val webViewNavEntry = WebViewFeature.NavEntry(clickAction.url.value)
+                        navController.navigate(webViewNavEntry)
                     }
 
                     null -> Unit

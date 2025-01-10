@@ -35,6 +35,7 @@ import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
+import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
@@ -65,9 +66,11 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberProductSubsc
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberWebViewNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.signUpFeature
+import ru.livetyping.zarina.presentation.navigation.feature.webViewFeature
 import ru.livetyping.zarina.presentation.navigation.feature.wishlistFeature
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
@@ -121,6 +124,9 @@ fun ZarinaNavigation(
 
     val detectedCityFeature = features.find<DetectedCityFeature>()
     val detectedCityNavActions = rememberDetectedCityNavActions(navController)
+
+    val webViewFeature = features.find<WebViewFeature>()
+    val webViewNavActions = rememberWebViewNavActions(navController)
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
@@ -196,6 +202,7 @@ fun ZarinaNavigation(
         productFeature(productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)
+        webViewFeature(webViewFeature, webViewNavActions)
     }
 }
 
