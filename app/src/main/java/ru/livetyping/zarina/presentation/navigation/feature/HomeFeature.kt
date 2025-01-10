@@ -54,6 +54,10 @@ fun rememberHomeNavActions(
                         navController.navigate(productListNavEntry)
                     }
 
+                    is ClickAction.OpenUrl -> {
+                        // TODO: [Top] Implement
+                    }
+
                     null -> Unit
                 }
             },
