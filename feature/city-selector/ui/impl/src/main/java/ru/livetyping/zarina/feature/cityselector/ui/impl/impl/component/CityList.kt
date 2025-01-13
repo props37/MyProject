@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -157,6 +158,7 @@ private fun CityListSuccessList(
         PaddingValues(top = 8.dp, bottom = bottom + bottomBase)
     }
     val contentPadding = windowInsetsProvider()
+        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
         .asPaddingValues()
         .plus(baseContentPadding, LocalLayoutDirection.current)
 
