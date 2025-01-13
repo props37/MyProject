@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.common.Location
@@ -24,6 +25,7 @@ internal fun StoreListViewModePager(
 ) {
     HorizontalPager(
         state = pagerState,
+        verticalAlignment = Alignment.Top,
         userScrollEnabled = false,
         key = { page -> viewModes[page] },
         modifier = modifier,

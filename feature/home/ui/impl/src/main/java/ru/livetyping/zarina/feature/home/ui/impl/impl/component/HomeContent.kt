@@ -196,6 +196,7 @@ private fun GenderContentPager(
     CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
         HorizontalPager(
             state = pagerState,
+            verticalAlignment = Alignment.Top,
             key = { page -> genderTabs[page] },
             modifier = modifier,
         ) { page ->

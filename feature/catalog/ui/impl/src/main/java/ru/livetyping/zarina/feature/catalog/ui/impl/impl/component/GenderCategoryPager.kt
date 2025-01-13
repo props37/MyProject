@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
@@ -22,6 +23,7 @@ internal fun GenderCategoryPager(
 ) {
     HorizontalPager(
         state = pagerState,
+        verticalAlignment = Alignment.Top,
         key = { page -> genderTabs[page] },
         modifier = modifier,
     ) { page ->
