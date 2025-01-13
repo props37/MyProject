@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist
 
+import android.Manifest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -99,7 +101,7 @@ internal class StoreListViewModel @Inject constructor(
         .map { it.getOrNull() }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
+            started = SharingStarted.WhileAndroidUiSubscribed,
             initialValue = null,
         )
 
@@ -107,7 +109,7 @@ internal class StoreListViewModel @Inject constructor(
         when (event) {
             StoreListEvent.BackClicked -> onBackClicked()
             StoreListEvent.ErrorRefreshClicked -> storeRequester.request(StoreRequest)
-            StoreListEvent.MyLocationClicked -> currentLocationRequester.request(LocationRequest)
+            StoreListEvent.MyLocationClicked -> onMyLocationClicked()
         }
     }
 
@@ -122,6 +124,26 @@ internal class StoreListViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = StoreListScreenAction.BackClicked
             emitSideEffect(StoreListSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onMyLocationClicked() {
+        viewModelScope.launch {
+            val fineLocationPermissionState =
+                deps.permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (fineLocationPermissionState.isGranted) {
+                currentLocationRequester.request(LocationRequest)
+            } else {
+                val newPermissionsState =
+                    deps.permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                if (newPermissionsState.any { it.value.isGranted }) {
+                    currentLocationRequester.request(LocationRequest)
+                } else {
+                    // TODO: [Top] Show LocationPermissionRequired dialog
+//                    val action = StoresScreenAction.LocationPermissionRequired
+//                    emitSideEffect(SideEffect.Navigate(action))
+                }
+            }
         }
     }
 
@@ -173,4 +195,12 @@ internal class StoreListViewModel @Inject constructor(
     private data object StoreRequest : FlowRequest
 
     private data object LocationRequest : FlowRequest
+
+    private companion object {
+        private val LOCATION_PERMISSIONS: List<String>
+            get() = listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+    }
 }

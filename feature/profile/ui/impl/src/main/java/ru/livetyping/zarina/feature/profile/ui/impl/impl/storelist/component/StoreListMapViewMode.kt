@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.uimap.toLatLng
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
+import timber.log.Timber
 
 @Composable
 internal fun StoreListMapViewMode(
@@ -93,7 +94,9 @@ private fun StoreMapSuccess(
     }
 
     ZarinaGoogleMap(
-        currentLocation = currentLocationProvider(),
+        currentLocation = currentLocationProvider().also {
+            Timber.d("<3 current location: $it")
+        },
         onMyLocationClicked = onMyLocationClicked,
         cameraPositionState = cameraPositionState,
         modifier = modifier,
