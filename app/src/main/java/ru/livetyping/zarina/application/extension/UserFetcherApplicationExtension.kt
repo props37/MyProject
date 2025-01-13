@@ -16,8 +16,12 @@ class UserFetcherApplicationExtension @Inject constructor(
 
     override fun install(application: Application) {
         coroutineScope.launch {
-            val params = GetUserFlowUseCase.Params(CachePolicy.Remote())
-            getUserFlow(params).firstOrNull()
+            val getLocalUserUseCaseParams = GetUserFlowUseCase.Params(CachePolicy.LocalOnly)
+            val localUser = getUserFlow(getLocalUserUseCaseParams).firstOrNull()?.getOrNull()
+            if (localUser != null) {
+                val getRemoteUserUseCaseParams = GetUserFlowUseCase.Params(CachePolicy.Remote())
+                getUserFlow(getRemoteUserUseCaseParams).firstOrNull()
+            }
         }
     }
 }
