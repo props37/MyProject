@@ -43,22 +43,7 @@ internal fun getZarinaAuthorizedHttpClient(
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     applyZarinaConfig(baseUrl, headerProvider)
-    install(Auth) {
-        bearer {
-            loadTokens {
-                val tokens = bearerTokenService.loadTokens()
-                Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens loaded: $tokens")
-                tokens?.toKtorBearerTokens()
-            }
-
-            refreshTokens {
-                val oldTokens = this.oldTokens?.let { BearerTokens.from(it) }
-                val newTokens = bearerTokenService.refreshTokens(oldTokens)
-                Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens refreshed: $newTokens")
-                newTokens?.toKtorBearerTokens()
-            }
-        }
-    }
+    installAuthPlugin(bearerTokenService)
 }.also { client ->
     client.loadBearerTokensOnAuthorizationFailure()
 }
@@ -105,6 +90,25 @@ private fun HttpClientConfig<*>.applyZarinaConfig(
         headers {
             headerProvider.provide().forEach { (key, value) ->
                 append(key, value)
+            }
+        }
+    }
+}
+
+private fun HttpClientConfig<*>.installAuthPlugin(bearerTokenService: BearerTokenService) {
+    install(Auth) {
+        bearer {
+            loadTokens {
+                val tokens = bearerTokenService.loadTokens()
+                Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens loaded: $tokens")
+                tokens?.toKtorBearerTokens()
+            }
+
+            refreshTokens {
+                val oldTokens = this.oldTokens?.let { BearerTokens.from(it) }
+                val newTokens = bearerTokenService.refreshTokens(oldTokens)
+                Timber.tag(HTTP_CLIENT_TAG).v("Bearer tokens refreshed: $newTokens")
+                newTokens?.toKtorBearerTokens()
             }
         }
     }
