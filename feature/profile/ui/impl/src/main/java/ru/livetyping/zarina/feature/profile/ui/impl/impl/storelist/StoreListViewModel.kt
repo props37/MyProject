@@ -8,6 +8,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
@@ -23,9 +24,15 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.platform.PackageName
+import ru.livetyping.zarina.core.platform.settings.SystemSettings
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.RequiredPermission
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -33,6 +40,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreLi
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListViewMode
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class StoreListViewModel @Inject constructor(
@@ -105,6 +113,11 @@ internal class StoreListViewModel @Inject constructor(
             initialValue = null,
         )
 
+    private val _permissionRequiredDialogState =
+        MutableStateFlow<PermissionRequiredDialogState>(PermissionRequiredDialogState.None)
+    val permissionRequiredDialogState: StateFlow<PermissionRequiredDialogState> =
+        _permissionRequiredDialogState.asStateFlow()
+
     fun onStoreListEvent(event: StoreListEvent) {
         when (event) {
             StoreListEvent.BackClicked -> onBackClicked()
@@ -117,6 +130,22 @@ internal class StoreListViewModel @Inject constructor(
         when (event) {
             is TabRowEvent.TabChanged -> currentViewMode.value = event.tab
             is TabRowEvent.TabReselected -> Unit
+        }
+    }
+
+    fun onRequiredPermissionDialogEvent(event: PermissionRequiredDialogEvent) {
+        when (event) {
+            PermissionRequiredDialogEvent.CloseClicked -> {
+                _permissionRequiredDialogState.value = PermissionRequiredDialogState.None
+            }
+
+            is PermissionRequiredDialogEvent.GoToSettingsClicked -> {
+                if (event.permission == RequiredPermission.LOCATION) {
+                    val systemSettings = SystemSettings.ApplicationDetails(PackageName.Own)
+                    emitSideEffect(StoreListSideEffect.OpenSystemSettings(systemSettings))
+                }
+                _permissionRequiredDialogState.value = PermissionRequiredDialogState.None
+            }
         }
     }
 
@@ -139,9 +168,11 @@ internal class StoreListViewModel @Inject constructor(
                 if (newPermissionsState.any { it.value.isGranted }) {
                     currentLocationRequester.request(LocationRequest)
                 } else {
-                    // TODO: [Top] Show LocationPermissionRequired dialog
-//                    val action = StoresScreenAction.LocationPermissionRequired
-//                    emitSideEffect(SideEffect.Navigate(action))
+                    _permissionRequiredDialogState.value = PermissionRequiredDialogState.PermissionRequired(
+                        permission = RequiredPermission.LOCATION,
+                        title = Text.Resource(RCommon.string.res_grant_location_permission),
+                        body = Text.Resource(RCommon.string.res_it_will_help_us_to_detect_your_location),
+                    )
                 }
             }
         }

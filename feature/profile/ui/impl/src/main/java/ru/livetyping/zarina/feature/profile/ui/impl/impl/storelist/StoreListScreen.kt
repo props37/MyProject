@@ -22,6 +22,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.store.Store
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -44,6 +47,7 @@ internal fun StoreListScreen(
     val mapState by viewModel.mapState.collectAsStateWithLifecycle()
     val listState by viewModel.listState.collectAsStateWithLifecycle()
     val currentLocation by viewModel.currentLocation.collectAsStateWithLifecycle()
+    val permissionRequiredDialogState by viewModel.permissionRequiredDialogState.collectAsStateWithLifecycle()
 
     ScreenContent(
         onStoreListEvent = viewModel::onStoreListEvent,
@@ -52,6 +56,8 @@ internal fun StoreListScreen(
         mapStateProvider = { mapState },
         listStateProvider = { listState },
         currentLocationProvider = { currentLocation },
+        permissionRequiredDialogState = permissionRequiredDialogState,
+        onPermissionRequiredDialogEvent = viewModel::onRequiredPermissionDialogEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -66,6 +72,8 @@ internal fun ScreenContent(
     mapStateProvider: () -> StoreListState,
     listStateProvider: () -> StoreListState,
     currentLocationProvider: () -> Location?,
+    permissionRequiredDialogState: PermissionRequiredDialogState,
+    onPermissionRequiredDialogEvent: (PermissionRequiredDialogEvent) -> Unit,
     sideEffects: Flow<StoreListSideEffect>,
     navActions: StoreListNavActions,
 ) {
@@ -81,6 +89,11 @@ internal fun ScreenContent(
             onDismissRequest = { visibleStoreModalBottomSheet = null },
         )
     }
+
+    PermissionRequiredModalBottomSheet(
+        state = permissionRequiredDialogState,
+        onEvent = onPermissionRequiredDialogEvent,
+    )
 
     Column(
         modifier = Modifier
