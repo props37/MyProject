@@ -164,8 +164,8 @@ public data class ProductFilters(
     }
 
     public companion object {
-        public val EMPTY: ProductFilters
-            get() = ProductFilters(
+        public fun getEmpty(): ProductFilters {
+            return ProductFilters(
                 sorting = null,
                 price = null,
                 materials = null,
@@ -175,6 +175,7 @@ public data class ProductFilters(
                 storePickupAvailability = null,
                 pickupStores = null,
             )
+        }
 
         public fun create(
             sorting: ProductListFilter<ProductSortFilterItem>? = null,

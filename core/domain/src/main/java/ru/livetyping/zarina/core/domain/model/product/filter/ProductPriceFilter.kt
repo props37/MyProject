@@ -33,7 +33,8 @@ public data class ProductPriceFilter(
     }
 
     public companion object {
-        public val EMPTY: ProductPriceFilter
-            get() = ProductPriceFilter(min = null, max = null, limits = PriceRange.EMPTY)
+        public fun getEmpty(): ProductPriceFilter {
+            return ProductPriceFilter(min = null, max = null, limits = PriceRange.getEmpty())
+        }
     }
 }

@@ -10,7 +10,6 @@ public data class PriceRange(
     }
 
     public companion object {
-        public val EMPTY: PriceRange
-            get() = PriceRange(min = 0, max = Int.MAX_VALUE)
+        public fun getEmpty(): PriceRange = PriceRange(min = 0, max = Int.MAX_VALUE)
     }
 }

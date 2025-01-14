@@ -23,8 +23,8 @@ public data class MediaDto(
             val originalUrl = originalUrl?.let { Url.create(it) }
             val thumbnailUrl = mediaUrl?.let { Url.create(it) }
             Media(
-                originalUrl = originalUrl ?: thumbnailUrl ?: Url.EMPTY,
-                thumbnailUrl = thumbnailUrl ?: originalUrl ?: Url.EMPTY,
+                originalUrl = originalUrl ?: thumbnailUrl ?: Url.getEmpty(),
+                thumbnailUrl = thumbnailUrl ?: originalUrl ?: Url.getEmpty(),
                 type = type,
             )
         } else {
