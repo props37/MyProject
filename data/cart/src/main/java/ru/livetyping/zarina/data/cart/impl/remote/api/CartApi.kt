@@ -16,5 +16,9 @@ internal interface CartApi {
 
     suspend fun remoteProductFromCart(barcode: Barcode): CartProductCountDto
 
+    suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int)
+
+    suspend fun withdrawMyCard(cartType: CartType)
+
     suspend fun clearCart()
 }

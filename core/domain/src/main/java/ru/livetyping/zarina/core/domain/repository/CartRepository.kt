@@ -28,6 +28,10 @@ public interface CartRepository {
         barcode: Barcode,
     )
 
+    public suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int)
+
+    public suspend fun withdrawMyCard(cartType: CartType)
+
     public suspend fun clearCart()
 
     public fun clear()

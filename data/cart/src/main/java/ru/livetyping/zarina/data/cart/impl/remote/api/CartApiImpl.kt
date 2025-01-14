@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.AddProductToCartRequestBody
+import ru.livetyping.zarina.data.cart.impl.remote.api.dto.ApplyMyCardRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductIdsDto
@@ -43,6 +44,22 @@ internal class CartApiImpl @Inject constructor(
 
     override suspend fun remoteProductFromCart(barcode: Barcode): CartProductCountDto {
         return httpClient.delete("/api/cart/item/${barcode.value}").body()
+    }
+
+    override suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int) {
+        val body = ApplyMyCardRequestBody(
+            cartType = CartTypeDto.from(cartType),
+            productsFirstPriceSum = productsFirstPriceSum,
+        )
+        httpClient.post("/api/cart/my-card") {
+            setJsonBody(body)
+        }
+    }
+
+    override suspend fun withdrawMyCard(cartType: CartType) {
+        httpClient.delete("/api/cart/my-card") {
+            parameter("cart_type", CartTypeDto.from(cartType).value)
+        }
     }
 
     override suspend fun clearCart() {

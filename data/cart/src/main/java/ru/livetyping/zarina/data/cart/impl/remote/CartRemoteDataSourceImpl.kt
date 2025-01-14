@@ -32,6 +32,14 @@ internal class CartRemoteDataSourceImpl @Inject constructor(
         return api.remoteProductFromCart(barcode).toCartProductCount()
     }
 
+    override suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int) {
+        api.applyMyCard(cartType, productsFirstPriceSum)
+    }
+
+    override suspend fun withdrawMyCard(cartType: CartType) {
+        api.withdrawMyCard(cartType)
+    }
+
     override suspend fun clearCart() {
         api.clearCart()
     }
