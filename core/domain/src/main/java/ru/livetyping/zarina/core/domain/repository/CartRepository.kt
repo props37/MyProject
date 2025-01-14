@@ -32,6 +32,10 @@ public interface CartRepository {
 
     public suspend fun withdrawMyCard(cartType: CartType)
 
+    public suspend fun applyPromoCode(promoCode: String)
+
+    public suspend fun withdrawPromoCode()
+
     public suspend fun clearCart()
 
     public fun clear()

@@ -66,6 +66,14 @@ internal class CartRepositoryImpl @Inject constructor(
         remoteDataSource.withdrawMyCard(cartType)
     }
 
+    override suspend fun applyPromoCode(promoCode: String) {
+        remoteDataSource.applyPromoCode(promoCode)
+    }
+
+    override suspend fun withdrawPromoCode() {
+        remoteDataSource.withdrawPromoCode()
+    }
+
     override suspend fun clearCart() {
         remoteDataSource.clearCart()
         localDataSource.setCartProductIds(emptySet())

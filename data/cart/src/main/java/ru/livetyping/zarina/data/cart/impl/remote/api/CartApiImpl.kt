@@ -14,6 +14,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.AddProductToCartRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.ApplyMyCardRequestBody
+import ru.livetyping.zarina.data.cart.impl.remote.api.dto.ApplyPromoCodeRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductIdsDto
@@ -60,6 +61,17 @@ internal class CartApiImpl @Inject constructor(
         httpClient.delete("/api/cart/my-card") {
             parameter("cart_type", CartTypeDto.from(cartType).value)
         }
+    }
+
+    override suspend fun applyPromoCode(promoCode: String) {
+        val body = ApplyPromoCodeRequestBody(promoCode)
+        httpClient.post("/api/cart/promocode") {
+            setJsonBody(body)
+        }
+    }
+
+    override suspend fun withdrawPromoCode() {
+        httpClient.delete("/api/cart/promocode")
     }
 
     override suspend fun clearCart() {

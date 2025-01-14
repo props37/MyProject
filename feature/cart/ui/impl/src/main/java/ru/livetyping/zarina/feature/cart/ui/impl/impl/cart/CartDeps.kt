@@ -1,12 +1,14 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
@@ -23,8 +25,8 @@ internal class CartDeps @Inject constructor(
     val removeProductFromCart: RemoveProductFromCartUseCase,
     val applyMyCard: ApplyMyCardUseCase,
     val withdrawMyCard: WithdrawMyCardUseCase,
-    // TODO: [Top] Add ApplyPromoCodeUseCase
-    // TODO: [Top] Add RemovePromoCodeUseCase
+    val applyPromoCode: ApplyPromoCodeUseCase,
+    val withdrawPromoCode: WithdrawPromoCodeUseCase,
     // TODO: [Top] Add ApplyBonusWriteOffUseCase
     // TODO: [Top] Add RemoveBonusWriteOffUseCase
 )

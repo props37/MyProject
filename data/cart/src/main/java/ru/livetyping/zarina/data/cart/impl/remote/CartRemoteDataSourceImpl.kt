@@ -40,6 +40,14 @@ internal class CartRemoteDataSourceImpl @Inject constructor(
         api.withdrawMyCard(cartType)
     }
 
+    override suspend fun applyPromoCode(promoCode: String) {
+        api.applyPromoCode(promoCode)
+    }
+
+    override suspend fun withdrawPromoCode() {
+        api.withdrawPromoCode()
+    }
+
     override suspend fun clearCart() {
         api.clearCart()
     }

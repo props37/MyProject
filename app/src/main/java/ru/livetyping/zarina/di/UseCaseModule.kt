@@ -22,12 +22,14 @@ import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
@@ -723,6 +725,28 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): WithdrawMyCardUseCase {
         return WithdrawMyCardUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideApplyPromoCodeUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): ApplyPromoCodeUseCase {
+        return ApplyPromoCodeUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideWithdrawPromoCodeUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): WithdrawPromoCodeUseCase {
+        return WithdrawPromoCodeUseCase.getInstance(
             cartRepository = cartRepository,
             logger = logger,
         )

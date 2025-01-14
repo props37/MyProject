@@ -20,5 +20,9 @@ internal interface CartApi {
 
     suspend fun withdrawMyCard(cartType: CartType)
 
+    suspend fun applyPromoCode(promoCode: String)
+
+    suspend fun withdrawPromoCode()
+
     suspend fun clearCart()
 }
