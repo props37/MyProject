@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
+import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
@@ -13,7 +14,7 @@ internal class CartDeps @Inject constructor(
     val getUserCityFlow: GetUserCityFlowUseCase,
     val setUserCity: SetUserCityUseCase,
     // TODO: [Top] Add GetCartFlowUseCase
-    // TODO: [Top] Add ClearCartUseCase
+    val clearCart: ClearCartUseCase,
     val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     // TODO: [Top] Add RemoveProductFromCartUseCase
     // TODO: [Top] Add ApplyMyCardToCartUseCase
