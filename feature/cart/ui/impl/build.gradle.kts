@@ -58,7 +58,7 @@ composeCompiler {
 
 dependencies {
     implementation(projects.feature.cart.ui.api)
-    implementation(projects.core.uiCommon)
+    implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
     implementation(projects.core.uiModel)
     implementation(projects.core.coroutinesUtil)
@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.hilt.navigationCompose)
 
     implementation(libs.kotlin.serialization.json)
+    implementation(libs.kotlin.immutableCollections)
 
     implementation(libs.timber)
 

@@ -22,6 +22,7 @@ internal fun CartScreenBehavior(
 
     BottomNavBarBehavior(isVisible = true)
 
+    // TODO: [Top] Implement
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
@@ -29,6 +30,10 @@ internal fun CartScreenBehavior(
                     is CartSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
+
+                    CartSideEffect.HideKeyboard -> TODO()
+                    is CartSideEffect.OpenUrl -> TODO()
+                    is CartSideEffect.ShowZarinaToast -> TODO()
                 }
             }
         }
@@ -39,8 +44,14 @@ internal fun CartScreenBehavior(
     }
 }
 
+// TODO: [Top] Implement
 private fun navigate(navActions: CartNavActions, action: CartScreenAction) {
     when (action) {
         CartScreenAction.BackClicked -> navActions.onBackClicked()
+        is CartScreenAction.CheckoutClicked -> TODO()
+        is CartScreenAction.CityClicked -> TODO()
+        CartScreenAction.GoToCatalogClicked -> TODO()
+        is CartScreenAction.ProductClicked -> TODO()
+        is CartScreenAction.ProductCountClicked -> TODO()
     }
 }
