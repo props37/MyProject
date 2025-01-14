@@ -35,6 +35,10 @@ internal class CartRepositoryImpl @Inject constructor(
         return localDataSource.areCartProductIdsFetched()
     }
 
+    override fun getCartProductCountFlow(): Flow<Int> {
+        return localDataSource.getCartProductCountFlow()
+    }
+
     override suspend fun addProductToCart(productId: Product.Id, barcode: Barcode, count: Int) {
         val cartProductCount = remoteDataSource.addProductToCart(barcode, count)
         localDataSource.addProductToCart(productId)

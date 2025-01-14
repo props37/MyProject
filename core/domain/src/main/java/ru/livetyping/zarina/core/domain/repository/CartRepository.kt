@@ -10,6 +10,8 @@ public interface CartRepository {
 
     public fun areCartProductIdsFetched(): Boolean
 
+    public fun getCartProductCountFlow(): Flow<Int>
+
     public suspend fun addProductToCart(
         productId: Product.Id,
         barcode: Barcode,
