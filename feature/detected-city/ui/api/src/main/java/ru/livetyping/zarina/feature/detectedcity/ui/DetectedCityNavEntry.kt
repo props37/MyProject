@@ -9,6 +9,6 @@ public data class DetectedCityNavEntry(
     val cityName: String = getDefaultCityName(),
 ) : NavigationEntry {
     internal companion object {
-        fun getDefaultCityName(): String = City.DEFAULT.name
+        fun getDefaultCityName(): String = City.getDefault().name
     }
 }

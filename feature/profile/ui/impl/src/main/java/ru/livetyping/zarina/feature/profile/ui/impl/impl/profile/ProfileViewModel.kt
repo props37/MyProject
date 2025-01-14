@@ -72,7 +72,7 @@ internal class ProfileViewModel @AssistedInject constructor(
         GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
     private val userCity: StateFlow<City?> = deps.getUserCityFlow(getUserCityUseCaseParams)
         .map { result ->
-            result.getOrDefault(City.DEFAULT)
+            result.getOrDefault(City.getDefault())
         }
         .stateIn(
             scope = viewModelScope,

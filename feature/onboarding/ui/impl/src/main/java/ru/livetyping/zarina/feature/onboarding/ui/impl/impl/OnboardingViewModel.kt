@@ -104,7 +104,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
         OnboardingState(
             onboardingSteps = onboardingSteps.toImmutableList(),
             currentOnboardingStep = currentStep,
-            city = city?.toCity() ?: City.DEFAULT,
+            city = city?.toCity() ?: City.getDefault(),
             isSkipCityDetectionButtonLoading = isSkipCityDetectionButtonLoading,
             isDetectCityButtonLoading = Operation.DETECT_CITY in ongoingOperations,
             isConfirmCityButtonLoading = isConfirmCityButtonLoading,
@@ -116,7 +116,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
         initialValue = OnboardingState(
             onboardingSteps = onboardingStepsValueHolder.stateFlow.value.toImmutableList(),
             currentOnboardingStep = currentOnboardingStepValueHolder.stateFlow.value,
-            city = cityValueHolder.get()?.toCity() ?: City.DEFAULT,
+            city = cityValueHolder.get()?.toCity() ?: City.getDefault(),
             isSkipCityDetectionButtonLoading = false,
             isDetectCityButtonLoading = false,
             isConfirmCityButtonLoading = false,
@@ -177,7 +177,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
                             .firstOrNull() ?: emptyMap()
                     if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
                         // User has denied the permission permanently
-                        cityValueHolder.set(CityParcelable.from(City.DEFAULT))
+                        cityValueHolder.set(CityParcelable.from(City.getDefault()))
                         showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
                     }
                 }
@@ -196,7 +196,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
         completeOnboardingJob = viewModelScope.launch {
             val city = cityValueHolder.get()?.toCity() ?: run {
                 Timber.e("User city is null, proceeding with default")
-                City.DEFAULT
+                City.getDefault()
             }
             completeOnboarding(city)
                 .onSuccess {
@@ -263,7 +263,7 @@ internal class OnboardingViewModel @AssistedInject constructor(
     }
 
     private fun onDetectCityFailure() {
-        cityValueHolder.set(CityParcelable.from(City.DEFAULT))
+        cityValueHolder.set(CityParcelable.from(City.getDefault()))
         showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
     }
 
@@ -285,10 +285,10 @@ internal class OnboardingViewModel @AssistedInject constructor(
                 SetIsOnboardingCompletedUseCase.Params(isCompleted = true)
             deps.setIsOnboardingCompleted(setIsOnboardingCompletedParams)
 
-            val setUserCityParams = SetUserCityUseCase.Params(selectedCity ?: City.DEFAULT)
+            val setUserCityParams = SetUserCityUseCase.Params(selectedCity ?: City.getDefault())
             deps.setUserCity(setUserCityParams)
                 .onFailure {
-                    deps.setLocalUserCity(SetLocalUserCityUseCase.Params(City.DEFAULT))
+                    deps.setLocalUserCity(SetLocalUserCityUseCase.Params(City.getDefault()))
                 }
         }
     }
