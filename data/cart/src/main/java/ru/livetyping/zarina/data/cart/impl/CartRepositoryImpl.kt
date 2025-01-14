@@ -51,6 +51,12 @@ internal class CartRepositoryImpl @Inject constructor(
         localDataSource.setCartProductCount(cartProductCount.value)
     }
 
+    override suspend fun clearCart() {
+        remoteDataSource.clearCart()
+        localDataSource.setCartProductIds(emptySet())
+        localDataSource.setCartProductCount(0)
+    }
+
     override fun clear() {
         localDataSource.clear()
     }

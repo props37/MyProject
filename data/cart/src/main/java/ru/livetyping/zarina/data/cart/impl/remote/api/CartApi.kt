@@ -10,4 +10,6 @@ internal interface CartApi {
     suspend fun addProductToCart(barcode: Barcode, count: Int): CartProductCountDto
 
     suspend fun remoteProductFromCart(barcode: Barcode): CartProductCountDto
+
+    suspend fun clearCart()
 }

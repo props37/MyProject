@@ -23,4 +23,8 @@ internal class CartRemoteDataSourceImpl @Inject constructor(
     override suspend fun remoteProductFromCart(barcode: Barcode): CartProductCount {
         return api.remoteProductFromCart(barcode).toCartProductCount()
     }
+
+    override suspend fun clearCart() {
+        api.clearCart()
+    }
 }

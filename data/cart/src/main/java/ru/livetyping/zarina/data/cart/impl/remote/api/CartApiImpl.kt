@@ -32,4 +32,8 @@ internal class CartApiImpl @Inject constructor(
     override suspend fun remoteProductFromCart(barcode: Barcode): CartProductCountDto {
         return httpClient.delete("/api/cart/item/${barcode.value}").body()
     }
+
+    override suspend fun clearCart() {
+        httpClient.delete("/api/cart")
+    }
 }

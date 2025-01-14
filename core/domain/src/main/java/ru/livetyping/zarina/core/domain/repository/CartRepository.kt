@@ -23,5 +23,7 @@ public interface CartRepository {
         barcode: Barcode,
     )
 
+    public suspend fun clearCart()
+
     public fun clear()
 }
