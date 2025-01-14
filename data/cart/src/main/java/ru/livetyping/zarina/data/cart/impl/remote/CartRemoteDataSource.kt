@@ -25,5 +25,9 @@ internal interface CartRemoteDataSource {
 
     suspend fun withdrawPromoCode()
 
+    suspend fun redeemBonuses(cartType: CartType, bonusCount: Int)
+
+    suspend fun cancelBonusRedemption(cartType: CartType)
+
     suspend fun clearCart()
 }

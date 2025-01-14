@@ -48,6 +48,14 @@ internal class CartRemoteDataSourceImpl @Inject constructor(
         api.withdrawPromoCode()
     }
 
+    override suspend fun redeemBonuses(cartType: CartType, bonusCount: Int) {
+        api.redeemBonuses(cartType, bonusCount)
+    }
+
+    override suspend fun cancelBonusRedemption(cartType: CartType) {
+        api.cancelBonusRedemption(cartType)
+    }
+
     override suspend fun clearCart() {
         api.clearCart()
     }

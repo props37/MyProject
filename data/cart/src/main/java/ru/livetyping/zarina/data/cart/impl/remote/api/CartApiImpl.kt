@@ -19,6 +19,7 @@ import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductIdsDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartTypeDto
+import ru.livetyping.zarina.data.cart.impl.remote.api.dto.SetBonusRedemptionRequestBody
 import javax.inject.Inject
 
 internal class CartApiImpl @Inject constructor(
@@ -74,7 +75,38 @@ internal class CartApiImpl @Inject constructor(
         httpClient.delete("/api/cart/promocode")
     }
 
+    override suspend fun redeemBonuses(cartType: CartType, bonusCount: Int) {
+        setBonusRedemption(
+            cartType = cartType,
+            isRedemptionApplied = true,
+            bonusCountToRedeem = bonusCount,
+        )
+    }
+
+    override suspend fun cancelBonusRedemption(cartType: CartType) {
+        setBonusRedemption(
+            cartType = cartType,
+            isRedemptionApplied = false,
+            bonusCountToRedeem = 0,
+        )
+    }
+
     override suspend fun clearCart() {
         httpClient.delete("/api/cart")
+    }
+
+    private suspend fun setBonusRedemption(
+        cartType: CartType,
+        isRedemptionApplied: Boolean,
+        bonusCountToRedeem: Int,
+    ) {
+        val body = SetBonusRedemptionRequestBody(
+            cartType = CartTypeDto.from(cartType),
+            isRedemptionApplied = isRedemptionApplied,
+            bonusCountToRedeem = bonusCountToRedeem,
+        )
+        httpClient.post("/api/cart/bonuses") {
+            setJsonBody(body)
+        }
     }
 }

@@ -23,10 +23,12 @@ import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
@@ -747,6 +749,28 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): WithdrawPromoCodeUseCase {
         return WithdrawPromoCodeUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRedeemBonusesUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): RedeemBonusesUseCase {
+        return RedeemBonusesUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCancelBonusRedemptionUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): CancelBonusRedemptionUseCase {
+        return CancelBonusRedemptionUseCase.getInstance(
             cartRepository = cartRepository,
             logger = logger,
         )

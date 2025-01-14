@@ -36,6 +36,10 @@ public interface CartRepository {
 
     public suspend fun withdrawPromoCode()
 
+    public suspend fun redeemBonuses(cartType: CartType, bonusCount: Int)
+
+    public suspend fun cancelBonusRedemption(cartType: CartType)
+
     public suspend fun clearCart()
 
     public fun clear()
