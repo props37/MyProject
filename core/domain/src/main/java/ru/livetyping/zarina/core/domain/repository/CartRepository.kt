@@ -9,7 +9,7 @@ import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 
 public interface CartRepository {
-    public fun getCartFlow(cartType: CartType, cityKladrId: KladrId): Flow<Cart>
+    public fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart>
 
     public fun getCartProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>>
 

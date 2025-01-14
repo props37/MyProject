@@ -21,7 +21,7 @@ public data class CartProduct(
     val size: String,
     val height: String?,
     val count: Int,
-    val isInFavorites: Boolean,
+    val isInWishlist: Boolean,
     val availableCount: AvailableCount,
 ) {
     @JvmInline

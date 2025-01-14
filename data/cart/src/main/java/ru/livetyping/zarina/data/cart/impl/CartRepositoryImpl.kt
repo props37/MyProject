@@ -23,7 +23,7 @@ internal class CartRepositoryImpl @Inject constructor(
     private val remoteDataSource: CartRemoteDataSource,
     private val localDataSource: CartLocalDataSource,
 ) : CartRepository {
-    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId): Flow<Cart> {
+    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart> {
         return remoteDataSource.getCartFlow(cartType, cityKladrId)
     }
 

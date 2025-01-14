@@ -50,7 +50,7 @@ internal data class CartProductDto(
             size = offer.sizeName,
             height = offer.growth?.takeIf { it.isNotBlank() },
             count = quantity,
-            isInFavorites = offer.isFavorite ?: false,
+            isInWishlist = offer.isFavorite ?: false,
             availableCount = CartProduct.AvailableCount(
                 delivery = offer.onlineAmount ?: 0,
                 pickup = offer.retailAmount ?: 0,

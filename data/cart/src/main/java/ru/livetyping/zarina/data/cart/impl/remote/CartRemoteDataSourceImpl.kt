@@ -14,7 +14,7 @@ import javax.inject.Inject
 internal class CartRemoteDataSourceImpl @Inject constructor(
     private val api: CartApi,
 ) : CartRemoteDataSource {
-    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId): Flow<Cart> = flow {
+    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart> = flow {
         val cart = api.getCart(cartType, cityKladrId).toCart(cartType)
         emit(cart)
     }

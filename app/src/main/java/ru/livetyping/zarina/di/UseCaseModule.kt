@@ -22,6 +22,7 @@ import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
@@ -684,6 +685,21 @@ internal class UseCaseModule {
     ): ClearCartUseCase {
         return ClearCartUseCase.getInstance(
             cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCartFlowUseCase(
+        cartRepository: CartRepository,
+        userRepository: UserRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetCartFlowUseCase {
+        return GetCartFlowUseCase.getInstance(
+            cartRepository = cartRepository,
+            userRepository = userRepository,
+            wishlistRepository = wishlistRepository,
             logger = logger,
         )
     }

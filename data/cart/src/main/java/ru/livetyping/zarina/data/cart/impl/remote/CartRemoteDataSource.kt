@@ -9,7 +9,7 @@ import ru.livetyping.zarina.data.cart.impl.model.CartProductCount
 import ru.livetyping.zarina.data.cart.impl.model.CartProductIds
 
 internal interface CartRemoteDataSource {
-    fun getCartFlow(cartType: CartType, cityKladrId: KladrId): Flow<Cart>
+    fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart>
 
     fun getCartProductIdsFlow(): Flow<CartProductIds>
 
