@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.domain.model.store
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
-import ru.livetyping.zarina.core.domain.model.geo.City as DomainCity
+import ru.livetyping.zarina.core.domain.model.geo.City as CityDomain
 
 // Marked as stable on config/compose/stability_config.txt
 public data class Store(
@@ -16,9 +16,9 @@ public data class Store(
     val country: String?,
     val city: City?,
 ) {
-    public fun getCity(): DomainCity? {
+    public fun getCity(): CityDomain? {
         return city?.let { city ->
-            DomainCity(
+            CityDomain(
                 id = city.kladrId,
                 name = city.name,
                 fullName = null,

@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.network.auth
 
 import ru.livetyping.zarina.core.domain.model.common.Token
 import io.ktor.client.plugins.auth.providers.BearerTokens as KtorBearerTokens
-import ru.livetyping.zarina.core.domain.model.auth.BearerTokens as DomainBearerTokens
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens as BearerTokensDomain
 
 public data class BearerTokens(
     public val accessToken: String,
@@ -15,8 +15,8 @@ public data class BearerTokens(
         )
     }
 
-    public fun toBearerTokens(): DomainBearerTokens {
-        return DomainBearerTokens(
+    public fun toBearerTokens(): BearerTokensDomain {
+        return BearerTokensDomain(
             accessToken = Token(accessToken),
             refreshToken = Token(refreshToken),
         )
@@ -31,7 +31,7 @@ public data class BearerTokens(
             )
         }
 
-        public fun from(tokens: DomainBearerTokens): BearerTokens {
+        public fun from(tokens: BearerTokensDomain): BearerTokens {
             return BearerTokens(
                 accessToken = tokens.accessToken.value,
                 refreshToken = tokens.refreshToken.value,

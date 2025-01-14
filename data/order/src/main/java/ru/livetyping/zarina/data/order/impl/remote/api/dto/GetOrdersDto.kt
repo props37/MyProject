@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
 import java.time.LocalDate
-import ru.livetyping.zarina.core.domain.model.order.Order as DomainOrder
+import ru.livetyping.zarina.core.domain.model.order.Order as OrderDomain
 
 @Serializable
 internal data class GetOrdersDto(
@@ -59,8 +59,8 @@ internal data class GetOrdersDto(
             checkPropertyNotNull(totalSum) { ::totalSum }
             checkPropertyNotNull(products) { ::products }
             return OrderShort(
-                id = DomainOrder.Id(id.toString()),
-                number = DomainOrder.Number(number),
+                id = OrderDomain.Id(id.toString()),
+                number = OrderDomain.Number(number),
                 productCount = productCount,
                 date = LocalDate.parse(date),
                 status = status.toOrderStatus(),

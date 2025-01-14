@@ -15,8 +15,8 @@ import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
-import ru.livetyping.zarina.core.domain.model.common.Color as DomainColor
-import ru.livetyping.zarina.core.domain.model.product.Product as DomainProduct
+import ru.livetyping.zarina.core.domain.model.common.Color as ColorDomain
+import ru.livetyping.zarina.core.domain.model.product.Product as ProductDomain
 
 @Serializable
 internal data class OrderDto(
@@ -136,7 +136,7 @@ internal data class OrderDto(
             checkPropertyNotNull(price) { ::price }
             checkPropertyNotNull(quantity) { ::quantity }
             return OrderDetailed.Product(
-                id = DomainProduct.Id(vendorCode),
+                id = ProductDomain.Id(vendorCode),
                 name = name,
                 size = size,
                 color = getProductColor(),
@@ -154,8 +154,8 @@ internal data class OrderDto(
             return ProductColor(
                 id = ProductColor.Id(color.code),
                 name = color.title,
-                color = DomainColor(color.code),
-                productId = DomainProduct.Id(vendorCode),
+                color = ColorDomain(color.code),
+                productId = ProductDomain.Id(vendorCode),
             )
         }
 

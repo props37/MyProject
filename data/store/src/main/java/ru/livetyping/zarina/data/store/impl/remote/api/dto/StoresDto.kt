@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
-import ru.livetyping.zarina.core.domain.model.store.Store as DomainStore
+import ru.livetyping.zarina.core.domain.model.store.Store as StoreDomain
 
 @Serializable
 internal data class StoresDto(
@@ -33,7 +33,7 @@ internal data class StoresDto(
         @SerialName("shops")
         val shops: List<Store>? = null,
     ) {
-        fun getStores(country: String): List<DomainStore> {
+        fun getStores(country: String): List<StoreDomain> {
             checkPropertyNotNull(shops) { ::shops }
             return shops.map { store ->
                 checkPropertyNotNull(name) { ::name }
@@ -68,15 +68,15 @@ internal data class StoresDto(
             @SerialName("lon")
             val lon: Double? = null,
         ) {
-            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): DomainStore {
+            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): StoreDomain {
                 checkPropertyNotNull(id) { ::id }
                 checkPropertyNotNull(name) { ::name }
                 checkPropertyNotNull(address) { ::address }
                 checkPropertyNotNull(lat) { ::lat }
                 checkPropertyNotNull(lon) { ::lat }
-                val city = cityKladrId?.let { DomainStore.City(cityKladrId, cityName) }
-                return DomainStore(
-                    id = DomainStore.Id(id),
+                val city = cityKladrId?.let { StoreDomain.City(cityKladrId, cityName) }
+                return StoreDomain(
+                    id = StoreDomain.Id(id),
                     name = name,
                     address = address,
                     phone = phone?.let { PhoneNumber.create(it) },

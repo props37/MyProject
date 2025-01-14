@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import java.time.LocalDate
-import ru.livetyping.zarina.core.domain.model.product.Product as DomainProduct
+import ru.livetyping.zarina.core.domain.model.product.Product as ProductDomain
 
 // Marked as stable on config/compose/stability_config.txt
 public data class OrderDetailed(
@@ -32,7 +32,7 @@ public data class OrderDetailed(
 ) {
     // Marked as stable on config/compose/stability_config.txt
     public data class Product(
-        val id: DomainProduct.Id,
+        val id: ProductDomain.Id,
         val name: String,
         val size: String,
         val color: ProductColor,
