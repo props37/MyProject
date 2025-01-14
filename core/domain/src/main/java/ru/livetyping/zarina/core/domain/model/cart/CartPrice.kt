@@ -6,5 +6,5 @@ public data class CartPrice(
     val discountSize: Int,
     val finalPrice: Int,
     val deliveryPrice: Int?,
-    val giftCertificateWriteOffSize: Int?,
+    val giftCertificateRedemptionValue: Int?,
 )

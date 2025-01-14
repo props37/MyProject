@@ -67,7 +67,7 @@ internal data class CartDto(
             products = items.map { it.toCartProduct() },
             size = getCartSize(),
             price = getCartPrice(),
-            bonuses = getBonuses(),
+            bonusAccount = getBonusAccount(),
             myCard = getMyCard(),
             giftCertificate = getAppliedGiftCertificate(),
             promoCode = getPromoCode(),
@@ -88,7 +88,7 @@ internal data class CartDto(
         checkPropertyNotNull(discount) { ::discount }
         checkPropertyNotNull(totalDiscount) { ::totalDiscount }
         checkPropertyNotNull(totalSum) { ::totalSum }
-        val giftCertificateWriteOffSize = giftCard?.awayAmount?.toIntOrNull()
+        val giftCertificateRedemptionValue = giftCard?.awayAmount?.toIntOrNull()
         val finalPrice = if (giftCard?.total != null) {
             giftCard.total
         } else {
@@ -99,25 +99,25 @@ internal data class CartDto(
             discountSize = totalDiscount,
             finalPrice = finalPrice,
             deliveryPrice = deliveryPrice,
-            giftCertificateWriteOffSize = giftCertificateWriteOffSize,
+            giftCertificateRedemptionValue = giftCertificateRedemptionValue,
         )
     }
 
-    private fun getBonuses(): Cart.Bonuses {
+    private fun getBonusAccount(): Cart.BonusAccount {
         checkPropertyNotNull(bonusAction) { ::bonusAction }
         checkPropertyNotNull(bonusAction.bonusCharge) { bonusAction::bonusCharge }
         checkPropertyNotNull(bonusAction.isChargingOffApplied) { bonusAction::isChargingOffApplied }
         checkPropertyNotNull(bonusAction.bonusChargeOff) { bonusAction::bonusChargeOff }
         checkPropertyNotNull(maxBonusToChargeOff) { ::maxBonusToChargeOff }
-        val writeOff = Cart.Bonuses.WriteOff(
+        val redemption = Cart.BonusAccount.Redemption(
             isApplied = bonusAction.isChargingOffApplied,
             value = bonusAction.bonusChargeOff,
             max = maxBonusToChargeOff,
         )
-        return Cart.Bonuses(
-            available = bonusBalance ?: 0,
-            accrualForPurchase = bonusAction.bonusCharge,
-            writeOff = writeOff,
+        return Cart.BonusAccount(
+            balance = bonusBalance ?: 0,
+            addForPurchase = bonusAction.bonusCharge,
+            redemption = redemption,
         )
     }
 
@@ -136,12 +136,12 @@ internal data class CartDto(
     private fun getAppliedGiftCertificate(): AppliedGiftCertificate? {
         if (giftCard?.barcode == null) return null
         checkPropertyNotNull(giftCard.amount) { giftCard::amount }
-        val writeOffSize = giftCard.awayAmount?.toIntOrNull()
-        checkNotNull(writeOffSize) { "writeOffSize is null" }
+        val redemptionValue = giftCard.awayAmount?.toIntOrNull()
+        checkNotNull(redemptionValue) { "writeOffSize is null" }
         return AppliedGiftCertificate(
             number = GiftCertificateDomain.Number(giftCard.barcode),
             balance = giftCard.amount,
-            writeOffSize = writeOffSize,
+            redemptionValue = redemptionValue,
         )
     }
 

@@ -9,18 +9,18 @@ public data class Cart(
     val products: List<CartProduct>,
     val size: CartSize,
     val price: CartPrice,
-    val bonuses: Bonuses,
+    val bonusAccount: BonusAccount,
     val myCard: MyCard?,
     val giftCertificate: AppliedGiftCertificate?,
     val promoCode: PromoCode?,
     val productLimit: ProductLimit,
 ) {
-    public data class Bonuses(
-        val available: Int,
-        val accrualForPurchase: Int,
-        val writeOff: WriteOff,
+    public data class BonusAccount(
+        val balance: Int,
+        val addForPurchase: Int,
+        val redemption: Redemption,
     ) {
-        public data class WriteOff(
+        public data class Redemption(
             val isApplied: Boolean,
             val value: Int,
             val max: Int,
