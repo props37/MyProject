@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.cart.Cart
+import ru.livetyping.zarina.core.domain.model.cart.CartType
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.repository.CartRepository
@@ -20,6 +23,10 @@ internal class CartRepositoryImpl @Inject constructor(
     private val remoteDataSource: CartRemoteDataSource,
     private val localDataSource: CartLocalDataSource,
 ) : CartRepository {
+    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId): Flow<Cart> {
+        return remoteDataSource.getCartFlow(cartType, cityKladrId)
+    }
+
     override fun getCartProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>> {
         return when (cachePolicy) {
             CachePolicy.LocalOnly -> localDataSource.getCartProductIdsFlow()
