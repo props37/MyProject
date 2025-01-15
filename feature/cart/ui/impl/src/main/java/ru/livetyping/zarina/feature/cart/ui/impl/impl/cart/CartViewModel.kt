@@ -524,6 +524,12 @@ internal class CartViewModel @AssistedInject constructor(
     }
 
     private suspend fun redeemBonuses(cartType: CartType, bonusCount: Int) {
+        if (bonusCount == 0) {
+            val text = Text.Resource(R.string.cart_you_cant_redeem_bonuses_for_this_order)
+            val message = ZarinaToastMessage(text = text, duration = ZarinaToastMessage.DURATION_LONG)
+            emitSideEffect(CartSideEffect.ShowZarinaToast(message))
+        }
+
         val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
         deps.redeemBonuses(params)
             .onSuccess {
