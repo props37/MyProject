@@ -24,6 +24,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ChangeProductCountInCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
@@ -771,6 +772,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): CancelBonusRedemptionUseCase {
         return CancelBonusRedemptionUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideChangeProductCountInCartUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): ChangeProductCountInCartUseCase {
+        return ChangeProductCountInCartUseCase.getInstance(
             cartRepository = cartRepository,
             logger = logger,
         )
