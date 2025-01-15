@@ -17,16 +17,11 @@ public interface CartRepository {
 
     public fun getCartProductCountFlow(): Flow<Int>
 
-    public suspend fun addProductToCart(
-        productId: Product.Id,
-        barcode: Barcode,
-        count: Int,
-    )
+    public suspend fun addProductToCart(productId: Product.Id, barcode: Barcode, count: Int)
 
-    public suspend fun removeProductFromCart(
-        productId: Product.Id,
-        barcode: Barcode,
-    )
+    public suspend fun removeProductFromCart(productId: Product.Id, barcode: Barcode)
+
+    public suspend fun changeProductCount(barcode: Barcode, count: Int, cartType: CartType)
 
     public suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int)
 

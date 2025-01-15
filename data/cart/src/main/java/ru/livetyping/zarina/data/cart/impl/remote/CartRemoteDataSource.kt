@@ -15,7 +15,9 @@ internal interface CartRemoteDataSource {
 
     suspend fun addProductToCart(barcode: Barcode, count: Int): CartProductCount
 
-    suspend fun remoteProductFromCart(barcode: Barcode): CartProductCount
+    suspend fun removeProductFromCart(barcode: Barcode): CartProductCount
+
+    suspend fun changeProductCount(barcode: Barcode, count: Int, cartType: CartType)
 
     suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int)
 

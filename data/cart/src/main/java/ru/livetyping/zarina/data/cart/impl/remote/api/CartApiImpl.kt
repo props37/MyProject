@@ -44,8 +44,16 @@ internal class CartApiImpl @Inject constructor(
         }.body()
     }
 
-    override suspend fun remoteProductFromCart(barcode: Barcode): CartProductCountDto {
+    override suspend fun removeProductFromCart(barcode: Barcode): CartProductCountDto {
         return httpClient.delete("/api/cart/item/${barcode.value}").body()
+    }
+
+    override suspend fun changeProductCount(barcode: Barcode, count: Int, cartType: CartType) {
+        httpClient.post("/api/cart/item/update") {
+            parameter("barcode", barcode.value)
+            parameter("quantity", count)
+            parameter("cart_type", CartTypeDto.from(cartType).value)
+        }
     }
 
     override suspend fun applyMyCard(cartType: CartType, productsFirstPriceSum: Int) {
