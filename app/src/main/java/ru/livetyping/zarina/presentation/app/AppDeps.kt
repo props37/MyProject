@@ -4,13 +4,13 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
-import ru.livetyping.zarina.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
-class AppInteractor @Inject constructor(
+class AppDeps @Inject constructor(
     val getIsOnboardingCompletedFlow: GetIsOnboardingCompletedFlowUseCase,
     val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     val getCartProductCountFlow: GetCartProductCountFlowUseCase,

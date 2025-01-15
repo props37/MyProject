@@ -25,13 +25,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val interactor: AppInteractor,
+    private val deps: AppDeps,
     private val getForcedSignOutRequestsFlow: GetForcedSignOutRequestsFlowUseCase,
     private val forcedSignOut: ForcedSignOutUseCase,
 ) : ViewModel() {
 
     val startFeature: AppStartFeature = runBlocking {
-        val isOnboardingCompleted = interactor.getIsOnboardingCompletedFlow()
+        val isOnboardingCompleted = deps.getIsOnboardingCompletedFlow()
             .firstOrNull()?.getOrNull() ?: false
         if (isOnboardingCompleted) {
             AppStartFeature.HOME
@@ -44,7 +44,7 @@ class AppViewModel @Inject constructor(
         GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalOnly)
 
     val wishlistProductCount: StateFlow<Int> =
-        interactor.getWishlistProductIdsFlow(getWishlistProductIdsParams)
+        deps.getWishlistProductIdsFlow(getWishlistProductIdsParams)
             .map { result ->
                 result.getOrNull()?.size ?: 0
             }.stateIn(
@@ -53,8 +53,7 @@ class AppViewModel @Inject constructor(
                 initialValue = 0,
             )
 
-    // TODO: [Top] Migrate to new components
-    val cartProductCount: StateFlow<Int> = interactor.getCartProductCountFlow()
+    val cartProductCount: StateFlow<Int> = deps.getCartProductCountFlow()
         .map { result ->
             result.getOrDefault(0)
         }
@@ -65,11 +64,11 @@ class AppViewModel @Inject constructor(
         )
 
     @OptIn(UnstableApi::class)
-    val exoPlayerCache: Cache = interactor.exoPlayerCache
+    val exoPlayerCache: Cache = deps.exoPlayerCache
 
     @OptIn(UnstableApi::class)
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory =
-        interactor.exoPlayerCacheDataSourceFactory
+        deps.exoPlayerCacheDataSourceFactory
 
     init {
         listenToForcedSignOutRequests()
