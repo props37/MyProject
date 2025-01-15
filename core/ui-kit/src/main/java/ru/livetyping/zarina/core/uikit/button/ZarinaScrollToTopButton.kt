@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,8 +23,8 @@ public fun ZarinaScrollToTopButton(
 ) {
     AnimatedVisibility(
         visible = isVisible,
-        enter = remember { AnimatedContentDefaultEnterTransition },
-        exit = remember { AnimatedContentDefaultExitTransition },
+        enter = AnimatedContentDefaultEnterTransition,
+        exit = AnimatedContentDefaultExitTransition,
         modifier = modifier,
     ) {
         ZarinaButton(

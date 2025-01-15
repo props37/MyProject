@@ -44,7 +44,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -496,8 +495,8 @@ public object ZarinaTextFieldDefaults {
     ) {
         AnimatedVisibility(
             visible = isVisible,
-            enter = remember { AnimatedContentDefaultEnterTransition },
-            exit = remember { AnimatedContentDefaultExitTransition },
+            enter = AnimatedContentDefaultEnterTransition,
+            exit = AnimatedContentDefaultExitTransition,
             modifier = modifier,
         ) {
             ClearButtonImpl(

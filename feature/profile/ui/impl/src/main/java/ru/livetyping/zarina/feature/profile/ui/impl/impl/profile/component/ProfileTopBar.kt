@@ -11,7 +11,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -68,8 +67,8 @@ internal fun ProfileTopBar(
         endContent = {
             AnimatedVisibility(
                 visible = isProfileDetailsButtonVisible,
-                enter = remember { AnimatedContentDefaultEnterTransition },
-                exit = remember { AnimatedContentDefaultExitTransition },
+                enter = AnimatedContentDefaultEnterTransition,
+                exit = AnimatedContentDefaultExitTransition,
             ) {
                 ZarinaIconButton(
                     onClick = onProfileDetailsClicked,

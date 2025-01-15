@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,8 +37,8 @@ internal fun TopBar(
         endContent = {
             AnimatedVisibility(
                 visible = state.isClearButtonVisible,
-                enter = remember { AnimatedContentDefaultEnterTransition },
-                exit = remember { AnimatedContentDefaultExitTransition },
+                enter = AnimatedContentDefaultEnterTransition,
+                exit = AnimatedContentDefaultExitTransition,
             ) {
                 ZarinaButton(
                     onClick = { onEvent(TopBarEvent.ClearWishlistClicked) },
