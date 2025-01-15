@@ -71,6 +71,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -91,6 +92,7 @@ import qrcode.QRCode
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.contains
 import ru.livetyping.zarina.core.domain.model.user.requiredPurchaseSum
+import ru.livetyping.zarina.core.platform.copyTextToClipboard
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uicompose.screenbrightness.ForcedScreenBrightnessBehavior
@@ -281,6 +283,8 @@ private fun BackSide(
     onShowFrontSideClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -290,8 +294,16 @@ private fun BackSide(
             Text(
                 text = card.number.value,
                 style = UiKitTheme.typography.tertiary.regular,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.clickable(
+                    interactionSource = null,
+                    indication = null,
+                    onClick = {
+                        val label = context.getString(R.string.profile_loyalty_card_number_description)
+                        context.copyTextToClipboard(label, card.number.value)
+                    },
+                ),
             )
+            Spacer(modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(8.dp))
 
             val iconSize = 16.dp
