@@ -11,6 +11,7 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.api.CartNavActions
 import ru.livetyping.zarina.feature.cart.ui.api.CartNavEntry
+import ru.livetyping.zarina.feature.cart.ui.api.CartNavResultRetrievers
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
 
@@ -18,7 +19,7 @@ public class CartFeatureImpl : CartFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: CartNavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: CartNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
@@ -39,7 +40,10 @@ public class CartFeatureImpl : CartFeature {
                 onGoToCatalogClicked = actions.onGoToCatalogClicked,
                 onProductClicked = actions.onProductClicked,
             )
-            cartScreen(cartScreenNavActions)
+            cartScreen(
+                actions = cartScreenNavActions,
+                selectedCityResultRetriever = resultRetrievers.selectedCityResultRetriever,
+            )
         }
     }
 }

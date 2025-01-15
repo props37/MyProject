@@ -54,6 +54,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.productListFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productSubscriptionFeature
 import ru.livetyping.zarina.presentation.navigation.feature.profileFeature
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCartNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.rememberCartNavResultRetrievers
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCatalogNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberCitySelectorNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberDetectedCityNavActions
@@ -100,6 +101,7 @@ fun ZarinaNavigation(
 
     val cartFeature = features.find<CartFeature>()
     val cartNavActions = rememberCartNavActions(navController)
+    val cartNavResultRetrievers = rememberCartNavResultRetrievers()
 
     val onboardingFeature = features.find<OnboardingFeature>()
     val onboardingNavActions = rememberOnboardingNavActions(navController)
@@ -192,7 +194,7 @@ fun ZarinaNavigation(
         wishlistFeature(navController, wishlistFeature, wishlistNavActions)
         homeFeature(navController, homeFeature, homeNavActions)
         profileFeature(navController, profileFeature, profileNavActions, profileNavResultRetrievers)
-        cartFeature(navController, cartFeature, cartNavActions)
+        cartFeature(navController, cartFeature, cartNavActions, cartNavResultRetrievers)
 
         onboardingFeature(onboardingFeature, onboardingNavActions, onboardingNavResultRetrievers)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)

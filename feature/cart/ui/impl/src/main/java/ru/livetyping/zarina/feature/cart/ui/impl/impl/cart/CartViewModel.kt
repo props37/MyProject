@@ -3,10 +3,14 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +43,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
@@ -46,6 +51,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartRequest
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
@@ -56,13 +62,14 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartBonusAccountStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartMyCardStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartPromoCodeStateHolder
-import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 // TODO: [Top] Handle city change
 
-@HiltViewModel
-internal class CartViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CartViewModel.Factory::class)
+internal class CartViewModel @AssistedInject constructor(
+    @Assisted
+    selectedCityResultFlow: Flow<CartSelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
     private val deps: CartDeps,
 ) : ViewModel(), SideEffectSource<CartSideEffect> by SideEffectSourceImpl() {
@@ -256,6 +263,7 @@ internal class CartViewModel @Inject constructor(
 
     init {
         removePromoCodeErrorsOnChange()
+        handleSelectedCityResult(selectedCityResultFlow)
     }
 
     fun onScreenCreated() {
@@ -675,6 +683,27 @@ internal class CartViewModel @Inject constructor(
         emitSideEffect(CartSideEffect.ShowZarinaToast(message))
     }
 
+    private suspend fun updateUserCity(city: City) {
+        val params = SetUserCityUseCase.Params(city)
+        deps.setUserCity(params)
+            .onFailure {
+                val text = Text.Resource(RCommon.string.res_city_changing_error)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(CartSideEffect.ShowZarinaToast(message))
+            }
+    }
+
+    private fun handleSelectedCityResult(resultFlow: Flow<CartSelectedCityResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.SELECTED_CITY_RESULT.key,
+            ) { result ->
+                updateUserCity(result.city)
+            }
+        }
+    }
+
     private fun requestCarts(request: CartRequest) {
         requestDeliveryCart(request)
         requestPickupCart(request)
@@ -702,10 +731,18 @@ internal class CartViewModel @Inject constructor(
         }
     }
 
-    companion object {
-        private const val KEY_RESULT_CITY_SELECTOR_RESULT = "result_city_selector"
-        private const val KEY_RESULT_PRODUCT_COUNT_SELECTOR = "result_product_count_selector"
+    @AssistedFactory
+    internal interface Factory {
+        fun create(selectedCityResultFlow: Flow<CartSelectedCityResult?>): CartViewModel
+    }
 
+    private enum class Keys {
+        SELECTED_CITY_RESULT;
+
+        val key: String = name
+    }
+
+    companion object {
         private const val PRODUCT_COUNT_MAX_VALUE = 10
     }
 }

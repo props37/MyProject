@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +59,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun CartScreen(
     navActions: CartNavActions,
-    viewModel: CartViewModel = hiltViewModel(),
+    viewModel: CartViewModel,
 ) {
     val cartProductCount by viewModel.cartProductCount.collectAsStateWithLifecycle()
     val cartSize by viewModel.cartSize.collectAsStateWithLifecycle()

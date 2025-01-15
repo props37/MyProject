@@ -4,11 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.flow.map
+import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.api.CartNavActions
+import ru.livetyping.zarina.feature.cart.ui.api.CartNavResultRetrievers
+import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
@@ -20,12 +25,13 @@ fun NavGraphBuilder.cartFeature(
     navController: NavHostController,
     feature: CartFeature,
     actions: CartNavActions,
+    resultRetrievers: CartNavResultRetrievers,
 ) {
     with(feature) {
         navigation(
             navController = navController,
             actions = actions,
-            resultRetrievers = Unit,
+            resultRetrievers = resultRetrievers,
         )
     }
 }
@@ -55,6 +61,25 @@ fun rememberCartNavActions(
                 val productNavEntry = ProductFeature.getNavEntry(productParams)
                 navController.navigate(productNavEntry)
             },
+        )
+    }
+}
+
+@Composable
+fun rememberCartNavResultRetrievers(): CartNavResultRetrievers {
+    return remember {
+        val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
+            navBackStackEntry.savedStateHandle
+                .getStateFlow<CitySelectorResult?>(CitySelectorResult.KEY, null)
+                .map { citySelectorResult ->
+                    citySelectorResult?.let {
+                        CartSelectedCityResult(id = it.id, city = it.city.toCity())
+                    }
+                }
+        }
+
+        CartNavResultRetrievers(
+            selectedCityResultRetriever = selectedCityResultRetriever,
         )
     }
 }
