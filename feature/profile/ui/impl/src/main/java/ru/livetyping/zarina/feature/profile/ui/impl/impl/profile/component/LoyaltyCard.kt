@@ -217,12 +217,10 @@ private fun LoyaltyCardImpl(
 
             FrontSide(
                 card = card,
+                isVisible = visibleSide == LoyaltyCardSide.FRONT,
                 onShowBackSideClicked = { side = LoyaltyCardSide.BACK },
                 onInfoClicked = onInfoClicked,
                 modifier = Modifier
-                    .graphicsLayer {
-                        alpha = if (visibleSide == LoyaltyCardSide.FRONT) 1f else 0f
-                    }
                     .onSizeChanged {
                         frontSideHeightDp = with(density) { it.height.toDp() }
                     },
@@ -230,13 +228,11 @@ private fun LoyaltyCardImpl(
 
             BackSide(
                 card = card,
+                isVisible = visibleSide == LoyaltyCardSide.BACK,
                 onShowFrontSideClicked = { side = LoyaltyCardSide.FRONT },
                 modifier = Modifier
                     .height(frontSideHeightDp)
-                    .graphicsLayer {
-                        alpha = if (visibleSide == LoyaltyCardSide.BACK) 1f else 0f
-                        rotationY = RotationBackSide
-                    },
+                    .graphicsLayer { rotationY = RotationBackSide },
             )
         }
     }
@@ -245,11 +241,16 @@ private fun LoyaltyCardImpl(
 @Composable
 private fun FrontSide(
     card: LoyaltyCard,
+    isVisible: Boolean,
     onShowBackSideClicked: () -> Unit,
     onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.padding(ContentPaddingFrontSide)) {
+    Column(
+        modifier = modifier
+            .padding(ContentPaddingFrontSide)
+            .graphicsLayer { alpha = if (isVisible) 1f else 0f },
+    ) {
         Row {
             FrontSideBonuses(
                 bonuses = card.bonuses,
@@ -259,6 +260,7 @@ private fun FrontSide(
             Spacer(modifier = Modifier.width(16.dp))
 
             FrontSideQrCode(
+                isEnabled = isVisible,
                 onShowBackSideClicked = onShowBackSideClicked,
                 modifier = Modifier.padding(top = 4.dp),
             )
@@ -268,6 +270,7 @@ private fun FrontSide(
 
         FrontSideLevelInfo(
             card = card,
+            isEnabled = isVisible,
             onInfoClicked = onInfoClicked,
         )
 
@@ -280,6 +283,7 @@ private fun FrontSide(
 @Composable
 private fun BackSide(
     card: LoyaltyCard,
+    isVisible: Boolean,
     onShowFrontSideClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -289,6 +293,7 @@ private fun BackSide(
         modifier = modifier
             .fillMaxWidth()
             .padding(ContentPaddingBackSide)
+            .graphicsLayer { alpha = if (isVisible) 1f else 0f },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -297,6 +302,7 @@ private fun BackSide(
                 modifier = Modifier.clickable(
                     interactionSource = null,
                     indication = null,
+                    enabled = isVisible,
                     onClick = {
                         val label = context.getString(R.string.profile_loyalty_card_number_description)
                         context.copyTextToClipboard(label, card.number.value)
@@ -310,6 +316,7 @@ private fun BackSide(
             val iconColor = LocalContentColor.current
             ZarinaIconButton(
                 onClick = onShowFrontSideClicked,
+                isEnabled = isVisible,
                 indication = ripple(bounded = false, radius = iconSize),
                 modifier = Modifier
                     .size(iconSize)
@@ -361,6 +368,7 @@ private fun FrontSideBonuses(
 
 @Composable
 private fun FrontSideQrCode(
+    isEnabled: Boolean,
     onShowBackSideClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -370,6 +378,7 @@ private fun FrontSideQrCode(
             .clickable(
                 interactionSource = null,
                 indication = null,
+                enabled = isEnabled,
                 onClick = onShowBackSideClicked,
             ),
     ) {
@@ -416,6 +425,7 @@ private fun FrontSideQrCode(
 @Composable
 private fun FrontSideLevelInfo(
     card: LoyaltyCard,
+    isEnabled: Boolean,
     onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -427,6 +437,7 @@ private fun FrontSideLevelInfo(
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             ZarinaIconButton(
                 onClick = onInfoClicked,
+                isEnabled = isEnabled,
                 indication = ripple(bounded = false, radius = iconSize),
                 modifier = Modifier.size(iconSize),
             ) {
