@@ -48,8 +48,8 @@ import ru.livetyping.zarina.core.uikit.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartScreenComponents.CartContent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartScreenComponents.TopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.component.CartScreenComponents.CartContent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.component.CartScreenComponents.TopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
 import ru.livetyping.zarina.core.resource.R as RCommon

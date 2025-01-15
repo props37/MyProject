@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.component
 
 import android.os.Parcelable
 import androidx.compose.animation.AnimatedContent
@@ -423,7 +423,7 @@ internal object CartScreenComponents {
 
             Crossfade(
                 targetState = cartState,
-                contentKey = ::getCartTypePagerContentKey,
+                contentKey = CartScreenComponents::getCartTypePagerContentKey,
                 modifier = Modifier.fillMaxSize(),
             ) { state ->
                 when (state) {
