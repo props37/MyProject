@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
@@ -31,6 +32,7 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ChangeProductCountInCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
@@ -75,6 +77,7 @@ internal class CartViewModel @Inject constructor(
     private var bonusAccountJob: Job? = null
     private var myCardJob: Job? = null
     private var promoCodeJob: Job? = null
+    private var changeProductCountJob: Job? = null
 
     val cartProductCount: StateFlow<Int> = deps.getCartProductCountFlow()
         .map { result ->
@@ -498,6 +501,7 @@ internal class CartViewModel @Inject constructor(
     fun onProductCountSelectorEvent(event: ProductCountSelectorEvent) {
         when (event) {
             ProductCountSelectorEvent.DismissRequested -> {
+                changeProductCountJob?.cancel()
                 _productCountSelectorState.value = ProductCountSelectorState.None
             }
 
@@ -607,14 +611,68 @@ internal class CartViewModel @Inject constructor(
         emitSideEffect(CartSideEffect.ShowZarinaToast(message))
     }
 
-    private fun changeProductCount(
-        product: CartProduct,
-        count: Int,
-        cartType: CartType,
-    ) {
-        // TODO: [Top] Implement
+    private fun changeProductCount(product: CartProduct, count: Int, cartType: CartType) {
+        changeProductCountJob?.cancel()
 
-        _productCountSelectorState.value = ProductCountSelectorState.None
+        if (count == product.count) {
+            _productCountSelectorState.value = ProductCountSelectorState.None
+            return
+        }
+
+        changeProductCountJob = viewModelScope.launch {
+            try {
+                markProductCountItemAsLoading(count)
+                val params = ChangeProductCountInCartUseCase.Params(
+                    barcode = product.barcode,
+                    count = count,
+                    cartType = cartType,
+                )
+                deps.changeProductCount(params)
+                    .onSuccess {
+                        _productCountSelectorState.value = ProductCountSelectorState.None
+                        requestCarts(CartRequest.REFRESHING)
+                    }
+                    .onFailure(::handleProductCountChangingException)
+            } finally {
+                markProductCountItemAsNotLoading(count)
+            }
+        }
+    }
+
+    private fun markProductCountItemAsLoading(count: Int) {
+        _productCountSelectorState.update { state ->
+            when (state) {
+                is ProductCountSelectorState.ProductCountSelector -> {
+                    val newCountItems = state.countItems.map { item ->
+                        if (item.count == count) item.copy(isLoading = true) else item
+                    }.toImmutableList()
+                    state.copy(countItems = newCountItems)
+                }
+
+                ProductCountSelectorState.None -> state
+            }
+        }
+    }
+
+    private fun markProductCountItemAsNotLoading(count: Int) {
+        _productCountSelectorState.update { state ->
+            when (state) {
+                is ProductCountSelectorState.ProductCountSelector -> {
+                    val newCountItems = state.countItems.map { item ->
+                        if (item.count == count) item.copy(isLoading = false) else item
+                    }.toImmutableList()
+                    state.copy(countItems = newCountItems)
+                }
+
+                ProductCountSelectorState.None -> state
+            }
+        }
+    }
+
+    private fun handleProductCountChangingException(t: Throwable) {
+        val text = Text.Resource(R.string.cart_product_count_changing_error)
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(CartSideEffect.ShowZarinaToast(message))
     }
 
     private fun requestCarts(request: CartRequest) {

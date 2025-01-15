@@ -23,6 +23,7 @@
     <string name="cart_empty_cart_placeholder_title">Корзина пока что пуста</string>
     <string name="cart_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>
     <string name="cart_select_count">Выбери количество</string>
+    <string name="cart_product_count_changing_error">Не удалось изменить количество товара</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У тебя нет бонусов</item>

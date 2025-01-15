@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ChangeProductCountInCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
@@ -31,4 +32,5 @@ internal class CartDeps @Inject constructor(
     val withdrawPromoCode: WithdrawPromoCodeUseCase,
     val redeemBonuses: RedeemBonusesUseCase,
     val cancelBonusRedemption: CancelBonusRedemptionUseCase,
+    val changeProductCount: ChangeProductCountInCartUseCase,
 )
