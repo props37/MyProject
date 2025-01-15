@@ -60,14 +60,12 @@ internal fun CartScreenBehavior(
     }
 }
 
-// TODO: [Top] Implement
 private fun navigate(navActions: CartNavActions, action: CartScreenAction) {
     when (action) {
         CartScreenAction.BackClicked -> navActions.onBackClicked()
-        is CartScreenAction.CheckoutClicked -> TODO()
+        is CartScreenAction.CheckoutClicked -> Unit // TODO: [Top] Implement
         is CartScreenAction.ChangeCityClicked -> navActions.onChangeCityClicked(action.currentCity)
         CartScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
         is CartScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
-        is CartScreenAction.ProductCountClicked -> TODO()
     }
 }

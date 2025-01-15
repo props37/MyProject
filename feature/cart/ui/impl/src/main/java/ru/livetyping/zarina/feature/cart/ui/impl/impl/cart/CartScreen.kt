@@ -52,6 +52,9 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.component.CartScreenC
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.component.CartScreenComponents.TopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorModalBottomSheet
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -77,6 +80,7 @@ internal fun CartScreen(
     }
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val isPullRefreshing by viewModel.isPullRefreshing.collectAsStateWithLifecycle()
+    val productCountSelectorState by viewModel.productCountSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
         cartProductCount = cartProductCount,
@@ -105,6 +109,8 @@ internal fun CartScreen(
         onCheckoutClicked = viewModel::onCheckoutClicked,
         onScreenCreated = viewModel::onScreenCreated,
         onBackClicked = viewModel::onBackClicked,
+        productCountSelectorState = productCountSelectorState,
+        onProductCountSelectorEvent = viewModel::onProductCountSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -139,6 +145,8 @@ internal fun ScreenContent(
     onCheckoutClicked: () -> Unit,
     onScreenCreated: () -> Unit,
     onBackClicked: () -> Unit,
+    productCountSelectorState: ProductCountSelectorState,
+    onProductCountSelectorEvent: (ProductCountSelectorEvent) -> Unit,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
 ) {
@@ -155,6 +163,11 @@ internal fun ScreenContent(
             onDismissRequest = { isZarinaClubBottomSheetVisible = false },
         )
     }
+
+    ProductCountSelectorModalBottomSheet(
+        state = productCountSelectorState,
+        onEvent = onProductCountSelectorEvent,
+    )
 
     Box {
         Column(

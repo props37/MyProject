@@ -48,6 +48,9 @@ import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartRequest
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartStateBuilder
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountItem
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartBonusAccountStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartMyCardStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartPromoCodeStateHolder
@@ -244,6 +247,10 @@ internal class CartViewModel @Inject constructor(
         initialValue = false,
     )
 
+    private val _productCountSelectorState =
+        MutableStateFlow<ProductCountSelectorState>(ProductCountSelectorState.None)
+    val productCountSelectorState = _productCountSelectorState.asStateFlow()
+
     init {
         removePromoCodeErrorsOnChange()
     }
@@ -298,20 +305,24 @@ internal class CartViewModel @Inject constructor(
     }
 
     fun onProductCountClicked(product: CartProduct) {
-        navigationThrottler.throttle {
-            val availableCount = when (currentCartType.value) {
-                CartType.DELIVERY -> product.availableCount.delivery
-                CartType.PICKUP -> product.availableCount.pickup
-            }
-            val action = CartScreenAction.ProductCountClicked(
-                productId = product.productId,
-                barcode = product.barcode,
-                initialCount = product.count,
-                availableCount = availableCount,
-                cartType = currentCartType.value,
+        emitSideEffect(CartSideEffect.HideKeyboard)
+
+        val availableCount = when (currentCartType.value) {
+            CartType.DELIVERY -> product.availableCount.delivery
+            CartType.PICKUP -> product.availableCount.pickup
+        }.coerceAtMost(PRODUCT_COUNT_MAX_VALUE)
+        val countItems = List(availableCount) { index ->
+            val count = index + 1
+            ProductCountItem(
+                count = count,
+                isSelected = count == product.count,
+                isLoading = false,
             )
-            emitSideEffect(CartSideEffect.Navigate(action))
-        }
+        }.toImmutableList()
+        _productCountSelectorState.value = ProductCountSelectorState.ProductCountSelector(
+            product = product,
+            countItems = countItems,
+        )
     }
 
     fun onAddProductToWishlistClicked(product: CartProduct) {
@@ -484,6 +495,22 @@ internal class CartViewModel @Inject constructor(
         }
     }
 
+    fun onProductCountSelectorEvent(event: ProductCountSelectorEvent) {
+        when (event) {
+            ProductCountSelectorEvent.DismissRequested -> {
+                _productCountSelectorState.value = ProductCountSelectorState.None
+            }
+
+            is ProductCountSelectorEvent.CountItemClicked -> {
+                changeProductCount(
+                    product = event.product,
+                    count = event.countItem.count,
+                    cartType = currentCartType.value,
+                )
+            }
+        }
+    }
+
     private suspend fun redeemBonuses(cartType: CartType, bonusCount: Int) {
         val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
         deps.redeemBonuses(params)
@@ -580,6 +607,16 @@ internal class CartViewModel @Inject constructor(
         emitSideEffect(CartSideEffect.ShowZarinaToast(message))
     }
 
+    private fun changeProductCount(
+        product: CartProduct,
+        count: Int,
+        cartType: CartType,
+    ) {
+        // TODO: [Top] Implement
+
+        _productCountSelectorState.value = ProductCountSelectorState.None
+    }
+
     private fun requestCarts(request: CartRequest) {
         requestDeliveryCart(request)
         requestPickupCart(request)
@@ -610,5 +647,7 @@ internal class CartViewModel @Inject constructor(
     companion object {
         private const val KEY_RESULT_CITY_SELECTOR_RESULT = "result_city_selector"
         private const val KEY_RESULT_PRODUCT_COUNT_SELECTOR = "result_product_count_selector"
+
+        private const val PRODUCT_COUNT_MAX_VALUE = 10
     }
 }
