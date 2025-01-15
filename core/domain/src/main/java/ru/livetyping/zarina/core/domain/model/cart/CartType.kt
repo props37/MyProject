@@ -1,4 +1,4 @@
 package ru.livetyping.zarina.core.domain.model.cart
 
-// TODO: [High] Add to stability config
+// Marked as stable on config/compose/stability_config.txt
 public enum class CartType { DELIVERY, PICKUP }

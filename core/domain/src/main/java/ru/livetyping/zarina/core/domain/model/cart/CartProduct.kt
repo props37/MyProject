@@ -7,8 +7,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 
-// TODO: [High] Add to stability config
-
+// Marked as stable on config/compose/stability_config.txt
 public data class CartProduct(
     val id: Id,
     val productId: Product.Id,
@@ -24,9 +23,11 @@ public data class CartProduct(
     val isInWishlist: Boolean,
     val availableCount: AvailableCount,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Id(public val value: String)
 
+    // Marked as stable on config/compose/stability_config.txt
     public data class AvailableCount(
         val delivery: Int,
         val pickup: Int,

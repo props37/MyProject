@@ -84,6 +84,19 @@ ru.livetyping.zarina.core.domain.model.user.LoyaltyCard.Bonuses
 ru.livetyping.zarina.core.domain.model.store.Store
 ru.livetyping.zarina.core.domain.model.store.Store.Id
 ru.livetyping.zarina.core.domain.model.store.Store.City
+
+ru.livetyping.zarina.core.domain.model.cart.CartType
+ru.livetyping.zarina.core.domain.model.cart.CartSize
+ru.livetyping.zarina.core.domain.model.cart.CartProduct
+ru.livetyping.zarina.core.domain.model.cart.CartProduct.Id
+ru.livetyping.zarina.core.domain.model.cart.CartProduct.AvailableCount
+ru.livetyping.zarina.core.domain.model.cart.CartPrice
+ru.livetyping.zarina.core.domain.model.cart.Cart
+ru.livetyping.zarina.core.domain.model.cart.Cart.BonusAccount
+ru.livetyping.zarina.core.domain.model.cart.Cart.BonusAccount.Redemption
+ru.livetyping.zarina.core.domain.model.cart.Cart.MyCard
+ru.livetyping.zarina.core.domain.model.cart.Cart.PromoCode
+ru.livetyping.zarina.core.domain.model.cart.Cart.ProductLimit
 // :core:domain end
 
 
