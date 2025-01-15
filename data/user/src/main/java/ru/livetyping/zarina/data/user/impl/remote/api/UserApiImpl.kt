@@ -182,7 +182,7 @@ internal class UserApiImpl @Inject constructor(
         birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
-        gender: Gender,
+        gender: Gender?,
         oldPassword: String?,
         newPassword: String?,
     ) {
@@ -192,7 +192,7 @@ internal class UserApiImpl @Inject constructor(
             birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN)),
             email = email.value,
             phone = phone.value,
-            gender = GenderDto.from(gender),
+            gender = gender?.let { GenderDto.from(it) },
             oldPassword = oldPassword,
             newPassword = newPassword,
         )

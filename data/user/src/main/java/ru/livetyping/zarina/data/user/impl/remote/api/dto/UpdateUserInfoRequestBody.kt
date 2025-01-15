@@ -21,7 +21,7 @@ internal data class UpdateUserInfoRequestBody(
     val phone: String,
 
     @SerialName("gender")
-    val gender: GenderDto,
+    val gender: GenderDto?,
 
     @SerialName("old_password")
     val oldPassword: String?,

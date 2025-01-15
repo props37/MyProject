@@ -59,7 +59,7 @@ internal interface UserRemoteDataSource {
         birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
-        gender: Gender,
+        gender: Gender?,
         oldPassword: String?,
         newPassword: String?,
     )

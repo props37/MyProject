@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8d11b16d83a67d4b6fc58fa3a3ebbba5",
+    "identityHash": "4d515d1fbef72c1f328a709c641f2c22",
     "entities": [
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_email` TEXT NOT NULL, `user_phone` TEXT, `user_first_name` TEXT, `user_last_name` TEXT, `user_birth_date` TEXT, `user_gender` TEXT NOT NULL, `user_receive_sms` INTEGER NOT NULL, `user_receive_emails` INTEGER NOT NULL, PRIMARY KEY(`user_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_email` TEXT NOT NULL, `user_phone` TEXT, `user_first_name` TEXT, `user_last_name` TEXT, `user_birth_date` TEXT, `user_gender` TEXT, `user_receive_sms` INTEGER NOT NULL, `user_receive_emails` INTEGER NOT NULL, PRIMARY KEY(`user_id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -48,7 +48,7 @@
             "fieldPath": "gender",
             "columnName": "user_gender",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "notificationSettings.receiveSms",
@@ -76,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8d11b16d83a67d4b6fc58fa3a3ebbba5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4d515d1fbef72c1f328a709c641f2c22')"
     ]
   }
 }

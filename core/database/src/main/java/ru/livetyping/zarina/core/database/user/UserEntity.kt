@@ -32,7 +32,7 @@ public data class UserEntity(
     val birthDate: String?,
 
     @ColumnInfo(name = FIELD_GENDER)
-    val gender: GenderEntity,
+    val gender: GenderEntity?,
 
     @Embedded
     val notificationSettings: NotificationSettings,
@@ -44,7 +44,7 @@ public data class UserEntity(
         firstName = firstName,
         lastName = lastName,
         birthDate = birthDate?.let { LocalDate.parse(it) },
-        gender = gender.toGender(),
+        gender = gender?.toGender(),
         notificationSettings = notificationSettings.toNotificationSettings(),
     )
 
@@ -81,7 +81,7 @@ public data class UserEntity(
                 firstName = user.firstName,
                 lastName = user.lastName,
                 birthDate = user.birthDate.toString(),
-                gender = GenderEntity.from(user.gender),
+                gender = user.gender?.let { GenderEntity.from(it) },
                 notificationSettings = NotificationSettings.from(user.notificationSettings),
             )
         }

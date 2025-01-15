@@ -58,7 +58,7 @@ internal interface UserApi {
         birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
-        gender: Gender,
+        gender: Gender?,
         oldPassword: String?,
         newPassword: String?,
     )
