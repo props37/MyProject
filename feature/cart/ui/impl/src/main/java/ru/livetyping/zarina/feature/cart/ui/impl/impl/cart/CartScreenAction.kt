@@ -11,7 +11,7 @@ internal sealed interface CartScreenAction {
 
     data object GoToCatalogClicked : CartScreenAction
 
-    data class CityClicked(val currentCity: City?) : CartScreenAction
+    data class ChangeCityClicked(val currentCity: City?) : CartScreenAction
 
     data class ProductClicked(val product: CartProduct) : CartScreenAction
 

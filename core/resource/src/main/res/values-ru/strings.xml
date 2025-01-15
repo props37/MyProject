@@ -26,6 +26,7 @@
     <string name="res_continue">Продолжить</string>
     <string name="res_skip">Пропустить</string>
     <string name="res_city">Город</string>
+    <string name="res_change_city">Изменить город</string>
     <string name="res_change">Изменить</string>
     <string name="res_my_orders">Мои заказы</string>
     <string name="res_stores">Магазины</string>
@@ -81,6 +82,18 @@
     <string name="res_grant_location_permission">Разреши доступ к геолокации</string>
     <string name="res_it_will_help_us_to_detect_your_location">Это поможет автоматически определить твоё местоположение</string>
     <string name="res_city_changing_error">Не удалось изменить город</string>
+    <string name="res_promo_code">Промокод</string>
+    <string name="res_apply">Применить</string>
+    <string name="res_promo_code_applied">Промокод применён</string>
+    <string name="res_discount">Скидка</string>
+    <string name="res_delivery">Доставка</string>
+    <string name="res_from_store">Из магазина</string>
+    <string name="res_order_price">Сумма заказа</string>
+    <string name="res_total">Итого</string>
+    <string name="res_show_details">Показать подробности</string>
+    <string name="res_to_wishlist">В избранное</string>
+    <string name="res_in_wishlist">В избранном</string>
+    <string name="res_checkout">Оформить</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

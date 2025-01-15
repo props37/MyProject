@@ -27,7 +27,6 @@ import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
 import ru.livetyping.zarina.core.domain.model.cart.CartSize
 import ru.livetyping.zarina.core.domain.model.cart.CartType
-import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
@@ -282,7 +281,7 @@ internal class CartViewModel @Inject constructor(
 
     fun onCityClicked() {
         navigationThrottler.throttle {
-            val action = CartScreenAction.CityClicked(city.value)
+            val action = CartScreenAction.ChangeCityClicked(city.value)
             emitSideEffect(CartSideEffect.Navigate(action))
         }
     }
@@ -466,12 +465,6 @@ internal class CartViewModel @Inject constructor(
     fun onPromoCodeImeDoneClicked() {
         if (promoCodeStateHolder.promoCode.isNotBlank()) {
             onApplyPromoCodeClicked()
-        }
-    }
-
-    fun onUrlClicked(url: Url) {
-        navigationThrottler.throttle {
-            emitSideEffect(CartSideEffect.OpenUrl(url))
         }
     }
 

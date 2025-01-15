@@ -10,4 +10,34 @@
     <string name="cart_my_card_withdraw_error">Не удалось отменить действие MyCard</string>
     <string name="cart_my_card_cant_be_combined_with_bonuses">MyCard не суммируется с другими скидками, поэтому отменили списание баллов</string>
     <string name="cart_my_card_cant_be_combined_with_promo_code">MyCard не суммируется с другими скидками, поэтому отменили применение промокода</string>
+    <string name="cart_product_limit_exceeded_error_content_description">Превышен лимит числа товаров в корзине</string>
+    <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавь товары в Избранное, чтобы заказать их позже</string>
+    <string name="cart_empty_delivery_cart_placeholder_title">Нет товаров для доставки</string>
+    <string name="cart_empty_delivery_cart_placeholder_body">Попробуй найти товары через фильтры в Каталоге, либо выбери другой способ получения</string>
+    <string name="cart_empty_pick_up_from_store_cart_placeholder_title">Нет товаров для получения в магазине</string>
+    <string name="cart_empty_pick_up_from_store_cart_placeholder_body">Попробуй найти товары через фильтры в Каталоге, либо выбери другой способ получения</string>
+    <string name="cart_to_catalog">В каталог</string>
+    <string name="cart_we_will_award_you_for_purchase">За покупку начислим</string>
+    <string name="cart_redeem_bonuses">Списать бонусы</string>
+    <string name="cart_apply_my_card">Применить MyCard</string>
+    <string name="cart_empty_cart_placeholder_title">Корзина пока что пуста</string>
+    <string name="cart_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>
+
+    <plurals name="cart_you_have_bonuses">
+        <item quantity="zero">У тебя нет бонусов</item>
+        <item quantity="one">У тебя %1$s бонус</item>
+        <item quantity="two">У тебя %1$s бонуса</item>
+        <item quantity="few">У тебя %1$s бонуса</item>
+        <item quantity="many">У тебя %1$s бонусов</item>
+        <item quantity="other">У тебя %1$s бонусов</item>
+    </plurals>
+
+    <plurals name="cart_you_can_redeem_bonuses">
+        <item quantity="zero">Нельзя списать бонусы</item>
+        <item quantity="one">Можно списать %1$s бонус</item>
+        <item quantity="two">Можно списать %1$s бонуса</item>
+        <item quantity="few">Можно списать %1$s бонуса</item>
+        <item quantity="many">Можно списать %1$s бонусов</item>
+        <item quantity="other">Можно списать %1$s бонусов</item>
+    </plurals>
 </resources>

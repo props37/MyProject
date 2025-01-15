@@ -12,4 +12,6 @@
     <string name="uikit_available_heights_cm">Доступно %1$s см</string>
     <string name="uikit_item_count">%1$s шт</string>
     <string name="uikit_show_my_location">Показать моё местоположение</string>
+    <string name="uikit_redeemed_from_gift_certificate">Списано по сертификату</string>
+    <string name="uikit_excluding_delivery">Без учёта доставки</string>
 </resources>

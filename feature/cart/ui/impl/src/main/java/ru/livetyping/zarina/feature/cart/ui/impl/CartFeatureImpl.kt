@@ -35,6 +35,9 @@ public class CartFeatureImpl : CartFeature {
         ) {
             val cartScreenNavActions = CartScreenNavActions(
                 onBackClicked = actions.onBackClicked,
+                onChangeCityClicked = actions.onChangeCityClicked,
+                onGoToCatalogClicked = actions.onGoToCatalogClicked,
+                onProductClicked = actions.onProductClicked,
             )
             cartScreen(cartScreenNavActions)
         }
