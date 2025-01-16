@@ -91,6 +91,9 @@ private fun ScreenContent(
                 update = { webView ->
                     webView.isVisible = isWebViewVisible
                 },
+                onRelease = { webView ->
+                    webView.destroy()
+                },
                 modifier = Modifier.fillMaxSize(),
             )
         }
