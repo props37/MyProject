@@ -394,25 +394,20 @@ object SignInScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val privacyPolicy = stringResource(R.string.sign_in_policies_privacy_policy)
-        val recaptchaPrivacy = stringResource(R.string.sign_up_recaptcha_policies_privacy)
-        val recaptchaTerms = stringResource(R.string.sign_up_recaptcha_policies_terms)
+        val yandexCaptchaPrivacy = stringResource(R.string.sign_up_yandex_captcha_policies_terms)
 
         val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
-        val recaptchaPrivacyUrl = stringResource(R.string.recaptcha_policies_privacy_url)
-        val recaptchaTermsUrl = stringResource(R.string.recaptcha_policies_terms_url)
+        val yandexCaptchaTermsUrl = stringResource(R.string.yandex_captcha_terms_policy_url)
 
         val substringToUrl = remember(
             privacyPolicy,
-            recaptchaPrivacy,
-            recaptchaTerms,
+            yandexCaptchaPrivacy,
             privacyPolicyUrl,
-            recaptchaPrivacyUrl,
-            recaptchaTermsUrl,
+            yandexCaptchaTermsUrl,
         ) {
             mapOf(
                 privacyPolicy to privacyPolicyUrl,
-                recaptchaPrivacy to recaptchaPrivacyUrl,
-                recaptchaTerms to recaptchaTermsUrl,
+                yandexCaptchaPrivacy to yandexCaptchaTermsUrl,
             )
         }
         val stringWithLinks = rememberStringWithLinks(

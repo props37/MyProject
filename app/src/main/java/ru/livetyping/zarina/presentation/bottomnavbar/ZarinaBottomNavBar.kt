@@ -75,6 +75,11 @@ import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.BottomNavB
 import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.presentation.common.component.counter.ZarinaCounter
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.CatalogGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.FavoritesGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.HomeGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.HorizontalAndBottom
 import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
@@ -173,6 +178,8 @@ fun ZarinaBottomNavBar(
 
             BottomNavBarItem.ITEMS.forEach { item ->
                 key(item) {
+                    val isItemSelected = isItemSelected(item, backStack)
+
                     val counterValue = when (item) {
                         BottomNavBarItem.Favorites -> favoriteProductCount
                         BottomNavBarItem.Cart -> cartProductCount
@@ -182,8 +189,21 @@ fun ZarinaBottomNavBar(
                     Item(
                         title = stringResource(item.titleResId),
                         iconResId = item.iconResId,
-                        isSelected = isItemSelected(item, backStack),
-                        onClick = { navController.navigateToBottomNavBarItem(item) },
+                        isSelected = isItemSelected,
+                        onClick = {
+                            if (!isItemSelected) {
+                                navController.navigateToBottomNavBarItem(item)
+                            } else {
+                                val routeToPopTo = when (item) {
+                                    BottomNavBarItem.Catalog -> CatalogGraph.startDestination.routeSchema
+                                    BottomNavBarItem.Favorites -> FavoritesGraph.startDestination.routeSchema
+                                    BottomNavBarItem.Home -> HomeGraph.startDestination.routeSchema
+                                    BottomNavBarItem.Profile -> ProfileGraph.startDestination.routeSchema
+                                    BottomNavBarItem.Cart -> CartGraph.startDestination.routeSchema
+                                }
+                                navController.popBackStack(route = routeToPopTo, inclusive = false)
+                            }
+                        },
                         counterValue = counterValue,
                     )
                 }

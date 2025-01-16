@@ -8,6 +8,8 @@ value class PhoneNumber private constructor(val value: String) {
         val ZARINA_SUPPORT: PhoneNumber
             get() = create("88007070666")
 
+        const val MAX_LENGTH = 12
+
         fun create(phone: String): PhoneNumber {
             val normalizedPhone = PhoneNumberUtils.normalizeNumber(phone)
             return PhoneNumber(normalizedPhone)
