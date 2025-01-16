@@ -34,7 +34,7 @@ jetpack-webkit = "1.12.1"
 jetpack-compose-bom = "2024.10.01"
 jetpack-compose-material-navigation = "1.7.0-beta01"
 
-ktor = "3.0.1"
+ktor = "3.0.3"
 
 hilt = "2.52"
 hilt-navigationCompose = "1.2.0"
