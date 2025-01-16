@@ -78,7 +78,14 @@ private fun ScreenContent(
                     WebView(context).apply {
                         isVisible = isWebViewVisible
                         loadUrl(paymentUrl.value)
-                        settings.javaScriptEnabled = true
+                        settings.apply {
+                            javaScriptEnabled = true
+                            builtInZoomControls = false
+                            displayZoomControls = false
+                            setSupportZoom(false)
+                            loadsImagesAutomatically = true
+                            domStorageEnabled = true
+                        }
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 if (!isWebViewVisible && url == paymentUrl.value) {
