@@ -1,11 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.cart
 
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
-import androidx.lifecycle.viewmodel.compose.saveable
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -152,7 +149,7 @@ class CartViewModel @AssistedInject constructor(
         .onEach { result ->
             val cart = result.getOrNull()
             if (cart != null) {
-                deliveryBonusStateHolder.updateFromCart(cart)
+                pickupBonusStateHolder.updateFromCart(cart)
                 myCardStateHolder.updateFromCart(cart)
                 promoCodeStateHolder.updateFromCart(cart)
             }
@@ -214,7 +211,7 @@ class CartViewModel @AssistedInject constructor(
             cartLoadingState = loadingState,
             cartType = CartType.PICKUP,
             isBonusWriteOffApplied = isBonusWriteOffApplied,
-            bonusWriteOffTextFieldState = pickupBonusWriteOffTextFieldState,
+            bonusWriteOffTextFieldState = pickupBonusStateHolder.bonusWriteOffTextFieldState,
             isMyCardApplied = isMyCardApplied,
             promoCodeTextFieldState = promoCodeStateHolder.promoCodeTextFieldState,
             isPromoCodeInvalid = isPromoCodeInvalid,
@@ -252,12 +249,6 @@ class CartViewModel @AssistedInject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
         initialValue = false,
-    )
-
-    @OptIn(SavedStateHandleSaveableApi::class)
-    private val pickupBonusWriteOffTextFieldState: TextFieldState by savedStateHandle.saveable(
-        saver = TextFieldState.Saver,
-        init = { TextFieldState() },
     )
 
     init {
