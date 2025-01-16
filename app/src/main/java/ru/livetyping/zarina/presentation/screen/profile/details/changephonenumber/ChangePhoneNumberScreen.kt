@@ -43,7 +43,7 @@ import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
-import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
+import ru.livetyping.zarina.presentation.common.component.policy.YandexCaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialog
@@ -170,8 +170,7 @@ private fun ScreenContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                RecaptchaPolicy(
-                    onUrlClicked = onUrlClicked,
+                YandexCaptchaPolicy(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 

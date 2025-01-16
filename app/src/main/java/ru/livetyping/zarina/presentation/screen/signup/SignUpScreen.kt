@@ -54,7 +54,7 @@ import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDateP
 import ru.livetyping.zarina.presentation.common.component.datepicker.ZarinaDatePickerDialog
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
-import ru.livetyping.zarina.presentation.common.component.policy.RecaptchaPolicy
+import ru.livetyping.zarina.presentation.common.component.policy.YandexCaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.switchh.ZarinaSwitch
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPhoneNumberTextField
@@ -429,8 +429,7 @@ private fun ScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                RecaptchaPolicy(
-                    onUrlClicked = onUrlClicked,
+                YandexCaptchaPolicy(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
