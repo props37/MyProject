@@ -101,11 +101,13 @@ class CheckoutRepository @Inject constructor(
         paymentData: PaymentData,
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)? = null,
     ) {
         remoteDataSource.awaitPaymentCompleted(
             paymentData = paymentData,
             paymentMethodType = paymentMethodType,
             pollingDelay = pollingDelay,
+            onCheck = onCheck,
         )
     }
 

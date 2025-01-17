@@ -104,6 +104,7 @@ class CheckoutUseCase @Inject constructor(
         awaitPaymentCompleted(
             paymentData = paymentData,
             paymentMethod = paymentMethod,
+            onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
         )
         emit(CheckoutStage.PaymentCompleted)
 
@@ -195,6 +196,7 @@ class CheckoutUseCase @Inject constructor(
             awaitPaymentCompleted(
                 paymentData = paymentData,
                 paymentMethod = paymentMethodForRemainingPrice,
+                onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
             )
             emit(CheckoutStage.PaymentCompleted)
 
@@ -265,11 +267,13 @@ class CheckoutUseCase @Inject constructor(
     private suspend fun awaitPaymentCompleted(
         paymentData: PaymentData,
         paymentMethod: PaymentMethod,
+        onCheck: (suspend () -> Unit)? = null,
     ) {
         checkoutRepository.awaitPaymentCompleted(
             paymentMethodType = paymentMethod.type,
             paymentData = paymentData,
             pollingDelay = PAYMENT_RESULT_POLLING_DELAY,
+            onCheck = onCheck,
         )
     }
 

@@ -638,8 +638,9 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 emitSideEffect(SideEffect.Navigate(action))
             }
 
-            CheckoutStage.PaymentCompleted -> Unit
+            CheckoutStage.PaymentStatusChecked -> TODO()
 
+            CheckoutStage.PaymentCompleted -> Unit
             is CheckoutStage.CheckoutCompleted -> {
                 if (!stage.shouldAwaitPaymentCompleted) {
                     completeCheckout(stage)
