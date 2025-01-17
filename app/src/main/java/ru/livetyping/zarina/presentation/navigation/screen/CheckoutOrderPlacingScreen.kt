@@ -24,8 +24,14 @@ fun NavGraphBuilder.checkoutOrderPlacingScreen(navController: NavHostController)
                         key = CheckoutGraph.GiftCertificate.RESULT_KEY,
                         initialValue = null,
                     )
+                val paymentResultFlow = it.savedStateHandle
+                    .getStateFlow<UnscopedDestinations.Payment.Result?>(
+                        key = UnscopedDestinations.Payment.RESULT_KEY,
+                        initialValue = null,
+                    )
                 factory.create(
                     giftCertificateResultFlow = giftCertificateResultFlow,
+                    paymentResultFlow = paymentResultFlow,
                 )
             },
             navigate = { action ->

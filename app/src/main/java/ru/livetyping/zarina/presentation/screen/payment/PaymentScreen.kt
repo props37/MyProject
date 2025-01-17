@@ -50,6 +50,7 @@ private fun ScreenContent(
     navigate: (PaymentScreenAction) -> Unit,
 ) {
     PaymentScreenBehavior(
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navigate = navigate,
     )
