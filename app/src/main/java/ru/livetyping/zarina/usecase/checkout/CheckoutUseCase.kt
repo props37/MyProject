@@ -106,6 +106,7 @@ class CheckoutUseCase @Inject constructor(
             paymentMethod = paymentMethod,
             onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
         )
+        checkoutRepository.onPaymentCompleted(paymentData)
         emit(CheckoutStage.PaymentCompleted)
 
         val order = createOrder(
@@ -198,6 +199,7 @@ class CheckoutUseCase @Inject constructor(
                 paymentMethod = paymentMethodForRemainingPrice,
                 onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
             )
+            checkoutRepository.onPaymentCompleted(paymentData)
             emit(CheckoutStage.PaymentCompleted)
 
             // Use the original payment method to create an order

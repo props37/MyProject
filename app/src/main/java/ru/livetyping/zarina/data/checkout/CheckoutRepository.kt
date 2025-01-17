@@ -134,6 +134,14 @@ class CheckoutRepository @Inject constructor(
         remoteDataSource.removeGiftCertificate(paymentMethodType)
     }
 
+    fun getCompletedPaymentsFlow(): Flow<PaymentData> {
+        return localDataSource.getCompletedPaymentsFlow()
+    }
+
+    fun onPaymentCompleted(paymentData: PaymentData) {
+        localDataSource.onPaymentCompleted(paymentData)
+    }
+
     fun clear() {
         localDataSource.clear()
     }
