@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.screen.payment
 
 import android.os.SystemClock
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -14,10 +15,13 @@ import ru.livetyping.zarina.presentation.screen.payment.PaymentViewModel.SideEff
 
 @Composable
 fun PaymentScreenBehavior(
+    onBackClicked: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (PaymentScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
+
+    BackHandler(onBack = onBackClicked)
 
     ForcedBottomNavBarBehavior(isVisible = false)
 

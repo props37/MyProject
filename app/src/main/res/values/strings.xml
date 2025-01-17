@@ -358,6 +358,7 @@
     <string name="yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="yandex_captcha_terms_policy">условия использования</string>
     <string name="yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
+    <string name="payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>

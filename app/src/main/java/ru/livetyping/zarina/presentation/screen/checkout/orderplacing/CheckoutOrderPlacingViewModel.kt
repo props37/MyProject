@@ -55,6 +55,7 @@ import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.formatPrice
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.cart.model.CartRequest
 import ru.livetyping.zarina.presentation.screen.cart.model.CartState
@@ -80,11 +81,14 @@ import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.combineMore
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel(assistedFactory = CheckoutOrderPlacingViewModel.Factory::class)
 class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     @Assisted
     private val giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
+    @Assisted
+    private val paymentResultFlow: StateFlow<UnscopedDestinations.Payment.Result?>,
     savedStateHandle: SavedStateHandle,
     private val interactor: CheckoutOrderPlacingInteractor,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
@@ -265,13 +269,17 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
 
     private var currentCheckoutStage: CheckoutStage? = null
 
+    private var wasPaymentClosed = false
+    private var paymentStatusCheckCountAfterPaymentClosed = 0
+
     init {
         handleGiftCertificateResult()
+        handlePaymentResult()
     }
 
     fun onScreenOpened() {
         val currentCheckoutStage = currentCheckoutStage
-        if (currentCheckoutStage is CheckoutStage.Completed) {
+        if (currentCheckoutStage is CheckoutStage.CheckoutCompleted) {
             viewModelScope.launch {
                 completeCheckout(currentCheckoutStage)
             }
@@ -609,6 +617,9 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     ) {
         if (checkoutJob?.isActive == true) return
 
+        wasPaymentClosed = false
+        paymentStatusCheckCountAfterPaymentClosed = 0
+
         checkoutJob = viewModelScope.launch {
             operationTracker.track(Operation.CHECKOUT) {
                 val params = CheckoutUseCase.Params(
@@ -629,7 +640,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     private suspend fun onCheckoutStage(stage: CheckoutStage) {
         currentCheckoutStage = stage
         when (stage) {
-            is CheckoutStage.Payment -> {
+            is CheckoutStage.PaymentStarted -> {
                 val paymentUrl = when (val data = stage.paymentData) {
                     is CardPaymentData -> data.paymentUrl
                     is UrlPaymentData -> data.paymentUrl
@@ -638,9 +649,21 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
                 emitSideEffect(SideEffect.Navigate(action))
             }
 
-            CheckoutStage.PaymentCompleted -> Unit
+            CheckoutStage.PaymentStatusChecked -> {
+                if (wasPaymentClosed) paymentStatusCheckCountAfterPaymentClosed++
+                if (paymentStatusCheckCountAfterPaymentClosed > PAYMENT_STATUS_CHECK_COUNT_LIMIT_AFTER_PAYMENT_CLOSED) {
+                    checkoutJob?.cancel()
+                    val text = Text.Resource(R.string.payment_status_check_error)
+                    val message = ZarinaToastMessage.error(
+                        text = text,
+                        duration = 5.seconds,
+                    )
+                    emitSideEffect(SideEffect.ShowZarinaToast(message))
+                }
+            }
 
-            is CheckoutStage.Completed -> {
+            CheckoutStage.PaymentCompleted -> Unit
+            is CheckoutStage.CheckoutCompleted -> {
                 if (!stage.shouldAwaitPaymentCompleted) {
                     completeCheckout(stage)
                 }
@@ -657,7 +680,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
-    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
+    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.CheckoutCompleted) {
         val order = completedCheckoutStage.order
         operationTracker.track(Operation.CHECKOUT) {
             if (completedCheckoutStage.shouldUpdateOrderStatus) {
@@ -783,6 +806,17 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         }
     }
 
+    private fun handlePaymentResult() {
+        viewModelScope.launch {
+            screenResultHandler.handle<UnscopedDestinations.Payment.Result>(
+                resultFlow = paymentResultFlow,
+                key = KEY_RESULT_PAYMENT,
+            ) { result ->
+                wasPaymentClosed = true
+            }
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: CheckoutOrderPlacingScreenAction) : SideEffect
 
@@ -834,12 +868,15 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             giftCertificateResultFlow: StateFlow<CheckoutGraph.GiftCertificate.Result?>,
+            paymentResultFlow: StateFlow<UnscopedDestinations.Payment.Result?>,
         ): CheckoutOrderPlacingViewModel
     }
 
     companion object {
         private const val COMMA_SEPARATOR = ", "
+        private const val PAYMENT_STATUS_CHECK_COUNT_LIMIT_AFTER_PAYMENT_CLOSED = 1
 
         private const val KEY_RESULT_GIFT_CERTIFICATE_RESULT = "result_gift_certificate"
+        private const val KEY_RESULT_PAYMENT = "result_payment"
     }
 }

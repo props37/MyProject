@@ -99,12 +99,14 @@ class CheckoutUseCase @Inject constructor(
             checkoutParams = checkoutParams,
             user = user,
         )
-        emit(CheckoutStage.Payment(paymentData))
+        emit(CheckoutStage.PaymentStarted(paymentData))
 
         awaitPaymentCompleted(
             paymentData = paymentData,
             paymentMethod = paymentMethod,
+            onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
         )
+        checkoutRepository.onPaymentCompleted(paymentData)
         emit(CheckoutStage.PaymentCompleted)
 
         val order = createOrder(
@@ -115,13 +117,13 @@ class CheckoutUseCase @Inject constructor(
         )
         updateOrderPaymentStatus(order, paymentMethod)
 
-        val completed = CheckoutStage.Completed(
+        val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = false,
             shouldAwaitPaymentCompleted = false,
         )
-        emit(completed)
+        emit(checkoutCompleted)
     }
 
     private suspend fun FlowCollector<CheckoutStage>.checkoutWithOptionalPayment(
@@ -138,18 +140,18 @@ class CheckoutUseCase @Inject constructor(
 
         if (order.paymentUrl != null) {
             val paymentData = UrlPaymentData(order.paymentUrl)
-            emit(CheckoutStage.Payment(paymentData))
+            emit(CheckoutStage.PaymentStarted(paymentData))
         } else {
             Timber.v("Order payment URL is not provided")
         }
 
-        val completed = CheckoutStage.Completed(
+        val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = true,
             shouldAwaitPaymentCompleted = true,
         )
-        emit(completed)
+        emit(checkoutCompleted)
     }
 
     private suspend fun FlowCollector<CheckoutStage>.checkoutWithPaymentUponReceipt(
@@ -164,13 +166,13 @@ class CheckoutUseCase @Inject constructor(
             paymentData = null,
         )
 
-        val completed = CheckoutStage.Completed(
+        val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = false,
             shouldAwaitPaymentCompleted = false,
         )
-        emit(completed)
+        emit(checkoutCompleted)
     }
 
     private suspend fun FlowCollector<CheckoutStage>.checkoutWithGiftCertificatePayment(
@@ -190,12 +192,14 @@ class CheckoutUseCase @Inject constructor(
                 checkoutParams = checkoutParams,
                 user = user,
             )
-            emit(CheckoutStage.Payment(paymentData))
+            emit(CheckoutStage.PaymentStarted(paymentData))
 
             awaitPaymentCompleted(
                 paymentData = paymentData,
                 paymentMethod = paymentMethodForRemainingPrice,
+                onCheck = { emit(CheckoutStage.PaymentStatusChecked) },
             )
+            checkoutRepository.onPaymentCompleted(paymentData)
             emit(CheckoutStage.PaymentCompleted)
 
             // Use the original payment method to create an order
@@ -208,13 +212,13 @@ class CheckoutUseCase @Inject constructor(
             // Use the payment method used to pay the remaining amount
             updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
-            val completed = CheckoutStage.Completed(
+            val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
                 paymentMethodType = paymentMethod.type,
                 shouldUpdateOrderStatus = false,
                 shouldAwaitPaymentCompleted = false,
             )
-            emit(completed)
+            emit(checkoutCompleted)
         } else {
             // The gift certificate is enough, there is no remaining price the user has to pay
             val order = createOrder(
@@ -224,13 +228,13 @@ class CheckoutUseCase @Inject constructor(
                 paymentData = null,
             )
 
-            val completed = CheckoutStage.Completed(
+            val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
                 paymentMethodType = paymentMethod.type,
                 shouldUpdateOrderStatus = false,
                 shouldAwaitPaymentCompleted = false,
             )
-            emit(completed)
+            emit(checkoutCompleted)
         }
     }
 
@@ -265,11 +269,13 @@ class CheckoutUseCase @Inject constructor(
     private suspend fun awaitPaymentCompleted(
         paymentData: PaymentData,
         paymentMethod: PaymentMethod,
+        onCheck: (suspend () -> Unit)? = null,
     ) {
         checkoutRepository.awaitPaymentCompleted(
             paymentMethodType = paymentMethod.type,
             paymentData = paymentData,
             pollingDelay = PAYMENT_RESULT_POLLING_DELAY,
+            onCheck = onCheck,
         )
     }
 

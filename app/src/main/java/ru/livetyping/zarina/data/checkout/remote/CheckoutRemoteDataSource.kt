@@ -116,6 +116,7 @@ class CheckoutRemoteDataSource @Inject constructor(
         paymentData: PaymentData,
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)? = null,
     ) {
         when (paymentMethodType) {
             PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
@@ -124,6 +125,7 @@ class CheckoutRemoteDataSource @Inject constructor(
                     paymentData = paymentData,
                     paymentMethodType = paymentMethodType,
                     pollingDelay = pollingDelay,
+                    onCheck = onCheck,
                 )
             }
 
@@ -158,6 +160,7 @@ class CheckoutRemoteDataSource @Inject constructor(
         paymentData: CardPaymentData,
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)?,
     ) {
         var errorCount = 0
         while (coroutineContext.isActive) {
@@ -166,6 +169,7 @@ class CheckoutRemoteDataSource @Inject constructor(
                     paymentMethodType = paymentMethodType,
                     paymentData = paymentData,
                 )
+                onCheck?.invoke()
                 if (result.success == true) break
             } catch (e: Exception) {
                 Timber.e(e)

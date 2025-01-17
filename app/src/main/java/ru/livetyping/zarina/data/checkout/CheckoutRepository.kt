@@ -101,11 +101,13 @@ class CheckoutRepository @Inject constructor(
         paymentData: PaymentData,
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)? = null,
     ) {
         remoteDataSource.awaitPaymentCompleted(
             paymentData = paymentData,
             paymentMethodType = paymentMethodType,
             pollingDelay = pollingDelay,
+            onCheck = onCheck,
         )
     }
 
@@ -130,6 +132,14 @@ class CheckoutRepository @Inject constructor(
 
     suspend fun removeGiftCertificate(paymentMethodType: PaymentMethodType) {
         remoteDataSource.removeGiftCertificate(paymentMethodType)
+    }
+
+    fun getCompletedPaymentsFlow(): Flow<PaymentData> {
+        return localDataSource.getCompletedPaymentsFlow()
+    }
+
+    fun onPaymentCompleted(paymentData: PaymentData) {
+        localDataSource.onPaymentCompleted(paymentData)
     }
 
     fun clear() {
