@@ -1,13 +1,13 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.7.2"
+androidGradlePlugin = "8.7.3"
 googlePlayServices-plugin = "4.4.2"
 firebase-crashlyticsPlugin = "3.0.2"
 androidGitVersion = "0.4.14"
 checkDependencyUpdates = "1.5.0"
 
-kotlin = "2.0.21"
-kotlin-ksp = "2.0.21-1.0.27"
+kotlin = "2.1.0"
+kotlin-ksp = "2.1.0-1.0.29"
 kotlin-coroutines = "1.9.0"
 kotlin-serialization = "1.7.3"
 kotlin-immutableCollections = "0.3.8"
@@ -36,7 +36,7 @@ jetpack-compose-material-navigation = "1.7.6"
 
 ktor = "3.0.3"
 
-hilt = "2.52"
+hilt = "2.55"
 hilt-navigationCompose = "1.2.0"
 
 accompanist = "0.37.0"
@@ -52,7 +52,7 @@ leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "19.0.0"
-googlePlayServices-maps-compose = "6.2.1"
+googlePlayServices-maps-compose = "6.4.1"
 googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.6.1"
