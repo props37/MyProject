@@ -271,7 +271,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
 
     fun onScreenOpened() {
         val currentCheckoutStage = currentCheckoutStage
-        if (currentCheckoutStage is CheckoutStage.Completed) {
+        if (currentCheckoutStage is CheckoutStage.CheckoutCompleted) {
             viewModelScope.launch {
                 completeCheckout(currentCheckoutStage)
             }
@@ -629,7 +629,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     private suspend fun onCheckoutStage(stage: CheckoutStage) {
         currentCheckoutStage = stage
         when (stage) {
-            is CheckoutStage.Payment -> {
+            is CheckoutStage.PaymentStarted -> {
                 val paymentUrl = when (val data = stage.paymentData) {
                     is CardPaymentData -> data.paymentUrl
                     is UrlPaymentData -> data.paymentUrl
@@ -640,7 +640,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
 
             CheckoutStage.PaymentCompleted -> Unit
 
-            is CheckoutStage.Completed -> {
+            is CheckoutStage.CheckoutCompleted -> {
                 if (!stage.shouldAwaitPaymentCompleted) {
                     completeCheckout(stage)
                 }
@@ -657,7 +657,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
-    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.Completed) {
+    private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.CheckoutCompleted) {
         val order = completedCheckoutStage.order
         operationTracker.track(Operation.CHECKOUT) {
             if (completedCheckoutStage.shouldUpdateOrderStatus) {
