@@ -29,6 +29,7 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.domain.product.exception.ProductNotFoundException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
@@ -328,7 +329,12 @@ class ProductViewModel @AssistedInject constructor(
                         SuggestedProductListState.Empty
                     }
                 },
-                onFailure = { SuggestedProductListState.Error },
+                onFailure = { t ->
+                    when (t) {
+                        is ProductNotFoundException -> SuggestedProductListState.Empty
+                        else -> SuggestedProductListState.Error
+                    }
+                },
             )
         }
     }
