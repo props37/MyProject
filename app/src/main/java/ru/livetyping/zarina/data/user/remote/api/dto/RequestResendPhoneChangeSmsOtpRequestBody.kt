@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RequestResendSmsOtpRequestBody(
+data class RequestResendPhoneChangeSmsOtpRequestBody(
     @SerialName("phone")
     val phone: String,
 )

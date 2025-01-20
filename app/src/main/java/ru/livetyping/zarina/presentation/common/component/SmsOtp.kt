@@ -57,6 +57,7 @@ fun SmsOtp(
     isOtpLoading: Boolean = false,
     isOtpInvalid: Boolean = false,
     isOtpReadOnly: Boolean = false,
+    isResendButtonLoading: Boolean = false,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     backgroundColor: Color = BackgroundColor,
     contentPadding: PaddingValues = PaddingValues(),
@@ -117,6 +118,7 @@ fun SmsOtp(
                 OtpResendState.ResendAvailable -> {
                     ZarinaButton(
                         onClick = onResendClicked,
+                        isLoading = isResendButtonLoading,
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {

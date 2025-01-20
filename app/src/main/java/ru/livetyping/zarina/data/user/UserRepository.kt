@@ -12,7 +12,6 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
@@ -171,8 +170,11 @@ class UserRepository @Inject constructor(
         return remoteDataSource.confirmSignInByPhone(phone, otp)
     }
 
-    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
-        remoteDataSource.requestResendAuthorizationSmsOtp(phone)
+    suspend fun requestResendAuthorizationSmsOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        remoteDataSource.requestResendAuthorizationSmsOtp(phone, yandexCaptchaToken)
     }
 
     suspend fun requestPasswordReset(email: Email) {

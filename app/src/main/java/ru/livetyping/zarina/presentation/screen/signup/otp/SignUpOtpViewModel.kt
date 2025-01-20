@@ -4,23 +4,33 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.base.operationtracker.OperationKey
+import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.common.exception.InvalidOtpException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
+import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.SignUpGraph
 import ru.livetyping.zarina.presentation.screen.common.otp.OtpViewModelComponent
 import ru.livetyping.zarina.presentation.screen.signup.otp.SignUpOtpViewModel.SideEffect
 import ru.livetyping.zarina.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.usecase.user.RequestResendAuthorizationSmsOtpUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import javax.inject.Inject
@@ -34,6 +44,8 @@ class SignUpOtpViewModel @Inject constructor(
     SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
 
     val phone: StateFlow<PhoneNumber> = savedStateHandle
         .getStateFlow<String?>(
@@ -55,6 +67,22 @@ class SignUpOtpViewModel @Inject constructor(
     val isOtpInvalid: StateFlow<Boolean> = otpComponent.isOtpInvalid
 
     val otpResendState: StateFlow<OtpResendState> = otpComponent.otpResendState
+
+    private val _yandexCaptchaState =
+        MutableStateFlow<YandexCaptchaDialogState>(YandexCaptchaDialogState.Hidden)
+    val yandexCaptchaState: StateFlow<YandexCaptchaDialogState> = _yandexCaptchaState.asStateFlow()
+
+    val isResendButtonLoading: StateFlow<Boolean> = combine(
+        operationTracker.ongoingOperationKeys,
+        yandexCaptchaState,
+    ) { ongoingOperations, yandexCaptchaState ->
+        yandexCaptchaState is YandexCaptchaDialogState.Visible
+                || RequestNewOtpOperation in ongoingOperations
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = false,
+    )
 
     init {
         interactor.smsCodeRetriever.addListener { code ->
@@ -88,14 +116,39 @@ class SignUpOtpViewModel @Inject constructor(
     }
 
     fun onResendOtpClicked() {
+        viewModelScope.launch {
+            val yandexCaptcha = interactor.getYandexCaptcha().getOrNull()
+            if (yandexCaptcha != null) {
+                _yandexCaptchaState.value = YandexCaptchaDialogState.Visible(yandexCaptcha)
+            } else {
+                val text = Text.Resource(R.string.something_went_wrong)
+                val message = ZarinaToastMessage.error(text)
+                emitSideEffect(SideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    fun onYandexCaptchaDismissRequested() {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+    }
+
+    fun onYandexCaptchaTokenReceived(token: YandexCaptchaToken) {
+        _yandexCaptchaState.value = YandexCaptchaDialogState.Hidden
+        resendOtp(token)
+    }
+
+    private fun resendOtp(yandexCaptchaToken: YandexCaptchaToken) {
         otpComponent.onResendOtpClicked {
-            val params = RequestResendAuthorizationSmsOtpUseCase.Params(phone.value)
-            interactor.requestResendSmsOtp(params)
-                .onFailure {
-                    val text = Text.Resource(R.string.code_resend_error)
-                    val message = ZarinaToastMessage.error(text)
-                    emitSideEffect(SideEffect.ShowZarinaToast(message))
-                }
+            operationTracker.track(RequestNewOtpOperation) {
+                val params =
+                    RequestResendAuthorizationSmsOtpUseCase.Params(phone.value, yandexCaptchaToken)
+                interactor.requestResendSmsOtp(params)
+                    .onFailure {
+                        val text = Text.Resource(R.string.code_resend_error)
+                        val message = ZarinaToastMessage.error(text)
+                        emitSideEffect(SideEffect.ShowZarinaToast(message))
+                    }
+            }
         }
     }
 
@@ -124,4 +177,6 @@ class SignUpOtpViewModel @Inject constructor(
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }
+
+    private data object RequestNewOtpOperation : OperationKey
 }
