@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.checkout
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ru.livetyping.zarina.base.usecase.FlowUseCase
 import ru.livetyping.zarina.data.checkout.CheckoutRepository
 import ru.livetyping.zarina.di.Qualifiers
@@ -18,6 +19,9 @@ class GetPickupStoresFlowUseCase @Inject constructor(
     override fun execute(params: Params): Flow<List<PickupStore>> {
         val city = params.city
         return checkoutRepository.getPickupStoresFlow(city.id)
+            .map { stores ->
+                stores.sortedByDescending { it.availableItemCount }
+            }
     }
 
     data class Params(val city: City)
