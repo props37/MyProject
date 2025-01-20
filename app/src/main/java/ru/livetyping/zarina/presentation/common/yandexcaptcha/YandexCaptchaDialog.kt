@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.view.isVisible
 import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
@@ -74,6 +75,7 @@ fun BoxScope.YandexCaptchaDialog(
 
         Box(
             modifier = Modifier
+                .zIndex(Z_INDEX)
                 .fillMaxSize()
                 .drawBehind {
                     drawRect(
@@ -96,7 +98,7 @@ fun BoxScope.YandexCaptchaDialog(
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 Timber.tag(TAG).v("onPageFinished: $url")
-                                if (url == captchaUrl) isPageLoaded = true
+                                isPageLoaded = true
                             }
                         }
 
@@ -156,6 +158,8 @@ private interface YandexCaptchaJsInterface {
     @JavascriptInterface
     fun onChallengeHidden()
 }
+
+private const val Z_INDEX = 1_000_000f
 
 private const val JS_INTERFACE_NAME = "NativeClient"
 
