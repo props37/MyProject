@@ -187,6 +187,9 @@ class ProductViewModel @AssistedInject constructor(
         if (productTotalLookResult.value?.isSuccess != true) {
             productTotalLookRequester.request(ProductRequest)
         }
+        if (productSimilarResult.value?.isSuccess != true) {
+            productSimilarRequester.request(ProductRequest)
+        }
     }
 
     fun onAddProductToCartClicked(product: Product) {
