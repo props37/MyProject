@@ -50,7 +50,7 @@ fun ZarinaLogo(
 }
 
 // According to R.drawable.zarina_logo size
-const val ZarinaLogoAspectRatio = 100f / 10
+const val ZarinaLogoAspectRatio = 100f / 13.56f
 
 @Preview
 @Composable

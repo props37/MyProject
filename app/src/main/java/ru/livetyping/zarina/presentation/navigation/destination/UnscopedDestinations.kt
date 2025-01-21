@@ -498,5 +498,15 @@ object UnscopedDestinations {
     }
 
     @Serializable
-    data class Payment(val paymentUrl: String)
+    data class Payment(val paymentUrl: String) {
+
+        @Parcelize
+        data class Result(
+            override val id: String = UUID.randomUUID().toString(),
+        ) : ScreenResult, Parcelable
+
+        companion object {
+            const val RESULT_KEY = "result_payment"
+        }
+    }
 }

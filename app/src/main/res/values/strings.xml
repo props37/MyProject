@@ -145,8 +145,6 @@
     <string name="by_email">По почте</string>
     <string name="by_phone">По телефону</string>
     <string name="forgot_password_question">Не помнишь пароль?</string>
-    <string name="recaptcha_policies_privacy_url">https://policies.google.com/privacy</string>
-    <string name="recaptcha_policies_terms_url">https://policies.google.com/terms</string>
     <string name="do_not_have_account_yet_question">У тебя ещё нет аккаунта?</string>
     <string name="invalid_email_or_password_try_again">Неправильный адрес электронной почты или пароль. Повтори попытку</string>
     <string name="password_recovery">Восстановление пароля</string>
@@ -357,6 +355,10 @@
     <string name="zarina_app_version">Версия Zarina</string>
     <string name="mindbox_device_uuid">Mindbox device UUID</string>
     <string name="mindbox_device_uuid_clipboard_label">Zarina Mindbox device UUID</string>
+    <string name="yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
+    <string name="yandex_captcha_terms_policy">условия использования</string>
+    <string name="yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
+    <string name="payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
@@ -417,9 +419,7 @@
     <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
     <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
     <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
-    <string name="sign_up_recaptcha_policies">Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
-    <string name="sign_up_recaptcha_policies_privacy">конфиденциальность</string>
-    <string name="sign_up_recaptcha_policies_terms">условия использования</string>
+    <string name="sign_up_yandex_captcha_policies_terms">условия использования</string>
     <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
     <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
@@ -427,10 +427,8 @@
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуй снова позже</string>
     <string name="sign_up_otp_invalid_otp_error">Неправильный код. Повтори попытку</string>
 
-    <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама reCAPTCHA: конфиденциальность и условия использования</string>
+    <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
-    <string name="sign_in_recaptcha_policies_privacy">конфиденциальность</string>
-    <string name="sign_in_recaptcha_policies_terms">условия использования</string>
     <string name="sign_in_by_email_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введи адрес электронной почты и пароль</string>
     <string name="sign_in_by_phone_empty_fields_error">Для входа в аккаунт введи номер телефона</string>
 

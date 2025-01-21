@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
+import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,8 +18,11 @@ class RequestResendAuthorizationSmsOtpUseCase @Inject constructor(
     override suspend fun execute(params: Params) {
         val phone = params.phone
         Timber.v("Request SMS OTP resend for phone $phone")
-        userRepository.requestResendAuthorizationSmsOtp(phone)
+        userRepository.requestResendAuthorizationSmsOtp(phone, params.yandexCaptchaToken)
     }
 
-    data class Params(val phone: PhoneNumber)
+    data class Params(
+        val phone: PhoneNumber,
+        val yandexCaptchaToken: YandexCaptchaToken,
+    )
 }

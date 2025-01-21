@@ -23,6 +23,9 @@ fun NavGraphBuilder.paymentScreen(navController: NavHostController) {
                 when (action) {
                     PaymentScreenAction.ScreenClosed -> {
                         navController.popBackStack<UnscopedDestinations.Payment>(inclusive = true)
+                        val result = UnscopedDestinations.Payment.Result()
+                        navController.currentBackStackEntry?.savedStateHandle
+                            ?.set(UnscopedDestinations.Payment.RESULT_KEY, result)
                     }
                 }
             },

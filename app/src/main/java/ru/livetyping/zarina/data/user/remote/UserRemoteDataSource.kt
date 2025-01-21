@@ -10,7 +10,6 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.PhoneNumber
-import ru.livetyping.zarina.domain.common.Token
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
 import ru.livetyping.zarina.domain.user.LoyaltyProgramBonusAction
@@ -140,8 +139,11 @@ class UserRemoteDataSource @Inject constructor(
         return api.confirmSignInByPhone(phone, otp).toAuthorizationResult()
     }
 
-    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
-        api.requestResendAuthorizationSmsOtp(phone)
+    suspend fun requestResendAuthorizationSmsOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        api.requestResendAuthorizationSmsOtp(phone, yandexCaptchaToken)
     }
 
     suspend fun requestPasswordReset(email: Email) {

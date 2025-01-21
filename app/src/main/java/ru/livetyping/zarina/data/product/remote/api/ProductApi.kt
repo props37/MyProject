@@ -11,6 +11,7 @@ import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
 import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
+import ru.livetyping.zarina.data.product.remote.api.exception.ProductSuggestionsApiExceptionConverter
 import ru.livetyping.zarina.data.product.remote.api.exception.SubscribeToProductApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.category.Category
@@ -26,6 +27,7 @@ class ProductApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
+    private val productSuggestionsApiExceptionConverter: ProductSuggestionsApiExceptionConverter,
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
@@ -49,11 +51,15 @@ class ProductApi @Inject constructor(
     }
 
     suspend fun getProductTotalLook(productId: Product.Id): List<ProductItemDto> {
-        return httpClient.get("/api/v1/products/${productId.value}/total_look").body()
+        return productSuggestionsApiExceptionConverter {
+            httpClient.get("/api/v1/products/${productId.value}/total_look").body()
+        }
     }
 
     suspend fun getProductSimilar(productId: Product.Id): List<ProductItemDto>{
-        return httpClient.get("api/v1/products/${productId.value}/similar_products").body()
+        return productSuggestionsApiExceptionConverter {
+            httpClient.get("api/v1/products/${productId.value}/similar_products").body()
+        }
     }
 
     suspend fun getCategoryProductInfo(

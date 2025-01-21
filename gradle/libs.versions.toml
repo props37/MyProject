@@ -37,7 +37,7 @@ jetpack-compose-material-navigation = "1.7.6"
 
 ktor = "3.0.3"
 
-dagger = "2.55"
+hilt = "2.55"
 hilt-navigationCompose = "1.2.0"
 
 accompanist = "0.37.0"

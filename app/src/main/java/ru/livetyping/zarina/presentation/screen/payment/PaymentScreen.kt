@@ -50,6 +50,7 @@ private fun ScreenContent(
     navigate: (PaymentScreenAction) -> Unit,
 ) {
     PaymentScreenBehavior(
+        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -77,8 +78,16 @@ private fun ScreenContent(
                 factory = { context ->
                     WebView(context).apply {
                         isVisible = isWebViewVisible
-                        loadUrl(paymentUrl.value)
-                        settings.javaScriptEnabled = true
+                        settings.apply {
+                            javaScriptEnabled = true
+                            builtInZoomControls = false
+                            displayZoomControls = false
+                            setSupportZoom(false)
+                            loadsImagesAutomatically = true
+                            domStorageEnabled = true
+                        }
+                        scrollBarStyle = WebView.SCROLLBARS_OUTSIDE_OVERLAY
+                        isScrollbarFadingEnabled = true
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 if (!isWebViewVisible && url == paymentUrl.value) {
@@ -86,10 +95,14 @@ private fun ScreenContent(
                                 }
                             }
                         }
+                        loadUrl(paymentUrl.value)
                     }
                 },
                 update = { webView ->
                     webView.isVisible = isWebViewVisible
+                },
+                onRelease = { webView ->
+                    webView.destroy()
                 },
                 modifier = Modifier.fillMaxSize(),
             )

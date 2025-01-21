@@ -42,6 +42,7 @@ fun SmsOtpScreenContent(
     otpResendState: OtpResendState,
     onResendOtpClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    isResendButtonLoading: Boolean = false,
 ) {
     val otpFocusRequester = remember { FocusRequester() }
 
@@ -72,6 +73,7 @@ fun SmsOtpScreenContent(
                 isOtpLoading = isOtpLoading,
                 resendState = otpResendState,
                 onResendClicked = onResendOtpClicked,
+                isResendButtonLoading = isResendButtonLoading,
                 keyboardActions = keyboardActions,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier

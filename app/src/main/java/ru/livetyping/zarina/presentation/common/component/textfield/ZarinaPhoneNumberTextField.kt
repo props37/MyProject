@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.text.rememberPhoneNumberVisualTransformation
@@ -67,7 +68,10 @@ fun ZarinaPhoneNumberTextField(
     ZarinaTextField(
         textFieldValue = textFieldValue,
         onValueChanged = {
-            onPhoneNumberChanged(it.text)
+            val text = it.text
+            val length = text.length
+            val adjustedValue = text.take(length.coerceAtMost(PhoneNumber.MAX_LENGTH))
+            onPhoneNumberChanged(adjustedValue)
             selection = it.selection
         },
         isEnabled = isEnabled,

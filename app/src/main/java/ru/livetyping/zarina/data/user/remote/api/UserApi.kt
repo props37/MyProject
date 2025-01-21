@@ -21,7 +21,8 @@ import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
 import ru.livetyping.zarina.data.user.remote.api.dto.LoyaltyProgramBonusHistoryDto
 import ru.livetyping.zarina.data.user.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.remote.api.dto.RequestPasswordResetRequestBody
-import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendSmsOtpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendAuthSmsOtpRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.RequestResendPhoneChangeSmsOtpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.SignOutDto
 import ru.livetyping.zarina.data.user.remote.api.dto.SignUpRequestBody
@@ -108,7 +109,7 @@ class UserApi @Inject constructor(
     }
 
     suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
-        val body = RequestResendSmsOtpRequestBody(phone.value)
+        val body = RequestResendPhoneChangeSmsOtpRequestBody(phone.value)
         httpClient.post("/api/phone/verification/sms") {
             setJsonBody(body)
         }
@@ -236,8 +237,11 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun requestResendAuthorizationSmsOtp(phone: PhoneNumber) {
-        val body = RequestResendSmsOtpRequestBody(phone.value)
+    suspend fun requestResendAuthorizationSmsOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        val body = RequestResendAuthSmsOtpRequestBody(phone.value, yandexCaptchaToken.value)
         httpClient.post("/api/auth/phone/sms") {
             setJsonBody(body)
         }
