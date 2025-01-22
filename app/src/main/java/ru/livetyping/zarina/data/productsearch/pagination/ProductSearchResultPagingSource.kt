@@ -29,12 +29,13 @@ class ProductSearchResultPagingSource(
 
             val nextOffset = result.offset + products.size
             val nextKey = nextOffset.takeIf { products.isNotEmpty() }
-            val itemsAfter = result.productTotalCount - (products.size + offset)
+            val itemsAfter = (result.productTotalCount - (products.size + offset))
+                .coerceAtLeast(0)
             return LoadResult.Page(
                 data = products,
                 prevKey = null, // TODO: [Low] Implement
                 nextKey = nextKey,
-                itemsBefore = offset,
+                itemsBefore = offset.coerceAtLeast(0),
                 itemsAfter = itemsAfter,
             )
         } catch (e: Exception) {
