@@ -98,7 +98,7 @@ public fun BoxScope.YandexCaptchaDialog(
                     webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView?, url: String?) {
                             Timber.tag(TAG).v("onPageFinished: $url")
-                            if (url == captchaUrl) isPageLoaded = true
+                            isPageLoaded = true
                         }
                     }
 
