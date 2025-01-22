@@ -23,7 +23,7 @@ data class ClickActionDto(
     fun toClickAction(): ClickAction? {
         if (type == null || payload == null) return null
         return when (type) {
-            TYPE_PRODUCT_LIST -> toClickActionProducts()
+            TYPE_PRODUCT_LIST -> toClickActionProductList()
             else -> {
                 Timber.w("Unknown type $type")
                 null
@@ -31,9 +31,9 @@ data class ClickActionDto(
         }
     }
 
-    private fun toClickActionProducts(): ClickAction.Products? {
+    private fun toClickActionProductList(): ClickAction.ProductList? {
         if (payload?.categoryId == null) return null
-        return ClickAction.Products(
+        return ClickAction.ProductList(
             categoryId = Category.Id(payload.categoryId),
         )
     }

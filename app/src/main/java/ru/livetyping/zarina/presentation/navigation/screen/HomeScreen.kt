@@ -17,7 +17,7 @@ fun NavGraphBuilder.homeScreen(navController: NavHostController) {
                 when (action) {
                     is HomeScreenAction.BannerClicked -> {
                         when (action.banner.clickAction) {
-                            is ClickAction.Products -> {
+                            is ClickAction.ProductList -> {
                                 val categoryId = action.banner.clickAction.categoryId
                                 navController.navigateToProductsScreen(categoryId)
                             }
