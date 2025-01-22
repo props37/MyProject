@@ -30,6 +30,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersS
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSubscriptionScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productsScreen
+import ru.livetyping.zarina.presentation.navigation.screen.webViewScreen
 import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
 import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
 
@@ -74,6 +75,7 @@ fun ZarinaNavigation(
         productSubscriptionScreen(navController)
         permissionRequirementBottomSheetScreen(navController)
         paymentScreen(navController)
+        webViewScreen(navController)
 
         genericBottomSheetScreen(navController)
     }

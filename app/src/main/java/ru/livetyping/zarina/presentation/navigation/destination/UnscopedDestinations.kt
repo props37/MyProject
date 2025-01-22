@@ -509,4 +509,7 @@ object UnscopedDestinations {
             const val RESULT_KEY = "result_payment"
         }
     }
+
+    @Serializable
+    data class WebView(val url: String)
 }
