@@ -51,5 +51,5 @@ public object ZarinaLogoDefaults {
         get() = UiKitTheme.colors.icon.regular.default
 
     // According to R.drawable.zarina_logo size
-    public const val ZarinaLogoAspectRatio: Float = 100f / 10
+    public const val ZarinaLogoAspectRatio: Float = 100f / 13.56f
 }
