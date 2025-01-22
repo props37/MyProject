@@ -81,7 +81,7 @@ internal data class OrderDto(
             LocalDate.parse(date.substringBefore('T'))
         }
         // TODO: [Backend] Migrate to separate field when it is available
-        val deliveryPrice = shipping.shippingMethod.price ?: 0
+        val deliveryPrice = shipping.shippingMethod.price?.toInt() ?: 0
         val price = OrderPrice(
             orderPrice = totalSum - deliveryPrice,
             deliveryPrice = deliveryPrice,
@@ -188,7 +188,7 @@ internal data class OrderDto(
             val type: DeliveryMethodTypeDto? = null,
 
             @SerialName("price")
-            val price: Int? = null,
+            val price: Float? = null,
         )
     }
 
