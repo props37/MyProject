@@ -22,6 +22,7 @@ fun NavGraphBuilder.homeScreen(navController: NavHostController) {
                                 navController.navigateToProductsScreen(categoryId)
                             }
 
+                            is ClickAction.OpenUrl -> TODO() // TODO: [Top] Implement
                             null -> Unit
                         }
                     }
