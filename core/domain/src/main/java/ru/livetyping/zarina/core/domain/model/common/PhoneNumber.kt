@@ -7,6 +7,8 @@ public value class PhoneNumber private constructor(public val value: String) {
         public val ZARINA_SUPPORT: PhoneNumber
             get() = create("88007070666")
 
+        public const val MAX_LENGTH: Int = 12
+
         public fun create(phone: String): PhoneNumber = PhoneNumber(phone.trim())
     }
 }

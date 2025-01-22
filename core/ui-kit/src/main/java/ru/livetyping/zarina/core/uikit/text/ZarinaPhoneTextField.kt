@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Density
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.uicompose.phone.rememberPhoneOutputTransformation
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -30,9 +32,7 @@ public fun ZarinaPhoneTextField(
     isError: Boolean = false,
     isReadOnly: Boolean = false,
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
-    inputTransformation: InputTransformation? = InputTransformation.byValue { _, proposed ->
-        proposed.filter { it.isDigit() || it == '+' }
-    },
+    inputTransformation: InputTransformation? = ZarinaPhoneTextFieldDefaults.InputTransformationDefault,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = {
         val text = if (state.text.isNotEmpty()) {
@@ -86,4 +86,12 @@ public fun ZarinaPhoneTextField(
 public object ZarinaPhoneTextFieldDefaults {
     public val KeyboardOptions: KeyboardOptions
         get() = KeyboardOptions(keyboardType = KeyboardType.Phone)
+
+    internal val InputTransformationDefault = InputTransformation
+        .byValue { _, proposed ->
+            proposed.filter { it.isDigit() || it == PLUS }
+        }
+        .maxLength(PhoneNumber.MAX_LENGTH)
+
+    private const val PLUS = '+'
 }
