@@ -77,6 +77,10 @@ fun NavGraphBuilder.signInScreen(navController: NavHostController) {
                             inclusive = true,
                         )
                     }
+
+                    is SignInScreenAction.PhoneConfirmationNeeded -> {
+                        TODO() // TODO: [Top] Implement
+                    }
                 }
             },
         )
