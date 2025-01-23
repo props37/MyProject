@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.user
 
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.user.UserRepository
+import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Email
 import timber.log.Timber
@@ -11,9 +12,9 @@ class SignInByEmailUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val validateFieldsUseCase: ValidateSignInByEmailFieldsUseCase,
     private val setUserWithAuthorizationTokensUseCase: SetUserWithAuthorizationTokensUseCase,
-) : UseCase<SignInByEmailUseCase.Params, Unit>() {
+) : UseCase<SignInByEmailUseCase.Params, AuthorizationResult>() {
 
-    override suspend fun execute(params: Params) {
+    override suspend fun execute(params: Params): AuthorizationResult {
         val email = params.email
         val password = params.password
         Timber.v("Sign in by email. Email: $email, password: $password")
@@ -31,6 +32,8 @@ class SignInByEmailUseCase @Inject constructor(
 
         val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
         setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+
+        return authorizationResult
     }
 
     data class Params(
