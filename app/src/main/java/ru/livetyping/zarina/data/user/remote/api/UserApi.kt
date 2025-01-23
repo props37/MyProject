@@ -108,6 +108,13 @@ class UserApi @Inject constructor(
         }
     }
 
+    suspend fun confirmPhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        val body = RequestResendAuthSmsOtpRequestBody(phone.value, yandexCaptchaToken.value)
+        httpClient.post("/api/phone/verification") {
+            setJsonBody(body)
+        }
+    }
+
     suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
         val body = RequestResendPhoneChangeSmsOtpRequestBody(phone.value)
         httpClient.post("/api/phone/verification/sms") {
