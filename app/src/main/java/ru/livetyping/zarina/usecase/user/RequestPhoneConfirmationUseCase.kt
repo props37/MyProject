@@ -6,12 +6,12 @@ import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import javax.inject.Inject
 
-class ConfirmPhoneNumberUseCase @Inject constructor(
+class RequestPhoneConfirmationUseCase @Inject constructor(
     private val userRepository: UserRepository,
-) : UseCase<ConfirmPhoneNumberUseCase.Params, Unit>() {
+) : UseCase<RequestPhoneConfirmationUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params) {
-        userRepository.confirmPhoneNumber(params.phone, params.yandexCaptchaToken)
+        userRepository.requestPhoneConfirmation(params.phone, params.yandexCaptchaToken)
     }
 
     data class Params(
