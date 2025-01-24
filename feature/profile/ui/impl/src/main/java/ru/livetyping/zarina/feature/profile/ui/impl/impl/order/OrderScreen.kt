@@ -36,7 +36,7 @@ internal fun OrderScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     orderState: OrderState,
     onOrderEvent: (OrderEvent) -> Unit,
     sideEffects: Flow<OrderSideEffect>,

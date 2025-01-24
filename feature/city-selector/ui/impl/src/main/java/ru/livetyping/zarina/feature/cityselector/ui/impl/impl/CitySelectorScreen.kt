@@ -49,7 +49,7 @@ internal fun CitySelectorScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
     cityListState: CityListState,

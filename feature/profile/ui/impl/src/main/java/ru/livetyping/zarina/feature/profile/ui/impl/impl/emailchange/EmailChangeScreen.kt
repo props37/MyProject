@@ -67,7 +67,7 @@ internal fun EmailChangeScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: EmailChangeState,
     onEvent: (EmailChangeEvent) -> Unit,
     sideEffects: Flow<EmailChangeSideEffect>,

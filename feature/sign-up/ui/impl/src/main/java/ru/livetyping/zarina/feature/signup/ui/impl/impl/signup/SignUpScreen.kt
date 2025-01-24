@@ -50,7 +50,7 @@ internal fun SignUpScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     signUpState: SignUpState,
     onSignUpEvent: (SignUpEvent) -> Unit,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,

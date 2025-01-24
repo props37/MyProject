@@ -65,7 +65,7 @@ internal fun PasswordChangeScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: PasswordChangeState,
     onEvent: (PasswordChangeEvent) -> Unit,
     sideEffects: Flow<PasswordChangeSideEffect>,

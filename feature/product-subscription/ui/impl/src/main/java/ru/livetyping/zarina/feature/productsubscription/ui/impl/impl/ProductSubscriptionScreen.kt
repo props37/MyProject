@@ -39,7 +39,7 @@ internal fun ProductSubscriptionScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: ProductSubscriptionState,
     onEvent: (ProductSubscriptionEvent) -> Unit,
     sideEffects: Flow<ProductSubscriptionSideEffect>,

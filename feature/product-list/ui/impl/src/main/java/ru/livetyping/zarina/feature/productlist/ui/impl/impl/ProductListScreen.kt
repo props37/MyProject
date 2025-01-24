@@ -69,7 +69,7 @@ internal fun ProductListScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
     tagListState: TagListState,

@@ -65,7 +65,7 @@ internal fun StoreListScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     onStoreListEvent: (StoreListEvent) -> Unit,
     viewModeSelectorState: TabRowState<StoreListViewMode>,
     onViewModeSelectorEvent: (TabRowEvent<StoreListViewMode>) -> Unit,

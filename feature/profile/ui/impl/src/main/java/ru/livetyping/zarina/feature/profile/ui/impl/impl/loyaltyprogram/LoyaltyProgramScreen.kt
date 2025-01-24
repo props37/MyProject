@@ -37,7 +37,7 @@ internal fun LoyaltyProgramScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: LoyaltyProgramState,
     onEvent: (LoyaltyProgramEvent) -> Unit,
     sideEffects: Flow<LoyaltyProgramSideEffect>,

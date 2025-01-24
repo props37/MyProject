@@ -58,7 +58,7 @@ internal fun SignUpConfirmationScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: SignUpConfirmationState,
     onEvent: (SignUpConfirmationEvent) -> Unit,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,

@@ -117,7 +117,7 @@ internal fun CartScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     cartProductCount: Int,
     cartSize: CartSize,
     city: City?,

@@ -42,7 +42,7 @@ internal fun PhoneChangeScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: PhoneChangeState,
     onEvent: (PhoneChangeEvent) -> Unit,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,

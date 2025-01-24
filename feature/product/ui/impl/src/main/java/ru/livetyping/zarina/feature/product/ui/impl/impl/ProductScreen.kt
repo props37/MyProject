@@ -62,7 +62,7 @@ internal fun ProductScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,

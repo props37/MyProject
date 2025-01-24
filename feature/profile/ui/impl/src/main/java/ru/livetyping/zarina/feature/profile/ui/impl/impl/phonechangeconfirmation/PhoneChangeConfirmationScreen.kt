@@ -54,7 +54,7 @@ internal fun PhoneChangeConfirmationScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     state: PhoneChangeConfirmationState,
     onEvent: (PhoneChangeConfirmationEvent) -> Unit,
     sideEffects: Flow<PhoneChangeConfirmationSideEffect>,

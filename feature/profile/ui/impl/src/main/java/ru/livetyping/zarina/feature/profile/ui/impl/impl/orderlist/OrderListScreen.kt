@@ -36,7 +36,7 @@ internal fun OrderListScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     orderPagingDataFlow: Flow<PagingData<OrderShort>>,
     onOrderClicked: (Order) -> Unit,
     onBackClicked: () -> Unit,

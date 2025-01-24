@@ -66,7 +66,7 @@ internal fun ProfileDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     topBarState: ProfileDetailsTopBarState,
     onTopBarEvent: (ProfileDetailsTopBarEvent) -> Unit,
     profileDetailsState: ProfileDetailsState,

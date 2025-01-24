@@ -55,7 +55,7 @@ internal fun SignInScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     signInTypeSelectorState: TabRowState<SignInType>,
     onSignInTypeSelectorEvent: (TabRowEvent<SignInType>) -> Unit,
     signInState: SignInState,

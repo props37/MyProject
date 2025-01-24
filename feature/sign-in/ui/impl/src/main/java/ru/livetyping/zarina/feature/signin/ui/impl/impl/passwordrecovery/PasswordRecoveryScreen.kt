@@ -37,7 +37,7 @@ internal fun PasswordRecoveryScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     passwordRecoveryState: PasswordRecoveryState,
     onRequestPasswordRecoveryClicked: () -> Unit,
     onBackClicked: () -> Unit,

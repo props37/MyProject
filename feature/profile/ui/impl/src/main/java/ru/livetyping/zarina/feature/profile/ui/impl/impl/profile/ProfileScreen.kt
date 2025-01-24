@@ -47,7 +47,7 @@ internal fun ProfileScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     profileState: ProfileState,
     onProfileEvent: (ProfileEvent) -> Unit,
     onBackClicked: () -> Unit,

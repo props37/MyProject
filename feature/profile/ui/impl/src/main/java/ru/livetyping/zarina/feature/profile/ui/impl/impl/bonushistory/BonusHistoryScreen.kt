@@ -47,7 +47,7 @@ internal fun BonusHistoryScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     tabRowState: TabRowState<BonusHistoryTab>,
     onTabRowEvent: (TabRowEvent<BonusHistoryTab>) -> Unit,
     bonusHistoryPagingDataFlow: Flow<PagingData<LoyaltyProgramBonusAction>>,

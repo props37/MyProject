@@ -32,7 +32,7 @@ internal fun DetectedCityScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     cityName: String,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<DetectedCitySideEffect>,

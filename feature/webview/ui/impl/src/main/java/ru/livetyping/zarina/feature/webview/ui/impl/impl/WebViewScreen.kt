@@ -41,7 +41,7 @@ internal fun WebViewScreen(
 }
 
 @Composable
-internal fun ScreenContent(
+private fun ScreenContent(
     url: String,
     onBackClicked: () -> Unit,
     sideEffects: Flow<WebViewSideEffect>,
