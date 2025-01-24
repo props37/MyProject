@@ -295,6 +295,11 @@ class SignInViewModel @Inject constructor(
     private fun requestPhoneConfirmation(yandexCaptchaToken: YandexCaptchaToken) {
         if (requestPhoneConfirmationJob?.isActive == true) return
 
+        interactor.smsCodeRetriever.start(
+            sender = SmsConstants.SENDER_ZARINA,
+            codeRegexPattern = SmsConstants.CODE_PATTERN_ZARINA,
+        )
+
         requestPhoneConfirmationJob = viewModelScope.launch {
             operationTracker.track(Operation.REQUEST_PHONE_CONFIRMATION) {
                 val phone = PhoneNumber.create(phoneToConfirm.value)
@@ -333,12 +338,12 @@ class SignInViewModel @Inject constructor(
             }
 
             phoneConfirmation?.isConfirmed != true && phoneConfirmation?.phone != null -> {
-                phoneValueHolder.set(phoneConfirmation.phone.value)
+                phoneToConfirmValueHolder.set(phoneConfirmation.phone.value)
                 requestPhoneConfirmation()
             }
 
             else -> {
-                phoneValueHolder.set(PHONE_NUMBER_INITIAL_VALUE)
+                phoneToConfirmValueHolder.set(PHONE_NUMBER_INITIAL_VALUE)
                 TODO() // TODO: [Top] Implement
             }
         }
