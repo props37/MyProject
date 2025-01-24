@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.presentation.navigation.BaseRoute
 import ru.livetyping.zarina.presentation.navigation.base.Destination
@@ -49,4 +50,7 @@ data object SignInGraph : SimpleGraph(
 
         data class Args(val phone: PhoneNumber)
     }
+
+    @Serializable
+    data class PhoneNumberConfirmation(val phone: String)
 }
