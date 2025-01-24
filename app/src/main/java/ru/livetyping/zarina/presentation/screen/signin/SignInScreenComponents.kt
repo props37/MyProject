@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.signin
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +42,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconB
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
+import ru.livetyping.zarina.presentation.common.component.policy.YandexCaptchaPolicy
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTab
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaTabRow
 import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaPasswordTextField
@@ -50,6 +52,7 @@ import ru.livetyping.zarina.presentation.common.component.textfield.ZarinaTextFi
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.screen.signin.SignInViewModel.SignInType
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.autofill.autofill
 import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
@@ -113,6 +116,7 @@ object SignInScreenComponents {
     fun SignInTypePager(
         signInTypes: ImmutableList<SignInType>,
         signInTypePagerState: PagerState,
+        signInByEmailStep: SignInViewModel.SignInByEmailStep,
         email: String,
         onEmailChanged: (String) -> Unit,
         isEmailInvalid: Boolean,
@@ -124,6 +128,11 @@ object SignInScreenComponents {
         isPhoneInvalid: Boolean,
         onSignInClicked: () -> Unit,
         isSignInButtonLoading: Boolean,
+        phoneToConfirm: String,
+        onPhoneToConfirmChanged: (String) -> Unit,
+        isPhoneToConfirmInvalid: Boolean,
+        onGetPhoneConfirmationCodeClicked: () -> Unit,
+        isGetPhoneConfirmationCodeButtonLoading: Boolean,
         onForgotPasswordClicked: () -> Unit,
         onSignUpClicked: () -> Unit,
         onUrlClicked: (Url) -> Unit,
@@ -138,6 +147,7 @@ object SignInScreenComponents {
             when (signInType) {
                 SignInType.EMAIL -> {
                     SignInByEmail(
+                        signInByEmailStep = signInByEmailStep,
                         email = email,
                         onEmailChanged = onEmailChanged,
                         isEmailInvalid = isEmailInvalid,
@@ -146,6 +156,11 @@ object SignInScreenComponents {
                         isPasswordInvalid = isPasswordInvalid,
                         onSignInClicked = onSignInClicked,
                         isSignInButtonLoading = isSignInButtonLoading,
+                        phoneToConfirm = phoneToConfirm,
+                        onPhoneToConfirmChanged = onPhoneToConfirmChanged,
+                        isPhoneToConfirmInvalid = isPhoneToConfirmInvalid,
+                        onGetPhoneConfirmationCodeClicked = onGetPhoneConfirmationCodeClicked,
+                        isGetPhoneConfirmationCodeButtonLoading = isGetPhoneConfirmationCodeButtonLoading,
                         onForgotPasswordClicked = onForgotPasswordClicked,
                         onSignUpClicked = onSignUpClicked,
                         onUrlClicked = onUrlClicked,
@@ -167,9 +182,70 @@ object SignInScreenComponents {
         }
     }
 
-    @OptIn(ExperimentalComposeUiApi::class)
     @Composable
     private fun SignInByEmail(
+        signInByEmailStep: SignInViewModel.SignInByEmailStep,
+        email: String,
+        onEmailChanged: (String) -> Unit,
+        isEmailInvalid: Boolean,
+        password: String,
+        onPasswordChanged: (String) -> Unit,
+        isPasswordInvalid: Boolean,
+        onSignInClicked: () -> Unit,
+        isSignInButtonLoading: Boolean,
+        phoneToConfirm: String,
+        onPhoneToConfirmChanged: (String) -> Unit,
+        isPhoneToConfirmInvalid: Boolean,
+        onGetPhoneConfirmationCodeClicked: () -> Unit,
+        isGetPhoneConfirmationCodeButtonLoading: Boolean,
+        onForgotPasswordClicked: () -> Unit,
+        onSignUpClicked: () -> Unit,
+        onUrlClicked: (Url) -> Unit,
+        modifier: Modifier = Modifier,
+    ) {
+        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(TopPadding))
+
+            AnimatedContent(
+                targetState = signInByEmailStep,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec.using(sizeTransform = null)
+                },
+            ) { step ->
+                when (step) {
+                    SignInViewModel.SignInByEmailStep.MAIN -> {
+                        SignInByEmailMain(
+                            email = email,
+                            onEmailChanged = onEmailChanged,
+                            isEmailInvalid = isEmailInvalid,
+                            password = password,
+                            onPasswordChanged = onPasswordChanged,
+                            isPasswordInvalid = isPasswordInvalid,
+                            onSignInClicked = onSignInClicked,
+                            isSignInButtonLoading = isSignInButtonLoading,
+                            onForgotPasswordClicked = onForgotPasswordClicked,
+                            onSignUpClicked = onSignUpClicked,
+                            onUrlClicked = onUrlClicked,
+                        )
+                    }
+
+                    SignInViewModel.SignInByEmailStep.PHONE_CONFIRMATION -> {
+                        SignInByEmailPhoneConfirmation(
+                            phoneToConfirm = phoneToConfirm,
+                            onPhoneToConfirmChanged = onPhoneToConfirmChanged,
+                            isPhoneToConfirmInvalid = isPhoneToConfirmInvalid,
+                            onGetPhoneConfirmationCodeClicked = onGetPhoneConfirmationCodeClicked,
+                            isGetPhoneConfirmationCodeButtonLoading = isGetPhoneConfirmationCodeButtonLoading,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    private fun SignInByEmailMain(
         email: String,
         onEmailChanged: (String) -> Unit,
         isEmailInvalid: Boolean,
@@ -198,9 +274,7 @@ object SignInScreenComponents {
             onStopOrDispose {}
         }
 
-        Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(TopPadding))
-
+        Column(modifier = modifier) {
             ZarinaTextField(
                 value = email,
                 onValueChanged = onEmailChanged,
@@ -285,6 +359,66 @@ object SignInScreenComponents {
                 onUrlClicked = onUrlClicked,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
+        }
+    }
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Composable
+    private fun SignInByEmailPhoneConfirmation(
+        phoneToConfirm: String,
+        onPhoneToConfirmChanged: (String) -> Unit,
+        isPhoneToConfirmInvalid: Boolean,
+        onGetPhoneConfirmationCodeClicked: () -> Unit,
+        isGetPhoneConfirmationCodeButtonLoading: Boolean,
+        modifier: Modifier = Modifier,
+    ) {
+        val focusRequester = remember { FocusRequester() }
+        LifecycleStartEffect(Unit) {
+            focusRequester.tryRequestFocus()
+            onStopOrDispose {}
+        }
+
+        Column(modifier = modifier) {
+            ZarinaPhoneNumberTextField(
+                phoneNumber = phoneToConfirm,
+                onPhoneNumberChanged = onPhoneToConfirmChanged,
+                isError = isPhoneToConfirmInvalid,
+                keyboardOptions = remember {
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done,
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .focusRequester(focusRequester)
+                    .autofill(
+                        autofillType = AutofillType.PhoneNumber,
+                        onFilled = { onPhoneToConfirmChanged(it) },
+                    ),
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ZarinaButton(
+                onClick = onGetPhoneConfirmationCodeClicked,
+                isLoading = isGetPhoneConfirmationCodeButtonLoading,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            ) {
+                Text(text = stringResource(R.string.get_code).uppercase())
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            YandexCaptchaPolicy(modifier = Modifier.padding(horizontal = 16.dp))
+
+            Spacer(modifier = Modifier.height(20.dp))
+            val navigationBarsOrImeBottomPadding =
+                WindowInsets.navigationBarsOrIme.asPaddingValues().calculateBottomPadding()
+            Spacer(modifier = Modifier.height(navigationBarsOrImeBottomPadding))
         }
     }
 
