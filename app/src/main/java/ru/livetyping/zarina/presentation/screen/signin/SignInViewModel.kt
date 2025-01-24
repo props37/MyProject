@@ -156,6 +156,11 @@ class SignInViewModel @Inject constructor(
 
     fun onScreenOpened() {
         if (credentialManagerJob?.isActive == true) return
+        if (
+            currentSignInType.value != SignInType.EMAIL
+            || signInByEmailStep.value != SignInByEmailStep.MAIN
+        ) return
+
         credentialManagerJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_IN) {
                 val result = interactor.credentialManager.getCredential()
