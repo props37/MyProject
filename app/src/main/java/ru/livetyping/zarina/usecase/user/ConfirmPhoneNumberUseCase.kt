@@ -1,0 +1,17 @@
+package ru.livetyping.zarina.usecase.user
+
+import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.user.UserRepository
+import ru.livetyping.zarina.domain.common.PhoneNumber
+import javax.inject.Inject
+
+class ConfirmPhoneNumberUseCase @Inject constructor(
+    private val userRepository: UserRepository,
+) : UseCase<ConfirmPhoneNumberUseCase.Params, Unit>() {
+
+    override suspend fun execute(params: Params) {
+        userRepository.confirmPhoneNumberChange(params.phone, params.code)
+    }
+
+    data class Params(val phone: PhoneNumber, val code: String)
+}
