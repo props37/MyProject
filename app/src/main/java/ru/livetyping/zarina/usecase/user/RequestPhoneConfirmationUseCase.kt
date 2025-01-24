@@ -11,7 +11,7 @@ class RequestPhoneConfirmationUseCase @Inject constructor(
 ) : UseCase<RequestPhoneConfirmationUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params) {
-        userRepository.requestPhoneConfirmation(params.phone, params.yandexCaptchaToken)
+        userRepository.requestPhoneNumberConfirmation(params.phone, params.yandexCaptchaToken)
     }
 
     data class Params(
