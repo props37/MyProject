@@ -47,6 +47,7 @@ class PhoneNumberConfirmationViewModel @Inject constructor(
     init {
         interactor.smsCodeRetriever.addListener { code ->
             onOtpChanged(code)
+            onOtpEntered()
         }
     }
 
