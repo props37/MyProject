@@ -29,7 +29,7 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val interactor: ChangePhoneNumberOtpInteractor,
     private val otpComponent: OtpViewModelComponent,
-) : ViewModel(otpComponent), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
+) : ViewModel(otpComponent, interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
