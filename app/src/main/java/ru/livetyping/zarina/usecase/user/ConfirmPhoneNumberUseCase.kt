@@ -7,10 +7,16 @@ import javax.inject.Inject
 
 class ConfirmPhoneNumberUseCase @Inject constructor(
     private val userRepository: UserRepository,
+    private val setUserWithAuthorizationTokensUseCase: SetUserWithAuthorizationTokensUseCase,
 ) : UseCase<ConfirmPhoneNumberUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params) {
-        userRepository.confirmPhoneNumber(params.phone, params.code)
+        val authResult = userRepository.confirmPhoneNumber(params.phone, params.code)
+        val user = authResult.user
+        val tokens = authResult.tokens
+
+        val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
+        setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
     }
 
     data class Params(val phone: PhoneNumber, val code: String)

@@ -110,8 +110,8 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun confirmPhoneNumber(phone: PhoneNumber, code: String) {
-        confirmPhoneNumberImpl(phone, code)
+    suspend fun confirmPhoneNumber(phone: PhoneNumber, code: String): AuthorizationDto {
+        return confirmPhoneNumberImpl(phone, code)
     }
 
     suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
@@ -270,12 +270,12 @@ class UserApi @Inject constructor(
         httpClient.post("/api/profile/delete")
     }
 
-    private suspend fun confirmPhoneNumberImpl(phone: PhoneNumber, code: String) {
+    private suspend fun confirmPhoneNumberImpl(phone: PhoneNumber, code: String): AuthorizationDto {
         val body = ConfirmPhoneNumberRequestBody(phone = phone.value, code = code)
-        confirmSignUpApiExceptionConverter {
+        return confirmSignUpApiExceptionConverter {
             httpClient.post("/api/phone/verification/sms/confirmation") {
                 setJsonBody(body)
-            }
+            }.body()
         }
     }
 

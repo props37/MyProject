@@ -30,8 +30,12 @@ class SignInByEmailUseCase @Inject constructor(
         val tokens = authorizationResult.tokens
         val user = authorizationResult.user
 
-        val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
-        setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+        if (authorizationResult.phoneConfirmation?.isConfirmed == true) {
+            val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
+            setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+        } else {
+            Timber.v("Phone confirmation needed")
+        }
 
         return authorizationResult
     }
