@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.authorization.remote.api.dto.AuthorizationTokensDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.UserDto
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
+import ru.livetyping.zarina.domain.common.PhoneNumber
 
 @Serializable
 data class AuthorizationDto(
@@ -13,6 +14,9 @@ data class AuthorizationDto(
 
     @SerialName("jwt")
     val authorizationTokens: AuthorizationTokensDto? = null,
+
+    @SerialName("phone_verification")
+    val phoneVerification: PhoneConfirmationDto? = null,
 ) {
     fun toAuthorizationResult(): AuthorizationResult {
         checkNotNull(authorizationTokens) { "authorizationTokens is null" }
@@ -20,6 +24,26 @@ data class AuthorizationDto(
         return AuthorizationResult(
             tokens = authorizationTokens.toAuthorizationTokens(),
             user = user.toUser(),
+            phoneConfirmation = phoneVerification?.toPhoneConfirmation(),
         )
+    }
+
+    @Serializable
+    data class PhoneConfirmationDto(
+        @SerialName("phone_is_verified")
+        val isPhoneVerified: Boolean? = null,
+
+        @SerialName("unverified_phone")
+        val unverifiedPhone: String? = null,
+    ) {
+        fun toPhoneConfirmation(): AuthorizationResult.PhoneConfirmation {
+            val phone = unverifiedPhone
+                ?.takeIf { it.isNotBlank() }
+                ?.let { PhoneNumber.create(it) }
+            return AuthorizationResult.PhoneConfirmation(
+                phone = phone,
+                isConfirmed = isPhoneVerified ?: true,
+            )
+        }
     }
 }

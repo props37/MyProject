@@ -13,22 +13,15 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewFontScale
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.domain.common.Url
-import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialog
 import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.screen.signin.SignInScreenComponents.SignInTypePager
@@ -46,6 +39,7 @@ fun SignInScreen(
 ) {
     val signInTypes by viewModel.signInTypes.collectAsStateWithLifecycle()
     val currentSignInType by viewModel.currentSignInType.collectAsStateWithLifecycle()
+    val signInByEmailStep by viewModel.signInByEmailStep.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
         context = Dispatchers.Main.immediate,
     )
@@ -58,12 +52,18 @@ fun SignInScreen(
         context = Dispatchers.Main.immediate,
     )
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
+    val phoneToConfirm by viewModel.phoneToConfirm.collectAsStateWithLifecycle(
+        context = Dispatchers.Main.immediate,
+    )
+    val isPhoneToConfirmInvalid by viewModel.isPhoneToConfirmInvalid.collectAsStateWithLifecycle()
+    val isGetPhoneConfirmationCodeButtonLoading by viewModel.isGetPhoneConfirmationCodeButtonLoading.collectAsStateWithLifecycle()
     val isSignInButtonLoading by viewModel.isSignInButtonLoading.collectAsStateWithLifecycle()
     val yandexCaptchaDialogState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         signInTypes = signInTypes,
         currentSignInType = currentSignInType,
+        signInByEmailStep = signInByEmailStep,
         onSignInTypeChanged = viewModel::onSignInTypeChanged,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
@@ -76,6 +76,11 @@ fun SignInScreen(
         isPhoneInvalid = isPhoneInvalid,
         onSignInClicked = viewModel::onSignInClicked,
         isSignInButtonLoading = isSignInButtonLoading,
+        phoneToConfirm = phoneToConfirm,
+        onPhoneToConfirmChanged = viewModel::onPhoneToConfirmChanged,
+        isPhoneToConfirmInvalid = isPhoneToConfirmInvalid,
+        onGetPhoneConfirmationCodeClicked = viewModel::onGetPhoneConfirmationCodeClicked,
+        isGetPhoneConfirmationCodeButtonLoading = isGetPhoneConfirmationCodeButtonLoading,
         onForgotPasswordClicked = viewModel::onForgotPasswordClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         onUrlClicked = viewModel::onUrlClicked,
@@ -93,6 +98,7 @@ fun SignInScreen(
 private fun ScreenContent(
     signInTypes: ImmutableList<SignInType>,
     currentSignInType: SignInType,
+    signInByEmailStep: SignInViewModel.SignInByEmailStep,
     onSignInTypeChanged: (SignInType) -> Unit,
     email: String,
     onEmailChanged: (String) -> Unit,
@@ -105,6 +111,11 @@ private fun ScreenContent(
     isPhoneInvalid: Boolean,
     onSignInClicked: () -> Unit,
     isSignInButtonLoading: Boolean,
+    phoneToConfirm: String,
+    onPhoneToConfirmChanged: (String) -> Unit,
+    isPhoneToConfirmInvalid: Boolean,
+    onGetPhoneConfirmationCodeClicked: () -> Unit,
+    isGetPhoneConfirmationCodeButtonLoading: Boolean,
     onForgotPasswordClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
@@ -157,6 +168,7 @@ private fun ScreenContent(
             SignInTypePager(
                 signInTypes = signInTypes,
                 signInTypePagerState = signInTypePagerState,
+                signInByEmailStep = signInByEmailStep,
                 email = email,
                 onEmailChanged = onEmailChanged,
                 isEmailInvalid = isEmailInvalid,
@@ -168,6 +180,11 @@ private fun ScreenContent(
                 isPhoneInvalid = isPhoneInvalid,
                 onSignInClicked = onSignInClicked,
                 isSignInButtonLoading = isSignInButtonLoading,
+                phoneToConfirm = phoneToConfirm,
+                onPhoneToConfirmChanged = onPhoneToConfirmChanged,
+                isPhoneToConfirmInvalid = isPhoneToConfirmInvalid,
+                onGetPhoneConfirmationCodeClicked = onGetPhoneConfirmationCodeClicked,
+                isGetPhoneConfirmationCodeButtonLoading = isGetPhoneConfirmationCodeButtonLoading,
                 onForgotPasswordClicked = onForgotPasswordClicked,
                 onSignUpClicked = onSignUpClicked,
                 onUrlClicked = onUrlClicked,
@@ -179,76 +196,6 @@ private fun ScreenContent(
             state = yandexCaptchaDialogState,
             onDismissRequest = onYandexCaptchaDismissRequested,
             onTokenReceived = onYandexCaptchaTokenReceived,
-        )
-    }
-}
-
-@Preview
-@PreviewFontScale
-@PreviewScreenSizes
-@Composable
-private fun Preview() {
-    ZarinaPreview {
-        ScreenContent(
-            signInTypes = remember { SignInType.entries.toImmutableList() },
-            currentSignInType = SignInType.EMAIL,
-            onSignInTypeChanged = {},
-            email = "",
-            onEmailChanged = {},
-            isEmailInvalid = false,
-            password = "",
-            onPasswordChanged = {},
-            isPasswordInvalid = false,
-            phone = "+7",
-            onPhoneChanged = {},
-            isPhoneInvalid = false,
-            onSignInClicked = {},
-            isSignInButtonLoading = false,
-            onForgotPasswordClicked = {},
-            onSignUpClicked = {},
-            onUrlClicked = {},
-            onBackClicked = {},
-            onScreenOpened = {},
-            yandexCaptchaDialogState = YandexCaptchaDialogState.Hidden,
-            onYandexCaptchaDismissRequested = {},
-            onYandexCaptchaTokenReceived = {},
-            sideEffects = remember { emptyFlow() },
-            navigate = {},
-        )
-    }
-}
-
-@Preview
-@PreviewFontScale
-@PreviewScreenSizes
-@Composable
-private fun PreviewPhone() {
-    ZarinaPreview {
-        ScreenContent(
-            signInTypes = remember { SignInType.entries.toImmutableList() },
-            currentSignInType = SignInType.PHONE,
-            onSignInTypeChanged = {},
-            email = "",
-            onEmailChanged = {},
-            isEmailInvalid = false,
-            password = "",
-            onPasswordChanged = {},
-            isPasswordInvalid = false,
-            phone = "+7",
-            onPhoneChanged = {},
-            isPhoneInvalid = false,
-            onSignInClicked = {},
-            isSignInButtonLoading = false,
-            onForgotPasswordClicked = {},
-            onSignUpClicked = {},
-            onUrlClicked = {},
-            onBackClicked = {},
-            onScreenOpened = {},
-            yandexCaptchaDialogState = YandexCaptchaDialogState.Hidden,
-            onYandexCaptchaDismissRequested = {},
-            onYandexCaptchaTokenReceived = {},
-            sideEffects = remember { emptyFlow() },
-            navigate = {},
         )
     }
 }

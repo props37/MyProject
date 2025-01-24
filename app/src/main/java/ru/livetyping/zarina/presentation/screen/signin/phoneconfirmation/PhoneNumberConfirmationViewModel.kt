@@ -1,10 +1,9 @@
-package ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp
+package ru.livetyping.zarina.presentation.screen.signin.phoneconfirmation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -16,35 +15,26 @@ import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.otp.OtpResendState
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
-import ru.livetyping.zarina.presentation.navigation.destination.graph.ProfileGraph
+import ru.livetyping.zarina.presentation.navigation.destination.graph.SignInGraph
 import ru.livetyping.zarina.presentation.screen.common.otp.OtpViewModelComponent
-import ru.livetyping.zarina.presentation.screen.profile.details.changephonenumber.otp.ChangePhoneNumberOtpViewModel.SideEffect
-import ru.livetyping.zarina.usecase.user.ConfirmPhoneNumberChangeUseCase
+import ru.livetyping.zarina.presentation.screen.signin.phoneconfirmation.PhoneNumberConfirmationViewModel.SideEffect
+import ru.livetyping.zarina.usecase.user.ConfirmPhoneNumberUseCase
 import ru.livetyping.zarina.usecase.user.RequestResendPhoneNumberChangeSmsOtpUseCase
-import ru.livetyping.zarina.util.library.coroutines.mapState
+import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class ChangePhoneNumberOtpViewModel @Inject constructor(
+class PhoneNumberConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val interactor: ChangePhoneNumberOtpInteractor,
+    private val interactor: PhoneNumberConfirmationInteractor,
     private val otpComponent: OtpViewModelComponent,
 ) : ViewModel(otpComponent, interactor.smsCodeRetriever), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    val phone: StateFlow<PhoneNumber> = savedStateHandle
-        .getStateFlow<String?>(
-            key = ProfileGraph.ChangePhoneNumberOtp.ARG_KEY_PHONE,
-            initialValue = null,
-        )
-        .mapState(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-        ) { string ->
-            checkNotNull(string) { "phone is null" }
-            PhoneNumber.create(string)
-        }
+    private val navEntry = savedStateHandle.toRoute<SignInGraph.PhoneNumberConfirmation>()
+
+    val phone: StateFlow<PhoneNumber> = ImmutableStateFlow(PhoneNumber.create(navEntry.phone))
 
     val otp: StateFlow<String> = otpComponent.otp
 
@@ -63,7 +53,7 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
 
     fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = ChangePhoneNumberOtpScreenAction.ScreenClosed
+            val action = PhoneNumberConfirmationScreenAction.ScreenClosed
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
@@ -74,14 +64,10 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
 
     fun onOtpEntered() {
         otpComponent.onOtpEntered {
-            val params = ConfirmPhoneNumberChangeUseCase.Params(phone.value, otp.value)
-            interactor.confirmPhoneNumberChange(params)
+            val params = ConfirmPhoneNumberUseCase.Params(phone.value, otp.value)
+            interactor.confirmPhoneNumber(params)
                 .onSuccess {
-                    val text = Text.Resource(R.string.phone_number_changed)
-                    val message = ZarinaToastMessage(text)
-                    emitSideEffect(SideEffect.ShowZarinaToast(message))
-
-                    val action = ChangePhoneNumberOtpScreenAction.PhoneNumberChanged
+                    val action = PhoneNumberConfirmationScreenAction.PhoneNumberConfirmed
                     emitSideEffect(SideEffect.Navigate(action))
                 }
                 .onFailure(::onOtpFailure)
@@ -91,7 +77,7 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
     fun onResendOtpClicked() {
         otpComponent.onResendOtpClicked {
             val params = RequestResendPhoneNumberChangeSmsOtpUseCase.Params(phone.value)
-            interactor.requestResendPhoneNumberChangeSmsOtp(params)
+            interactor.requestNewOtp(params)
                 .onFailure {
                     val text = Text.Resource(R.string.code_resend_error)
                     val message = ZarinaToastMessage.error(text)
@@ -119,7 +105,7 @@ class ChangePhoneNumberOtpViewModel @Inject constructor(
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
-        data class Navigate(val action: ChangePhoneNumberOtpScreenAction) : SideEffect
+        data class Navigate(val action: PhoneNumberConfirmationScreenAction) : SideEffect
 
         data class ShowZarinaToast(val message: ZarinaToastMessage) : SideEffect
     }

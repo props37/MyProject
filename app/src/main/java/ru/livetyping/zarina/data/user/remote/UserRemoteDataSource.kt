@@ -57,6 +57,17 @@ class UserRemoteDataSource @Inject constructor(
         api.confirmPhoneNumberChange(phone, code)
     }
 
+    suspend fun requestPhoneNumberConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        api.requestPhoneNumberConfirmation(phone, yandexCaptchaToken)
+    }
+
+    suspend fun confirmPhoneNumber(phone: PhoneNumber, code: String): AuthorizationResult {
+        return api.confirmPhoneNumber(phone, code).toAuthorizationResult()
+    }
+
     suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
         api.requestResendPhoneNumberChangeSmsOtp(phone)
     }

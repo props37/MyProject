@@ -14,7 +14,7 @@ import ru.livetyping.zarina.data.geography.remote.api.dto.CityDto
 import ru.livetyping.zarina.data.geography.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.AuthorizationDto
 import ru.livetyping.zarina.data.user.remote.api.dto.ChangePhoneNumberRequestBody
-import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmPhoneNumberChangeRequestBody
+import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmPhoneNumberRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.remote.api.dto.GetLoyaltyCardDto
@@ -97,15 +97,21 @@ class UserApi @Inject constructor(
     }
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, code: String) {
-        val body = ConfirmPhoneNumberChangeRequestBody(
-            phone = phone.value,
-            code = code,
-        )
-        confirmSignUpApiExceptionConverter {
-            httpClient.post("/api/phone/verification/sms/confirmation") {
-                setJsonBody(body)
-            }
+        confirmPhoneNumberImpl(phone, code)
+    }
+
+    suspend fun requestPhoneNumberConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        val body = RequestResendAuthSmsOtpRequestBody(phone.value, yandexCaptchaToken.value)
+        httpClient.post("/api/phone/verification") {
+            setJsonBody(body)
         }
+    }
+
+    suspend fun confirmPhoneNumber(phone: PhoneNumber, code: String): AuthorizationDto {
+        return confirmPhoneNumberImpl(phone, code)
     }
 
     suspend fun requestResendPhoneNumberChangeSmsOtp(phone: PhoneNumber) {
@@ -262,6 +268,15 @@ class UserApi @Inject constructor(
 
     suspend fun deleteAccount() {
         httpClient.post("/api/profile/delete")
+    }
+
+    private suspend fun confirmPhoneNumberImpl(phone: PhoneNumber, code: String): AuthorizationDto {
+        val body = ConfirmPhoneNumberRequestBody(phone = phone.value, code = code)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/phone/verification/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
+        }
     }
 
     companion object {
