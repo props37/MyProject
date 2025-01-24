@@ -350,6 +350,7 @@ class SignInViewModel @Inject constructor(
                 val params = RequestPhoneConfirmationUseCase.Params(phone, yandexCaptchaToken)
                 interactor.requestPhoneConfirmation(params)
                     .onSuccess {
+                        _signInByEmailStep.value = SignInByEmailStep.MAIN
                         val action = SignInScreenAction.PhoneConfirmationNeeded(phone)
                         emitSideEffect(SideEffect.Navigate(action))
                     }
