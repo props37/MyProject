@@ -10,7 +10,7 @@ class ConfirmPhoneNumberUseCase @Inject constructor(
 ) : UseCase<ConfirmPhoneNumberUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params) {
-        userRepository.confirmPhoneNumberChange(params.phone, params.code)
+        userRepository.confirmPhoneNumber(params.phone, params.code)
     }
 
     data class Params(val phone: PhoneNumber, val code: String)
