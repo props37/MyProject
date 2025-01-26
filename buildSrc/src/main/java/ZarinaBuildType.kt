@@ -47,6 +47,6 @@ sealed class ZarinaBuildType(val name: String) {
         val all: List<ZarinaBuildType>
             get() = listOf(Debug, Qa, Release)
 
-        private const val APPLICATION_NAME = "Zarina 2"
+        private const val APPLICATION_NAME = "Zarina"
     }
 }
