@@ -1,17 +1,36 @@
 package ru.livetyping.zarina.feature.profile.ui
 
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
+import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
+import ru.livetyping.zarina.feature.profile.ui.ProfileFeature.NavActions
+import ru.livetyping.zarina.feature.profile.ui.ProfileFeature.NavEntry
 import kotlin.reflect.KClass
 
 public interface ProfileFeature :
-    ComplexFeatureEntry<ProfileNavEntry, ProfileNavActions, ProfileNavResultRetrievers> {
+    ComplexFeatureEntry<NavEntry, NavActions, ProfileNavResultRetrievers> {
+
+    @Serializable
+    public object NavEntry : NavigationEntry {
+
+        @Serializable
+        public data object StartNavEntry : NavigationEntry
+    }
+
+    public class NavActions(
+        public val onBackClicked: () -> Unit,
+        public val onSignInClicked: () -> Unit,
+        public val onSignUpClicked: () -> Unit,
+        public val onChangeCityClicked: (currentCity: City?) -> Unit,
+    ) : NavigationActions
 
     public companion object {
-        public fun getNavEntry(): ProfileNavEntry = ProfileNavEntry
+        public fun getNavEntry(): NavEntry = NavEntry
 
-        public fun getNavEntryClass(): KClass<ProfileNavEntry> = ProfileNavEntry::class
+        public fun getNavEntryClass(): KClass<NavEntry> = NavEntry::class
 
-        public fun getStartNavEntry(): NavigationEntry = ProfileNavEntry.StartNavEntry
+        public fun getStartNavEntry(): NavigationEntry = NavEntry.StartNavEntry
     }
 }

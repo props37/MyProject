@@ -9,8 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
@@ -48,7 +46,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ProfileNavActio
 public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: ProfileNavActions,
+        actions: ProfileFeature.NavActions,
         resultRetrievers: ProfileNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -56,8 +54,8 @@ public class ProfileFeatureImpl : ProfileFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<ProfileNavEntry>(
-            startDestination = ProfileNavEntry.StartNavEntry,
+        navigation<ProfileFeature.NavEntry>(
+            startDestination = ProfileFeature.NavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
@@ -87,10 +85,10 @@ public class ProfileFeatureImpl : ProfileFeature {
                 onChangeEmailClicked = { navController.navigate(EmailChangeNavEntry) },
                 onChangePasswordClicked = { navController.navigate(PasswordChangeNavEntry) },
                 onUserSignedOut = {
-                    navController.popBackStack<ProfileNavEntry.StartNavEntry>(inclusive = false)
+                    navController.popBackStack<ProfileFeature.NavEntry.StartNavEntry>(inclusive = false)
                 },
                 onAccountDeleted = {
-                    navController.popBackStack<ProfileNavEntry.StartNavEntry>(inclusive = false)
+                    navController.popBackStack<ProfileFeature.NavEntry.StartNavEntry>(inclusive = false)
                 }
             )
             profileDetailsScreen(profileDetailsNavActions)

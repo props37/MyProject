@@ -12,7 +12,6 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.ProfileSelectedCityResult
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
@@ -23,7 +22,7 @@ import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 fun NavGraphBuilder.profileFeature(
     navController: NavHostController,
     feature: ProfileFeature,
-    actions: ProfileNavActions,
+    actions: ProfileFeature.NavActions,
     resultRetrievers: ProfileNavResultRetrievers,
 ) {
     with(feature) {
@@ -38,9 +37,9 @@ fun NavGraphBuilder.profileFeature(
 @Composable
 fun rememberProfileNavActions(
     navController: NavHostController
-): ProfileNavActions {
+): ProfileFeature.NavActions {
     return remember(navController) {
-        ProfileNavActions(
+        ProfileFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onSignInClicked = { navController.navigate(SignInFeature.getNavEntry()) },
             onSignUpClicked = { navController.navigate(SignUpFeature.getNavEntry()) },
