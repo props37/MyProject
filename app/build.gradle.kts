@@ -21,6 +21,7 @@ plugins {
 androidGitVersion {
     codeFormat = "MNNPPP"
     format = "%tag%%-branch%%-commit%"
+    baseCode = 2000000
 }
 
 android {
