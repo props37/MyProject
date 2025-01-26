@@ -9,7 +9,6 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
@@ -44,7 +43,7 @@ fun rememberProfileNavActions(
             onSignInClicked = { navController.navigate(SignInFeature.getNavEntry()) },
             onSignUpClicked = { navController.navigate(SignUpFeature.getNavEntry()) },
             onChangeCityClicked = { currentCity ->
-                val citySelectorParams = CitySelectorNavParams(
+                val citySelectorParams = CitySelectorFeature.NavParams(
                     title = Text.Resource(R.string.city_change),
                     currentCity = currentCity,
                 )

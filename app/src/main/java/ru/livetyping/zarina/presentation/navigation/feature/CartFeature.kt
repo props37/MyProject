@@ -10,7 +10,6 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
@@ -42,7 +41,7 @@ fun rememberCartNavActions(
         CartFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onChangeCityClicked = { currentCity ->
-                val citySelectorParams = CitySelectorNavParams(
+                val citySelectorParams = CitySelectorFeature.NavParams(
                     title = Text.Resource(RCommon.string.res_change_city),
                     currentCity = currentCity,
                 )

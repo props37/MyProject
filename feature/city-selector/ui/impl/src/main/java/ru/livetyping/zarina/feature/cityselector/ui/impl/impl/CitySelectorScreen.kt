@@ -21,7 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CityList
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CitySearchTextField
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.TopBar
@@ -32,7 +32,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun CitySelectorScreen(
-    navActions: CitySelectorNavActions,
+    navActions: CitySelectorFeature.NavActions,
     viewModel: CitySelectorViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
@@ -55,7 +55,7 @@ private fun ScreenContent(
     cityListState: CityListState,
     onCityListEvent: (CityListEvent) -> Unit,
     sideEffects: Flow<CitySelectorSideEffect>,
-    navActions: CitySelectorNavActions,
+    navActions: CitySelectorFeature.NavActions,
 ) {
     CitySelectorScreenBehavior(
         sideEffects = sideEffects,

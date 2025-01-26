@@ -9,13 +9,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.CitySelectorScreen
 
 public class CitySelectorFeatureImpl : CitySelectorFeature {
     override fun NavGraphBuilder.composable(
-        actions: CitySelectorNavActions,
+        actions: CitySelectorFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -23,8 +21,8 @@ public class CitySelectorFeatureImpl : CitySelectorFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        composable<CitySelectorNavEntry>(
-            typeMap = CitySelectorNavEntry.typeMap(),
+        composable<CitySelectorFeature.NavEntry>(
+            typeMap = CitySelectorFeature.NavEntry.typeMap(),
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,

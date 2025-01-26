@@ -34,7 +34,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListStateBuilder
@@ -57,8 +57,8 @@ internal class CitySelectorViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val navEntry = savedStateHandle.toRoute<CitySelectorNavEntry>(
-        typeMap = CitySelectorNavEntry.typeMap(),
+    private val navEntry = savedStateHandle.toRoute<CitySelectorFeature.NavEntry>(
+        typeMap = CitySelectorFeature.NavEntry.typeMap(),
     )
 
     @OptIn(SavedStateHandleSaveableApi::class)

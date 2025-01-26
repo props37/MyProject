@@ -11,7 +11,6 @@ import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.navigationutil.hasRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
@@ -71,7 +70,7 @@ fun rememberOnboardingNavActions(
                 }
             },
             onSelectCityClicked = {
-                val citySelectorParams = CitySelectorNavParams()
+                val citySelectorParams = CitySelectorFeature.NavParams()
                 val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
                 navController.navigate(citySelectorNavEntry)
             },

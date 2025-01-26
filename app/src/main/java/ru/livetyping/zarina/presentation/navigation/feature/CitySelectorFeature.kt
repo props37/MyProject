@@ -12,7 +12,6 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTra
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
@@ -20,7 +19,7 @@ import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.citySelectorFeature(
     feature: CitySelectorFeature,
-    actions: CitySelectorNavActions,
+    actions: CitySelectorFeature.NavActions,
 ) {
     with(feature) {
         composable(
@@ -57,9 +56,9 @@ fun NavGraphBuilder.citySelectorFeature(
 @Composable
 fun rememberCitySelectorNavActions(
     navController: NavHostController
-): CitySelectorNavActions {
+): CitySelectorFeature.NavActions {
     return remember(navController) {
-        CitySelectorNavActions(
+        CitySelectorFeature.NavActions(
             onBackClicked = { navController.navigateUp() },
             onCitySelected = { city ->
                 val cityParcelable = CityParcelable.from(city)
