@@ -11,14 +11,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavEntry
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
 
 public class WishlistFeatureImpl : WishlistFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: WishlistNavActions,
+        actions: WishlistFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -26,15 +24,15 @@ public class WishlistFeatureImpl : WishlistFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<WishlistNavEntry>(
-            startDestination = WishlistNavEntry.StartNavEntry,
+        navigation<WishlistFeature.NavEntry>(
+            startDestination = WishlistFeature.NavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<WishlistNavEntry.StartNavEntry> {
+            composable<WishlistFeature.NavEntry.StartNavEntry> {
                 WishlistScreen(navActions = actions)
             }
         }

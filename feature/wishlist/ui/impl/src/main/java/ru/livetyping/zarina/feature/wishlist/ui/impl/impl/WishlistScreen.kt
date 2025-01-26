@@ -27,7 +27,7 @@ import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorModalBotto
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlistPlaceholder
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
@@ -36,7 +36,7 @@ import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 
 @Composable
 internal fun WishlistScreen(
-    navActions: WishlistNavActions,
+    navActions: WishlistFeature.NavActions,
     viewModel: WishlistViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
@@ -67,7 +67,7 @@ private fun ScreenContent(
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
-    navActions: WishlistNavActions,
+    navActions: WishlistFeature.NavActions,
 ) {
     WishlistScreenBehavior(
         onLifecycleEvent = onLifecycleEvent,

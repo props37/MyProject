@@ -12,14 +12,14 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
+import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 
 @Composable
 internal fun WishlistScreenBehavior(
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
-    navActions: WishlistNavActions,
+    navActions: WishlistFeature.NavActions,
 ) {
     val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
@@ -49,7 +49,7 @@ internal fun WishlistScreenBehavior(
     }
 }
 
-private fun navigate(navActions: WishlistNavActions, action: WishlistScreenAction) {
+private fun navigate(navActions: WishlistFeature.NavActions, action: WishlistScreenAction) {
     when (action) {
         WishlistScreenAction.BackClicked -> navActions.onBackClicked()
         WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()

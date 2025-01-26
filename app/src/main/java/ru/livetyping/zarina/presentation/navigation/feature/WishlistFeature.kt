@@ -9,7 +9,6 @@ import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavParams
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.WishlistNavActions
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.popBackStackToBottomNavBarItem
@@ -17,7 +16,7 @@ import ru.livetyping.zarina.presentation.bottomnavbar.popBackStackToBottomNavBar
 fun NavGraphBuilder.wishlistFeature(
     navController: NavHostController,
     feature: WishlistFeature,
-    actions: WishlistNavActions,
+    actions: WishlistFeature.NavActions,
 ) {
     with(feature) {
         navigation(
@@ -31,9 +30,9 @@ fun NavGraphBuilder.wishlistFeature(
 @Composable
 fun rememberWishlistNavActions(
     navController: NavHostController
-): WishlistNavActions {
+): WishlistFeature.NavActions {
     return remember(navController) {
-        WishlistNavActions(
+        WishlistFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onGoToCatalogClicked = {
                 val bottomNavBarItem = BottomNavBarItem.Catalog
