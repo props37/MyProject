@@ -26,14 +26,14 @@ public interface CitySelectorFeature :
     ) : NavigationEntry {
         public companion object {
             public fun typeMap(): Map<KType, NavType<*>> {
-                val textType = object : ParcelableNavType<Text?>(
+                val textType = ParcelableNavType<Text?>(
                     isNullableAllowed = true,
                     serializer = kotlinx.serialization.serializer(),
-                ) {}
-                val cityType = object : ParcelableNavType<CityParcelable?>(
+                )
+                val cityType = ParcelableNavType<CityParcelable?>(
                     isNullableAllowed = true,
                     serializer = kotlinx.serialization.serializer(),
-                ) {}
+                )
                 return mapOf(
                     typeOf<Text?>() to textType,
                     typeOf<CityParcelable?>() to cityType,

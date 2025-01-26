@@ -17,10 +17,10 @@ public data class ProductListNavEntry(
         public const val CATEGORY_ID_PROPERTY_NAME: String = "categoryId"
 
         public fun typeMap(): Map<KType, NavType<*>> {
-            val filtersType = object : ParcelableNavType<ProductFiltersParcelable?>(
+            val filtersType = ParcelableNavType<ProductFiltersParcelable?>(
                 isNullableAllowed = true,
                 serializer = kotlinx.serialization.serializer(),
-            ) {}
+            )
             return mapOf(
                 typeOf<ProductFiltersParcelable?>() to filtersType,
             )

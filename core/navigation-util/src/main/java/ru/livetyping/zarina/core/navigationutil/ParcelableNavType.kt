@@ -7,8 +7,7 @@ import androidx.navigation.NavType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
-// TODO: [High] Make final
-public abstract class ParcelableNavType<T : Parcelable?>(
+public open class ParcelableNavType<T : Parcelable?>(
     override val isNullableAllowed: Boolean,
     private val serializer: KSerializer<T>,
 ) : NavType<T>(isNullableAllowed) {

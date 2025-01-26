@@ -16,14 +16,14 @@ public data class ProductSubscriptionNavEntry(
 ) : NavigationEntry {
     public companion object {
         public fun typeMap(): Map<KType, NavType<*>> {
-            val productType = object : ParcelableNavType<ProductShortParcelable?>(
+            val productType = ParcelableNavType<ProductShortParcelable?>(
                 isNullableAllowed = true,
                 serializer = kotlinx.serialization.serializer(),
-            ) {}
-            val offerType = object : ParcelableNavType<ProductOfferParcelable?>(
+            )
+            val offerType = ParcelableNavType<ProductOfferParcelable?>(
                 isNullableAllowed = true,
                 serializer = kotlinx.serialization.serializer(),
-            ) {}
+            )
             return mapOf(
                 typeOf<ProductShortParcelable>() to productType,
                 typeOf<ProductOfferParcelable>() to offerType,
