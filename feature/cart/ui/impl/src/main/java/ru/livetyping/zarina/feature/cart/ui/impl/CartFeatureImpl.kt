@@ -9,25 +9,22 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
-import ru.livetyping.zarina.feature.cart.ui.api.CartNavActions
-import ru.livetyping.zarina.feature.cart.ui.api.CartNavEntry
-import ru.livetyping.zarina.feature.cart.ui.api.CartNavResultRetrievers
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
 
 public class CartFeatureImpl : CartFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: CartNavActions,
-        resultRetrievers: CartNavResultRetrievers,
+        actions: CartFeature.NavActions,
+        resultRetrievers: CartFeature.NavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<CartNavEntry>(
-            startDestination = CartNavEntry.StartNavEntry,
+        navigation<CartFeature.NavEntry>(
+            startDestination = CartFeature.NavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,

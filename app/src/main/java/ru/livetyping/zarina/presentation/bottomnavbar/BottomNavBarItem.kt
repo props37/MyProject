@@ -52,7 +52,7 @@ fun BottomNavBarItem.toFeatureNavEntry(): NavigationEntry {
         BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getNavEntry()
         BottomNavBarItem.Profile -> ProfileFeature.getNavEntry()
-        BottomNavBarItem.Cart -> CartFeature.getNavEntry()
+        BottomNavBarItem.Cart -> CartFeature.NavEntry
     }
 }
 
@@ -78,7 +78,7 @@ fun NavHostController.popBackStackToBottomNavBarItem(bottomNavItem: BottomNavBar
         BottomNavBarItem.Wishlist -> WishlistFeature.getStartNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getStartNavEntry()
         BottomNavBarItem.Profile -> ProfileFeature.getStartNavEntry()
-        BottomNavBarItem.Cart -> CartFeature.getStartNavEntry()
+        BottomNavBarItem.Cart -> CartFeature.NavEntry.StartNavEntry
     }
     this.popBackStack(route = initialScreenNavEntry, inclusive = false)
 }

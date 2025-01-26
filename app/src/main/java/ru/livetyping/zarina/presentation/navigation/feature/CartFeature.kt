@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.map
 import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
-import ru.livetyping.zarina.feature.cart.ui.api.CartNavActions
-import ru.livetyping.zarina.feature.cart.ui.api.CartNavResultRetrievers
 import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavParams
@@ -24,8 +22,8 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 fun NavGraphBuilder.cartFeature(
     navController: NavHostController,
     feature: CartFeature,
-    actions: CartNavActions,
-    resultRetrievers: CartNavResultRetrievers,
+    actions: CartFeature.NavActions,
+    resultRetrievers: CartFeature.NavResultRetrievers,
 ) {
     with(feature) {
         navigation(
@@ -39,9 +37,9 @@ fun NavGraphBuilder.cartFeature(
 @Composable
 fun rememberCartNavActions(
     navController: NavHostController
-): CartNavActions {
+): CartFeature.NavActions {
     return remember(navController) {
-        CartNavActions(
+        CartFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onChangeCityClicked = { currentCity ->
                 val citySelectorParams = CitySelectorNavParams(
@@ -66,7 +64,7 @@ fun rememberCartNavActions(
 }
 
 @Composable
-fun rememberCartNavResultRetrievers(): CartNavResultRetrievers {
+fun rememberCartNavResultRetrievers(): CartFeature.NavResultRetrievers {
     return remember {
         val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
             navBackStackEntry.savedStateHandle
@@ -78,7 +76,7 @@ fun rememberCartNavResultRetrievers(): CartNavResultRetrievers {
                 }
         }
 
-        CartNavResultRetrievers(
+        CartFeature.NavResultRetrievers(
             selectedCityResultRetriever = selectedCityResultRetriever,
         )
     }
