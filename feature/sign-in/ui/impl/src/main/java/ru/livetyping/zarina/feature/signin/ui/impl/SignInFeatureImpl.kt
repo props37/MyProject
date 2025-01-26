@@ -10,8 +10,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
-import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
-import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.phoneConfirmationScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
@@ -25,7 +23,7 @@ import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as
 public class SignInFeatureImpl : SignInFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: SignInNavActions,
+        actions: SignInFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -33,7 +31,7 @@ public class SignInFeatureImpl : SignInFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<SignInNavEntry>(
+        navigation<SignInFeature.NavEntry>(
             startDestination = SignInScreenNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
@@ -45,7 +43,7 @@ public class SignInFeatureImpl : SignInFeature {
 
             val signInScreenNavActions = SignInScreenNavActions(
                 onBackClicked = navigateUp,
-                onUserSignedIn = { navController.popBackStack<SignInNavEntry>(inclusive = true) },
+                onUserSignedIn = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
                 onSignInByPhoneRequested = { phone ->
                     val phoneConfirmationParams = PhoneConfirmationNavParams(phone)
                     val phoneConfirmationNavEntry = phoneConfirmationParams.toNavEntry()
@@ -64,7 +62,7 @@ public class SignInFeatureImpl : SignInFeature {
 
             val phoneConfirmationNavActions = PhoneConfirmationNavActions(
                 onBackClicked = navigateUp,
-                onPhoneConfirmed = { navController.popBackStack<SignInNavEntry>(inclusive = true) },
+                onPhoneConfirmed = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
             )
             phoneConfirmationScreen(phoneConfirmationNavActions)
         }
