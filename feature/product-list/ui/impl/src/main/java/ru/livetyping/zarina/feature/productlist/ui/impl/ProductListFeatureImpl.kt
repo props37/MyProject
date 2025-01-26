@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
@@ -17,7 +18,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.ProductListScreen
 public class ProductListFeatureImpl : ProductListFeature {
     override fun NavGraphBuilder.composable(
         actions: ProductListNavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,

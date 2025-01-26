@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
@@ -20,12 +21,12 @@ public class CatalogFeatureImpl : CatalogFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: CatalogNavActions,
-        resultRetrievers: Unit,
-        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
-        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
-        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
-        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
-        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
+        resultRetrievers: EmptyNavResultRetrievers,
+        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
+        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
+        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
+        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
+        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
         navigation<CatalogNavEntry>(
             startDestination = CatalogNavEntry.StartNavEntry,

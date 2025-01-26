@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
@@ -19,7 +20,7 @@ fun NavGraphBuilder.catalogFeature(
         navigation(
             navController = navController,
             actions = actions,
-            resultRetrievers = Unit,
+            resultRetrievers = EmptyNavResultRetrievers,
         )
     }
 }

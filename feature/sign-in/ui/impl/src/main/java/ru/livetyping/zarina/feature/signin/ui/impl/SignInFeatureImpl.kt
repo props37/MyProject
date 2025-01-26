@@ -8,6 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInNavEntry
@@ -25,7 +26,7 @@ public class SignInFeatureImpl : SignInFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: SignInNavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,

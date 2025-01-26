@@ -7,6 +7,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavActions
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorNavEntry
@@ -15,7 +16,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.CitySelectorScreen
 public class CitySelectorFeatureImpl : CitySelectorFeature {
     override fun NavGraphBuilder.composable(
         actions: CitySelectorNavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,

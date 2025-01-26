@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 
 fun NavGraphBuilder.webViewFeature(
@@ -13,7 +14,7 @@ fun NavGraphBuilder.webViewFeature(
     with(feature) {
         composable(
             actions = actions,
-            resultRetrievers = Unit,
+            resultRetrievers = EmptyNavResultRetrievers,
         )
     }
 }

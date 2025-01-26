@@ -7,13 +7,14 @@ import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.feature.webview.ui.impl.impl.WebViewScreen
 
 public class WebViewFeatureImpl : WebViewFeature {
     override fun NavGraphBuilder.composable(
         actions: WebViewFeature.NavActions,
-        resultRetrievers: Unit,
+        resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
