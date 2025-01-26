@@ -34,7 +34,6 @@ import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscripti
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
-import ru.livetyping.zarina.feature.signup.ui.api.SignUpNavActions
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.app.AppStartFeature
@@ -199,7 +198,7 @@ fun ZarinaNavigation(
         onboardingFeature(onboardingFeature, onboardingNavActions, onboardingNavResultRetrievers)
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
-        signUpFeature(navController, signUpFeature, SignUpNavActions)
+        signUpFeature(navController, signUpFeature, SignUpFeature.NavActions)
         productListFeature(productListFeature, productListNavActions)
         productFeature(productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
