@@ -28,7 +28,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
+import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderCategoryPager
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderSelector
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.SearchBar
@@ -38,7 +38,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
 
 @Composable
 internal fun CatalogScreen(
-    navActions: CatalogNavActions,
+    navActions: CatalogFeature.NavActions,
     viewModel: CatalogViewModel = hiltViewModel(),
 ) {
     val genderSelectorState by viewModel.genderSelectorState.collectAsStateWithLifecycle()
@@ -68,7 +68,7 @@ private fun ScreenContent(
     onSearchBarClicked: () -> Unit,
     onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
-    navActions: CatalogNavActions,
+    navActions: CatalogFeature.NavActions,
 ) {
     CatalogScreenBehavior(
         onBackClicked = onBackClicked,

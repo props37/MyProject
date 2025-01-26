@@ -48,7 +48,7 @@ sealed class BottomNavBarItem(
 
 fun BottomNavBarItem.toFeatureNavEntry(): NavigationEntry {
     return when (this) {
-        BottomNavBarItem.Catalog -> CatalogFeature.getNavEntry()
+        BottomNavBarItem.Catalog -> CatalogFeature.NavEntry
         BottomNavBarItem.Wishlist -> WishlistFeature.getNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getNavEntry()
         BottomNavBarItem.Profile -> ProfileFeature.getNavEntry()
@@ -74,7 +74,7 @@ fun NavHostController.navigateToBottomNavBarItem(item: BottomNavBarItem) {
 
 fun NavHostController.popBackStackToBottomNavBarItem(bottomNavItem: BottomNavBarItem) {
     val initialScreenNavEntry = when (bottomNavItem) {
-        BottomNavBarItem.Catalog -> CatalogFeature.getStartNavEntry()
+        BottomNavBarItem.Catalog -> CatalogFeature.NavEntry.StartNavEntry
         BottomNavBarItem.Wishlist -> WishlistFeature.getStartNavEntry()
         BottomNavBarItem.Home -> HomeFeature.getStartNavEntry()
         BottomNavBarItem.Profile -> ProfileFeature.getStartNavEntry()

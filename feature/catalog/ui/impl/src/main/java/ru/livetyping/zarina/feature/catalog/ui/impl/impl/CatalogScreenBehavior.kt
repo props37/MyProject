@@ -9,13 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
+import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 
 @Composable
 internal fun CatalogScreenBehavior(
     onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
-    navActions: CatalogNavActions,
+    navActions: CatalogFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
@@ -40,7 +40,7 @@ internal fun CatalogScreenBehavior(
     }
 }
 
-private fun navigate(navActions: CatalogNavActions, action: CatalogScreenAction) {
+private fun navigate(navActions: CatalogFeature.NavActions, action: CatalogScreenAction) {
     when (action) {
         CatalogScreenAction.BackClicked -> navActions.onBackClicked()
         CatalogScreenAction.SearchClicked -> Unit // TODO: [Top] Implement

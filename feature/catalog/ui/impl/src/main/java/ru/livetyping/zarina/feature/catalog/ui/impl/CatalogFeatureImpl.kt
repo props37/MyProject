@@ -13,14 +13,12 @@ import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavEntry
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
 
 public class CatalogFeatureImpl : CatalogFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: CatalogNavActions,
+        actions: CatalogFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -28,15 +26,15 @@ public class CatalogFeatureImpl : CatalogFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<CatalogNavEntry>(
-            startDestination = CatalogNavEntry.StartNavEntry,
+        navigation<CatalogFeature.NavEntry>(
+            startDestination = CatalogFeature.NavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<CatalogNavEntry.StartNavEntry>(deepLinks = DeepLinks) {
+            composable<CatalogFeature.NavEntry.StartNavEntry>(deepLinks = DeepLinks) {
                 CatalogScreen(navActions = actions)
             }
         }

@@ -6,7 +6,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.catalog.ui.CatalogNavActions
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
@@ -14,7 +13,7 @@ import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 fun NavGraphBuilder.catalogFeature(
     navController: NavHostController,
     feature: CatalogFeature,
-    actions: CatalogNavActions,
+    actions: CatalogFeature.NavActions,
 ) {
     with(feature) {
         navigation(
@@ -28,9 +27,9 @@ fun NavGraphBuilder.catalogFeature(
 @Composable
 fun rememberCatalogNavActions(
     navController: NavHostController
-): CatalogNavActions {
+): CatalogFeature.NavActions {
     return remember(navController) {
-        CatalogNavActions(
+        CatalogFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onCategoryClicked = { categoryId ->
                 val productListParams = ProductListNavParams(categoryId)
