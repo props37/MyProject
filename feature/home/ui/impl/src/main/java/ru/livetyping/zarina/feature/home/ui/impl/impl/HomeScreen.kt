@@ -13,14 +13,14 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.home.ui.impl.impl.component.HomeContent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentState
 
 @Composable
 internal fun HomeScreen(
-    navActions: HomeNavActions,
+    navActions: HomeFeature.NavActions,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val genderSelectorState by viewModel.genderSelectorState.collectAsStateWithLifecycle()
@@ -43,7 +43,7 @@ private fun ScreenContent(
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
     sideEffects: Flow<HomeSideEffect>,
-    navActions: HomeNavActions,
+    navActions: HomeFeature.NavActions,
 ) {
     HomeScreenBehavior(
         sideEffects = sideEffects,

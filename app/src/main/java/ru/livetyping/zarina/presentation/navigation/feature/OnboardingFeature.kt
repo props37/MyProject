@@ -62,7 +62,7 @@ fun rememberOnboardingNavActions(
     return remember(navController) {
         OnboardingNavActions(
             onOnboardingCompleted = { selectedCity ->
-                navController.navigate(HomeFeature.getNavEntry()) {
+                navController.navigate(HomeFeature.NavEntry) {
                     popUpTo(0)
                 }
 

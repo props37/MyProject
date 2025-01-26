@@ -8,12 +8,12 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.feature.home.ui.HomeNavActions
+import ru.livetyping.zarina.feature.home.ui.HomeFeature
 
 @Composable
 internal fun HomeScreenBehavior(
     sideEffects: Flow<HomeSideEffect>,
-    navActions: HomeNavActions,
+    navActions: HomeFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
@@ -34,7 +34,7 @@ internal fun HomeScreenBehavior(
     }
 }
 
-private fun navigate(navActions: HomeNavActions, action: HomeScreenAction) {
+private fun navigate(navActions: HomeFeature.NavActions, action: HomeScreenAction) {
     when (action) {
         is HomeScreenAction.BannerClicked -> {
             navActions.onBannerClicked(action.banner)

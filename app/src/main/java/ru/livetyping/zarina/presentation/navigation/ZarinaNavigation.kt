@@ -132,7 +132,7 @@ fun ZarinaNavigation(
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
-        AppStartFeature.HOME -> HomeFeature.getNavEntry()
+        AppStartFeature.HOME -> HomeFeature.NavEntry
     }
 
     val currentBackStack = navController.currentBackStack

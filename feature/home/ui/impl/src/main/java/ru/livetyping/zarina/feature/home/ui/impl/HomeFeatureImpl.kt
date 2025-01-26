@@ -11,14 +11,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
-import ru.livetyping.zarina.feature.home.ui.HomeNavActions
-import ru.livetyping.zarina.feature.home.ui.HomeNavEntry
 import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
 
 public class HomeFeatureImpl : HomeFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
-        actions: HomeNavActions,
+        actions: HomeFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -26,15 +24,15 @@ public class HomeFeatureImpl : HomeFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        navigation<HomeNavEntry>(
-            startDestination = HomeNavEntry.StartNavEntry,
+        navigation<HomeFeature.NavEntry>(
+            startDestination = HomeFeature.NavEntry.StartNavEntry,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
-            composable<HomeNavEntry.StartNavEntry> {
+            composable<HomeFeature.NavEntry.StartNavEntry> {
                 HomeScreen(navActions = actions)
             }
         }

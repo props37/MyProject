@@ -10,7 +10,6 @@ import ru.livetyping.zarina.core.navigationutil.withParent
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
 import ru.livetyping.zarina.feature.home.domain.model.ClickAction
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
-import ru.livetyping.zarina.feature.home.ui.HomeNavActions
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
@@ -19,7 +18,7 @@ import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 fun NavGraphBuilder.homeFeature(
     navController: NavHostController,
     feature: HomeFeature,
-    actions: HomeNavActions,
+    actions: HomeFeature.NavActions,
 ) {
     with(feature) {
         navigation(
@@ -43,9 +42,9 @@ fun NavGraphBuilder.homeFeature(
 @Composable
 fun rememberHomeNavActions(
     navController: NavHostController
-): HomeNavActions {
+): HomeFeature.NavActions {
     return remember(navController) {
-        HomeNavActions(
+        HomeFeature.NavActions(
             onBannerClicked = { banner ->
                 when (val clickAction = banner.clickAction) {
                     is ClickAction.OpenProductList -> {
