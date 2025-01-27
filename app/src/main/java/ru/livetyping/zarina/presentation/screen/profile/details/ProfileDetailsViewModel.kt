@@ -40,10 +40,11 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.compose.text.clear
 import ru.livetyping.zarina.util.compose.text.textAsFlow
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
-import ru.livetyping.zarina.util.kotlin.date.toMillis
+import ru.livetyping.zarina.util.kotlin.date.toEpochMillis
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
+import java.time.ZoneOffset
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -89,12 +90,12 @@ class ProfileDetailsViewModel @Inject constructor(
         init = { TextFieldState() },
     )
 
-    private val birthDateMillisValueHolder = savedStateHandle.createValueHolder<Long?>(
+    private val birthDateMillisUtcValueHolder = savedStateHandle.createValueHolder<Long?>(
         key = KEY_BIRTH_DATE_MILLIS,
         initialValue = null,
     )
 
-    val birthDateMillis: StateFlow<Long?> = birthDateMillisValueHolder.stateFlow
+    val birthDateMillisUtc: StateFlow<Long?> = birthDateMillisUtcValueHolder.stateFlow
 
     private val _phoneNumber = MutableStateFlow<String?>(null)
     val phoneNumber: StateFlow<String?> = _phoneNumber.asStateFlow()
@@ -135,12 +136,14 @@ class ProfileDetailsViewModel @Inject constructor(
         currentUser,
         firstNameTextFieldState.textAsFlow(),
         lastNameTextFieldState.textAsFlow(),
-        birthDateMillis,
-    ) { currentUser, firstName, lastName, birthDateMillis ->
+        birthDateMillisUtc,
+    ) { currentUser, firstName, lastName, birthDateMillisUtc ->
         if (currentUser != null) {
             val firstNameChanged = firstName.toString().trim() != currentUser.firstName
             val lastNameChanged = lastName.toString().trim() != currentUser.lastName
-            val birthDate = birthDateMillis?.let { LocalDateUtil.fromMillis(it) }
+            val birthDate = birthDateMillisUtc?.let {
+                LocalDateUtil.fromMillis(it, ZoneOffset.UTC)
+            }
             val birthDateChanged = birthDate != currentUser.birthDate
             (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
                     && (firstNameChanged || lastNameChanged || birthDateChanged)
@@ -154,11 +157,11 @@ class ProfileDetailsViewModel @Inject constructor(
     )
 
     val isBirthDateChangeable: StateFlow<Boolean> = combine(
-        birthDateMillis,
+        birthDateMillisUtc,
         userResult,
-    ) { birthDateMillis, userResult ->
-        if (birthDateMillis != null) {
-            val currentBirthDate = LocalDateUtil.fromMillis(birthDateMillis)
+    ) { birthDateMillisUtc, userResult ->
+        if (birthDateMillisUtc != null) {
+            val currentBirthDate = LocalDateUtil.fromMillis(birthDateMillisUtc, ZoneOffset.UTC)
             val user = userResult?.getOrNull()
             currentBirthDate == User.BIRTH_DATE_DEFAULT || currentBirthDate != user?.birthDate
         } else {
@@ -192,8 +195,8 @@ class ProfileDetailsViewModel @Inject constructor(
 
         emitSideEffect(SideEffect.HideKeyboard)
         saveUserInfoJob = viewModelScope.launch {
-            val birthDate = birthDateMillis.value
-                ?.let { LocalDateUtil.fromMillis(it) } ?: User.BIRTH_DATE_DEFAULT
+            val birthDate = birthDateMillisUtc.value
+                ?.let { LocalDateUtil.fromMillis(it, ZoneOffset.UTC) } ?: User.BIRTH_DATE_DEFAULT
             val params = UpdateUserInfoUseCase.Params(
                 firstName = firstNameTextFieldState.text.toString().trim(),
                 lastName = lastNameTextFieldState.text.toString().trim(),
@@ -222,8 +225,8 @@ class ProfileDetailsViewModel @Inject constructor(
         userRequester.request(UserRequest.LOADING)
     }
 
-    fun onBirthDateMillisChanged(millis: Long?) {
-        birthDateMillisValueHolder.set(millis)
+    fun onBirthDateMillisUtcChanged(millisUtc: Long?) {
+        birthDateMillisUtcValueHolder.set(millisUtc)
     }
 
     fun onPhoneNumberClicked() {
@@ -324,8 +327,8 @@ class ProfileDetailsViewModel @Inject constructor(
             append(user.firstName?.trim())
             placeCursorAtEnd()
         }
-        val birthDateMillis = user.birthDate?.toMillis()
-        birthDateMillisValueHolder.set(birthDateMillis)
+        val birthDateMillisUtc = user.birthDate?.toEpochMillis(ZoneOffset.UTC)
+        birthDateMillisUtcValueHolder.set(birthDateMillisUtc)
         _phoneNumber.value = user.phone?.value
         _email.value = user.email.value
         _receiveSms.value = user.notificationSettings.receiveSms

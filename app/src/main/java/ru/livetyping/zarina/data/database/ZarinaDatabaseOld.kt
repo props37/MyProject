@@ -8,7 +8,7 @@ import ru.livetyping.zarina.data.user.local.database.dao.UserDao
 import ru.livetyping.zarina.data.user.local.database.entity.UserEntity
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [UserEntity::class, ProductSearchHistoryQueryEntity::class],
     exportSchema = false,
 )

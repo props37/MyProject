@@ -12,7 +12,7 @@ data class User(
     val firstName: String?,
     val lastName: String?,
     val birthDate: LocalDate?,
-    val gender: Gender,
+    val gender: Gender?,
     val notificationSettings: NotificationSettings,
 ) {
     @JvmInline

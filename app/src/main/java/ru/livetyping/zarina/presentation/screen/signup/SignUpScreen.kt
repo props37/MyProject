@@ -75,6 +75,7 @@ import ru.livetyping.zarina.util.compose.navigationBarsOrIme
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 @Composable
 fun SignUpScreen(
@@ -84,7 +85,7 @@ fun SignUpScreen(
     val firstName by viewModel.firstName.collectAsStateWithLifecycle(
         context = Dispatchers.Main.immediate,
     )
-    val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
+    val birthDateMillisUtc by viewModel.birthDateMillisUtc.collectAsStateWithLifecycle()
     val isBirthDateInvalid by viewModel.isBirthDateInvalid.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle(
@@ -111,8 +112,8 @@ fun SignUpScreen(
         firstName = firstName,
         onFirstNameChanged = viewModel::onFirstNameChanged,
         isFirstNameInvalid = isFirstNameInvalid,
-        birthDateMillis = birthDateMillis,
-        onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
+        birthDateMillisUtc = birthDateMillisUtc,
+        onBirthDateMillisUtcChanged = viewModel::onBirthDateMillisUtcChanged,
         isBirthDateInvalid = isBirthDateInvalid,
         email = email,
         onEmailChanged = viewModel::onEmailChanged,
@@ -148,8 +149,8 @@ private fun ScreenContent(
     firstName: String,
     onFirstNameChanged: (String) -> Unit,
     isFirstNameInvalid: Boolean,
-    birthDateMillis: Long?,
-    onBirthDateMillisChanged: (Long?) -> Unit,
+    birthDateMillisUtc: Long?,
+    onBirthDateMillisUtcChanged: (Long?) -> Unit,
     isBirthDateInvalid: Boolean,
     email: String,
     onEmailChanged: (String) -> Unit,
@@ -199,7 +200,7 @@ private fun ScreenContent(
             confirmButton = {
                 ZarinaDatePickerDefaults.ConfirmButton(
                     onClick = {
-                        onBirthDateMillisChanged(datePickerState.selectedDateMillis)
+                        onBirthDateMillisUtcChanged(datePickerState.selectedDateMillis)
                         isDatePickerVisible = false
                     },
                 )
@@ -260,10 +261,10 @@ private fun ScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                val formattedBirthDate = if (birthDateMillis != null) {
+                val formattedBirthDate = if (birthDateMillisUtc != null) {
                     rememberFormattedLocalDate(
-                        localDate = remember(birthDateMillis) {
-                            LocalDateUtil.fromMillis(birthDateMillis)
+                        localDate = remember(birthDateMillisUtc) {
+                            LocalDateUtil.fromMillis(birthDateMillisUtc, ZoneOffset.UTC)
                         },
                         formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
                     )
@@ -461,8 +462,8 @@ private fun Preview() {
             firstName = "",
             onFirstNameChanged = {},
             isFirstNameInvalid = false,
-            birthDateMillis = null,
-            onBirthDateMillisChanged = {},
+            birthDateMillisUtc = null,
+            onBirthDateMillisUtcChanged = {},
             isBirthDateInvalid = false,
             email = "",
             onEmailChanged = {},
