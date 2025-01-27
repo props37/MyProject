@@ -6,10 +6,10 @@ import ru.livetyping.zarina.domain.common.Gender
 @Serializable
 @JvmInline
 value class GenderDto(val value: String) {
-    fun toGender(): Gender = when (value) {
+    fun toGender(): Gender? = when (value) {
         FEMALE -> Gender.FEMALE
         MALE -> Gender.MALE
-        else -> error("Unknown gender $value")
+        else -> null
     }
 
     companion object {

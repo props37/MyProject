@@ -65,7 +65,7 @@ class UserApi @Inject constructor(
         birthDate: LocalDate,
         email: Email,
         phone: PhoneNumber,
-        gender: Gender,
+        gender: Gender?,
         oldPassword: String?,
         newPassword: String?,
     ) {
@@ -76,7 +76,7 @@ class UserApi @Inject constructor(
             birthDate = birthDate.format(DateTimeFormatter.ofPattern(DATE_BACKEND_PATTERN)),
             email = email.value,
             phone = phone.value,
-            gender = GenderDto.from(gender),
+            gender = gender?.let { GenderDto.from(it) },
             oldPassword = oldPassword,
             newPassword = newPassword,
         )
