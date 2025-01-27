@@ -13,7 +13,7 @@ import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpConfirmationScreen
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpScreen
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavActions
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavParams
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavEntry
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavActions as SignUpScreenNavActions
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
 
@@ -41,8 +41,7 @@ public class SignUpFeatureImpl : SignUpFeature {
             val signUpScreenNavActions = SignUpScreenNavActions(
                 onBackClicked = navigateUp,
                 onUserCreated = { phone ->
-                    val signUpConfirmationParams = SignUpConfirmationNavParams(phone)
-                    val signUpConfirmationNavEntry = signUpConfirmationParams.toNavEntry()
+                    val signUpConfirmationNavEntry = SignUpConfirmationNavEntry.create(phone)
                     navController.navigate(signUpConfirmationNavEntry)
                 },
             )

@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
-import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
@@ -61,7 +60,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
     private val countDownTimer = CountDownTimer()
 
     private val navEntry = savedStateHandle.toRoute<SignUpConfirmationNavEntry>()
-    private val phone = PhoneNumber.create(navEntry.phone)
+    private val phone = navEntry.getPhone()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val otpTextFieldState by savedStateHandle.saveable(
