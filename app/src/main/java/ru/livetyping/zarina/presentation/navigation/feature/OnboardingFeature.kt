@@ -68,7 +68,7 @@ fun rememberOnboardingNavActions(
                 }
             },
             onSelectCityClicked = {
-                navController.navigate(CitySelectorFeature.NavEntry())
+                navController.navigate(CitySelectorFeature.NavEntry.create())
             },
         )
     }

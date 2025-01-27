@@ -43,7 +43,7 @@ fun rememberProfileNavActions(
             onSignInClicked = { navController.navigate(SignInFeature.NavEntry) },
             onSignUpClicked = { navController.navigate(SignUpFeature.NavEntry) },
             onChangeCityClicked = { currentCity ->
-                val citySelectorNavEntry = CitySelectorFeature.NavEntry(
+                val citySelectorNavEntry = CitySelectorFeature.NavEntry.create(
                     title = Text.Resource(R.string.city_change),
                     currentCity = currentCity,
                 )

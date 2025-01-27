@@ -19,19 +19,21 @@ public interface CitySelectorFeature :
     ComposableFeatureEntry<NavEntry, NavActions, EmptyNavResultRetrievers> {
 
     @Serializable
-    public data class NavEntry(
-        val title: Text? = null,
-        val currentCity: CityParcelable? = null,
+    public class NavEntry private constructor(
+        public val title: Text?,
+        public val currentCity: CityParcelable?,
     ) : NavigationEntry {
-        public constructor(
-            title: Text? = null,
-            currentCity: City? = null,
-        ) : this(
-            title = title,
-            currentCity = currentCity?.let { CityParcelable.from(it) },
-        )
-
         public companion object {
+            public fun create(
+                title: Text? = null,
+                currentCity: City? = null,
+            ): NavEntry {
+                return NavEntry(
+                    title = title,
+                    currentCity = currentCity?.let { CityParcelable.from(it) },
+                )
+            }
+
             public fun typeMap(): Map<KType, NavType<*>> {
                 val textType = ParcelableNavType<Text?>(
                     isNullableAllowed = true,

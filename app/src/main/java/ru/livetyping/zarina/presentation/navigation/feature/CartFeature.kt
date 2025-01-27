@@ -40,7 +40,7 @@ fun rememberCartNavActions(
         CartFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onChangeCityClicked = { currentCity ->
-                val citySelectorNavEntry = CitySelectorFeature.NavEntry(
+                val citySelectorNavEntry = CitySelectorFeature.NavEntry.create(
                     title = Text.Resource(RCommon.string.res_change_city),
                     currentCity = currentCity,
                 )
