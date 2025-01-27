@@ -130,7 +130,7 @@ fun ZarinaNavigation(
     val webViewNavActions = rememberWebViewNavActions(navController)
 
     val startDestination = when (startFeature) {
-        AppStartFeature.ONBOARDING -> OnboardingFeature.getNavEntry()
+        AppStartFeature.ONBOARDING -> OnboardingFeature.NavEntry
         AppStartFeature.HOME -> HomeFeature.NavEntry
     }
 

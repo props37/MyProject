@@ -28,7 +28,7 @@ fun NavGraphBuilder.citySelectorFeature(
             enterTransition = {
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestinationWithParent.hasRoute(OnboardingFeature.getNavEntryClass()) -> {
+                    initialDestinationWithParent.hasRoute(OnboardingFeature.NavEntry::class) -> {
                         zarinaEnterSlideTransition(
                             towards = AnimatedContentTransitionScope.SlideDirection.Up,
                         )
@@ -40,7 +40,7 @@ fun NavGraphBuilder.citySelectorFeature(
             popExitTransition = {
                 val targetDestinationWithParent = targetDestination.withParent()
                 when {
-                    targetDestinationWithParent.hasRoute(OnboardingFeature.getNavEntryClass()) -> {
+                    targetDestinationWithParent.hasRoute(OnboardingFeature.NavEntry::class) -> {
                         zarinaPopExitSlideTransition(
                             towards = AnimatedContentTransitionScope.SlideDirection.Down,
                         )

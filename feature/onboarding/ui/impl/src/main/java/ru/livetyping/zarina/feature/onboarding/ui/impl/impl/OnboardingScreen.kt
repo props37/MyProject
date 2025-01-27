@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Banner
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Onboarding
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.ProgressIndicator
@@ -33,7 +33,7 @@ import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStat
 
 @Composable
 internal fun OnboardingScreen(
-    navActions: OnboardingNavActions,
+    navActions: OnboardingFeature.NavActions,
     viewModel: OnboardingViewModel,
 ) {
     val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
@@ -51,7 +51,7 @@ private fun ScreenContent(
     onboardingState: OnboardingState,
     onOnboardingEvent: (OnboardingEvent) -> Unit,
     sideEffects: Flow<OnboardingSideEffect>,
-    navActions: OnboardingNavActions,
+    navActions: OnboardingFeature.NavActions,
 ) {
     OnboardingScreenBehavior(
         sideEffects = sideEffects,

@@ -28,7 +28,7 @@ fun NavGraphBuilder.homeFeature(
             enterTransition = {
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestinationWithParent.hasRoute(OnboardingFeature.getNavEntryClass()) -> {
+                    initialDestinationWithParent.hasRoute(OnboardingFeature.NavEntry::class) -> {
                         zarinaEnterFadeInTransition()
                     }
 

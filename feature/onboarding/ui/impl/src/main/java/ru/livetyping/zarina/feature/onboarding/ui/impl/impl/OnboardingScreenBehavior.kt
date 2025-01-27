@@ -10,12 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 
 @Composable
 internal fun OnboardingScreenBehavior(
     sideEffects: Flow<OnboardingSideEffect>,
-    navActions: OnboardingNavActions,
+    navActions: OnboardingFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentContext by rememberUpdatedState(LocalContext.current)
@@ -47,7 +47,7 @@ internal fun OnboardingScreenBehavior(
     }
 }
 
-private fun navigate(navActions: OnboardingNavActions, action: OnboardingScreenAction) {
+private fun navigate(navActions: OnboardingFeature.NavActions, action: OnboardingScreenAction) {
     when (action) {
         is OnboardingScreenAction.OnboardingCompleted -> {
             navActions.onOnboardingCompleted(action.selectedCity)

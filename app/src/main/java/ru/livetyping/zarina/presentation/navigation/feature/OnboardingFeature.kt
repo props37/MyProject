@@ -15,16 +15,14 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavActions
-import ru.livetyping.zarina.feature.onboarding.ui.OnboardingNavResultRetrievers
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingSelectedCityResult
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.onboardingFeature(
     feature: OnboardingFeature,
-    actions: OnboardingNavActions,
-    resultRetrievers: OnboardingNavResultRetrievers,
+    actions: OnboardingFeature.NavActions,
+    resultRetrievers: OnboardingFeature.NavResultRetrievers,
 ) {
     with(feature) {
         composable(
@@ -57,9 +55,9 @@ fun NavGraphBuilder.onboardingFeature(
 @Composable
 fun rememberOnboardingNavActions(
     navController: NavHostController
-): OnboardingNavActions {
+): OnboardingFeature.NavActions {
     return remember(navController) {
-        OnboardingNavActions(
+        OnboardingFeature.NavActions(
             onOnboardingCompleted = { selectedCity ->
                 navController.navigate(HomeFeature.NavEntry) {
                     popUpTo(0)
@@ -77,7 +75,7 @@ fun rememberOnboardingNavActions(
 }
 
 @Composable
-fun rememberOnboardingNavResultRetrievers(): OnboardingNavResultRetrievers {
+fun rememberOnboardingNavResultRetrievers(): OnboardingFeature.NavResultRetrievers {
     return remember {
         val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
             navBackStackEntry.savedStateHandle
@@ -89,7 +87,7 @@ fun rememberOnboardingNavResultRetrievers(): OnboardingNavResultRetrievers {
                 }
         }
 
-        OnboardingNavResultRetrievers(
+        OnboardingFeature.NavResultRetrievers(
             selectedCityResultRetriever = selectedCityResultRetriever,
         )
     }
