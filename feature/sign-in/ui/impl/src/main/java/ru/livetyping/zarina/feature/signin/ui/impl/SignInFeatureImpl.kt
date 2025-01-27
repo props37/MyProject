@@ -16,7 +16,7 @@ import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavParams
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -45,8 +45,7 @@ public class SignInFeatureImpl : SignInFeature {
                 onBackClicked = navigateUp,
                 onUserSignedIn = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
                 onSignInByPhoneRequested = { phone ->
-                    val phoneConfirmationParams = PhoneConfirmationNavParams(phone)
-                    val phoneConfirmationNavEntry = phoneConfirmationParams.toNavEntry()
+                    val phoneConfirmationNavEntry = PhoneConfirmationNavEntry.create(phone)
                     navController.navigate(phoneConfirmationNavEntry)
                 },
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
