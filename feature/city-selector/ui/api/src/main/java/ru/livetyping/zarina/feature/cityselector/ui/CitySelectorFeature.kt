@@ -23,7 +23,10 @@ public interface CitySelectorFeature :
         val title: Text? = null,
         val currentCity: CityParcelable? = null,
     ) : NavigationEntry {
-        public constructor(title: Text?, currentCity: City?) : this(
+        public constructor(
+            title: Text? = null,
+            currentCity: City? = null,
+        ) : this(
             title = title,
             currentCity = currentCity?.let { CityParcelable.from(it) },
         )

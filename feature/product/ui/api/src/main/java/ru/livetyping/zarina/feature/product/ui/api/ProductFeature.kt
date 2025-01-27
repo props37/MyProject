@@ -14,7 +14,9 @@ public interface ProductFeature :
     ComposableFeatureEntry<NavEntry, NavActions, EmptyNavResultRetrievers> {
 
     @Serializable
-    public class NavEntry private constructor(public val productId: String) : NavigationEntry {
+    public class NavEntry private constructor(private val productId: String) : NavigationEntry {
+        public fun getProductId(): Product.Id = Product.Id(productId)
+
         public companion object {
             public fun create(productId: Product.Id): NavEntry = NavEntry(productId.value)
         }

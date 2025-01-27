@@ -50,7 +50,7 @@ internal class ProductViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val navEntry = savedStateHandle.toRoute<ProductFeature.NavEntry>()
-    private val initialProductId = Product.Id(navEntry.productId)
+    private val initialProductId = navEntry.getProductId()
 
     private val productId = MutableStateFlow(initialProductId)
 
