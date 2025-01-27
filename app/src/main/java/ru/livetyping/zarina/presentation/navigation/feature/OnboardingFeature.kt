@@ -33,7 +33,7 @@ fun NavGraphBuilder.onboardingFeature(
             exitTransition = {
                 val targetDestinationWithParent = targetDestination.withParent()
                 when {
-                    targetDestinationWithParent.hasRoute(CitySelectorFeature.getNavEntryClass()) -> {
+                    targetDestinationWithParent.hasRoute(CitySelectorFeature.NavEntry::class) -> {
                         ExitTransition.KeepUntilTransitionsFinished
                     }
 
@@ -43,7 +43,7 @@ fun NavGraphBuilder.onboardingFeature(
             popEnterTransition = {
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {
-                    initialDestinationWithParent.hasRoute(CitySelectorFeature.getNavEntryClass()) -> {
+                    initialDestinationWithParent.hasRoute(CitySelectorFeature.NavEntry::class) -> {
                         EnterTransition.None
                     }
 
@@ -70,9 +70,7 @@ fun rememberOnboardingNavActions(
                 }
             },
             onSelectCityClicked = {
-                val citySelectorParams = CitySelectorFeature.NavParams()
-                val citySelectorNavEntry = CitySelectorFeature.getNavEntry(citySelectorParams)
-                navController.navigate(citySelectorNavEntry)
+                navController.navigate(CitySelectorFeature.NavEntry())
             },
         )
     }

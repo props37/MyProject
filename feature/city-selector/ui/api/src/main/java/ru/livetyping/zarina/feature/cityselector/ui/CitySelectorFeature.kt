@@ -12,7 +12,6 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature.NavActions
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature.NavEntry
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -24,6 +23,11 @@ public interface CitySelectorFeature :
         val title: Text? = null,
         val currentCity: CityParcelable? = null,
     ) : NavigationEntry {
+        public constructor(title: Text?, currentCity: City?) : this(
+            title = title,
+            currentCity = currentCity?.let { CityParcelable.from(it) },
+        )
+
         public companion object {
             public fun typeMap(): Map<KType, NavType<*>> {
                 val textType = ParcelableNavType<Text?>(
@@ -46,24 +50,4 @@ public interface CitySelectorFeature :
         public val onBackClicked: () -> Unit,
         public val onCitySelected: (City) -> Unit,
     ) : NavigationActions
-
-    public data class NavParams(
-        val title: Text? = null,
-        val currentCity: City? = null,
-    ) {
-        public fun toNavEntry(): NavEntry {
-            return NavEntry(
-                title = title,
-                currentCity = currentCity?.let { CityParcelable.from(it) },
-            )
-        }
-    }
-
-    public companion object {
-        public fun getNavEntry(params: NavParams): NavEntry {
-            return params.toNavEntry()
-        }
-
-        public fun getNavEntryClass(): KClass<NavEntry> = NavEntry::class
-    }
 }
