@@ -6,11 +6,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
 
 fun NavGraphBuilder.productSubscriptionFeature(
     feature: ProductSubscriptionFeature,
-    actions: ProductSubscriptionNavActions,
+    actions: ProductSubscriptionFeature.NavActions,
 ) {
     with(feature) {
         composable(
@@ -23,11 +22,11 @@ fun NavGraphBuilder.productSubscriptionFeature(
 @Composable
 fun rememberProductSubscriptionNavActions(
     navController: NavHostController
-): ProductSubscriptionNavActions {
+): ProductSubscriptionFeature.NavActions {
     return remember(navController) {
         val navigateUp: () -> Unit = { navController.navigateUp() }
 
-        ProductSubscriptionNavActions(
+        ProductSubscriptionFeature.NavActions(
             onBackClicked = navigateUp,
             onSubscriptionCompleted = navigateUp,
         )

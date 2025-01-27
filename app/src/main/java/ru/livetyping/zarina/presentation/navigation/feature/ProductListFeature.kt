@@ -8,7 +8,6 @@ import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavParams
 
 fun NavGraphBuilder.productListFeature(
     feature: ProductListFeature,
@@ -41,9 +40,8 @@ fun rememberProductListNavActions(
                 navController.navigate(productNavEntry)
             },
             onSubscribeToProductClicked = { product, offer ->
-                val productSubscriptionParams = ProductSubscriptionNavParams(product, offer)
                 val productSubscriptionNavEntry =
-                    ProductSubscriptionFeature.getNavEntry(productSubscriptionParams)
+                    ProductSubscriptionFeature.NavEntry.create(product, offer)
                 navController.navigate(productSubscriptionNavEntry)
             }
         )

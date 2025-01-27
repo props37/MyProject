@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
+import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 
 @Composable
 internal fun ProductSubscriptionScreenBehavior(
     sideEffects: Flow<ProductSubscriptionSideEffect>,
-    navActions: ProductSubscriptionNavActions,
+    navActions: ProductSubscriptionFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
@@ -46,7 +46,7 @@ internal fun ProductSubscriptionScreenBehavior(
 }
 
 private fun navigate(
-    navActions: ProductSubscriptionNavActions,
+    navActions: ProductSubscriptionFeature.NavActions,
     action: ProductSubscriptionScreenAction
 ) {
     when (action) {

@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
+import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.ProductSubscriptionContent
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
@@ -25,7 +25,7 @@ import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.Produ
 
 @Composable
 internal fun ProductSubscriptionScreen(
-    navActions: ProductSubscriptionNavActions,
+    navActions: ProductSubscriptionFeature.NavActions,
     viewModel: ProductSubscriptionViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -43,7 +43,7 @@ private fun ScreenContent(
     state: ProductSubscriptionState,
     onEvent: (ProductSubscriptionEvent) -> Unit,
     sideEffects: Flow<ProductSubscriptionSideEffect>,
-    navActions: ProductSubscriptionNavActions,
+    navActions: ProductSubscriptionFeature.NavActions,
 ) {
     ProductSubscriptionScreenBehavior(
         sideEffects = sideEffects,

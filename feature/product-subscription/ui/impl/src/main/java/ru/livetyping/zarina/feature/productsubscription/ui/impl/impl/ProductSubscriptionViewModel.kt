@@ -37,7 +37,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavEntry
+import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.R
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
@@ -57,8 +57,8 @@ internal class ProductSubscriptionViewModel @Inject constructor(
 
     private var subscribeJob: Job? = null
 
-    private val navEntry = savedStateHandle.toRoute<ProductSubscriptionNavEntry>(
-        typeMap = ProductSubscriptionNavEntry.typeMap(),
+    private val navEntry = savedStateHandle.toRoute<ProductSubscriptionFeature.NavEntry>(
+        typeMap = ProductSubscriptionFeature.NavEntry.typeMap(),
     )
     private val product = navEntry.product.toProductShort()
     private val productOffer = navEntry.offer.toProductOffer()

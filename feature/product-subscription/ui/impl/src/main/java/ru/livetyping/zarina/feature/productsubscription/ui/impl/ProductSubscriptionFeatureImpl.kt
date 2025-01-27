@@ -9,22 +9,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavActions
-import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavEntry
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ProductSubscriptionScreen
 
 public class ProductSubscriptionFeatureImpl : ProductSubscriptionFeature {
     override fun NavGraphBuilder.composable(
-        actions: ProductSubscriptionNavActions,
+        actions: ProductSubscriptionFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
-        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
-        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
-        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
-        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
-        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
+        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
+        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
+        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
+        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
+        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        composable<ProductSubscriptionNavEntry>(
-            typeMap = ProductSubscriptionNavEntry.typeMap(),
+        composable<ProductSubscriptionFeature.NavEntry>(
+            typeMap = ProductSubscriptionFeature.NavEntry.typeMap(),
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
