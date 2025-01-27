@@ -30,7 +30,7 @@ class SignInByEmailUseCase @Inject constructor(
         val tokens = authorizationResult.tokens
         val user = authorizationResult.user
 
-        if (authorizationResult.phoneConfirmation?.isConfirmed == true) {
+        if (!authorizationResult.isPhoneConfirmationNeeded()) {
             val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
             setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
         } else {

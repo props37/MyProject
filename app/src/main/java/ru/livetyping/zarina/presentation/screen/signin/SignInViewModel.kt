@@ -377,12 +377,12 @@ class SignInViewModel @Inject constructor(
 
         val phoneConfirmation = authorizationResult.phoneConfirmation
         when {
-            phoneConfirmation?.isConfirmed == true -> {
+            !authorizationResult.isPhoneConfirmationNeeded() -> {
                 val action = SignInScreenAction.UserSignedIn
                 emitSideEffect(SideEffect.Navigate(action))
             }
 
-            phoneConfirmation?.isConfirmed != true && phoneConfirmation?.phone != null -> {
+            authorizationResult.isPhoneConfirmationNeeded() && phoneConfirmation?.phone != null -> {
                 phoneToConfirmValueHolder.set(phoneConfirmation.phone.value)
                 requestPhoneConfirmation()
             }
