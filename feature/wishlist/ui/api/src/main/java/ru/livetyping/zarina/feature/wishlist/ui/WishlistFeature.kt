@@ -9,7 +9,6 @@ import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature.NavActions
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature.NavEntry
-import kotlin.reflect.KClass
 
 public interface WishlistFeature :
     ComplexFeatureEntry<NavEntry, NavActions, EmptyNavResultRetrievers> {
@@ -27,12 +26,4 @@ public interface WishlistFeature :
         public val onProductClicked: (Product) -> Unit,
         public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
     ) : NavigationActions
-
-    public companion object {
-        public fun getNavEntry(): NavEntry = NavEntry
-
-        public fun getNavEntryClass(): KClass<NavEntry> = NavEntry::class
-
-        public fun getStartNavEntry(): NavigationEntry = NavEntry.StartNavEntry
-    }
 }

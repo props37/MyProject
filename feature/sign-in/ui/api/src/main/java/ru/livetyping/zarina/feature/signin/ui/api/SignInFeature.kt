@@ -7,7 +7,6 @@ import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature.NavActions
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature.NavEntry
-import kotlin.reflect.KClass
 
 public interface SignInFeature :
     ComplexFeatureEntry<NavEntry, NavActions, EmptyNavResultRetrievers> {
@@ -18,10 +17,4 @@ public interface SignInFeature :
     public class NavActions(
         public val onSignUpClicked: () -> Unit,
     ) : NavigationActions
-
-    public companion object {
-        public fun getNavEntry(): NavEntry = NavEntry
-
-        public fun getNavEntryClass(): KClass<NavEntry> = NavEntry::class
-    }
 }

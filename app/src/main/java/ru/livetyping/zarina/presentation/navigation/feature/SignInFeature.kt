@@ -29,8 +29,8 @@ fun rememberSignInNavActions(
     return remember(navController) {
         SignInFeature.NavActions(
             onSignUpClicked = {
-                navController.navigate(SignUpFeature.getNavEntry()) {
-                    popUpTo(SignInFeature.getNavEntry()) { inclusive = true }
+                navController.navigate(SignUpFeature.NavEntry) {
+                    popUpTo(SignInFeature.NavEntry) { inclusive = true }
                 }
             },
         )

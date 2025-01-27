@@ -7,7 +7,6 @@ import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature.NavActions
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature.NavEntry
-import kotlin.reflect.KClass
 
 public interface ProfileFeature :
     ComplexFeatureEntry<NavEntry, NavActions, ProfileNavResultRetrievers> {
@@ -25,12 +24,4 @@ public interface ProfileFeature :
         public val onSignUpClicked: () -> Unit,
         public val onChangeCityClicked: (currentCity: City?) -> Unit,
     ) : NavigationActions
-
-    public companion object {
-        public fun getNavEntry(): NavEntry = NavEntry
-
-        public fun getNavEntryClass(): KClass<NavEntry> = NavEntry::class
-
-        public fun getStartNavEntry(): NavigationEntry = NavEntry.StartNavEntry
-    }
 }

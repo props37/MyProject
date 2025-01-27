@@ -40,8 +40,8 @@ fun rememberProfileNavActions(
     return remember(navController) {
         ProfileFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
-            onSignInClicked = { navController.navigate(SignInFeature.getNavEntry()) },
-            onSignUpClicked = { navController.navigate(SignUpFeature.getNavEntry()) },
+            onSignInClicked = { navController.navigate(SignInFeature.NavEntry) },
+            onSignUpClicked = { navController.navigate(SignUpFeature.NavEntry) },
             onChangeCityClicked = { currentCity ->
                 val citySelectorNavEntry = CitySelectorFeature.NavEntry(
                     title = Text.Resource(R.string.city_change),
