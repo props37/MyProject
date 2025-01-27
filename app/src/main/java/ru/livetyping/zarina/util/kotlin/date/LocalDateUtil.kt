@@ -3,11 +3,10 @@ package ru.livetyping.zarina.util.kotlin.date
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.Locale
 
 object LocalDateUtil {
-    fun fromMillis(millis: Long, zoneId: ZoneId = ZoneOffset.UTC): LocalDate {
+    fun fromMillis(millis: Long, zoneId: ZoneId = ZoneId.systemDefault()): LocalDate {
         return Instant.ofEpochMilli(millis).atZone(zoneId).toLocalDate()
     }
 

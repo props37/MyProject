@@ -50,6 +50,7 @@ import ru.livetyping.zarina.usecase.user.ValidateSignUpFieldsUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,7 +70,7 @@ class SignUpViewModel @Inject constructor(
         initialValue = "",
     )
 
-    private val birthDateMillisValueHolder = savedStateHandle.createValueHolder<Long?>(
+    private val birthDateMillisUtcValueHolder = savedStateHandle.createValueHolder<Long?>(
         key = KEY_BIRTH_DATE_MILLIS,
         initialValue = null,
     )
@@ -114,7 +115,7 @@ class SignUpViewModel @Inject constructor(
     private val _isFirstNameInvalid = MutableStateFlow(false)
     val isFirstNameInvalid = _isFirstNameInvalid.asStateFlow()
 
-    val birthDateMillis: StateFlow<Long?> = birthDateMillisValueHolder.stateFlow
+    val birthDateMillisUtc: StateFlow<Long?> = birthDateMillisUtcValueHolder.stateFlow
 
     private val _isBirthDateInvalid = MutableStateFlow(false)
     val isBirthDateInvalid = _isBirthDateInvalid.asStateFlow()
@@ -170,8 +171,8 @@ class SignUpViewModel @Inject constructor(
         _isFirstNameInvalid.value = false
     }
 
-    fun onBirthDateMillisChanged(millis: Long?) {
-        birthDateMillisValueHolder.set(millis)
+    fun onBirthDateMillisUtcChanged(millis: Long?) {
+        birthDateMillisUtcValueHolder.set(millis)
         _isBirthDateInvalid.value = false
     }
 
@@ -225,8 +226,8 @@ class SignUpViewModel @Inject constructor(
 
         viewModelScope.launch {
             val phone = PhoneNumber.create(phone.value)
-            val birthDate = birthDateMillis.value?.let {
-                LocalDateUtil.fromMillis(it)
+            val birthDate = birthDateMillisUtc.value?.let {
+                LocalDateUtil.fromMillis(it, ZoneOffset.UTC)
             }
             val email = Email.create(email.value)
             val password = password.value
@@ -280,8 +281,8 @@ class SignUpViewModel @Inject constructor(
         signUpJob = viewModelScope.launch {
             operationTracker.track(Operation.SIGN_UP) {
                 val phone = PhoneNumber.create(phone.value)
-                val birthDate = birthDateMillis.value?.let {
-                    LocalDateUtil.fromMillis(it)
+                val birthDate = birthDateMillisUtc.value?.let {
+                    LocalDateUtil.fromMillis(it, ZoneOffset.UTC)
                 }
                 val email = Email.create(email.value)
                 val password = password.value
