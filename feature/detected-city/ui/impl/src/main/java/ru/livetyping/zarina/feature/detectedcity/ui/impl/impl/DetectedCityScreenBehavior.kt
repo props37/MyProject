@@ -7,12 +7,12 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityNavActions
+import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 
 @Composable
 internal fun DetectedCityScreenBehavior(
     sideEffects: Flow<DetectedCitySideEffect>,
-    navActions: DetectedCityNavActions,
+    navActions: DetectedCityFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
 
@@ -33,7 +33,7 @@ internal fun DetectedCityScreenBehavior(
     }
 }
 
-private fun navigate(navActions: DetectedCityNavActions, action: DetectedCityScreenAction) {
+private fun navigate(navActions: DetectedCityFeature.NavActions, action: DetectedCityScreenAction) {
     when (action) {
         DetectedCityScreenAction.CloseClicked -> navActions.onCloseClicked()
     }

@@ -9,7 +9,7 @@ import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityNavEntry
+import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +19,7 @@ internal class DetectedCityViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val navEntry = savedStateHandle.toRoute<DetectedCityNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<DetectedCityFeature.NavEntry>()
 
     val cityName: StateFlow<String> = ReadOnlyStateFlow(navEntry.cityName)
 

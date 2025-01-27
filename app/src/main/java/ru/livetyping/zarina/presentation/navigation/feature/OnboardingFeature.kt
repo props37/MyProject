@@ -66,7 +66,7 @@ fun rememberOnboardingNavActions(
                 }
 
                 if (selectedCity == null) {
-                    navController.navigate(DetectedCityFeature.getNavEntry())
+                    navController.navigate(DetectedCityFeature.NavEntry())
                 }
             },
             onSelectCityClicked = {

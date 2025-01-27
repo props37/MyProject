@@ -10,13 +10,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
-import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityNavActions
-import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityNavEntry
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.DetectedCityScreen
 
 public class DetectedCityFeatureImpl : DetectedCityFeature {
     override fun NavGraphBuilder.composable(
-        actions: DetectedCityNavActions,
+        actions: DetectedCityFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -24,7 +22,7 @@ public class DetectedCityFeatureImpl : DetectedCityFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        dialog<DetectedCityNavEntry>(
+        dialog<DetectedCityFeature.NavEntry>(
             dialogProperties = DialogProperties(
                 dismissOnClickOutside = false,
                 usePlatformDefaultWidth = false,
