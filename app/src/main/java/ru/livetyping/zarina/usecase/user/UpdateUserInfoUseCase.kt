@@ -78,7 +78,7 @@ class UpdateUserInfoUseCase @Inject constructor(
         val birthDate: LocalDate,
         val email: Email,
         val phone: PhoneNumber,
-        val gender: Gender,
+        val gender: Gender?,
         val middleName: String? = null,
         val oldPassword: String? = null,
         val newPassword: String? = null,
