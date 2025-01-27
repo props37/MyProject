@@ -3,8 +3,8 @@ package ru.livetyping.zarina.util.kotlin.date
 import java.time.LocalDate
 import java.time.ZoneId
 
-fun LocalDate.toMillis(): Long = this
+fun LocalDate.toEpochMillis(zoneId: ZoneId = ZoneId.systemDefault()): Long = this
     .atStartOfDay()
-    .atZone(ZoneId.systemDefault())
+    .atZone(zoneId)
     .toInstant()
     .toEpochMilli()

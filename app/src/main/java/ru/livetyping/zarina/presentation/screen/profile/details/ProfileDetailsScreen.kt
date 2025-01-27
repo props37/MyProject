@@ -43,7 +43,7 @@ fun ProfileDetailsScreen(
     viewModel: ProfileDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val birthDateMillis by viewModel.birthDateMillis.collectAsStateWithLifecycle()
+    val birthDateMillisUtc by viewModel.birthDateMillisUtc.collectAsStateWithLifecycle()
     val isBrithDateChangeable by viewModel.isBirthDateChangeable.collectAsStateWithLifecycle()
     val phoneNumber by viewModel.phoneNumber.collectAsStateWithLifecycle()
     val email by viewModel.email.collectAsStateWithLifecycle()
@@ -57,9 +57,9 @@ fun ProfileDetailsScreen(
         state = state,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
-        birthDateMillis = birthDateMillis,
+        birthDateMillisUtc = birthDateMillisUtc,
         isBrithDateChangeable = isBrithDateChangeable,
-        onBirthDateMillisChanged = viewModel::onBirthDateMillisChanged,
+        onBirthDateMillisUtcChanged = viewModel::onBirthDateMillisUtcChanged,
         phoneNumber = phoneNumber,
         onPhoneNumberClicked = viewModel::onPhoneNumberClicked,
         email = email,
@@ -88,9 +88,9 @@ private fun ScreenContent(
     state: State,
     firstNameTextFieldState: TextFieldState,
     lastNameTextFieldState: TextFieldState,
-    birthDateMillis: Long?,
+    birthDateMillisUtc: Long?,
     isBrithDateChangeable: Boolean,
-    onBirthDateMillisChanged: (Long?) -> Unit,
+    onBirthDateMillisUtcChanged: (Long?) -> Unit,
     phoneNumber: String?,
     onPhoneNumberClicked: () -> Unit,
     email: String,
@@ -118,7 +118,7 @@ private fun ScreenContent(
     var isDatePickerVisible by remember { mutableStateOf(false) }
     if (isDatePickerVisible) {
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = birthDateMillis,
+            initialSelectedDateMillis = birthDateMillisUtc,
             yearRange = remember { DatePickerMinYear..LocalDate.now().year },
         )
 
@@ -127,7 +127,7 @@ private fun ScreenContent(
             confirmButton = {
                 ZarinaDatePickerDefaults.ConfirmButton(
                     onClick = {
-                        onBirthDateMillisChanged(datePickerState.selectedDateMillis)
+                        onBirthDateMillisUtcChanged(datePickerState.selectedDateMillis)
                         isDatePickerVisible = false
                     },
                 )
@@ -158,7 +158,7 @@ private fun ScreenContent(
             state = state,
             firstNameTextFieldState = firstNameTextFieldState,
             lastNameTextFieldState = lastNameTextFieldState,
-            birthDateMillis = birthDateMillis,
+            birthDateMillisUtc = birthDateMillisUtc,
             isBrithDateChangeable = isBrithDateChangeable,
             onBirthDateMillisClicked = { isDatePickerVisible = true },
             phoneNumber = phoneNumber,

@@ -59,6 +59,7 @@ import ru.livetyping.zarina.util.compose.animation.Crossfade
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 import ru.livetyping.zarina.util.compose.tryRequestFocus
 import ru.livetyping.zarina.util.kotlin.date.LocalDateUtil
+import java.time.ZoneOffset
 
 @Suppress("ConstPropertyName")
 object ProfileDetailsScreenComponents {
@@ -113,7 +114,7 @@ object ProfileDetailsScreenComponents {
         state: State,
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
-        birthDateMillis: Long?,
+        birthDateMillisUtc: Long?,
         isBrithDateChangeable: Boolean,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
@@ -147,7 +148,7 @@ object ProfileDetailsScreenComponents {
                     ProfileDetailsImpl(
                         firstNameTextFieldState = firstNameTextFieldState,
                         lastNameTextFieldState = lastNameTextFieldState,
-                        birthDateMillis = birthDateMillis,
+                        birthDateMillisUtc = birthDateMillisUtc,
                         isBrithDateChangeable = isBrithDateChangeable,
                         onBirthDateMillisClicked = onBirthDateMillisClicked,
                         phoneNumber = phoneNumber,
@@ -192,7 +193,7 @@ object ProfileDetailsScreenComponents {
     private fun ProfileDetailsImpl(
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
-        birthDateMillis: Long?,
+        birthDateMillisUtc: Long?,
         isBrithDateChangeable: Boolean,
         onBirthDateMillisClicked: () -> Unit,
         phoneNumber: String?,
@@ -215,7 +216,7 @@ object ProfileDetailsScreenComponents {
             PersonalDataBlock(
                 firstNameTextFieldState = firstNameTextFieldState,
                 lastNameTextFieldState = lastNameTextFieldState,
-                birthDateMillis = birthDateMillis,
+                birthDateMillisUtc = birthDateMillisUtc,
                 isBrithDateChangeable = isBrithDateChangeable,
                 onBirthDateClicked = onBirthDateMillisClicked,
             )
@@ -272,7 +273,7 @@ object ProfileDetailsScreenComponents {
     private fun PersonalDataBlock(
         firstNameTextFieldState: TextFieldState,
         lastNameTextFieldState: TextFieldState,
-        birthDateMillis: Long?,
+        birthDateMillisUtc: Long?,
         isBrithDateChangeable: Boolean,
         onBirthDateClicked: () -> Unit,
         modifier: Modifier = Modifier,
@@ -346,10 +347,10 @@ object ProfileDetailsScreenComponents {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val formattedDate = if (birthDateMillis != null) {
+            val formattedDate = if (birthDateMillisUtc != null) {
                 rememberFormattedLocalDate(
-                    localDate = remember(birthDateMillis) {
-                        LocalDateUtil.fromMillis(birthDateMillis)
+                    localDate = remember(birthDateMillisUtc) {
+                        LocalDateUtil.fromMillis(birthDateMillisUtc, ZoneOffset.UTC)
                     },
                     formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
                 )
