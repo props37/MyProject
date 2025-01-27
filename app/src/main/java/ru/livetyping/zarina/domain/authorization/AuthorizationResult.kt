@@ -8,6 +8,10 @@ data class AuthorizationResult(
     val user: User,
     val phoneConfirmation: PhoneConfirmation?,
 ) {
+    fun isPhoneConfirmationNeeded(): Boolean {
+        return phoneConfirmation?.isConfirmed == false
+    }
+
     data class PhoneConfirmation(
         val phone: PhoneNumber?,
         val isConfirmed: Boolean,
