@@ -36,7 +36,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.Password
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.PhoneChangeNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.PhoneChangeConfirmationNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.PhoneChangeConfirmationNavParams
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.PhoneChangeConfirmationNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ProfileDetailsNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.StoreListNavActions
@@ -127,8 +127,7 @@ public class ProfileFeatureImpl : ProfileFeature {
             val phoneChangeNavActions = PhoneChangeNavActions(
                 onBackClicked = navigateUp,
                 onPhoneChangeRequested = { phone ->
-                    val phoneChangeConfirmationParams = PhoneChangeConfirmationNavParams(phone)
-                    val phoneChangeConfirmationNavEntry = phoneChangeConfirmationParams.toNavEntry()
+                    val phoneChangeConfirmationNavEntry = PhoneChangeConfirmationNavEntry.create(phone)
                     navController.navigate(phoneChangeConfirmationNavEntry)
                 },
             )

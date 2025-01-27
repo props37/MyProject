@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidOtpException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
@@ -62,7 +61,7 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
     private val countDownTimer = CountDownTimer()
 
     private val navEntry = savedStateHandle.toRoute<PhoneChangeConfirmationNavEntry>()
-    private val phone = PhoneNumber.create(navEntry.phone)
+    private val phone = navEntry.getPhone()
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val otpTextFieldState by savedStateHandle.saveable(
