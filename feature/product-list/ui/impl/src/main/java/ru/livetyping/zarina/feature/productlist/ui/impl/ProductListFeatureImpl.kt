@@ -11,13 +11,11 @@ import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.ProductListScreen
 
 public class ProductListFeatureImpl : ProductListFeature {
     override fun NavGraphBuilder.composable(
-        actions: ProductListNavActions,
+        actions: ProductListFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -25,8 +23,8 @@ public class ProductListFeatureImpl : ProductListFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        composable<ProductListNavEntry>(
-            typeMap = ProductListNavEntry.typeMap(),
+        composable<ProductListFeature.NavEntry>(
+            typeMap = ProductListFeature.NavEntry.typeMap(),
             deepLinks = DeepLinks,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
@@ -40,7 +38,7 @@ public class ProductListFeatureImpl : ProductListFeature {
 
     private companion object {
         private val DeepLinks = buildList {
-            val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
+            val categoryId = ProductListFeature.NavEntry.CATEGORY_ID_PROPERTY_NAME
             ZarinaWebLinkUris.forEach { uri ->
                 // TODO: [Low] Migrate to navDeepLink<ProductListNavEntry>?
                 add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}" })

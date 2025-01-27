@@ -48,7 +48,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
@@ -68,10 +68,10 @@ internal class ProductListViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val navEntry = savedStateHandle.toRoute<ProductListNavEntry>(
-        typeMap = ProductListNavEntry.typeMap(),
+    private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
+        typeMap = ProductListFeature.NavEntry.typeMap(),
     )
-    private val categoryId = Category.Id(navEntry.categoryId)
+    private val categoryId = navEntry.getCategoryId()
     private val initialFilters = navEntry.filters?.toFilters()
 
     private val categoryRequester = FlowRequester(CategoryRequest) {

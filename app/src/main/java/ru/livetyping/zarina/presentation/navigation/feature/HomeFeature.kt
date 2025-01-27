@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTr
 import ru.livetyping.zarina.feature.home.domain.model.ClickAction
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 
@@ -48,10 +48,8 @@ fun rememberHomeNavActions(
             onBannerClicked = { banner ->
                 when (val clickAction = banner.clickAction) {
                     is ClickAction.OpenProductList -> {
-                        val productListParams = ProductListNavParams(
-                            categoryId = clickAction.categoryId,
-                        )
-                        val productListNavEntry = productListParams.toNavEntry()
+                        val productListNavEntry =
+                            ProductListFeature.NavEntry.create(clickAction.categoryId)
                         navController.navigate(productListNavEntry)
                     }
 

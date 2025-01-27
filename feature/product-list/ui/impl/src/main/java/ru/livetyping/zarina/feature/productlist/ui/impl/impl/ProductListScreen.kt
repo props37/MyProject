@@ -29,7 +29,7 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.EmptyProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TagList
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TopBar
@@ -41,7 +41,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun ProductListScreen(
-    navActions: ProductListNavActions,
+    navActions: ProductListFeature.NavActions,
     viewModel: ProductListViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
@@ -79,7 +79,7 @@ private fun ScreenContent(
     visibleProductSizeSelector: Product?,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
-    navActions: ProductListNavActions,
+    navActions: ProductListFeature.NavActions,
 ) {
     ProductListScreenBehavior(
         sideEffects = sideEffects,

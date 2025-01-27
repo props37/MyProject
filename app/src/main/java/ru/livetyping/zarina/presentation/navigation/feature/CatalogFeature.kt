@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 
@@ -32,8 +32,7 @@ fun rememberCatalogNavActions(
         CatalogFeature.NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onCategoryClicked = { categoryId ->
-                val productListParams = ProductListNavParams(categoryId)
-                val productListNavEntry = productListParams.toNavEntry()
+                val productListNavEntry = ProductListFeature.NavEntry.create(categoryId)
                 navController.navigate(productListNavEntry)
             }
         )

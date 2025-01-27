@@ -7,14 +7,12 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavParams
 
 fun NavGraphBuilder.productListFeature(
     feature: ProductListFeature,
-    actions: ProductListNavActions,
+    actions: ProductListFeature.NavActions,
 ) {
     with(feature) {
         composable(
@@ -27,16 +25,15 @@ fun NavGraphBuilder.productListFeature(
 @Composable
 fun rememberProductListNavActions(
     navController: NavHostController
-): ProductListNavActions {
+): ProductListFeature.NavActions {
     return remember(navController) {
-        ProductListNavActions(
+        ProductListFeature.NavActions(
             onBackClicked = { navController.navigateUp() },
             onTagClicked = { category, filters ->
-                val productListParams = ProductListNavParams(
+                val productListNavEntry = ProductListFeature.NavEntry.create(
                     categoryId = category.id,
                     filters = filters,
                 )
-                val productListNavEntry = ProductListFeature.getNavEntry(productListParams)
                 navController.navigate(productListNavEntry)
             },
             onProductClicked = { product ->
