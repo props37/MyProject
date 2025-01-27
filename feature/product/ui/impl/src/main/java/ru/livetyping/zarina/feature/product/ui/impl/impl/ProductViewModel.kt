@@ -33,7 +33,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
@@ -49,7 +49,7 @@ internal class ProductViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val navEntry = savedStateHandle.toRoute<ProductNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<ProductFeature.NavEntry>()
     private val initialProductId = Product.Id(navEntry.productId)
 
     private val productId = MutableStateFlow(initialProductId)

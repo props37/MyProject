@@ -12,7 +12,6 @@ import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.popBackStackToBottomNavBarItem
@@ -53,8 +52,7 @@ fun rememberCartNavActions(
                 navController.popBackStackToBottomNavBarItem(bottomNavBarItem)
             },
             onProductClicked = { product ->
-                val productParams = ProductNavParams(product.productId)
-                val productNavEntry = ProductFeature.getNavEntry(productParams)
+                val productNavEntry = ProductFeature.NavEntry.create(product.productId)
                 navController.navigate(productNavEntry)
             },
         )

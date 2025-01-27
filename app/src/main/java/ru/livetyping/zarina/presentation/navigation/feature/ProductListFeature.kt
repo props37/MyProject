@@ -6,7 +6,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavActions
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavParams
@@ -41,8 +40,7 @@ fun rememberProductListNavActions(
                 navController.navigate(productListNavEntry)
             },
             onProductClicked = { product ->
-                val productParams = ProductNavParams(product.id)
-                val productNavEntry = ProductFeature.getNavEntry(productParams)
+                val productNavEntry = ProductFeature.NavEntry.create(product.id)
                 navController.navigate(productNavEntry)
             },
             onSubscribeToProductClicked = { product, offer ->

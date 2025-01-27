@@ -9,13 +9,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavActions
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.ProductScreen
 
 public class ProductFeatureImpl : ProductFeature {
     override fun NavGraphBuilder.composable(
-        actions: ProductNavActions,
+        actions: ProductFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
@@ -23,7 +21,7 @@ public class ProductFeatureImpl : ProductFeature {
         popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
     ) {
-        composable<ProductNavEntry>(
+        composable<ProductFeature.NavEntry>(
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,

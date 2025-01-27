@@ -1,17 +1,27 @@
 package ru.livetyping.zarina.feature.product.ui.api
 
+import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
-import kotlin.reflect.KClass
+import ru.livetyping.zarina.core.navigation.NavigationActions
+import ru.livetyping.zarina.core.navigation.NavigationEntry
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature.NavActions
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature.NavEntry
 
 public interface ProductFeature :
-    ComposableFeatureEntry<ProductNavEntry, ProductNavActions, EmptyNavResultRetrievers> {
+    ComposableFeatureEntry<NavEntry, NavActions, EmptyNavResultRetrievers> {
 
-    public companion object {
-        public fun getNavEntry(params: ProductNavParams): ProductNavEntry {
-            return params.toNavEntry()
+    @Serializable
+    public class NavEntry private constructor(public val productId: String) : NavigationEntry {
+        public companion object {
+            public fun create(productId: Product.Id): NavEntry = NavEntry(productId.value)
         }
-
-        public fun getNavEntryClass(): KClass<ProductNavEntry> = ProductNavEntry::class
     }
+
+    public class NavActions(
+        public val onBackClicked: () -> Unit,
+        public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
+    ) : NavigationActions
 }

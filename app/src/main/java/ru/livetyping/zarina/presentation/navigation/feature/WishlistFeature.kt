@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
-import ru.livetyping.zarina.feature.product.ui.api.ProductNavParams
+import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionNavParams
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
@@ -40,8 +40,7 @@ fun rememberWishlistNavActions(
                 navController.popBackStackToBottomNavBarItem(bottomNavBarItem)
             },
             onProductClicked = { product ->
-                val productParams = ProductNavParams(product.id)
-                val productNavEntry = productParams.toNavEntry()
+                val productNavEntry = ProductFeature.NavEntry.create(product.id)
                 navController.navigate(productNavEntry)
             },
             onSubscribeToProductClicked = { product, offer ->
