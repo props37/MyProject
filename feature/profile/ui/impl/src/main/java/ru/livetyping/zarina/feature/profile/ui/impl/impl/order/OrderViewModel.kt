@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -33,7 +32,7 @@ internal class OrderViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val navEntry = savedStateHandle.toRoute<OrderNavEntry>()
-    private val orderId = Order.Id(navEntry.orderId)
+    private val orderId = navEntry.getOrderId()
 
     private val orderRequester = FlowRequester(OrderRequest.LOADING) {
         val params = GetOrderFlowUseCase.Params(orderId)

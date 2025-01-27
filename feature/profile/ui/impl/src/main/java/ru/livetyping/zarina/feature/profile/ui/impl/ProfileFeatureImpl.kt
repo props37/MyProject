@@ -28,7 +28,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileDetai
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.profileScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.navigation.storeListScreen
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavActions
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavParams
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.OrderNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.orderlist.OrderListNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.PasswordChangeNavActions
@@ -96,8 +96,7 @@ public class ProfileFeatureImpl : ProfileFeature {
             val orderListNavActions = OrderListNavActions(
                 onBackClicked = navigateUp,
                 onOrderClicked = { order ->
-                    val orderParams = OrderNavParams(order.id)
-                    val orderNavEntry = orderParams.toNavEntry()
+                    val orderNavEntry = OrderNavEntry.create(order.id)
                     navController.navigate(orderNavEntry)
                 },
             )
