@@ -21,7 +21,7 @@ fun ZarinaDatePickerDialog(
     dismissButton: @Composable (() -> Unit)? = null,
     shape: Shape = Shape,
     colors: DatePickerColors = ZarinaDatePickerDefaults.colors(),
-    properties: DialogProperties = remember { DialogProperties(usePlatformDefaultWidth = false) },
+    properties: DialogProperties = remember { DialogProperties() },
     content: @Composable ColumnScope.() -> Unit,
 ) {
     DatePickerDialog(
