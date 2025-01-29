@@ -204,6 +204,8 @@ dependencies {
     implementation(libs.mindbox)
     implementation(libs.mindbox.firebase)
 
+    implementation(libs.appMetrica)
+
     debugImplementation(libs.leakCanary)
 
     testImplementation(libs.junit)
