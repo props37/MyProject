@@ -97,6 +97,7 @@ android {
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.RECAPTCHA_KEY, buildType.recaptchaKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
+                buildConfigStringField(Keys.APP_METRICA_KEY, buildType.appMetricaKey)
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
             }
