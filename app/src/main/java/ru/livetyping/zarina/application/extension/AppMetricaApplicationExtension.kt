@@ -13,5 +13,6 @@ class AppMetricaApplicationExtension @Inject constructor() : ApplicationExtensio
             if (BuildConfig.IS_LOGGING_ENABLED) withLogs()
         }.build()
         AppMetrica.activate(application, config)
+        AppMetrica.enableActivityAutoTracking(application)
     }
 }
