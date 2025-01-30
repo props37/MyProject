@@ -89,9 +89,8 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
-    DisposableEffect(productState) {
-        val productStateSuccess = productState as? ProductState.Success
-        val product = productStateSuccess?.product
+    val product = (productState as? ProductState.Success)?.product
+    DisposableEffect(product?.id) {
         if (product != null) {
             AppMetricaHelper.reportShowProductDetailsEvent(product)
         }
