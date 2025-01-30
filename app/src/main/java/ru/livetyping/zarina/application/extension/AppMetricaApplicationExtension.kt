@@ -31,6 +31,7 @@ class AppMetricaApplicationExtension @Inject constructor(
 
     private fun initializeAppMetrica(application: Application) {
         val config = AppMetricaConfig.newConfigBuilder(BuildConfig.APP_METRICA_KEY).apply {
+            // TODO: [Top] Specify device type?
             if (BuildConfig.IS_LOGGING_ENABLED) withLogs()
         }.build()
         AppMetrica.activate(application, config)
