@@ -35,7 +35,6 @@ class AppMetricaApplicationExtension @Inject constructor(
             if (BuildConfig.IS_LOGGING_ENABLED) withLogs()
         }.build()
         AppMetrica.activate(application, config)
-        AppMetrica.enableActivityAutoTracking(application)
     }
 
     private fun enableAppMetricaUserProfileUpdate() {
