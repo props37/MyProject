@@ -3,6 +3,7 @@ package ru.livetyping.zarina.application.extension
 import android.app.Application
 import io.appmetrica.analytics.AppMetrica
 import io.appmetrica.analytics.AppMetricaConfig
+import io.appmetrica.analytics.PredefinedDeviceTypes
 import io.appmetrica.analytics.profile.Attribute
 import io.appmetrica.analytics.profile.GenderAttribute
 import io.appmetrica.analytics.profile.UserProfile
@@ -31,7 +32,7 @@ class AppMetricaApplicationExtension @Inject constructor(
 
     private fun initializeAppMetrica(application: Application) {
         val config = AppMetricaConfig.newConfigBuilder(BuildConfig.APP_METRICA_KEY).apply {
-            // TODO: [Top] Specify device type?
+            withDeviceType(getDeviceType())
             if (BuildConfig.IS_LOGGING_ENABLED) withLogs()
         }.build()
         AppMetrica.activate(application, config)
@@ -72,5 +73,9 @@ class AppMetricaApplicationExtension @Inject constructor(
             }
             apply(ageAttr)
         }.build()
+    }
+
+    private fun getDeviceType(): String {
+        return "${PredefinedDeviceTypes.PHONE}-android"
     }
 }
