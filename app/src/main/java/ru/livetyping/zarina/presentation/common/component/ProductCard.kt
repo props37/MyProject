@@ -78,7 +78,7 @@ fun ProductCard(
     backgroundColor: Color = BackgroundColor,
     appMetricaScreen: AppMetricaScreen? = null,
 ) {
-    DisposableEffect(product.id, appMetricaScreen) {
+    DisposableEffect(Unit) {
         if (appMetricaScreen != null) {
             AppMetricaHelper.reportShowProductCardEvent(product, appMetricaScreen)
         }
