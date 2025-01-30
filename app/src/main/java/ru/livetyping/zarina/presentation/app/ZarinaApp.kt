@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.app
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.navigation.ModalBottomSheetLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -16,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import ru.livetyping.zarina.presentation.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.bottomnavbar.rememberBottomNavBarSizeTracker
@@ -33,16 +34,14 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZari
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.rememberZarinaToastController
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
-import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 
 @Composable
 fun ZarinaApp(
+    navController: NavHostController,
+    bottomSheetNavigator: BottomSheetNavigator,
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = hiltViewModel(),
 ) {
-    val bottomSheetNavigator = rememberBottomSheetNavigator()
-    val navController = rememberNavController(bottomSheetNavigator)
-
     val toastController = rememberToastController()
 
     val defaultBottomNavBarBehavior = remember(viewModel.startDestination) {
