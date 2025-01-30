@@ -25,8 +25,8 @@ class AddProductToCartUseCase @Inject constructor(
         Timber.v("Add product $product to the cart")
         val cartProductCount = cartRepository.addProductToCart(product.id, barcode, count)
         AppMetricaHelper.reportAddCartItemEvent(product, count)
-
         cartRepository.setCartTotalProductCount(cartProductCount.value)
+
         if (!cartRepository.areCartProductIdsFetched.value) {
             Timber.w("Cart product IDs are not fetched. Trying to fetch")
             fetchCartProductIdsUseCase()

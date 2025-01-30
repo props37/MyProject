@@ -23,6 +23,7 @@ class RemoveProductFromCartUseCase @Inject constructor(
         Timber.v("Remove product $productId from the cart")
         val cartProductCount = cartRepository.removeProductFromCart(productId, barcode)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
+
         if (!cartRepository.areCartProductIdsFetched.value) {
             Timber.w("Cart product IDs are not fetched. Trying to fetch")
             fetchCartProductIdsUseCase()
