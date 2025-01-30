@@ -37,6 +37,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Sorting
@@ -310,6 +311,7 @@ class ProductSearchViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        AppMetricaHelper.reportAddProductToWishlistEvent(product)
                     }
                 }
                 .onFailure {
@@ -335,7 +337,7 @@ class ProductSearchViewModel @AssistedInject constructor(
                 Timber.e("Could not add product $product to cart because it has no offers")
                 return
             }
-            addProductToCart(product.id, offer.barcode)
+            addProductToCart(product, offer.barcode)
         }
     }
 
@@ -358,10 +360,10 @@ class ProductSearchViewModel @AssistedInject constructor(
         saveSearchQuery(query)
     }
 
-    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
+    private fun addProductToCart(product: Product, barcode: Barcode) {
         viewModelScopeDefault.launch {
             val params = AddProductToCartUseCase.Params(
-                productId = productId,
+                product = product,
                 barcode = barcode,
                 count = 1,
             )
@@ -397,7 +399,7 @@ class ProductSearchViewModel @AssistedInject constructor(
                 key = KEY_SIZE_SELECTOR_RESULT,
             ) { result ->
                 addProductToCart(
-                    productId = result.product.toProductItem().id,
+                    product = result.product.toProductItem(),
                     barcode = result.offer.toProductOffer().barcode,
                 )
             }

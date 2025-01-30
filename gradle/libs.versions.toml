@@ -61,6 +61,7 @@ firebase-bom = "33.5.1"
 
 firebase-performance = "1.4.2"
 mindbox = "2.11.2"
+appMetrica = "7.6.0"
 
 junit = "4.13.2"
 
@@ -153,6 +154,8 @@ firebase-performance = { group = "com.google.firebase", name = "firebase-perf-kt
 
 mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox" }
 mindbox-firebase = { group = "cloud.mindbox", name = "mindbox-firebase" }
+
+appMetrica = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appMetrica" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 

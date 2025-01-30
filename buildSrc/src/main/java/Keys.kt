@@ -8,4 +8,5 @@ object Keys {
     const val ANY_QUERY_KEY = "ANY_QUERY_KEY"
     const val GOOGLE_MAPS_KEY = "GOOGLE_MAPS_KEY"
     const val ASSET_LINK = "asset_statements"
+    const val APP_METRICA_KEY = "APP_METRICA_KEY"
 }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -105,6 +106,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
 
     fun onDeliveryMethodClicked(method: DeliveryMethod) {
         navigationThrottler.throttle {
+            AppMetricaHelper.reportSelectDeliveryTypeEvent(method)
             val action = CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected(
                 cartType = cartType,
                 step = step.value + 1,

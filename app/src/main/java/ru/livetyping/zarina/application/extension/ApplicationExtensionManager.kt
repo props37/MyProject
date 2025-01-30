@@ -11,6 +11,7 @@ class ApplicationExtensionManager @Inject constructor(
     authorizationTokenFetcher: AuthorizationTokenFetcherApplicationExtension,
     favoriteProductIdsFetcher: FavoriteProductIdsFetcherApplicationExtension,
     cartProductIdsFetcher: CartProductIdsFetcherApplicationExtension,
+    appMetricaApplicationExtension: AppMetricaApplicationExtension,
 ) {
     val extensions = listOf(
         timber,
@@ -21,5 +22,6 @@ class ApplicationExtensionManager @Inject constructor(
         authorizationTokenFetcher,
         favoriteProductIdsFetcher,
         cartProductIdsFetcher,
+        appMetricaApplicationExtension,
     )
 }

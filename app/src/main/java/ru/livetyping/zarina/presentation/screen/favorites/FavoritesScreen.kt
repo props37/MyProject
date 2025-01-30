@@ -26,6 +26,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
@@ -110,6 +111,7 @@ private fun ScreenContent(
                         .padding(16.dp),
                 )
             },
+            appMetricaScreen = AppMetricaScreen.WISHLIST,
             modifier = Modifier.fillMaxSize(),
         )
     }

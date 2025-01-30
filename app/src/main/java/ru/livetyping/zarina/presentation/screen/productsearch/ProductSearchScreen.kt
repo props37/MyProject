@@ -30,6 +30,7 @@ import androidx.paging.PagingData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
@@ -177,6 +178,7 @@ private fun ScreenContent(
                                     .padding(16.dp),
                             )
                         },
+                        appMetricaScreen = AppMetricaScreen.PRODUCT_SEARCH,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(UiKitTheme.colors.background.general.regular.default),

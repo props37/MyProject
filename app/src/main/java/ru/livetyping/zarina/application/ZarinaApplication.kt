@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.application
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import ru.livetyping.zarina.application.extension.ApplicationExtensionManager
 import javax.inject.Inject
@@ -13,6 +14,7 @@ class ZarinaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        FirebaseApp.initializeApp(this)
         installApplicationExtensions()
     }
 
