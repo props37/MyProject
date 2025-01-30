@@ -64,9 +64,6 @@ object SizeSelectorScreenComponents {
                 )
                 .windowInsetsPadding(windowInsets),
         ) {
-            SizeTableLabel(modifier = Modifier.padding(start = 16.dp))
-            Spacer(modifier = Modifier.height(16.dp))
-
             ZarinaBottomSheet(
                 modifier = Modifier.clickable(
                     interactionSource = null,
