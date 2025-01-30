@@ -4,10 +4,12 @@ import io.appmetrica.analytics.AppMetrica
 import io.appmetrica.analytics.ecommerce.ECommerceAmount
 import io.appmetrica.analytics.ecommerce.ECommerceCartItem
 import io.appmetrica.analytics.ecommerce.ECommerceEvent
+import io.appmetrica.analytics.ecommerce.ECommerceOrder
 import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
+import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
 
@@ -71,8 +73,26 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_START_CHECKOUT)
     }
 
-    fun reportCompletePurchaseEvent() {
-        // TODO: [Top] Implement
+    fun reportCompletePurchaseEvent(order: OrderDetails) {
+        val eCommerceCartItems = order.products.map { product ->
+            val eCommerceProduct = getECommerceProduct(
+                productId = product.id,
+                productName = product.name,
+                currentPrice = product.price.currentPrice,
+                originalPrice = product.price.originalPrice,
+            )
+            ECommerceCartItem(
+                /* product = */ eCommerceProduct,
+                /* revenue = */ ECommercePrice(getECommerceAmount(product.price.currentPrice)),
+                /* quantityMicros = */ product.count.toLong(),
+            )
+        }
+        val eCommerceOrder = ECommerceOrder(
+            /* identifier = */ order.id.value.toString(),
+            /* cartItems = */ eCommerceCartItems,
+        )
+        val event = ECommerceEvent.purchaseEvent(eCommerceOrder)
+        AppMetrica.reportECommerce(event)
     }
 
     // TODO: [Top] Rename
@@ -98,6 +118,19 @@ object AppMetricaHelper {
             name = product.name
             actualPrice = getECommerceCurrentPrice(product)
             originalPrice = getECommerceOriginalPrice(product)
+        }
+    }
+
+    private fun getECommerceProduct(
+        productId: Product.Id,
+        productName: String,
+        currentPrice: Int,
+        originalPrice: Int,
+    ): ECommerceProduct {
+        return ECommerceProduct(productId.value).apply {
+            name = productName
+            actualPrice = ECommercePrice(getECommerceAmount(currentPrice))
+            this.originalPrice = ECommercePrice(getECommerceAmount(originalPrice))
         }
     }
 
