@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
@@ -87,6 +89,15 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
+    DisposableEffect(productState) {
+        val productStateSuccess = productState as? ProductState.Success
+        val product = productStateSuccess?.product
+        if (product != null) {
+            AppMetricaHelper.reportShowProductDetailsEvent(product)
+        }
+        onDispose {}
+    }
+
     ProductScreenBehavior(
         sideEffects = sideEffects,
         navigate = navigate,
