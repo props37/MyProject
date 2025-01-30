@@ -205,7 +205,7 @@ class ProductViewModel @AssistedInject constructor(
                     Timber.e("Could not add product $product to cart because it has offers")
                     return
                 }
-                addProductToCart(product.id, offer.barcode)
+                addProductToCart(product, offer.barcode)
             }
         } else {
             navigationThrottler.throttle {
@@ -260,10 +260,10 @@ class ProductViewModel @AssistedInject constructor(
         }
     }
 
-    private fun addProductToCart(productId: Product.Id, barcode: Barcode) {
+    private fun addProductToCart(product: Product, barcode: Barcode) {
         viewModelScope.launch {
             val params = AddProductToCartUseCase.Params(
-                productId = productId,
+                product = product,
                 barcode = barcode,
                 count = 1,
             )
@@ -288,7 +288,7 @@ class ProductViewModel @AssistedInject constructor(
                 key = KEY_RESULT_SIZE_SELECTOR,
             ) { result ->
                 addProductToCart(
-                    productId = result.product.toProductItem().id,
+                    product = result.product.toProductItem(),
                     barcode = result.offer.toProductOffer().barcode,
                 )
             }

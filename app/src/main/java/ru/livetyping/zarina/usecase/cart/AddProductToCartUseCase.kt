@@ -18,11 +18,11 @@ class AddProductToCartUseCase @Inject constructor(
 ) : UseCase<AddProductToCartUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
-        val productId = params.productId
+        val product = params.product
         val barcode = params.barcode
         val count = params.count
-        Timber.v("Add product $productId to the cart")
-        val cartProductCount = cartRepository.addProductToCart(productId, barcode, count)
+        Timber.v("Add product $product to the cart")
+        val cartProductCount = cartRepository.addProductToCart(product.id, barcode, count)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
         if (!cartRepository.areCartProductIdsFetched.value) {
             Timber.w("Cart product IDs are not fetched. Trying to fetch")
@@ -30,5 +30,5 @@ class AddProductToCartUseCase @Inject constructor(
         }
     }
 
-    data class Params(val productId: Product.Id, val barcode: Barcode, val count: Int)
+    data class Params(val product: Product, val barcode: Barcode, val count: Int)
 }
