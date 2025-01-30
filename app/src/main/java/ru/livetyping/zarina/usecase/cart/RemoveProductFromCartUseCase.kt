@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.cart
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.cart.CartRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.cart.CartProduct
@@ -22,6 +23,7 @@ class RemoveProductFromCartUseCase @Inject constructor(
         val barcode = params.barcode
         Timber.v("Remove product $product from the cart")
         val cartProductCount = cartRepository.removeProductFromCart(product.productId, barcode)
+        AppMetricaHelper.reportRemoveCartItemEvent(product)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
 
         if (!cartRepository.areCartProductIdsFetched.value) {

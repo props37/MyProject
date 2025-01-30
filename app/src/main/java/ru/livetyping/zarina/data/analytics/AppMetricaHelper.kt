@@ -6,6 +6,7 @@ import io.appmetrica.analytics.ecommerce.ECommerceCartItem
 import io.appmetrica.analytics.ecommerce.ECommerceEvent
 import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
+import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
@@ -35,12 +36,12 @@ object AppMetricaHelper {
         AppMetrica.reportECommerce(event)
     }
 
-    fun reportRemoveCartItemEvent(product: Product, count: Int) {
+    fun reportRemoveCartItemEvent(product: CartProduct) {
         val eCommerceProduct = getECommerceProduct(product)
         val cartItem = ECommerceCartItem(
             /* product = */ eCommerceProduct,
             /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
-            /* quantityMicros = */ count.toLong()
+            /* quantityMicros = */ product.count.toLong(),
         )
         val event = ECommerceEvent.removeCartItemEvent(cartItem)
         AppMetrica.reportECommerce(event)
@@ -84,11 +85,27 @@ object AppMetricaHelper {
         }
     }
 
+    private fun getECommerceProduct(product: CartProduct): ECommerceProduct {
+        return ECommerceProduct(product.productId.value).apply {
+            name = product.name
+            actualPrice = getECommerceCurrentPrice(product)
+            originalPrice = getECommerceOriginalPrice(product)
+        }
+    }
+
     private fun getECommerceCurrentPrice(product: Product): ECommercePrice {
         return ECommercePrice(getECommerceAmount(product.price.currentPrice))
     }
 
+    private fun getECommerceCurrentPrice(product: CartProduct): ECommercePrice {
+        return ECommercePrice(getECommerceAmount(product.price.currentPrice))
+    }
+
     private fun getECommerceOriginalPrice(product: Product): ECommercePrice {
+        return ECommercePrice(getECommerceAmount(product.price.originalPrice))
+    }
+
+    private fun getECommerceOriginalPrice(product: CartProduct): ECommercePrice {
         return ECommercePrice(getECommerceAmount(product.price.originalPrice))
     }
 
