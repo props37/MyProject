@@ -29,6 +29,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -53,8 +54,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
+import io.appmetrica.analytics.AppMetrica
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
@@ -684,6 +688,11 @@ object ProductScreenComponents {
                 items = totalLook,
                 key = { it.id.value },
             ) { product ->
+                DisposableEffect(product) {
+                    AppMetricaHelper.reportShowProductCardEvent(product, AppMetricaScreen.PRODUCT)
+                    onDispose {}
+                }
+
                 ProductCardSmall(
                     product = product,
                     onClick = onProductClicked,

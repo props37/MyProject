@@ -22,6 +22,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductColor
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
@@ -73,7 +76,15 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     backgroundColor: Color = BackgroundColor,
+    appMetricaScreen: AppMetricaScreen? = null,
 ) {
+    DisposableEffect(product, appMetricaScreen) {
+        if (appMetricaScreen != null) {
+            AppMetricaHelper.reportShowProductCardEvent(product, appMetricaScreen)
+        }
+        onDispose {}
+    }
+
     Column(
         modifier = modifier
             .background(backgroundColor)
