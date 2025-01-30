@@ -1,0 +1,110 @@
+package ru.livetyping.zarina.data.analytics
+
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.ecommerce.ECommerceAmount
+import io.appmetrica.analytics.ecommerce.ECommerceCartItem
+import io.appmetrica.analytics.ecommerce.ECommerceEvent
+import io.appmetrica.analytics.ecommerce.ECommercePrice
+import io.appmetrica.analytics.ecommerce.ECommerceProduct
+import ru.livetyping.zarina.domain.checkout.DeliveryMethod
+import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.currentPrice
+
+object AppMetricaHelper {
+    fun reportShowProductCardEvent(product: Product, screen: AppMetricaScreen) {
+        val eCommerceProduct = getECommerceProduct(product)
+        val eCommerceScreen = screen.toECommerceScreen()
+        val event = ECommerceEvent.showProductCardEvent(eCommerceProduct, eCommerceScreen)
+        AppMetrica.reportECommerce(event)
+    }
+
+    fun reportShowProductDetailsEvent(product: Product) {
+        val eCommerceProduct = getECommerceProduct(product)
+        val event = ECommerceEvent.showProductDetailsEvent(eCommerceProduct, null)
+        AppMetrica.reportECommerce(event)
+    }
+
+    fun reportAddCartItemEvent(product: Product, count: Int) {
+        val eCommerceProduct = getECommerceProduct(product)
+        val cartItem = ECommerceCartItem(
+            /* product = */ eCommerceProduct,
+            /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
+            /* quantityMicros = */ count.toLong()
+        )
+        val event = ECommerceEvent.addCartItemEvent(cartItem)
+        AppMetrica.reportECommerce(event)
+    }
+
+    fun reportRemoveCartItemEvent(product: Product, count: Int) {
+        val eCommerceProduct = getECommerceProduct(product)
+        val cartItem = ECommerceCartItem(
+            /* product = */ eCommerceProduct,
+            /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
+            /* quantityMicros = */ count.toLong()
+        )
+        val event = ECommerceEvent.removeCartItemEvent(cartItem)
+        AppMetrica.reportECommerce(event)
+    }
+
+    fun reportAddProductToWishlistEvent(product: Product) {
+        val parameters = mapOf(
+            KEY_SKU to product.id.value,
+            KEY_NAME to product.name,
+        )
+        AppMetrica.reportEvent(EVENT_ADD_PRODUCT_TO_WISHLIST, parameters)
+    }
+
+    fun reportOpenCartEvent() {
+        AppMetrica.reportEvent(EVENT_OPEN_CART)
+    }
+
+    fun reportStartCheckoutEvent() {
+        AppMetrica.reportEvent(EVENT_START_CHECKOUT)
+    }
+
+    fun reportCompletePurchaseEvent() {
+        // TODO: [Top] Implement
+    }
+
+    // TODO: [Top] Rename
+    fun reportPaymentTypeEvent() {
+        AppMetrica.reportEvent(EVENT_PAYMENT_TYPE)
+    }
+
+    fun reportSelectDeliveryTypeEvent(deliveryMethod: DeliveryMethod) {
+        val parameters = mapOf(KEY_DELIVERY_TYPE to deliveryMethod.name)
+        AppMetrica.reportEvent(EVENT_SELECT_DELIVERY_TYPE, parameters)
+    }
+
+    private fun getECommerceProduct(product: Product): ECommerceProduct {
+        return ECommerceProduct(product.id.value).apply {
+            name = product.name
+            actualPrice = getECommerceCurrentPrice(product)
+            originalPrice = getECommerceOriginalPrice(product)
+        }
+    }
+
+    private fun getECommerceCurrentPrice(product: Product): ECommercePrice {
+        return ECommercePrice(getECommerceAmount(product.price.currentPrice))
+    }
+
+    private fun getECommerceOriginalPrice(product: Product): ECommercePrice {
+        return ECommercePrice(getECommerceAmount(product.price.originalPrice))
+    }
+
+    private fun getECommerceAmount(price: Int): ECommerceAmount {
+        return ECommerceAmount(price.toLong(), RUB_UNIT)
+    }
+
+    private const val EVENT_ADD_PRODUCT_TO_WISHLIST = "addWishlist"
+    private const val EVENT_OPEN_CART = "cartView"
+    private const val EVENT_START_CHECKOUT = "beginOrder"
+    private const val EVENT_PAYMENT_TYPE = "paymentType"
+    private const val EVENT_SELECT_DELIVERY_TYPE = "deliveryTypeSelected"
+
+    private const val KEY_SKU = "sku"
+    private const val KEY_NAME = "name"
+    private const val KEY_DELIVERY_TYPE = "deliveryType"
+
+    private const val RUB_UNIT = "RUB"
+}
