@@ -24,6 +24,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -327,6 +328,10 @@ class CartViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        AppMetricaHelper.reportAddProductToWishlistEvent(
+                            productId = product.productId,
+                            productName = product.name,
+                        )
                     }
                 }
                 .onFailure {

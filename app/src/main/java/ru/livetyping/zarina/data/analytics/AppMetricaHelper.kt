@@ -55,6 +55,14 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_ADD_PRODUCT_TO_WISHLIST, parameters)
     }
 
+    fun reportAddProductToWishlistEvent(productId: Product.Id, productName: String) {
+        val parameters = mapOf(
+            KEY_SKU to productId.value,
+            KEY_NAME to productName,
+        )
+        AppMetrica.reportEvent(EVENT_ADD_PRODUCT_TO_WISHLIST, parameters)
+    }
+
     fun reportOpenCartEvent() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }

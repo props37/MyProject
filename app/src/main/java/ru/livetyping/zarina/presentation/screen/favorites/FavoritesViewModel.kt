@@ -22,6 +22,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
@@ -105,6 +106,7 @@ class FavoritesViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
+                        AppMetricaHelper.reportAddProductToWishlistEvent(product)
                     }
                 }
                 .onFailure {
