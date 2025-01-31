@@ -61,7 +61,6 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
-    implementation(projects.core.uiComponent)
     implementation(projects.core.uiKitPaging)
     implementation(projects.core.uiModel)
     implementation(projects.core.uiMap)
