@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.permissionrequired
+package ru.livetyping.zarina.core.uikit.permission
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

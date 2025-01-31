@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.permissionrequired
+package ru.livetyping.zarina.core.uikit.permission
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

@@ -31,9 +31,9 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
-import ru.livetyping.zarina.core.uikit.permissionrequired.PermissionRequiredDialogEvent
-import ru.livetyping.zarina.core.uikit.permissionrequired.PermissionRequiredDialogState
-import ru.livetyping.zarina.core.uikit.permissionrequired.RequiredPermission
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uikit.permission.RequiredPermission
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent

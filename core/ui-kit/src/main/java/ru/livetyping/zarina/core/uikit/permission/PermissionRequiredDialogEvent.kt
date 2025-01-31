@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.permissionrequired
+package ru.livetyping.zarina.core.uikit.permission
 
 public sealed interface PermissionRequiredDialogEvent {
     public data class GoToSettingsClicked(
