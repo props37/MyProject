@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.sizeselector
+package ru.livetyping.zarina.core.uikit.sizeselector
 
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer

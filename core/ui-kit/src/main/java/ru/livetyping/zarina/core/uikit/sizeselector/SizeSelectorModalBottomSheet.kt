@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.sizeselector
+package ru.livetyping.zarina.core.uikit.sizeselector
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

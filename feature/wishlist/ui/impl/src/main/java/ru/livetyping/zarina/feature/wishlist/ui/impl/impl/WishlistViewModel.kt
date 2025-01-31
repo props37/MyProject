@@ -38,7 +38,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
-import ru.livetyping.zarina.core.uicomponent.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.R
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
