@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.otp
+package ru.livetyping.zarina.core.uikit.otp
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -21,14 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
-import ru.livetyping.zarina.core.uicomponent.R
-import ru.livetyping.zarina.core.uicomponent.otp.SmsOtpDefaults.RemainingTimeFormat
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
+import ru.livetyping.zarina.core.uikit.otp.SmsOtpDefaults.RemainingTimeFormat
 import ru.livetyping.zarina.core.uikit.text.ZarinaOtpTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
@@ -51,7 +51,7 @@ public fun SmsOtp(
             .padding(contentPadding),
     ) {
         Text(
-            text = stringResource(R.string.uicomponent_enter_code_from_sms),
+            text = stringResource(R.string.uikit_enter_code_from_sms),
             style = UiKitTheme.typography.secondary.bold,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -59,7 +59,7 @@ public fun SmsOtp(
         val formattedPhone = rememberFormattedPhoneNumber(phone.value)
         val phoneString = formattedPhone ?: phone.value
         Text(
-            text = stringResource(R.string.uicomponent_we_sent_sms_code_to_phone_number, phoneString),
+            text = stringResource(R.string.uikit_we_sent_sms_code_to_phone_number, phoneString),
             style = UiKitTheme.typography.tertiary.regular,
             color = UiKitTheme.colors.text.general.regular.default,
         )
@@ -102,7 +102,7 @@ public fun SmsOtp(
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {
-                        Text(text = stringResource(R.string.uicomponent_resend_code).uppercase())
+                        Text(text = stringResource(R.string.uikit_resend_code).uppercase())
                     }
                 }
 
@@ -117,7 +117,7 @@ public fun SmsOtp(
                     ) {
                         Text(
                             text = stringResource(
-                                id = R.string.uicomponent_code_can_be_sent_again_after,
+                                id = R.string.uikit_code_can_be_sent_again_after,
                                 remainingTime,
                             ),
                             style = UiKitTheme.typography.tertiary.regular,
