@@ -26,6 +26,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -72,6 +73,8 @@ dependencies {
     implementation(libs.timber)
 
     lintChecks(libs.lint.composeChecks)
+
+    coreLibraryDesugaring(libs.coreLibraryDesugaring)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
