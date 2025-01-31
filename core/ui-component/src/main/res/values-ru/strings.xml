@@ -4,9 +4,5 @@
     <string name="uicomponent_we_sent_sms_code_to_phone_number">Мы отправили СМС с кодом на номер %1$s</string>
     <string name="uicomponent_code_can_be_sent_again_after">Повторно отправить код можно через %1$s</string>
     <string name="uicomponent_resend_code">Отправить повторно</string>
-    <string name="uicomponent_for_zarina_club_members">Для участников Zarina Club</string>
-    <string name="uicomponent_zarina_club_program_description_1">Количество бонусов к начислению для уровня Prime. 1 бонус = 1 рубль</string>
-    <string name="uicomponent_zarina_club_program_description_2">Копи бонусы и оплачивай до 30% от стоимости покупки</string>
-    <string name="uicomponent_learn_more">Узнать больше</string>
     <string name="uicomponent_to_settings">В настройки</string>
 </resources>

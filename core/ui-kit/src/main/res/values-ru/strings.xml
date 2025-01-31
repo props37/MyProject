@@ -14,4 +14,8 @@
     <string name="uikit_show_my_location">Показать моё местоположение</string>
     <string name="uikit_redeemed_from_gift_certificate">Списано по сертификату</string>
     <string name="uikit_excluding_delivery">Без учёта доставки</string>
+    <string name="uikit_for_zarina_club_members">Для участников Zarina Club</string>
+    <string name="uikit_zarina_club_program_description_1">Количество бонусов к начислению для уровня Prime. 1 бонус = 1 рубль</string>
+    <string name="uikit_zarina_club_program_description_2">Копи бонусы и оплачивай до 30% от стоимости покупки</string>
+    <string name="uikit_learn_more">Узнать больше</string>
 </resources>
