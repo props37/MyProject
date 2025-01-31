@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.user.local
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.livetyping.zarina.data.database.ZarinaDatabaseOld
+import ru.livetyping.zarina.data.database.ZarinaDatabase
 import ru.livetyping.zarina.data.user.local.database.dao.UserDao
 import ru.livetyping.zarina.data.user.local.database.entity.UserEntity
 import ru.livetyping.zarina.domain.common.Gender
@@ -13,7 +13,7 @@ import ru.livetyping.zarina.domain.user.User
 import javax.inject.Inject
 
 class UserLocalDataSource @Inject constructor(
-    private val database: ZarinaDatabaseOld,
+    private val database: ZarinaDatabase,
     private val userDao: UserDao,
     private val userCityDataHolder: UserCityDataHolder,
     private val userContentGenderDataHolder: UserContentGenderDataHolder,
