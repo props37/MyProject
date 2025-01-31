@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
@@ -26,8 +26,6 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNa
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
-import androidx.navigation.NavHostController
-import ru.livetyping.zarina.presentation.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
@@ -36,7 +34,6 @@ import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastContro
 import ru.livetyping.zarina.presentation.common.toastcontroller.rememberToastController
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
-import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 
 @Composable
 fun ZarinaApp(
