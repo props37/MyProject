@@ -20,13 +20,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.Product
@@ -45,13 +45,14 @@ internal fun ProductScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val productState by viewModel.productState.collectAsStateWithLifecycle()
+    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         productState = productState,
         onProductEvent = viewModel::onProductEvent,
-        visibleProductSizeSelector = viewModel.visibleProductSizeSelector.collectAsStateWithLifecycle().value,
+        sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -67,7 +68,7 @@ private fun ScreenContent(
     onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
-    visibleProductSizeSelector: Product?,
+    sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductFeature.NavActions,
@@ -77,12 +78,10 @@ private fun ScreenContent(
         navActions = navActions,
     )
 
-    if (visibleProductSizeSelector != null) {
-        SizeSelectorModalBottomSheet(
-            product = visibleProductSizeSelector,
-            onEvent = onSizeSelectorEvent,
-        )
-    }
+    SizeSelectorModalBottomSheet(
+        state = sizeSelectorState,
+        onEvent = onSizeSelectorEvent,
+    )
 
     var isZarinaClubDescriptionVisible by remember { mutableStateOf(false) }
     if (isZarinaClubDescriptionVisible) {

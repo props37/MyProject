@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.R
@@ -31,53 +30,55 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 
 @Composable
 public fun SizeSelectorModalBottomSheet(
-    product: Product,
+    state: SizeSelectorState,
     onEvent: (SizeSelectorEvent) -> Unit,
 ) {
-    val onDismissRequest = { onEvent(SizeSelectorEvent.DismissRequested) }
+    if (state is SizeSelectorState.Visible) {
+        val product = state.product
 
-    val mode = remember(product) { mutableStateOf<Mode>(Mode.SizeSelector) }
+        val mode = remember(product) { mutableStateOf<Mode>(Mode.SizeSelector) }
 
-    val sizes = remember(product) {
-        buildList {
-            product.offers
-                .groupBy {
-                    if (it.sizeRu != null) "${it.size} ${it.sizeRu}" else it.size
-                }
-                .forEach { (size, offers) ->
-                    val item = SizeSelectorSizeItem(size, offers)
-                    add(item)
-                }
-        }
-    }
-
-    when (val modeValue = mode.value) {
-        Mode.SizeSelector -> {
-            SizeSelectorModalBottomSheetImpl(
-                sizes = sizes,
-                onSizeClicked = {
-                    val offers = it.offers
-                    if (offers.size > 1) {
-                        mode.value = Mode.HeightSelector(offers)
-                    } else {
-                        val firstOffer = offers.firstOrNull()
-                        if (firstOffer != null) {
-                            onEvent(SizeSelectorEvent.SizeSelected(product, firstOffer))
-                        }
+        val sizes = remember(product) {
+            buildList {
+                product.offers
+                    .groupBy {
+                        if (it.sizeRu != null) "${it.size} ${it.sizeRu}" else it.size
                     }
-                },
-                onDismissRequest = onDismissRequest,
-            )
+                    .forEach { (size, offers) ->
+                        val item = SizeSelectorSizeItem(size, offers)
+                        add(item)
+                    }
+            }
         }
 
-        is Mode.HeightSelector -> {
-            HeightSelectorModalBottomSheet(
-                heights = modeValue.heights,
-                onHeightSelected = {
-                    onEvent(SizeSelectorEvent.SizeSelected(product, it))
-                },
-                onDismissRequest = { mode.value = Mode.SizeSelector },
-            )
+        when (val modeValue = mode.value) {
+            Mode.SizeSelector -> {
+                SizeSelectorModalBottomSheetImpl(
+                    sizes = sizes,
+                    onSizeClicked = {
+                        val offers = it.offers
+                        if (offers.size > 1) {
+                            mode.value = Mode.HeightSelector(offers)
+                        } else {
+                            val firstOffer = offers.firstOrNull()
+                            if (firstOffer != null) {
+                                onEvent(SizeSelectorEvent.SizeSelected(product, firstOffer))
+                            }
+                        }
+                    },
+                    onDismissRequest = { onEvent(SizeSelectorEvent.DismissRequested) },
+                )
+            }
+
+            is Mode.HeightSelector -> {
+                HeightSelectorModalBottomSheet(
+                    heights = modeValue.heights,
+                    onHeightSelected = {
+                        onEvent(SizeSelectorEvent.SizeSelected(product, it))
+                    },
+                    onDismissRequest = { mode.value = Mode.SizeSelector },
+                )
+            }
         }
     }
 }

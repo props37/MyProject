@@ -20,13 +20,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
@@ -46,7 +46,7 @@ internal fun ProductListScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
-    val visibleProductSizeSelector by viewModel.visibleProductSizeSelector.collectAsStateWithLifecycle()
+    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
     val shouldSystemBackBeIntercepted by viewModel.shouldSystemBackBeIntercepted.collectAsStateWithLifecycle()
 
     BackHandler(
@@ -61,7 +61,7 @@ internal fun ProductListScreen(
         onTagListEvent = viewModel::onTagListEvent,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         onProductEvent = viewModel::onProductEvent,
-        visibleProductSizeSelector = visibleProductSizeSelector,
+        sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -76,7 +76,7 @@ private fun ScreenContent(
     onTagListEvent: (TagListEvent) -> Unit,
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onProductEvent: (ProductEvent) -> Unit,
-    visibleProductSizeSelector: Product?,
+    sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListFeature.NavActions,
@@ -86,12 +86,10 @@ private fun ScreenContent(
         navActions = navActions,
     )
 
-    if (visibleProductSizeSelector != null) {
-        SizeSelectorModalBottomSheet(
-            product = visibleProductSizeSelector,
-            onEvent = onSizeSelectorEvent,
-        )
-    }
+    SizeSelectorModalBottomSheet(
+        state = sizeSelectorState,
+        onEvent = onSizeSelectorEvent,
+    )
 
     Column(
         modifier = Modifier

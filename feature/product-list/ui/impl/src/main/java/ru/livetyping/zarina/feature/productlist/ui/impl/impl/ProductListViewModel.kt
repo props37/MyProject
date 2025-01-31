@@ -47,6 +47,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
@@ -181,8 +182,8 @@ internal class ProductListViewModel @Inject constructor(
         }
         .cachedIn(viewModelScopeDefault)
 
-    private val _visibleProductSizeSelector = MutableStateFlow<Product?>(null)
-    val visibleProductSizeSelector: StateFlow<Product?> = _visibleProductSizeSelector.asStateFlow()
+    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
+    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
 
     val shouldSystemBackBeIntercepted: StateFlow<Boolean> = selectedTagId.mapState(
         scope = viewModelScope,
@@ -237,9 +238,12 @@ internal class ProductListViewModel @Inject constructor(
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
         when (event) {
-            SizeSelectorEvent.DismissRequested -> _visibleProductSizeSelector.value = null
+            SizeSelectorEvent.DismissRequested -> {
+                _sizeSelectorState.value = SizeSelectorState.Hidden
+            }
+
             is SizeSelectorEvent.SizeSelected -> {
-                _visibleProductSizeSelector.value = null
+                _sizeSelectorState.value = SizeSelectorState.Hidden
                 val product = event.product
                 val offer = event.offer
                 if (event.offer.isAvailable) {
@@ -301,7 +305,7 @@ internal class ProductListViewModel @Inject constructor(
     private fun onAddProductToCartClicked(event: ProductEvent.AddToCartClicked) {
         val product = event.product
         if (product.offers.size > 1) {
-            _visibleProductSizeSelector.value = product
+            _sizeSelectorState.value = SizeSelectorState.Visible(product)
         } else {
             val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
