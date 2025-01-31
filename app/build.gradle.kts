@@ -96,6 +96,7 @@ android {
                 buildConfigStringField(Keys.MINDBOX_ENDPOINT, buildType.mindboxEndpoint)
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
+                buildConfigStringField(Keys.APP_METRICA_KEY, buildType.appMetricaKey)
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
 
@@ -268,11 +269,12 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
     implementation(libs.firebase.performance)
 
     implementation(libs.mindbox)
     implementation(libs.mindbox.firebase)
+
+    implementation(libs.appMetrica)
 
     debugImplementation(libs.leakCanary)
 

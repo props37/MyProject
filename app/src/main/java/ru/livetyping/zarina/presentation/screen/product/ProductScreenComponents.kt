@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.product
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +55,8 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.common.Media
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
@@ -684,6 +686,11 @@ object ProductScreenComponents {
                 items = totalLook,
                 key = { it.id.value },
             ) { product ->
+                DisposableEffect(Unit) {
+                    AppMetricaHelper.reportShowProductCardEvent(product, AppMetricaScreen.PRODUCT)
+                    onDispose {}
+                }
+
                 ProductCardSmall(
                     product = product,
                     onClick = onProductClicked,

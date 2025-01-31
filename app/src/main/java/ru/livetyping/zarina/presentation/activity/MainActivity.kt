@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
@@ -10,11 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.BuildConfig
@@ -32,6 +36,7 @@ import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.Activit
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.presentation.theme.ZarinaTheme
+import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
 import ru.livetyping.zarina.util.library.activity.DefaultLightScrim
 import ru.livetyping.zarina.util.platform.getSizeInBytes
@@ -46,6 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var features: Features
+
+    private var navController: NavHostController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -69,9 +76,15 @@ class MainActivity : AppCompatActivity() {
                 LocalSystemBarsBehaviorController provides systemBarsBehaviorController,
                 LocalScreenBrightnessBehaviorController provides screenBrightnessBehaviorController,
             ) {
+                val bottomSheetNavigator = rememberBottomSheetNavigator()
+                val navController = rememberNavController(bottomSheetNavigator)
+                SideEffect { this.navController = navController }
+
                 ZarinaTheme {
                     ZarinaApp(
                         features = features,
+                        navController = navController,
+                        bottomSheetNavigator = bottomSheetNavigator,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(UiKitTheme.colors.background.general.regular.default),
@@ -87,6 +100,11 @@ class MainActivity : AppCompatActivity() {
             val savedInstanceStateSize = savedInstanceState.getSizeInBytes()
             Timber.d("onRestoreInstanceState. Size: $savedInstanceStateSize bytes")
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        navController?.handleDeepLink(intent)
     }
 
     private fun addActivityLifecycleObservers() {

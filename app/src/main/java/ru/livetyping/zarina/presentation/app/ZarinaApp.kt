@@ -3,6 +3,7 @@ package ru.livetyping.zarina.presentation.app
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.navigation.ModalBottomSheetLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -25,6 +26,8 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNa
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
+import androidx.navigation.NavHostController
+import ru.livetyping.zarina.presentation.bottomnavbar.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
@@ -33,17 +36,16 @@ import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastContro
 import ru.livetyping.zarina.presentation.common.toastcontroller.rememberToastController
 import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
-import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
+import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 
 @Composable
 fun ZarinaApp(
     features: Features,
+    navController: NavHostController,
+    bottomSheetNavigator: BottomSheetNavigator,
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = hiltViewModel(),
 ) {
-    val bottomSheetNavigator = rememberBottomSheetNavigator()
-    val navController = rememberNavController(bottomSheetNavigator)
-
     val toastController = rememberToastController()
 
     val defaultBottomNavBarBehavior = remember(viewModel.startFeature) {

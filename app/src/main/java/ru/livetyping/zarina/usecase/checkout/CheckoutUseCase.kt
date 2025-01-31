@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.base.usecase.FlowUseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.checkout.CheckoutRepository
 import ru.livetyping.zarina.data.order.OrderRepository
 import ru.livetyping.zarina.data.user.UserRepository
@@ -117,6 +118,8 @@ class CheckoutUseCase @Inject constructor(
         )
         updateOrderPaymentStatus(order, paymentMethod)
 
+        AppMetricaHelper.reportCompletePurchaseEvent(order)
+
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
             paymentMethodType = paymentMethod.type,
@@ -145,6 +148,8 @@ class CheckoutUseCase @Inject constructor(
             Timber.v("Order payment URL is not provided")
         }
 
+        AppMetricaHelper.reportCompletePurchaseEvent(order)
+
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
             paymentMethodType = paymentMethod.type,
@@ -165,6 +170,8 @@ class CheckoutUseCase @Inject constructor(
             checkoutParams = checkoutParams,
             paymentData = null,
         )
+
+        AppMetricaHelper.reportCompletePurchaseEvent(order)
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -212,6 +219,8 @@ class CheckoutUseCase @Inject constructor(
             // Use the payment method used to pay the remaining amount
             updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
+            AppMetricaHelper.reportCompletePurchaseEvent(order)
+
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
                 paymentMethodType = paymentMethod.type,
@@ -227,6 +236,8 @@ class CheckoutUseCase @Inject constructor(
                 checkoutParams = checkoutParams,
                 paymentData = null,
             )
+
+            AppMetricaHelper.reportCompletePurchaseEvent(order)
 
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,

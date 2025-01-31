@@ -34,6 +34,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaScrollToTopButton
@@ -71,6 +72,7 @@ fun ProductGrid(
      * is done under the hood, the additional logic can be invoked using this callback.
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
+    appMetricaScreen: AppMetricaScreen? = null,
 ) {
     val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
@@ -142,6 +144,7 @@ fun ProductGrid(
                             onAddToCartClicked = onAddToCartClicked,
                             onSubscribeClicked = onSubscribeClicked,
                             noProductsPlaceholder = noProductsPlaceholder,
+                            appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .pullRefresh(pullRefreshState),
@@ -213,6 +216,7 @@ private fun ProductGridImpl(
     onSubscribeClicked: (Product) -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    appMetricaScreen: AppMetricaScreen? = null,
 ) {
     val placeholderShimmer = rememberZarinaSkeletonShimmer()
     val itemModifier = Modifier.fillMaxWidth()
@@ -247,6 +251,7 @@ private fun ProductGridImpl(
                             onSubscribeClicked = onSubscribeClicked,
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
+                            appMetricaScreen = appMetricaScreen,
                         )
                     } else {
                         ProductCardSkeleton(

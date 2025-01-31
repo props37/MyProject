@@ -32,6 +32,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
@@ -156,6 +157,7 @@ private fun ScreenContent(
                             .padding(16.dp),
                     )
                 },
+                appMetricaScreen = AppMetricaScreen.PRODUCT_LIST,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
