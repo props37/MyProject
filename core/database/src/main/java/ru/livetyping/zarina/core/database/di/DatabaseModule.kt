@@ -50,6 +50,6 @@ internal abstract class DatabaseModule {
             return database.getUserDao()
         }
 
-        private const val DATABASE_NAME = "zarina_database"
+        private const val DATABASE_NAME = "zarina_database_2"
     }
 }
