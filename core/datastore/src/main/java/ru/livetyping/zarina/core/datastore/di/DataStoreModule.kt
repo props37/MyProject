@@ -26,6 +26,6 @@ internal class DataStoreModule {
     }
 
     private companion object {
-        private const val PREFERENCES_DATA_STORE_NAME = "preferences_data_store"
+        private const val PREFERENCES_DATA_STORE_NAME = "preferences_data_store_2"
     }
 }
