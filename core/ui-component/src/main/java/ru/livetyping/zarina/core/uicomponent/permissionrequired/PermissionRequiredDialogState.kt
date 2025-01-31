@@ -6,9 +6,8 @@ import ru.livetyping.zarina.core.text.Text
 
 @Stable
 public sealed class PermissionRequiredDialogState {
-
     @Immutable
-    public data class PermissionRequired(
+    public data class Visible(
         val permission: RequiredPermission,
         val title: Text,
         val body: Text,

@@ -33,7 +33,7 @@ public fun PermissionRequiredModalBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
-    if (state is PermissionRequiredDialogState.PermissionRequired) {
+    if (state is PermissionRequiredDialogState.Visible) {
         val coroutineScope = rememberCoroutineScope()
 
         ZarinaModalBottomSheet(

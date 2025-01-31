@@ -168,7 +168,7 @@ internal class StoreListViewModel @Inject constructor(
                 if (newPermissionsState.any { it.value.isGranted }) {
                     currentLocationRequester.request(LocationRequest)
                 } else {
-                    _permissionRequiredDialogState.value = PermissionRequiredDialogState.PermissionRequired(
+                    _permissionRequiredDialogState.value = PermissionRequiredDialogState.Visible(
                         permission = RequiredPermission.LOCATION,
                         title = Text.Resource(RCommon.string.res_grant_location_permission),
                         body = Text.Resource(RCommon.string.res_it_will_help_us_to_detect_your_location),
