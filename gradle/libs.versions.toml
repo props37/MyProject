@@ -104,6 +104,7 @@ jetpack-annotation = { group = "androidx.annotation", name = "annotation", versi
 
 # Jetpack Compose
 jetpack-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "jetpack-compose-bom" }
+jetpack-compose-bom-beta = { group = "androidx.compose", name = "compose-bom-beta", version.ref = "jetpack-compose-bom" }
 jetpack-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 jetpack-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 jetpack-compose-ui = { group = "androidx.compose.ui", name = "ui" }
