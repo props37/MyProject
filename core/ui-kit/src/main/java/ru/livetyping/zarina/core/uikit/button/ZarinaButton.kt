@@ -34,9 +34,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.uikit.DarkRipple
-import ru.livetyping.zarina.core.uikit.LightRipple
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
+import ru.livetyping.zarina.core.uikit.ripple.DarkRipple
+import ru.livetyping.zarina.core.uikit.ripple.LightRipple
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable

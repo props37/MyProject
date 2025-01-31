@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit
+package ru.livetyping.zarina.core.uikit.ripple
 
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.material.ripple
