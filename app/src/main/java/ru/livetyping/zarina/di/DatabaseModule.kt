@@ -58,6 +58,6 @@ class DatabaseModule {
     }
 
     companion object {
-        private const val DATABASE_NAME = "zarina_database_old"
+        private const val DATABASE_NAME = "zarina_database"
     }
 }
