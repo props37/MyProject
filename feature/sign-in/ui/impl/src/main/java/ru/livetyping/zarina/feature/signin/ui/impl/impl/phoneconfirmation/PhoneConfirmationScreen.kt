@@ -30,11 +30,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicomponent.otp.SmsOtp
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.component.PhoneConfirmationTopBar
@@ -47,10 +48,12 @@ internal fun PhoneConfirmationScreen(
     viewModel: PhoneConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.phoneConfirmationState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
         onEvent = viewModel::onPhoneConfirmationEvent,
+        yandexCaptchaState = yandexCaptchaState,
         onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -61,6 +64,7 @@ internal fun PhoneConfirmationScreen(
 private fun ScreenContent(
     state: PhoneConfirmationState,
     onEvent: (PhoneConfirmationEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<PhoneConfirmationSideEffect>,
     navActions: PhoneConfirmationNavActions,
@@ -112,12 +116,10 @@ private fun ScreenContent(
             }
         }
 
-        if (state.visibleYandexCaptcha != null) {
-            YandexCaptchaDialog(
-                captcha = state.visibleYandexCaptcha,
-                onEvent = onYandexCaptchaEvent,
-            )
-        }
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
     }
 }
 

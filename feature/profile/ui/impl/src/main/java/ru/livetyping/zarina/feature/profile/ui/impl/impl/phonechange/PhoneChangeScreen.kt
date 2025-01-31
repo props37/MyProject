@@ -16,9 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.component.PhoneChangeContent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.component.PhoneChangeTopBar
@@ -31,10 +32,12 @@ internal fun PhoneChangeScreen(
     viewModel: PhoneChangeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.phoneChangeState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         state = state,
         onEvent = viewModel::onPhoneChangeEvent,
+        yandexCaptchaState = yandexCaptchaState,
         onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -45,6 +48,7 @@ internal fun PhoneChangeScreen(
 private fun ScreenContent(
     state: PhoneChangeState,
     onEvent: (PhoneChangeEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<PhoneChangeSideEffect>,
     navActions: PhoneChangeNavActions,
@@ -76,11 +80,9 @@ private fun ScreenContent(
             )
         }
 
-        if (state.visibleYandexCaptcha != null) {
-            YandexCaptchaDialog(
-                captcha = state.visibleYandexCaptcha,
-                onEvent = onYandexCaptchaEvent,
-            )
-        }
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
     }
 }

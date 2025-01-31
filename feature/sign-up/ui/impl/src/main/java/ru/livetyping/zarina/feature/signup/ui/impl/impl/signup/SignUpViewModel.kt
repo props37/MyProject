@@ -11,13 +11,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
-import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
@@ -40,7 +40,6 @@ import ru.livetyping.zarina.core.domain.validation.SignUpValidator
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
@@ -48,6 +47,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
@@ -122,7 +123,8 @@ internal class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
-    private val visibleYandexCaptcha = MutableStateFlow<YandexCaptcha?>(null)
+    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
+    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
     val signUpState: StateFlow<SignUpState> = combineMore(
         isNameInvalid,
@@ -135,14 +137,14 @@ internal class SignUpViewModel @Inject constructor(
         arePoliciesInvalid,
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
-        visibleYandexCaptcha,
+        yandexCaptchaState,
         operationTracker.ongoingOperationKeys,
     ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
         isPhoneInvalid, isPasswordInvalid, arePoliciesAccepted, arePoliciesInvalid,
-        receiveEmails, receiveSms, visibleYandexCaptcha, ongoingOperations ->
+        receiveEmails, receiveSms, yandexCaptchaState, ongoingOperations ->
 
         val isSignUpButtonLoading = SignUpOperation in ongoingOperations
-                || visibleYandexCaptcha != null
+                || yandexCaptchaState is YandexCaptchaState.Started
 
         SignUpState(
             nameTextFieldState = nameTextFieldState,
@@ -160,7 +162,6 @@ internal class SignUpViewModel @Inject constructor(
             arePoliciesAccepted = arePoliciesAccepted,
             arePoliciesInvalid = arePoliciesInvalid,
             isSignUpButtonLoading = isSignUpButtonLoading,
-            visibleYandexCaptcha = visibleYandexCaptcha,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -181,7 +182,6 @@ internal class SignUpViewModel @Inject constructor(
             arePoliciesAccepted = false,
             arePoliciesInvalid = false,
             isSignUpButtonLoading = false,
-            visibleYandexCaptcha = visibleYandexCaptcha.value,
         ),
     )
 
@@ -213,9 +213,12 @@ internal class SignUpViewModel @Inject constructor(
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
         when (event) {
-            YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
+            YandexCaptchaEvent.DismissRequested -> {
+                _yandexCaptchaState.value = YandexCaptchaState.None
+            }
+
             is YandexCaptchaEvent.TokenReceived -> {
-                visibleYandexCaptcha.value = null
+                _yandexCaptchaState.value = YandexCaptchaState.None
                 signUp(event.token)
             }
         }
@@ -399,7 +402,7 @@ internal class SignUpViewModel @Inject constructor(
     private suspend fun showYandexCaptcha() {
         val captcha = deps.getYandexCaptcha().getOrNull()
         if (captcha != null) {
-            visibleYandexCaptcha.value = captcha
+            _yandexCaptchaState.value = YandexCaptchaState.Started(captcha)
         } else {
             val text = Text.Resource(RCommon.string.res_something_went_wrong)
             showZarinaErrorToast(text)

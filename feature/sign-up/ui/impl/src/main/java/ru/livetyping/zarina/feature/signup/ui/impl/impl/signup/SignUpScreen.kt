@@ -21,9 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.user.User
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.component.SignUpScreenContent
@@ -38,10 +39,12 @@ internal fun SignUpScreen(
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         signUpState = signUpState,
         onSignUpEvent = viewModel::onSignUpEvent,
+        yandexCaptchaState = yandexCaptchaState,
         onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -53,6 +56,7 @@ internal fun SignUpScreen(
 private fun ScreenContent(
     signUpState: SignUpState,
     onSignUpEvent: (SignUpEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
     sideEffects: Flow<SignUpSideEffect>,
     navActions: SignUpNavActions,
@@ -106,11 +110,9 @@ private fun ScreenContent(
             )
         }
 
-        if (signUpState.visibleYandexCaptcha != null) {
-            YandexCaptchaDialog(
-                captcha = signUpState.visibleYandexCaptcha,
-                onEvent = onYandexCaptchaEvent,
-            )
-        }
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
     }
 }

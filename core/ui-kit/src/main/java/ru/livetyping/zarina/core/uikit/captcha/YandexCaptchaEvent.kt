@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicommon
+package ru.livetyping.zarina.core.uikit.captcha
 
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 

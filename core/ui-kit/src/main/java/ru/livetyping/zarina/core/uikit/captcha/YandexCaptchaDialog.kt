@@ -29,9 +29,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.isVisible
-import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import timber.log.Timber
 
@@ -39,112 +37,115 @@ import timber.log.Timber
 @Suppress("UnusedReceiverParameter")
 @Composable
 public fun BoxScope.YandexCaptchaDialog(
-    captcha: YandexCaptcha,
+    state: YandexCaptchaState,
     onEvent: (YandexCaptchaEvent) -> Unit,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
-    val captchaUrl = captcha.url.value
+    if (state is YandexCaptchaState.Started) {
+        val captcha = state.yandexCaptcha
+        val captchaUrl = captcha.url.value
 
-    var isUserActionRequired by remember { mutableStateOf(false) }
-    var isPageLoaded by remember(captcha) { mutableStateOf(false) }
+        var isUserActionRequired by remember { mutableStateOf(false) }
+        var isPageLoaded by remember(captcha) { mutableStateOf(false) }
 
-    val isWebViewVisible by remember(captcha) {
-        derivedStateOf { isPageLoaded && isUserActionRequired }
-    }
-
-    val backgroundClickableModifier = if (isWebViewVisible) {
-        Modifier.clickable(
-            interactionSource = null,
-            indication = null,
-            onClick = { onEvent(YandexCaptchaEvent.DismissRequested) },
-        )
-    } else {
-        Modifier
-    }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-    LaunchedEffect(keyboardController) {
-        snapshotFlow { isWebViewVisible }.collect {
-            keyboardController?.hide()
+        val isWebViewVisible by remember(captcha) {
+            derivedStateOf { isPageLoaded && isUserActionRequired }
         }
-    }
 
-    BackHandler(
-        enabled = isWebViewVisible,
-        onBack = { onEvent(YandexCaptchaEvent.DismissRequested) },
-    )
+        val backgroundClickableModifier = if (isWebViewVisible) {
+            Modifier.clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = { onEvent(YandexCaptchaEvent.DismissRequested) },
+            )
+        } else {
+            Modifier
+        }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .drawBehind {
-                drawRect(
-                    color = ZarinaBottomSheetDefaults.ScrimColor,
-                    alpha = if (isWebViewVisible) 1f else 0f,
-                )
+        val keyboardController = LocalSoftwareKeyboardController.current
+        LaunchedEffect(keyboardController) {
+            snapshotFlow { isWebViewVisible }.collect {
+                keyboardController?.hide()
             }
-            .windowInsetsPadding(windowInsetsProvider())
-            .then(backgroundClickableModifier),
-    ) {
-        AndroidView(
-            factory = { context ->
-                WebView(context).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                    )
-                    isVisible = isWebViewVisible
+        }
 
-                    webViewClient = object : WebViewClient() {
-                        override fun onPageFinished(view: WebView?, url: String?) {
-                            Timber.tag(TAG).v("onPageFinished: $url")
-                            isPageLoaded = true
-                        }
-                    }
-
-                    settings.javaScriptEnabled = true
-                    val jsInterface = object : YandexCaptchaJsInterface {
-                        @JavascriptInterface
-                        override fun onGetToken(token: String) {
-                            Timber.tag(TAG).v("onGetToken: $token")
-                            val yandexCaptchaToken = YandexCaptchaToken(token)
-                            onEvent(YandexCaptchaEvent.TokenReceived(yandexCaptchaToken))
-                        }
-
-                        @JavascriptInterface
-                        override fun onChallengeVisible() {
-                            Timber.tag(TAG).v("onChallengeVisible")
-                            isUserActionRequired = true
-                        }
-
-                        @JavascriptInterface
-                        override fun onChallengeHidden() {
-                            Timber.tag(TAG).v("onChallengeHidden")
-                            isUserActionRequired = false
-                        }
-                    }
-                    addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
-
-                    loadUrl(captchaUrl)
-                }
-            },
-            update = { webView ->
-                webView.isVisible = isWebViewVisible
-
-                if (webView.url != captchaUrl) {
-                    webView.loadUrl(captchaUrl)
-                }
-            },
-            onRelease = { webView ->
-                webView.settings.javaScriptEnabled = false
-                webView.removeJavascriptInterface(JS_INTERFACE_NAME)
-                webView.destroy()
-            },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .fillMaxHeight(fraction = 0.5f),
+        BackHandler(
+            enabled = isWebViewVisible,
+            onBack = { onEvent(YandexCaptchaEvent.DismissRequested) },
         )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .drawBehind {
+                    drawRect(
+                        color = ZarinaBottomSheetDefaults.ScrimColor,
+                        alpha = if (isWebViewVisible) 1f else 0f,
+                    )
+                }
+                .windowInsetsPadding(windowInsetsProvider())
+                .then(backgroundClickableModifier),
+        ) {
+            AndroidView(
+                factory = { context ->
+                    WebView(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                        )
+                        isVisible = isWebViewVisible
+
+                        webViewClient = object : WebViewClient() {
+                            override fun onPageFinished(view: WebView?, url: String?) {
+                                Timber.tag(TAG).v("onPageFinished: $url")
+                                isPageLoaded = true
+                            }
+                        }
+
+                        settings.javaScriptEnabled = true
+                        val jsInterface = object : YandexCaptchaJsInterface {
+                            @JavascriptInterface
+                            override fun onGetToken(token: String) {
+                                Timber.tag(TAG).v("onGetToken: $token")
+                                val yandexCaptchaToken = YandexCaptchaToken(token)
+                                onEvent(YandexCaptchaEvent.TokenReceived(yandexCaptchaToken))
+                            }
+
+                            @JavascriptInterface
+                            override fun onChallengeVisible() {
+                                Timber.tag(TAG).v("onChallengeVisible")
+                                isUserActionRequired = true
+                            }
+
+                            @JavascriptInterface
+                            override fun onChallengeHidden() {
+                                Timber.tag(TAG).v("onChallengeHidden")
+                                isUserActionRequired = false
+                            }
+                        }
+                        addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
+
+                        loadUrl(captchaUrl)
+                    }
+                },
+                update = { webView ->
+                    webView.isVisible = isWebViewVisible
+
+                    if (webView.url != captchaUrl) {
+                        webView.loadUrl(captchaUrl)
+                    }
+                },
+                onRelease = { webView ->
+                    webView.settings.javaScriptEnabled = false
+                    webView.removeJavascriptInterface(JS_INTERFACE_NAME)
+                    webView.destroy()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .fillMaxHeight(fraction = 0.5f),
+            )
+        }
     }
 }
 

@@ -20,10 +20,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -41,14 +42,16 @@ internal fun SignInScreen(
 ) {
     val signInTypeSelectorState by viewModel.signInTypeSelectorState.collectAsStateWithLifecycle()
     val signInState by viewModel.signInState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
     ScreenContent(
         signInTypeSelectorState = signInTypeSelectorState,
         onSignInTypeSelectorEvent = viewModel::onSignInTypeSelectorEvent,
         signInState = signInState,
         onSignInEvent = viewModel::onSignInEvent,
-        onLifecycleEvent = viewModel::onLifecycleEvent,
+        yandexCaptchaState = yandexCaptchaState,
         onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -60,8 +63,9 @@ private fun ScreenContent(
     onSignInTypeSelectorEvent: (TabRowEvent<SignInType>) -> Unit,
     signInState: SignInState,
     onSignInEvent: (SignInEvent) -> Unit,
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SignInSideEffect>,
     navActions: SignInNavActions,
 ) {
@@ -111,11 +115,9 @@ private fun ScreenContent(
             )
         }
 
-        if (signInState.visibleYandexCaptcha != null) {
-            YandexCaptchaDialog(
-                captcha = signInState.visibleYandexCaptcha,
-                onEvent = onYandexCaptchaEvent,
-            )
-        }
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
     }
 }

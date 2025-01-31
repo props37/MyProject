@@ -13,13 +13,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
@@ -27,7 +27,6 @@ import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.platform.CountDownTimer
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
-import ru.livetyping.zarina.core.uicommon.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
@@ -36,6 +35,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.feature.signin.ui.impl.R
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationState
@@ -96,21 +97,21 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         ),
     )
 
-    private val visibleYandexCaptcha = MutableStateFlow<YandexCaptcha?>(null)
+    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
+    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
     val phoneConfirmationState: StateFlow<PhoneConfirmationState> = combine(
         otpState,
-        visibleYandexCaptcha,
+        yandexCaptchaState,
         operationTracker.ongoingOperationKeys,
-    ) { otpState, visibleYandexCaptcha, ongoingOperations ->
+    ) { otpState, yandexCaptchaState, ongoingOperations ->
         val isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations
-                || visibleYandexCaptcha != null
+                || yandexCaptchaState is YandexCaptchaState.Started
 
         PhoneConfirmationState(
             phone = phone,
             otpState = otpState,
             isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
-            visibleYandexCaptcha = visibleYandexCaptcha,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -119,7 +120,6 @@ internal class PhoneConfirmationViewModel @Inject constructor(
             phone = phone,
             otpState = otpState.value,
             isRequestNewOtpButtonLoading = false,
-            visibleYandexCaptcha = null,
         ),
     )
 
@@ -143,9 +143,12 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
         when (event) {
-            YandexCaptchaEvent.DismissRequested -> visibleYandexCaptcha.value = null
+            YandexCaptchaEvent.DismissRequested -> {
+                _yandexCaptchaState.value = YandexCaptchaState.None
+            }
+
             is YandexCaptchaEvent.TokenReceived -> {
-                visibleYandexCaptcha.value = null
+                _yandexCaptchaState.value = YandexCaptchaState.None
                 requestNewOtp(event.token)
             }
         }
@@ -183,7 +186,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         viewModelScope.launch {
             val yandexCaptcha = deps.getYandexCaptcha().getOrNull()
             if (yandexCaptcha != null) {
-                visibleYandexCaptcha.value = yandexCaptcha
+                _yandexCaptchaState.value = YandexCaptchaState.Started(yandexCaptcha)
             } else {
                 val text = Text.Resource(RCommon.string.res_something_went_wrong)
                 showZarinaErrorToast(text)
