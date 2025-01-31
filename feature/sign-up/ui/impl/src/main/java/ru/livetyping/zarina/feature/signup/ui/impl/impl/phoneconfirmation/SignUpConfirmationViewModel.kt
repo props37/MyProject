@@ -147,7 +147,7 @@ internal class SignUpConfirmationViewModel @Inject constructor(
 
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
         when (event) {
-            YandexCaptchaEvent.DismissRequested -> {
+            is YandexCaptchaEvent.DismissRequested -> {
                 _yandexCaptchaState.value = YandexCaptchaState.None
             }
 

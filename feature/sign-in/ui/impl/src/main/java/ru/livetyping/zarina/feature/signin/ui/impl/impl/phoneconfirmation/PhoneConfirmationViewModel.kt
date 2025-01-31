@@ -80,7 +80,7 @@ internal class PhoneConfirmationViewModel @Inject constructor(
     fun onYandexCaptchaEvent(event: YandexCaptchaEvent) {
         otpStateComponent.setIsRequestNewOtpButtonLoading(false)
         when (event) {
-            YandexCaptchaEvent.DismissRequested -> {
+            is YandexCaptchaEvent.DismissRequested -> {
                 _yandexCaptchaState.value = YandexCaptchaState.None
             }
 

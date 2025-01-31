@@ -52,11 +52,15 @@ public fun BoxScope.YandexCaptchaDialog(
             derivedStateOf { isPageLoaded && isUserActionRequired }
         }
 
+        val onDismissRequested = {
+            onEvent(YandexCaptchaEvent.DismissRequested(state.reason))
+        }
+
         val backgroundClickableModifier = if (isWebViewVisible) {
             Modifier.clickable(
                 interactionSource = null,
                 indication = null,
-                onClick = { onEvent(YandexCaptchaEvent.DismissRequested) },
+                onClick = onDismissRequested,
             )
         } else {
             Modifier
@@ -71,7 +75,7 @@ public fun BoxScope.YandexCaptchaDialog(
 
         BackHandler(
             enabled = isWebViewVisible,
-            onBack = { onEvent(YandexCaptchaEvent.DismissRequested) },
+            onBack = onDismissRequested,
         )
 
         Box(
@@ -108,7 +112,11 @@ public fun BoxScope.YandexCaptchaDialog(
                             override fun onGetToken(token: String) {
                                 Timber.tag(TAG).v("onGetToken: $token")
                                 val yandexCaptchaToken = YandexCaptchaToken(token)
-                                onEvent(YandexCaptchaEvent.TokenReceived(yandexCaptchaToken))
+                                val event = YandexCaptchaEvent.TokenReceived(
+                                    token = yandexCaptchaToken,
+                                    reason = state.reason,
+                                )
+                                onEvent(event)
                             }
 
                             @JavascriptInterface

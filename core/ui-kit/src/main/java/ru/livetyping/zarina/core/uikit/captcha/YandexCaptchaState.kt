@@ -7,7 +7,10 @@ import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
 @Stable
 public sealed class YandexCaptchaState {
     @Immutable
-    public data class Started(val yandexCaptcha: YandexCaptcha) : YandexCaptchaState()
+    public data class Started(
+        val yandexCaptcha: YandexCaptcha,
+        val reason: YandexCaptchaReason? = null,
+    ) : YandexCaptchaState()
 
     public data object None : YandexCaptchaState()
 }
