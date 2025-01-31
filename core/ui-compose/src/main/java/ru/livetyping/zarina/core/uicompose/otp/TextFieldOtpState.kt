@@ -11,6 +11,7 @@ public data class TextFieldOtpState(
     override val isLoading: Boolean,
     override val isInvalid: Boolean,
     override val newOtpRequestState: NewOtpRequestState,
+    override val isRequestNewOtpButtonLoading: Boolean,
 ) : OtpState() {
     override val otp: String get() = textFieldState.text.toString()
 }

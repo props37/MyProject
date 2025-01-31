@@ -75,16 +75,24 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         NewOtpRequestState.Unavailable(NEW_OTP_REQUEST_TIMEOUT),
     )
 
+    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
+    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
+
     private val otpState: StateFlow<TextFieldOtpState> = combine(
         isOtpInvalid,
         newOtpRequestState,
+        yandexCaptchaState,
         operationTracker.ongoingOperationKeys,
-    ) { isOtpInvalid, newOtpRequestState, ongoingOperations ->
+    ) { isOtpInvalid, newOtpRequestState, yandexCaptchaState, ongoingOperations ->
+        val isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations
+                || yandexCaptchaState is YandexCaptchaState.Started
+
         TextFieldOtpState(
             textFieldState = otpTextFieldState,
             isLoading = Operation.CONFIRM_SIGN_UP in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
+            isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -94,11 +102,9 @@ internal class SignUpConfirmationViewModel @Inject constructor(
             isLoading = false,
             isInvalid = false,
             newOtpRequestState = NewOtpRequestState.Available,
+            isRequestNewOtpButtonLoading = false,
         ),
     )
-
-    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
-    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
     val signUpConfirmationState: StateFlow<SignUpConfirmationState> = combine(
         otpState,
@@ -111,7 +117,6 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         SignUpConfirmationState(
             phone = phone,
             otpState = otpState,
-            isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -119,7 +124,6 @@ internal class SignUpConfirmationViewModel @Inject constructor(
         initialValue = SignUpConfirmationState(
             phone = phone,
             otpState = otpState.value,
-            isRequestNewOtpButtonLoading = false,
         ),
     )
 

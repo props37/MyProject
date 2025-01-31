@@ -40,7 +40,6 @@ public fun SmsOtp(
     onRequestNewOtpClicked: () -> Unit,
     modifier: Modifier = Modifier,
     otpLength: Int = 4,
-    isRequestNewOtpButtonLoading: Boolean = false,
     onKeyboardAction: KeyboardActionHandler? = null,
     backgroundColor: Color = SmsOtpDefaults.BackgroundColor,
     contentPadding: PaddingValues = PaddingValues(),
@@ -98,7 +97,7 @@ public fun SmsOtp(
                 NewOtpRequestState.Available -> {
                     ZarinaButton(
                         onClick = onRequestNewOtpClicked,
-                        isLoading = isRequestNewOtpButtonLoading,
+                        isLoading = otpState.isLoading,
                         size = ZarinaButtonSize.Medium,
                         colors = ZarinaButtonDefaults.backlessColors(),
                     ) {

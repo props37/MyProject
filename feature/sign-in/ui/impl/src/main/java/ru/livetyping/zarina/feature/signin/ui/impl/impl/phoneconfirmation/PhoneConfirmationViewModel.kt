@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
@@ -75,16 +76,24 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         NewOtpRequestState.Unavailable(NEW_OTP_REQUEST_TIMEOUT),
     )
 
+    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
+    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
+
     private val otpState: StateFlow<TextFieldOtpState> = combine(
         isOtpInvalid,
         newOtpRequestState,
+        yandexCaptchaState,
         operationTracker.ongoingOperationKeys,
-    ) { isOtpInvalid, newOtpRequestState, ongoingOperations ->
+    ) { isOtpInvalid, newOtpRequestState, yandexCaptchaState, ongoingOperations ->
+        val isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations
+                || yandexCaptchaState is YandexCaptchaState.Started
+
         TextFieldOtpState(
             textFieldState = otpTextFieldState,
             isLoading = Operation.CONFIRM_PHONE in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
+            isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -94,34 +103,19 @@ internal class PhoneConfirmationViewModel @Inject constructor(
             isLoading = false,
             isInvalid = false,
             newOtpRequestState = NewOtpRequestState.Available,
-        ),
-    )
-
-    private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
-    val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
-
-    val phoneConfirmationState: StateFlow<PhoneConfirmationState> = combine(
-        otpState,
-        yandexCaptchaState,
-        operationTracker.ongoingOperationKeys,
-    ) { otpState, yandexCaptchaState, ongoingOperations ->
-        val isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations
-                || yandexCaptchaState is YandexCaptchaState.Started
-
-        PhoneConfirmationState(
-            phone = phone,
-            otpState = otpState,
-            isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = PhoneConfirmationState(
-            phone = phone,
-            otpState = otpState.value,
             isRequestNewOtpButtonLoading = false,
         ),
     )
+
+    val phoneConfirmationState: StateFlow<PhoneConfirmationState> = otpState.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+    ) { otpState ->
+        PhoneConfirmationState(
+            phone = phone,
+            otpState = otpState,
+        )
+    }
 
     init {
         startNewOtpRequestTimeout()

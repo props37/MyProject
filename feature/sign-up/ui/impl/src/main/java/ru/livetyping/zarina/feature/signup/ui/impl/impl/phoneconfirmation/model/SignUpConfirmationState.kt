@@ -8,5 +8,4 @@ import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 internal data class SignUpConfirmationState(
     val phone: PhoneNumber,
     val otpState: TextFieldOtpState,
-    val isRequestNewOtpButtonLoading: Boolean,
 )

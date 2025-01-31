@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidOtpException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
@@ -85,6 +86,7 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
             isLoading = Operation.CONFIRM_PHONE_CHANGE in ongoingOperations,
             isInvalid = isOtpInvalid,
             newOtpRequestState = newOtpRequestState,
+            isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -94,28 +96,19 @@ internal class PhoneChangeConfirmationViewModel @Inject constructor(
             isLoading = false,
             isInvalid = false,
             newOtpRequestState = NewOtpRequestState.Available,
-        ),
-    )
-
-    val phoneChangeConfirmationState: StateFlow<PhoneChangeConfirmationState> = combine(
-        otpState,
-        operationTracker.ongoingOperationKeys,
-    ) { otpState, ongoingOperations ->
-        val isRequestNewOtpButtonLoading = Operation.REQUEST_NEW_OTP in ongoingOperations
-        PhoneChangeConfirmationState(
-            phone = phone,
-            otpState = otpState,
-            isRequestNewOtpButtonLoading = isRequestNewOtpButtonLoading,
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = PhoneChangeConfirmationState(
-            phone = phone,
-            otpState = otpState.value,
             isRequestNewOtpButtonLoading = false,
         ),
     )
+
+    val phoneChangeConfirmationState: StateFlow<PhoneChangeConfirmationState> = otpState.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+    ) { otpState ->
+        PhoneChangeConfirmationState(
+            phone = phone,
+            otpState = otpState,
+        )
+    }
 
     init {
         startNewOtpRequestTimeout()
