@@ -22,11 +22,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.store.Store
-import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogEvent
-import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredDialogState
-import ru.livetyping.zarina.core.uicomponent.permissionrequired.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.permissionrequired.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uikit.permissionrequired.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uikit.permissionrequired.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
