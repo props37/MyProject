@@ -62,6 +62,8 @@ dependencies {
     implementation(projects.core.mediaCompose)
     implementation(projects.core.platform)
 
+    implementation(libs.jetpack.activity.compose)
+
     implementation(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
     api(libs.jetpack.compose.material)
