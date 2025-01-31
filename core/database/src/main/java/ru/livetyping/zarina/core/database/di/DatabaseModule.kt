@@ -11,7 +11,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.database.ZarinaDatabaseCallback
-import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase
+import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase2
 import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
 import ru.livetyping.zarina.core.database.transaction.ZarinaDatabaseTransactionManager
 import ru.livetyping.zarina.core.database.user.UserDao
@@ -33,8 +33,8 @@ internal abstract class DatabaseModule {
             @ApplicationContext
             context: Context,
             onDestructiveMigration: ZarinaDatabaseCallback,
-        ): ZarinaDatabase {
-            return Room.databaseBuilder(context, ZarinaDatabase::class.java, DATABASE_NAME)
+        ): ZarinaDatabase2 {
+            return Room.databaseBuilder(context, ZarinaDatabase2::class.java, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
@@ -46,7 +46,7 @@ internal abstract class DatabaseModule {
 
         @Provides
         @Singleton
-        fun provideUserDao(database: ZarinaDatabase): UserDao {
+        fun provideUserDao(database: ZarinaDatabase2): UserDao {
             return database.getUserDao()
         }
 

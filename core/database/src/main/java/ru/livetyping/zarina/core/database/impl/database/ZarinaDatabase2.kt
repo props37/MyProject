@@ -9,6 +9,6 @@ import ru.livetyping.zarina.core.database.user.UserEntity
     version = 1,
     entities = [UserEntity::class],
 )
-internal abstract class ZarinaDatabase : RoomDatabase() {
+internal abstract class ZarinaDatabase2 : RoomDatabase() {
     abstract fun getUserDao(): UserDao
 }
