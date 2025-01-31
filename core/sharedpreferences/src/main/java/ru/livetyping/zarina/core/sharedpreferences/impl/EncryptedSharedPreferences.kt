@@ -15,4 +15,4 @@ internal fun getEncryptedSharedPreferences(context: Context): SharedPreferences 
     )
 }
 
-private const val ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "encrypted_shared_preferences"
+private const val ENCRYPTED_SHARED_PREFERENCES_FILE_NAME = "encrypted_shared_preferences_2"
