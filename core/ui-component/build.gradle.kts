@@ -25,6 +25,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -39,7 +40,19 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.uiCompose)
+    implementation(projects.core.platform)
+
+    implementation(libs.jetpack.lifecycle.viewModel.compose)
+
+    implementation(platform(libs.jetpack.compose.bom))
+    implementation(libs.jetpack.compose.foundation)
+
+    implementation(libs.kotlin.coroutines.android)
+
     implementation(libs.timber)
+
+    coreLibraryDesugaring(libs.coreLibraryDesugaring)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
