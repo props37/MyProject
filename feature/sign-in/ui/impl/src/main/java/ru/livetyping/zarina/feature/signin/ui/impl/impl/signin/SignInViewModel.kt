@@ -47,6 +47,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaReason
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -145,8 +146,6 @@ internal class SignInViewModel @Inject constructor(
 
     private var showSaveCredentialPrompt = true
 
-    private var yandexCaptchaTrigger: YandexCaptchaTrigger? = null
-
     init {
         makeFieldsValidOnChange()
     }
@@ -187,9 +186,9 @@ internal class SignInViewModel @Inject constructor(
 
             is YandexCaptchaEvent.TokenReceived -> {
                 _yandexCaptchaState.value = YandexCaptchaState.None
-                when (yandexCaptchaTrigger) {
-                    YandexCaptchaTrigger.SIGN_IN_BY_EMAIL -> signInByEmail(event.token)
-                    YandexCaptchaTrigger.SIGN_IN_BY_PHONE -> signInByPhone(event.token)
+                when (event.reason) {
+                    CaptchaReason.SIGN_IN_BY_EMAIL -> signInByEmail(event.token)
+                    CaptchaReason.SIGN_IN_BY_PHONE -> signInByPhone(event.token)
                     null -> Unit
                 }
             }
@@ -252,7 +251,7 @@ internal class SignInViewModel @Inject constructor(
             validator.validate(signInParams)
 
             viewModelScope.launch {
-                showYandexCaptcha(YandexCaptchaTrigger.SIGN_IN_BY_EMAIL)
+                showYandexCaptcha(CaptchaReason.SIGN_IN_BY_EMAIL)
             }
         } catch (e: Exception) {
             handleSignInException(e)
@@ -270,7 +269,7 @@ internal class SignInViewModel @Inject constructor(
             validator.validate(signInParams)
 
             viewModelScope.launch {
-                showYandexCaptcha(YandexCaptchaTrigger.SIGN_IN_BY_PHONE)
+                showYandexCaptcha(CaptchaReason.SIGN_IN_BY_PHONE)
             }
         } catch (e: Exception) {
             handleSignInException(e)
@@ -388,11 +387,10 @@ internal class SignInViewModel @Inject constructor(
         showZarinaErrorToast(messageText)
     }
 
-    private suspend fun showYandexCaptcha(trigger: YandexCaptchaTrigger) {
+    private suspend fun showYandexCaptcha(reason: CaptchaReason) {
         val captcha = deps.getYandexCaptcha().getOrNull()
         if (captcha != null) {
-            _yandexCaptchaState.value = YandexCaptchaState.Started(captcha)
-            yandexCaptchaTrigger = trigger
+            _yandexCaptchaState.value = YandexCaptchaState.Started(captcha, reason)
         } else {
             val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
             showZarinaErrorToast(messageText)
@@ -418,7 +416,7 @@ internal class SignInViewModel @Inject constructor(
 
     private data object SignInOperation : OperationKey
 
-    private enum class YandexCaptchaTrigger {
+    private enum class CaptchaReason : YandexCaptchaReason {
         SIGN_IN_BY_EMAIL,
         SIGN_IN_BY_PHONE,
     }
