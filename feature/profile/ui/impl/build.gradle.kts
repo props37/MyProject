@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.core.uiKit)
     implementation(projects.core.uiKitPaging)
     implementation(projects.core.uiModel)
+    implementation(projects.core.uiComponent)
     implementation(projects.core.uiMap)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
