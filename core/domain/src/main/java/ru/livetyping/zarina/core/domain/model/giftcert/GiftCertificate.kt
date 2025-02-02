@@ -1,11 +1,11 @@
 package ru.livetyping.zarina.core.domain.model.giftcert
 
-// TODO: [High] Add to stability config
-
+// Marked as stable on config/compose/stability_config.txt
 public data class GiftCertificate(
     val number: Number,
     val verificationCode: String,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Number(public val value: String)
 
