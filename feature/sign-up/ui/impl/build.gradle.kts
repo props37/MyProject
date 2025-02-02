@@ -62,6 +62,7 @@ dependencies {
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
     implementation(projects.core.uiModel)
+    implementation(projects.core.uiComponent)
     implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.navigationUtil)
