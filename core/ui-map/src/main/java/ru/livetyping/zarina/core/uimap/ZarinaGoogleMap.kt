@@ -52,6 +52,7 @@ public fun ZarinaGoogleMap(
             Manifest.permission.ACCESS_FINE_LOCATION,
         )
     }
+    // TODO: [High] Migrate to ActivityResult API
     val locationPermissionsState = rememberMultiplePermissionsState(locationPermissions)
     val isAnyLocationPermissionGranted by remember {
         derivedStateOf {
