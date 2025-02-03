@@ -30,7 +30,7 @@ public fun ZarinaCounter(
             contentAlignment = Alignment.Center,
             modifier = modifier
                 .drawBehind {
-                    drawCircle(color = backgroundColor, radius = this.size.maxDimension / 2)
+                    drawCircle(color = backgroundColor, radius = this.size.minDimension / 2)
                 }
                 .padding(contentPadding),
             content = content,
