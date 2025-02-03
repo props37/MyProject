@@ -53,6 +53,7 @@ import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
 import timber.log.Timber
+import java.time.ZoneOffset
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -242,8 +243,8 @@ internal class SignUpViewModel @Inject constructor(
         try {
             val signUpParams = SignUpValidator.Params(
                 firstName = nameTextFieldState.text.toString(),
-                birthDate = birthDateEpochMillisValueHolder.get()?.let {
-                    LocalDateUtil.fromEpochMillis(it)
+                birthDate = birthDateEpochMillisValueHolder.get()?.let { millis ->
+                    LocalDateUtil.fromEpochMillis(millis, ZoneOffset.UTC)
                 },
                 email = Email.create(emailTextFieldState.text.toString()),
                 phone = PhoneNumber.create(phoneTextFieldState.text.toString()),
@@ -274,8 +275,8 @@ internal class SignUpViewModel @Inject constructor(
 
         signUpJob = viewModelScope.launch {
             operationTracker.track(SignUpOperation) {
-                val birthDate = birthDateEpochMillisValueHolder.get()?.let {
-                    LocalDateUtil.fromEpochMillis(it)
+                val birthDate = birthDateEpochMillisValueHolder.get()?.let { millis ->
+                    LocalDateUtil.fromEpochMillis(millis, ZoneOffset.UTC)
                 }
                 val email = Email.create(emailTextFieldState.text.toString())
                 val phone = PhoneNumber.create(phoneTextFieldState.text.toString())

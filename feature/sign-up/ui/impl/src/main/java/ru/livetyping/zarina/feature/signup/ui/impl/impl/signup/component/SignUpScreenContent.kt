@@ -63,6 +63,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
+import java.time.ZoneOffset
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -203,7 +204,7 @@ private fun ColumnScope.PersonalDataFields(
     val formattedBirthDate = if (birthDateEpochMillis != null) {
         rememberFormattedLocalDate(
             localDate = remember(birthDateEpochMillis) {
-                LocalDateUtil.fromEpochMillis(birthDateEpochMillis)
+                LocalDateUtil.fromEpochMillis(birthDateEpochMillis, ZoneOffset.UTC)
             },
             formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
         )
