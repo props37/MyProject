@@ -203,7 +203,7 @@ private fun ColumnScope.PersonalDataFields(
     val formattedBirthDate = if (birthDateEpochMillis != null) {
         rememberFormattedLocalDate(
             localDate = remember(birthDateEpochMillis) {
-                LocalDateUtil.fromMillis(birthDateEpochMillis)
+                LocalDateUtil.fromEpochMillis(birthDateEpochMillis)
             },
             formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
         )

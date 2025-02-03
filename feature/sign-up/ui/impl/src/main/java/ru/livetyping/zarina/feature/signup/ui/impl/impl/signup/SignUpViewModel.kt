@@ -243,7 +243,7 @@ internal class SignUpViewModel @Inject constructor(
             val signUpParams = SignUpValidator.Params(
                 firstName = nameTextFieldState.text.toString(),
                 birthDate = birthDateEpochMillisValueHolder.get()?.let {
-                    LocalDateUtil.fromMillis(it)
+                    LocalDateUtil.fromEpochMillis(it)
                 },
                 email = Email.create(emailTextFieldState.text.toString()),
                 phone = PhoneNumber.create(phoneTextFieldState.text.toString()),
@@ -275,7 +275,7 @@ internal class SignUpViewModel @Inject constructor(
         signUpJob = viewModelScope.launch {
             operationTracker.track(SignUpOperation) {
                 val birthDate = birthDateEpochMillisValueHolder.get()?.let {
-                    LocalDateUtil.fromMillis(it)
+                    LocalDateUtil.fromEpochMillis(it)
                 }
                 val email = Email.create(emailTextFieldState.text.toString())
                 val phone = PhoneNumber.create(phoneTextFieldState.text.toString())

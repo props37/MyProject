@@ -117,7 +117,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
         val isSaveButtonVisible = if (currentUser != null) {
             val firstNameChanged = firstName.toString().trim() != currentUser.firstName
             val lastNameChanged = lastName.toString().trim() != currentUser.lastName
-            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromMillis(it) }
+            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromEpochMillis(it) }
             val birthDateChanged = birthDate != currentUser.birthDate
             (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
                     && (firstNameChanged || lastNameChanged || birthDateChanged)
@@ -150,7 +150,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
             userResult.fold(
                 onSuccess = { user ->
                     val isBirthDateChangeable = if (birthDateEpochMillis != null) {
-                        val currentBirthDate = LocalDateUtil.fromMillis(birthDateEpochMillis)
+                        val currentBirthDate = LocalDateUtil.fromEpochMillis(birthDateEpochMillis)
                         currentBirthDate == User.BIRTH_DATE_MIN_VALUE || currentBirthDate != user?.birthDate
                     } else {
                         false
@@ -287,7 +287,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
         saveChangesJob = viewModelScope.launch {
             val birthDate = birthDateEpochMillisValueHolder.get()?.let { millis ->
-                LocalDateUtil.fromMillis(millis)
+                LocalDateUtil.fromEpochMillis(millis)
             } ?: User.BIRTH_DATE_MIN_VALUE
             val params = UpdateUserInfoUseCase.Params(
                 firstName = firstNameTextFieldState.text.toString(),
