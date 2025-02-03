@@ -57,6 +57,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
+import java.time.ZoneOffset
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Suppress("NAME_SHADOWING")
@@ -267,7 +268,7 @@ private fun PersonalData(
         val formattedDate = if (birthDateEpochMillis != null) {
             rememberFormattedLocalDate(
                 localDate = remember(birthDateEpochMillis) {
-                    LocalDateUtil.fromEpochMillis(birthDateEpochMillis)
+                    LocalDateUtil.fromEpochMillis(birthDateEpochMillis, ZoneOffset.UTC)
                 },
                 formatterPattern = DateTimeUtils.DATE_FORMAT_PATTERN,
             )

@@ -51,6 +51,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.Pr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogState
 import timber.log.Timber
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -117,7 +118,9 @@ internal class ProfileDetailsViewModel @Inject constructor(
         val isSaveButtonVisible = if (currentUser != null) {
             val firstNameChanged = firstName.toString().trim() != currentUser.firstName
             val lastNameChanged = lastName.toString().trim() != currentUser.lastName
-            val birthDate = birthDateEpochMillis?.let { LocalDateUtil.fromEpochMillis(it) }
+            val birthDate = birthDateEpochMillis?.let { millis ->
+                LocalDateUtil.fromEpochMillis(millis, ZoneOffset.UTC)
+            }
             val birthDateChanged = birthDate != currentUser.birthDate
             (firstName.isNotBlank() && lastName.isNotBlank() && birthDate != null)
                     && (firstNameChanged || lastNameChanged || birthDateChanged)
@@ -150,7 +153,8 @@ internal class ProfileDetailsViewModel @Inject constructor(
             userResult.fold(
                 onSuccess = { user ->
                     val isBirthDateChangeable = if (birthDateEpochMillis != null) {
-                        val currentBirthDate = LocalDateUtil.fromEpochMillis(birthDateEpochMillis)
+                        val currentBirthDate =
+                            LocalDateUtil.fromEpochMillis(birthDateEpochMillis, ZoneOffset.UTC)
                         currentBirthDate == User.BIRTH_DATE_MIN_VALUE || currentBirthDate != user?.birthDate
                     } else {
                         false
@@ -287,7 +291,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
 
         saveChangesJob = viewModelScope.launch {
             val birthDate = birthDateEpochMillisValueHolder.get()?.let { millis ->
-                LocalDateUtil.fromEpochMillis(millis)
+                LocalDateUtil.fromEpochMillis(millis, ZoneOffset.UTC)
             } ?: User.BIRTH_DATE_MIN_VALUE
             val params = UpdateUserInfoUseCase.Params(
                 firstName = firstNameTextFieldState.text.toString(),
@@ -415,7 +419,7 @@ internal class ProfileDetailsViewModel @Inject constructor(
     private fun updateFieldsWithUser(user: User) {
         firstNameTextFieldState.setTextAndPlaceCursorAtEnd(user.firstName.orEmpty())
         lastNameTextFieldState.setTextAndPlaceCursorAtEnd(user.lastName.orEmpty())
-        val birthDateEpochMillis = user.birthDate?.toEpochMillis()
+        val birthDateEpochMillis = user.birthDate?.toEpochMillis(ZoneOffset.UTC)
         birthDateEpochMillisValueHolder.set(birthDateEpochMillis)
         phone.value = user.phone
         email.value = user.email
