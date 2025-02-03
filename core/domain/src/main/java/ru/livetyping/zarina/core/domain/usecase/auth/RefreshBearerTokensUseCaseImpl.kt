@@ -18,9 +18,7 @@ internal class RefreshBearerTokensUseCaseImpl(
         return if (oldTokens != null) {
             refreshTokens(oldTokens)
         } else {
-            val newUnauthorizedUserTokens = authRepository.getNewUnauthorizedUserBearerTokens()
-            authRepository.setBearerTokens(newUnauthorizedUserTokens)
-            newUnauthorizedUserTokens
+            fetchNewUnauthorizedUserBearerTokens()
         }
     }
 
@@ -35,10 +33,24 @@ internal class RefreshBearerTokensUseCaseImpl(
             logger?.v(TAG, "Bearer tokens refreshed")
             newTokens
         } catch (e: Exception) {
-            logger?.e(TAG, e, "Failed to refresh Bearer tokens, request force signout")
+            logger?.e(TAG, e, "Failed to refresh Bearer tokens, fetch new unauthorized user tokens")
+            // TODO: [Top] Test!
+            try {
+                fetchNewUnauthorizedUserBearerTokens()
+            } catch (e: Exception) {
+                logger?.e(TAG, e, "Failed to fetch new unauthorized user tokens")
+            }
+
+            logger?.e(TAG, e, "Request force signout")
             forcedSignOutCoordinator.requestForcedSignOut()
             throw e
         }
+    }
+
+    private suspend fun fetchNewUnauthorizedUserBearerTokens(): BearerTokens {
+        val tokens = authRepository.getNewUnauthorizedUserBearerTokens()
+        authRepository.setBearerTokens(tokens)
+        return tokens
     }
 
     private companion object {
