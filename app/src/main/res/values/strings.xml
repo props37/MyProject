@@ -361,6 +361,7 @@
     <string name="payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
     <string name="phone_confirmation_error">Не удалось подтвердить номер телефона. Попробуй снова</string>
     <string name="get_code">Получить код</string>
+    <string name="application_not_found">Приложение не найдено</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
