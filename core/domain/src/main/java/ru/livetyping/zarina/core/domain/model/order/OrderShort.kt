@@ -12,14 +12,7 @@ public data class OrderShort(
     override val status: OrderStatus,
     override val totalPrice: Int,
     val products: List<Product>,
-) : Order(
-    id = id,
-    number = number,
-    productCount = productCount,
-    date = date,
-    status = status,
-    totalPrice = totalPrice,
-) {
+) : Order() {
     // Marked as stable on config/compose/stability_config.txt
     public data class Product(
         val imageUrl: Url,

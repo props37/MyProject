@@ -22,14 +22,10 @@ public data class OrderDetailed(
     val recipient: OrderRecipient,
     val deliveryAddress: String,
     val isCancellable: Boolean,
-) : Order(
-    id = id,
-    number = number,
-    productCount = productCount,
-    date = date,
-    status = status,
-    totalPrice = price.totalPrice,
-) {
+) : Order() {
+    override val totalPrice: Int
+        get() = price.totalPrice
+
     // Marked as stable on config/compose/stability_config.txt
     public data class Product(
         val id: ProductDomain.Id,
