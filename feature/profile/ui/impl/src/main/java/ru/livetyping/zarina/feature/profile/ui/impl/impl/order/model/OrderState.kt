@@ -7,11 +7,21 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 @Stable
 internal sealed class OrderState {
-    @Immutable
-    data class Success(val order: OrderDetailed) : OrderState()
-
-    data object Loading : OrderState()
+    abstract val isRefreshing: Boolean
 
     @Immutable
-    data class Error(val state: ZarinaErrorScreenState) : OrderState()
+    data class Success(
+        val order: OrderDetailed,
+        override val isRefreshing: Boolean,
+    ) : OrderState()
+
+    data object Loading : OrderState() {
+        override val isRefreshing: Boolean get() = false
+    }
+
+    @Immutable
+    data class Error(
+        val state: ZarinaErrorScreenState,
+        override val isRefreshing: Boolean,
+    ) : OrderState()
 }

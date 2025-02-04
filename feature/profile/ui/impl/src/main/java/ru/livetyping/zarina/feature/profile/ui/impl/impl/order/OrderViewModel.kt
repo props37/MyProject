@@ -55,13 +55,14 @@ internal class OrderViewModel @Inject constructor(
         if (isLoading) {
             OrderState.Loading
         } else {
+            val isRefreshing = loadingState.loadingRequest == OrderRequest.REFRESHING
             result.fold(
                 onSuccess = { order ->
-                    OrderState.Success(order)
+                    OrderState.Success(order, isRefreshing)
                 },
                 onFailure = { t ->
                     val errorState = ZarinaErrorScreenState.from(t)
-                    OrderState.Error(errorState)
+                    OrderState.Error(errorState, isRefreshing)
                 },
             )
         }
@@ -74,6 +75,8 @@ internal class OrderViewModel @Inject constructor(
     fun onOrderEvent(event: OrderEvent) {
         when (event) {
             OrderEvent.BackClicked -> onBackClicked()
+            OrderEvent.PullRefreshTriggered -> orderRequester.request(OrderRequest.REFRESHING)
+            OrderEvent.OrderErrorRefreshClicked -> orderRequester.request(OrderRequest.LOADING)
         }
     }
 
