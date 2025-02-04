@@ -12,13 +12,4 @@ public data class ProductShort(
     override val media: List<Media>,
     override val isInWishlist: Boolean,
     override val isInCart: Boolean,
-) : Product(
-    id = id,
-    name = name,
-    price = price,
-    offers = offers,
-    colors = colors,
-    media = media,
-    isInWishlist = isInWishlist,
-    isInCart = isInCart,
-)
+) : Product()

@@ -19,16 +19,7 @@ public data class ProductDetailed(
     val bonusAccrualForPurchase: Int,
     val freeDeliveryTotalPriceThreshold: Int,
     val shareUrl: Url?,
-) : Product(
-    id = id,
-    name = name,
-    price = price,
-    offers = offers,
-    colors = colors,
-    media = media,
-    isInWishlist = isInWishlist,
-    isInCart = isInCart,
-) {
+) : Product() {
     // Marked as stable on config/compose/stability_config.txt
     public data class Label(
         val name: String,
