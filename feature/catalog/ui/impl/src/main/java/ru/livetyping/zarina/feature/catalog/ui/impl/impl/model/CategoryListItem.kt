@@ -5,44 +5,28 @@ import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.domain.model.category.Category
 
 @Stable
-internal sealed class CategoryListItem(
-    open val id: Id,
-    open val nestingLevel: Int,
-) {
-    init {
-        checkNestingLevel()
-    }
-
-    private fun checkNestingLevel() {
-        check(nestingLevel >= NESTING_LEVEL_MIN_VALUE) {
-            "nestingLevel $nestingLevel must be at least $NESTING_LEVEL_MIN_VALUE"
-        }
-    }
+internal sealed class CategoryListItem {
+    abstract val id: Id
+    abstract val nestingLevel: Int
 
     @Immutable
     data class CategoryItem(
         val category: Category,
         override val nestingLevel: Int,
         val isExpandable: Boolean,
-    ) : CategoryListItem(createId(category), nestingLevel) {
-        private companion object {
-            private fun createId(category: Category): Id {
-                return Id(category.id.value)
-            }
-        }
+    ) : CategoryListItem() {
+        override val id = Id(category.id.value)
     }
 
     @Immutable
     data class SeeWholeCategoryItem(
         val category: Category,
         override val nestingLevel: Int,
-    ) : CategoryListItem(createId(category), nestingLevel) {
+    ) : CategoryListItem() {
+        override val id = Id("$ID_PREFIX${category.id.value}")
+
         companion object {
             private const val ID_PREFIX = "see_whole_category"
-
-            private fun createId(category: Category): Id {
-                return Id("$ID_PREFIX${category.id.value}")
-            }
         }
     }
 
