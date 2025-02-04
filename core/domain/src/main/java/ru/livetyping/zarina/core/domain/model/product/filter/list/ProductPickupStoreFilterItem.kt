@@ -5,4 +5,4 @@ public data class ProductPickupStoreFilterItem(
     override val id: Id,
     override val name: String,
     override val isSelected: Boolean,
-) : ProductListFilterItem(id, name, isSelected)
+) : ProductListFilterItem()

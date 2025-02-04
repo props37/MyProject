@@ -8,4 +8,4 @@ public data class ProductColorFilterItem(
     override val name: String,
     override val isSelected: Boolean,
     val color: Color?,
-) : ProductListFilterItem(id, name, isSelected)
+) : ProductListFilterItem()

@@ -7,7 +7,7 @@ public data class ProductSortFilterItem(
     override val id: Id,
     override val name: String,
     override val isSelected: Boolean,
-) : ProductListFilterItem(id, name, isSelected) {
+) : ProductListFilterItem() {
     public companion object {
         public fun from(
             sorting: ProductSorting,
