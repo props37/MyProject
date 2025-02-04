@@ -3,11 +3,15 @@ package ru.livetyping.zarina.feature.home.domain.model
 public data class MultipleBanners(
     val banners: List<Banner>,
     val arrangement: Arrangement,
-) : BannerContainer(id = banners.createBannerContainerId()) {
-    public enum class Arrangement { GRID }
-}
+) : BannerContainer() {
+    override val id: Id = banners.createBannerContainerId()
 
-private fun List<Banner>.createBannerContainerId(): BannerContainer.Id {
-    val id = this.fold(initial = "") { acc, item -> acc + item.id.value }
-    return BannerContainer.Id(id)
+    public enum class Arrangement { GRID }
+
+    private companion object {
+        private fun List<Banner>.createBannerContainerId(): Id {
+            val id = this.fold(initial = "") { acc, item -> acc + item.id.value }
+            return Id(id)
+        }
+    }
 }

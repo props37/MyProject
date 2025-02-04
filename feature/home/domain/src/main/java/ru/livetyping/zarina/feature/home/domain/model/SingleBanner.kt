@@ -1,8 +1,5 @@
 package ru.livetyping.zarina.feature.home.domain.model
 
-public data class SingleBanner(val banner: Banner) :
-    BannerContainer(id = banner.createBannerContainerId())
-
-private fun Banner.createBannerContainerId(): BannerContainer.Id {
-    return BannerContainer.Id(this.id.value)
+public data class SingleBanner(val banner: Banner) : BannerContainer() {
+    override val id: Id = Id(banner.id.value)
 }
