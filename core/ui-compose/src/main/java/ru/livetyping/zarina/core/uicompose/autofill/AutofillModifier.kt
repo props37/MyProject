@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.uicompose.autofill
 
 import android.annotation.SuppressLint
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusEventModifierNode
@@ -17,19 +16,16 @@ import androidx.compose.ui.platform.LocalAutofill
 import androidx.compose.ui.platform.LocalAutofillTree
 import androidx.compose.ui.autofill.AutofillNode as ComposeAutofillNode
 
-@OptIn(ExperimentalComposeUiApi::class)
 public fun Modifier.autofill(
     autofillType: AutofillType,
     onFilled: (String) -> Unit,
 ): Modifier = this.autofill(listOf(autofillType), onFilled)
 
-@OptIn(ExperimentalComposeUiApi::class)
 public fun Modifier.autofill(
     autofillTypes: List<AutofillType>,
     onFilled: (String) -> Unit,
 ): Modifier = this then AutofillElement(autofillTypes, onFilled)
 
-@OptIn(ExperimentalComposeUiApi::class)
 private class AutofillElement(
     val autofillTypes: List<AutofillType>,
     val onFilled: (String) -> Unit,
@@ -66,7 +62,6 @@ private class AutofillElement(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 private class AutofillNode(
     autofillTypes: List<AutofillType>,
     onFilled: (String) -> Unit,

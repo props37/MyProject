@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.uikit.toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
@@ -29,7 +28,6 @@ import ru.livetyping.zarina.core.uicompose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 public fun ZarinaToastContainer(
     controller: ZarinaToastController,
@@ -60,7 +58,8 @@ public fun ZarinaToastContainer(
 
         val anchoredDraggableState = rememberAnchoredDraggableState(
             initialValue = SwipeableState.Default,
-            confirmValueChange = { message?.isRemovable == true },
+            // TODO: [Top] Migrate!
+//            confirmValueChange = { message?.isRemovable == true },
         )
 
         DisposableEffect(anchoredDraggableState, toastHeightPx) {
@@ -95,6 +94,7 @@ public fun ZarinaToastContainer(
                                 .roundToInt(),
                         )
                     }
+                    // TODO: [Top] Migrate!
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,

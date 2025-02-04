@@ -54,7 +54,7 @@ dependencies {
     api(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui)
 
-    implementation(platform(libs.jetpack.compose.bom))
+    implementation(platform(libs.jetpack.compose.bom.beta))
     implementation(libs.jetpack.compose.foundation)
     implementation(libs.jetpack.compose.ui)
     implementation(libs.jetpack.compose.toolingPreview)

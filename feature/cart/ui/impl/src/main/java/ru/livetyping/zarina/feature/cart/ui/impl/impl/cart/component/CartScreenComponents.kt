@@ -8,7 +8,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -830,7 +829,6 @@ internal object CartScreenComponents {
         )
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun SwipeableProductOrderCard(
         productItem: CartProductItem,
@@ -883,6 +881,7 @@ internal object CartScreenComponents {
                             anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
+                    // TODO: [Top] Migrate!
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,

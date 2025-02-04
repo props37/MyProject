@@ -45,7 +45,7 @@ dependencies {
 
     implementation(libs.jetpack.lifecycle.viewModel.compose)
 
-    implementation(platform(libs.jetpack.compose.bom))
+    implementation(platform(libs.jetpack.compose.bom.beta))
     implementation(libs.jetpack.compose.foundation)
 
     implementation(libs.kotlin.coroutines.android)

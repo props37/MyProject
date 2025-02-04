@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
 
-    implementation(platform(libs.jetpack.compose.bom))
+    implementation(platform(libs.jetpack.compose.bom.beta))
     implementation(libs.jetpack.compose.ui)
     implementation(libs.jetpack.compose.material)
     implementation(libs.jetpack.compose.toolingPreview)

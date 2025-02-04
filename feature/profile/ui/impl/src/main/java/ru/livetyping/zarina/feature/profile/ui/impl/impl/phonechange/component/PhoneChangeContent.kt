@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
@@ -34,7 +33,6 @@ import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeState
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun PhoneChangeContent(
     state: PhoneChangeState,

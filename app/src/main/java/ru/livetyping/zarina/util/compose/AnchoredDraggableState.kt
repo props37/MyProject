@@ -81,8 +81,8 @@ fun <T> rememberAnchoredDraggableState(
 
 @OptIn(ExperimentalFoundationApi::class)
 fun <T> AnchoredDraggableState<T>.requireCoercedOffset(): Float {
-    val minOffset = this.anchors.minAnchor()
-    val maxOffset = this.anchors.maxAnchor()
+    val minOffset = this.anchors.minPosition()
+    val maxOffset = this.anchors.maxPosition()
     return this.requireOffset().coerceIn(minOffset, maxOffset)
 }
 
@@ -95,8 +95,8 @@ val <T> AnchoredDraggableState<T>.coercedOffset: Float
     get() {
         val offset = this.offset
         if (offset.isNaN()) return offset
-        val minOffset = this.anchors.minAnchor()
-        val maxOffset = this.anchors.maxAnchor()
+        val minOffset = this.anchors.minPosition()
+        val maxOffset = this.anchors.maxPosition()
         return offset.coerceIn(minOffset, maxOffset)
     }
 
