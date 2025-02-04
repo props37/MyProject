@@ -1,8 +1,7 @@
 package ru.livetyping.zarina.feature.home.ui.impl.impl.component
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
@@ -184,7 +183,6 @@ private fun HomeContentSuccess(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun GenderContentPager(
     genderTabs: ImmutableList<GenderTab>,
@@ -193,7 +191,7 @@ private fun GenderContentPager(
     pagerState: PagerState,
     modifier: Modifier = Modifier,
 ) {
-    CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+    CompositionLocalProvider(LocalOverscrollFactory provides null) {
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
