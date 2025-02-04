@@ -20,6 +20,8 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderTo
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderState
 
+// TODO: [Top] Add ability to pay for the order
+
 @Composable
 internal fun OrderScreen(
     navActions: OrderNavActions,
