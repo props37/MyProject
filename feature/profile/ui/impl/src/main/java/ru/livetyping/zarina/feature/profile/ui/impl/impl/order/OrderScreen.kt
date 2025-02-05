@@ -17,7 +17,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.Order
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderCancellationDialog
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderTopBar
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderCancellationDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderCancellationDialogState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderState
 
@@ -29,10 +32,13 @@ internal fun OrderScreen(
     viewModel: OrderViewModel = hiltViewModel(),
 ) {
     val orderState by viewModel.orderState.collectAsStateWithLifecycle()
+    val orderCancellationDialogState by viewModel.orderCancellationDialogState.collectAsStateWithLifecycle()
 
     ScreenContent(
         orderState = orderState,
         onOrderEvent = viewModel::onOrderEvent,
+        orderCancellationDialogState = orderCancellationDialogState,
+        onOrderCancellationDialogEvent = viewModel::onOrderCancellationDialogEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -42,12 +48,19 @@ internal fun OrderScreen(
 private fun ScreenContent(
     orderState: OrderState,
     onOrderEvent: (OrderEvent) -> Unit,
+    orderCancellationDialogState: OrderCancellationDialogState,
+    onOrderCancellationDialogEvent: (OrderCancellationDialogEvent) -> Unit,
     sideEffects: Flow<OrderSideEffect>,
     navActions: OrderNavActions,
 ) {
     OrderScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
+    )
+
+    OrderCancellationDialog(
+        state = orderCancellationDialogState,
+        onEvent = onOrderCancellationDialogEvent,
     )
 
     Column(

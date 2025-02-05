@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun OrderScreenBehavior(
@@ -15,6 +16,7 @@ internal fun OrderScreenBehavior(
     navActions: OrderNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
 
@@ -24,6 +26,10 @@ internal fun OrderScreenBehavior(
                 when (sideEffect) {
                     is OrderSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    is OrderSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }
