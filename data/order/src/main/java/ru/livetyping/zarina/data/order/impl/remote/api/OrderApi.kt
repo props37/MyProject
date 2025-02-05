@@ -8,4 +8,6 @@ internal interface OrderApi {
     suspend fun getOrders(page: Int): GetOrdersDto
 
     suspend fun getOrder(orderId: Order.Id): List<OrderDto>
+
+    suspend fun cancelOrder(orderId: Order.Id)
 }

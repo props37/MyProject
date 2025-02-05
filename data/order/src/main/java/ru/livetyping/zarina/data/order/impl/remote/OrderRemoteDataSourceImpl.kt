@@ -21,4 +21,8 @@ internal class OrderRemoteDataSourceImpl @Inject constructor(
         val order = api.getOrder(orderId).first().toOrderDetailed()
         emit(order)
     }
+
+    override suspend fun cancelOrder(orderId: Order.Id) {
+        api.cancelOrder(orderId)
+    }
 }

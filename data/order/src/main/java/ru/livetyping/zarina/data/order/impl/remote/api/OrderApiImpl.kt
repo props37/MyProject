@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.order.impl.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ru.livetyping.zarina.core.domain.model.order.Order
@@ -23,5 +24,9 @@ internal class OrderApiImpl @Inject constructor(
 
     override suspend fun getOrder(orderId: Order.Id): List<OrderDto> {
         return httpClient.get("/api/v1/orders/${orderId.value}").body()
+    }
+
+    override suspend fun cancelOrder(orderId: Order.Id) {
+        httpClient.delete("/api/orders/${orderId.value}")
     }
 }

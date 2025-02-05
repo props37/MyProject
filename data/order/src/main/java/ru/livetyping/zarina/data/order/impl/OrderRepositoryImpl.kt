@@ -19,4 +19,8 @@ internal class OrderRepositoryImpl @Inject constructor(
     override fun getOrderFlow(orderId: Order.Id): Flow<OrderDetailed> {
         return remoteDataSource.getOrderFlow(orderId)
     }
+
+    override suspend fun cancelOrder(orderId: Order.Id) {
+        remoteDataSource.cancelOrder(orderId)
+    }
 }

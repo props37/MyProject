@@ -10,4 +10,6 @@ internal interface OrderRemoteDataSource {
     fun getOrderPageFlow(page: Int): Flow<Page<List<OrderShort>>>
 
     fun getOrderFlow(orderId: Order.Id): Flow<OrderDetailed>
+
+    suspend fun cancelOrder(orderId: Order.Id)
 }

@@ -10,4 +10,6 @@ public interface OrderRepository {
     public fun getOrderPageFlow(page: Int): Flow<Page<List<OrderShort>>>
 
     public fun getOrderFlow(orderId: Order.Id): Flow<OrderDetailed>
+
+    public suspend fun cancelOrder(orderId: Order.Id)
 }
