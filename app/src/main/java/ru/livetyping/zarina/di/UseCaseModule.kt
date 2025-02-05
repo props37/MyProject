@@ -1,3 +1,4 @@
+
 package ru.livetyping.zarina.di
 
 import dagger.Module
@@ -42,6 +43,7 @@ import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlow
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
@@ -784,6 +786,17 @@ internal class UseCaseModule {
     ): ChangeProductCountInCartUseCase {
         return ChangeProductCountInCartUseCase.getInstance(
             cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCancelOrderUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): CancelOrderUseCase {
+        return CancelOrderUseCase.getInstance(
+            orderRepository = orderRepository,
             logger = logger,
         )
     }
