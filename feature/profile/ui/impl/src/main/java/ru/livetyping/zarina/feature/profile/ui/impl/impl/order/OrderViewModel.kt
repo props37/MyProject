@@ -77,6 +77,8 @@ internal class OrderViewModel @Inject constructor(
             OrderEvent.BackClicked -> onBackClicked()
             OrderEvent.PullRefreshTriggered -> orderRequester.request(OrderRequest.REFRESHING)
             OrderEvent.OrderErrorRefreshClicked -> orderRequester.request(OrderRequest.LOADING)
+            OrderEvent.CancelOrderClicked -> TODO() // TODO: [Top] Implement
+            OrderEvent.PayForOrderClicked -> TODO() // TODO: [Top] Implement
         }
     }
 

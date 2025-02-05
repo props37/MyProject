@@ -6,4 +6,8 @@ internal sealed interface OrderEvent {
     data object PullRefreshTriggered : OrderEvent
 
     data object OrderErrorRefreshClicked : OrderEvent
+
+    data object PayForOrderClicked : OrderEvent
+
+    data object CancelOrderClicked : OrderEvent
 }

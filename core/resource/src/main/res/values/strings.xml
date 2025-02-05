@@ -102,6 +102,14 @@
     <string name="res_to_wishlist">В избранное</string>
     <string name="res_in_wishlist">В избранном</string>
     <string name="res_checkout">Оформить</string>
+    <string name="res_pay">Оплатить</string>
+    <string name="res_cancel_order">Отменить заказ</string>
+    <string name="res_order_contents">Состав заказа</string>
+    <string name="res_order_info">Информация о заказе</string>
+    <string name="res_delivery_method">Способ доставки</string>
+    <string name="res_delivery_address">Адрес доставки</string>
+    <string name="res_order_recipient">Получатель</string>
+    <string name="res_payment">Оплата</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
@@ -111,6 +119,18 @@
     <string name="res_order_status_cancelled">Отменён</string>
     <string name="res_order_status_refund">Возврат</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
+
+    <string name="res_payment_method_upon_receipt">При получении</string>
+    <string name="res_payment_method_by_card_online">Картой онлайн</string>
+    <string name="res_payment_method_sbp">СБП</string>
+    <string name="res_payment_method_podeli">Подели</string>
+    <string name="res_payment_method_gift_certificate">Подарочный сертификат</string>
+
+    <string name="res_delivery_method_express_delivery">Курьерская доставка</string>
+    <string name="res_delivery_method_post">Почта России</string>
+    <string name="res_delivery_method_pick_up_point">Пункт самовывоза</string>
+    <string name="res_delivery_method_pick_up_from_store">Забрать из магазина</string>
+    <string name="res_delivery_method_yandex_express">Яндекс Экспресс</string>
 
     <plurals name="res_product_count">
         <item quantity="zero">%1$s товаров</item>

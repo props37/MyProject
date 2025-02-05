@@ -52,8 +52,11 @@ internal fun Order(
         ) { state ->
             when (state) {
                 is OrderState.Success -> {
-                    // TODO: [Top] Implement
-                    TODO()
+                    OrderSuccess(
+                        order = state.order,
+                        onPayForOrderClicked = { onEvent(OrderEvent.PayForOrderClicked) },
+                        onCancelOrderClicked = { onEvent(OrderEvent.CancelOrderClicked) },
+                    )
                 }
 
                 OrderState.Loading -> {

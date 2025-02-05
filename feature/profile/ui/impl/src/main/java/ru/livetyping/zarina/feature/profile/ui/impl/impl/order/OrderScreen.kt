@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.Order
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderState
@@ -66,6 +67,10 @@ private fun ScreenContent(
             onBackClicked = { onOrderEvent(OrderEvent.BackClicked) },
         )
 
-        // TODO: [Top] Implement
+        Order(
+            state = orderState,
+            onEvent = onOrderEvent,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
