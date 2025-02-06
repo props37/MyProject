@@ -157,7 +157,7 @@ private fun ScreenContent(
                             .padding(16.dp),
                     )
                 },
-                appMetricaScreen = AppMetricaScreen.PRODUCT_LIST,
+                appMetricaScreen = AppMetricaScreen.ProductList,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)

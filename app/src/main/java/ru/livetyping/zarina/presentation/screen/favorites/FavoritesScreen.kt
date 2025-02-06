@@ -111,7 +111,7 @@ private fun ScreenContent(
                         .padding(16.dp),
                 )
             },
-            appMetricaScreen = AppMetricaScreen.WISHLIST,
+            appMetricaScreen = AppMetricaScreen.Wishlist,
             modifier = Modifier.fillMaxSize(),
         )
     }

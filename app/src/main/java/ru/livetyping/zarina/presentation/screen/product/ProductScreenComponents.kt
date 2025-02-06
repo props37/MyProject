@@ -687,7 +687,7 @@ object ProductScreenComponents {
                 key = { it.id.value },
             ) { product ->
                 DisposableEffect(Unit) {
-                    AppMetricaHelper.reportShowProductCardEvent(product, AppMetricaScreen.PRODUCT)
+                    AppMetricaHelper.reportShowProductCardEvent(product, AppMetricaScreen.Product)
                     onDispose {}
                 }
 
