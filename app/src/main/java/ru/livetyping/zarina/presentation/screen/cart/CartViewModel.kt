@@ -491,7 +491,6 @@ class CartViewModel @AssistedInject constructor(
 
     fun onCheckoutClicked() {
         navigationThrottler.throttle {
-            AppMetricaHelper.reportStartCheckoutEvent()
             val action = CartScreenAction.CheckoutClicked(currentCartType.value)
             emitSideEffect(SideEffect.Navigate(action))
         }

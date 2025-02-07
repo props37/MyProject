@@ -91,10 +91,6 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
 
-    fun reportStartCheckoutEvent() {
-        AppMetrica.reportEvent(EVENT_START_CHECKOUT)
-    }
-
     fun reportOrderConfirmed(order: OrderDetails) {
         val eCommerceCartItems = order.products.map { product ->
             val eCommerceProduct = getECommerceProduct(
@@ -115,11 +111,6 @@ object AppMetricaHelper {
         )
         val event = ECommerceEvent.purchaseEvent(eCommerceOrder)
         AppMetrica.reportECommerce(event)
-    }
-
-    // TODO: [Top] Rename
-    fun reportPaymentTypeEvent() {
-        AppMetrica.reportEvent(EVENT_PAYMENT_TYPE)
     }
 
     fun reportDeliveryMethodSelected(deliveryMethod: DeliveryMethod) {
@@ -212,8 +203,6 @@ object AppMetricaHelper {
     private const val EVENT_SELECT_DELIVERY_TYPE = "selectDeliveryType"
     private const val EVENT_SEARCH_PRODUCTS = "searchProducts"
     private const val EVENT_OPEN_CART = "openCart"
-    private const val EVENT_START_CHECKOUT = "beginOrder"
-    private const val EVENT_PAYMENT_TYPE = "paymentType"
     private const val EVENT_SIGN_UP = "signUp"
     private const val EVENT_SIGN_IN = "signIn"
     private const val EVENT_OPEN_PROFILE = "openProfile"
