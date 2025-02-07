@@ -7,13 +7,11 @@ class ApplicationExtensionManager @Inject constructor(
     userCityFetcher: UserCityFetcherApplicationExtension,
     favoriteProductIdsFetcher: FavoriteProductIdsFetcherApplicationExtension,
     cartProductIdsFetcher: CartProductIdsFetcherApplicationExtension,
-    appMetricaApplicationExtension: AppMetricaApplicationExtension,
 ) {
     val extensions = listOf(
         userFetcher,
         userCityFetcher,
         favoriteProductIdsFetcher,
         cartProductIdsFetcher,
-        appMetricaApplicationExtension,
     )
 }
