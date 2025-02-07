@@ -92,7 +92,7 @@ private fun ScreenContent(
     val product = (productState as? ProductState.Success)?.product
     DisposableEffect(product?.id) {
         if (product != null) {
-            AppMetricaHelper.reportShowProductDetailsEvent(product)
+            AppMetricaHelper.reportProductScreenOpened(product)
         }
         onDispose {}
     }

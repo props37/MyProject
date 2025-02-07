@@ -22,7 +22,7 @@ object AppMetricaHelper {
         AppMetrica.reportECommerce(event)
     }
 
-    fun reportShowProductDetailsEvent(product: Product) {
+    fun reportProductScreenOpened(product: Product) {
         val eCommerceProduct = getECommerceProduct(product)
         val event = ECommerceEvent.showProductDetailsEvent(eCommerceProduct, null)
         AppMetrica.reportECommerce(event)
