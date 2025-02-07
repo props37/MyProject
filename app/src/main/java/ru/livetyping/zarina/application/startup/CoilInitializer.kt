@@ -1,8 +1,10 @@
-package ru.livetyping.zarina.application.extension
+package ru.livetyping.zarina.application.startup
 
-import android.app.Application
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
+import androidx.startup.Initializer
 import coil.Coil
 import coil.ComponentRegistry
 import coil.ImageLoader
@@ -11,23 +13,27 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import javax.inject.Inject
 
-class CoilApplicationExtension @Inject constructor() : ApplicationExtension {
-    override fun install(application: Application) {
+@SuppressLint("LogNotTimber")
+class CoilInitializer : Initializer<Unit> {
+    override fun create(context: Context) {
+        Log.v(TAG, "Initialize Coil")
         val factory = ImageLoaderFactory {
-            ImageLoader.Builder(application)
+            ImageLoader.Builder(context)
                 .crossfade(true)
                 .components {
                     addGifComponent()
                 }
-                .memoryCache(createMemoryCache(application))
-                .diskCache(createDiskCache(application))
+                .memoryCache(createMemoryCache(context))
+                .diskCache(createDiskCache(context))
                 .build()
         }
 
         Coil.setImageLoader(factory)
+    }
+
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf()
     }
 
     private fun ComponentRegistry.Builder.addGifComponent() {
@@ -56,5 +62,7 @@ class CoilApplicationExtension @Inject constructor() : ApplicationExtension {
 
         private const val DISK_CACHE_DIR = "coil_cache"
         private const val DISK_CACHE_MAX_SIZE_PERCENT = 0.02
+
+        private const val TAG = "CoilInitializer"
     }
 }

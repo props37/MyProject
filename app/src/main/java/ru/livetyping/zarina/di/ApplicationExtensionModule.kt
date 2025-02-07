@@ -7,7 +7,6 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import ru.livetyping.zarina.application.extension.AppMetricaApplicationExtension
 import ru.livetyping.zarina.application.extension.CartProductIdsFetcherApplicationExtension
-import ru.livetyping.zarina.application.extension.CoilApplicationExtension
 import ru.livetyping.zarina.application.extension.FavoriteProductIdsFetcherApplicationExtension
 import ru.livetyping.zarina.application.extension.UserCityFetcherApplicationExtension
 import ru.livetyping.zarina.application.extension.UserFetcherApplicationExtension
@@ -22,10 +21,6 @@ abstract class ApplicationExtensionModule {
     abstract fun bindCartProductIdsFetcherApplicationExtension(
         impl: CartProductIdsFetcherApplicationExtension,
     ): ApplicationExtension
-
-    @Binds
-    @IntoSet
-    abstract fun bindCoilApplicationExtension(impl: CoilApplicationExtension): ApplicationExtension
 
     @Binds
     @IntoSet
