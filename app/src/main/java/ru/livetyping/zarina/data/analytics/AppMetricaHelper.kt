@@ -95,7 +95,7 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_START_CHECKOUT)
     }
 
-    fun reportCompletePurchaseEvent(order: OrderDetails) {
+    fun reportOrderConfirmed(order: OrderDetails) {
         val eCommerceCartItems = order.products.map { product ->
             val eCommerceProduct = getECommerceProduct(
                 productId = product.id,

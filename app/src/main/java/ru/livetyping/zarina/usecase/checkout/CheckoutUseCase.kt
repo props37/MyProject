@@ -118,7 +118,7 @@ class CheckoutUseCase @Inject constructor(
         )
         updateOrderPaymentStatus(order, paymentMethod)
 
-        AppMetricaHelper.reportCompletePurchaseEvent(order)
+        AppMetricaHelper.reportOrderConfirmed(order)
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -148,7 +148,7 @@ class CheckoutUseCase @Inject constructor(
             Timber.v("Order payment URL is not provided")
         }
 
-        AppMetricaHelper.reportCompletePurchaseEvent(order)
+        AppMetricaHelper.reportOrderConfirmed(order)
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -171,7 +171,7 @@ class CheckoutUseCase @Inject constructor(
             paymentData = null,
         )
 
-        AppMetricaHelper.reportCompletePurchaseEvent(order)
+        AppMetricaHelper.reportOrderConfirmed(order)
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -219,7 +219,7 @@ class CheckoutUseCase @Inject constructor(
             // Use the payment method used to pay the remaining amount
             updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
-            AppMetricaHelper.reportCompletePurchaseEvent(order)
+            AppMetricaHelper.reportOrderConfirmed(order)
 
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
@@ -237,7 +237,7 @@ class CheckoutUseCase @Inject constructor(
                 paymentData = null,
             )
 
-            AppMetricaHelper.reportCompletePurchaseEvent(order)
+            AppMetricaHelper.reportOrderConfirmed(order)
 
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
