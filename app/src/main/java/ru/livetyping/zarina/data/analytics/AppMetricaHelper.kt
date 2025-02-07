@@ -28,12 +28,12 @@ object AppMetricaHelper {
         AppMetrica.reportECommerce(event)
     }
 
-    fun reportAddCartItemEvent(product: Product, count: Int) {
+    fun reportProductAddedToCart(product: Product, count: Int) {
         val eCommerceProduct = getECommerceProduct(product)
         val cartItem = ECommerceCartItem(
             /* product = */ eCommerceProduct,
             /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
-            /* quantityMicros = */ count.toLong()
+            /* quantityMicros = */ count.toLong(),
         )
         val event = ECommerceEvent.addCartItemEvent(cartItem)
         AppMetrica.reportECommerce(event)

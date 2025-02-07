@@ -24,7 +24,7 @@ class AddProductToCartUseCase @Inject constructor(
         val count = params.count
         Timber.v("Add product $product to the cart")
         val cartProductCount = cartRepository.addProductToCart(product.id, barcode, count)
-        AppMetricaHelper.reportAddCartItemEvent(product, count)
+        AppMetricaHelper.reportProductAddedToCart(product, count)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
 
         if (!cartRepository.areCartProductIdsFetched.value) {
