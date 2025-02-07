@@ -9,6 +9,7 @@ import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
+import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
@@ -79,6 +80,11 @@ object AppMetricaHelper {
             KEY_NAME to productName,
         )
         AppMetrica.reportEvent(EVENT_REMOVE_WISHLIST_ITEM, parameters)
+    }
+
+    fun reportPaymentMethodSelected(paymentMethod: PaymentMethod) {
+        val parameters = mapOf("KEY_PAYMENT_METHOD" to paymentMethod.title)
+        AppMetrica.reportEvent(EVENT_SELECT_PAYMENT_METHOD, parameters)
     }
 
     fun reportOpenCartEvent() {
@@ -187,6 +193,7 @@ object AppMetricaHelper {
 
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
     private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
+    private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
     private const val EVENT_OPEN_CART = "cartView"
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
@@ -199,6 +206,7 @@ object AppMetricaHelper {
     private const val KEY_NAME = "name"
     private const val KEY_DELIVERY_TYPE = "deliveryType"
     private const val KEY_SIGN_IN_METHOD = "method"
+    private const val KEY_PAYMENT_METHOD = "paymentMethod"
 
     private const val RUB_UNIT = "RUB"
 }
