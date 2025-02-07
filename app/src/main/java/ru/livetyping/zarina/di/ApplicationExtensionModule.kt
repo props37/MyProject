@@ -9,7 +9,6 @@ import ru.livetyping.zarina.application.extension.AppMetricaApplicationExtension
 import ru.livetyping.zarina.application.extension.CartProductIdsFetcherApplicationExtension
 import ru.livetyping.zarina.application.extension.CoilApplicationExtension
 import ru.livetyping.zarina.application.extension.FavoriteProductIdsFetcherApplicationExtension
-import ru.livetyping.zarina.application.extension.TimberApplicationExtension
 import ru.livetyping.zarina.application.extension.UserCityFetcherApplicationExtension
 import ru.livetyping.zarina.application.extension.UserFetcherApplicationExtension
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
@@ -32,12 +31,6 @@ abstract class ApplicationExtensionModule {
     @IntoSet
     abstract fun bindFavoriteProductIdsFetcherApplicationExtension(
         impl: FavoriteProductIdsFetcherApplicationExtension,
-    ): ApplicationExtension
-
-    @Binds
-    @IntoSet
-    abstract fun bindTimberApplicationExtension(
-        impl: TimberApplicationExtension,
     ): ApplicationExtension
 
     @Binds
