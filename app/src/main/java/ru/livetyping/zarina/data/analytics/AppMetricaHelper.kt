@@ -7,12 +7,14 @@ import io.appmetrica.analytics.ecommerce.ECommerceEvent
 import io.appmetrica.analytics.ecommerce.ECommerceOrder
 import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
+import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
+import java.util.UUID
 
 object AppMetricaHelper {
     fun reportShowProductCardEvent(product: Product, screen: AppMetricaScreen) {
@@ -47,6 +49,19 @@ object AppMetricaHelper {
             /* quantityMicros = */ product.count.toLong(),
         )
         val event = ECommerceEvent.removeCartItemEvent(cartItem)
+        AppMetrica.reportECommerce(event)
+    }
+
+    fun reportCheckoutStarted(cart: Cart) {
+        val identifier = UUID.randomUUID().toString()
+        val cartItems = cart.products.map { product ->
+            val eCommerceProduct = getECommerceProduct(product)
+            val revenue = ECommercePrice(getECommerceAmount(product.price.currentPrice))
+            val quantity = product.count.toLong()
+            ECommerceCartItem(eCommerceProduct, revenue, quantity)
+        }
+        val order = ECommerceOrder(identifier, cartItems)
+        val event = ECommerceEvent.beginCheckoutEvent(order)
         AppMetrica.reportECommerce(event)
     }
 
