@@ -87,7 +87,7 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_SELECT_PAYMENT_METHOD, parameters)
     }
 
-    fun reportOpenCartEvent() {
+    fun reportCartOpened() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
 
@@ -201,7 +201,7 @@ object AppMetricaHelper {
     private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
     private const val EVENT_SELECT_DELIVERY_TYPE = "selectDeliveryType"
     private const val EVENT_SEARCH_PRODUCTS = "searchProducts"
-    private const val EVENT_OPEN_CART = "cartView"
+    private const val EVENT_OPEN_CART = "openCart"
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
     private const val EVENT_SIGN_UP = "signUp"

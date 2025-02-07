@@ -266,6 +266,7 @@ class CartViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.fetchUserCity()
         }
+        AppMetricaHelper.reportCartOpened()
     }
 
     fun onClearCartClicked() {

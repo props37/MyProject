@@ -23,7 +23,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +41,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
-import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.cart.CartSize
 import ru.livetyping.zarina.domain.cart.CartType
 import ru.livetyping.zarina.domain.common.Url
@@ -150,11 +148,6 @@ private fun ScreenContent(
     sideEffects: Flow<SideEffect>,
     navigate: (CartScreenAction) -> Unit,
 ) {
-    DisposableEffect(Unit) {
-        AppMetricaHelper.reportOpenCartEvent()
-        onDispose {}
-    }
-
     CartScreenBehavior(
         onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
