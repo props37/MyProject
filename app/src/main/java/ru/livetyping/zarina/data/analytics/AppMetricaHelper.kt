@@ -105,6 +105,12 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_SELECT_DELIVERY_TYPE, parameters)
     }
 
+    fun reportProfileOpened(isUserSignedIn: Boolean) {
+        if (isUserSignedIn) {
+            AppMetrica.reportEvent(EVENT_OPEN_PROFILE)
+        }
+    }
+
     private fun getECommerceProduct(product: Product): ECommerceProduct {
         return ECommerceProduct(product.id.value).apply {
             name = product.name
@@ -159,6 +165,7 @@ object AppMetricaHelper {
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
     private const val EVENT_SELECT_DELIVERY_TYPE = "deliveryTypeSelected"
+    private const val EVENT_OPEN_PROFILE = "openProfile"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"

@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -18,16 +20,22 @@ import ru.livetyping.zarina.util.domain.common.toUri
 
 @Composable
 fun ProfileScreenBehavior(
+    onScreenCreated: () -> Unit,
     onScreenOpened: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProfileScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val updatedOnScreenCreated by rememberUpdatedState(onScreenCreated)
     val updatedOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
+
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
+        updatedOnScreenCreated()
+    }
 
     LifecycleStartEffect(Unit) {
         updatedOnScreenOpened()
