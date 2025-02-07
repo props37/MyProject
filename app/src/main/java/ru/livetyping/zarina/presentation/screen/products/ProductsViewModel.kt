@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -369,7 +370,17 @@ class ProductsViewModel @AssistedInject constructor(
                 val filters = result.filters.toFilters()
                 val filtersParcelable = FiltersParcelable.from(filters)
                 savedStateHandle[KEY_FILTERS] = filtersParcelable
+                reportFiltersApplied(filters)
             }
+        }
+    }
+
+    private suspend fun reportFiltersApplied(filters: Filters) {
+        val currentCategoryId = selectedTagId.value ?: categoryId.value
+        val params = GetCategoryFlowUseCase.Params(currentCategoryId)
+        val category = interactor.getCategoryFlow(params).firstOrNull()?.getOrNull()
+        if (category != null) {
+            AppMetricaHelper.reportProductFiltersApplied(category, filters)
         }
     }
 

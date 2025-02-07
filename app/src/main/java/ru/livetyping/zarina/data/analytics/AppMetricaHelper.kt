@@ -10,10 +10,14 @@ import io.appmetrica.analytics.ecommerce.ECommerceProduct
 import io.appmetrica.analytics.ecommerce.ECommerceScreen
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
+import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.category.CategoryPath
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.common.Gender
+import ru.livetyping.zarina.domain.common.Sorting
+import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
@@ -173,6 +177,62 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_USE_BONUSES, parameters)
     }
 
+    fun reportProductFiltersApplied(category: Category, filters: Filters) {
+        val filterParameters = buildMap {
+            val appliedSorting = filters.sorting?.selected
+            if (appliedSorting != null) {
+                put(KEY_SORTING, appliedSorting.getName())
+            }
+
+            val priceParameters = buildMap {
+                if (filters.price?.min != null) {
+                    put(KEY_MIN, filters.price.min)
+                }
+                if (filters.price?.max != null) {
+                    put(KEY_MAX, filters.price.max)
+                }
+            }.takeIf { it.isNotEmpty() }
+            if (priceParameters != null) {
+                put(KEY_PRICE, priceParameters)
+            }
+
+            if (filters.materials?.selectedItems?.isNotEmpty() == true) {
+                val names = filters.materials.selectedItems.map { it.name }
+                put(KEY_MATERIALS, names)
+            }
+
+            if (filters.sizes?.selectedItems?.isNotEmpty() == true) {
+                val names = filters.sizes.selectedItems.map { it.name }
+                put(KEY_SIZES, names)
+            }
+
+            if (filters.colors?.selectedItems?.isNotEmpty() == true) {
+                val names = filters.colors.selectedItems.map { it.name }
+                put(KEY_COLORS, names)
+            }
+
+            val da = filters.deliveryAvailability.takeIf { it?.isApplied == true }
+            if (da != null) {
+                put(KEY_DELIVERY_AVAILABILITY, da.isApplied)
+            }
+
+            val spa = filters.storePickupAvailability.takeIf { it?.isApplied == true }
+            if (spa != null) {
+                put(KEY_STORE_PICKUP_AVAILABILITY, spa.isApplied)
+            }
+
+            if (filters.pickupStores?.selectedItems?.isNotEmpty() == true) {
+                val names = filters.pickupStores.selectedItems.map { it.name }
+                put(KEY_PICKUP_STORES, names)
+            }
+        }
+        val parameters = buildMap {
+            put(KEY_CATEGORY, category.name)
+            put(KEY_FILTERS, filterParameters)
+        }
+        AppMetrica.reportEvent(EVENT_APPLY_PRODUCT_FILTERS, parameters)
+    }
+
     private fun reportCartOpened() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
@@ -251,6 +311,16 @@ object AppMetricaHelper {
         }
     }
 
+    private fun Sorting.getName(): String {
+        return when (this) {
+            Sorting.NEW -> SORTING_NEW
+            Sorting.POPULAR -> SORTING_POPULAR
+            Sorting.DISCOUNT -> SORTING_DISCOUNT
+            Sorting.PRICE_LOW_TO_HIGH -> SORTING_PRICE_LOW_TO_HIGH
+            Sorting.PRICE_HIGH_TO_LOW -> SORTING_PRICE_HIGH_TO_LOW
+        }
+    }
+
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
     private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
     private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
@@ -263,6 +333,7 @@ object AppMetricaHelper {
     private const val EVENT_APPLY_PROMO_CODE = "applyPromoCode"
     private const val EVENT_USE_BONUSES = "useBonuses"
     private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
+    private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
@@ -274,9 +345,26 @@ object AppMetricaHelper {
     private const val KEY_BONUS_COUNT = "bonusCount"
     private const val KEY_CATEGORY = "category"
     private const val KEY_CATEGORY_PATH = "categoryPath"
+    private const val KEY_FILTERS = "filters"
+    private const val KEY_SORTING = "sorting"
+    private const val KEY_PRICE = "price"
+    private const val KEY_MIN = "min"
+    private const val KEY_MAX = "max"
+    private const val KEY_MATERIALS = "materials"
+    private const val KEY_SIZES = "sizes"
+    private const val KEY_COLORS = "colors"
+    private const val KEY_DELIVERY_AVAILABILITY = "deliveryAvailability"
+    private const val KEY_STORE_PICKUP_AVAILABILITY = "storePickupAvailability"
+    private const val KEY_PICKUP_STORES = "pickupStores"
 
     private const val CURRENCY_UNIT_RUB = "RUB"
 
     private const val CATEGORY_WOMEN = "Женщинам"
     private const val CATEGORY_MEN = "Мужчинам"
+
+    private const val SORTING_NEW = "NEW"
+    private const val SORTING_POPULAR = "POPULAR"
+    private const val SORTING_DISCOUNT = "DISCOUNT_SIZE"
+    private const val SORTING_PRICE_LOW_TO_HIGH = "PRICE_LOW_TO_HIGH"
+    private const val SORTING_PRICE_HIGH_TO_LOW = "PRICE_HIGH_TO_LOW"
 }
