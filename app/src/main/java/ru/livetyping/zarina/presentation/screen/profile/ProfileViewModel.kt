@@ -14,13 +14,17 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.user.LoyaltyCard
@@ -48,8 +52,17 @@ class ProfileViewModel @AssistedInject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private var fetchLoyaltyCardJob: Job? = null
+    private var reportScreenCreatedJob: Job? = null
 
-    val userState: StateFlow<UserState> = interactor.getUserFlow()
+    private val userResultFlow = interactor.getUserFlow()
+        .conflate()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            replay = 1,
+        )
+
+    val userState: StateFlow<UserState> = userResultFlow
         .map { result ->
             UserState.Success(user = result.getOrNull())
         }
@@ -90,6 +103,10 @@ class ProfileViewModel @AssistedInject constructor(
 
     init {
         handleCitySelectorResult()
+    }
+
+    fun onScreenCreated() {
+        reportScreenCreated()
     }
 
     fun onScreenOpened() {
@@ -159,6 +176,14 @@ class ProfileViewModel @AssistedInject constructor(
         if (fetchLoyaltyCardJob?.isActive == true) return
         fetchLoyaltyCardJob = viewModelScope.launch {
             interactor.fetchLoyaltyCard()
+        }
+    }
+
+    private fun reportScreenCreated() {
+        reportScreenCreatedJob?.cancel()
+        reportScreenCreatedJob = viewModelScope.launch {
+            val user = userResultFlow.firstOrNull()?.getOrNull()
+            AppMetricaHelper.reportProfileOpened(isUserSignedIn = user != null)
         }
     }
 

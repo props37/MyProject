@@ -4,6 +4,8 @@ import android.os.SystemClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -14,12 +16,17 @@ import ru.livetyping.zarina.presentation.screen.catalog.CatalogViewModel.SideEff
 
 @Composable
 fun CatalogScreenBehavior(
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CatalogScreenAction) -> Unit,
 ) {
     val updatedNavigate by rememberUpdatedState(navigate)
 
     ForcedBottomNavBarBehavior(isVisible = true)
+
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
+        onScreenCreated()
+    }
 
     LifecycleStartEffect(sideEffects) {
         val startedElapsedRealtime = SystemClock.elapsedRealtime()

@@ -27,6 +27,8 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.category.Categories
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.category.withFlattenedChildren
@@ -129,6 +131,10 @@ class CatalogViewModel @Inject constructor(
         started = SharingStarted.WhileUiSubscribed,
         initialValue = CategoryListItemsState(persistentSetOf(), persistentSetOf()),
     )
+
+    fun onScreenCreated() {
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Catalog)
+    }
 
     fun onSearchBarClicked() {
         navigationThrottler.throttle {

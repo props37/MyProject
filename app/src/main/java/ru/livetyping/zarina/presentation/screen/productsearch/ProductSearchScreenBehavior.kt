@@ -6,6 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +19,7 @@ import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchViewM
 
 @Composable
 fun ProductSearchScreenBehavior(
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
@@ -26,6 +29,10 @@ fun ProductSearchScreenBehavior(
     val updatedKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     ForcedBottomNavBarBehavior(isVisible = true)
+
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
+        onScreenCreated()
+    }
 
     LifecycleStartEffect(sideEffects) {
         val startedElapsedRealtime = SystemClock.elapsedRealtime()

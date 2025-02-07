@@ -106,7 +106,7 @@ class CheckoutDeliveryMethodViewModel @Inject constructor(
 
     fun onDeliveryMethodClicked(method: DeliveryMethod) {
         navigationThrottler.throttle {
-            AppMetricaHelper.reportSelectDeliveryTypeEvent(method)
+            AppMetricaHelper.reportDeliveryMethodSelected(method)
             val action = CheckoutDeliveryMethodScreenAction.DeliveryMethodSelected(
                 cartType = cartType,
                 step = step.value + 1,

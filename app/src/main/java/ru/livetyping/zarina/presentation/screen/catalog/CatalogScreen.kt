@@ -63,6 +63,7 @@ fun CatalogScreen(
         categoryListItemsState = categoryListItemsState,
         onCategoryListItemClicked = viewModel::onCategoryListItemClicked,
         onCategoryListErrorRefreshClicked = viewModel::onCategoryListErrorRefreshClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -78,10 +79,12 @@ private fun ScreenContent(
     categoryListItemsState: CategoryListItemsState,
     onCategoryListItemClicked: (CategoryListItem) -> Unit,
     onCategoryListErrorRefreshClicked: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (CatalogScreenAction) -> Unit,
 ) {
     CatalogScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -166,6 +169,7 @@ private fun Preview(
             },
             onCategoryListItemClicked = {},
             onCategoryListErrorRefreshClicked = {},
+            onScreenCreated = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )
