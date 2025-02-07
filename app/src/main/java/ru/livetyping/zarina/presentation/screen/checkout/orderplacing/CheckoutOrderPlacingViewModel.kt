@@ -30,6 +30,7 @@ import ru.livetyping.zarina.base.operationtracker.OperationTracker
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
@@ -425,6 +426,11 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         val currentPaymentMethod = selectedPaymentMethod.value
+
+        if (paymentMethod.type != currentPaymentMethod?.type) {
+            AppMetricaHelper.reportPaymentMethodSelected(paymentMethod)
+        }
+
         when {
             paymentMethod.type == PaymentMethodType.GIFT_CERTIFICATE
                     && currentPaymentMethod?.type != PaymentMethodType.GIFT_CERTIFICATE -> {

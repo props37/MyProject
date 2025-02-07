@@ -25,6 +25,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -266,6 +267,7 @@ class CartViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.fetchUserCity()
         }
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Cart)
     }
 
     fun onClearCartClicked() {
@@ -328,7 +330,12 @@ class CartViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
-                        AppMetricaHelper.reportAddProductToWishlistEvent(
+                        AppMetricaHelper.reportProductAddedToWishlist(
+                            productId = product.productId,
+                            productName = product.name,
+                        )
+                    } else {
+                        AppMetricaHelper.reportProductRemovedFromWishlist(
                             productId = product.productId,
                             productName = product.name,
                         )
@@ -485,8 +492,13 @@ class CartViewModel @AssistedInject constructor(
 
     fun onCheckoutClicked() {
         navigationThrottler.throttle {
-            AppMetricaHelper.reportStartCheckoutEvent()
-            val action = CartScreenAction.CheckoutClicked(currentCartType.value)
+            val cartType = currentCartType.value
+            val cart = getCart(cartType)
+            if (cart != null) {
+                AppMetricaHelper.reportCheckoutStarted(cart)
+            }
+
+            val action = CartScreenAction.CheckoutClicked(cartType)
             emitSideEffect(SideEffect.Navigate(action))
         }
     }

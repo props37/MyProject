@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +21,17 @@ import ru.livetyping.zarina.util.platform.shareText
 
 @Composable
 fun ProductScreenBehavior(
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
     val updatedContext by rememberUpdatedState(LocalContext.current)
     val updatedZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val updatedNavigate by rememberUpdatedState(navigate)
+
+    LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
+        onScreenCreated()
+    }
 
     ForcedBottomNavBarBehavior(isVisible = true)
 

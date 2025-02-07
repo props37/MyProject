@@ -83,6 +83,7 @@ fun ProductsScreen(
         onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
         onRefreshProducts = viewModel::onRefreshProducts,
         onProductsErrorRefreshClicked = viewModel::onProductsErrorRefreshClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -103,10 +104,12 @@ private fun ScreenContent(
     onSubscribeToProductClicked: (Product) -> Unit,
     onRefreshProducts: () -> Unit,
     onProductsErrorRefreshClicked: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<ProductsViewModel.SideEffect>,
     navigate: (ProductsScreenAction) -> Unit,
 ) {
     ProductsScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -157,7 +160,7 @@ private fun ScreenContent(
                             .padding(16.dp),
                     )
                 },
-                appMetricaScreen = AppMetricaScreen.PRODUCT_LIST,
+                appMetricaScreen = AppMetricaScreen.ProductList(null),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
@@ -191,6 +194,7 @@ private fun Preview() {
             onSubscribeToProductClicked = {},
             onRefreshProducts = {},
             onProductsErrorRefreshClicked = {},
+            onScreenCreated = {},
             sideEffects = remember { emptyFlow() },
             navigate = {},
         )

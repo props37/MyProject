@@ -8,6 +8,7 @@ import ru.livetyping.zarina.data.category.local.CategoryLocalDataSource
 import ru.livetyping.zarina.data.category.remote.CategoryRemoteDataSource
 import ru.livetyping.zarina.domain.category.Categories
 import ru.livetyping.zarina.domain.category.Category
+import ru.livetyping.zarina.domain.category.CategoryPath
 import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(
@@ -32,6 +33,13 @@ class CategoryRepository @Inject constructor(
                 }
             }
             .filterNotNull()
+    }
+
+    suspend fun getCategoryPath(categoryId: Category.Id): CategoryPath? {
+        return localDataSource.getCategoryPath(categoryId) ?: run {
+            fetchCategories()
+            localDataSource.getCategoryPath(categoryId)
+        }
     }
 
     private suspend fun fetchCategories(): Categories {

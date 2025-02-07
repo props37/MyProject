@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.user
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.PhoneNumber
@@ -26,6 +27,7 @@ class ConfirmSignUpUseCase @Inject constructor(
 
         val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
         setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+        AppMetricaHelper.reportUserSignedUp()
     }
 
     data class Params(val phone: PhoneNumber, val otp: String)

@@ -78,6 +78,7 @@ fun ProductSearchScreen(
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
         onSubscribeToProductClicked = viewModel::onSubscribeToProductClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -104,10 +105,12 @@ private fun ScreenContent(
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
     onSubscribeToProductClicked: (Product) -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductSearchScreenAction) -> Unit,
 ) {
     ProductSearchScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )
@@ -178,7 +181,7 @@ private fun ScreenContent(
                                     .padding(16.dp),
                             )
                         },
-                        appMetricaScreen = AppMetricaScreen.PRODUCT_SEARCH,
+                        appMetricaScreen = AppMetricaScreen.Search,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(UiKitTheme.colors.background.general.regular.default),

@@ -23,6 +23,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
@@ -88,6 +89,7 @@ class FavoritesViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.fetchFavoriteProductIds()
         }
+        reportScreenCreated()
     }
 
     fun onProductClicked(product: Product) {
@@ -106,7 +108,9 @@ class FavoritesViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
-                        AppMetricaHelper.reportAddProductToWishlistEvent(product)
+                        AppMetricaHelper.reportProductAddedToWishlist(product)
+                    } else {
+                        AppMetricaHelper.reportProductRemovedFromWishlist(product)
                     }
                 }
                 .onFailure {
@@ -185,6 +189,10 @@ class FavoritesViewModel @AssistedInject constructor(
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
         }
+    }
+
+    private fun reportScreenCreated() {
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Wishlist)
     }
 
     private fun handleSizeSelectorResult() {

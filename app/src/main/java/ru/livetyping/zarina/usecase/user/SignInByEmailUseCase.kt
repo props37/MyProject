@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.usecase.user
 
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaSignInMethod
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.domain.authorization.AuthorizationResult
 import ru.livetyping.zarina.domain.captcha.YandexCaptchaToken
@@ -33,6 +35,7 @@ class SignInByEmailUseCase @Inject constructor(
         if (!authorizationResult.isPhoneConfirmationNeeded()) {
             val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
             setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+            AppMetricaHelper.reportUserSignedIn(AppMetricaSignInMethod.PASSWORD)
         } else {
             Timber.v("Phone confirmation needed")
         }

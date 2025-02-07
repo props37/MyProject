@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.cart
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.cart.CartRepository
 import ru.livetyping.zarina.di.Qualifiers
 import timber.log.Timber
@@ -17,6 +18,7 @@ class ApplyPromoCodeUseCase @Inject constructor(
         val promoCode = params.promoCode.trim()
         Timber.v("Apply promo code: $promoCode")
         cartRepository.applyPromoCode(promoCode)
+        AppMetricaHelper.reportPromoCodeApplied(promoCode)
     }
 
     data class Params(val promoCode: String)

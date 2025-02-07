@@ -20,6 +20,8 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.content.HomeContent
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -98,6 +100,10 @@ class HomeViewModel @Inject constructor(
         it is FlowRequester.LoadingState.Loading && it.request == ContentRequest.REFRESHING
     }
 
+    fun onScreenCreated() {
+        reportScreenCreated()
+    }
+
     fun onGenderTabChanged(tab: GenderTab) {
         savedStateHandle[KEY_CURRENT_GENDER_TAB] = tab
         viewModelScope.launch {
@@ -119,6 +125,10 @@ class HomeViewModel @Inject constructor(
 
     fun onContentErrorRefreshClicked() {
         requestContent(ContentRequest.LOADING)
+    }
+
+    private fun reportScreenCreated() {
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Home)
     }
 
     private fun requestContent(request: ContentRequest) {

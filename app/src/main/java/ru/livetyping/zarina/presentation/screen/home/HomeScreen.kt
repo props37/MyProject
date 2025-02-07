@@ -74,6 +74,7 @@ fun HomeScreen(
         isRefreshing = isRefreshing,
         onRefreshTriggered = viewModel::onRefreshTriggered,
         onContentErrorRefreshClicked = viewModel::onContentErrorRefreshClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigateForward = navigateForward,
     )
@@ -90,10 +91,12 @@ private fun ScreenContent(
     isRefreshing: Boolean,
     onRefreshTriggered: () -> Unit,
     onContentErrorRefreshClicked: () -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigateForward: (HomeScreenAction) -> Unit,
 ) {
     HomeScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigateForward = navigateForward,
     )
@@ -217,6 +220,7 @@ private fun Preview(
             isRefreshing = false,
             onRefreshTriggered = {},
             onContentErrorRefreshClicked = {},
+            onScreenCreated = {},
             sideEffects = remember { emptyFlow() },
             navigateForward = {},
         )

@@ -65,6 +65,7 @@ fun ProductScreen(
         onBackClicked = viewModel::onBackClicked,
         onShareClicked = viewModel::onShareClicked,
         onUrlClicked = viewModel::onUrlClicked,
+        onScreenCreated = viewModel::onScreenCreated,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
     )
@@ -86,18 +87,20 @@ private fun ScreenContent(
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
     onUrlClicked: (Url) -> Unit,
+    onScreenCreated: () -> Unit,
     sideEffects: Flow<SideEffect>,
     navigate: (ProductScreenAction) -> Unit,
 ) {
     val product = (productState as? ProductState.Success)?.product
     DisposableEffect(product?.id) {
         if (product != null) {
-            AppMetricaHelper.reportShowProductDetailsEvent(product)
+            AppMetricaHelper.reportProductScreenOpened(product)
         }
         onDispose {}
     }
 
     ProductScreenBehavior(
+        onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navigate = navigate,
     )

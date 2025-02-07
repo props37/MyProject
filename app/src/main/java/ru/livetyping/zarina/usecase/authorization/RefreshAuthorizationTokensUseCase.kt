@@ -38,6 +38,7 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
         } catch (e: Exception) {
             Timber.e(e, "Failed to refresh authorization tokens. Request forced sign out")
             forcedSignOutCoordinator.requestForcedSignOut()
+            fetchUnauthorizedUserAuthorizationTokensUseCase()
             throw e
         }
     }
