@@ -38,6 +38,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Sorting
@@ -210,6 +211,10 @@ class ProductSearchViewModel @AssistedInject constructor(
     init {
         handleSizeSelectorResult()
         handleFiltersResult()
+    }
+
+    fun onScreenCreated() {
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Search)
     }
 
     fun onBackClicked() {
