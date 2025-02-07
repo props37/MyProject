@@ -32,6 +32,7 @@ object AppMetricaHelper {
 
         when (screen) {
             is AppMetricaScreen.ProductList -> reportProductListOpened(screen)
+            AppMetricaScreen.Cart -> reportCartOpened()
             else -> Unit
         }
     }
@@ -118,10 +119,6 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_SELECT_PAYMENT_METHOD, parameters)
     }
 
-    fun reportCartOpened() {
-        AppMetrica.reportEvent(EVENT_OPEN_CART)
-    }
-
     fun reportOrderConfirmed(order: OrderDetails) {
         val identifier = order.id.value.toString()
         val eCommerceCartItems = order.products.map { product ->
@@ -174,6 +171,10 @@ object AppMetricaHelper {
     fun reportBonusesUsed(bonusCount: Int) {
         val parameters = mapOf(KEY_BONUS_COUNT to bonusCount)
         AppMetrica.reportEvent(EVENT_USE_BONUSES, parameters)
+    }
+
+    private fun reportCartOpened() {
+        AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
 
     private fun reportProductListOpened(screen: AppMetricaScreen.ProductList) {

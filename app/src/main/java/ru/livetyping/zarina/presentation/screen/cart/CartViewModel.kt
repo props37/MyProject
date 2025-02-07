@@ -25,6 +25,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.cart.CartSize
@@ -266,7 +267,7 @@ class CartViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.fetchUserCity()
         }
-        AppMetricaHelper.reportCartOpened()
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Cart)
     }
 
     fun onClearCartClicked() {
