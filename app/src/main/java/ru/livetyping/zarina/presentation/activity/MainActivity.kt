@@ -82,14 +82,16 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var getUserFlowUseCase: GetUserFlowUseCase
 
-    private val authTokensFlow = getAuthorizationTokensFlowUseCase()
-        .map { it.getOrNull() }
-        .conflate()
-        .shareIn(
-            scope = lifecycleScope,
-            started = SharingStarted.WhileUiSubscribed,
-            replay = 1,
-        )
+    private val authTokensFlow by lazy {
+        getAuthorizationTokensFlowUseCase()
+            .map { it.getOrNull() }
+            .conflate()
+            .shareIn(
+                scope = lifecycleScope,
+                started = SharingStarted.WhileUiSubscribed,
+                replay = 1,
+            )
+    }
 
     private var navController: NavHostController? = null
 
