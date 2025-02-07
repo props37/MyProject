@@ -152,6 +152,11 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_APPLY_PROMO_CODE, parameters)
     }
 
+    fun reportBonusesUsed(bonusCount: Int) {
+        val parameters = mapOf(KEY_BONUS_COUNT to bonusCount)
+        AppMetrica.reportEvent(EVENT_USE_BONUSES, parameters)
+    }
+
     private fun getECommerceProduct(product: Product): ECommerceProduct {
         return ECommerceProduct(product.id.value).apply {
             name = product.name
@@ -213,6 +218,7 @@ object AppMetricaHelper {
     private const val EVENT_SIGN_IN = "signIn"
     private const val EVENT_OPEN_PROFILE = "openProfile"
     private const val EVENT_APPLY_PROMO_CODE = "applyPromoCode"
+    private const val EVENT_USE_BONUSES = "useBonuses"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
@@ -221,6 +227,7 @@ object AppMetricaHelper {
     private const val KEY_PAYMENT_METHOD = "paymentMethod"
     private const val KEY_QUERY = "query"
     private const val KEY_PROMO_CODE = "promoCode"
+    private const val KEY_BONUS_COUNT = "bonusCount"
 
     private const val RUB_UNIT = "RUB"
 }
