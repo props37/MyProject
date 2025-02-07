@@ -1,27 +1,28 @@
-package ru.livetyping.zarina.application.extension
+package ru.livetyping.zarina.application.startup
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import androidx.startup.Initializer
 import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.MindboxConfiguration
 import cloud.mindbox.mobile_sdk.logger.Level
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.livetyping.zarina.BuildConfig
-import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import timber.log.Timber
-import javax.inject.Inject
 
-class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
-    override fun install(application: Application) {
-        val configuration = getConfiguration(application)
+class MindboxInitializer : Initializer<Unit> {
+    override fun create(context: Context) {
+        Log.d(TAG, "Initialize Mindbox")
+        val configuration = getConfiguration(context)
         val pushServices = listOf(MindboxFirebase)
         Mindbox.initPushServices(
-            context = application,
+            context = context,
             pushServices = pushServices,
         )
         Mindbox.init(
-            application = application,
+            application = context as Application,
             configuration = configuration,
             pushServices = pushServices,
         )
@@ -29,21 +30,25 @@ class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
             Mindbox.setLogLevel(Level.DEBUG)
         }
         val areNotificationsEnabled =
-            NotificationManagerCompat.from(application).areNotificationsEnabled()
+            NotificationManagerCompat.from(context).areNotificationsEnabled()
         if (areNotificationsEnabled) {
-            Mindbox.updateNotificationPermissionStatus(application)
+            Mindbox.updateNotificationPermissionStatus(context)
         }
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-            Mindbox.updatePushToken(application, token, MindboxFirebase)
+            Mindbox.updatePushToken(context, token, MindboxFirebase)
         }
         Mindbox.subscribeDeviceUuid { uuid ->
-            Timber.tag(TAG).v("Mindbox device UUID: $uuid")
+            Log.v(MINDBOX_TAG, "Mindbox device UUID: $uuid")
         }
     }
 
-    private fun getConfiguration(application: Application): MindboxConfiguration {
+    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+        return mutableListOf()
+    }
+
+    private fun getConfiguration(context: Context): MindboxConfiguration {
         return MindboxConfiguration.Builder(
-            context = application,
+            context = context,
             domain = DOMAIN,
             endpointId = BuildConfig.MINDBOX_ENDPOINT,
         )
@@ -55,6 +60,7 @@ class MindboxApplicationExtension @Inject constructor() : ApplicationExtension {
     companion object {
         const val DOMAIN = "api.mindbox.ru"
 
-        private const val TAG = "Mindbox"
+        private const val TAG = "MindboxInitializer"
+        private const val MINDBOX_TAG = "Mindbox"
     }
 }
