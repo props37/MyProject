@@ -224,6 +224,7 @@ dependencies {
     implementation(libs.jetpack.credentials)
     implementation(libs.jetpack.credentials.compat)
     implementation(libs.jetpack.webkit)
+    implementation(libs.jetpack.startup)
 
     implementation(platform(libs.jetpack.compose.bom))
     implementation(libs.jetpack.compose.ui)
