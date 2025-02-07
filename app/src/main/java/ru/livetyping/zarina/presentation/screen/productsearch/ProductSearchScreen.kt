@@ -178,7 +178,7 @@ private fun ScreenContent(
                                     .padding(16.dp),
                             )
                         },
-                        appMetricaScreen = AppMetricaScreen.ProductSearch,
+                        appMetricaScreen = AppMetricaScreen.Search,
                         modifier = Modifier
                             .fillMaxSize()
                             .background(UiKitTheme.colors.background.general.regular.default),

@@ -7,16 +7,35 @@ import io.appmetrica.analytics.ecommerce.ECommerceEvent
 import io.appmetrica.analytics.ecommerce.ECommerceOrder
 import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
+import io.appmetrica.analytics.ecommerce.ECommerceScreen
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartProduct
+import ru.livetyping.zarina.domain.category.CategoryPath
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
 import java.util.UUID
 
 object AppMetricaHelper {
+    fun reportScreenOpened(screen: AppMetricaScreen) {
+        val eCommerceScreen = ECommerceScreen().apply {
+            name = screen.name
+            if (screen is AppMetricaScreen.ProductList && screen.categoryPath != null) {
+                categoriesPath = screen.categoryPath.getNameList()
+            }
+        }
+        val event = ECommerceEvent.showScreenEvent(eCommerceScreen)
+        AppMetrica.reportECommerce(event)
+
+        when (screen) {
+            is AppMetricaScreen.ProductList -> reportProductListOpened(screen)
+            else -> Unit
+        }
+    }
+
     fun reportShowProductCardEvent(product: Product, screen: AppMetricaScreen) {
         val eCommerceProduct = getECommerceProduct(product)
         val eCommerceScreen = screen.toECommerceScreen()
@@ -157,6 +176,19 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_USE_BONUSES, parameters)
     }
 
+    private fun reportProductListOpened(screen: AppMetricaScreen.ProductList) {
+        val parameters = screen.categoryPath?.let { path ->
+            val categoryPathNameList = path.getNameList().takeIf { it.isNotEmpty() }
+            categoryPathNameList?.let { nameList ->
+                mapOf(
+                    KEY_CATEGORY to nameList.last(),
+                    KEY_CATEGORY_PATH to categoryPathNameList,
+                )
+            }
+        }
+        AppMetrica.reportEvent(EVENT_OPEN_PRODUCT_LIST, parameters)
+    }
+
     private fun getECommerceProduct(product: Product): ECommerceProduct {
         return ECommerceProduct(product.id.value).apply {
             name = product.name
@@ -206,6 +238,18 @@ object AppMetricaHelper {
         return ECommerceAmount(price.toLong(), CURRENCY_UNIT_RUB)
     }
 
+    private fun CategoryPath.getNameList(): List<String> {
+        val path = this
+        return buildList {
+            val section = when (path.gender) {
+                Gender.FEMALE -> CATEGORY_WOMEN
+                Gender.MALE -> CATEGORY_MEN
+            }
+            add(section)
+            addAll(path.path.map { it.name })
+        }
+    }
+
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
     private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
     private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
@@ -217,6 +261,7 @@ object AppMetricaHelper {
     private const val EVENT_OPEN_PROFILE = "openProfile"
     private const val EVENT_APPLY_PROMO_CODE = "applyPromoCode"
     private const val EVENT_USE_BONUSES = "useBonuses"
+    private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
@@ -226,6 +271,11 @@ object AppMetricaHelper {
     private const val KEY_QUERY = "query"
     private const val KEY_PROMO_CODE = "promoCode"
     private const val KEY_BONUS_COUNT = "bonusCount"
+    private const val KEY_CATEGORY = "category"
+    private const val KEY_CATEGORY_PATH = "categoryPath"
 
     private const val CURRENCY_UNIT_RUB = "RUB"
+
+    private const val CATEGORY_WOMEN = "Женщинам"
+    private const val CATEGORY_MEN = "Мужчинам"
 }

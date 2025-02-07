@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.data.analytics
 
 import io.appmetrica.analytics.ecommerce.ECommerceScreen
+import ru.livetyping.zarina.domain.category.CategoryPath
 
 // NOTE: DO NOT CHANGE. Values correspond to AppMetrica screen names. The same are used on iOS app.
 sealed class AppMetricaScreen(val name: String) {
@@ -12,9 +13,9 @@ sealed class AppMetricaScreen(val name: String) {
 
     data object Home : AppMetricaScreen("HOME")
 
-    data object ProductList : AppMetricaScreen("CATALOG")
+    data object Catalog : AppMetricaScreen("CATALOG")
 
-    data object ProductSearch : AppMetricaScreen("PRODUCT_LIST")
+    data class ProductList(val categoryPath: CategoryPath?) : AppMetricaScreen("PRODUCT_LIST")
 
     data object Product : AppMetricaScreen("PRODUCT")
 
