@@ -12,10 +12,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,6 +26,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.product.Product
@@ -61,6 +64,8 @@ class ProductViewModel @AssistedInject constructor(
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var reportScreenCreatedJob: Job? = null
 
     private val initialProductId: StateFlow<Product.Id> = savedStateHandle
         .getStateFlow<String?>(
@@ -164,6 +169,10 @@ class ProductViewModel @AssistedInject constructor(
         handleSizeSelectorResult()
     }
 
+    fun onScreenCreated() {
+        reportScreenCreated()
+    }
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductScreenAction.ScreenClosed
@@ -181,6 +190,7 @@ class ProductViewModel @AssistedInject constructor(
     fun onProductColorClicked(productColor: ProductColor) {
         if (productColor.productId != productId.value) {
             productId.value = productColor.productId
+            reportScreenCreated()
         }
     }
 
@@ -261,6 +271,21 @@ class ProductViewModel @AssistedInject constructor(
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.OpenUrl(url))
+        }
+    }
+
+    private fun reportScreenCreated() {
+        AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Product)
+
+        reportScreenCreatedJob?.cancel()
+        reportScreenCreatedJob = viewModelScope.launch {
+            val productSuccessState = productState
+                .firstOrNull { it is ProductState.Success }
+                as? ProductState.Success
+            val product = productSuccessState?.product
+            if (product != null) {
+                AppMetricaHelper.reportProductScreenOpened(product)
+            }
         }
     }
 

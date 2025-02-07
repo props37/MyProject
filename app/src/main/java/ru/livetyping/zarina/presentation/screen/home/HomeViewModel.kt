@@ -101,7 +101,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onScreenCreated() {
-        reportScreenOpened()
+        reportScreenCreated()
     }
 
     fun onGenderTabChanged(tab: GenderTab) {
@@ -127,7 +127,7 @@ class HomeViewModel @Inject constructor(
         requestContent(ContentRequest.LOADING)
     }
 
-    private fun reportScreenOpened() {
+    private fun reportScreenCreated() {
         AppMetricaHelper.reportScreenOpened(AppMetricaScreen.Home)
     }
 
