@@ -15,6 +15,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
@@ -92,6 +93,9 @@ class MainActivity : AppCompatActivity() {
                 replay = 1,
             )
     }
+
+    private var lastTokensCartProductIdsFetchedFor: AuthorizationTokens? = null
+    private var lastTokensFavoriteProductIdsFetchedFor: AuthorizationTokens? = null
 
     private var navController: NavHostController? = null
 
@@ -210,31 +214,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: [Top] Test!
     private fun setUpCartProductIdsFetching() {
         authTokensFlow
             .filterNotNull()
             .distinctUntilChanged()
-            .transformLatest<AuthorizationTokens, Unit> {
-                // TODO: [High] Find a better way
-                // Delay is used to prevent making requests with old authorization tokens
-                // as tokens stored on the disk get updated earlier than HttpClient tokens
-                delay(FETCHING_DELAY)
-                fetchCartProductIdsUseCase()
+            .transformLatest<AuthorizationTokens, Unit> { tokens ->
+                if (tokens != lastTokensCartProductIdsFetchedFor) {
+                    // TODO: [High] Find a better way
+                    // Delay is used to prevent making requests with old authorization tokens
+                    // as tokens stored on the disk get updated earlier than HttpClient tokens
+                    delay(FETCHING_DELAY)
+                    fetchCartProductIdsUseCase()
+                }
             }
+            .flowWithLifecycle(lifecycle)
             .launchIn(lifecycleScope)
     }
 
+    // TODO: [Top] Test!
     private fun setUpFavoriteProductIdsFetching() {
         authTokensFlow
             .filterNotNull()
             .distinctUntilChanged()
-            .transformLatest<AuthorizationTokens, Unit> {
-                // TODO: [High] Find a better way
-                // Delay is used to prevent making requests with old authorization tokens
-                // as tokens stored on the disk get updated earlier than HttpClient tokens
-                delay(FETCHING_DELAY)
-                fetchFavoriteProductIdsUseCase()
+            .transformLatest<AuthorizationTokens, Unit> { tokens ->
+                if (tokens != lastTokensFavoriteProductIdsFetchedFor) {
+                    // TODO: [High] Find a better way
+                    // Delay is used to prevent making requests with old authorization tokens
+                    // as tokens stored on the disk get updated earlier than HttpClient tokens
+                    delay(FETCHING_DELAY)
+                    fetchFavoriteProductIdsUseCase()
+                }
             }
+            .flowWithLifecycle(lifecycle)
             .launchIn(lifecycleScope)
     }
 
