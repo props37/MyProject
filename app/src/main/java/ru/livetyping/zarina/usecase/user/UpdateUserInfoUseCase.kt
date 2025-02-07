@@ -29,7 +29,7 @@ class UpdateUserInfoUseCase @Inject constructor(
         val birthDate = params.birthDate
         val email = params.email
         val phone = params.phone
-        val gender = params.gender
+        val gender = params.gender ?: Gender.getDefault()
         val oldPassword = params.oldPassword
         val newPassword = params.newPassword
         Timber.v(
