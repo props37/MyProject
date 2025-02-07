@@ -194,7 +194,7 @@ object AppMetricaHelper {
     }
 
     private fun getECommerceAmount(price: Int): ECommerceAmount {
-        return ECommerceAmount(price.toLong(), RUB_UNIT)
+        return ECommerceAmount(price.toLong(), CURRENCY_UNIT_RUB)
     }
 
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
@@ -218,5 +218,5 @@ object AppMetricaHelper {
     private const val KEY_PROMO_CODE = "promoCode"
     private const val KEY_BONUS_COUNT = "bonusCount"
 
-    private const val RUB_UNIT = "RUB"
+    private const val CURRENCY_UNIT_RUB = "RUB"
 }
