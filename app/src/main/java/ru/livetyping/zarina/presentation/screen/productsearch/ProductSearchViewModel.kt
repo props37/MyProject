@@ -183,6 +183,7 @@ class ProductSearchViewModel @AssistedInject constructor(
         searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
         filters,
     ) { searchQuery, filters ->
+        AppMetricaHelper.reportProductSearch(searchQuery)
         val sorting = filters.sorting?.selected ?: Sorting.getDefault()
         interactor.productSearchResultPager.getProductPagingDataFlow(
             query = searchQuery,

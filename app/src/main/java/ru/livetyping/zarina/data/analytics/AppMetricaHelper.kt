@@ -127,6 +127,11 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_SELECT_DELIVERY_TYPE, parameters)
     }
 
+    fun reportProductSearch(query: String) {
+        val parameters = mapOf(KEY_QUERY to query)
+        AppMetrica.reportEvent(EVENT_SEARCH_PRODUCTS, parameters)
+    }
+
     fun reportUserSignedUp() {
         AppMetrica.reportEvent(EVENT_SIGN_UP)
     }
@@ -195,6 +200,7 @@ object AppMetricaHelper {
     private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
     private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
     private const val EVENT_SELECT_DELIVERY_TYPE = "selectDeliveryType"
+    private const val EVENT_SEARCH_PRODUCTS = "searchProducts"
     private const val EVENT_OPEN_CART = "cartView"
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
@@ -207,6 +213,7 @@ object AppMetricaHelper {
     private const val KEY_DELIVERY_TYPE = "deliveryType"
     private const val KEY_SIGN_IN_METHOD = "method"
     private const val KEY_PAYMENT_METHOD = "paymentMethod"
+    private const val KEY_QUERY = "query"
 
     private const val RUB_UNIT = "RUB"
 }
