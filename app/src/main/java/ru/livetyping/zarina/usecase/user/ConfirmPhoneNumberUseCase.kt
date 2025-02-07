@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.usecase.user
 
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
+import ru.livetyping.zarina.data.analytics.AppMetricaSignInMethod
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import javax.inject.Inject
@@ -17,6 +19,7 @@ class ConfirmPhoneNumberUseCase @Inject constructor(
 
         val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
         setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()
+        AppMetricaHelper.reportUserSignedIn(AppMetricaSignInMethod.PASSWORD)
     }
 
     data class Params(val phone: PhoneNumber, val code: String)
