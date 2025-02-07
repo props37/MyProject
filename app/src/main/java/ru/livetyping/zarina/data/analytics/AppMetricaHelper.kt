@@ -105,6 +105,10 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_SELECT_DELIVERY_TYPE, parameters)
     }
 
+    fun reportUserSignedUp() {
+        AppMetrica.reportEvent(EVENT_SIGN_UP)
+    }
+
     fun reportUserSignedIn(method: AppMetricaSignInMethod) {
         val parameters = mapOf(KEY_SIGN_IN_METHOD to method.value)
         AppMetrica.reportEvent(EVENT_SIGN_IN, parameters)
@@ -170,6 +174,7 @@ object AppMetricaHelper {
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
     private const val EVENT_SELECT_DELIVERY_TYPE = "deliveryTypeSelected"
+    private const val EVENT_SIGN_UP = "signUp"
     private const val EVENT_SIGN_IN = "signIn"
     private const val EVENT_OPEN_PROFILE = "openProfile"
 
