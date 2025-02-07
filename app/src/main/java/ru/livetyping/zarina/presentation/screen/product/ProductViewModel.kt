@@ -225,7 +225,7 @@ class ProductViewModel @AssistedInject constructor(
                         val text = Text.Resource(R.string.product_adding_to_favorites_completed)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
-                        AppMetricaHelper.reportAddProductToWishlistEvent(product)
+                        AppMetricaHelper.reportProductAddedToWishlist(product)
                     }
                 }
                 .onFailure {
