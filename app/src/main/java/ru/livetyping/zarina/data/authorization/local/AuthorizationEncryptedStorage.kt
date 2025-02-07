@@ -36,7 +36,7 @@ class AuthorizationEncryptedStorage @Inject constructor(
 
     fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
-        encryptedSharedPreferences.edit {
+        encryptedSharedPreferences.edit(commit = true) {
             putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
             putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
         }
