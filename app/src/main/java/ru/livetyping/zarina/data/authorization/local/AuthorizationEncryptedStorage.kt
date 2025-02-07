@@ -5,6 +5,7 @@ import androidx.core.content.edit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.conflate
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Token
@@ -33,6 +34,7 @@ class AuthorizationEncryptedStorage @Inject constructor(
             encryptedSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
     }
+        .conflate() // TODO: [Top] Test!
 
     fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
