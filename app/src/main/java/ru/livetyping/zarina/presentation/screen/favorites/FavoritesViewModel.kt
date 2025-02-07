@@ -107,6 +107,8 @@ class FavoritesViewModel @AssistedInject constructor(
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SideEffect.ShowZarinaToast(message))
                         AppMetricaHelper.reportProductAddedToWishlist(product)
+                    } else {
+                        AppMetricaHelper.reportProductRemovedFromWishlist(product)
                     }
                 }
                 .onFailure {

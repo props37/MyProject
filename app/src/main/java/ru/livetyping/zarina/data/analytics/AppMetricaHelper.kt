@@ -65,6 +65,22 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_ADD_WISHLIST_ITEM, parameters)
     }
 
+    fun reportProductRemovedFromWishlist(product: Product) {
+        val parameters = mapOf(
+            KEY_SKU to product.id.value,
+            KEY_NAME to product.name,
+        )
+        AppMetrica.reportEvent(EVENT_REMOVE_WISHLIST_ITEM, parameters)
+    }
+
+    fun reportProductRemovedFromWishlist(productId: Product.Id, productName: String) {
+        val parameters = mapOf(
+            KEY_SKU to productId.value,
+            KEY_NAME to productName,
+        )
+        AppMetrica.reportEvent(EVENT_REMOVE_WISHLIST_ITEM, parameters)
+    }
+
     fun reportOpenCartEvent() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
@@ -170,6 +186,7 @@ object AppMetricaHelper {
     }
 
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
+    private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
     private const val EVENT_OPEN_CART = "cartView"
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"

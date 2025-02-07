@@ -332,6 +332,11 @@ class CartViewModel @AssistedInject constructor(
                             productId = product.productId,
                             productName = product.name,
                         )
+                    } else {
+                        AppMetricaHelper.reportProductRemovedFromWishlist(
+                            productId = product.productId,
+                            productName = product.name,
+                        )
                     }
                 }
                 .onFailure {
