@@ -32,22 +32,18 @@ object AppMetricaHelper {
 
     fun reportProductAddedToCart(product: Product, count: Int) {
         val eCommerceProduct = getECommerceProduct(product)
-        val cartItem = ECommerceCartItem(
-            /* product = */ eCommerceProduct,
-            /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
-            /* quantityMicros = */ count.toLong(),
-        )
+        val revenue = eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product)
+        val quantity = count.toLong()
+        val cartItem = ECommerceCartItem(eCommerceProduct, revenue, quantity)
         val event = ECommerceEvent.addCartItemEvent(cartItem)
         AppMetrica.reportECommerce(event)
     }
 
     fun reportProductRemovedFromCart(product: CartProduct) {
         val eCommerceProduct = getECommerceProduct(product)
-        val cartItem = ECommerceCartItem(
-            /* product = */ eCommerceProduct,
-            /* revenue = */ eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product),
-            /* quantityMicros = */ product.count.toLong(),
-        )
+        val revenue = eCommerceProduct.actualPrice ?: getECommerceCurrentPrice(product)
+        val quantity = product.count.toLong()
+        val cartItem = ECommerceCartItem(eCommerceProduct, revenue, quantity)
         val event = ECommerceEvent.removeCartItemEvent(cartItem)
         AppMetrica.reportECommerce(event)
     }
@@ -56,7 +52,8 @@ object AppMetricaHelper {
         val identifier = UUID.randomUUID().toString()
         val cartItems = cart.products.map { product ->
             val eCommerceProduct = getECommerceProduct(product)
-            val revenue = ECommercePrice(getECommerceAmount(product.price.currentPrice))
+            val revenue = eCommerceProduct.actualPrice
+                ?: ECommercePrice(getECommerceAmount(product.price.currentPrice))
             val quantity = product.count.toLong()
             ECommerceCartItem(eCommerceProduct, revenue, quantity)
         }
@@ -107,6 +104,7 @@ object AppMetricaHelper {
     }
 
     fun reportOrderConfirmed(order: OrderDetails) {
+        val identifier = order.id.value.toString()
         val eCommerceCartItems = order.products.map { product ->
             val eCommerceProduct = getECommerceProduct(
                 productId = product.id,
@@ -114,16 +112,12 @@ object AppMetricaHelper {
                 currentPrice = product.price.currentPrice,
                 originalPrice = product.price.originalPrice,
             )
-            ECommerceCartItem(
-                /* product = */ eCommerceProduct,
-                /* revenue = */ ECommercePrice(getECommerceAmount(product.price.currentPrice)),
-                /* quantityMicros = */ product.count.toLong(),
-            )
+            val revenue = eCommerceProduct.actualPrice
+                ?: ECommercePrice(getECommerceAmount(product.price.currentPrice))
+            val quantity = product.count.toLong()
+            ECommerceCartItem(eCommerceProduct, revenue, quantity)
         }
-        val eCommerceOrder = ECommerceOrder(
-            /* identifier = */ order.id.value.toString(),
-            /* cartItems = */ eCommerceCartItems,
-        )
+        val eCommerceOrder = ECommerceOrder(identifier, eCommerceCartItems)
         val event = ECommerceEvent.purchaseEvent(eCommerceOrder)
         AppMetrica.reportECommerce(event)
     }
