@@ -23,7 +23,7 @@ class RemoveProductFromCartUseCase @Inject constructor(
         val barcode = params.barcode
         Timber.v("Remove product $product from the cart")
         val cartProductCount = cartRepository.removeProductFromCart(product.productId, barcode)
-        AppMetricaHelper.reportRemoveCartItemEvent(product)
+        AppMetricaHelper.reportProductRemovedFromCart(product)
         cartRepository.setCartTotalProductCount(cartProductCount.value)
 
         if (!cartRepository.areCartProductIdsFetched.value) {

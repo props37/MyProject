@@ -39,7 +39,7 @@ object AppMetricaHelper {
         AppMetrica.reportECommerce(event)
     }
 
-    fun reportRemoveCartItemEvent(product: CartProduct) {
+    fun reportProductRemovedFromCart(product: CartProduct) {
         val eCommerceProduct = getECommerceProduct(product)
         val cartItem = ECommerceCartItem(
             /* product = */ eCommerceProduct,
