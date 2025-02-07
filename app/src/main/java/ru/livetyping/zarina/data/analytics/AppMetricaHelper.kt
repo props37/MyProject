@@ -122,7 +122,7 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_PAYMENT_TYPE)
     }
 
-    fun reportSelectDeliveryTypeEvent(deliveryMethod: DeliveryMethod) {
+    fun reportDeliveryMethodSelected(deliveryMethod: DeliveryMethod) {
         val parameters = mapOf(KEY_DELIVERY_TYPE to deliveryMethod.name)
         AppMetrica.reportEvent(EVENT_SELECT_DELIVERY_TYPE, parameters)
     }
@@ -194,10 +194,10 @@ object AppMetricaHelper {
     private const val EVENT_ADD_WISHLIST_ITEM = "addWishlistItem"
     private const val EVENT_REMOVE_WISHLIST_ITEM = "removeWishlistItem"
     private const val EVENT_SELECT_PAYMENT_METHOD = "selectPaymentMethod"
+    private const val EVENT_SELECT_DELIVERY_TYPE = "selectDeliveryType"
     private const val EVENT_OPEN_CART = "cartView"
     private const val EVENT_START_CHECKOUT = "beginOrder"
     private const val EVENT_PAYMENT_TYPE = "paymentType"
-    private const val EVENT_SELECT_DELIVERY_TYPE = "deliveryTypeSelected"
     private const val EVENT_SIGN_UP = "signUp"
     private const val EVENT_SIGN_IN = "signIn"
     private const val EVENT_OPEN_PROFILE = "openProfile"
