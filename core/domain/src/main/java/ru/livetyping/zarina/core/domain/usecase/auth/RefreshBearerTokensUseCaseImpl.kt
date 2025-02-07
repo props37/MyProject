@@ -33,7 +33,11 @@ internal class RefreshBearerTokensUseCaseImpl(
             logger?.v(TAG, "Bearer tokens refreshed")
             newTokens
         } catch (e: Exception) {
-            logger?.e(TAG, e, "Failed to refresh Bearer tokens, fetch new unauthorized user tokens")
+            logger?.e(TAG, e, "Failed to refresh Bearer tokens")
+            logger?.e(TAG, e, "Request force signout")
+            forcedSignOutCoordinator.requestForcedSignOut()
+
+            logger?.e(TAG, e, "Fetch new unauthorized user tokens")
             // TODO: [Top] Test!
             try {
                 fetchNewUnauthorizedUserBearerTokens()
@@ -41,8 +45,6 @@ internal class RefreshBearerTokensUseCaseImpl(
                 logger?.e(TAG, e, "Failed to fetch new unauthorized user tokens")
             }
 
-            logger?.e(TAG, e, "Request force signout")
-            forcedSignOutCoordinator.requestForcedSignOut()
             throw e
         }
     }
