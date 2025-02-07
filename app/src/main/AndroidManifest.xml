@@ -137,6 +137,18 @@
         </service>
 
         <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="ru.livetyping.zarina.application.startup.MindboxInitializer"
+                android:value="androidx.startup" />
+
+        </provider>
+
+        <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
             android:authorities="${applicationId}.firebaseinitprovider"
             tools:node="remove" />
