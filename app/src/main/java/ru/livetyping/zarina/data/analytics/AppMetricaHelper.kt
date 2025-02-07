@@ -83,7 +83,7 @@ object AppMetricaHelper {
     }
 
     fun reportPaymentMethodSelected(paymentMethod: PaymentMethod) {
-        val parameters = mapOf("KEY_PAYMENT_METHOD" to paymentMethod.title)
+        val parameters = mapOf(KEY_PAYMENT_METHOD to paymentMethod.title)
         AppMetrica.reportEvent(EVENT_SELECT_PAYMENT_METHOD, parameters)
     }
 
