@@ -1,16 +1,15 @@
 package ru.livetyping.zarina.presentation.activity.lifecycleobserver
 
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
 import ru.livetyping.zarina.presentation.activity.ActivityResultRegistryHolder
+import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
 import javax.inject.Inject
 
 class ActivityResultRegistryHolderLifecycleObserver @Inject constructor(
     private val activityResultRegistryHolder: ActivityResultRegistryHolder,
 ) : ActivityLifecycleObserver {
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        val activity = source.asActivity()
+    override fun onStateChanged(activity: ComponentActivity, event: Lifecycle.Event) {
         when (event) {
             Lifecycle.Event.ON_CREATE -> {
                 activityResultRegistryHolder.set(activity.activityResultRegistry)
