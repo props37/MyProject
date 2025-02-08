@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
@@ -47,7 +48,7 @@ internal class UpdateUserInfoUseCaseImpl(
             birthDate = birthDate ?: currentUser.birthDate ?: User.BIRTH_DATE_MIN_VALUE,
             email = email ?: currentUser.email,
             phone = checkNotNull(currentUser.phone) { "Current user's phone is null" },
-            gender = gender ?: currentUser.gender,
+            gender = gender ?: currentUser.gender ?: Gender.getDefault(),
             oldPassword = oldPassword,
             newPassword = newPassword,
         )
