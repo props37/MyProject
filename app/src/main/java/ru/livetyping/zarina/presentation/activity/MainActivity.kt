@@ -21,6 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.conflate
@@ -215,6 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // TODO: [Top] Test!
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setUpCartProductIdsFetching() {
         authTokensFlow
             .filterNotNull()
@@ -233,6 +235,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // TODO: [Top] Test!
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun setUpFavoriteProductIdsFetching() {
         authTokensFlow
             .filterNotNull()
