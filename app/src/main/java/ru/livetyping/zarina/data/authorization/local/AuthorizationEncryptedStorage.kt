@@ -2,10 +2,12 @@ package ru.livetyping.zarina.data.authorization.local
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.authorization.AuthorizationTokens
 import ru.livetyping.zarina.domain.common.Token
@@ -34,11 +36,12 @@ class AuthorizationEncryptedStorage @Inject constructor(
             encryptedSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
     }
-        .conflate() // TODO: [Top] Test!
+        .conflate()
+        .flowOn(Dispatchers.IO)
 
     fun setAuthorizationTokens(tokens: AuthorizationTokens?) {
         Timber.v("Set authorization tokens: $tokens")
-        encryptedSharedPreferences.edit(commit = true) {
+        encryptedSharedPreferences.edit {
             putString(KEY_ACCESS_TOKEN, tokens?.accessToken?.value)
             putString(KEY_REFRESH_TOKEN, tokens?.refreshToken?.value)
         }
