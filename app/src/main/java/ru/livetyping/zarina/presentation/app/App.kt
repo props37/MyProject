@@ -36,7 +36,7 @@ import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 
 @Composable
-fun ZarinaApp(
+fun App(
     features: Features,
     navController: NavHostController,
     bottomSheetNavigator: BottomSheetNavigator,
