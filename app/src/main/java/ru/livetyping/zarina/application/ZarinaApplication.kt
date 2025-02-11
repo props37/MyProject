@@ -5,27 +5,21 @@ import android.app.Application
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
-import ru.livetyping.zarina.application.extension.base.ApplicationExtension
+import ru.livetyping.zarina.application.extension.AppMetricaApplicationExtension
 import javax.inject.Inject
 
 @HiltAndroidApp
 class ZarinaApplication : Application() {
 
     @Inject
-    lateinit var applicationExtensions: Set<@JvmSuppressWildcards ApplicationExtension>
+    lateinit var appMetricaApplicationExtension: AppMetricaApplicationExtension
 
     @SuppressLint("LogNotTimber")
     override fun onCreate() {
         super.onCreate()
         Log.v(TAG, "onCreate")
         FirebaseApp.initializeApp(this)
-        installApplicationExtensions()
-    }
-
-    private fun installApplicationExtensions() {
-        applicationExtensions.forEach { extension ->
-            extension.install(this)
-        }
+        appMetricaApplicationExtension.install(this)
     }
 
     private companion object {
