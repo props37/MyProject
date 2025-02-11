@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.uikit.toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -11,6 +10,7 @@ import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.overscroll
+import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -46,10 +46,7 @@ public fun ZarinaToastContainer(
         }
     }
 
-    val overscrollFactory = LocalOverscrollFactory.current
-    val overscrollEffect = remember(overscrollFactory) {
-        overscrollFactory?.createOverscrollEffect()
-    }
+    val overscrollEffect = rememberOverscrollEffect()
     val flingBehavior = ScrollableDefaults.flingBehavior()
 
     AnimatedContent(
