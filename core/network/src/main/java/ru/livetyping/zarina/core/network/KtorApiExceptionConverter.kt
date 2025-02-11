@@ -7,9 +7,9 @@ public abstract class KtorApiExceptionConverter {
         return try {
             block()
         } catch (e: ClientRequestException) {
-            handle(e)
+            convert(e)
         }
     }
 
-    protected abstract suspend fun handle(e: ClientRequestException): Nothing
+    protected abstract suspend fun convert(e: ClientRequestException): Nothing
 }

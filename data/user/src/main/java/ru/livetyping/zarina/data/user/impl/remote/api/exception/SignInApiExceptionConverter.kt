@@ -15,7 +15,7 @@ internal class SignInApiExceptionConverter @Inject constructor(
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 
-    override suspend fun handle(e: ClientRequestException): Nothing {
+    override suspend fun convert(e: ClientRequestException): Nothing {
         val responseText = e.response.bodyAsText()
         val element = json.parseToJsonElement(responseText)
         when (element) {

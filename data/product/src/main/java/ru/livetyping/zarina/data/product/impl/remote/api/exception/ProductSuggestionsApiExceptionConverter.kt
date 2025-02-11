@@ -9,7 +9,7 @@ import javax.inject.Inject
 internal class ProductSuggestionsApiExceptionConverter @Inject constructor() :
     KtorApiExceptionConverter() {
 
-    override suspend fun handle(e: ClientRequestException): Nothing {
+    override suspend fun convert(e: ClientRequestException): Nothing {
         when (e.response.status) {
             HttpStatusCode.NotFound -> throw ProductNotFoundException()
             else -> throw e
