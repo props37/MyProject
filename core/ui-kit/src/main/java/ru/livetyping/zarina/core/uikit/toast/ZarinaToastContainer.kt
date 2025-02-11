@@ -3,11 +3,14 @@ package ru.livetyping.zarina.core.uikit.toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.overscroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +46,12 @@ public fun ZarinaToastContainer(
         }
     }
 
+    val overscrollFactory = LocalOverscrollFactory.current
+    val overscrollEffect = remember(overscrollFactory) {
+        overscrollFactory?.createOverscrollEffect()
+    }
+    val flingBehavior = ScrollableDefaults.flingBehavior()
+
     AnimatedContent(
         targetState = currentMessage,
         transitionSpec = {
@@ -52,20 +61,20 @@ public fun ZarinaToastContainer(
         },
         contentAlignment = Alignment.TopCenter,
         label = "ZarinaToastContainer",
-        modifier = modifier,
+        modifier = modifier.overscroll(overscrollEffect),
     ) { message ->
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
         val anchoredDraggableState = rememberAnchoredDraggableState(
             initialValue = SwipeableState.Default,
-            // TODO: [Top] Migrate!
-//            confirmValueChange = { message?.isRemovable == true },
         )
 
-        DisposableEffect(anchoredDraggableState, toastHeightPx) {
+        DisposableEffect(anchoredDraggableState, toastHeightPx, message) {
             val anchors = DraggableAnchors {
                 SwipeableState.Default at 0f
-                SwipeableState.Swiped at (-toastHeightPx).toFloat()
+                if (message?.isRemovable == true) {
+                    SwipeableState.Swiped at (-toastHeightPx).toFloat()
+                }
             }
             anchoredDraggableState.updateAnchors(anchors)
             onDispose {}
@@ -94,10 +103,11 @@ public fun ZarinaToastContainer(
                                 .roundToInt(),
                         )
                     }
-                    // TODO: [Top] Migrate!
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
+                        overscrollEffect = overscrollEffect,
+                        flingBehavior = flingBehavior,
                     ),
             )
         }
