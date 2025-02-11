@@ -34,6 +34,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.topBarModeAsState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarMode
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
@@ -52,14 +53,13 @@ internal fun ProductScreen(
         onTopBarEvent = viewModel::onTopBarEvent,
         productState = productState,
         onProductEvent = viewModel::onProductEvent,
+        onProductSuggestionsEvent = viewModel::onProductSuggestionsEvent,
         sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
 }
-
-// TODO: [Top] Add TotalLook and similar products
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +68,7 @@ private fun ScreenContent(
     onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
+    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
@@ -127,6 +128,7 @@ private fun ScreenContent(
         Product(
             productState = productState,
             onProductEvent = onProductEvent,
+            onProductSuggestionsEvent = onProductSuggestionsEvent,
             onShowZarinaClubDescription = { isZarinaClubDescriptionVisible = true },
             lazyListState = lazyListState,
             modifier = Modifier

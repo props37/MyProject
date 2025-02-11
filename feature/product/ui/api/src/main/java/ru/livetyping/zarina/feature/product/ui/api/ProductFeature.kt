@@ -25,5 +25,6 @@ public interface ProductFeature :
     public class NavActions(
         public val onBackClicked: () -> Unit,
         public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
+        public val onProductClicked: (Product) -> Unit,
     ) : NavigationActions
 }

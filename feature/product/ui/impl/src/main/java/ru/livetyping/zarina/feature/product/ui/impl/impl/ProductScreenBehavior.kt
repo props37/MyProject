@@ -52,5 +52,7 @@ private fun navigate(navActions: ProductFeature.NavActions, action: ProductScree
         is ProductScreenAction.SubscribeToProductClicked -> {
             navActions.onSubscribeToProductClicked(action.product, action.offer)
         }
+
+        is ProductScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
     }
 }

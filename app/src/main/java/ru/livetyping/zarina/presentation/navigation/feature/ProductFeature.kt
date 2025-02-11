@@ -32,6 +32,10 @@ fun rememberProductNavActions(
                     ProductSubscriptionFeature.NavEntry.create(product, offer)
                 navController.navigate(productSubscriptionNavEntry)
             },
+            onProductClicked = { product ->
+                val productNavEntry = ProductFeature.NavEntry.create(product.id)
+                navController.navigate(productNavEntry)
+            },
         )
     }
 }

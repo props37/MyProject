@@ -10,4 +10,6 @@ internal sealed interface ProductScreenAction {
         val product: Product,
         val offer: ProductOffer,
     ) : ProductScreenAction
+
+    data class ProductClicked(val product: Product) : ProductScreenAction
 }

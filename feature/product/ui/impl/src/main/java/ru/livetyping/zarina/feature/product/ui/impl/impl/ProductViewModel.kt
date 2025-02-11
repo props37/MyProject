@@ -25,6 +25,8 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -37,6 +39,8 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsStateBuilder
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
 import javax.inject.Inject
@@ -49,6 +53,8 @@ internal class ProductViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<ProductSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val productSuggestionsStateBuilder = ProductSuggestionsStateBuilder()
 
     private val navEntry = savedStateHandle.toRoute<ProductFeature.NavEntry>()
     private val initialProductId = navEntry.getProductId()
@@ -72,6 +78,54 @@ internal class ProductViewModel @Inject constructor(
             replay = 1,
         )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val productTotalLookRequester = FlowRequester(ProductRequest) { request ->
+        productId.flatMapLatest { productId ->
+            markAsLoading(request)
+            val params = GetProductTotalLookFlowUseCase.Params(productId)
+            deps.getProductTotalLookFlow(params)
+        }
+    }
+
+    private val productTotalLookResultFlow = productTotalLookRequester.flow
+        .conflate()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+
+    private val productTotalLookStateFlow = combine(
+        productTotalLookResultFlow,
+        productTotalLookRequester.loadingState,
+    ) { result, loadingState ->
+        productSuggestionsStateBuilder.build(result, loadingState)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val similarProductsRequester = FlowRequester(ProductRequest) { request ->
+        productId.flatMapLatest { productId ->
+            markAsLoading(request)
+            val params = GetSimilarProductsFlowUseCase.Params(productId)
+            deps.getSimilarProductsFlow(params)
+        }
+    }
+
+    private val similarProductsResultFlow = similarProductsRequester.flow
+        .conflate()
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
+
+    private val similarProductsStateFlow = combine(
+        similarProductsResultFlow,
+        similarProductsRequester.loadingState,
+    ) { result, loadingState ->
+        productSuggestionsStateBuilder.build(result, loadingState)
+    }
+
     val topBarState: StateFlow<TopBarState> = productResult
         .map { result ->
             val productName = result.getOrNull()?.name
@@ -86,13 +140,15 @@ internal class ProductViewModel @Inject constructor(
     val productState: StateFlow<ProductState> = combine(
         productResult,
         productRequester.loadingState,
-    ) { productResult, productLoadingState ->
+        productTotalLookStateFlow,
+        similarProductsStateFlow,
+    ) { productResult, productLoadingState, totalLookState, similarProductsState ->
         if (productLoadingState.isLoading()) {
             ProductState.Loading
         } else {
             productResult.fold(
                 onSuccess = { product ->
-                    ProductState.Success(product)
+                    ProductState.Success(product, totalLookState, similarProductsState)
                 },
                 onFailure = {
                     val errorState = ZarinaErrorScreenState.from(it)
@@ -126,7 +182,14 @@ internal class ProductViewModel @Inject constructor(
 
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
-            ProductEvent.ErrorRefreshClicked -> productRequester.request(ProductRequest)
+            ProductEvent.ErrorRefreshClicked -> onProductErrorRefreshClicked()
+        }
+    }
+
+    fun onProductSuggestionsEvent(event: ProductSuggestionsEvent) {
+        when (event) {
+            is ProductSuggestionsEvent.ProductClicked -> onProductClicked(event.product)
+            ProductSuggestionsEvent.ErrorRefreshClicked -> requestProductSuggestionsIfNeeded()
         }
     }
 
@@ -221,6 +284,33 @@ internal class ProductViewModel @Inject constructor(
                     val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
                     showZarinaErrorToast(text)
                 }
+        }
+    }
+
+    private fun onProductClicked(product: Product) {
+        navigationThrottler.throttle {
+            val action = ProductScreenAction.ProductClicked(product)
+            emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onProductErrorRefreshClicked() {
+        productRequester.request(ProductRequest)
+        requestProductSuggestionsIfNeeded()
+    }
+
+    private fun requestProductSuggestionsIfNeeded() {
+        viewModelScope.launch {
+            val productTotalLookResult = productTotalLookResultFlow.firstOrNull()
+            if (productTotalLookResult?.isSuccess != true) {
+                productTotalLookRequester.request(ProductRequest)
+            }
+        }
+        viewModelScope.launch {
+            val similarProductsResult = similarProductsResultFlow.firstOrNull()
+            if (similarProductsResult?.isSuccess != true) {
+                similarProductsRequester.request(ProductRequest)
+            }
         }
     }
 

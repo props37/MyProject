@@ -21,14 +21,18 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun ProductSuccess(
     productState: ProductState.Success,
     onProductEvent: (ProductEvent) -> Unit,
+    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
     onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
@@ -37,6 +41,7 @@ internal fun ProductSuccess(
         ProductList(
             productState = productState,
             onProductEvent = onProductEvent,
+            onProductSuggestionsEvent = onProductSuggestionsEvent,
             onShowZarinaClubDescription = onShowZarinaClubDescription,
             lazyListState = lazyListState,
             modifier = Modifier.weight(1f),
@@ -63,6 +68,7 @@ internal fun ProductSuccess(
 private fun ProductList(
     productState: ProductState.Success,
     onProductEvent: (ProductEvent) -> Unit,
+    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
     onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
@@ -122,7 +128,37 @@ private fun ProductList(
             )
         }
 
-        // TODO: [Top] Add total look and similar products
+        if (productState.totalLookState !is ProductSuggestionsState.None) {
+            item(
+                key = ProductListKey.TotalLook,
+                contentType = ProductListContentKey.Suggestions,
+            ) {
+                ProductSuggestions(
+                    title = stringResource(R.string.product_suggestions_title_total_look),
+                    state = productState.totalLookState,
+                    onEvent = onProductSuggestionsEvent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateZarinaItem(this),
+                )
+            }
+        }
+
+        if (productState.similarProductsState !is ProductSuggestionsState.None) {
+            item(
+                key = ProductListKey.SimilarProducts,
+                contentType = ProductListContentKey.Suggestions,
+            ) {
+                ProductSuggestions(
+                    title = stringResource(R.string.product_suggestions_title_similar_products),
+                    state = productState.similarProductsState,
+                    onEvent = onProductSuggestionsEvent,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .animateZarinaItem(this),
+                )
+            }
+        }
     }
 }
 
@@ -176,6 +212,8 @@ internal enum class ProductListKey : Parcelable {
     GeneralInfo,
     Description,
     DeliveryAndPayment,
+    TotalLook,
+    SimilarProducts,
 }
 
 private enum class ProductListContentKey {
@@ -183,4 +221,5 @@ private enum class ProductListContentKey {
     GeneralInfo,
     Description,
     DeliveryAndPayment,
+    Suggestions,
 }

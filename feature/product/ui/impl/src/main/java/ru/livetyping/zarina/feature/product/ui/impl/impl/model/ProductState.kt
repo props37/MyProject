@@ -8,7 +8,11 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 @Stable
 internal sealed class ProductState {
     @Immutable
-    data class Success(val product: ProductDetailed) : ProductState()
+    data class Success(
+        val product: ProductDetailed,
+        val totalLookState: ProductSuggestionsState,
+        val similarProductsState: ProductSuggestionsState,
+    ) : ProductState()
 
     data object Loading : ProductState()
 

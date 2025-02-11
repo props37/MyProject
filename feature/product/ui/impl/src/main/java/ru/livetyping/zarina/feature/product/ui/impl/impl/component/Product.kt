@@ -11,11 +11,13 @@ import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
 
 @Composable
 internal fun Product(
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
+    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
     onShowZarinaClubDescription: () -> Unit,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
@@ -36,6 +38,7 @@ internal fun Product(
                 ProductSuccess(
                     productState = state,
                     onProductEvent = onProductEvent,
+                    onProductSuggestionsEvent = onProductSuggestionsEvent,
                     onShowZarinaClubDescription = onShowZarinaClubDescription,
                     lazyListState = lazyListState,
                 )
