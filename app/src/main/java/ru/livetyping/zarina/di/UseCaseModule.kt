@@ -47,7 +47,9 @@ import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
@@ -797,6 +799,28 @@ internal class UseCaseModule {
     ): CancelOrderUseCase {
         return CancelOrderUseCase.getInstance(
             orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductTotalLookFlowUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetProductTotalLookFlowUseCase {
+        return GetProductTotalLookFlowUseCase.getInstance(
+            productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetSimilarProductsFlowUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetSimilarProductsFlowUseCase {
+        return GetSimilarProductsFlowUseCase.getInstance(
+            productRepository = productRepository,
             logger = logger,
         )
     }
