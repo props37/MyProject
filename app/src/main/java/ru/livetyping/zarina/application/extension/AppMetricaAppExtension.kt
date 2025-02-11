@@ -19,7 +19,7 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import javax.inject.Inject
 
-class AppMetricaApplicationExtension @Inject constructor(
+class AppMetricaAppExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
     private val getUserFlowUseCase: GetUserFlowUseCase,
 ) : ApplicationExtension {
