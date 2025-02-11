@@ -15,6 +15,10 @@ internal class OnboardingRepositoryImpl @Inject constructor(
         return remoteDataSource.getOnboardingBannerUrlFlow()
     }
 
+    override fun getIsOnboardingCompleted(): Flow<Boolean> {
+        return localDataSource.getIsOnboardingCompleted()
+    }
+
     override suspend fun setIsOnboardingCompleted(isCompleted: Boolean) {
         localDataSource.setIsOnboardingCompleted(isCompleted)
     }

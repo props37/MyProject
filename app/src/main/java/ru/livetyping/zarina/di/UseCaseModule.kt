@@ -41,6 +41,7 @@ import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCa
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
@@ -821,6 +822,17 @@ internal class UseCaseModule {
     ): GetSimilarProductsFlowUseCase {
         return GetSimilarProductsFlowUseCase.getInstance(
             productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetIsOnboardingCompletedFlowUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): GetIsOnboardingCompletedFlowUseCase {
+        return GetIsOnboardingCompletedFlowUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
             logger = logger,
         )
     }

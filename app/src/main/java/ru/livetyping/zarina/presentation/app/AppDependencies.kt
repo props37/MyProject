@@ -5,10 +5,10 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
-import ru.livetyping.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
