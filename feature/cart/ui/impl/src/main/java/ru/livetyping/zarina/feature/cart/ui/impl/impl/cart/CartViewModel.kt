@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -270,7 +272,7 @@ internal class CartViewModel @AssistedInject constructor(
         requestCarts(CartRequest.LOADING)
         viewModelScope.launch {
             val params = GetCartProductIdsFlowUseCase.Params(CachePolicy.Remote())
-            deps.getCartProductIdsFlow(params)
+            deps.getCartProductIdsFlow(params).firstOrNull()
         }
     }
 
