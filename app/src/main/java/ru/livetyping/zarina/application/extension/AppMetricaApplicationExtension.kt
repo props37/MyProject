@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
-import ru.livetyping.zarina.domain.common.Gender
-import ru.livetyping.zarina.domain.user.User
-import ru.livetyping.zarina.usecase.user.GetUserFlowUseCase
-import ru.livetyping.zarina.util.base.usecase.invoke
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.domain.model.user.User
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import javax.inject.Inject
 
 class AppMetricaApplicationExtension @Inject constructor(
@@ -37,7 +37,7 @@ class AppMetricaApplicationExtension @Inject constructor(
     }
 
     private fun enableAppMetricaUserProfileUpdate() {
-        getUserFlowUseCase()
+        getUserFlowUseCase(GetUserFlowUseCase.Params(CachePolicy.LocalOnly))
             .map { result ->
                 result.getOrNull()
             }
@@ -59,8 +59,8 @@ class AppMetricaApplicationExtension @Inject constructor(
             }
             apply(genderAttr)
 
-            val ageAttr = if (user?.birthDate != null) {
-                val birthDate = user.birthDate
+            val birthDate = user?.birthDate
+            val ageAttr = if (birthDate != null) {
                 Attribute.birthDate().withBirthDate(
                     /* year = */ birthDate.year,
                     /* month = */ birthDate.monthValue,
