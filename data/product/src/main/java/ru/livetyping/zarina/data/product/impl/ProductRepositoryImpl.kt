@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
@@ -33,6 +34,14 @@ internal class ProductRepositoryImpl @Inject constructor(
 
     override fun getProductFlow(productId: Product.Id): Flow<ProductDetailed> {
         return remoteDataSource.getProductFlow(productId)
+    }
+
+    override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> {
+        return remoteDataSource.getProductTotalLookFlow(productId)
+    }
+
+    override fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>> {
+        return remoteDataSource.getSimilarProductsFlow(productId)
     }
 
     override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
