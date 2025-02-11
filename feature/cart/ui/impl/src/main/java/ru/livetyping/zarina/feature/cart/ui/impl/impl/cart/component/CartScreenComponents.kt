@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.interaction.DragInteraction
@@ -40,9 +41,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
@@ -872,7 +875,14 @@ internal object CartScreenComponents {
             }
         }
 
-        Box(modifier = modifier.height(IntrinsicSize.Min)) {
+        val overscrollEffect = rememberOverscrollEffect()
+        val flingBehavior = ScrollableDefaults.flingBehavior()
+
+        Box(
+            modifier = modifier
+                .height(IntrinsicSize.Min)
+                .overscroll(overscrollEffect),
+        ) {
             Column(
                 modifier = Modifier
                     .zIndex(1f)
@@ -881,11 +891,12 @@ internal object CartScreenComponents {
                             anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
-                    // TODO: [Top] Migrate!
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,
                         interactionSource = anchoredDraggableInteractionSource,
+                        overscrollEffect = overscrollEffect,
+                        flingBehavior = flingBehavior,
                     ),
             ) {
                 val countStyle = remember(productItem, productCardActions.onCountClicked) {
