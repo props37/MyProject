@@ -10,8 +10,8 @@ import timber.log.Timber
 @SuppressLint("LogNotTimber")
 class TimberInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.v(TAG, "Initialize Timber")
         if (BuildConfig.IS_LOGGING_ENABLED) Timber.plant(Timber.DebugTree())
+        Log.v(TAG, "Timber initialized")
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {

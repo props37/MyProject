@@ -16,7 +16,6 @@ import ru.livetyping.zarina.BuildConfig
 @SuppressLint("LogNotTimber")
 class MindboxInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.v(TAG, "Initialize Mindbox")
         val configuration = getConfiguration(context)
         val pushServices = listOf(MindboxFirebase)
         Mindbox.initPushServices(context, pushServices)
@@ -39,6 +38,7 @@ class MindboxInitializer : Initializer<Unit> {
         Mindbox.subscribeDeviceUuid { uuid ->
             Log.v(MINDBOX_TAG, "Mindbox device UUID: $uuid")
         }
+        Log.v(TAG, "Mindbox initialized")
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {

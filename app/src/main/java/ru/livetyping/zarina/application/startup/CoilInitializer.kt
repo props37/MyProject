@@ -17,7 +17,6 @@ import coil.memory.MemoryCache
 @SuppressLint("LogNotTimber")
 class CoilInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        Log.v(TAG, "Initialize Coil")
         val factory = ImageLoaderFactory {
             ImageLoader.Builder(context)
                 .crossfade(true)
@@ -30,6 +29,7 @@ class CoilInitializer : Initializer<Unit> {
         }
 
         Coil.setImageLoader(factory)
+        Log.v(TAG, "Coil initialized")
     }
 
     override fun dependencies(): MutableList<Class<out Initializer<*>>> {
