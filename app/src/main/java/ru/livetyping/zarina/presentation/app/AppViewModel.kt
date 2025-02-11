@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val deps: AppDeps,
+    private val deps: AppDependencies,
     private val getForcedSignOutRequestsFlow: GetForcedSignOutRequestsFlowUseCase,
     private val forcedSignOut: ForcedSignOutUseCase,
 ) : ViewModel() {

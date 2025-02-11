@@ -57,7 +57,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ProfileDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val deps: ProfileDetailsDeps,
+    private val deps: ProfileDetailsDependencies,
 ) : ViewModel(), SideEffectSource<ProfileDetailsSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

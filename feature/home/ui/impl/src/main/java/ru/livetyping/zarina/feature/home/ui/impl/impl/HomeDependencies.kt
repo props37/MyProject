@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCa
 import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
 import javax.inject.Inject
 
-internal class HomeDeps @Inject constructor(
+internal class HomeDependencies @Inject constructor(
     val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
     val setLastContentGender: SetLastContentGenderUseCase,
     val getHomeContentFlow: GetHomeContentFlowUseCase,

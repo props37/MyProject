@@ -44,7 +44,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class StoreListViewModel @Inject constructor(
-    private val deps: StoreListDeps,
+    private val deps: StoreListDependencies,
 ) : ViewModel(), SideEffectSource<StoreListSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

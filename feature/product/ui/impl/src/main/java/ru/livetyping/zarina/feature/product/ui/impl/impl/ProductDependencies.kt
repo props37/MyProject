@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUs
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import javax.inject.Inject
 
-internal class ProductDeps @Inject constructor(
+internal class ProductDependencies @Inject constructor(
     val getProductFlow: GetProductFlowUseCase,
     val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     val addProductToCart: AddProductToCartUseCase,

@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -73,7 +72,7 @@ internal class CartViewModel @AssistedInject constructor(
     @Assisted
     selectedCityResultFlow: Flow<CartSelectedCityResult?>,
     savedStateHandle: SavedStateHandle,
-    private val deps: CartDeps,
+    private val deps: CartDependencies,
 ) : ViewModel(), SideEffectSource<CartSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

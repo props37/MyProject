@@ -34,7 +34,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class SignUpConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val deps: SignUpConfirmationDeps,
+    private val deps: SignUpConfirmationDependencies,
 ) : ViewModel(), SideEffectSource<SignUpConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val otpStateComponent = OtpStateComponent(savedStateHandle, viewModelScope)

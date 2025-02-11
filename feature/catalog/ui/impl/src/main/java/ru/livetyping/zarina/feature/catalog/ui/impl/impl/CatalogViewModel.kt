@@ -43,7 +43,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    private val deps: CatalogDeps,
+    private val deps: CatalogDependencies,
 ) : ViewModel(), SideEffectSource<CatalogSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

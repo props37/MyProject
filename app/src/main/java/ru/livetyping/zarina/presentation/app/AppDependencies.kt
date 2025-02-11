@@ -10,7 +10,7 @@ import ru.livetyping.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
-class AppDeps @Inject constructor(
+class AppDependencies @Inject constructor(
     val getIsOnboardingCompletedFlow: GetIsOnboardingCompletedFlowUseCase,
     val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     val getCartProductCountFlow: GetCartProductCountFlowUseCase,

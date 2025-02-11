@@ -17,7 +17,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import javax.inject.Inject
 
-internal class CartDeps @Inject constructor(
+internal class CartDependencies @Inject constructor(
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     val getCartProductCountFlow: GetCartProductCountFlowUseCase,
     val getUserCityFlow: GetUserCityFlowUseCase,

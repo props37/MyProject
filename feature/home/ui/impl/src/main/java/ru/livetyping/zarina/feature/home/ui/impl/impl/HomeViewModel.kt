@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val deps: HomeDeps,
+    private val deps: HomeDependencies,
 ) : ViewModel(), SideEffectSource<HomeSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()

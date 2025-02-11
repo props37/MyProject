@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowU
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import javax.inject.Inject
 
-internal class CatalogDeps @Inject constructor(
+internal class CatalogDependencies @Inject constructor(
     val getLastContentGenderFlow: GetLastContentGenderFlowUseCase,
     val getCategoriesFlow: GetCategoriesFlowUseCase,
     val setLastContentGender: SetLastContentGenderUseCase,

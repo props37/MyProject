@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import javax.inject.Inject
 
-internal class ProfileDetailsDeps @Inject constructor(
+internal class ProfileDetailsDependencies @Inject constructor(
     val getUserFlow: GetUserFlowUseCase,
     val updateUserInfo: UpdateUserInfoUseCase,
     val updateUserNotificationsSettings: UpdateUserNotificationsSettingsUseCase,

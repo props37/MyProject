@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
 import javax.inject.Inject
 
-internal class StoreListDeps @Inject constructor(
+internal class StoreListDependencies @Inject constructor(
     val permissionManager: PermissionManager,
     val getStoresFlow: GetStoresFlowUseCase,
     val getCurrentLocationFlow: GetCurrentLocationFlowUseCase,
