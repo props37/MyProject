@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 
 internal class ProductListNavActions(
     val onBackClicked: () -> Unit,
+    val onFiltersClicked: () -> Unit,
     val onTagClicked: (Category, ProductFilters?) -> Unit,
     val onProductClicked: (Product) -> Unit,
     val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,

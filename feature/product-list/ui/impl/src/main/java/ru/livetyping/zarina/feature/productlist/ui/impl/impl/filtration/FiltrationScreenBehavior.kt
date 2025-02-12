@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,24 +11,24 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun ProductListScreenBehavior(
-    sideEffects: Flow<ProductListSideEffect>,
-    navActions: ProductListNavActions,
+internal fun FiltrationScreenBehavior(
+    sideEffects: Flow<FiltrationSideEffect>,
+    navActions: FiltrationNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
-    BottomNavBarBehavior(isVisible = true)
+    BottomNavBarBehavior(isVisible = false)
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is ProductListSideEffect.Navigate -> {
+                    is FiltrationSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is ProductListSideEffect.ShowZarinaToast -> {
+                    is FiltrationSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -41,17 +41,7 @@ internal fun ProductListScreenBehavior(
     }
 }
 
-private fun navigate(navActions: ProductListNavActions, action: ProductListScreenAction) {
-    when (action) {
-        ProductListScreenAction.BackClicked -> navActions.onBackClicked()
-        ProductListScreenAction.FiltersClicked -> navActions.onFiltersClicked()
-        is ProductListScreenAction.TagClicked -> {
-            navActions.onTagClicked(action.tag, action.filters)
-        }
-
-        is ProductListScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
-        is ProductListScreenAction.SubscribeToProductClicked -> {
-            navActions.onSubscribeToProductClicked(action.product, action.offer)
-        }
-    }
+private fun navigate(navActions: FiltrationNavActions, action: FiltrationScreenAction) {
+    // TODO: [Top] Implement
+    TODO()
 }

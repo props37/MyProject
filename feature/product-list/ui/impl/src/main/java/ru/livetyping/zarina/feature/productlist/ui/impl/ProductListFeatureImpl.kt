@@ -13,6 +13,9 @@ import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavActions
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.filtrationScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.productListScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListNavActions
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListNavEntry as ProductListScreenNavEntry
@@ -40,6 +43,7 @@ public class ProductListFeatureImpl : ProductListFeature {
         ) {
             val productListNavActions = ProductListNavActions(
                 onBackClicked = actions.onBackClicked,
+                onFiltersClicked = { navController.navigate(FiltrationNavEntry()) },
                 onTagClicked = { tag, filters ->
                     val productListNavEntry = ProductListScreenNavEntry.create(
                         categoryId = tag.id,
@@ -51,6 +55,9 @@ public class ProductListFeatureImpl : ProductListFeature {
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
             )
             productListScreen(productListNavActions)
+
+            val filtrationNavActions = FiltrationNavActions()
+            filtrationScreen(filtrationNavActions)
         }
     }
 

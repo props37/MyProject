@@ -197,7 +197,7 @@ internal class ProductListViewModel @Inject constructor(
         when (event) {
             TopBarEvent.BackClicked -> onBackClicked()
             TopBarEvent.SearchClicked -> Unit // TODO: [Top] Implement
-            TopBarEvent.FiltersClicked -> Unit // TODO: [Top] Implement
+            TopBarEvent.FiltersClicked -> onFiltersClicked()
         }
     }
 
@@ -268,6 +268,13 @@ internal class ProductListViewModel @Inject constructor(
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = ProductListScreenAction.BackClicked
+            emitSideEffect(ProductListSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onFiltersClicked() {
+        navigationThrottler.throttle {
+            val action = ProductListScreenAction.FiltersClicked
             emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }
