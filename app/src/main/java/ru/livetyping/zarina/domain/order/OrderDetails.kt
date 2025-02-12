@@ -18,7 +18,7 @@ data class OrderDetails(
     val paymentUrl: Url?,
     val deliveryInfo: OrderDeliveryInfo,
     val contactInfo: OrderContactInfo,
-    val deliveryAddress: String,
+    val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Order(
     id = id,

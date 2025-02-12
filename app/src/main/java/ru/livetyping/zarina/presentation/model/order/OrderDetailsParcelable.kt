@@ -26,7 +26,7 @@ data class OrderDetailsParcelable(
     val paymentUrl: String?,
     val deliveryInfo: OrderDeliveryInfoParcelable,
     val contactInfo: OrderContactInfoParcelable,
-    val deliveryAddress: String,
+    val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Parcelable {
     fun toOrderDetails(): OrderDetails {

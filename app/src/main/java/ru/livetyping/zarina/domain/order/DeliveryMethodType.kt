@@ -4,6 +4,7 @@ enum class DeliveryMethodType {
     DELIVERY_SERVICE,
     POST,
     PICKUP,
+    PICKUP_STORE,
     RETAIL,
     YANDEX,
     EXPRESS,
