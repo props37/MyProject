@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.TopBarEvent
 
 @Composable
 internal fun FiltrationScreen(
@@ -22,6 +23,7 @@ internal fun FiltrationScreen(
     viewModel: FiltrationViewModel = hiltViewModel(),
 ) {
     ScreenContent(
+        onTopBarEvent = viewModel::onTopBarEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -29,6 +31,7 @@ internal fun FiltrationScreen(
 
 @Composable
 private fun ScreenContent(
+    onTopBarEvent: (TopBarEvent) -> Unit,
     sideEffects: Flow<FiltrationSideEffect>,
     navActions: FiltrationNavActions,
 ) {
