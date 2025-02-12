@@ -18,6 +18,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberPlatformOverscrollFactory
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshDefaults
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -250,24 +251,27 @@ private fun BannerPager(
         }
     }
 
-    VerticalPager(
-        state = pagerState,
-        key = { page -> banners[page].id.value },
-        modifier = modifier,
-    ) { page ->
-        val currentPage by rememberUpdatedState(page)
-        val isOnScreen by remember(visibleBannerPagesState) {
-            derivedStateOf { currentPage in visibleBannerPagesState.value }
+    val overscrollFactory = rememberPlatformOverscrollFactory()
+    CompositionLocalProvider(LocalOverscrollFactory provides overscrollFactory) {
+        VerticalPager(
+            state = pagerState,
+            key = { page -> banners[page].id.value },
+            modifier = modifier,
+        ) { page ->
+            val currentPage by rememberUpdatedState(page)
+            val isOnScreen by remember(visibleBannerPagesState) {
+                derivedStateOf { currentPage in visibleBannerPagesState.value }
+            }
+
+            val banner = banners[page]
+
+            Banner(
+                bannerContainer = banner,
+                onBannerClicked = onBannerClicked,
+                isOnScreen = isOnScreen,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
-
-        val banner = banners[page]
-
-        Banner(
-            bannerContainer = banner,
-            onBannerClicked = onBannerClicked,
-            isOnScreen = isOnScreen,
-            modifier = Modifier.fillMaxSize(),
-        )
     }
 }
 
