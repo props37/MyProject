@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.component
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

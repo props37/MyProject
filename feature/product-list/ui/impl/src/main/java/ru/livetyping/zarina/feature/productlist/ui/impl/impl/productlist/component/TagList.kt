@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.component
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -19,8 +19,8 @@ import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTagSkeleton
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
 
 @Composable
 internal fun TagList(

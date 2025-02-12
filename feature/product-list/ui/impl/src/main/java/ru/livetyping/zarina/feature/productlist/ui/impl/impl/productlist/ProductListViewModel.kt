@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -50,11 +50,11 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 

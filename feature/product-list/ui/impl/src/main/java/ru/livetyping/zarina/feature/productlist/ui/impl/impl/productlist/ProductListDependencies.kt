@@ -1,11 +1,11 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
 
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.paging.ProductPager
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.paging.ProductPager
 import javax.inject.Inject
 
 internal class ProductListDependencies @Inject constructor(

@@ -11,7 +11,7 @@ import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.ProductListScreen
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListScreen
 
 public class ProductListFeatureImpl : ProductListFeature {
     override fun NavGraphBuilder.composable(

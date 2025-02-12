@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -30,14 +30,14 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.EmptyProductsPlaceholder
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TagList
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.component.TopBar
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.ProductEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TagListState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.EmptyProductsPlaceholder
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TagList
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 
 @Composable
 internal fun ProductListScreen(

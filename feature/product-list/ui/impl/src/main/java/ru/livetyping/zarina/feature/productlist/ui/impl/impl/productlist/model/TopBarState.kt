@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.model
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model
 
 import androidx.compose.runtime.Immutable
 
