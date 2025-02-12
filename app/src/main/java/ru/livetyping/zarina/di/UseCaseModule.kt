@@ -47,6 +47,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingComple
 import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
@@ -833,6 +834,17 @@ internal class UseCaseModule {
     ): GetIsOnboardingCompletedFlowUseCase {
         return GetIsOnboardingCompletedFlowUseCase.getInstance(
             onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoryInfoFlowUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetCategoryInfoFlowUseCase {
+        return GetCategoryInfoFlowUseCase.getInstance(
+            productRepository = productRepository,
             logger = logger,
         )
     }

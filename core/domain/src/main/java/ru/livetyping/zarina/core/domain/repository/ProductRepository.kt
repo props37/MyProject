@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
@@ -27,4 +28,9 @@ public interface ProductRepository {
     public fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>>
 
     public suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
+
+    public fun getCategoryInfoFlow(
+        categoryId: Category.Id,
+        filters: ProductFilters?,
+    ): Flow<CategoryInfo>
 }

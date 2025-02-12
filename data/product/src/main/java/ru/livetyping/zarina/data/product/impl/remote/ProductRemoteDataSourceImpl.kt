@@ -3,6 +3,7 @@ package ru.livetyping.zarina.data.product.impl.remote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
@@ -51,5 +52,13 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {
         api.subscribeToProduct(barcode, firstName, email)
+    }
+
+    override fun getCategoryInfoFlow(
+        categoryId: Category.Id,
+        filters: ProductFilters?,
+    ): Flow<CategoryInfo> = flow {
+        val categoryInfo = api.getCategoryInfo(categoryId, filters).toCategoryInfo(categoryId)
+        emit(categoryInfo)
     }
 }

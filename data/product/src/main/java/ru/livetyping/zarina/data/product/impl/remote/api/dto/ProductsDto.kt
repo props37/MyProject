@@ -3,8 +3,8 @@ package ru.livetyping.zarina.data.product.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.pagination.Page
-import ru.livetyping.zarina.core.domain.model.product.CategoryProductInfo
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
@@ -39,9 +39,9 @@ internal data class ProductsDto(
         )
     }
 
-    fun toCategoryProductInfo(categoryId: Category.Id): CategoryProductInfo {
+    fun toCategoryInfo(categoryId: Category.Id): CategoryInfo {
         checkPropertyNotNull(filters) { ::filters }
-        return CategoryProductInfo(
+        return CategoryInfo(
             categoryId = categoryId,
             productCount = checkPropertyNotNull(itemCount) { ::itemCount },
             availableFilters = filters.toFilters(),

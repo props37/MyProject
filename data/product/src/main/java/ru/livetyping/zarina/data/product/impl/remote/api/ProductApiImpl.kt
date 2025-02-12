@@ -76,4 +76,20 @@ internal class ProductApiImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getCategoryInfo(
+        categoryId: Category.Id,
+        filters: ProductFilters?,
+    ): ProductsDto {
+        val body = GetProductsRequestBody(
+            categoryId = categoryId.value,
+            filters = filters?.let { FiltersRequestDto.from(it) },
+            sorting = SortingDto.from(ProductSorting.getDefault()),
+            page = 1,
+            returnProducts = false,
+        )
+        return httpClient.post("/api/v1/products") {
+            setJsonBody(body)
+        }.body()
+    }
 }

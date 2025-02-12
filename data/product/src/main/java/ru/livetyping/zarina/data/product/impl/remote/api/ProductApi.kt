@@ -25,4 +25,6 @@ internal interface ProductApi {
     suspend fun getSimilarProducts(productId: Product.Id): List<ProductShortDto>
 
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
+
+    suspend fun getCategoryInfo(categoryId: Category.Id, filters: ProductFilters?): ProductsDto
 }

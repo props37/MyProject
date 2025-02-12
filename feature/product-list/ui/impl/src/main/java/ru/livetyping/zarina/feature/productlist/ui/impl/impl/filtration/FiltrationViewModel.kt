@@ -15,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class FiltrationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    deps: FiltrationDependencies,
 ) : ViewModel(), SideEffectSource<FiltrationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
