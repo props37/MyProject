@@ -36,6 +36,7 @@ internal fun BonusHistoryScreenBehavior(
 }
 
 private fun navigate(navActions: BonusHistoryNavActions, action: BonusHistoryScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        BonusHistoryScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }
