@@ -4,8 +4,12 @@ import ru.livetyping.zarina.domain.common.exception.ValidationException
 
 abstract class FirstNameValidationException(message: String) : ValidationException(message)
 
-open class InvalidFirstNameException(message: String = "Invalid first name") :
-    FirstNameValidationException(message)
+open class InvalidFirstNameException(
+    message: String = "Invalid first name",
+    private val localizedMessage: String? = null,
+) : FirstNameValidationException(message) {
+    override fun getLocalizedMessage(): String? = localizedMessage ?: message
+}
 
 class EmptyFirstNameException(message: String = "First name can not be empty") :
     InvalidFirstNameException(message)
