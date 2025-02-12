@@ -199,7 +199,7 @@ fun ZarinaNavigation(
         citySelectorFeature(citySelectorFeature, citySelectorNavActions)
         signInFeature(navController, signInFeature, signInNavActions)
         signUpFeature(navController, signUpFeature, SignUpFeature.NavActions)
-        productListFeature(productListFeature, productListNavActions)
+        productListFeature(navController, productListFeature, productListNavActions)
         productFeature(productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)

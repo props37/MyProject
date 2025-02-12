@@ -50,6 +50,7 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
@@ -70,7 +71,7 @@ internal class ProductListViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
-        typeMap = ProductListFeature.NavEntry.typeMap(),
+        typeMap = ProductListNavEntry.typeMap(),
     )
     private val categoryId = navEntry.getCategoryId()
     private val initialFilters = navEntry.filters?.toFilters()

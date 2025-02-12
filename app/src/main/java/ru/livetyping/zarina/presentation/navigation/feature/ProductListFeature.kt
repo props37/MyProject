@@ -10,11 +10,13 @@ import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 
 fun NavGraphBuilder.productListFeature(
+    navController: NavHostController,
     feature: ProductListFeature,
     actions: ProductListFeature.NavActions,
 ) {
     with(feature) {
-        composable(
+        navigation(
+            navController = navController,
             actions = actions,
             resultRetrievers = EmptyNavResultRetrievers,
         )

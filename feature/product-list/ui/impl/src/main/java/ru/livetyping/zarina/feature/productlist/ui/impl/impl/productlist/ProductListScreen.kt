@@ -29,7 +29,6 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
-import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.EmptyProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TagList
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TopBar
@@ -41,7 +40,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.T
 
 @Composable
 internal fun ProductListScreen(
-    navActions: ProductListFeature.NavActions,
+    navActions: ProductListNavActions,
     viewModel: ProductListViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
@@ -79,7 +78,7 @@ private fun ScreenContent(
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
-    navActions: ProductListFeature.NavActions,
+    navActions: ProductListNavActions,
 ) {
     ProductListScreenBehavior(
         sideEffects = sideEffects,
