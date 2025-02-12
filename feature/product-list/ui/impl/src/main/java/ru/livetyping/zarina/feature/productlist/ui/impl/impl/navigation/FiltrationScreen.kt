@@ -7,7 +7,9 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.Filtrati
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationScreen
 
 internal fun NavGraphBuilder.filtrationScreen(actions: FiltrationNavActions) {
-    composable<FiltrationNavEntry> {
+    composable<FiltrationNavEntry>(
+        typeMap = FiltrationNavEntry.typeMap(),
+    ) {
         FiltrationScreen(actions)
     }
 }

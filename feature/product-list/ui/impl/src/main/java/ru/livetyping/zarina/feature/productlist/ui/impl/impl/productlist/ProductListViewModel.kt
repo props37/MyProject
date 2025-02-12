@@ -103,7 +103,9 @@ internal class ProductListViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(),
     ) {
         it?.toFilters() ?: run {
-            initialFilters ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
+            val fallbackFilters = initialFilters
+                ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
+            fallbackFilters
         }
     }
 
@@ -274,7 +276,15 @@ internal class ProductListViewModel @Inject constructor(
 
     private fun onFiltersClicked() {
         navigationThrottler.throttle {
-            val action = ProductListScreenAction.FiltersClicked
+            val filters = filters.value
+            val availableFilters = availableFilters
+            val combinedFilters = availableFilters
+                ?.let { filters.coerceInAvailable(availableFilters) }
+                ?: filters
+            val action = ProductListScreenAction.FiltersClicked(
+                categoryId = categoryId,
+                filters = combinedFilters,
+            )
             emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }
