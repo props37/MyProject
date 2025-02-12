@@ -100,7 +100,7 @@ internal class ProductListViewModel @Inject constructor(
     )
     private val filters: StateFlow<ProductFilters> = filtersValueHolder.stateFlow.mapState(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+        started = SharingStarted.Eagerly,
     ) {
         it?.toFilters() ?: run {
             val fallbackFilters = initialFilters
