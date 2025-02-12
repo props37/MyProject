@@ -11,6 +11,6 @@ data class CreateOrderDto(
 ) {
     fun toOrderDetails(): OrderDetails {
         checkNotNull(order) { "order is null" }
-        return order.toOrderDetails(requireAddress = false)
+        return order.toOrderDetails()
     }
 }

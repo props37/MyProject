@@ -366,7 +366,7 @@ object OrderScreenComponents {
     @Composable
     private fun OrderInfo(
         deliveryMethodType: DeliveryMethodType,
-        deliveryAddress: String,
+        deliveryAddress: String?,
         contactInfo: OrderContactInfo,
         paymentMethodType: PaymentMethodType,
         modifier: Modifier = Modifier,
@@ -391,11 +391,13 @@ object OrderScreenComponents {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                OrderInfoItem(
-                    name = stringResource(R.string.delivery_address),
-                    value = deliveryAddress,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
+                if (deliveryAddress != null) {
+                    OrderInfoItem(
+                        name = stringResource(R.string.delivery_address),
+                        value = deliveryAddress,
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
                 val formattedPhone =
                     rememberFormattedPhoneNumber(contactInfo.phone?.value.orEmpty())
