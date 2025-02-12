@@ -27,6 +27,8 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.PhoneNumber
 import ru.livetyping.zarina.domain.user.User
+import ru.livetyping.zarina.domain.user.exception.InvalidFirstNameException
+import ru.livetyping.zarina.domain.user.exception.InvalidLastNameException
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
 import ru.livetyping.zarina.presentation.common.error.from
@@ -213,8 +215,15 @@ class ProfileDetailsViewModel @Inject constructor(
 
                     userRequester.request(UserRequest.REFRESHING)
                 }
-                .onFailure {
-                    val text = Text.Resource(R.string.user_info_updating_error)
+                .onFailure { t ->
+                    val fallbackText = Text.Resource(R.string.user_info_updating_error)
+                    val text = when (t) {
+                        is InvalidFirstNameException, is InvalidLastNameException -> {
+                            t.localizedMessage?.let { Text.String(it) } ?: fallbackText
+                        }
+
+                        else -> fallbackText
+                    }
                     val message = ZarinaToastMessage.error(text)
                     emitSideEffect(SideEffect.ShowZarinaToast(message))
                 }
