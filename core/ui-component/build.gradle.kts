@@ -41,7 +41,9 @@ kotlin {
 
 dependencies {
     implementation(projects.core.uiCompose)
+    implementation(projects.core.uiModel)
     implementation(projects.core.platform)
+    implementation(projects.core.coroutinesUtil)
 
     implementation(libs.jetpack.lifecycle.viewModel.compose)
 
