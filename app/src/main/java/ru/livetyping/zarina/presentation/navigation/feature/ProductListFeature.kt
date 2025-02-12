@@ -30,13 +30,6 @@ fun rememberProductListNavActions(
     return remember(navController) {
         ProductListFeature.NavActions(
             onBackClicked = { navController.navigateUp() },
-            onTagClicked = { category, filters ->
-                val productListNavEntry = ProductListFeature.NavEntry.create(
-                    categoryId = category.id,
-                    filters = filters,
-                )
-                navController.navigate(productListNavEntry)
-            },
             onProductClicked = { product ->
                 val productNavEntry = ProductFeature.NavEntry.create(product.id)
                 navController.navigate(productNavEntry)

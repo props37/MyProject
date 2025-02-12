@@ -35,8 +35,6 @@ public interface ProductListFeature :
 
     public class NavActions(
         public val onBackClicked: () -> Unit,
-        // TODO: [Top] Remove
-        public val onTagClicked: (Category, ProductFilters?) -> Unit,
         public val onProductClicked: (Product) -> Unit,
         public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
     ) : NavigationActions
