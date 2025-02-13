@@ -22,10 +22,10 @@
     <string name="clear">Очистить</string>
     <string name="refresh">Обновить</string>
     <string name="internet_connection_error">Проблемы с интернетом</string>
-    <string name="check_internet_connection_and_refresh_page">Проверь соединение с интернетом или отключи VPN. Затем обнови страницу</string>
+    <string name="check_internet_connection_and_refresh_page">Проверьте соединение с интернетом или отключите VPN. Затем обновите страницу</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="something_went_wrong_try_again">Что-то пошло не так. Попробуйте снова</string>
-    <string name="refresh_page_or_come_back_later">Обнови страницу или зайди позже</string>
+    <string name="refresh_page_or_come_back_later">Обновите страницу или зайдите позже</string>
     <string name="loading">Загрузка</string>
     <string name="for_women">Женщинам</string>
     <string name="for_men">Мужчинам</string>
@@ -66,13 +66,13 @@
     <string name="scroll_to_top">Вернуться наверх</string>
     <string name="products_not_found">Товары не найдены</string>
     <string name="could_not_find_products">Не нашли товаров</string>
-    <string name="try_select_another_category">Попробуй выбрать другую категорию</string>
+    <string name="try_select_another_category">Попробуйте выбрать другую категорию</string>
     <string name="subscribe_to_product">Подписаться на товар</string>
     <string name="size_table">Таблица размеров</string>
-    <string name="choose_size">Выбери размер</string>
+    <string name="choose_size">Выберите размер</string>
     <string name="available_height_cm">Доступно %1$s см</string>
     <string name="subscribe">Подписаться</string>
-    <string name="choose_height">Выбери рост</string>
+    <string name="choose_height">Выберите рост</string>
     <string name="height_cm">%1$s см</string>
     <string name="product_subscription">Подписка на товар</string>
     <string name="email">Электронная почта</string>
@@ -101,7 +101,7 @@
     <string name="in_favorites">В избранном</string>
     <string name="select_count">Выбери количество</string>
     <string name="favorites_clearing_error">Не удалось очистить избранное</string>
-    <string name="sign_in_or_sign_up">Войди в аккаунт или зарегистрируйcя</string>
+    <string name="sign_in_or_sign_up">Войдите в аккаунт или зарегистрируйтесь</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="app_version_s">Версия приложения %1$s</string>
@@ -117,11 +117,11 @@
     <string name="receive_news_by_email">Получать новости на почту</string>
     <string name="receive_sms_notifications">Получать СМС-уведомления</string>
     <string name="incorrect_data_entered">Введены некорректные данные</string>
-    <string name="enter_sms_code_from_message">Введи СМС-код из сообщения</string>
+    <string name="enter_sms_code_from_message">Введите СМС-код из сообщения</string>
     <string name="we_sent_sms_code_to_phone_number">Мы отправили СМС-код на номер %1$s</string>
     <string name="resend">Отправить повторно</string>
     <string name="code_can_be_sent_again_after">Повторно отправить код можно через %1$s</string>
-    <string name="code_resend_error">Не удалось запросить новый код. Попробуй ещё раз</string>
+    <string name="code_resend_error">Не удалось запросить новый код. Попробуйте ещё раз</string>
     <string name="number">Номер</string>
     <string name="first_name_text_field_placeholder">Только кириллицей</string>
     <string name="last_name_text_field_placeholder">Только кириллицей</string>
@@ -129,7 +129,7 @@
     <string name="email_text_field_placeholder">email@example.ru</string>
     <string name="password_text_field_placeholder_eight_symbolds">Минимум 8 символов</string>
     <string name="password_text_field_placeholder_nine_symbolds">Минимум 8 символов</string>
-    <string name="promotional_code_text_field_placeholder">Вставь или введи промокод</string>
+    <string name="promotional_code_text_field_placeholder">Вставьте или введите промокод</string>
     <string name="birth_date_text_field_label">Дата рождения</string>
     <string name="birth_date_text_field_placeholder">ДД.ММ.ГГГГ</string>
     <string name="payment_placeholder">Один из предложенных вариантов</string>
@@ -139,11 +139,11 @@
     <string name="sign_in_to_account">Вход в аккаунт</string>
     <string name="by_email">По почте</string>
     <string name="by_phone">По телефону</string>
-    <string name="forgot_password_question">Не помнишь пароль?</string>
-    <string name="do_not_have_account_yet_question">У тебя ещё нет аккаунта?</string>
-    <string name="invalid_email_or_password_try_again">Неправильный адрес электронной почты или пароль. Повтори попытку</string>
+    <string name="forgot_password_question">Не помните пароль?</string>
+    <string name="do_not_have_account_yet_question">У Вас ещё нет аккаунта?</string>
+    <string name="invalid_email_or_password_try_again">Неправильный адрес электронной почты или пароль. Повторите попытку</string>
     <string name="password_recovery">Восстановление пароля</string>
-    <string name="enter_email_specified_during_registration">Введи адрес электронной почты, указанный при регистрации</string>
+    <string name="enter_email_specified_during_registration">Введите адрес электронной почты, указанный при регистрации</string>
     <string name="we_will_send_link_to_reset_password_to_specified_email">Мы отправим ссылку для восстановления пароля на указанный адрес</string>
     <string name="send">Отправить</string>
     <string name="user_with_this_email_not_found">Пользователь с таким адресом электронной почты не найден</string>
@@ -159,7 +159,7 @@
     <string name="delete_account_question">Удалить аккаунт?</string>
     <string name="keep">Оставить</string>
     <string name="account_deletion_error">Не удалось удалить аккаунт</string>
-    <string name="user_with_this_phone_number_not_found_error">Пользователя с таким номером телефона у нас нет. Повтори попытку</string>
+    <string name="user_with_this_phone_number_not_found_error">Пользователя с таким номером телефона у нас нет. Повторите попытку</string>
     <string name="no_orders_yet">Заказов пока что нет</string>
     <string name="repeat">Повторить</string>
     <string name="loading_error">Ошибка загрузки</string>
@@ -190,27 +190,27 @@
     <string name="share">Поделиться</string>
     <string name="product_details">Подробнее об изделии</string>
     <string name="delivery_and_payment">Доставка и оплата</string>
-    <string name="product_delivery_and_payment_info">Бесплатная доставка при заказе от %1$s ₽. Выбирай подходящий способ доставки товара:\n\n    &#8226; курьером\n    &#8226; в пункты выдачи заказов и постаматы\n    &#8226; самовывозом из магазина\n    \nПодробная информация в разделе Доставка\n\nДля твоего удобства предусмотрели разные способы оплаты:\n\n    &#8226; банковской картой на сайте или в приложении\n    &#8226; наличными или картой при получении\n    &#8226; системой быстрых платежей (СБП)\n    &#8226; Подели — оплата по частям без комиссии и переплат\n    &#8226; подарочным сертификатом\n    \nПодробная информация в разделе Оплата</string>
+    <string name="product_delivery_and_payment_info">Бесплатная доставка при заказе от %1$s ₽. Выбирайте подходящий способ доставки товара:\n\n    &#8226; курьером\n    &#8226; в пункты выдачи заказов и постаматы\n    &#8226; самовывозом из магазина\n    \nПодробная информация в разделе Доставка\n\nДля Вашего удобства предусмотрели разные способы оплаты:\n\n    &#8226; банковской картой на сайте или в приложении\n    &#8226; наличными или картой при получении\n    &#8226; системой быстрых платежей (СБП)\n    &#8226; Подели — оплата по частям без комиссии и переплат\n    &#8226; подарочным сертификатом\n    \nПодробная информация в разделе Оплата</string>
     <string name="product_delivery_and_payment_info_delivery">Доставка</string>
     <string name="product_delivery_and_payment_info_payment">Оплата</string>
     <string name="product_total_look">Дополнить образ</string>
     <string name="to_cart">В корзину</string>
     <string name="in_cart">В корзине</string>
-    <string name="you_may_like">Тебе может понравиться</string>
+    <string name="you_may_like">Вам может понравиться</string>
     <string name="notify_about_product_appearance">Сообщить о поступлении</string>
     <string name="show_my_location">Показать моё расположение</string>
     <string name="current_location_missing_permission_error">Для определения местоположения необходимо разрешить приложению доступ к геолокации</string>
     <string name="to_settings">В настройки</string>
     <string name="map_store_content_description">Магазин %1%s</string>
-    <string name="grant_location_permission">Разреши доступ к геолокации</string>
-    <string name="it_will_help_us_to_detect_your_location">Это поможет автоматически определить твоё местоположение</string>
-    <string name="select_date">Выбери дату</string>
+    <string name="grant_location_permission">Разрешите доступ к геолокации</string>
+    <string name="it_will_help_us_to_detect_your_location">Это поможет автоматически определить Ваше местоположение</string>
+    <string name="select_date">Выберите дату</string>
     <string name="selected_date">Выбранная дата</string>
     <string name="search_results">Результаты поиска</string>
     <string name="search_history">История поиска</string>
     <string name="categories">Категории</string>
     <string name="nothing_found">Ничего не нашлось</string>
-    <string name="write_different_search_query">Напиши по‑другому или измени запрос</string>
+    <string name="write_different_search_query">Напишите по‑другому или измените запрос</string>
     <string name="loyalty_program">Программа лояльности</string>
     <string name="loyalty_program_level">Уровень в программе лояльности</string>
     <string name="my_bonuses">Мои бонусы</string>
@@ -223,21 +223,21 @@
     <string name="write_off">Списание</string>
     <string name="for_zarina_club_members">Для участников Zarina Club</string>
     <string name="zarina_club_program_description_1">Количество бонусов к начислению для уровня Prime. 1 бонус = 1 рубль</string>
-    <string name="zarina_club_program_description_2">Копи бонусы и оплачивай до 30% от стоимости покупки</string>
+    <string name="zarina_club_program_description_2">Копите бонусы и оплачивайте до 30% от стоимости покупки</string>
     <string name="personal_data">Личные данные</string>
     <string name="contacts">Контакты</string>
     <string name="settings">Настройки</string>
     <string name="last_name">Фамилия</string>
     <string name="change_password">Изменить пароль</string>
     <string name="notifications_about_order_statuses_will_continue_to_arrive">Оповещения о статусах заказов продолжат поступать</string>
-    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies">Подписываясь на рассылку, ты соглашаешься с политикой обработки персональных данных</string>
+    <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies">Подписываясь на рассылку, Вы соглашаетесь с политикой обработки персональных данных</string>
     <string name="by_subscribing_to_newsletter_you_agree_to_personal_data_policies_policy_text">политикой обработки персональных данных</string>
     <string name="save">Сохранить</string>
     <string name="personal_data_changed">Личные данные изменены</string>
     <string name="notification_settings_updating_error">Не удалось обновить настройки уведомлений</string>
     <string name="user_info_updating_error">Не удалось обновить профиль</string>
     <string name="email_change">Смена электронной почты</string>
-    <string name="enter_new_email">Введи новый адрес электронной почты</string>
+    <string name="enter_new_email">Введите новый адрес электронной почты</string>
     <string name="password_change">Смена пароля</string>
     <string name="old_password">Старый пароль</string>
     <string name="new_password">Новый пароль</string>
@@ -246,13 +246,13 @@
     <string name="password_changing_error">Не удалось сменить пароль</string>
     <string name="email_changing_error">Не удалось сменить электронную почту</string>
     <string name="password_does_not_meet_requirements">Пароль не соотвествует требованиям</string>
-    <string name="enter_valid_password">Введи действительный пароль</string>
+    <string name="enter_valid_password">Введите действительный пароль</string>
     <string name="invalid_old_password">Неверный старый пароль</string>
-    <string name="invalid_email_try_again">Адрес электронной почты некорректный. Введи другой</string>
+    <string name="invalid_email_try_again">Адрес электронной почты некорректный. Введите другой</string>
     <string name="phone_change">Смена телефона</string>
-    <string name="enter_new_phone_number">Введи новый номер телефона</string>
+    <string name="enter_new_phone_number">Введите новый номер телефона</string>
     <string name="we_will_send_code_for_changing_phone_number">Мы отправим СМС-код для смены телефона на указанный номер</string>
-    <string name="enter_valid_phone_number">Введи действительный номер телефона</string>
+    <string name="enter_valid_phone_number">Введите действительный номер телефона</string>
     <string name="phone_number_changed">Номер телефона изменён</string>
     <string name="discount">Скидка</string>
     <string name="excluding_delivery">Без учёта доставки</string>
@@ -266,19 +266,19 @@
     <string name="promo_code_is_applied">Промокод применён</string>
     <string name="promo_code">Промокод</string>
     <string name="promo_code_applying_error">Не удалось применить промокод</string>
-    <string name="promo_code_applying_error_description">Такого промокода нет, или срок его действия истёк. Введи промокод заново</string>
+    <string name="promo_code_applying_error_description">Такого промокода нет, или срок его действия истёк. Введите промокод заново</string>
     <string name="promo_code_removing_error">Не удалось отменить действие промокода</string>
     <string name="cart_product_limit_exceeded_error_content_description">Превышен лимит числа товаров в корзине</string>
-    <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавь товары в Избранное, чтобы заказать их позже</string>
+    <string name="cart_product_limit_exceeded_error_text">Оформление заказа возможно при количестве товаров не более %1$d. Добавьте товары в Избранное, чтобы заказать их позже</string>
     <string name="bonus_write_off_applying_error">Не удалось использовать бонусы</string>
     <string name="bonus_write_off_removing_error">Не удалось отменить действие бонусов</string>
     <string name="bonus_history_is_empty">В истории бонусов пусто</string>
     <string name="expected_bonuses_list_is_empty">В ожидаемых бонусах пусто</string>
     <string name="bonus_history_will_be_displayed_here">Здесь будут отображаться начисления и списания бонусов при заказах на сайте и в мобильном приложении</string>
-    <string name="expected_bonuses_will_be_displayed_here">Здесь будут отображаться бонусы, которые скоро поступят на твой бонусный счёт</string>
+    <string name="expected_bonuses_will_be_displayed_here">Здесь будут отображаться бонусы, которые скоро поступят на Ваш бонусный счёт</string>
     <string name="step_number">Шаг %1$d из %2$d</string>
     <string name="order_placement_recipient_empty_fields_error">Поля ввода пусты. Для продолжения заполни все поля</string>
-    <string name="order_placement_recipient_validation_error">Введи действительные данные</string>
+    <string name="order_placement_recipient_validation_error">Введите действительные данные</string>
     <string name="store_selection">Выбор магазина</string>
     <string name="all_products_are_available">Доступны все товары</string>
     <string name="select_store">Выбрать магазин</string>
@@ -313,19 +313,19 @@
     <string name="s_or_s">%1$s или %2$s</string>
     <string name="by_cash">Наличными</string>
     <string name="by_card">Банковской картой</string>
-    <string name="choose_delivery_terms">Выбери условия доставки</string>
+    <string name="choose_delivery_terms">Выберите условия доставки</string>
     <string name="my_card_cant_be_combined_with_bonuses">MyCard не суммируется с другими скидками, поэтому отменили списание баллов</string>
     <string name="my_card_cant_be_combined_with_promo_code">MyCard не суммируется с другими скидками, поэтому отменили применение промокода</string>
     <string name="you_should_enter_address_first">Сначала нужно указать адрес</string>
     <string name="you_should_select_delivery_option_first">Сначала нужно выбрать вариант доставки</string>
     <string name="order_confirmation">Подтверждение заказа</string>
     <string name="customer">Покупатель</string>
-    <string name="your_order">Твой заказ</string>
+    <string name="your_order">Ваш заказ</string>
     <string name="payment_method">Способ оплаты</string>
     <string name="select_payment_method">Выбери способ оплаты</string>
     <string name="pay">Оплатить</string>
-    <string name="payment_method_not_selected_error">Сначала выбери способ оплаты</string>
-    <string name="cart_has_changed_error">Состав заказ изменился. Проверь его и попробуй снова</string>
+    <string name="payment_method_not_selected_error">Сначала выберите способ оплаты</string>
+    <string name="cart_has_changed_error">Состав заказ изменился. Проверьте изменения и попробуйте снова</string>
     <string name="thanks_for_order">Спасибо за заказ!</string>
     <string name="to_home_screen">На главную</string>
     <string name="gift_certificate">Подарочный сертификат</string>
@@ -334,25 +334,25 @@
     <string name="gift_certificate_applying_error">Не удалось применить подарочный сертификат. Попробуйте снова</string>
     <string name="gift_certificate_removing_error">Не удалось отменить действие подарочного сертификата. Попробуйте снова</string>
     <string name="gift_certificate_reserved_error">Подарочный сертификат зарезервирован другим заказом и будет разблокирован в течение часа</string>
-    <string name="unknown_gift_certificate_error">Такого сертификата нет, или срок его действия истёк. Введи данные заново</string>
-    <string name="gift_certificate_fields_empty_error">Поля ввода пусты. Для применения сертификата введи его номер и проверочный код</string>
-    <string name="gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введи его номер</string>
-    <string name="gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введи проверочный код</string>
+    <string name="unknown_gift_certificate_error">Такого сертификата нет, или срок его действия истёк. Введите данные заново</string>
+    <string name="gift_certificate_fields_empty_error">Поля ввода пусты. Для применения сертификата введите его номер и проверочный код</string>
+    <string name="gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введите его номер</string>
+    <string name="gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введите проверочный код</string>
     <string name="written_off_from_gift_certificate">Списано по сертификату</string>
-    <string name="payment_policies">Нажимая на кнопку «Оплатить», ты принимаешь правила работы интернет-магазина и подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Также даёшь согласие на обработку персональных данных с целью получения информационной рассылки</string>
+    <string name="payment_policies">Нажимая на кнопку «Оплатить», Вы принимаете правила работы интернет-магазина и подтверждаете, что ознакомлены с политикой конфиденциальности. Также даёте согласие на обработку персональных данных с целью получения информационной рассылки</string>
     <string name="payment_policies_online_store">правила работы интернет-магазина</string>
     <string name="payment_policies_privacy">политикой конфиденциальности</string>
     <string name="payment_policies_personal_data">согласие на обработку персональных данных</string>
     <string name="gift_certificate_write_off_info">Забронировали %1$s ₽ на сертификате. При отменённом заказе вернём эту сумму в течение часа</string>
     <string name="gift_certificate_user_need_to_pay_difference">Доплата проведётся банковской картой онлайн, после перенаправления на страницу оплаты. Если после оформления заказа оплата не поступит в течение часа, то деньги вернутся на подарочный сертификат</string>
-    <string name="gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если ты отменишь заказ, то деньги вернутся на сертификат в течение часа</string>
+    <string name="gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если Вы отмените заказ, то деньги вернутся на сертификат в течение часа</string>
     <string name="zarina_app_version">Версия Zarina</string>
     <string name="mindbox_device_uuid">Mindbox device UUID: %1$s</string>
     <string name="mindbox_device_uuid_clipboard_label">Zarina Mindbox device UUID</string>
     <string name="yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="yandex_captcha_terms_policy">условия использования</string>
     <string name="payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
-    <string name="phone_confirmation_error">Не удалось подтвердить номер телефона. Попробуй снова</string>
+    <string name="phone_confirmation_error">Не удалось подтвердить номер телефона. Попробуйте снова</string>
     <string name="get_code">Получить код</string>
     <string name="application_not_found">Приложение не найдено</string>
 
@@ -382,66 +382,66 @@
     <string name="order_payment_method_gift_certificate">Подарочный сертификат</string>
 
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
-    <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
-    <string name="onboarding_city_selection_title">Определяем твой город</string>
+    <string name="onboarding_notifications_setup_body">Будьте в курсе всех акций и новых поступлений, отслеживайте статус заказов и получайте лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
+    <string name="onboarding_city_selection_title">Определяем Ваш город</string>
     <string name="onboarding_city_selection_body">Для актуальной информации об акциях и наличии товаров в розничных магазинах ZARINA.</string>
-    <string name="onboarding_city_confirmation_title">Твой город %1$s?</string>
-    <string name="onboarding_city_confirmation_body">Ты можешь изменить геолокацию сейчас или настроить её позже.</string>
+    <string name="onboarding_city_confirmation_title">Ваш город %1$s?</string>
+    <string name="onboarding_city_confirmation_body">Вы можете изменить геолокацию сейчас или настроить её позже.</string>
 
-    <string name="default_city_dialog_title">Мы определили твой город</string>
-    <string name="default_city_dialog_body">Текущая геолокация: %1$s. Ты можешь изменить геолокацию в любой момент в настройках Профиля.</string>
+    <string name="default_city_dialog_title">Мы определили Ваш город</string>
+    <string name="default_city_dialog_body">Текущая геолокация: %1$s. Вы можете изменить геолокацию в любой момент в настройках Профиля.</string>
 
     <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
     <string name="product_subscription_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие на обработку персональных данных</string>
     <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
     <string name="product_subscription_policies_personal_data">обработку персональных данных</string>
-    <string name="product_subscription_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие на обработку персональных данных</string>
-    <string name="product_subscription_empty_fields_error">Поля ввода пусты. Для подписки на товар введи имя и адрес электронной почты</string>
+    <string name="product_subscription_agreement_error">Ознакомьтесь с политикой конфиденциальности и правилами работы интернет-магазина и подтвердите согласие на обработку персональных данных</string>
+    <string name="product_subscription_empty_fields_error">Поля ввода пусты. Для подписки на товар введите имя и адрес электронной почты</string>
 
     <string name="cart_empty_cart_placeholder_title">Корзина пока что пуста</string>
-    <string name="cart_empty_cart_placeholder_description">В каталоге ты найдёшь много товаров</string>
+    <string name="cart_empty_cart_placeholder_description">В каталоге Вы найдёте много товаров</string>
     <string name="cart_empty_delivery_cart_placeholder_title">Нет товаров для доставки</string>
-    <string name="cart_empty_delivery_cart_placeholder_body">Попробуй найти товары через фильтры в Каталоге, либо выбери другой способ получения</string>
+    <string name="cart_empty_delivery_cart_placeholder_body">Попробуйте найти товары через фильтры в Каталоге, либо выберите другой способ получения</string>
     <string name="cart_empty_pick_up_from_store_cart_placeholder_title">Нет товаров для получения в магазине</string>
-    <string name="cart_empty_pick_up_from_store_cart_placeholder_body">Попробуй найти товары через фильтры в Каталоге, либо выбери другой способ получения</string>
+    <string name="cart_empty_pick_up_from_store_cart_placeholder_body">Попробуйте найти товары через фильтры в Каталоге, либо выберите другой способ получения</string>
 
     <string name="favorites_no_favorites_placeholder_title">В избранном пока что пусто</string>
-    <string name="favorites_no_favorites_placeholder_body">Товары можно добавить через Каталог. Не теряй их, если временно откладываешь покупку</string>
+    <string name="favorites_no_favorites_placeholder_body">Товары можно добавить через Каталог. Не теряйте их, если временно откладываете покупку</string>
 
-    <string name="profile_authorization_description">Тебя ждут преимущества бонусной программы и персональные предложения</string>
+    <string name="profile_authorization_description">Вас ждут преимущества бонусной программы и персональные предложения</string>
 
     <string name="sign_up_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие с правилами бонусной программы</string>
     <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
     <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
     <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
     <string name="sign_up_yandex_captcha_policies_terms">условия использования</string>
-    <string name="sign_up_agreement_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
-    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
-    <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
-    <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
-    <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Повтори попытку позже</string>
-    <string name="sign_up_otp_invalid_otp_error">Неправильный код. Повтори попытку</string>
+    <string name="sign_up_agreement_error">Ознакомьтесь с политикой конфиденциальности и правилами работы интернет-магазина и подтвердите согласие с правилами бонусной программы</string>
+    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введите имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
+    <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повторите попытку</string>
+    <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повторите попытку</string>
+    <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуйте снова позже</string>
+    <string name="sign_up_otp_invalid_otp_error">Неправильный код. Повторите попытку</string>
 
-    <string name="sign_in_policies">Нажимая на кнопку «Войти», ты подтверждаешь, что ознакомлен(а) с политикой конфиденциальности. Защита от спама Yandex SmartCaptcha: условия использования</string>
+    <string name="sign_in_policies">Нажимая на кнопку «Войти», Вы подтверждаете, что ознакомлены с политикой конфиденциальности. Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="sign_in_policies_privacy_policy">политикой конфиденциальности</string>
-    <string name="sign_in_by_email_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введи адрес электронной почты и пароль</string>
-    <string name="sign_in_by_phone_empty_fields_error">Для входа в аккаунт введи номер телефона</string>
+    <string name="sign_in_by_email_empty_fields_error">Поля ввода пусты. Для входа в аккаунт введите адрес электронной почты и пароль</string>
+    <string name="sign_in_by_phone_empty_fields_error">Для входа в аккаунт введите номер телефона</string>
 
-    <string name="password_recovery_password_reset_requested">Мы отправили ссылку для восстановления пароля на твою почту</string>
-    <string name="password_recovery_empty_email_error">Напиши адрес электронной почты. Без него нам не удастся отправить ссылку</string>
+    <string name="password_recovery_password_reset_requested">Мы отправили ссылку для восстановления пароля на Вашу почту</string>
+    <string name="password_recovery_empty_email_error">Напишите адрес электронной почты. Без него нам не удастся отправить ссылку</string>
 
-    <string name="sign_out_confirmation_body">После выхода из аккаунта ты не сможешь отслеживать статус своих заказов и воспользоваться бонусной картой</string>
+    <string name="sign_out_confirmation_body">После выхода из аккаунта Вы не сможете отслеживать статус своих заказов и воспользоваться бонусной картой</string>
 
-    <string name="account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также ты не сможешь пользоваться бонусной программой</string>
+    <string name="account_deletion_confirmation_body">Данные, связанные с аккаунтом, нельзя будет восстановить. Также Вы не сможете пользоваться бонусной программой</string>
 
-    <string name="my_orders_no_orders_body">После оформления заказа ты найдёшь здесь информацию о статусе и способе доставки</string>
+    <string name="my_orders_no_orders_body">После оформления заказа Вы найдёте здесь информацию о статусе и способе доставки</string>
 
-    <string name="order_confirmed_description_paid">Твой заказ %1$s оплачен. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный</string>
-    <string name="order_confirmed_description_should_be_paid">Твой заказ %1$s принят. В течение часа тебе необходимо оплатить заказ. После оплаты ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
-    <string name="order_confirmed_description_should_be_paid_upon_receipt">Твой заказ %1$s принят. Ты будешь получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у тебя возникли вопросы, позвони на нашу горячую линию %3$s. Звонок бесплатный.</string>
+    <string name="order_confirmed_description_paid">Ваш заказ %1$s оплачен. Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный</string>
+    <string name="order_confirmed_description_should_be_paid">Ваш заказ %1$s принят. В течение часа Вам необходимо оплатить заказ. После оплаты Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный.</string>
+    <string name="order_confirmed_description_should_be_paid_upon_receipt">Ваш заказ %1$s принят. Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный.</string>
 
-    <string name="gift_certificate_description">Воспользуйся электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
+    <string name="gift_certificate_description">Воспользуйтесь электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
 
     <string name="notification_channel_marketing_name">Маркетинг</string>
     <string name="notification_channel_marketing_description">Реклама, акции и персональные предложения</string>
@@ -483,12 +483,12 @@
     </plurals>
 
     <plurals name="you_have_s_bonuses">
-        <item quantity="zero">У тебя нет бонусов</item>
-        <item quantity="one">У тебя %1$s бонус</item>
-        <item quantity="two">У тебя %1$s бонуса</item>
-        <item quantity="few">У тебя %1$s бонуса</item>
-        <item quantity="many">У тебя %1$s бонусов</item>
-        <item quantity="other">У тебя %1$s бонусов</item>
+        <item quantity="zero">У Вас нет бонусов</item>
+        <item quantity="one">У Вас %1$s бонус</item>
+        <item quantity="two">У Вас %1$s бонуса</item>
+        <item quantity="few">У Вас %1$s бонуса</item>
+        <item quantity="many">У Вас %1$s бонусов</item>
+        <item quantity="other">У Вас %1$s бонусов</item>
     </plurals>
 
     <plurals name="you_can_write_off_s_bonuses">
