@@ -185,7 +185,7 @@
     <string name="show_loyalty_card_info">Показать информацию о карте лояльности</string>
     <string name="turn_card">Перевернуть карту</string>
     <string name="qr_code_generation_error">Не удалось сгенерировать QR-код</string>
-    <string name="creating_your_loyalty_card">Создаём твою карту лояльности</string>
+    <string name="creating_your_loyalty_card">Загружаем Вашу карту лояльности</string>
     <string name="it_will_take_up_to_five_minutes">Это займёт до пяти минут</string>
     <string name="share">Поделиться</string>
     <string name="product_details">Подробнее об изделии</string>
