@@ -398,7 +398,7 @@
     <string name="default_city_dialog_title">Мы определили Ваш город</string>
     <string name="default_city_dialog_body">Текущая геолокация: %1$s. Вы можете изменить геолокацию в любой момент в настройках Профиля.</string>
     
-    <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
+    <string name="product_subscription_description">Оставьте контактные данные, и мы сообщим, когда товар появится в продаже</string>
     <string name="product_subscription_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие на обработку персональных данных</string>
     <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
