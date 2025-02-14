@@ -97,7 +97,7 @@ private fun ScreenContent(
         ) {
             itemsIndexed(
                 items = availableProducts,
-                key = { _, product -> product.productId.value },
+                key = { _, product -> product.id.value },
             ) { index, product ->
                 ProductOrderCard(
                     name = product.name,
