@@ -38,7 +38,7 @@ public class FiltrationComponent(
         filters?.hasAppliedIgnoringSorting == true
     }
 
-    public val isPickupStoresFilterVisible: StateFlow<Boolean> = filters.mapState(
+    public val isPickupStoreFilterVisible: StateFlow<Boolean> = filters.mapState(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(),
     ) { filters ->
