@@ -13,12 +13,10 @@ public abstract class FlowUseCase<in P, out R>(private val logger: UseCaseLogger
     public fun call(params: P): Flow<Result<R>> = execute(params)
         .map { Result.success(it) }
         .retryWhen { t, attempt ->
-            if (t is CancellationException) throw t
-
             val shouldRetry = shouldRetry(t, attempt)
             if (shouldRetry) {
                 logError(t, params)
-                emit(Result.failure(t))
+                logger?.v(className, "Retry after catching exception $t")
             }
             shouldRetry
         }
