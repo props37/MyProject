@@ -198,7 +198,7 @@
     <string name="in_cart">В корзине</string>
     <string name="you_may_like">Вам может понравиться</string>
     <string name="notify_about_product_appearance">Сообщить о поступлении</string>
-    <string name="show_my_location">Показать моё расположение</string>
+    <string name="show_my_location">Показать моё местоположение</string>
     <string name="current_location_missing_permission_error">Для определения местоположения необходимо разрешить приложению доступ к геолокации</string>
     <string name="to_settings">В настройки</string>
     <string name="map_store_content_description">Магазин %1%s</string>
@@ -391,7 +391,7 @@
     <string name="default_city_dialog_title">Мы определили Ваш город</string>
     <string name="default_city_dialog_body">Текущая геолокация: %1$s. Вы можете изменить геолокацию в любой момент в настройках Профиля.</string>
 
-    <string name="product_subscription_description">Оставь контактные данные, и мы сообщим, когда товар появится в продаже</string>
+    <string name="product_subscription_description">Оставьте контактные данные, и мы сообщим, когда товар появится в продаже</string>
     <string name="product_subscription_policies">Я ознакомлен(а) с политикой конфиденциальности и правилами работы интернет-магазина. Также подтверждаю согласие на обработку персональных данных</string>
     <string name="product_subscription_policies_privacy">политикой конфиденциальности</string>
     <string name="product_subscription_policies_online_store">правилами работы интернет-магазина</string>
