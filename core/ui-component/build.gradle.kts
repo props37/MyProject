@@ -42,6 +42,7 @@ kotlin {
 dependencies {
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiModel)
+    implementation(projects.core.uiKit)
     implementation(projects.core.platform)
     implementation(projects.core.coroutinesUtil)
 
