@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.base.usecase
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -39,14 +40,20 @@ abstract class FlowUseCase<in P, out R>(private val dispatcher: CoroutineDispatc
             Timber
                 .tag(className)
                 .e(e, "Exception occurred while executing $className with parameters $params")
-            emit(Result.failure(e))
-            shouldRetry(e, attempt)
+            val shouldRetry = shouldRetry(e, attempt)
+            Timber.tag(className).v("Should retry: $shouldRetry")
+            shouldRetry
         }
         .catch { e ->
-            Timber
-                .tag(className)
-                .e(e, "Exception occurred while executing $className with parameters $params")
-            emit(Result.failure(e))
+            when (e) {
+                is CancellationException -> throw e
+                else -> {
+                    Timber
+                        .tag(className)
+                        .e(e, "Exception occurred while executing $className with parameters $params")
+                    emit(Result.failure(e))
+                }
+            }
         }
 
     protected abstract fun execute(params: P): Flow<R>
