@@ -23,10 +23,10 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationComponent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.FiltrationStateBuilder
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.TopBarState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,12 +68,12 @@ internal class FiltrationViewModel @Inject constructor(
             replay = 1,
         )
 
-    val topBarState: StateFlow<TopBarState> = filtrationComponent.isResetFiltersButtonVisible
+    val topBarState: StateFlow<FiltrationTopBarState> = filtrationComponent.isResetFiltersButtonVisible
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.WhileAndroidUiSubscribed,
         ) { isResetFiltersButtonVisible ->
-            TopBarState(isResetFiltersButtonVisible)
+            FiltrationTopBarState(isResetFiltersButtonVisible)
         }
 
     private val filtrationStateBuilder = FiltrationStateBuilder()
@@ -101,10 +101,10 @@ internal class FiltrationViewModel @Inject constructor(
         initialValue = filtrationInitialState,
     )
 
-    fun onTopBarEvent(event: TopBarEvent) {
+    fun onTopBarEvent(event: FiltrationTopBarEvent) {
         when (event) {
-            TopBarEvent.BackClicked -> onBackClicked()
-            TopBarEvent.ResetFiltersClicked -> onResetFiltersClicked()
+            FiltrationTopBarEvent.BackClicked -> onBackClicked()
+            FiltrationTopBarEvent.ResetFiltersClicked -> onResetFiltersClicked()
         }
     }
 

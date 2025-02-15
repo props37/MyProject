@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model
+package ru.livetyping.zarina.core.uicomponent.filtration
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -6,17 +6,17 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 @Stable
-internal sealed class FiltrationState {
+public sealed class FiltrationState {
     @Immutable
-    data class Success(
+    public data class Success(
         val filters: ProductFilters,
         val isPickupStoreFilterVisible: Boolean,
         val availableProductCount: Int?,
         val isRefreshing: Boolean,
     ) : FiltrationState()
 
-    data object Loading : FiltrationState()
+    public data object Loading : FiltrationState()
 
     @Immutable
-    data class Error(val errorState: ZarinaErrorScreenState) : FiltrationState()
+    public data class Error(val errorState: ZarinaErrorScreenState) : FiltrationState()
 }

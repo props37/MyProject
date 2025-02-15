@@ -111,6 +111,7 @@
     <string name="res_order_recipient">Получатель</string>
     <string name="res_payment">Оплата</string>
     <string name="res_return">Вернуться</string>
+    <string name="res_reset">Сбросить</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

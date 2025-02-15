@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_component_show_products">Показать товары</string>
+    <string name="ui_component_products_not_found">Товары не найдены</string>
+
+    <plurals name="ui_component_show_products">
+        <item quantity="zero">Показать %1$s товаров</item>
+        <item quantity="one">Показать %1$s товар</item>
+        <item quantity="two">Показать %1$s товара</item>
+        <item quantity="few">Показать %1$s товара</item>
+        <item quantity="many">Показать %1$s товаров</item>
+        <item quantity="other">Показать %1$s товаров</item>
+    </plurals>
+</resources>
