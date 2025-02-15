@@ -23,4 +23,7 @@
     <string name="uikit_we_sent_sms_code_to_phone_number">Мы отправили СМС с кодом на номер %1$s</string>
     <string name="uikit_code_can_be_sent_again_after">Повторно отправить код можно через %1$s</string>
     <string name="uikit_resend_code">Отправить повторно</string>
+    <string name="uikit_price_filter_price_rubbles">Цена, ₽</string>
+    <string name="uikit_price_filter_from">От</string>
+    <string name="uikit_price_filter_to">До</string>
 </resources>

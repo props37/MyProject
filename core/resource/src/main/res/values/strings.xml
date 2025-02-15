@@ -134,6 +134,21 @@
     <string name="res_delivery_method_pick_up_from_store">Забрать из магазина</string>
     <string name="res_delivery_method_yandex_express">Яндекс Экспресс</string>
 
+    <string name="res_filter_sorting">Сортировка</string>
+    <string name="res_filter_price">Цена</string>
+    <string name="res_filter_materials">Состав</string>
+    <string name="res_filter_delivery_availability">Доступные для доставки</string>
+    <string name="res_filter_store_pickup_availability">Доступные в магазине</string>
+    <string name="res_filter_pickup_store">Забрать из магазина</string>
+    <string name="res_filter_size">Размер</string>
+    <string name="res_filter_color">Цвет</string>
+
+    <string name="res_sorting_new">По новизне</string>
+    <string name="res_sorting_popular">По популярности</string>
+    <string name="res_sorting_discount">По скидке</string>
+    <string name="res_sorting_price_low_to_high">По возрастанию цены</string>
+    <string name="res_sorting_price_high_to_low">По убыванию цены</string>
+
     <plurals name="res_product_count">
         <item quantity="zero">%1$s товаров</item>
         <item quantity="one">%1$s товар</item>
