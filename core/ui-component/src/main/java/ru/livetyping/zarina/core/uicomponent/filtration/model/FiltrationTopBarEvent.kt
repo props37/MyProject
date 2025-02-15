@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.filtration
+package ru.livetyping.zarina.core.uicomponent.filtration.model
 
 public sealed interface FiltrationTopBarEvent {
     public data object BackClicked : FiltrationTopBarEvent

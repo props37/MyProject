@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.filtration
+package ru.livetyping.zarina.core.uicomponent.filtration.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductPriceFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductToggleFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
 import ru.livetyping.zarina.core.uicomponent.R
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.filtration
+package ru.livetyping.zarina.core.uicomponent.filtration.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
 import ru.livetyping.zarina.core.uikit.overlay.ZarinaRefreshingOverlay
 
 @Composable

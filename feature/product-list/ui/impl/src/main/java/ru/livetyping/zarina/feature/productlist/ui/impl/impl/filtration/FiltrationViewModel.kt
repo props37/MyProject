@@ -22,10 +22,10 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCa
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationComponent
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationState
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.viewmodel.FiltrationComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.FiltrationStateBuilder
 import javax.inject.Inject
 

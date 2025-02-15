@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.filtration
+package ru.livetyping.zarina.core.uicomponent.filtration.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

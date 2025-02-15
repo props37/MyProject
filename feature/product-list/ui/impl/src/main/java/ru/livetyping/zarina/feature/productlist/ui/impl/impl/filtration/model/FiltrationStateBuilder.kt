@@ -2,7 +2,7 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model
 
 import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 internal class FiltrationStateBuilder {

@@ -8,10 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationContent
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationState
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.ui.FiltrationContent
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable

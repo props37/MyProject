@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicomponent.filtration
+package ru.livetyping.zarina.core.uicomponent.filtration.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
