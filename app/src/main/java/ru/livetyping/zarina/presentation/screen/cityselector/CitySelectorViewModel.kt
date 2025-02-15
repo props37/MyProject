@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -149,11 +150,19 @@ class CitySelectorViewModel @Inject constructor(
                         cityListStateFromFetchCitiesSuccess(cityNameQuery, cities)
                     },
                     onFailure = { throwable ->
-                        val errorState = ErrorState.from(throwable)
-                        CityListState.Error(errorState)
+                        when (throwable) {
+                            is CancellationException -> null
+
+                            else -> {
+                                val errorState = ErrorState.from(throwable)
+                                CityListState.Error(errorState)
+                            }
+                        }
                     },
                 )
-                _cityListState.value = cityListState
+                if (cityListState != null) {
+                    _cityListState.value = cityListState
+                }
             }
         }
     }
