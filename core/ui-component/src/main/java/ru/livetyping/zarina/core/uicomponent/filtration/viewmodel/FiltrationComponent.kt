@@ -45,6 +45,10 @@ public class FiltrationComponent(
         filters?.storePickupAvailability?.isEnabled == true
     }
 
+    public fun getFilters(): ProductFilters? {
+        return filters.value
+    }
+
     public fun setFilters(filters: ProductFilters?) {
         val filtersParcelable = filters?.let { ProductFiltersParcelable.from(it) }
         filtersValueHolder.set(filtersParcelable)

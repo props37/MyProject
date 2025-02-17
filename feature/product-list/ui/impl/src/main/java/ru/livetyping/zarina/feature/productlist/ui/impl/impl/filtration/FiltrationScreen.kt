@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
@@ -26,6 +27,7 @@ internal fun FiltrationScreen(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         filtrationState = filtrationState,
+        onFiltrationEvent = viewModel::onFiltrationEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -36,6 +38,7 @@ private fun ScreenContent(
     topBarState: FiltrationTopBarState,
     onTopBarEvent: (FiltrationTopBarEvent) -> Unit,
     filtrationState: FiltrationState,
+    onFiltrationEvent: (FiltrationEvent) -> Unit,
     sideEffects: Flow<FiltrationSideEffect>,
     navActions: FiltrationNavActions,
 ) {
@@ -48,21 +51,9 @@ private fun ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = onTopBarEvent,
         filtrationState = filtrationState,
+        onFiltrationEvent = onFiltrationEvent,
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default),
     )
-
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(UiKitTheme.colors.background.general.regular.default)
-//            .windowInsetsPadding(
-//                WindowInsets.statusBars
-//                    .union(WindowInsets.displayCutout),
-//            )
-//            .bottomNavBarPadding(WindowInsets.ime),
-//    ) {
-//        // TODO: [Top] Implement
-//    }
 }

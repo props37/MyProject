@@ -22,6 +22,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCa
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
@@ -108,6 +109,15 @@ internal class FiltrationViewModel @Inject constructor(
         }
     }
 
+    fun onFiltrationEvent(event: FiltrationEvent) {
+        when (event) {
+            is FiltrationEvent.FilterChanged -> onFilterChanged(event)
+            is FiltrationEvent.FilterClicked -> TODO() // TODO: [Top] Implement
+            FiltrationEvent.ShowProductsClicked -> TODO() // TODO: [Top] Implement
+            FiltrationEvent.FiltrationErrorRefreshClicked -> onFiltrationErrorRefreshClicked()
+        }
+    }
+
     private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = FiltrationScreenAction.BackClicked
@@ -116,11 +126,21 @@ internal class FiltrationViewModel @Inject constructor(
     }
 
     private fun onResetFiltersClicked() {
-        val filters = filtrationComponent.filters.value
+        val filters = filtrationComponent.getFilters()
         if (filters != null) {
             val newFilters = filters.reset()
             filtrationComponent.setFilters(newFilters)
         }
+    }
+
+    private fun onFilterChanged(event: FiltrationEvent.FilterChanged) {
+        val filters = filtrationComponent.getFilters()
+        val newFilters = filters?.updateWith(event.filter)
+        filtrationComponent.setFilters(newFilters)
+    }
+
+    private fun onFiltrationErrorRefreshClicked() {
+        categoryInfoRequester.request(CategoryInfoRequester)
     }
 
     private data object CategoryInfoRequester : FlowRequest

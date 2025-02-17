@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductPriceFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductToggleFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
 import ru.livetyping.zarina.core.uicomponent.R
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
@@ -37,6 +38,7 @@ import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 @Composable
 internal fun FiltersSuccess(
     state: FiltrationState.Success,
+    onEvent: (FiltrationEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -76,7 +78,11 @@ internal fun FiltersSuccess(
                             },
                         ) {
                             Column(modifier = Modifier.animateZarinaItem(this)) {
-                                Filter(filter)
+                                Filter(
+                                    filter = filter,
+                                    onFilterChanged = { onEvent(FiltrationEvent.FilterChanged(it)) },
+                                    onFilterClicked = { onEvent(FiltrationEvent.FilterClicked(it)) },
+                                )
 
                                 if (filter !is ProductPriceFilter && index < filterCount - 1) {
                                     ZarinaDivider(
@@ -96,7 +102,7 @@ internal fun FiltersSuccess(
 
         ShowProductsButton(
             productCount = state.availableProductCount,
-            onClick = { TODO() }, // TODO: [Top] Implement
+            onClick = { onEvent(FiltrationEvent.ShowProductsClicked) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -107,6 +113,8 @@ internal fun FiltersSuccess(
 @Composable
 private fun Filter(
     filter: ProductFilter<*>,
+    onFilterChanged: (ProductFilter<*>) -> Unit,
+    onFilterClicked: (ProductFilter<*>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -122,7 +130,7 @@ private fun Filter(
 
                 PriceFilter(
                     filter = filter,
-                    onFilterChanged = {}, // TODO: [Top] Implement
+                    onFilterChanged = onFilterChanged,
                     sliderAdditionalHorizontalPadding = sliderHorizontalPadding,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,13 +148,13 @@ private fun Filter(
                     SingleSelectionFilterItem(
                         type = filter.type,
                         selected = filter.selectedItems.firstOrNull(),
-                        onClick = { TODO() }, // TODO: [Top] Implement
+                        onClick = { onFilterClicked(filter) },
                     )
                 } else {
                     MultiSelectionListFilter(
                         type = filter.type,
                         selectedCount = filter.selectedItems.size,
-                        onClick = { TODO() }, // TODO: [Top] Implement
+                        onClick = { onFilterClicked(filter) },
                     )
                 }
             }
@@ -156,7 +164,8 @@ private fun Filter(
                     type = filter.type,
                     isChecked = filter.isEnabled,
                     onCheckedChanged = {
-                        TODO() // TODO: [Top] Implement
+                        val updatedFilter = filter.copy(isEnabled = it)
+                        onFilterChanged(updatedFilter)
                     },
                 )
             }

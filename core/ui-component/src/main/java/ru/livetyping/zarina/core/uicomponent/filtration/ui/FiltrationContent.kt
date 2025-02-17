@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
@@ -21,6 +22,7 @@ public fun FiltrationContent(
     topBarState: FiltrationTopBarState,
     onTopBarEvent: (FiltrationTopBarEvent) -> Unit,
     filtrationState: FiltrationState,
+    onFiltrationEvent: (FiltrationEvent) -> Unit,
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
@@ -34,6 +36,7 @@ public fun FiltrationContent(
 
             Filters(
                 state = filtrationState,
+                onEvent = onFiltrationEvent,
                 modifier = Modifier.fillMaxSize(),
             )
         }
