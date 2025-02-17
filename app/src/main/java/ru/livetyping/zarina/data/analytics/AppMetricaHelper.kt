@@ -127,7 +127,7 @@ object AppMetricaHelper {
         val identifier = order.id.value.toString()
         val eCommerceCartItems = order.products.map { product ->
             val eCommerceProduct = getECommerceProduct(
-                productId = product.id,
+                productId = product.productId,
                 productName = product.name,
                 currentPrice = product.price.currentPrice,
                 originalPrice = product.price.originalPrice,

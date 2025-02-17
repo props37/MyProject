@@ -102,9 +102,12 @@ data class OrderDto(
 
     @Serializable
     data class Product(
+        @SerialName("id")
+        val id: Long?,
+
         @SerialName("vendor_code")
-        val id: String? = null,
-        
+        val productId: String? = null,
+
         @SerialName("name")
         val name: String? = null,
 
@@ -125,6 +128,7 @@ data class OrderDto(
     ) {
         fun toOrderProduct(): OrderDetails.Product {
             checkNotNull(id) { "id is null" }
+            checkNotNull(productId) { "productId is null" }
             checkNotNull(name) { "name is null" }
             checkNotNull(size) { "size is null" }
             checkNotNull(color) { "color is null" }
@@ -132,7 +136,8 @@ data class OrderDto(
             checkNotNull(price) { "price is null" }
             checkNotNull(count) { "count is null" }
             return OrderDetails.Product(
-                id = DomainProduct.Id(id),
+                id = OrderDetails.Product.Id(id.toString()),
+                productId = DomainProduct.Id(productId),
                 name = name,
                 size = size,
                 color = getProductColor(),
@@ -146,12 +151,12 @@ data class OrderDto(
             checkNotNull(color) { "color is null" }
             checkNotNull(color.code) { "code is null" }
             checkNotNull(color.name) { "name is null" }
-            checkNotNull(id) { "id is null" }
+            checkNotNull(productId) { "productId is null" }
             return ProductColor(
                 id = ProductColor.Id(color.code),
                 name = color.name,
                 color = DomainColor(color.code),
-                productId = DomainProduct.Id(id),
+                productId = DomainProduct.Id(productId),
             )
         }
 
