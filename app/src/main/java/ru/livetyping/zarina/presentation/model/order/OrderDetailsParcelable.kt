@@ -51,6 +51,7 @@ data class OrderDetailsParcelable(
     @Parcelize
     data class Product(
         val id: String,
+        val productId: String,
         val name: String,
         val size: String,
         val color: ProductColorParcelable,
@@ -60,7 +61,8 @@ data class OrderDetailsParcelable(
     ) : Parcelable {
         fun toOrderDetailsProduct(): OrderDetails.Product {
             return Product(
-                id = DomainProduct.Id(id),
+                id = OrderDetails.Product.Id(id),
+                productId = DomainProduct.Id(productId),
                 name = name,
                 size = size,
                 color = color.toProductColor(),
@@ -74,6 +76,7 @@ data class OrderDetailsParcelable(
             fun from(product: OrderDetails.Product): Product {
                 return Product(
                     id = product.id.value,
+                    productId = product.productId.value,
                     name = product.name,
                     size = product.size,
                     color = ProductColorParcelable.from(product.color),

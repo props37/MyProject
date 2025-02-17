@@ -29,12 +29,16 @@ data class OrderDetails(
     totalPrice = price.totalPrice,
 ) {
     data class Product(
-        val id: DomainProduct.Id,
+        val id: Id,
+        val productId: DomainProduct.Id,
         val name: String,
         val size: String,
         val color: ProductColor,
         val imageUrl: Url,
         val price: Price,
         val count: Int,
-    )
+    ) {
+        @JvmInline
+        value class Id(val value: String)
+    }
 }
