@@ -16,6 +16,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,6 +26,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -44,6 +47,7 @@ import ru.livetyping.zarina.domain.filter.selected
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.component.ProductGridSideEffect
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.util.library.paging.mapProducts
@@ -167,6 +171,9 @@ class ProductsViewModel @AssistedInject constructor(
             it?.toFilters() ?: fallbackFilters
         }
 
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
     private var availableFilters: Filters? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -185,6 +192,7 @@ class ProductsViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScopeDefault)
+        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),

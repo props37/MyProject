@@ -11,10 +11,13 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -28,6 +31,7 @@ import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.base.text.Text
+import ru.livetyping.zarina.presentation.common.component.ProductGridSideEffect
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.util.library.paging.mapProducts
@@ -72,8 +76,12 @@ class FavoritesViewModel @AssistedInject constructor(
             initialValue = false,
         )
 
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
     val productPagingDataFlow: Flow<PagingData<ProductItem>> = favoriteProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
+        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),

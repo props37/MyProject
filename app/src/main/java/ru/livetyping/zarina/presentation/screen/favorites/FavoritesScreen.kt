@@ -31,6 +31,7 @@ import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.ProductGrid
+import ru.livetyping.zarina.presentation.common.component.ProductGridSideEffect
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.favorites.FavoritesScreenComponents.FavoriteProductsNotFoundPlaceholder
@@ -47,6 +48,7 @@ fun FavoritesScreen(
 
     ScreenContent(
         productPagingDataFlow = viewModel.productPagingDataFlow,
+        productGridSideEffects = viewModel.productGridSideEffects,
         onProductClicked = viewModel::onProductClicked,
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
@@ -63,6 +65,7 @@ fun FavoritesScreen(
 @Composable
 private fun ScreenContent(
     productPagingDataFlow: Flow<PagingData<ProductItem>>,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     onProductClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
@@ -98,6 +101,7 @@ private fun ScreenContent(
 
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
+            sideEffects = productGridSideEffects,
             onProductClicked = onProductClicked,
             onAddToFavoritesClicked = onAddProductToFavoritesClicked,
             onAddToCartClicked = onAddProductToCartClicked,
@@ -127,6 +131,7 @@ private fun Preview() {
             productPagingDataFlow = remember {
                 flowOf(PagingData.from(FakeDataGenerator.getProductItems()))
             },
+            productGridSideEffects = emptyFlow(),
             onProductClicked = {},
             onAddProductToFavoritesClicked = {},
             onAddProductToCartClicked = {},

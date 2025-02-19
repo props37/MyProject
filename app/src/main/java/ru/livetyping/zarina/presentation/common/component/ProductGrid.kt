@@ -33,6 +33,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.data.analytics.AppMetricaScreen
 import ru.livetyping.zarina.domain.product.Product
@@ -72,6 +75,7 @@ fun ProductGrid(
      * is done under the hood, the additional logic can be invoked using this callback.
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
+    sideEffects: Flow<ProductGridSideEffect>? = null,
     appMetricaScreen: AppMetricaScreen? = null,
 ) {
     val gridState = rememberLazyGridState()
@@ -81,14 +85,19 @@ fun ProductGrid(
         productPagingItems.retryAppendPrependErrors(gridState)
     }
 
-    // Scroll to top when Refresh loading completes
-    LaunchedEffect(gridState, productPagingItems) {
-        var prevLoadState: LoadState? = null
-        snapshotFlow { productPagingItems.loadState.refresh }.collect { loadState ->
-            if (loadState is LoadState.NotLoading && prevLoadState is LoadState.Loading) {
-                gridState.scrollToItem(0)
+    // Scroll to top when the list changes
+    LaunchedEffect(gridState, productPagingItems, sideEffects) {
+        if (sideEffects != null) {
+            val scrollToTopEffects =
+                sideEffects.filterIsInstance<ProductGridSideEffect.ScrollToTop>()
+            val refreshStateFlow = snapshotFlow { productPagingItems.loadState.refresh }
+            scrollToTopEffects.collectLatest {
+                // Wait for a loading to start
+                refreshStateFlow.firstOrNull { it is LoadState.Loading }
+                // Wait for products to load
+                refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
+                gridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
             }
-            prevLoadState = loadState
         }
     }
 
@@ -314,6 +323,10 @@ private fun getProductGridItemContentType(
     } else {
         ProductGridContentTypeProductCardPlaceholder
     }
+}
+
+sealed interface ProductGridSideEffect {
+    data object ScrollToTop : ProductGridSideEffect
 }
 
 private const val ProductGridCellInRowCount = 2

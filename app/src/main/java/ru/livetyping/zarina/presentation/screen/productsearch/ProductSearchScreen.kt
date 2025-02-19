@@ -36,6 +36,7 @@ import ru.livetyping.zarina.domain.product.ProductItem
 import ru.livetyping.zarina.domain.productsearch.ProductSearchSuggestions
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.common.component.ProductGrid
+import ru.livetyping.zarina.presentation.common.component.ProductGridSideEffect
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.NothingFoundPlaceholder
 import ru.livetyping.zarina.presentation.screen.productsearch.ProductSearchScreenComponents.SearchSuggestions
@@ -74,6 +75,7 @@ fun ProductSearchScreen(
         onSearchSuggestionItemClicked = viewModel::onSearchSuggestionItemClicked,
         onDeleteSearchHistoryQueryItemClicked = viewModel::onDeleteSearchHistoryQueryItemClicked,
         productSearchResultPagingDataFlow = viewModel.productSearchResultPagingDataFlow,
+        productGridSideEffects = viewModel.productGridSideEffects,
         onProductClicked = viewModel::onProductClicked,
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
@@ -101,6 +103,7 @@ private fun ScreenContent(
     onSearchSuggestionItemClicked: (SearchSuggestionItem) -> Unit,
     onDeleteSearchHistoryQueryItemClicked: (SearchSuggestionItem.HistoryQueryItem) -> Unit,
     productSearchResultPagingDataFlow: Flow<PagingData<ProductItem>>,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     onProductClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
@@ -170,6 +173,7 @@ private fun ScreenContent(
                 SearchMode.SEARCH_RESULTS -> {
                     ProductGrid(
                         productPagingDataFlow = productSearchResultPagingDataFlow,
+                        sideEffects = productGridSideEffects,
                         onProductClicked = onProductClicked,
                         onAddToFavoritesClicked = onAddProductToFavoritesClicked,
                         onAddToCartClicked = onAddProductToCartClicked,
