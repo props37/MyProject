@@ -101,6 +101,7 @@ private fun ScreenContent(
 
         ProductGrid(
             productPagingDataFlow = productPagingDataFlow,
+            sideEffects = productGridSideEffects,
             onProductClicked = onProductClicked,
             onAddToFavoritesClicked = onAddProductToFavoritesClicked,
             onAddToCartClicked = onAddProductToCartClicked,
