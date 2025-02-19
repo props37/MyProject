@@ -9,7 +9,6 @@ import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.MindboxConfiguration
 import cloud.mindbox.mobile_sdk.logger.Level
-import com.google.firebase.messaging.FirebaseMessaging
 import ru.livetyping.zarina.BuildConfig
 
 class MindboxInitializer : Initializer<Unit> {
@@ -33,9 +32,6 @@ class MindboxInitializer : Initializer<Unit> {
             NotificationManagerCompat.from(context).areNotificationsEnabled()
         if (areNotificationsEnabled) {
             Mindbox.updateNotificationPermissionStatus(context)
-        }
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-            Mindbox.updatePushToken(context, token, MindboxFirebase)
         }
         Mindbox.subscribeDeviceUuid { uuid ->
             Log.v(MINDBOX_TAG, "Mindbox device UUID: $uuid")
