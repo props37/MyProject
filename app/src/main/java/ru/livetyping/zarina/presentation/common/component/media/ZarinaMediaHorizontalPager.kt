@@ -45,11 +45,6 @@ fun ZarinaMediaHorizontalPager(
             state = pagerState,
             snapAnimationSpec = spring(stiffness = Spring.StiffnessMedium),
         ),
-        key = { index ->
-            @Suppress("NAME_SHADOWING")
-            val media = media.loopingGet(index)
-            media?.originalUrl?.value ?: index
-        },
         modifier = modifier,
     ) { page ->
         @Suppress("NAME_SHADOWING")
