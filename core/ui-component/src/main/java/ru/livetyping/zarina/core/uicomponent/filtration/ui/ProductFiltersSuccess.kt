@@ -28,17 +28,17 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductPriceFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductToggleFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
 import ru.livetyping.zarina.core.uicomponent.R
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 
 @Composable
-internal fun FiltersSuccess(
-    state: FiltrationState.Success,
-    onEvent: (FiltrationEvent) -> Unit,
+internal fun ProductFiltersSuccess(
+    state: ProductFiltrationState.Success,
+    onEvent: (ProductFiltrationEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -80,8 +80,8 @@ internal fun FiltersSuccess(
                             Column(modifier = Modifier.animateZarinaItem(this)) {
                                 Filter(
                                     filter = filter,
-                                    onFilterChanged = { onEvent(FiltrationEvent.FilterChanged(it)) },
-                                    onFilterClicked = { onEvent(FiltrationEvent.FilterClicked(it)) },
+                                    onFilterChanged = { onEvent(ProductFiltrationEvent.FilterChanged(it)) },
+                                    onFilterClicked = { onEvent(ProductFiltrationEvent.FilterClicked(it)) },
                                 )
 
                                 if (filter !is ProductPriceFilter && index < filterCount - 1) {
@@ -102,7 +102,7 @@ internal fun FiltersSuccess(
 
         ShowProductsButton(
             productCount = state.availableProductCount,
-            onClick = { onEvent(FiltrationEvent.ShowProductsClicked) },
+            onClick = { onEvent(ProductFiltrationEvent.ShowProductsClicked) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -128,7 +128,7 @@ private fun Filter(
                     (systemGestureHorizontalPadding - horizontalPadding)
                         .coerceAtLeast(0.dp)
 
-                PriceFilter(
+                ProductPriceFilter(
                     filter = filter,
                     onFilterChanged = onFilterChanged,
                     sliderAdditionalHorizontalPadding = sliderHorizontalPadding,
@@ -145,13 +145,13 @@ private fun Filter(
 
             is ProductListFilter<*> -> {
                 if (filter.isSingleSelection) {
-                    SingleSelectionFilterItem(
+                    ProductSingleSelectionFilterItem(
                         type = filter.type,
                         selected = filter.selectedItems.firstOrNull(),
                         onClick = { onFilterClicked(filter) },
                     )
                 } else {
-                    MultiSelectionListFilter(
+                    ProductMultiSelectionListFilterItem(
                         type = filter.type,
                         selectedCount = filter.selectedItems.size,
                         onClick = { onFilterClicked(filter) },
@@ -160,7 +160,7 @@ private fun Filter(
             }
 
             is ProductToggleFilter -> {
-                ToggleFilter(
+                ProductToggleFilter(
                     type = filter.type,
                     isChecked = filter.isEnabled,
                     onCheckedChanged = {

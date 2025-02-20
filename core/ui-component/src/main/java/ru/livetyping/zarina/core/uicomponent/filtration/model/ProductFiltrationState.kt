@@ -6,17 +6,17 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 @Stable
-public sealed class FiltrationState {
+public sealed class ProductFiltrationState {
     @Immutable
     public data class Success(
         val filters: ProductFilters,
         val isPickupStoreFilterVisible: Boolean,
         val availableProductCount: Int?,
         val isRefreshing: Boolean,
-    ) : FiltrationState()
+    ) : ProductFiltrationState()
 
-    public data object Loading : FiltrationState()
+    public data object Loading : ProductFiltrationState()
 
     @Immutable
-    public data class Error(val errorState: ZarinaErrorScreenState) : FiltrationState()
+    public data class Error(val errorState: ZarinaErrorScreenState) : ProductFiltrationState()
 }

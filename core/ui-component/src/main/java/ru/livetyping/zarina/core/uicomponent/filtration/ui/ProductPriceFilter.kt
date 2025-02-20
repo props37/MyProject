@@ -47,7 +47,7 @@ import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-internal fun PriceFilter(
+internal fun ProductPriceFilter(
     filter: ProductPriceFilter,
     onFilterChanged: (ProductPriceFilter) -> Unit,
     modifier: Modifier = Modifier,

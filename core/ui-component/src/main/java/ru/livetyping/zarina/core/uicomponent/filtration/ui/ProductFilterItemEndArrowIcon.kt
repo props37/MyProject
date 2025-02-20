@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun FilterEndArrowIcon(
+internal fun ProductFilterItemEndArrowIcon(
     modifier: Modifier = Modifier,
 ) {
     Icon(

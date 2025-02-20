@@ -21,7 +21,7 @@ import ru.livetyping.zarina.core.uicommon.nameResId
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-internal fun SingleSelectionFilterItem(
+internal fun ProductSingleSelectionFilterItem(
     type: ProductFilter.Type,
     selected: ProductListFilterItem?,
     onClick: () -> Unit,
@@ -56,6 +56,6 @@ internal fun SingleSelectionFilterItem(
         Spacer(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(16.dp))
 
-        FilterEndArrowIcon()
+        ProductFilterItemEndArrowIcon()
     }
 }

@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
@@ -22,15 +22,15 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun FiltrationTopBar(
-    state: FiltrationTopBarState,
-    onEvent: (FiltrationTopBarEvent) -> Unit,
+internal fun ProductFiltrationTopBar(
+    state: ProductFiltrationTopBarState,
+    onEvent: (ProductFiltrationTopBarEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
         startContent = {
             ZarinaBackIconButton(
-                onClick = { onEvent(FiltrationTopBarEvent.BackClicked) },
+                onClick = { onEvent(ProductFiltrationTopBarEvent.BackClicked) },
                 iconSize = 20.dp,
                 modifier = Modifier.padding(start = 2.dp),
             )
@@ -49,7 +49,7 @@ internal fun FiltrationTopBar(
                 exit = AnimatedContentDefaultExitTransition,
             ) {
                 ZarinaButton(
-                    onClick = { onEvent(FiltrationTopBarEvent.ResetFiltersClicked) },
+                    onClick = { onEvent(ProductFiltrationTopBarEvent.ResetFiltersClicked) },
                     size = ZarinaButtonSize.Small,
                     colors = ZarinaButtonDefaults.backlessColors(),
                     modifier = Modifier.padding(end = 8.dp),

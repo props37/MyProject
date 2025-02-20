@@ -22,11 +22,11 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCa
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
-import ru.livetyping.zarina.core.uicomponent.filtration.viewmodel.FiltrationComponent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.viewmodel.ProductFiltrationComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model.FiltrationStateBuilder
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ internal class FiltrationViewModel @Inject constructor(
     private val categoryId = navEntry.getCategoryId()
     private val initialFilters = navEntry.filters?.toFilters()
 
-    private val filtrationComponent = FiltrationComponent(
+    private val filtrationComponent = ProductFiltrationComponent(
         savedStateHandle = savedStateHandle,
         initialFilters = initialFilters,
         coroutineScope = viewModelScope,
@@ -69,12 +69,12 @@ internal class FiltrationViewModel @Inject constructor(
             replay = 1,
         )
 
-    val topBarState: StateFlow<FiltrationTopBarState> = filtrationComponent.isResetFiltersButtonVisible
+    val topBarState: StateFlow<ProductFiltrationTopBarState> = filtrationComponent.isResetFiltersButtonVisible
         .mapState(
             scope = viewModelScope,
             started = SharingStarted.WhileAndroidUiSubscribed,
         ) { isResetFiltersButtonVisible ->
-            FiltrationTopBarState(isResetFiltersButtonVisible)
+            ProductFiltrationTopBarState(isResetFiltersButtonVisible)
         }
 
     private val filtrationStateBuilder = FiltrationStateBuilder()
@@ -84,7 +84,7 @@ internal class FiltrationViewModel @Inject constructor(
         isPickupStoreFilterVisible = filtrationComponent.isPickupStoreFilterVisible.value,
         isRefreshing = filtrationComponent.isRefreshing.value,
     )
-    val filtrationState: StateFlow<FiltrationState> = combine(
+    val filtrationState: StateFlow<ProductFiltrationState> = combine(
         filtrationComponent.filters,
         categoryInfoResultFlow,
         filtrationComponent.isPickupStoreFilterVisible,
@@ -102,19 +102,19 @@ internal class FiltrationViewModel @Inject constructor(
         initialValue = filtrationInitialState,
     )
 
-    fun onTopBarEvent(event: FiltrationTopBarEvent) {
+    fun onTopBarEvent(event: ProductFiltrationTopBarEvent) {
         when (event) {
-            FiltrationTopBarEvent.BackClicked -> onBackClicked()
-            FiltrationTopBarEvent.ResetFiltersClicked -> onResetFiltersClicked()
+            ProductFiltrationTopBarEvent.BackClicked -> onBackClicked()
+            ProductFiltrationTopBarEvent.ResetFiltersClicked -> onResetFiltersClicked()
         }
     }
 
-    fun onFiltrationEvent(event: FiltrationEvent) {
+    fun onFiltrationEvent(event: ProductFiltrationEvent) {
         when (event) {
-            is FiltrationEvent.FilterChanged -> onFilterChanged(event)
-            is FiltrationEvent.FilterClicked -> TODO() // TODO: [Top] Implement
-            FiltrationEvent.ShowProductsClicked -> TODO() // TODO: [Top] Implement
-            FiltrationEvent.FiltrationErrorRefreshClicked -> onFiltrationErrorRefreshClicked()
+            is ProductFiltrationEvent.FilterChanged -> onFilterChanged(event)
+            is ProductFiltrationEvent.FilterClicked -> TODO() // TODO: [Top] Implement
+            ProductFiltrationEvent.ShowProductsClicked -> TODO() // TODO: [Top] Implement
+            ProductFiltrationEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
         }
     }
 
@@ -133,13 +133,13 @@ internal class FiltrationViewModel @Inject constructor(
         }
     }
 
-    private fun onFilterChanged(event: FiltrationEvent.FilterChanged) {
+    private fun onFilterChanged(event: ProductFiltrationEvent.FilterChanged) {
         val filters = filtrationComponent.getFilters()
         val newFilters = filters?.updateWith(event.filter)
         filtrationComponent.setFilters(newFilters)
     }
 
-    private fun onFiltrationErrorRefreshClicked() {
+    private fun onErrorRefreshClicked() {
         categoryInfoRequester.request(CategoryInfoRequester)
     }
 

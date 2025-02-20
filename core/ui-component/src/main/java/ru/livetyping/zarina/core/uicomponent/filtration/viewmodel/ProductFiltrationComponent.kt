@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 
-public class FiltrationComponent(
+public class ProductFiltrationComponent(
     savedStateHandle: SavedStateHandle,
     initialFilters: ProductFilters?,
     coroutineScope: CoroutineScope,

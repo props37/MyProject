@@ -11,37 +11,38 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
 import ru.livetyping.zarina.core.uikit.overlay.ZarinaRefreshingOverlay
 
 @Composable
-public fun FiltrationContent(
-    topBarState: FiltrationTopBarState,
-    onTopBarEvent: (FiltrationTopBarEvent) -> Unit,
-    filtrationState: FiltrationState,
-    onFiltrationEvent: (FiltrationEvent) -> Unit,
+public fun ProductFiltrationContent(
+    topBarState: ProductFiltrationTopBarState,
+    onTopBarEvent: (ProductFiltrationTopBarEvent) -> Unit,
+    filtrationState: ProductFiltrationState,
+    onFiltrationEvent: (ProductFiltrationEvent) -> Unit,
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
     // Do not use passed modifier here since refreshing overlay should take the whole available space
     Box(modifier = Modifier) {
         Column(modifier = modifier.windowInsetsPadding(windowInsetsProvider())) {
-            FiltrationTopBar(
+            ProductFiltrationTopBar(
                 state = topBarState,
                 onEvent = onTopBarEvent,
             )
 
-            Filters(
+            ProductFilters(
                 state = filtrationState,
                 onEvent = onFiltrationEvent,
                 modifier = Modifier.fillMaxSize(),
             )
         }
 
-        val isRefreshing = (filtrationState as? FiltrationState.Success)?.isRefreshing == true
+        val isRefreshing =
+            (filtrationState as? ProductFiltrationState.Success)?.isRefreshing == true
         AnimatedVisibility(
             visible = isRefreshing,
             enter = fadeIn(),

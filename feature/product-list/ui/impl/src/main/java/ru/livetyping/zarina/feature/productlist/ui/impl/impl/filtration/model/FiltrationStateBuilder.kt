@@ -2,7 +2,7 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.model
 
 import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 internal class FiltrationStateBuilder {
@@ -11,14 +11,14 @@ internal class FiltrationStateBuilder {
         categoryInfoResult: Result<CategoryInfo>?,
         isPickupStoreFilterVisible: Boolean,
         isRefreshing: Boolean,
-    ): FiltrationState {
+    ): ProductFiltrationState {
         val categoryInfo = categoryInfoResult?.getOrNull()
         return if (filters != null) {
             val availableFilters = categoryInfo?.availableFilters
             val combinedFilters = availableFilters?.let {
                 filters.coerceInAvailable(availableFilters)
             } ?: filters
-            FiltrationState.Success(
+            ProductFiltrationState.Success(
                 filters = combinedFilters,
                 isPickupStoreFilterVisible = isPickupStoreFilterVisible,
                 availableProductCount = categoryInfo?.productCount,
@@ -27,7 +27,7 @@ internal class FiltrationStateBuilder {
         } else {
             categoryInfoResult?.fold(
                 onSuccess = { info ->
-                    FiltrationState.Success(
+                    ProductFiltrationState.Success(
                         filters = info.availableFilters,
                         isPickupStoreFilterVisible = isPickupStoreFilterVisible,
                         availableProductCount = info.productCount,
@@ -36,9 +36,9 @@ internal class FiltrationStateBuilder {
                 },
                 onFailure = { throwable ->
                     val errorState = ZarinaErrorScreenState.from(throwable)
-                    FiltrationState.Error(errorState)
+                    ProductFiltrationState.Error(errorState)
                 },
-            ) ?: FiltrationState.Loading
+            ) ?: ProductFiltrationState.Loading
         }
     }
 }

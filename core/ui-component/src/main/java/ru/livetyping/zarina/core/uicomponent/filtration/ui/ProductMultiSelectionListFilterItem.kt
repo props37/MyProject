@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.uicomponent.filtration.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,13 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilter
 import ru.livetyping.zarina.core.uicommon.nameResId
-import ru.livetyping.zarina.core.uikit.switchh.ZarinaSwitch
+import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-internal fun ToggleFilter(
+internal fun ProductMultiSelectionListFilterItem(
     type: ProductFilter.Type,
-    isChecked: Boolean,
-    onCheckedChanged: (Boolean) -> Unit,
+    selectedCount: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -28,6 +30,7 @@ internal fun ToggleFilter(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = FilterMinHeight)
+            .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
@@ -36,12 +39,18 @@ internal fun ToggleFilter(
             color = FilterTitleColor,
         )
 
+        Spacer(modifier = Modifier.width(8.dp))
+
+        if (selectedCount > 0) {
+            ZarinaCounter(
+                value = selectedCount.toString(),
+                textStyle = UiKitTheme.typography.footnote.bold,
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(16.dp))
 
-        ZarinaSwitch(
-            isChecked = isChecked,
-            onCheckedChanged = onCheckedChanged,
-        )
+        ProductFilterItemEndArrowIcon()
     }
 }

@@ -8,39 +8,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 
 @Suppress("NAME_SHADOWING")
 @Composable
-internal fun Filters(
-    state: FiltrationState,
-    onEvent: (FiltrationEvent) -> Unit,
+internal fun ProductFilters(
+    state: ProductFiltrationState,
+    onEvent: (ProductFiltrationEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
         targetState = state,
         contentKey = {
             when (it) {
-                is FiltrationState.Success -> FiltersContentKey.Success
-                is FiltrationState.Error, FiltrationState.Loading -> it
+                is ProductFiltrationState.Success -> FiltersContentKey.Success
+                is ProductFiltrationState.Error, ProductFiltrationState.Loading -> it
             }
         },
         modifier = modifier,
     ) { state ->
         when (state) {
-            is FiltrationState.Success -> {
-                FiltersSuccess(
+            is ProductFiltrationState.Success -> {
+                ProductFiltersSuccess(
                     state = state,
                     onEvent = onEvent,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
 
-            FiltrationState.Loading -> {
+            ProductFiltrationState.Loading -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -51,10 +51,10 @@ internal fun Filters(
                 }
             }
 
-            is FiltrationState.Error -> {
+            is ProductFiltrationState.Error -> {
                 ZarinaErrorScreen(
                     state = state.errorState,
-                    onButtonClicked = { onEvent(FiltrationEvent.FiltrationErrorRefreshClicked) },
+                    onButtonClicked = { onEvent(ProductFiltrationEvent.ErrorRefreshClicked) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp),

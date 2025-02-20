@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationState
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarEvent
-import ru.livetyping.zarina.core.uicomponent.filtration.model.FiltrationTopBarState
-import ru.livetyping.zarina.core.uicomponent.filtration.ui.FiltrationContent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationState
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarEvent
+import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
+import ru.livetyping.zarina.core.uicomponent.filtration.ui.ProductFiltrationContent
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
@@ -35,10 +35,10 @@ internal fun FiltrationScreen(
 
 @Composable
 private fun ScreenContent(
-    topBarState: FiltrationTopBarState,
-    onTopBarEvent: (FiltrationTopBarEvent) -> Unit,
-    filtrationState: FiltrationState,
-    onFiltrationEvent: (FiltrationEvent) -> Unit,
+    topBarState: ProductFiltrationTopBarState,
+    onTopBarEvent: (ProductFiltrationTopBarEvent) -> Unit,
+    filtrationState: ProductFiltrationState,
+    onFiltrationEvent: (ProductFiltrationEvent) -> Unit,
     sideEffects: Flow<FiltrationSideEffect>,
     navActions: FiltrationNavActions,
 ) {
@@ -47,7 +47,7 @@ private fun ScreenContent(
         navActions = navActions,
     )
 
-    FiltrationContent(
+    ProductFiltrationContent(
         topBarState = topBarState,
         onTopBarEvent = onTopBarEvent,
         filtrationState = filtrationState,
