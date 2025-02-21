@@ -21,12 +21,14 @@ import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
@@ -39,11 +41,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.lifecycleScope
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
@@ -130,16 +128,13 @@ private fun SignInByEmail(
         mutableStateOf(SignInByEmailFocusTarget.Email)
     }
 
-    LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch {
-            delay(FocusRequesterDelayMillis)
-            val focusRequester = when (lastFocusTarget) {
-                SignInByEmailFocusTarget.Email -> emailFocusRequester
-                SignInByEmailFocusTarget.Password -> passwordFocusRequester
-            }
-            focusRequester.tryRequestFocus()
+    LaunchedEffect(Unit) {
+        withFrameMillis {}
+        val focusRequester = when (lastFocusTarget) {
+            SignInByEmailFocusTarget.Email -> emailFocusRequester
+            SignInByEmailFocusTarget.Password -> passwordFocusRequester
         }
-        onPauseOrDispose {}
+        focusRequester.tryRequestFocus()
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -254,12 +249,9 @@ private fun SignInByPhone(
     modifier: Modifier = Modifier,
 ) {
     val focusRequester = remember { FocusRequester() }
-    LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch {
-            delay(FocusRequesterDelayMillis)
-            focusRequester.tryRequestFocus()
-        }
-        onPauseOrDispose {}
+    LaunchedEffect(Unit) {
+        withFrameMillis {}
+        focusRequester.tryRequestFocus()
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {

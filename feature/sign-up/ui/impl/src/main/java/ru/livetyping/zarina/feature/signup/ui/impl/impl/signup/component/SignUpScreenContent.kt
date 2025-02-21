@@ -23,10 +23,11 @@ import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
@@ -37,10 +38,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
@@ -137,7 +134,6 @@ internal fun SignUpScreenContent(
 }
 
 @Suppress("UnusedReceiverParameter")
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ColumnScope.PersonalDataFields(
     nameTextFieldState: TextFieldState,
@@ -154,12 +150,9 @@ private fun ColumnScope.PersonalDataFields(
 ) {
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
-    LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch {
-            delay(FocusRequesterDelayMillis)
-            nameFocusRequester.tryRequestFocus()
-        }
-        onPauseOrDispose {}
+    LaunchedEffect(Unit) {
+        withFrameMillis {}
+        nameFocusRequester.tryRequestFocus()
     }
 
     ZarinaTextField(
@@ -425,5 +418,3 @@ private fun PoliciesText(
         modifier = modifier,
     )
 }
-
-private const val FocusRequesterDelayMillis = 100L

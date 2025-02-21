@@ -14,7 +14,9 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -22,10 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
@@ -43,12 +41,9 @@ internal fun PasswordRecoveryContent(
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
     val emailFocusRequester = remember { FocusRequester() }
-    LifecycleResumeEffect(Unit) {
-        lifecycleScope.launch {
-            delay(FocusRequesterDelayMillis)
-            emailFocusRequester.tryRequestFocus()
-        }
-        onPauseOrDispose {}
+    LaunchedEffect(Unit) {
+        withFrameMillis {}
+        emailFocusRequester.tryRequestFocus()
     }
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
