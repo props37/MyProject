@@ -112,7 +112,7 @@ internal class FiltrationViewModel @Inject constructor(
     fun onFiltrationEvent(event: ProductFiltrationEvent) {
         when (event) {
             is ProductFiltrationEvent.FilterChanged -> onFilterChanged(event)
-            is ProductFiltrationEvent.FilterClicked -> TODO() // TODO: [Top] Implement
+            is ProductFiltrationEvent.FilterClicked -> onFilterClicked(event)
             ProductFiltrationEvent.ShowProductsClicked -> onShowProductsClicked()
             ProductFiltrationEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
         }
@@ -131,6 +131,13 @@ internal class FiltrationViewModel @Inject constructor(
 
     private fun onFilterChanged(event: ProductFiltrationEvent.FilterChanged) {
         filtrationComponent.updateFiltersWith(event.filter)
+    }
+
+    private fun onFilterClicked(event: ProductFiltrationEvent.FilterClicked) {
+        navigationThrottler.throttle {
+            val action = FiltrationScreenAction.FilterClicked(event.filter)
+            emitSideEffect(FiltrationSideEffect.Navigate(action))
+        }
     }
 
     private fun onShowProductsClicked() {

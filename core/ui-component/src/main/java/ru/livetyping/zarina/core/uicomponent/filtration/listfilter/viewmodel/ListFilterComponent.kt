@@ -67,6 +67,15 @@ public class ListFilterComponent(
         filterValueHolder.set(newFilterParcelable)
     }
 
+    public fun resetFilter() {
+        val filter = getFilter()
+        val resetItems = filter.items.map {
+            if (it.isSelected) it.copy(isSelected = false) else it
+        }
+        val resetFilter = filter.copy(items = resetItems)
+        filterValueHolder.set(ProductListFilterParcelable.from(resetFilter))
+    }
+
     public fun setIsApplyButtonVisible(isVisible: Boolean) {
         isApplyButtonVisibleValueHolder.set(isVisible)
     }

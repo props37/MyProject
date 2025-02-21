@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration
+package ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,9 +11,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun FiltrationScreenBehavior(
-    sideEffects: Flow<FiltrationSideEffect>,
-    navActions: FiltrationNavActions,
+internal fun ListFilterScreenBehavior(
+    sideEffects: Flow<ListFilterSideEffect>,
+    navActions: ListFilterNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
@@ -24,11 +24,11 @@ internal fun FiltrationScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is FiltrationSideEffect.Navigate -> {
+                    is ListFilterSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is FiltrationSideEffect.ShowZarinaToast -> {
+                    is ListFilterSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -41,12 +41,9 @@ internal fun FiltrationScreenBehavior(
     }
 }
 
-private fun navigate(navActions: FiltrationNavActions, action: FiltrationScreenAction) {
+private fun navigate(navActions: ListFilterNavActions, action: ListFilterScreenAction) {
     when (action) {
-        FiltrationScreenAction.BackClicked -> navActions.onBackClicked()
-        is FiltrationScreenAction.FilterClicked -> navActions.onFilterClicked(action.filter)
-        is FiltrationScreenAction.ShowProductsClicked -> {
-            navActions.onShowProductsClicked(action.filters)
-        }
+        ListFilterScreenAction.BackClicked -> navActions.onBackClicked()
+        is ListFilterScreenAction.AppliedClicked -> navActions.onApplyClicked(action.filter)
     }
 }

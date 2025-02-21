@@ -23,8 +23,8 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 public fun ListFilterContent(
     topBarState: ListFilterTopBarState,
     onTopBarEvent: (ListFilterTopBarEvent) -> Unit,
-    state: ListFilterState,
-    onEvent: (ListFilterEvent) -> Unit,
+    listFilterState: ListFilterState,
+    onListFilterEvent: (ListFilterEvent) -> Unit,
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
@@ -40,7 +40,7 @@ public fun ListFilterContent(
             onEvent = onTopBarEvent,
         )
 
-        val contentPadding = if (!state.isApplyButtonVisible) {
+        val contentPadding = if (!listFilterState.isApplyButtonVisible) {
             windowInsetsProvider().only(WindowInsetsSides.Bottom).asPaddingValues()
         } else {
             PaddingValues()
@@ -50,16 +50,16 @@ public fun ListFilterContent(
         )
 
         ListFilterItems(
-            filter = state.filter,
-            onItemClicked = { onEvent(ListFilterEvent.ItemClicked(it)) },
-            cityHeader = state.cityHeader,
+            filter = listFilterState.filter,
+            onItemClicked = { onListFilterEvent(ListFilterEvent.ItemClicked(it)) },
+            cityHeader = listFilterState.cityHeader,
             contentPadding = contentPadding,
             modifier = Modifier.weight(1f),
         )
 
         ListFilterApplyButton(
-            isVisible = state.isApplyButtonVisible,
-            onClick = { onEvent(ListFilterEvent.ApplyClicked) },
+            isVisible = listFilterState.isApplyButtonVisible,
+            onClick = { onListFilterEvent(ListFilterEvent.ApplyClicked) },
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(
