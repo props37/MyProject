@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
+import ru.livetyping.zarina.core.uimodel.product.filter.ProductListFilterParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavActions
@@ -20,6 +21,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.Filtrati
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterNavActions
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.filtrationScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.listFilterScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.productListScreen
@@ -88,8 +90,11 @@ public class ProductListFeatureImpl : ProductListFeature {
             val listFilterNavActions = ListFilterNavActions(
                 onBackClicked = internalOnBackClicked,
                 onApplyClicked = { listFilter ->
+                    val filterParcelable = ProductListFilterParcelable.from(listFilter)
+                    val result = ListFilterResult(filter = filterParcelable)
                     navController.navigateUp()
-                    // TODO: [Top] Implement
+                    navController.currentBackStackEntry?.savedStateHandle
+                        ?.set(ListFilterResult.KEY, result)
                 },
             )
             listFilterScreen(listFilterNavActions)

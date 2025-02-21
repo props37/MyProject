@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationEvent
@@ -18,7 +17,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 @Composable
 internal fun FiltrationScreen(
     navActions: FiltrationNavActions,
-    viewModel: FiltrationViewModel = hiltViewModel(),
+    viewModel: FiltrationViewModel,
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val filtrationState by viewModel.filtrationState.collectAsStateWithLifecycle()
