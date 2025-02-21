@@ -42,6 +42,7 @@ internal fun FiltrationScreenBehavior(
 }
 
 private fun navigate(navActions: FiltrationNavActions, action: FiltrationScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        FiltrationScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

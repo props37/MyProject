@@ -59,7 +59,9 @@ public class ProductListFeatureImpl : ProductListFeature {
             )
             productListScreen(productListNavActions)
 
-            val filtrationNavActions = FiltrationNavActions()
+            val filtrationNavActions = FiltrationNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
             filtrationScreen(filtrationNavActions)
         }
     }
