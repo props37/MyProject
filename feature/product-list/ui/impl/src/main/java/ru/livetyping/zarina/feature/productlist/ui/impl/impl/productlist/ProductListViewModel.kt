@@ -7,6 +7,9 @@ import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +43,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCas
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -51,16 +55,18 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
-import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
-@HiltViewModel
-internal class ProductListViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ProductListViewModel.Factory::class)
+internal class ProductListViewModel @AssistedInject constructor(
+    @Assisted
+    filtrationResultFlow: Flow<FiltrationResult?>,
     savedStateHandle: SavedStateHandle,
     private val deps: ProductListDependencies,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
@@ -69,6 +75,8 @@ internal class ProductListViewModel @Inject constructor(
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
         typeMap = ProductListNavEntry.typeMap(),
@@ -193,6 +201,10 @@ internal class ProductListViewModel @Inject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { selectedTagId ->
         selectedTagId != null
+    }
+
+    init {
+        handleFiltrationResult(filtrationResultFlow)
     }
 
     fun onTopBarEvent(event: TopBarEvent) {
@@ -371,8 +383,26 @@ internal class ProductListViewModel @Inject constructor(
         emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
     }
 
+    private fun handleFiltrationResult(resultFlow: Flow<FiltrationResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.FILTRATION_RESULT.key,
+            ) { result ->
+                filtersValueHolder.set(result.filters)
+            }
+        }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(filtrationResultFlow: Flow<FiltrationResult?>): ProductListViewModel
+    }
+
     private enum class Keys {
-        FILTERS;
+        FILTERS,
+
+        FILTRATION_RESULT;
 
         val key: String get() = name
     }

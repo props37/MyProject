@@ -44,5 +44,8 @@ internal fun FiltrationScreenBehavior(
 private fun navigate(navActions: FiltrationNavActions, action: FiltrationScreenAction) {
     when (action) {
         FiltrationScreenAction.BackClicked -> navActions.onBackClicked()
+        is FiltrationScreenAction.ShowProductsClicked -> {
+            navActions.onShowProductsClicked(action.filters)
+        }
     }
 }

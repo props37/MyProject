@@ -11,10 +11,12 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
+import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavActions
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.filtrationScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.productListScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListNavActions
@@ -59,8 +61,17 @@ public class ProductListFeatureImpl : ProductListFeature {
             )
             productListScreen(productListNavActions)
 
+            val internalOnBackClicked: () -> Unit = { navController.navigateUp() }
+
             val filtrationNavActions = FiltrationNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = internalOnBackClicked,
+                onShowProductsClicked = { filters ->
+                    val filtersParcelable = ProductFiltersParcelable.from(filters)
+                    val result = FiltrationResult(filters = filtersParcelable)
+                    navController.navigateUp()
+                    navController.currentBackStackEntry?.savedStateHandle
+                        ?.set(FiltrationResult.KEY, result)
+                },
             )
             filtrationScreen(filtrationNavActions)
         }

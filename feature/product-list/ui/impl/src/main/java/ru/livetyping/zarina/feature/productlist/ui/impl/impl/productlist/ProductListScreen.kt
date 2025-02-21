@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
@@ -41,7 +40,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.T
 @Composable
 internal fun ProductListScreen(
     navActions: ProductListNavActions,
-    viewModel: ProductListViewModel = hiltViewModel(),
+    viewModel: ProductListViewModel,
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
