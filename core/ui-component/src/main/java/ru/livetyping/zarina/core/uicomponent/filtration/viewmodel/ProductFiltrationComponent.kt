@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilter
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
@@ -49,13 +50,27 @@ public class ProductFiltrationComponent(
         return filters.value
     }
 
-    public fun setFilters(filters: ProductFilters?) {
-        val filtersParcelable = filters?.let { ProductFiltersParcelable.from(it) }
-        filtersValueHolder.set(filtersParcelable)
+    public fun updateFiltersWith(filter: ProductFilter<*>) {
+        val filters = getFilters()
+        val newFilters = filters?.updateWith(filter)
+        setFilters(newFilters)
+    }
+
+    public fun resetFilters() {
+        val filters = getFilters()
+        if (filters != null) {
+            val newFilters = filters.reset()
+            setFilters(newFilters)
+        }
     }
 
     public fun setIsRefreshing(isRefreshing: Boolean) {
         _isRefreshing.value = isRefreshing
+    }
+
+    private fun setFilters(filters: ProductFilters?) {
+        val filtersParcelable = filters?.let { ProductFiltersParcelable.from(it) }
+        filtersValueHolder.set(filtersParcelable)
     }
 
     private enum class Keys {

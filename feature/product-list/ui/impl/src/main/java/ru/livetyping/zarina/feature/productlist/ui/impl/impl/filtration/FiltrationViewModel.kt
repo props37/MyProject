@@ -126,17 +126,11 @@ internal class FiltrationViewModel @Inject constructor(
     }
 
     private fun onResetFiltersClicked() {
-        val filters = filtrationComponent.getFilters()
-        if (filters != null) {
-            val newFilters = filters.reset()
-            filtrationComponent.setFilters(newFilters)
-        }
+        filtrationComponent.resetFilters()
     }
 
     private fun onFilterChanged(event: ProductFiltrationEvent.FilterChanged) {
-        val filters = filtrationComponent.getFilters()
-        val newFilters = filters?.updateWith(event.filter)
-        filtrationComponent.setFilters(newFilters)
+        filtrationComponent.updateFiltersWith(event.filter)
     }
 
     private fun onShowProductsClicked() {
