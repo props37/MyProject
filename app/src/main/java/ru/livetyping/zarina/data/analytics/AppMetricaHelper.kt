@@ -296,7 +296,7 @@ object AppMetricaHelper {
     }
 
     private fun getECommerceAmount(price: Int): ECommerceAmount {
-        return ECommerceAmount(price.toLong(), CURRENCY_UNIT_RUB)
+        return ECommerceAmount(price * PRICE_MICROS_CONVERSION_RATE, CURRENCY_UNIT_RUB)
     }
 
     private fun CategoryPath.getNameList(): List<String> {
@@ -367,4 +367,6 @@ object AppMetricaHelper {
     private const val SORTING_DISCOUNT = "DISCOUNT_SIZE"
     private const val SORTING_PRICE_LOW_TO_HIGH = "PRICE_LOW_TO_HIGH"
     private const val SORTING_PRICE_HIGH_TO_LOW = "PRICE_HIGH_TO_LOW"
+
+    private const val PRICE_MICROS_CONVERSION_RATE = 1_000_000L
 }
