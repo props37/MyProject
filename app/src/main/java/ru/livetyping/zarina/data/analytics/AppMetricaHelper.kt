@@ -233,6 +233,16 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_APPLY_PRODUCT_FILTERS, parameters)
     }
 
+    fun reportErrorShown(title: String) {
+        val parameters = mapOf(KEY_TITLE to title)
+        AppMetrica.reportEvent(EVENT_SHOW_ERROR, parameters)
+    }
+
+    fun reportTokenRefreshAttempted(isSuccess: Boolean) {
+        val parameters = mapOf(KEY_IS_SUCCESS to isSuccess)
+        AppMetrica.reportEvent(EVENT_REFRESH_TOKENS, parameters)
+    }
+
     private fun reportCartOpened() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
@@ -334,6 +344,8 @@ object AppMetricaHelper {
     private const val EVENT_USE_BONUSES = "useBonuses"
     private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
     private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
+    private const val EVENT_SHOW_ERROR = "_showError"
+    private const val EVENT_REFRESH_TOKENS = "_refreshTokens"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
@@ -356,6 +368,8 @@ object AppMetricaHelper {
     private const val KEY_DELIVERY_AVAILABILITY = "deliveryAvailability"
     private const val KEY_STORE_PICKUP_AVAILABILITY = "storePickupAvailability"
     private const val KEY_PICKUP_STORES = "pickupStores"
+    private const val KEY_TITLE = "title"
+    private const val KEY_IS_SUCCESS = "isSuccess"
 
     private const val CURRENCY_UNIT_RUB = "RUB"
 

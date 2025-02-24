@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.presentation.base.text.textString
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -35,6 +37,13 @@ fun ZarinaErrorScreen(
     modifier: Modifier = Modifier,
     fillWholeHeight: Boolean = true,
 ) {
+    val title = textString(state.title)
+
+    DisposableEffect(title) {
+        AppMetricaHelper.reportErrorShown(title)
+        onDispose {}
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
@@ -50,7 +59,7 @@ fun ZarinaErrorScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = textString(state.title),
+            text = title,
             style = UiKitTheme.typography.primary.bold,
             color = UiKitTheme.colors.text.general.regular.default,
             textAlign = TextAlign.Center,
