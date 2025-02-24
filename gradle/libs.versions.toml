@@ -45,7 +45,7 @@ accompanist = "0.37.2"
 
 coil = "2.7.0"
 composeShimmer = "1.3.2"
-qrcode = "4.1.1"
+qrcode = "4.2.1"
 
 libphonenumber = "8.13.52"
 
