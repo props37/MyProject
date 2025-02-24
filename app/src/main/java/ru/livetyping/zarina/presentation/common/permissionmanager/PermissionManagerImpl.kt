@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.UUID
 import javax.inject.Inject
@@ -112,16 +111,6 @@ class PermissionManagerImpl @Inject constructor(
             map[permission] = getPermissionState(permission)
         }
         return map
-    }
-
-    override fun hasPermissionRequiredRequestRationale(permission: String): Flow<Boolean?> {
-        return storage.hasPermissionRequiredRequestRationale(permission)
-    }
-
-    override fun haveMultiplePermissionsRequiredRequestRationale(
-        permissions: List<String>,
-    ): Flow<Map<String, Boolean?>> {
-        return storage.haveMultiplePermissionsRequiredRequestRationale(permissions)
     }
 
     @Synchronized
