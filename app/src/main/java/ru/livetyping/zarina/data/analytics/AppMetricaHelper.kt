@@ -243,6 +243,12 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_REFRESH_TOKENS, parameters)
     }
 
+    fun reportDuplicateProductsFound(duplicateProducts: List<Product>) {
+        val ids = duplicateProducts.map { it.id.value }
+        val parameters = mapOf(KEY_PRODUCTS to ids)
+        AppMetrica.reportEvent(EVENT_DUPLICATE_PRODUCTS, parameters)
+    }
+
     private fun reportCartOpened() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
@@ -346,6 +352,7 @@ object AppMetricaHelper {
     private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
     private const val EVENT_SHOW_ERROR = "_showError"
     private const val EVENT_REFRESH_TOKENS = "_refreshTokens"
+    private const val EVENT_DUPLICATE_PRODUCTS = "_duplicateProducts"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
@@ -370,6 +377,7 @@ object AppMetricaHelper {
     private const val KEY_PICKUP_STORES = "pickupStores"
     private const val KEY_TITLE = "title"
     private const val KEY_IS_SUCCESS = "isSuccess"
+    private const val KEY_PRODUCTS = "products"
 
     private const val CURRENCY_UNIT_RUB = "RUB"
 

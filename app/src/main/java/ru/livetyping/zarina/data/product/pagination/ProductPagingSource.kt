@@ -3,6 +3,7 @@ package ru.livetyping.zarina.data.product.pagination
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.product.ProductRepository
 import ru.livetyping.zarina.domain.category.Category
 import ru.livetyping.zarina.domain.common.Sorting
@@ -24,7 +25,12 @@ class ProductPagingSource(
             val productsWithFiltersPage =
                 productRepository.getProductsWithFiltersPageFlow(categoryId, filters, sorting, page)
                     .first()
-            val products = productsWithFiltersPage.data.products
+            val products = productsWithFiltersPage.data.products.distinctBy { it.id }
+            if (productsWithFiltersPage.data.products.size != products.size) {
+                val duplicateProducts = productsWithFiltersPage.data.products - products.toSet()
+                Timber.tag(TAG).w("Duplicate products found: ${duplicateProducts.joinToString { it.id.value }}")
+                AppMetricaHelper.reportDuplicateProductsFound(duplicateProducts)
+            }
             onAvailableFiltersReceived(productsWithFiltersPage.data.filters)
 
             val paginationInfo = productsWithFiltersPage.paginationInfo
@@ -54,5 +60,9 @@ class ProductPagingSource(
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
+    }
+
+    private companion object {
+        private const val TAG = "ProductPagingSource"
     }
 }
