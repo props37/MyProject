@@ -339,7 +339,7 @@ object AppMetricaHelper {
     private const val EVENT_USE_BONUSES = "useBonuses"
     private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
     private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
-    private const val EVENT_SHOW_ERROR = "showError"
+    private const val EVENT_SHOW_ERROR = "_showError"
 
     private const val KEY_SKU = "sku"
     private const val KEY_NAME = "name"
