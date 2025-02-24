@@ -3,6 +3,7 @@ package ru.livetyping.zarina.usecase.authorization
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.authorization.AuthorizationRepository
 import ru.livetyping.zarina.data.signout.ForcedSignOutCoordinator
 import ru.livetyping.zarina.di.Qualifiers
@@ -34,9 +35,11 @@ class RefreshAuthorizationTokensUseCase @Inject constructor(
             val newTokens = authorizationRepository.refreshAuthorizationTokens(currentTokens)
             authorizationRepository.setAuthorizationTokens(newTokens)
             Timber.v("Authorization tokens refreshed. New tokens: $newTokens")
+            AppMetricaHelper.reportTokenRefreshAttempted(isSuccess = true)
             newTokens
         } catch (e: Exception) {
             Timber.e(e, "Failed to refresh authorization tokens. Request forced sign out")
+            AppMetricaHelper.reportTokenRefreshAttempted(isSuccess = false)
             forcedSignOutCoordinator.requestForcedSignOut()
             fetchUnauthorizedUserAuthorizationTokensUseCase()
             throw e
