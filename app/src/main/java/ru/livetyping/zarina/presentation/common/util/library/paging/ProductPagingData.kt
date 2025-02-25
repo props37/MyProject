@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.presentation.common.util.library.paging
 
 import androidx.paging.PagingData
+import androidx.paging.filter
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -10,6 +11,7 @@ import ru.livetyping.zarina.domain.product.ProductItem
 fun Flow<PagingData<ProductItem>>.mapProducts(
     favoriteProductIdsResultFlow: Flow<Result<Set<Product.Id>>>,
     cartProductIdsResultFlow: Flow<Result<Set<Product.Id>>>,
+    filterDuplicates: Boolean = false,
 ): Flow<PagingData<ProductItem>> {
     return combine(
         this,
@@ -18,7 +20,17 @@ fun Flow<PagingData<ProductItem>>.mapProducts(
     ) { pagingData, favoriteProductIdsResult, cartProductIdsResult ->
         val favoriteProductIds = favoriteProductIdsResult.getOrDefault(emptySet())
         val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
-        pagingData.mapProducts(favoriteProductIds, cartProductIds)
+
+        val transformedPagingData = if (filterDuplicates) {
+            val keyHashSet = HashSet<String>()
+            pagingData.filter { product ->
+                keyHashSet.add(product.id.value)
+            }
+        } else {
+            pagingData
+        }
+
+        transformedPagingData.mapProducts(favoriteProductIds, cartProductIds)
     }
 }
 
