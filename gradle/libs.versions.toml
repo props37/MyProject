@@ -36,7 +36,7 @@ jetpack-startup = "1.2.0"
 jetpack-compose-bom = "2025.02.00"
 jetpack-compose-material-navigation = "1.7.8"
 
-ktor = "3.1.0"
+ktor = "3.1.1"
 
 dagger = "2.55"
 hilt-navigationCompose = "1.2.0"
