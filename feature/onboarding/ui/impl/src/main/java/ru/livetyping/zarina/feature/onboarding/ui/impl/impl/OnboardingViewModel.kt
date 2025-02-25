@@ -212,9 +212,12 @@ internal class OnboardingViewModel @AssistedInject constructor(
             val currentPermissionState = deps.permissionManager.getPermissionState(permission)
             if (currentPermissionState.isGranted) {
                 showOnboardingStep(OnboardingStep.CITY_DETECTION)
+                emitSideEffect(OnboardingSideEffect.NotificationPermissionGranted)
             } else {
-                deps.permissionManager.requestPermission(permission)
-                // TODO: [Top] Update Mindbox state
+                val newPermissionState = deps.permissionManager.requestPermission(permission)
+                if (newPermissionState.isGranted) {
+                    emitSideEffect(OnboardingSideEffect.NotificationPermissionGranted)
+                }
                 showOnboardingStep(OnboardingStep.CITY_DETECTION)
             }
         }

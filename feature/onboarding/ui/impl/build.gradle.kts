@@ -88,6 +88,8 @@ dependencies {
 
     implementation(libs.timber)
 
+    implementation(libs.mindbox)
+
     lintChecks(libs.lint.composeChecks)
 
     coreLibraryDesugaring(libs.coreLibraryDesugaring)

@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
+import cloud.mindbox.mobile_sdk.Mindbox
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
@@ -28,6 +29,10 @@ internal fun OnboardingScreenBehavior(
                 when (sideEffect) {
                     is OnboardingSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    OnboardingSideEffect.NotificationPermissionGranted -> {
+                        Mindbox.updateNotificationPermissionStatus(currentContext)
                     }
 
                     is OnboardingSideEffect.ShowToast -> {
