@@ -37,7 +37,7 @@ internal data class BannerContainerDto(
                 }
             }
         } else {
-            Timber.tag(TAG).e("Drop BannerContainerDto because its view or items is null")
+            Timber.tag(TAG).e("Drop BannerContainerDto $this because its view or items is null")
             null
         }
     }
