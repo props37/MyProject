@@ -6,7 +6,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import ru.livetyping.zarina.core.permission.PermissionManager
 import ru.livetyping.zarina.core.permission.PermissionState
@@ -16,9 +15,7 @@ import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-internal class PermissionManagerImpl @Inject constructor(
-    private val storage: PermissionManagerStorage,
-) : PermissionManager {
+internal class PermissionManagerImpl @Inject constructor() : PermissionManager {
     private var activityRef = AtomicReference<ComponentActivity?>(null)
 
     override fun isPermissionGranted(permission: String): Boolean {
@@ -55,10 +52,6 @@ internal class PermissionManagerImpl @Inject constructor(
         }
         launcher?.unregister()
 
-        if (shouldShowRequestPermissionRationale(permission)) {
-            storage.savePermissionRequiredRequestRationale(permission)
-        }
-
         return getPermissionState(permission)
     }
 
@@ -82,12 +75,6 @@ internal class PermissionManagerImpl @Inject constructor(
         }
         launcher?.unregister()
 
-        for (permission in permissions) {
-            if (shouldShowRequestPermissionRationale(permission)) {
-                storage.savePermissionRequiredRequestRationale(permission)
-            }
-        }
-
         return getMultiplePermissionsState(permissions)
     }
 
@@ -96,9 +83,6 @@ internal class PermissionManagerImpl @Inject constructor(
             PermissionState.Granted
         } else {
             val shouldShowRequestRationale = shouldShowRequestPermissionRationale(permission)
-            if (shouldShowRequestRationale) {
-                storage.savePermissionRequiredRequestRationale(permission)
-            }
             PermissionState.Denied(shouldShowRequestRationale)
         }
     }
@@ -112,16 +96,6 @@ internal class PermissionManagerImpl @Inject constructor(
                 put(permission, permissionState)
             }
         }
-    }
-
-    override fun hasPermissionRequiredRequestRationale(permission: String): Flow<Boolean?> {
-        return storage.hasPermissionRequiredRequestRationale(permission)
-    }
-
-    override fun haveMultiplePermissionsRequiredRequestRationale(
-        permissions: List<String>,
-    ): Flow<Map<String, Boolean?>> {
-        return storage.haveMultiplePermissionsRequiredRequestRationale(permissions)
     }
 
     override fun setActivity(activity: ComponentActivity) {

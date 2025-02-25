@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.permission
 
 import androidx.activity.ComponentActivity
-import kotlinx.coroutines.flow.Flow
 
 public interface PermissionManager {
     public fun isPermissionGranted(permission: String): Boolean
@@ -15,18 +14,6 @@ public interface PermissionManager {
     public suspend fun getPermissionState(permission: String): PermissionState
 
     public suspend fun getMultiplePermissionsState(permissions: List<String>): Map<String, PermissionState>
-
-    /**
-     * Check if given permission has required request rationale in past.
-     */
-    public fun hasPermissionRequiredRequestRationale(permission: String): Flow<Boolean?>
-
-    /**
-     * Check if given permissions have required request rationale in past.
-     */
-    public fun haveMultiplePermissionsRequiredRequestRationale(
-        permissions: List<String>,
-    ): Flow<Map<String, Boolean?>>
 
     /**
      * Set Activity that will be used to request permissions under the hood.
