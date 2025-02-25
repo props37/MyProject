@@ -32,6 +32,7 @@ import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
+import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
@@ -65,9 +66,11 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberProductNavAc
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductSubscriptionNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProfileNavResultRetrievers
+import ru.livetyping.zarina.presentation.navigation.feature.rememberSearchNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberSignInNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWebViewNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberWishlistNavActions
+import ru.livetyping.zarina.presentation.navigation.feature.searchFeature
 import ru.livetyping.zarina.presentation.navigation.feature.signInFeature
 import ru.livetyping.zarina.presentation.navigation.feature.signUpFeature
 import ru.livetyping.zarina.presentation.navigation.feature.webViewFeature
@@ -128,6 +131,9 @@ fun ZarinaNavigation(
 
     val webViewFeature = features.find<WebViewFeature>()
     val webViewNavActions = rememberWebViewNavActions(navController)
+
+    val searchFeature = features.find<SearchFeature>()
+    val searchNavActions = rememberSearchNavActions(navController)
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.NavEntry
@@ -204,6 +210,7 @@ fun ZarinaNavigation(
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)
         webViewFeature(webViewFeature, webViewNavActions)
+        searchFeature(searchFeature, searchNavActions)
     }
 }
 

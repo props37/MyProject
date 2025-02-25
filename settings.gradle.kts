@@ -63,6 +63,7 @@ include(":feature:webview:ui:api")
 include(":feature:webview:ui:impl")
 
 include(":feature:search:ui:api")
+include(":feature:search:ui:impl")
 
 include(":data:content")
 include(":data:auth")

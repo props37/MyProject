@@ -182,6 +182,9 @@ dependencies {
     implementation(projects.feature.webview.ui.api)
     implementation(projects.feature.webview.ui.impl)
 
+    implementation(projects.feature.search.ui.api)
+    implementation(projects.feature.search.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)
