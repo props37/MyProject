@@ -62,6 +62,8 @@ include(":feature:detected-city:ui:impl")
 include(":feature:webview:ui:api")
 include(":feature:webview:ui:impl")
 
+include(":feature:search:ui:api")
+
 include(":data:content")
 include(":data:auth")
 include(":data:category")
