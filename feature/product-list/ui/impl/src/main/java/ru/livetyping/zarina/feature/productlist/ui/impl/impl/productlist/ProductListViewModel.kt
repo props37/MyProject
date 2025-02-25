@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.map
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -178,19 +179,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScopeDefault)
-        .combine(
-            deps.getWishlistProductIdsFlow(wishlistProductIdsParams),
-            deps.getCartProductIdsFlow(cartProductIdsParams),
-        ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
-            val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
-            val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
-            productPagingData.map { product ->
-                product.copy(
-                    isInWishlist = product.id in wishlistProductIds,
-                    isInCart = product.id in cartProductIds,
-                )
-            }
-        }
+        .transformProductPagingData()
         .cachedIn(viewModelScopeDefault)
 
     private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
@@ -398,6 +387,28 @@ internal class ProductListViewModel @AssistedInject constructor(
             ) { result ->
                 filtersValueHolder.set(result.filters)
             }
+        }
+    }
+
+    private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {
+        return this.combine(
+            deps.getWishlistProductIdsFlow(wishlistProductIdsParams),
+            deps.getCartProductIdsFlow(cartProductIdsParams),
+        ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
+            val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
+            val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
+            val productIdSet = HashSet<Product.Id>()
+
+            productPagingData
+                .filter { product ->
+                    productIdSet.add(product.id)
+                }
+                .map { product ->
+                    product.copy(
+                        isInWishlist = product.id in wishlistProductIds,
+                        isInCart = product.id in cartProductIds,
+                    )
+                }
         }
     }
 
