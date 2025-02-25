@@ -199,7 +199,7 @@ private fun OrderProductContentsItem(
 @Composable
 private fun OrderInfo(
     deliveryMethodType: DeliveryMethodType,
-    deliveryAddress: String,
+    deliveryAddress: String?,
     recipient: OrderRecipient,
     paymentMethodType: PaymentMethodType,
     modifier: Modifier = Modifier,
@@ -224,11 +224,13 @@ private fun OrderInfo(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            OrderInfoItem(
-                name = stringResource(RCommon.string.res_delivery_address),
-                value = deliveryAddress,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+            if (deliveryAddress != null) {
+                OrderInfoItem(
+                    name = stringResource(RCommon.string.res_delivery_address),
+                    value = deliveryAddress,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             val formattedPhone =
                 rememberFormattedPhoneNumber(recipient.phone?.value.orEmpty())

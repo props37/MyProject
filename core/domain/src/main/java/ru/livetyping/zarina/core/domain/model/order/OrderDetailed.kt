@@ -20,7 +20,7 @@ public data class OrderDetailed(
     val paymentUrl: Url?,
     val deliveryInfo: OrderDeliveryInfo,
     val recipient: OrderRecipient,
-    val deliveryAddress: String,
+    val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Order() {
     override val totalPrice: Int

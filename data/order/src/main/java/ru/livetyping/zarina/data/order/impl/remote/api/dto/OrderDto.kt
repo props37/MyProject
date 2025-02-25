@@ -59,7 +59,7 @@ internal data class OrderDto(
     @SerialName("is_cancelable")
     val isCancelable: Boolean? = null,
 ) {
-    fun toOrderDetailed(requireAddress: Boolean = true): OrderDetailed {
+    fun toOrderDetailed(): OrderDetailed {
         checkPropertyNotNull(id) { ::id }
         checkPropertyNotNull(number) { ::number }
         checkPropertyNotNull(productCount) { ::productCount }
@@ -72,9 +72,6 @@ internal data class OrderDto(
         checkPropertyNotNull(paymentMethod) { ::paymentMethod }
         checkPropertyNotNull(paymentMethod.code) { paymentMethod::code }
         checkPropertyNotNull(contactInfo) { ::contactInfo }
-        if (requireAddress) {
-            checkPropertyNotNull(address) { ::address }
-        }
         val date = try {
             LocalDate.parse(date)
         } catch (e: DateTimeParseException) {
@@ -99,7 +96,7 @@ internal data class OrderDto(
             paymentUrl = paymentTool?.link?.let { Url.create(it) },
             deliveryInfo = shipping.toOrderDeliveryInfo(),
             recipient = contactInfo.toOrderRecipient(),
-            deliveryAddress = address.orEmpty(),
+            deliveryAddress = address?.takeIf { it.isNotEmpty() },
             isCancellable = isCancelable ?: false,
         )
     }
