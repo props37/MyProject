@@ -152,20 +152,7 @@ class OnboardingViewModel @AssistedInject constructor(
                     if (newPermissionState.isGranted) {
                         emitSideEffect(SideEffect.NotificationPermissionGranted)
                     }
-                    if (newPermissionState != currentPermissionState) {
-                        // User has either granted or denied the permission
-                        showOnboardingStep(OnboardingStep.CITY_DETECTION)
-                    } else if (
-                        newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
-                    ) {
-                        val hasPermissionRequiredRequestRationale =
-                            permissionManager.hasPermissionRequiredRequestRationale(permission)
-                                .firstOrNull() ?: false
-                        if (hasPermissionRequiredRequestRationale) {
-                            // User has denied the permission permanently
-                            showOnboardingStep(OnboardingStep.CITY_DETECTION)
-                        }
-                    }
+                    showOnboardingStep(OnboardingStep.CITY_DETECTION)
                 }
             }
         } else {
@@ -184,26 +171,10 @@ class OnboardingViewModel @AssistedInject constructor(
             } else {
                 val newPermissionsState =
                     permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
-                if (newPermissionsState != currentPermissionsState) {
-                    // User has either granted or denied the permission
-                    if (newPermissionsState.any { it.value.isGranted }) {
-                        detectCity()
-                    } else {
-                        skipCityDetection()
-                    }
-                } else if (
-                    newPermissionsState.all { it.value.isDenied }
-                    && newPermissionsState.any { !it.value.shouldShowRequestRationale }
-                ) {
-                    val havePermissionsRequiredRequestRationale =
-                        permissionManager
-                            .haveMultiplePermissionsRequiredRequestRationale(LOCATION_PERMISSIONS)
-                            .firstOrNull() ?: emptyMap()
-                    if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
-                        // User has denied the permission permanently
-                        savedStateHandle[KEY_CURRENT_CITY] = CityParcelable.from(City.DEFAULT)
-                        showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
-                    }
+                if (newPermissionsState.any { it.value.isGranted }) {
+                    detectCity()
+                } else {
+                    skipCityDetection()
                 }
             }
         }

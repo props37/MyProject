@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.presentation.common.permissionmanager
 
 import androidx.activity.ComponentActivity
-import kotlinx.coroutines.flow.Flow
 
 /**
  * A wrapper around Android permissions that allows to work with permissions outside of the
@@ -47,18 +46,6 @@ interface PermissionManager {
      * Get [PermissionState]s of the given permissions.
      */
     suspend fun getMultiplePermissionsState(permissions: List<String>): Map<String, PermissionState>
-
-    /**
-     * Check if the permission has required request rationale in past.
-     */
-    fun hasPermissionRequiredRequestRationale(permission: String): Flow<Boolean?>
-
-    /**
-     * Check if the permissions have required request rationale in past.
-     */
-    fun haveMultiplePermissionsRequiredRequestRationale(
-        permissions: List<String>,
-    ): Flow<Map<String, Boolean?>>
 
     /**
      * Set Activity that will be used to request permissions under the hood.

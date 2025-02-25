@@ -196,6 +196,7 @@ class ProductsViewModel @AssistedInject constructor(
         .mapProducts(
             favoriteProductIdsResultFlow = interactor.getFavoriteProductIdsFlow(),
             cartProductIdsResultFlow = interactor.getCartProductIdsFlow(),
+            filterDuplicates = true,
         )
         .cachedIn(viewModelScopeDefault)
 
