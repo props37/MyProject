@@ -29,7 +29,6 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingComple
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
-import ru.livetyping.zarina.core.permission.shouldShowRequestRationale
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -160,26 +159,10 @@ internal class OnboardingViewModel @AssistedInject constructor(
             } else {
                 val newPermissionsState =
                     deps.permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
-                if (newPermissionsState != currentPermissionsState) {
-                    // User has either granted or denied the permission
-                    if (newPermissionsState.any { it.value.isGranted }) {
-                        detectCity()
-                    } else {
-                        skipCityDetection()
-                    }
-                } else if (
-                    newPermissionsState.all { it.value.isDenied }
-                    && newPermissionsState.any { !it.value.shouldShowRequestRationale }
-                ) {
-                    val havePermissionsRequiredRequestRationale =
-                        deps.permissionManager
-                            .haveMultiplePermissionsRequiredRequestRationale(LOCATION_PERMISSIONS)
-                            .firstOrNull() ?: emptyMap()
-                    if (havePermissionsRequiredRequestRationale.any { it.value == true }) {
-                        // User has denied the permission permanently
-                        cityValueHolder.set(CityParcelable.from(City.getDefault()))
-                        showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)
-                    }
+                if (newPermissionsState.any { it.value.isGranted }) {
+                    detectCity()
+                } else {
+                    skipCityDetection()
                 }
             }
         }
@@ -230,21 +213,9 @@ internal class OnboardingViewModel @AssistedInject constructor(
             if (currentPermissionState.isGranted) {
                 showOnboardingStep(OnboardingStep.CITY_DETECTION)
             } else {
-                val newPermissionState = deps.permissionManager.requestPermission(permission)
-                if (newPermissionState != currentPermissionState) {
-                    // User has either granted or denied the permission
-                    showOnboardingStep(OnboardingStep.CITY_DETECTION)
-                } else if (
-                    newPermissionState.isDenied && !newPermissionState.shouldShowRequestRationale
-                ) {
-                    val hasPermissionRequiredRequestRationale =
-                        deps.permissionManager.hasPermissionRequiredRequestRationale(permission)
-                            .firstOrNull() ?: false
-                    if (hasPermissionRequiredRequestRationale) {
-                        // User has denied the permission permanently
-                        showOnboardingStep(OnboardingStep.CITY_DETECTION)
-                    }
-                }
+                deps.permissionManager.requestPermission(permission)
+                // TODO: [Top] Update Mindbox state
+                showOnboardingStep(OnboardingStep.CITY_DETECTION)
             }
         }
     }
