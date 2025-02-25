@@ -36,7 +36,7 @@ internal data class BannerDto(
                 clickAction = click?.toClickAction(),
             )
         } else {
-            Timber.tag(TAG).e("Drop BannerDto because its id, mediaType or mediaUrl is null")
+            Timber.tag(TAG).e("Drop BannerDto with ID $id because its id, mediaType or mediaUrl is null")
             null
         }
     }

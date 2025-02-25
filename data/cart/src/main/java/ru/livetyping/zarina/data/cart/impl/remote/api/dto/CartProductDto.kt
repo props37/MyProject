@@ -119,7 +119,7 @@ internal data class CartProductDto(
                         productId = Product.Id(productId),
                     )
                 } else {
-                    Timber.tag(TAG).e("Drop ProductColor because its ID, name, color code or product ID is null")
+                    Timber.tag(TAG).e("Drop ProductColor with ID $id because its ID, name, color code or product ID is null")
                     null
                 }
             }

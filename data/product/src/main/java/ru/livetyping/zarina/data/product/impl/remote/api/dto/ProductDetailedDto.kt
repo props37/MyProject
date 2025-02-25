@@ -89,7 +89,7 @@ internal data class ProductDetailedDto(
                     color = Color(color.trim()),
                 )
             } else {
-                Timber.tag(TAG).e("Drop label because its name or color is null")
+                Timber.tag(TAG).e("Drop label with name $name because its name or color is null")
                 null
             }
         }
@@ -110,7 +110,7 @@ internal data class ProductDetailedDto(
                     body = body,
                 )
             } else {
-                Timber.tag(TAG).e("Drop description entry because its title or body is null")
+                Timber.tag(TAG).e("Drop description entry with title $title because its title or body is null")
                 null
             }
         }
