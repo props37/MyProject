@@ -77,7 +77,7 @@ internal fun OrderSuccess(
 
         itemsIndexed(
             items = order.products,
-            key = { _, order -> order.id.value },
+            key = { _, product -> product.id.value },
             contentType = { _, _ -> OrderListContentType.Product },
         ) { index, product ->
             Column(modifier = Modifier.animateZarinaItem(this)) {

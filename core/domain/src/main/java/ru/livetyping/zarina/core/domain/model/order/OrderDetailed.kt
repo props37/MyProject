@@ -28,12 +28,16 @@ public data class OrderDetailed(
 
     // Marked as stable on config/compose/stability_config.txt
     public data class Product(
-        val id: ProductDomain.Id,
+        val id: Id,
+        val productId: ProductDomain.Id,
         val name: String,
         val size: String,
         val color: ProductColor,
         val imageUrl: Url,
         val price: ProductPrice,
         val count: Int,
-    )
+    ) {
+        @JvmInline
+        public value class Id(public val value: String)
+    }
 }

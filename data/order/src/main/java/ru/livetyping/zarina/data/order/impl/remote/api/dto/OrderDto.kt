@@ -106,6 +106,9 @@ internal data class OrderDto(
 
     @Serializable
     data class Product(
+        @SerialName("id")
+        val id: Long?,
+
         @SerialName("vendor_code")
         val vendorCode: String? = null,
 
@@ -128,6 +131,7 @@ internal data class OrderDto(
         val quantity: Int? = null,
     ) {
         fun toOrderProduct(): OrderDetailed.Product {
+            checkPropertyNotNull(id) { ::id }
             checkPropertyNotNull(vendorCode) { ::vendorCode }
             checkPropertyNotNull(name) { ::name }
             checkPropertyNotNull(size) { ::size }
@@ -136,7 +140,8 @@ internal data class OrderDto(
             checkPropertyNotNull(price) { ::price }
             checkPropertyNotNull(quantity) { ::quantity }
             return OrderDetailed.Product(
-                id = ProductDomain.Id(vendorCode),
+                id = OrderDetailed.Product.Id(id.toString()),
+                productId = ProductDomain.Id(vendorCode),
                 name = name,
                 size = size,
                 color = getProductColor(),
