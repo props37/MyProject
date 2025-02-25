@@ -8,6 +8,7 @@ import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,6 +16,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -40,6 +43,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.impl.R
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
@@ -91,8 +95,12 @@ internal class WishlistViewModel @Inject constructor(
         GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
     private val cartProductIdsResultFlow = deps.getCartProductIdsFlow(cartProductIdsParams)
 
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScopeDefault)
+        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .combine(
             localWishlistProductIdsResultFlow,
             cartProductIdsResultFlow,

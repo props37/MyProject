@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.EmptyProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TagList
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TopBar
@@ -61,6 +62,7 @@ internal fun ProductListScreen(
         onProductEvent = viewModel::onProductEvent,
         sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
+        productGridSideEffects = viewModel.productGridSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -76,6 +78,7 @@ private fun ScreenContent(
     onProductEvent: (ProductEvent) -> Unit,
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListNavActions,
 ) {
@@ -133,6 +136,7 @@ private fun ScreenContent(
                             .padding(16.dp),
                     )
                 },
+                sideEffects = productGridSideEffects,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)

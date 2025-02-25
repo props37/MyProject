@@ -35,6 +35,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
@@ -79,6 +82,7 @@ public fun ProductGrid(
      * is done under the hood, the additional logic can be invoked using this callback.
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
+    sideEffects: Flow<ProductGridSideEffect>? = null,
 ) {
     val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
@@ -88,14 +92,19 @@ public fun ProductGrid(
         productPagingItems.retryAppendPrependErrors(gridState)
     }
 
-    // Scroll to top when Refresh loading completes
-    LaunchedEffect(gridState, productPagingItems) {
-        var prevLoadState: LoadState? = null
-        snapshotFlow { productPagingItems.loadState.refresh }.collect { loadState ->
-            if (loadState is LoadState.NotLoading && prevLoadState is LoadState.Loading) {
-                gridState.requestScrollToItem(0)
+    // Scroll to top when the list changes
+    LaunchedEffect(gridState, productPagingItems, sideEffects) {
+        if (sideEffects != null) {
+            val scrollToTopEffects =
+                sideEffects.filterIsInstance<ProductGridSideEffect.ScrollToTop>()
+            val refreshStateFlow = snapshotFlow { productPagingItems.loadState.refresh }
+            scrollToTopEffects.collectLatest {
+                // Wait for a loading to start
+                refreshStateFlow.firstOrNull { it is LoadState.Loading }
+                // Wait for products to load
+                refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
+                gridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
             }
-            prevLoadState = loadState
         }
     }
 

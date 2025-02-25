@@ -27,6 +27,7 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlistPlaceholder
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
@@ -51,6 +52,7 @@ internal fun WishlistScreen(
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         onBackClicked = viewModel::onBackClicked,
+        productGridSideEffects = viewModel.productGridSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -66,6 +68,7 @@ private fun ScreenContent(
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     onBackClicked: () -> Unit,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistFeature.NavActions,
 ) {
@@ -111,6 +114,7 @@ private fun ScreenContent(
                         .verticalScroll(rememberScrollState()),
                 )
             },
+            sideEffects = productGridSideEffects,
             modifier = Modifier.fillMaxSize(),
         )
     }
