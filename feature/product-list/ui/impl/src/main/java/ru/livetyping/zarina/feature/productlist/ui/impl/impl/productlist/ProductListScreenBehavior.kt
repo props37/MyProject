@@ -44,6 +44,7 @@ internal fun ProductListScreenBehavior(
 private fun navigate(navActions: ProductListNavActions, action: ProductListScreenAction) {
     when (action) {
         ProductListScreenAction.BackClicked -> navActions.onBackClicked()
+        ProductListScreenAction.SearchClicked -> navActions.onSearchClicked()
         is ProductListScreenAction.FiltersClicked -> {
             navActions.onFiltersClicked(action.categoryId, action.filters)
         }

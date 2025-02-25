@@ -43,7 +43,7 @@ internal fun CatalogScreenBehavior(
 private fun navigate(navActions: CatalogFeature.NavActions, action: CatalogScreenAction) {
     when (action) {
         CatalogScreenAction.BackClicked -> navActions.onBackClicked()
-        CatalogScreenAction.SearchClicked -> Unit // TODO: [Top] Implement
+        CatalogScreenAction.SearchClicked -> navActions.onSearchClicked()
         is CatalogScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
     }
 }

@@ -21,6 +21,7 @@ public interface CatalogFeature :
 
     public class NavActions(
         public val onBackClicked: () -> Unit,
+        public val onSearchClicked: () -> Unit,
         public val onCategoryClicked: (Category.Id) -> Unit,
     ) : NavigationActions
 }

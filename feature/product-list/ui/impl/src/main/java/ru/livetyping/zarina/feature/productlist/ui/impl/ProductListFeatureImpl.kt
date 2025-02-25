@@ -51,6 +51,7 @@ public class ProductListFeatureImpl : ProductListFeature {
         ) {
             val productListNavActions = ProductListNavActions(
                 onBackClicked = actions.onBackClicked,
+                onSearchClicked = actions.onSearchClicked,
                 onFiltersClicked = { categoryId, filters ->
                     val filtrationNavEntry = FiltrationNavEntry.create(categoryId, filters)
                     navController.navigate(filtrationNavEntry)

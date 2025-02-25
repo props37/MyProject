@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
+import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 
 fun NavGraphBuilder.productListFeature(
     navController: NavHostController,
@@ -30,6 +31,7 @@ fun rememberProductListNavActions(
     return remember(navController) {
         ProductListFeature.NavActions(
             onBackClicked = { navController.navigateUp() },
+            onSearchClicked = { navController.navigate(SearchFeature.NavEntry) },
             onProductClicked = { product ->
                 val productNavEntry = ProductFeature.NavEntry.create(product.id)
                 navController.navigate(productNavEntry)

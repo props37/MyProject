@@ -35,6 +35,7 @@ public interface ProductListFeature :
 
     public class NavActions(
         public val onBackClicked: () -> Unit,
+        public val onSearchClicked: () -> Unit,
         public val onProductClicked: (Product) -> Unit,
         public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
     ) : NavigationActions

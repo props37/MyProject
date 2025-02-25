@@ -8,6 +8,8 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 internal sealed interface ProductListScreenAction {
     data object BackClicked : ProductListScreenAction
 
+    data object SearchClicked : ProductListScreenAction
+
     data class FiltersClicked(
         val categoryId: Category.Id,
         val filters: ProductFilters?,
