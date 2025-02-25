@@ -103,24 +103,28 @@ internal class SmsCodeRetrieverImpl @Inject constructor(
     private fun getBroadcastReceiver(): BroadcastReceiver {
         return object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == SmsRetriever.SMS_RETRIEVED_ACTION) {
-                    val extras = intent.extras ?: return
-                    val smsRetrieverStatus =
-                        BundleCompat.getParcelable<Status>(extras, SmsRetriever.EXTRA_STATUS)
+                try {
+                    if (intent?.action == SmsRetriever.SMS_RETRIEVED_ACTION) {
+                        val extras = intent.extras ?: return
+                        val smsRetrieverStatus =
+                            BundleCompat.getParcelable<Status>(extras, SmsRetriever.EXTRA_STATUS)
 
-                    when (smsRetrieverStatus?.statusCode) {
-                        CommonStatusCodes.SUCCESS -> {
-                            val consentIntent = BundleCompat.getParcelable<Intent>(
-                                bundle = extras,
-                                key = SmsRetriever.EXTRA_CONSENT_INTENT,
-                            ) ?: return
-                            try {
-                                activityResultLauncher?.launch(consentIntent)
-                            } catch (e: ActivityNotFoundException) {
-                                Timber.tag(TAG).e(e, "Failed to start activity for result")
+                        when (smsRetrieverStatus?.statusCode) {
+                            CommonStatusCodes.SUCCESS -> {
+                                val consentIntent = BundleCompat.getParcelable<Intent>(
+                                    bundle = extras,
+                                    key = SmsRetriever.EXTRA_CONSENT_INTENT,
+                                ) ?: return
+                                try {
+                                    activityResultLauncher?.launch(consentIntent)
+                                } catch (e: ActivityNotFoundException) {
+                                    Timber.tag(TAG).e(e, "Failed to start activity for result")
+                                }
                             }
                         }
                     }
+                } catch (e: Exception) {
+                    Timber.tag(TAG).e(e)
                 }
             }
         }
