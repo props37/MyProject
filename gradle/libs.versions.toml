@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.8.1"
+androidGradlePlugin = "8.8.2"
 googlePlayServices-plugin = "4.4.2"
 firebase-crashlyticsPlugin = "3.0.3"
 androidGitVersion = "0.4.14"
