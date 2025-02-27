@@ -69,7 +69,7 @@ junit = "4.13.2"
 
 lint-composeChecks = "1.4.2"
 
-coreLibraryDesugaring = "2.1.4"
+coreLibraryDesugaring = "2.1.5"
 
 
 [libraries]
