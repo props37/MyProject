@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
 import ru.livetyping.zarina.core.network.impl.ZarinaHttpClientBearerTokenCleanerImpl
+import ru.livetyping.zarina.core.network.impl.getAnyQueryAutocompleteHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaUnauthorizedHttpClient
 import javax.inject.Singleton
@@ -61,6 +62,20 @@ internal abstract class NetworkModule {
                 json = json,
                 baseUrl = baseUrl,
                 headerProvider = ZarinaApiHeaderProvider(),
+                buildType = buildType,
+            )
+        }
+
+        @Provides
+        @Singleton
+        @AnyQueryAutocompleteApi
+        fun provideAnyQueryAutocompleteHttpClient(
+            @NetworkJson
+            json: Json,
+            buildType: BuildType,
+        ): HttpClient {
+            return getAnyQueryAutocompleteHttpClient(
+                json = json,
                 buildType = buildType,
             )
         }

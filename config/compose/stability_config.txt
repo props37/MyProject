@@ -103,6 +103,10 @@ ru.livetyping.zarina.core.domain.model.cart.Cart.ProductLimit
 ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate.Number
 ru.livetyping.zarina.core.domain.model.giftcert.AppliedGiftCertificate
+
+ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
+ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.AutocompleteSuggestion
+ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.Category
 // :core:domain end
 
 

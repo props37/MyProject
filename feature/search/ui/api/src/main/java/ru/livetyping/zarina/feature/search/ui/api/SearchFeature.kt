@@ -14,5 +14,7 @@ public interface SearchFeature :
     @Serializable
     public data object NavEntry : NavigationEntry
 
-    public class NavActions : NavigationActions
+    public class NavActions(
+        public val onBackClicked: () -> Unit,
+    ) : NavigationActions
 }

@@ -197,6 +197,7 @@ dependencies {
     implementation(projects.data.product)
     implementation(projects.data.cart)
     implementation(projects.data.store)
+    implementation(projects.data.search)
 
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)

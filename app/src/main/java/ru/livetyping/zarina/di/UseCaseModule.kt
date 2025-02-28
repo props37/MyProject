@@ -15,6 +15,7 @@ import ru.livetyping.zarina.core.domain.repository.LocationRepository
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
+import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
@@ -53,6 +54,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowU
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
@@ -845,6 +847,17 @@ internal class UseCaseModule {
     ): GetCategoryInfoFlowUseCase {
         return GetCategoryInfoFlowUseCase.getInstance(
             productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetSearchSuggestionsFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): GetSearchSuggestionsFlowUseCase {
+        return GetSearchSuggestionsFlowUseCase.getInstance(
+            searchRepository = searchRepository,
             logger = logger,
         )
     }

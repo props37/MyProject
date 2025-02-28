@@ -5,24 +5,17 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpSend
-import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.bearer
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
 import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.BearerTokens
 import ru.livetyping.zarina.core.network.util.clearBearerTokens
 import timber.log.Timber
-import kotlin.time.Duration.Companion.seconds
 
 internal fun getZarinaUnauthorizedHttpClient(
     json: Json,
@@ -46,39 +39,6 @@ internal fun getZarinaAuthorizedHttpClient(
     installAuthPlugin(bearerTokenService)
 }.also { client ->
     client.loadBearerTokensOnAuthorizationFailure()
-}
-
-private fun HttpClientConfig<*>.applyBaseConfig(
-    json: Json,
-    buildType: BuildType,
-) {
-    expectSuccess = true
-    install(ContentNegotiation) {
-        json(json)
-    }
-
-    val isDebugBuild = buildType == BuildType.DEBUG
-    val isQaBuild = buildType == BuildType.QA
-
-    if (isDebugBuild || isQaBuild) {
-        install(Logging) {
-            level = LogLevel.ALL
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Timber.tag(HTTP_CLIENT_TAG).v(message)
-                }
-            }
-        }
-    }
-
-    install(HttpTimeout) {
-        if (isDebugBuild || isQaBuild) {
-            val timeoutMillis = 20.seconds.inWholeMilliseconds
-            requestTimeoutMillis = timeoutMillis
-            socketTimeoutMillis = timeoutMillis
-            connectTimeoutMillis = timeoutMillis
-        }
-    }
 }
 
 private fun HttpClientConfig<*>.applyZarinaConfig(
@@ -135,5 +95,3 @@ private fun HttpClient.loadBearerTokensOnAuthorizationFailure() {
 }
 
 private const val HEADER_AUTHORIZATION = "Authorization"
-
-private const val HTTP_CLIENT_TAG = "HttpClient"
