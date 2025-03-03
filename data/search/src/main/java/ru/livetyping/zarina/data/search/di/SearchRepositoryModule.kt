@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.data.search.impl.SearchRepositoryImpl
+import ru.livetyping.zarina.data.search.impl.local.SearchLocalDataSource
+import ru.livetyping.zarina.data.search.impl.local.SearchLocalDataSourceImpl
 import ru.livetyping.zarina.data.search.impl.remote.SearchRemoteDataSource
 import ru.livetyping.zarina.data.search.impl.remote.SearchRemoteDataSourceImpl
 import ru.livetyping.zarina.data.search.impl.remote.api.SearchApi
@@ -22,6 +24,11 @@ internal abstract class SearchRepositoryModule {
     abstract fun bindSearchRemoteDataSource(
         impl: SearchRemoteDataSourceImpl,
     ): SearchRemoteDataSource
+
+    @Binds
+    abstract fun bindSearchLocalDataSource(
+        impl: SearchLocalDataSourceImpl,
+    ): SearchLocalDataSource
 
     @Binds
     abstract fun bindSearchApi(impl: SearchApiImpl): SearchApi

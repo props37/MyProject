@@ -22,10 +22,13 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
+import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -45,7 +48,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    deps: SearchDependencies,
+    private val deps: SearchDependencies,
 ) : ViewModel(), SideEffectSource<SearchSideEffect> by SideEffectSourceImpl() {
 
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
@@ -132,13 +135,14 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    // TODO: [Top] Implement
     fun onSearchEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.SearchSuggestionItemClicked -> onSearchSuggestionItemClicked(event)
             is SearchEvent.AutocompleteSuggestionClicked -> onAutocompleteSuggestionClicked(event)
-            SearchEvent.ClearSearchHistoryClicked -> TODO()
-            is SearchEvent.DeleteSearchHistoryQueryItemClicked -> TODO()
+            SearchEvent.ClearSearchHistoryClicked -> onClearSearchHistoryClicked()
+            is SearchEvent.DeleteSearchHistoryQueryItemClicked -> {
+                onDeleteSearchHistoryQueryItemClicked(event)
+            }
         }
     }
 
@@ -156,7 +160,7 @@ internal class SearchViewModel @Inject constructor(
             emitSideEffect(SearchSideEffect.ClearSearchBarTextFieldFocus)
             searchModeValueHolder.set(SearchMode.RESULTS)
             searchQueryValueHolder.set(query)
-            // TODO: [Top] Save search query
+            saveSearchQuery(query)
         }
     }
 
@@ -188,12 +192,34 @@ internal class SearchViewModel @Inject constructor(
         searchBarTextFieldState.setTextAndPlaceCursorAtEnd("$resultQuery ")
     }
 
+    private fun onClearSearchHistoryClicked() {
+        viewModelScope.launch {
+            deps.clearSearchHistory()
+        }
+    }
+
+    private fun onDeleteSearchHistoryQueryItemClicked(
+        event: SearchEvent.DeleteSearchHistoryQueryItemClicked,
+    ) {
+        viewModelScope.launch {
+            val params = DeleteSearchHistoryQueryUseCase.Params(event.item.query)
+            deps.deleteSearchHistoryQuery(params)
+        }
+    }
+
     private fun onQuerySuggestionClicked(query: String) {
         emitSideEffect(SearchSideEffect.ClearSearchBarTextFieldFocus)
         searchModeValueHolder.set(SearchMode.RESULTS)
         searchBarTextFieldState.setTextAndPlaceCursorAtEnd(query)
         searchQueryValueHolder.set(query)
-        // TODO: [Top] Save search query
+        saveSearchQuery(query)
+    }
+
+    private fun saveSearchQuery(query: String) {
+        viewModelScope.launch {
+            val params = SaveSearchHistoryQueryUseCase.Params(query)
+            deps.saveSearchHistoryQuery(params)
+        }
     }
 
     private enum class Keys {

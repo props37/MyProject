@@ -54,7 +54,11 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowU
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
@@ -857,6 +861,50 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetSearchSuggestionsFlowUseCase {
         return GetSearchSuggestionsFlowUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLastSearchHistoryQueriesFlowFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): GetLastSearchHistoryQueriesFlowFlowUseCase {
+        return GetLastSearchHistoryQueriesFlowFlowUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSaveSearchHistoryQueryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): SaveSearchHistoryQueryUseCase {
+        return SaveSearchHistoryQueryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideDeleteSearchHistoryQueryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): DeleteSearchHistoryQueryUseCase {
+        return DeleteSearchHistoryQueryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideClearSearchHistoryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): ClearSearchHistoryUseCase {
+        return ClearSearchHistoryUseCase.getInstance(
             searchRepository = searchRepository,
             logger = logger,
         )

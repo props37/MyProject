@@ -107,6 +107,7 @@ ru.livetyping.zarina.core.domain.model.giftcert.AppliedGiftCertificate
 ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.AutocompleteSuggestion
 ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.Category
+ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 // :core:domain end
 
 

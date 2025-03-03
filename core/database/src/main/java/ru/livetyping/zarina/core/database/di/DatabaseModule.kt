@@ -13,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.database.ZarinaDatabaseCallback
 import ru.livetyping.zarina.core.database.impl.database.ZarinaDatabase2
 import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
+import ru.livetyping.zarina.core.database.search.SearchHistoryQueryDao
 import ru.livetyping.zarina.core.database.transaction.ZarinaDatabaseTransactionManager
 import ru.livetyping.zarina.core.database.user.UserDao
 import javax.inject.Singleton
@@ -48,6 +49,12 @@ internal abstract class DatabaseModule {
         @Singleton
         fun provideUserDao(database: ZarinaDatabase2): UserDao {
             return database.getUserDao()
+        }
+
+        @Provides
+        @Singleton
+        fun provideSearchHistoryQueryDao(database: ZarinaDatabase2): SearchHistoryQueryDao {
+            return database.getSearchHistoryQueryDao()
         }
 
         private const val DATABASE_NAME = "zarina_database_2"
