@@ -38,6 +38,7 @@ import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchStateBuilder
+import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchSuggestionItem
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -134,7 +135,7 @@ internal class SearchViewModel @Inject constructor(
     // TODO: [Top] Implement
     fun onSearchEvent(event: SearchEvent) {
         when (event) {
-            is SearchEvent.SearchSuggestionItemClicked -> TODO()
+            is SearchEvent.SearchSuggestionItemClicked -> onSearchSuggestionItemClicked(event)
             is SearchEvent.AutocompleteSuggestionClicked -> onAutocompleteSuggestionClicked(event)
             SearchEvent.ClearSearchHistoryClicked -> TODO()
             is SearchEvent.DeleteSearchHistoryQueryItemClicked -> TODO()
@@ -166,9 +167,33 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun onSearchSuggestionItemClicked(event: SearchEvent.SearchSuggestionItemClicked) {
+        when (val item = event.item) {
+            is SearchSuggestionItem.QuerySuggestionItem -> onQuerySuggestionClicked(item.query)
+            is SearchSuggestionItem.HistoryQueryItem -> onQuerySuggestionClicked(item.query)
+            is SearchSuggestionItem.CategoryItem -> {
+                navigationThrottler.throttle {
+                    val action = SearchScreenAction.CategoryClicked(item.id)
+                    emitSideEffect(SearchSideEffect.Navigate(action))
+                }
+            }
+
+            is SearchSuggestionItem.GenericTitle -> Unit
+            SearchSuggestionItem.SearchHistoryTitle -> Unit
+        }
+    }
+
     private fun onAutocompleteSuggestionClicked(event: SearchEvent.AutocompleteSuggestionClicked) {
         val resultQuery = event.suggestion.resultQuery
         searchBarTextFieldState.setTextAndPlaceCursorAtEnd("$resultQuery ")
+    }
+
+    private fun onQuerySuggestionClicked(query: String) {
+        emitSideEffect(SearchSideEffect.ClearSearchBarTextFieldFocus)
+        searchModeValueHolder.set(SearchMode.RESULTS)
+        searchBarTextFieldState.setTextAndPlaceCursorAtEnd(query)
+        searchQueryValueHolder.set(query)
+        // TODO: [Top] Save search query
     }
 
     private enum class Keys {

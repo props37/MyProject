@@ -56,15 +56,28 @@ internal fun SearchContent(
                 }
             },
             modifier = Modifier.fillMaxSize(),
-        ) { state ->
-            when (state) {
+        ) { suggestionState ->
+            when (suggestionState) {
                 is SearchState.SuggestionState.Success -> {
-                    // TODO: [Top] Implement
+                    SearchSuggestionsSuccess(
+                        state = suggestionState,
+                        query = state.query,
+                        onSuggestionItemClicked = {
+                            onEvent(SearchEvent.SearchSuggestionItemClicked(it))
+                        },
+                        onClearSearchHistoryClicked = {
+                            onEvent(SearchEvent.ClearSearchHistoryClicked)
+                        },
+                        onDeleteHistoryQueryItemClicked = {
+                            onEvent(SearchEvent.DeleteSearchHistoryQueryItemClicked(it))
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
 
                 is SearchState.SuggestionState.Error -> {
                     ZarinaErrorScreen(
-                        state = state.state,
+                        state = suggestionState.state,
                         onButtonClicked = {}, // Refresh button is hidden here
                         modifier = Modifier
                             .fillMaxSize()

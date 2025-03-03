@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
 import ru.livetyping.zarina.presentation.navigation.util.fadeOutTransition
@@ -44,6 +45,10 @@ fun rememberSearchNavActions(
     return remember(navController) {
         SearchFeature.NavActions(
             onBackClicked = { navController.navigateUp() },
+            onCategoryClicked = { categoryId ->
+                val productListNavEntry = ProductListFeature.NavEntry.create(categoryId)
+                navController.navigate(productListNavEntry)
+            },
         )
     }
 }

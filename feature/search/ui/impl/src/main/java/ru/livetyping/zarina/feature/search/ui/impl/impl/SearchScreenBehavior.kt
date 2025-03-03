@@ -56,5 +56,6 @@ internal fun SearchScreenBehavior(
 private fun navigate(navActions: SearchFeature.NavActions, action: SearchScreenAction) {
     when (action) {
         SearchScreenAction.BackClicked -> navActions.onBackClicked()
+        is SearchScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
     }
 }
