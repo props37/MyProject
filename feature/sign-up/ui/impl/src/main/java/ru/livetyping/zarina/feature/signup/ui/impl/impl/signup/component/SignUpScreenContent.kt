@@ -33,6 +33,7 @@ import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -148,6 +149,8 @@ private fun ColumnScope.PersonalDataFields(
     isPasswordInvalid: Boolean,
     onBirthDateClicked: () -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val nameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -173,7 +176,9 @@ private fun ColumnScope.PersonalDataFields(
                 isVisible = nameTextFieldState.text.isNotEmpty(),
                 onClick = {
                     nameTextFieldState.clearText()
-                    nameFocusRequester.tryRequestFocus()
+                    if (nameFocusRequester.tryRequestFocus()) {
+                        keyboardController?.show()
+                    }
                 },
             )
         },
@@ -244,7 +249,9 @@ private fun ColumnScope.PersonalDataFields(
                 isVisible = emailTextFieldState.text.isNotEmpty(),
                 onClick = {
                     emailTextFieldState.clearText()
-                    emailFocusRequester.tryRequestFocus()
+                    if (emailFocusRequester.tryRequestFocus()) {
+                        keyboardController?.show()
+                    }
                 },
             )
         },

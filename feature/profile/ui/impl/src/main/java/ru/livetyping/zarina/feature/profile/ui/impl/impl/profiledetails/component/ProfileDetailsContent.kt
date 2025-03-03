@@ -27,6 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -194,6 +195,8 @@ private fun PersonalData(
     val firstNameFocusRequester = remember { FocusRequester() }
     val lastNameFocusRequester = remember { FocusRequester() }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(modifier = modifier) {
         val itemModifier = Modifier
             .fillMaxWidth()
@@ -223,7 +226,9 @@ private fun PersonalData(
                     isVisible = lastNameTextFieldState.text.isNotEmpty(),
                     onClick = {
                         lastNameTextFieldState.clearText()
-                        lastNameFocusRequester.tryRequestFocus()
+                        if (lastNameFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },
@@ -253,7 +258,9 @@ private fun PersonalData(
                     isVisible = firstNameTextFieldState.text.isNotEmpty(),
                     onClick = {
                         firstNameTextFieldState.clearText()
-                        firstNameFocusRequester.tryRequestFocus()
+                        if (firstNameFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },

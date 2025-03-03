@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ internal fun CitySearchTextField(
     val focusState = remember { mutableStateOf<FocusState?>(null) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     ZarinaTextField(
         state = state,
@@ -51,7 +53,9 @@ internal fun CitySearchTextField(
                 isVisible = state.text.isNotEmpty(),
                 onClick = {
                     state.clearText()
-                    focusRequester.tryRequestFocus()
+                    if (focusRequester.tryRequestFocus()) {
+                        keyboardController?.show()
+                    }
                 },
             )
         },

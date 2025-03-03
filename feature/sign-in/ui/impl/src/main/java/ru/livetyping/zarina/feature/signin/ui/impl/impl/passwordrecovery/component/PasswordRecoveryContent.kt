@@ -20,6 +20,7 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +41,8 @@ internal fun PasswordRecoveryContent(
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     val emailFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         withFrameMillis {}
@@ -89,7 +92,9 @@ internal fun PasswordRecoveryContent(
                     isVisible = emailTextFieldState.text.isNotEmpty(),
                     onClick = {
                         emailTextFieldState.clearText()
-                        emailFocusRequester.tryRequestFocus()
+                        if (emailFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },
@@ -125,5 +130,3 @@ internal fun PasswordRecoveryContent(
         Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
     }
 }
-
-private const val FocusRequesterDelayMillis = 100L

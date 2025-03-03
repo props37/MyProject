@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
@@ -85,6 +86,8 @@ internal fun SearchBar(
             )
         }
 
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         val focusState = remember { mutableStateOf<FocusState?>(null) }
 
         val textFieldState = state.textFieldState
@@ -106,7 +109,9 @@ internal fun SearchBar(
                     isVisible = textFieldState.text.isNotEmpty(),
                     onClick = {
                         textFieldState.clearText()
-                        focusRequester.tryRequestFocus()
+                        if (focusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },

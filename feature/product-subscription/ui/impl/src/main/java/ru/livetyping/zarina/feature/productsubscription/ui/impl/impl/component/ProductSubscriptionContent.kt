@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -55,6 +56,8 @@ internal fun ProductSubscriptionContent(
 ) {
     val product = state.product
     val productOffer = state.productOffer
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(12.dp))
@@ -107,7 +110,9 @@ internal fun ProductSubscriptionContent(
                     isVisible = nameTextFieldState.text.isNotEmpty(),
                     onClick = {
                         nameTextFieldState.clearText()
-                        nameFocusRequester.tryRequestFocus()
+                        if (nameFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },
@@ -145,7 +150,9 @@ internal fun ProductSubscriptionContent(
                     isVisible = emailTextFieldState.text.isNotEmpty(),
                     onClick = {
                         emailTextFieldState.clearText()
-                        emailFocusRequester.tryRequestFocus()
+                        if (emailFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },

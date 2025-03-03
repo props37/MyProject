@@ -36,6 +36,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -140,6 +141,8 @@ private fun SignInByEmail(
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(TopPadding))
 
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         ZarinaTextField(
             state = emailTextFieldState,
             isError = isEmailInvalid,
@@ -158,7 +161,9 @@ private fun SignInByEmail(
                     isVisible = emailTextFieldState.text.isNotEmpty(),
                     onClick = {
                         emailTextFieldState.clearText()
-                        emailFocusRequester.tryRequestFocus()
+                        if (emailFocusRequester.tryRequestFocus()) {
+                            keyboardController?.show()
+                        }
                     },
                 )
             },
@@ -385,7 +390,5 @@ private fun BottomSpacer(
 
 private val TopPadding: Dp get() = 32.dp
 private val SignInBottomBlockTopPadding: Dp get() = 32.dp
-
-private const val FocusRequesterDelayMillis = 100L
 
 private enum class SignInByEmailFocusTarget { Email, Password }
