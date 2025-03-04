@@ -8,9 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
@@ -115,9 +117,11 @@ internal class ListFilterViewModel @Inject constructor(
 
     private fun onApplyClicked() {
         navigationThrottler.throttle {
-            val filter = listFilterComponent.getFilter()
-            val action = ListFilterScreenAction.AppliedClicked(filter)
-            emitSideEffect(ListFilterSideEffect.Navigate(action))
+            viewModelScope.launch {
+                val filter = listFilterComponent.filter.firstOrNull() ?: return@launch
+                val action = ListFilterScreenAction.AppliedClicked(filter)
+                emitSideEffect(ListFilterSideEffect.Navigate(action))
+            }
         }
     }
 

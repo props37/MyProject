@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
@@ -89,7 +90,7 @@ internal class FiltrationViewModel @AssistedInject constructor(
 
     private val filtrationStateBuilder = FiltrationStateBuilder()
     private val filtrationInitialState = filtrationStateBuilder.build(
-        filters = filtrationComponent.filters.value,
+        filters = initialFilters,
         categoryInfoResult = null,
         isPickupStoreFilterVisible = filtrationComponent.isPickupStoreFilterVisible.value,
         isRefreshing = filtrationComponent.isRefreshing.value,
@@ -156,13 +157,15 @@ internal class FiltrationViewModel @AssistedInject constructor(
 
     private fun onShowProductsClicked() {
         navigationThrottler.throttle {
-            val filters = filtrationComponent.getFilters()
-            val action = if (filters != null) {
-                FiltrationScreenAction.ShowProductsClicked(filters)
-            } else {
-                FiltrationScreenAction.BackClicked
+            viewModelScope.launch {
+                val filters = filtrationComponent.filters.firstOrNull()
+                val action = if (filters != null) {
+                    FiltrationScreenAction.ShowProductsClicked(filters)
+                } else {
+                    FiltrationScreenAction.BackClicked
+                }
+                emitSideEffect(FiltrationSideEffect.Navigate(action))
             }
-            emitSideEffect(FiltrationSideEffect.Navigate(action))
         }
     }
 

@@ -18,13 +18,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -113,16 +116,19 @@ internal class ProductListViewModel @AssistedInject constructor(
         key = Keys.FILTERS.key,
         initialValue = null,
     )
-    private val filters: StateFlow<ProductFilters> = filtersValueHolder.stateFlow.mapState(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-    ) {
-        it?.toProductFilters() ?: run {
-            val fallbackFilters = initialFilters
-                ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
-            fallbackFilters
+    private val filters: SharedFlow<ProductFilters> = filtersValueHolder.stateFlow
+        .map {
+            it?.toProductFilters() ?: run {
+                val fallbackFilters = initialFilters
+                    ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
+                fallbackFilters
+            }
         }
-    }
+        .shareIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            replay = 1,
+        )
 
     private var availableFilters: ProductFilters? = null
 
@@ -139,7 +145,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = TopBarState(
             categoryName = null,
-            appliedFilterCount = filters.value.appliedFilterCount,
+            appliedFilterCount = 0,
         ),
     )
 
@@ -221,12 +227,15 @@ internal class ProductListViewModel @AssistedInject constructor(
                     selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
                 } else {
                     navigationThrottler.throttle {
-                        val action = ProductListScreenAction.TagClicked(
-                            tag = tag,
-                            filters = filters.value,
-                        )
-                        emitSideEffect(ProductListSideEffect.Navigate(action))
-                        selectedTagId.value = null
+                        viewModelScope.launch {
+                            val filters = filters.firstOrNull() ?: return@launch
+                            val action = ProductListScreenAction.TagClicked(
+                                tag = tag,
+                                filters = filters,
+                            )
+                            emitSideEffect(ProductListSideEffect.Navigate(action))
+                            selectedTagId.value = null
+                        }
                     }
                 }
             }
@@ -277,16 +286,18 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     private fun onFiltersClicked() {
         navigationThrottler.throttle {
-            val filters = filters.value
-            val availableFilters = availableFilters
-            val combinedFilters = availableFilters
-                ?.let { filters.coerceInAvailable(availableFilters) }
-                ?: filters
-            val action = ProductListScreenAction.FiltersClicked(
-                categoryId = categoryId,
-                filters = combinedFilters,
-            )
-            emitSideEffect(ProductListSideEffect.Navigate(action))
+            viewModelScope.launch {
+                val filters = filters.firstOrNull() ?: return@launch
+                val availableFilters = availableFilters
+                val combinedFilters = availableFilters
+                    ?.let { filters.coerceInAvailable(availableFilters) }
+                    ?: filters
+                val action = ProductListScreenAction.FiltersClicked(
+                    categoryId = categoryId,
+                    filters = combinedFilters,
+                )
+                emitSideEffect(ProductListSideEffect.Navigate(action))
+            }
         }
     }
 
