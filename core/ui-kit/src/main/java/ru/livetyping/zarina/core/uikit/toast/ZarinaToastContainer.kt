@@ -3,9 +3,9 @@ package ru.livetyping.zarina.core.uikit.toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -27,7 +28,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.filter
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastController
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessageStyle
-import ru.livetyping.zarina.core.uicompose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import kotlin.math.roundToInt
 
@@ -47,7 +47,6 @@ public fun ZarinaToastContainer(
     }
 
     val overscrollEffect = rememberOverscrollEffect()
-    val flingBehavior = ScrollableDefaults.flingBehavior()
 
     AnimatedContent(
         targetState = currentMessage,
@@ -62,9 +61,9 @@ public fun ZarinaToastContainer(
     ) { message ->
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
-        val anchoredDraggableState = rememberAnchoredDraggableState(
-            initialValue = SwipeableState.Default,
-        )
+        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+            AnchoredDraggableState(SwipeableState.Default)
+        }
 
         DisposableEffect(anchoredDraggableState, toastHeightPx, message) {
             val anchors = DraggableAnchors {
@@ -104,7 +103,6 @@ public fun ZarinaToastContainer(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
                         overscrollEffect = overscrollEffect,
-                        flingBehavior = flingBehavior,
                     ),
             )
         }

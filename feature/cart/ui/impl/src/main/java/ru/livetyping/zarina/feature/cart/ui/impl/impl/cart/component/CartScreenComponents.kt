@@ -10,9 +10,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.interaction.DragInteraction
@@ -66,6 +66,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -106,7 +107,6 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefa
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
-import ru.livetyping.zarina.core.uicompose.rememberAnchoredDraggableState
 import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
@@ -854,10 +854,12 @@ internal object CartScreenComponents {
                 }
             }
         }
-        val anchoredDraggableState = rememberAnchoredDraggableState(
-            initialValue = ProductOrderCardSwipeableState.Default,
-            anchors = anchors,
-        )
+        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+            AnchoredDraggableState(
+                initialValue = ProductOrderCardSwipeableState.Default,
+                anchors = anchors,
+            )
+        }
 
         val anchoredDraggableInteractionSource = remember { MutableInteractionSource() }
         val updatedProductId by rememberUpdatedState(product.id)
@@ -876,7 +878,6 @@ internal object CartScreenComponents {
         }
 
         val overscrollEffect = rememberOverscrollEffect()
-        val flingBehavior = ScrollableDefaults.flingBehavior()
 
         Box(
             modifier = modifier
@@ -896,7 +897,6 @@ internal object CartScreenComponents {
                         orientation = Orientation.Horizontal,
                         interactionSource = anchoredDraggableInteractionSource,
                         overscrollEffect = overscrollEffect,
-                        flingBehavior = flingBehavior,
                     ),
             ) {
                 val countStyle = remember(productItem, productCardActions.onCountClicked) {
