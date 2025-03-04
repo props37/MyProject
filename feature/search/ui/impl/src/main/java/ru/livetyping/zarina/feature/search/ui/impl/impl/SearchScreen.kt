@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -17,20 +18,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
+import ru.livetyping.zarina.feature.search.ui.impl.impl.component.NothingFoundPlaceholder
 import ru.livetyping.zarina.feature.search.ui.impl.impl.component.SearchBar
 import ru.livetyping.zarina.feature.search.ui.impl.impl.component.SearchContent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
+import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchResultEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
 
 @Composable
@@ -48,6 +56,9 @@ internal fun SearchScreen(
         searchMode = searchMode,
         searchState = searchState,
         onSearchEvent = viewModel::onSearchEvent,
+        searchResultPagingDataFlow = viewModel.searchResultPagingDataFlow,
+        onSearchResultEvent = viewModel::onSearchResultEvent,
+        productGridSideEffects = viewModel.productGridSideEffects,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -61,6 +72,9 @@ private fun ScreenContent(
     searchMode: SearchMode,
     searchState: SearchState,
     onSearchEvent: (SearchEvent) -> Unit,
+    searchResultPagingDataFlow: Flow<PagingData<ProductShort>>,
+    onSearchResultEvent: (SearchResultEvent) -> Unit,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SearchSideEffect>,
     navActions: SearchFeature.NavActions,
@@ -114,7 +128,32 @@ private fun ScreenContent(
                 }
 
                 SearchMode.RESULTS -> {
-                    // TODO: [Top] Implement
+                    ProductGrid(
+                        productPagingDataFlow = searchResultPagingDataFlow,
+                        onProductClicked = {
+                            onSearchResultEvent(SearchResultEvent.ProductClicked(it))
+                        },
+                        onAddToWishlistClicked = {
+                            onSearchResultEvent(SearchResultEvent.AddToWishlistClicked(it))
+                        },
+                        onAddToCartClicked = {
+                            onSearchResultEvent(SearchResultEvent.AddToCartClicked(it))
+                        },
+                        onSubscribeClicked = {
+                            onSearchResultEvent(SearchResultEvent.SubscribeClicked(it))
+                        },
+                        emptyProductsPlaceholder = {
+                            NothingFoundPlaceholder(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                            )
+                        },
+                        sideEffects = productGridSideEffects,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(backgroundColor),
+                    )
                 }
             }
         }

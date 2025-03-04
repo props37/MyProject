@@ -59,6 +59,7 @@ dependencies {
     implementation(projects.feature.search.ui.api)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
+    implementation(projects.core.uiKitPaging)
     implementation(projects.core.uiModel)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.resource)
@@ -66,6 +67,7 @@ dependencies {
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
+    implementation(libs.jetpack.paging.compose)
 
     implementation(platform(libs.jetpack.compose.bom.beta))
     implementation(libs.jetpack.compose.ui)

@@ -108,6 +108,7 @@ ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.AutocompleteSuggestion
 ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.Category
 ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
+ru.livetyping.zarina.core.domain.model.search.SearchResult
 // :core:domain end
 
 

@@ -59,6 +59,7 @@ import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryU
 import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.SearchFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
@@ -905,6 +906,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): ClearSearchHistoryUseCase {
         return ClearSearchHistoryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSearchFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): SearchFlowUseCase {
+        return SearchFlowUseCase.getInstance(
             searchRepository = searchRepository,
             logger = logger,
         )

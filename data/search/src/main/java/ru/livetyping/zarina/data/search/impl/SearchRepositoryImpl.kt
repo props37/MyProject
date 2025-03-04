@@ -1,7 +1,10 @@
 package ru.livetyping.zarina.data.search.impl
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.ProductSorting
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
+import ru.livetyping.zarina.core.domain.model.search.SearchResult
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.data.search.impl.local.SearchLocalDataSource
@@ -14,6 +17,15 @@ internal class SearchRepositoryImpl @Inject constructor(
 ) : SearchRepository {
     override fun getSearchSuggestionsFlow(query: String): Flow<SearchSuggestions> {
         return remoteDataSource.getSearchSuggestionsFlow(query)
+    }
+
+    override fun search(
+        query: String,
+        sorting: ProductSorting,
+        filters: ProductFilters?,
+        offset: Int,
+    ): Flow<SearchResult> {
+        return remoteDataSource.search(query, sorting, filters, offset)
     }
 
     override fun getLastSearchHistoryQueriesFlow(

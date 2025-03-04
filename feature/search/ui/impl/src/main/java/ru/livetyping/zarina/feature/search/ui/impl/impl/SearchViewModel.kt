@@ -7,40 +7,57 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combine
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.model.product.ProductSorting
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
+import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchResultEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchStateBuilder
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchSuggestionItem
@@ -145,6 +162,37 @@ internal class SearchViewModel @Inject constructor(
         ),
     )
 
+    private val wishlistProductIdsParams =
+        GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+
+    private val cartProductIdsParams =
+        GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
+    private var availableFilters: ProductFilters? = null
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val searchResultPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
+        searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
+        flowOf(Unit), // TODO: [Top] Replace with filters flow
+    ) { query, _ ->
+        // TODO: [Top] Report AppMetrica event
+        // val sorting = filters.sorting?.selected ?: Sorting.getDefault()
+        deps.searchResultPager.getSearchResultPagingDataFlow(
+            query = query,
+            sorting = ProductSorting.getDefault(), // TODO: [Top] Implement
+            filters = null, // TODO: [Top] Implement
+            onAvailableFiltersReceived = { availableFilters = it },
+        )
+    }
+        .flatMapLatest { it }
+        .cachedIn(viewModelScopeDefault)
+        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
+        .transformProductPagingData()
+        .cachedIn(viewModelScopeDefault)
+
     fun onSearchBarEvent(event: SearchBarEvent) {
         when (event) {
             SearchBarEvent.SearchClicked -> onSearchClicked()
@@ -163,6 +211,16 @@ internal class SearchViewModel @Inject constructor(
             is SearchEvent.DeleteSearchHistoryQueryItemClicked -> {
                 onDeleteSearchHistoryQueryItemClicked(event)
             }
+        }
+    }
+
+    // TODO: [Top] Implement
+    fun onSearchResultEvent(event: SearchResultEvent) {
+        when (event) {
+            is SearchResultEvent.ProductClicked -> TODO()
+            is SearchResultEvent.AddToWishlistClicked -> TODO()
+            is SearchResultEvent.AddToCartClicked -> TODO()
+            is SearchResultEvent.SubscribeClicked -> TODO()
         }
     }
 
@@ -239,6 +297,22 @@ internal class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val params = SaveSearchHistoryQueryUseCase.Params(query)
             deps.saveSearchHistoryQuery(params)
+        }
+    }
+
+    private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {
+        return this.combine(
+            deps.getWishlistProductIdsFlow(wishlistProductIdsParams),
+            deps.getCartProductIdsFlow(cartProductIdsParams),
+        ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
+            val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
+            val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
+            productPagingData.map { product ->
+                product.copy(
+                    isInWishlist = product.id in wishlistProductIds,
+                    isInCart = product.id in cartProductIds,
+                )
+            }
         }
     }
 
