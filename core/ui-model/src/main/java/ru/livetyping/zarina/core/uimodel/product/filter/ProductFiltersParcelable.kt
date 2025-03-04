@@ -20,7 +20,7 @@ public data class ProductFiltersParcelable(
     val storePickupAvailability: Boolean?,
     val pickupStores: ProductListFilterParcelable?,
 ) : Parcelable {
-    public fun toFilters(): ProductFilters {
+    public fun toProductFilters(): ProductFilters {
         val sorting = sorting?.let { sorting ->
             ProductListFilter(
                 items = sorting.items.map { it.toSortFilterItem() },

@@ -52,7 +52,7 @@ internal class FiltrationViewModel @AssistedInject constructor(
         typeMap = FiltrationNavEntry.typeMap(),
     )
     private val categoryId = navEntry.getCategoryId()
-    private val initialFilters = navEntry.filters?.toFilters()
+    private val initialFilters = navEntry.filters?.toProductFilters()
 
     private val filtrationComponent = ProductFiltrationComponent(
         savedStateHandle = savedStateHandle,

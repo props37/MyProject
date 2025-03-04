@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
@@ -34,12 +33,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
+import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
@@ -62,6 +63,7 @@ import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
+import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
@@ -100,14 +102,28 @@ internal class SearchViewModel @Inject constructor(
 
     val searchMode: StateFlow<SearchMode> = searchModeValueHolder.stateFlow
 
+    private val filtersValueHolder = savedStateHandle.createValueHolder<ProductFiltersParcelable?>(
+        key = Keys.FILTERS.key,
+        initialValue = null,
+    )
+
+    private val filters = filtersValueHolder.stateFlow.mapState(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+    ) {
+        it?.toProductFilters() ?: ProductFilters.create(
+            sorting = ProductFilters.getDefaultSorting(ProductSorting.getDefault()),
+        )
+    }
+
     val searchBarState: StateFlow<SearchBarState> = combine(
         searchMode,
-        flowOf(Unit), // TODO: [Top] Pass filters flow
-    ) { searchMode, _ ->
+        filters,
+    ) { searchMode, filters ->
         SearchBarState(
             textFieldState = searchBarTextFieldState,
             searchMode = searchMode,
-            appliedFilterCount = 0, // TODO: [Top] Implement
+            appliedFilterCount = filters.appliedFilterCount,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -188,14 +204,14 @@ internal class SearchViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val searchResultPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
         searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
-        flowOf(Unit), // TODO: [Top] Replace with filters flow
-    ) { query, _ ->
+        filters,
+    ) { query, filters ->
         // TODO: [Top] Report AppMetrica event
-        // val sorting = filters.sorting?.selected ?: Sorting.getDefault()
+         val sorting = filters.sorting?.selected ?: ProductSorting.getDefault()
         deps.searchResultPager.getSearchResultPagingDataFlow(
             query = query,
-            sorting = ProductSorting.getDefault(), // TODO: [Top] Implement
-            filters = null, // TODO: [Top] Implement
+            sorting = sorting,
+            filters = filters,
             onAvailableFiltersReceived = { availableFilters = it },
         )
     }
@@ -436,7 +452,8 @@ internal class SearchViewModel @Inject constructor(
 
     private enum class Keys {
         SEARCH_MODE,
-        SEARCH_QUERY;
+        SEARCH_QUERY,
+        FILTERS;
 
         val key: String get() = name
     }

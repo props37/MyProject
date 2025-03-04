@@ -89,7 +89,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         typeMap = ProductListNavEntry.typeMap(),
     )
     private val categoryId = navEntry.getCategoryId()
-    private val initialFilters = navEntry.filters?.toFilters()
+    private val initialFilters = navEntry.filters?.toProductFilters()
 
     private val categoryRequester = FlowRequester(CategoryRequest) {
         val params = GetCategoryFlowUseCase.Params(
@@ -117,7 +117,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
     ) {
-        it?.toFilters() ?: run {
+        it?.toProductFilters() ?: run {
             val fallbackFilters = initialFilters
                 ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
             fallbackFilters

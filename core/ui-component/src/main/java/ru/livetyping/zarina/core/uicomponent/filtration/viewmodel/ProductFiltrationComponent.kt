@@ -26,7 +26,7 @@ public class ProductFiltrationComponent(
         scope = coroutineScope,
         started = SharingStarted.Eagerly,
     ) { filtersParcelable ->
-        filtersParcelable?.toFilters() ?: initialFilters
+        filtersParcelable?.toProductFilters() ?: initialFilters
     }
 
     private val _isRefreshing = MutableStateFlow(false)
