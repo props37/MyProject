@@ -17,11 +17,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
@@ -59,6 +57,7 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelectorComponent
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
@@ -84,6 +83,8 @@ internal class SearchViewModel @Inject constructor(
     private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     @OptIn(SavedStateHandleSaveableApi::class)
     private val searchBarTextFieldState by savedStateHandle.saveable(
@@ -204,8 +205,7 @@ internal class SearchViewModel @Inject constructor(
         .transformProductPagingData()
         .cachedIn(viewModelScopeDefault)
 
-    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
-    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+    val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
     fun onSearchBarEvent(event: SearchBarEvent) {
         when (event) {
@@ -231,30 +231,14 @@ internal class SearchViewModel @Inject constructor(
     fun onSearchResultEvent(event: SearchResultEvent) {
         when (event) {
             is SearchResultEvent.ProductClicked -> onProductClicked(event)
-            is SearchResultEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
+            is SearchResultEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
             is SearchResultEvent.AddToCartClicked -> onAddToCartClicked(event)
             is SearchResultEvent.SubscribeToProductClicked -> onSubscribeToProductClicked(event)
         }
     }
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
-        when (event) {
-            SizeSelectorEvent.DismissRequested -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-            }
-
-            is SizeSelectorEvent.SizeSelected -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-                val product = event.product
-                val offer = event.offer
-                if (event.offer.isAvailable) {
-                    addProductToCart(product, offer)
-                } else {
-                    val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
-                    emitSideEffect(SearchSideEffect.Navigate(action))
-                }
-            }
-        }
+        sizeSelectorComponent.onEvent(event)
     }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
@@ -325,7 +309,7 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun onAddProductToWishlistClicked(event: SearchResultEvent.AddToWishlistClicked) {
+    private fun onAddToWishlistClicked(event: SearchResultEvent.AddToWishlistClicked) {
         viewModelScope.launch {
             val params = ToggleProductInWishlistUseCase.Params(event.product.id)
             deps.toggleProductInWishlist(params)
@@ -353,25 +337,31 @@ internal class SearchViewModel @Inject constructor(
 
     private fun onAddToCartClicked(event: SearchResultEvent.AddToCartClicked) {
         val product = event.product
-        if (product.offers.size > 1) {
-            _sizeSelectorState.value = SizeSelectorState.Visible(product)
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
         } else {
             val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(SearchSideEffect.Navigate(action))
+                navigationThrottler.throttle {
+                    val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(SearchSideEffect.Navigate(action))
+                }
             }
         }
     }
 
     private fun onSubscribeToProductClicked(event: SearchResultEvent.SubscribeToProductClicked) {
-        navigationThrottler.throttle {
-            val product = event.product
-            val offer = product.offers.firstOrNull() ?: return@throttle
-            val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
-            emitSideEffect(SearchSideEffect.Navigate(action))
+        val product = event.product
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
+        } else {
+            navigationThrottler.throttle {
+                val offer = product.offers.firstOrNull() ?: return@throttle
+                val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(SearchSideEffect.Navigate(action))
+            }
         }
     }
 
@@ -413,6 +403,19 @@ internal class SearchViewModel @Inject constructor(
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
+    }
+
+    private fun getSizeSelectorComponentListener(): SizeSelectorComponent.Listener {
+        return object : SizeSelectorComponent.Listener {
+            override fun onProductSizeAvailable(product: Product, offer: ProductOffer) {
+                addProductToCart(product, offer)
+            }
+
+            override fun onProductSizeNotAvailable(product: Product, offer: ProductOffer) {
+                val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(SearchSideEffect.Navigate(action))
+            }
+        }
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {

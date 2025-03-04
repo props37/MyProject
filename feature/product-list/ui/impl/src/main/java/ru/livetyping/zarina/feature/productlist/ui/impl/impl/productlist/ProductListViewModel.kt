@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -54,6 +53,7 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelectorComponent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
@@ -82,6 +82,8 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
+
+    private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
         typeMap = ProductListNavEntry.typeMap(),
@@ -190,8 +192,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         .transformProductPagingData()
         .cachedIn(viewModelScopeDefault)
 
-    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
-    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+    val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
     val shouldSystemBackBeIntercepted: StateFlow<Boolean> = selectedTagId.mapState(
         scope = viewModelScope,
@@ -249,23 +250,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
-        when (event) {
-            SizeSelectorEvent.DismissRequested -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-            }
-
-            is SizeSelectorEvent.SizeSelected -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-                val product = event.product
-                val offer = event.offer
-                if (event.offer.isAvailable) {
-                    addProductToCart(product, offer)
-                } else {
-                    val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-                    emitSideEffect(ProductListSideEffect.Navigate(action))
-                }
-            }
-        }
+        sizeSelectorComponent.onEvent(event)
     }
 
     fun onSystemBackClicked() {
@@ -338,24 +323,32 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     private fun onAddProductToCartClicked(event: ProductEvent.AddToCartClicked) {
         val product = event.product
-        if (product.offers.size > 1) {
-            _sizeSelectorState.value = SizeSelectorState.Visible(product)
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
         } else {
             val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(ProductListSideEffect.Navigate(action))
+                navigationThrottler.throttle {
+                    val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(ProductListSideEffect.Navigate(action))
+                }
             }
         }
     }
 
     private fun onSubscribeToProductClicked(event: ProductEvent.SubscribeClicked) {
         val product = event.product
-        val offer = product.offers.firstOrNull() ?: return
-        val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-        emitSideEffect(ProductListSideEffect.Navigate(action))
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
+        } else {
+            navigationThrottler.throttle {
+                val offer = product.offers.firstOrNull() ?: return@throttle
+                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(ProductListSideEffect.Navigate(action))
+            }
+        }
     }
 
     private fun addProductToCart(product: Product, offer: ProductOffer) {
@@ -417,6 +410,19 @@ internal class ProductListViewModel @AssistedInject constructor(
                         isInCart = product.id in cartProductIds,
                     )
                 }
+        }
+    }
+
+    private fun getSizeSelectorComponentListener(): SizeSelectorComponent.Listener {
+        return object : SizeSelectorComponent.Listener {
+            override fun onProductSizeAvailable(product: Product, offer: ProductOffer) {
+                addProductToCart(product, offer)
+            }
+
+            override fun onProductSizeNotAvailable(product: Product, offer: ProductOffer) {
+                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(ProductListSideEffect.Navigate(action))
+            }
         }
     }
 

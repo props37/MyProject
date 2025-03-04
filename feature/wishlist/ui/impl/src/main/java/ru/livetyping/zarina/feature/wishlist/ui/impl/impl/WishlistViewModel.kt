@@ -10,10 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
@@ -41,6 +39,7 @@ import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelectorComponent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
@@ -62,6 +61,8 @@ internal class WishlistViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
+
+    private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     private var clearWishlistJob: Job? = null
 
@@ -116,8 +117,7 @@ internal class WishlistViewModel @Inject constructor(
         }
         .cachedIn(viewModelScopeDefault)
 
-    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
-    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+    val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
@@ -136,23 +136,7 @@ internal class WishlistViewModel @Inject constructor(
     }
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
-        when (event) {
-            SizeSelectorEvent.DismissRequested -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-            }
-
-            is SizeSelectorEvent.SizeSelected -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-                val product = event.product
-                val offer = event.offer
-                if (event.offer.isAvailable) {
-                    addProductToCart(product, offer)
-                } else {
-                    val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
-                    emitSideEffect(WishlistSideEffect.Navigate(action))
-                }
-            }
-        }
+        sizeSelectorComponent.onEvent(event)
     }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
@@ -221,24 +205,32 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onAddProductToCartClicked(event: WishlistEvent.AddToCartClicked) {
         val product = event.product
-        if (product.offers.size > 1) {
-            _sizeSelectorState.value = SizeSelectorState.Visible(product)
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
         } else {
             val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(WishlistSideEffect.Navigate(action))
+                navigationThrottler.throttle {
+                    val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(WishlistSideEffect.Navigate(action))
+                }
             }
         }
     }
 
     private fun onSubscribeToProductClicked(event: WishlistEvent.SubscribeClicked) {
         val product = event.product
-        val offer = product.offers.firstOrNull() ?: return
-        val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
-        emitSideEffect(WishlistSideEffect.Navigate(action))
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
+        } else {
+            navigationThrottler.throttle {
+                val offer = product.offers.firstOrNull() ?: return@throttle
+                val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(WishlistSideEffect.Navigate(action))
+            }
+        }
     }
 
     private fun onGoToCatalogClicked() {
@@ -282,6 +274,19 @@ internal class WishlistViewModel @Inject constructor(
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
+    }
+
+    private fun getSizeSelectorComponentListener(): SizeSelectorComponent.Listener {
+        return object : SizeSelectorComponent.Listener {
+            override fun onProductSizeAvailable(product: Product, offer: ProductOffer) {
+                addProductToCart(product, offer)
+            }
+
+            override fun onProductSizeNotAvailable(product: Product, offer: ProductOffer) {
+                val action = WishlistScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(WishlistSideEffect.Navigate(action))
+            }
+        }
     }
 
     private data object WishlistProductsRequest : FlowRequest

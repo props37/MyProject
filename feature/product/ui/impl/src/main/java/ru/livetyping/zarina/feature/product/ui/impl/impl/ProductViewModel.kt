@@ -9,7 +9,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
@@ -33,6 +32,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelectorComponent
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
@@ -53,6 +53,8 @@ internal class ProductViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<ProductSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     private val productSuggestionsStateBuilder = ProductSuggestionsStateBuilder()
 
@@ -162,8 +164,7 @@ internal class ProductViewModel @Inject constructor(
         initialValue = ProductState.Loading,
     )
 
-    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
-    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+    val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
     fun onTopBarEvent(event: TopBarEvent) {
         when (event) {
@@ -194,23 +195,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
-        when (event) {
-            SizeSelectorEvent.DismissRequested -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-            }
-
-            is SizeSelectorEvent.SizeSelected -> {
-                _sizeSelectorState.value = SizeSelectorState.Hidden
-                val product = event.product
-                val offer = event.offer
-                if (event.offer.isAvailable) {
-                    addProductToCart(product, offer)
-                } else {
-                    val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
-                    emitSideEffect(ProductSideEffect.Navigate(action))
-                }
-            }
-        }
+        sizeSelectorComponent.onEvent(event)
     }
 
     private fun onBackClicked() {
@@ -254,15 +239,17 @@ internal class ProductViewModel @Inject constructor(
 
     private fun onAddProductToCartClicked(event: ProductEvent.AddToCartClicked) {
         val product = event.product
-        if (product.offers.size > 1) {
-            _sizeSelectorState.value = SizeSelectorState.Visible(product)
+        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
+            sizeSelectorComponent.showSizeSelector(product)
         } else {
             val offer = product.offers.firstOrNull() ?: return
             if (offer.isAvailable) {
                 addProductToCart(product, offer)
             } else {
-                val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(ProductSideEffect.Navigate(action))
+                navigationThrottler.throttle {
+                    val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(ProductSideEffect.Navigate(action))
+                }
             }
         }
     }
@@ -317,6 +304,19 @@ internal class ProductViewModel @Inject constructor(
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+    }
+
+    private fun getSizeSelectorComponentListener(): SizeSelectorComponent.Listener {
+        return object : SizeSelectorComponent.Listener {
+            override fun onProductSizeAvailable(product: Product, offer: ProductOffer) {
+                addProductToCart(product, offer)
+            }
+
+            override fun onProductSizeNotAvailable(product: Product, offer: ProductOffer) {
+                val action = ProductScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(ProductSideEffect.Navigate(action))
+            }
+        }
     }
 
     private data object ProductRequest : FlowRequest
