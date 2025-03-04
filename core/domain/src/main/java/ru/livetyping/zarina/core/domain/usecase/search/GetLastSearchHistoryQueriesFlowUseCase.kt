@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public interface GetLastSearchHistoryQueriesFlowFlowUseCase {
+public interface GetLastSearchHistoryQueriesFlowUseCase {
     public operator fun invoke(params: Params): Flow<Result<List<SearchHistoryQuery>>>
 
     public data class Params(
@@ -17,8 +17,8 @@ public interface GetLastSearchHistoryQueriesFlowFlowUseCase {
         public fun getInstance(
             searchRepository: SearchRepository,
             logger: UseCaseLogger?,
-        ): GetLastSearchHistoryQueriesFlowFlowUseCase {
-            return GetLastSearchHistoryQueriesFlowFlowUseCaseImpl(
+        ): GetLastSearchHistoryQueriesFlowUseCase {
+            return GetLastSearchHistoryQueriesFlowUseCaseImpl(
                 searchRepository = searchRepository,
                 logger = logger,
             )

@@ -56,7 +56,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUs
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
-import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
@@ -867,11 +867,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetLastSearchHistoryQueriesFlowFlowUseCase(
+    fun provideGetLastSearchHistoryQueriesFlowUseCase(
         searchRepository: SearchRepository,
         logger: UseCaseLogger,
-    ): GetLastSearchHistoryQueriesFlowFlowUseCase {
-        return GetLastSearchHistoryQueriesFlowFlowUseCase.getInstance(
+    ): GetLastSearchHistoryQueriesFlowUseCase {
+        return GetLastSearchHistoryQueriesFlowUseCase.getInstance(
             searchRepository = searchRepository,
             logger = logger,
         )

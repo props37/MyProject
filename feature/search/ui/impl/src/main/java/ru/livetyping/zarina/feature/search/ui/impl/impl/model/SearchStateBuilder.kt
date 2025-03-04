@@ -4,6 +4,7 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenButtonState
@@ -14,23 +15,22 @@ internal class SearchStateBuilder {
     private val categoryParentCategoryChainRegex = CATEGORY_PARENT_CATEGORY_CHAIN_PATTERN.toRegex()
 
     fun build(
+        searchHistoryQueriesResult: Result<List<SearchHistoryQuery>>,
         searchSuggestionsResult: Result<SearchSuggestions>,
         query: String,
     ): SearchState {
-        // TODO: [Top] Add search history items
         return searchSuggestionsResult.fold(
             onSuccess = { suggestions ->
                 val autocompleteSuggestions = suggestions.autocompleteSuggestions.toImmutableList()
                 val searchSuggestionItems = suggestions.toSearchSuggestionItems()
                 val suggestionState = if (searchSuggestionItems.isNotEmpty()) {
-//                    val historyQueryItems =
-//                        searchHistoryQueriesResult?.getOrNull()?.toSearchSuggestionItems()
-//                    val items = if (historyQueryItems != null) {
-//                        historyQueryItems + searchSuggestionItems
-//                    } else {
-//                        searchSuggestionItems
-//                    }
-                    val items = searchSuggestionItems
+                    val searchHistoryQueryItems =
+                        searchHistoryQueriesResult.getOrNull()?.toSearchSuggestionItems()
+                    val items = if (searchHistoryQueryItems != null) {
+                        searchHistoryQueryItems + searchSuggestionItems
+                    } else {
+                        searchSuggestionItems
+                    }
                     SearchState.SuggestionState.Success(items.toImmutableList())
                 } else {
                     SearchState.SuggestionState.Empty
@@ -76,6 +76,22 @@ internal class SearchStateBuilder {
                 val items = suggestions.categories
                     .take(SearchState.CATEGORY_MAX_COUNT)
                     .map { it.toCategoryItem() }
+                addAll(items)
+            }
+        }
+    }
+
+    private fun List<SearchHistoryQuery>.toSearchSuggestionItems(): List<SearchSuggestionItem> {
+        val historyQueries = this
+        return buildList {
+            if (historyQueries.isNotEmpty()) {
+                add(SearchSuggestionItem.SearchHistoryTitle)
+
+                val items = historyQueries
+                    .take(SearchState.SEARCH_HISTORY_QUERY_MAX_COUNT)
+                    .map { query ->
+                        SearchSuggestionItem.HistoryQueryItem(query.text.capitalize())
+                    }
                 addAll(items)
             }
         }

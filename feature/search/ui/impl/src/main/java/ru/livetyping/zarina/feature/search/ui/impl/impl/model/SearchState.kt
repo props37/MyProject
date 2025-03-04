@@ -26,6 +26,7 @@ internal data class SearchState(
     }
 
     companion object {
+        const val SEARCH_HISTORY_QUERY_MAX_COUNT = 5
         const val QUERY_SUGGESTION_MAX_COUNT = 5
         const val CATEGORY_MAX_COUNT = 5
     }

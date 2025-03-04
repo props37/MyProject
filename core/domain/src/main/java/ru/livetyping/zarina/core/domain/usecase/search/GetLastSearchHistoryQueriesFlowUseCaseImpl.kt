@@ -3,15 +3,15 @@ package ru.livetyping.zarina.core.domain.usecase.search
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
-import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowFlowUseCase.Params
+import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase.Params
 import ru.livetyping.zarina.core.usecase.FlowUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class GetLastSearchHistoryQueriesFlowFlowUseCaseImpl(
+internal class GetLastSearchHistoryQueriesFlowUseCaseImpl(
     private val searchRepository: SearchRepository,
     logger: UseCaseLogger?,
 ) : FlowUseCase<Params, List<SearchHistoryQuery>>(logger),
-    GetLastSearchHistoryQueriesFlowFlowUseCase {
+    GetLastSearchHistoryQueriesFlowUseCase {
 
     override fun execute(params: Params): Flow<List<SearchHistoryQuery>> {
         return searchRepository.getLastSearchHistoryQueriesFlow(
@@ -25,6 +25,6 @@ internal class GetLastSearchHistoryQueriesFlowFlowUseCaseImpl(
     }
 
     private companion object {
-        private const val TAG = "GetLastSearchHistoryQueriesFlowFlowUseCaseImpl"
+        private const val TAG = "GetLastSearchHistoryQueriesFlowUseCaseImpl"
     }
 }

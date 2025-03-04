@@ -25,8 +25,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
@@ -108,13 +110,31 @@ internal class SearchViewModel @Inject constructor(
                 replay = 1,
             )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val searchHistoryQueriesResult: SharedFlow<Result<List<SearchHistoryQuery>>> =
+        searchBarTextFieldState.textAsFlow()
+            .flatMapLatest { query ->
+                val params = GetLastSearchHistoryQueriesFlowUseCase.Params(
+                    query = query.toString(),
+                    limit = LAST_SEARCH_HISTORY_QUERY_COUNT,
+                )
+                deps.getLastSearchHistoryQueriesFlow(params)
+            }
+            .conflate()
+            .shareIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1,
+            )
+
     private val searchStateBuilder = SearchStateBuilder()
 
     val searchState: StateFlow<SearchState> = combine(
+        searchHistoryQueriesResult,
         searchSuggestionsResult,
         searchBarTextFieldState.textAsFlow(),
-    ) { searchSuggestionResult, query ->
-        searchStateBuilder.build(searchSuggestionResult, query.toString())
+    ) { searchHistoryQueriesResult, searchSuggestionResult, query ->
+        searchStateBuilder.build(searchHistoryQueriesResult, searchSuggestionResult, query.toString())
     }.stateIn(
         scope = viewModelScopeDefault,
         started = SharingStarted.WhileAndroidUiSubscribed,
@@ -227,5 +247,9 @@ internal class SearchViewModel @Inject constructor(
         SEARCH_QUERY;
 
         val key: String get() = name
+    }
+
+    private companion object {
+        private const val LAST_SEARCH_HISTORY_QUERY_COUNT = 5
     }
 }
