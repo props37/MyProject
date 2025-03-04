@@ -57,5 +57,9 @@ private fun navigate(navActions: SearchFeature.NavActions, action: SearchScreenA
     when (action) {
         SearchScreenAction.BackClicked -> navActions.onBackClicked()
         is SearchScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
+        is SearchScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
+        is SearchScreenAction.SubscribeToProductClicked -> {
+            navActions.onSubscribeToProductClicked(action.product, action.offer)
+        }
     }
 }

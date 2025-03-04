@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.search.ui.impl.impl
 
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
@@ -7,6 +8,7 @@ import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueri
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.feature.search.ui.impl.impl.paging.SearchResultPager
 import javax.inject.Inject
 
@@ -19,4 +21,6 @@ internal class SearchDependencies @Inject constructor(
     val clearSearchHistory: ClearSearchHistoryUseCase,
     val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
+    val toggleProductInWishlist: ToggleProductInWishlistUseCase,
+    val addProductToCart: AddProductToCartUseCase,
 )

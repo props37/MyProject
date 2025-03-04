@@ -9,5 +9,5 @@ internal sealed interface SearchResultEvent {
 
     data class AddToCartClicked(val product: Product) : SearchResultEvent
 
-    data class SubscribeClicked(val product: Product) : SearchResultEvent
+    data class SubscribeToProductClicked(val product: Product) : SearchResultEvent
 }

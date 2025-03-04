@@ -27,6 +27,9 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
@@ -49,6 +52,7 @@ internal fun SearchScreen(
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
+    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
         searchBarState = searchBarState,
@@ -59,6 +63,8 @@ internal fun SearchScreen(
         searchResultPagingDataFlow = viewModel.searchResultPagingDataFlow,
         onSearchResultEvent = viewModel::onSearchResultEvent,
         productGridSideEffects = viewModel.productGridSideEffects,
+        sizeSelectorState = sizeSelectorState,
+        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -75,6 +81,8 @@ private fun ScreenContent(
     searchResultPagingDataFlow: Flow<PagingData<ProductShort>>,
     onSearchResultEvent: (SearchResultEvent) -> Unit,
     productGridSideEffects: Flow<ProductGridSideEffect>,
+    sizeSelectorState: SizeSelectorState,
+    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SearchSideEffect>,
     navActions: SearchFeature.NavActions,
@@ -83,6 +91,11 @@ private fun ScreenContent(
         onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
+    )
+
+    SizeSelectorModalBottomSheet(
+        state = sizeSelectorState,
+        onEvent = onSizeSelectorEvent,
     )
 
     val backgroundColor = UiKitTheme.colors.background.general.regular.default
@@ -140,7 +153,7 @@ private fun ScreenContent(
                             onSearchResultEvent(SearchResultEvent.AddToCartClicked(it))
                         },
                         onSubscribeClicked = {
-                            onSearchResultEvent(SearchResultEvent.SubscribeClicked(it))
+                            onSearchResultEvent(SearchResultEvent.SubscribeToProductClicked(it))
                         },
                         emptyProductsPlaceholder = {
                             NothingFoundPlaceholder(

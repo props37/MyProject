@@ -17,9 +17,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
@@ -35,23 +37,31 @@ import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
+import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
@@ -63,6 +73,7 @@ import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchStateBuilder
 import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchSuggestionItem
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class SearchViewModel @Inject constructor(
@@ -193,13 +204,16 @@ internal class SearchViewModel @Inject constructor(
         .transformProductPagingData()
         .cachedIn(viewModelScopeDefault)
 
+    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
+    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+
     fun onSearchBarEvent(event: SearchBarEvent) {
         when (event) {
             SearchBarEvent.SearchClicked -> onSearchClicked()
             SearchBarEvent.Focused -> searchModeValueHolder.set(SearchMode.SEARCH)
             SearchBarEvent.CancelClicked -> onBackClicked()
             SearchBarEvent.BackClicked -> onBackClicked()
-            SearchBarEvent.FiltersClicked -> Unit // // TODO: [Top] Implement
+            SearchBarEvent.FiltersClicked -> Unit // TODO: [Top] Implement
         }
     }
 
@@ -214,19 +228,38 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    // TODO: [Top] Implement
     fun onSearchResultEvent(event: SearchResultEvent) {
         when (event) {
-            is SearchResultEvent.ProductClicked -> TODO()
-            is SearchResultEvent.AddToWishlistClicked -> TODO()
-            is SearchResultEvent.AddToCartClicked -> TODO()
-            is SearchResultEvent.SubscribeClicked -> TODO()
+            is SearchResultEvent.ProductClicked -> onProductClicked(event)
+            is SearchResultEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
+            is SearchResultEvent.AddToCartClicked -> onAddToCartClicked(event)
+            is SearchResultEvent.SubscribeToProductClicked -> onSubscribeToProductClicked(event)
+        }
+    }
+
+    fun onSizeSelectorEvent(event: SizeSelectorEvent) {
+        when (event) {
+            SizeSelectorEvent.DismissRequested -> {
+                _sizeSelectorState.value = SizeSelectorState.Hidden
+            }
+
+            is SizeSelectorEvent.SizeSelected -> {
+                _sizeSelectorState.value = SizeSelectorState.Hidden
+                val product = event.product
+                val offer = event.offer
+                if (event.offer.isAvailable) {
+                    addProductToCart(product, offer)
+                } else {
+                    val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+                    emitSideEffect(SearchSideEffect.Navigate(action))
+                }
+            }
         }
     }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> Unit // // TODO: [Top] Implement
+            LifecycleEvent.ON_CREATE -> Unit // TODO: [Top] Implement
             LifecycleEvent.ON_START -> Unit
             LifecycleEvent.ON_RESUME -> Unit
         }
@@ -285,6 +318,63 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun onProductClicked(event: SearchResultEvent.ProductClicked) {
+        navigationThrottler.throttle {
+            val action = SearchScreenAction.ProductClicked(event.product)
+            emitSideEffect(SearchSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onAddProductToWishlistClicked(event: SearchResultEvent.AddToWishlistClicked) {
+        viewModelScope.launch {
+            val params = ToggleProductInWishlistUseCase.Params(event.product.id)
+            deps.toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
+                        val message = ZarinaToastMessage(text)
+                        emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
+                        // TODO: [Top] Report AppMetrica event
+                    } else {
+                        // TODO: [Top] Report AppMetrica event
+                    }
+                }
+                .onFailure {
+                    val messageResId = if (event.product.isInWishlist) {
+                        RCommon.string.res_product_removing_from_wishlist_error
+                    } else {
+                        RCommon.string.res_product_adding_to_wishlist_error
+                    }
+                    val messageText = Text.Resource(messageResId)
+                    showZarinaErrorToast(messageText)
+                }
+        }
+    }
+
+    private fun onAddToCartClicked(event: SearchResultEvent.AddToCartClicked) {
+        val product = event.product
+        if (product.offers.size > 1) {
+            _sizeSelectorState.value = SizeSelectorState.Visible(product)
+        } else {
+            val offer = product.offers.firstOrNull() ?: return
+            if (offer.isAvailable) {
+                addProductToCart(product, offer)
+            } else {
+                val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+                emitSideEffect(SearchSideEffect.Navigate(action))
+            }
+        }
+    }
+
+    private fun onSubscribeToProductClicked(event: SearchResultEvent.SubscribeToProductClicked) {
+        navigationThrottler.throttle {
+            val product = event.product
+            val offer = product.offers.firstOrNull() ?: return@throttle
+            val action = SearchScreenAction.SubscribeToProductClicked(product, offer)
+            emitSideEffect(SearchSideEffect.Navigate(action))
+        }
+    }
+
     private fun onQuerySuggestionClicked(query: String) {
         emitSideEffect(SearchSideEffect.ClearSearchBarTextFieldFocus)
         searchModeValueHolder.set(SearchMode.RESULTS)
@@ -298,6 +388,31 @@ internal class SearchViewModel @Inject constructor(
             val params = SaveSearchHistoryQueryUseCase.Params(query)
             deps.saveSearchHistoryQuery(params)
         }
+    }
+
+    private fun addProductToCart(product: Product, offer: ProductOffer) {
+        viewModelScope.launch {
+            val params = AddProductToCartUseCase.Params(
+                productId = product.id,
+                barcode = offer.barcode,
+                count = 1,
+            )
+            deps.addProductToCart(params)
+                .onSuccess {
+                    val text = Text.Resource(RCommon.string.res_product_added_to_cart)
+                    val message = ZarinaToastMessage(text)
+                    emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
+                }
+                .onFailure {
+                    val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
+                    showZarinaErrorToast(text)
+                }
+        }
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {

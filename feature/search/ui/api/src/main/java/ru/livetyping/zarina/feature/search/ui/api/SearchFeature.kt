@@ -2,6 +2,8 @@ package ru.livetyping.zarina.feature.search.ui.api
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.navigation.NavigationActions
@@ -18,5 +20,7 @@ public interface SearchFeature :
     public class NavActions(
         public val onBackClicked: () -> Unit,
         public val onCategoryClicked: (Category.Id) -> Unit,
+        public val onProductClicked: (Product) -> Unit,
+        public val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
     ) : NavigationActions
 }
