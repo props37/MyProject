@@ -28,6 +28,8 @@ import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 
+// TODO: [High] Move to :core:ui-component alongside SizeSelectorComponent
+
 @Composable
 public fun SizeSelectorModalBottomSheet(
     state: SizeSelectorState,
