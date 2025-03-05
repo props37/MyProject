@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.screen.webview
 
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
@@ -25,6 +26,8 @@ class WebViewViewModel @Inject constructor(
 
     val url: StateFlow<String> = ImmutableStateFlow(navEntry.url)
 
+    val headers: StateFlow<Map<String, String>> = ImmutableStateFlow(getHeaders(navEntry.url))
+
     fun onBackClicked() {
         navigationThrottler.throttle {
             val action = WebViewScreenAction.BackClicked
@@ -32,7 +35,22 @@ class WebViewViewModel @Inject constructor(
         }
     }
 
+    private fun getHeaders(url: String): Map<String, String> {
+        val uri = url.toUri()
+        return if (uri.host == ZARINA_HOST) {
+            mapOf(HEADER_X_CLIENT_SOURCE_KEY to HEADER_X_CLIENT_SOURCE_VALUE)
+        } else {
+            emptyMap()
+        }
+    }
+
     sealed interface SideEffect : SideEffectSource.SideEffect {
         data class Navigate(val action: WebViewScreenAction) : SideEffect
+    }
+
+    private companion object {
+        private const val ZARINA_HOST = "zarina.ru"
+        private const val HEADER_X_CLIENT_SOURCE_KEY = "x-client-source"
+        private const val HEADER_X_CLIENT_SOURCE_VALUE = "frontend"
     }
 }
