@@ -3,7 +3,9 @@ package ru.livetyping.zarina.presentation.screen.profile
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +18,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -294,6 +296,7 @@ object ProfileScreenComponents {
         )
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun AppVersion(
         version: String,
@@ -301,17 +304,30 @@ object ProfileScreenComponents {
     ) {
         val context = LocalContext.current
 
+        var mindboxDeviceUuid by remember { mutableStateOf<String?>(null) }
+        DisposableEffect(Unit) {
+            val subscriptionId = Mindbox.subscribeDeviceUuid { mindboxDeviceUuid = it }
+            onDispose { Mindbox.disposePushTokenSubscription(subscriptionId) }
+        }
+
         Text(
             text = stringResource(R.string.app_version_s, version),
             style = UiKitTheme.typography.footnote.regular,
             color = UiKitTheme.colors.text.general.regular.muted,
-            modifier = modifier.clickable(
+            modifier = modifier.combinedClickable(
                 interactionSource = null,
                 indication = null,
                 onClick = {
                     val label = context.getString(R.string.zarina_app_version)
                     context.copyTextToClipboard(label, version)
-                }
+                },
+                onLongClick = {
+                    val currentMindboxDeviceUuid = mindboxDeviceUuid
+                    if (currentMindboxDeviceUuid != null) {
+                        val label = context.getString(R.string.mindbox_device_uuid)
+                        context.copyTextToClipboard(label, currentMindboxDeviceUuid)
+                    }
+                },
             ),
         )
     }
@@ -321,22 +337,26 @@ object ProfileScreenComponents {
         modifier: Modifier = Modifier,
     ) {
         val context = LocalContext.current
-        var mindboxDeviceUuid by remember { mutableStateOf("") }
-        LaunchedEffect(Unit) {
-            Mindbox.subscribeDeviceUuid { mindboxDeviceUuid = it }
+        var mindboxDeviceUuid by remember { mutableStateOf<String?>(null) }
+        DisposableEffect(Unit) {
+            val subscriptionId = Mindbox.subscribeDeviceUuid { mindboxDeviceUuid = it }
+            onDispose { Mindbox.disposePushTokenSubscription(subscriptionId) }
         }
 
         Text(
-            text = stringResource(R.string.mindbox_device_uuid, mindboxDeviceUuid),
+            text = stringResource(R.string.mindbox_device_uuid, mindboxDeviceUuid.orEmpty()),
             style = UiKitTheme.typography.footnote.regular,
             color = UiKitTheme.colors.text.general.regular.muted,
             modifier = modifier.clickable(
                 interactionSource = null,
                 indication = null,
                 onClick = {
-                    val label = context.getString(R.string.mindbox_device_uuid_clipboard_label)
-                    context.copyTextToClipboard(label, mindboxDeviceUuid)
-                }
+                    val currentMindboxDeviceUuid = mindboxDeviceUuid
+                    if (currentMindboxDeviceUuid != null) {
+                        val label = context.getString(R.string.mindbox_device_uuid_clipboard_label)
+                        context.copyTextToClipboard(label, currentMindboxDeviceUuid)
+                    }
+                },
             ),
         )
     }
