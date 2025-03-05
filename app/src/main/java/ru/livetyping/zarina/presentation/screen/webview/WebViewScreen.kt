@@ -4,24 +4,32 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
-import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
+import ru.livetyping.zarina.R
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButton
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDefaults
+import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
 @Composable
@@ -61,22 +69,29 @@ private fun ScreenContent(
         webView?.goBack()
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
             .safeDrawingPadding(),
     ) {
-        ZarinaTopBar(
-            startContent = {
-                ZarinaBackIconButton(
-                    onClick = onBackClicked,
-                    iconSize = 20.dp,
-                    modifier = Modifier.padding(start = 2.dp),
-                )
-            },
-            contentPadding = PaddingValues(vertical = 4.dp),
-        )
+        ZarinaButton(
+            onClick = onBackClicked,
+            size = ZarinaButtonSize.Small,
+            colors = ZarinaButtonDefaults.secondaryColors(),
+            contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
+            modifier = Modifier
+                .zIndex(1f)
+                .padding(top = 16.dp, start = 16.dp),
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+                contentDescription = stringResource(R.string.back),
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(270f),
+            )
+        }
 
         AndroidView(
             factory = { context ->
