@@ -17,6 +17,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -32,9 +33,7 @@ import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.base.text.Text
-import ru.livetyping.zarina.presentation.common.permissionmanager.isDenied
 import ru.livetyping.zarina.presentation.common.permissionmanager.isGranted
-import ru.livetyping.zarina.presentation.common.permissionmanager.shouldShowRequestRationale
 import ru.livetyping.zarina.presentation.common.screenresult.ScreenResultHandler
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.model.geography.CityParcelable
@@ -46,6 +45,7 @@ import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
 import timber.log.Timber
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
 
 @HiltViewModel(assistedFactory = OnboardingViewModel.Factory::class)
@@ -224,7 +224,11 @@ class OnboardingViewModel @AssistedInject constructor(
         }
 
         operationTracker.track(Operation.DETECT_CITY) {
-            interactor.getCurrentCityFlow().firstOrNull()
+            interactor.getCurrentCityFlow()
+                .catch { e ->
+                    if (e is CancellationException) onFailure() else throw e
+                }
+                .firstOrNull()
                 ?.onSuccess { city ->
                     savedStateHandle[KEY_CURRENT_CITY] = city?.let { CityParcelable.from(it) }
                     showOnboardingStep(OnboardingStep.CITY_CONFIRMATION)

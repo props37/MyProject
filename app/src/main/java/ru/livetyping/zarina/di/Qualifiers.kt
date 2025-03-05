@@ -15,6 +15,9 @@ object Qualifiers {
 
     enum class AnyQueryType { AUTOCOMPLETE }
 
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class MindboxApi
 
     @Qualifier
     @Retention(AnnotationRetention.RUNTIME)

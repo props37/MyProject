@@ -145,6 +145,7 @@ class SignInViewModel @Inject constructor(
         yandexCaptchaState,
     ) { ongoingOperations, yandexCaptchaState ->
         Operation.SIGN_IN in ongoingOperations
+                || Operation.REQUEST_PHONE_CONFIRMATION in ongoingOperations
                 || yandexCaptchaState is YandexCaptchaDialogState.Visible
     }.stateIn(
         scope = viewModelScope,
