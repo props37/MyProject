@@ -30,9 +30,11 @@ fun WebViewScreen(
     viewModel: WebViewViewModel = hiltViewModel(),
 ) {
     val url by viewModel.url.collectAsStateWithLifecycle()
+    val headers by viewModel.headers.collectAsStateWithLifecycle()
 
     ScreenContent(
         url = url,
+        headers = headers,
         onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navigate = navigate,
@@ -42,6 +44,7 @@ fun WebViewScreen(
 @Composable
 private fun ScreenContent(
     url: String,
+    headers: Map<String, String>,
     onBackClicked: () -> Unit,
     sideEffects: Flow<WebViewViewModel.SideEffect>,
     navigate: (WebViewScreenAction) -> Unit,
@@ -91,12 +94,12 @@ private fun ScreenContent(
                         }
                     }
 
-                    loadUrl(url)
+                    loadUrl(url, headers)
                 }.also { webView = it }
             },
             update = { webView ->
                 if (webView.url != url) {
-                    webView.loadUrl(url)
+                    webView.loadUrl(url, headers)
                 }
             },
             onRelease = { _webView ->
