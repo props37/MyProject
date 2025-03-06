@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.presentation.navigation.base.Destination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
@@ -66,6 +67,7 @@ class AppViewModel @Inject constructor(
 
     init {
         listenToForcedSignOutRequests()
+        ensureMindboxUserAssociation()
     }
 
     // TODO: [High] Do something with navigation?
@@ -75,5 +77,15 @@ class AppViewModel @Inject constructor(
                 interactor.forcedSignOut()
             }
             .launchIn(viewModelScope)
+    }
+
+    // TODO: [High] Remove when all users get associated within Mindbox
+    private fun ensureMindboxUserAssociation() {
+        viewModelScope.launch {
+            val user = interactor.getUserFlowUseCase().firstOrNull()?.getOrNull()
+            if (user != null) {
+                interactor.mindboxApi.userSignedIn(user)
+            }
+        }
     }
 }
