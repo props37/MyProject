@@ -21,6 +21,7 @@ import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinat
 import ru.livetyping.zarina.presentation.navigation.destination.graph.HomeGraph
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,7 +85,11 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             val user = interactor.getUserFlowUseCase().firstOrNull()?.getOrNull()
             if (user != null) {
-                interactor.mindboxApi.userSignedIn(user)
+                try {
+                    interactor.mindboxApi.userSignedIn(user)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
             }
         }
     }
