@@ -11,7 +11,10 @@ internal class ProductSuggestionsApiExceptionConverter @Inject constructor() :
 
     override suspend fun convert(e: ResponseException): Nothing {
         when (e.response.status) {
-            HttpStatusCode.NotFound -> throw ProductNotFoundException()
+            HttpStatusCode.NotFound, HttpStatusCode.InternalServerError -> {
+                throw ProductNotFoundException()
+            }
+
             else -> throw e
         }
     }
