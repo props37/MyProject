@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.data.product.impl.remote.api.exception
 
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidEmailException
@@ -17,7 +17,7 @@ internal class SubscribeToProductApiExceptionConverter @Inject constructor(
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 
-    override suspend fun convert(e: ClientRequestException): Nothing {
+    override suspend fun convert(e: ResponseException): Nothing {
         val responseText = e.response.bodyAsText()
         val errorDto =
             json.decodeFromString(SubscribeToProductErrorDtoSerializer(), responseText)

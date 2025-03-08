@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.data.user.impl.remote.api.exception
 
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -16,7 +16,7 @@ internal class ChangePhoneNumberApiExceptionConverter @Inject constructor(
     private val json: Json,
 ) : KtorApiExceptionConverter() {
 
-    override suspend fun convert(e: ClientRequestException): Nothing {
+    override suspend fun convert(e: ResponseException): Nothing {
         val responseText = e.response.bodyAsText()
         val element = json.parseToJsonElement(responseText)
         when (element) {

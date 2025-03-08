@@ -1,15 +1,15 @@
 package ru.livetyping.zarina.core.network
 
-import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ResponseException
 
 public abstract class KtorApiExceptionConverter {
     public suspend operator fun <T> invoke(block: suspend () -> T): T {
         return try {
             block()
-        } catch (e: ClientRequestException) {
+        } catch (e: ResponseException) {
             convert(e)
         }
     }
 
-    protected abstract suspend fun convert(e: ClientRequestException): Nothing
+    protected abstract suspend fun convert(e: ResponseException): Nothing
 }
