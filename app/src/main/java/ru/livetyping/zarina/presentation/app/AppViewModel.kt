@@ -14,12 +14,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,7 +67,6 @@ class AppViewModel @Inject constructor(
 
     init {
         listenToForcedSignOutRequests()
-        ensureMindboxUserAssociation()
     }
 
     // TODO: [High] Do something with navigation?
@@ -77,19 +74,5 @@ class AppViewModel @Inject constructor(
         deps.getForcedSignOutRequestsFlow()
             .onEach { deps.forcedSignOut() }
             .launchIn(viewModelScope)
-    }
-
-    // TODO: [High] Remove when all users get associated within Mindbox
-    private fun ensureMindboxUserAssociation() {
-        viewModelScope.launch {
-            val user = interactor.getUserFlowUseCase().firstOrNull()?.getOrNull()
-            if (user != null) {
-                try {
-                    interactor.mindboxApi.userSignedIn(user)
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
-            }
-        }
     }
 }

@@ -4,8 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.BuildConfig
+import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.data.mindbox.dto.UserAuthorizedDto
-import ru.livetyping.zarina.di.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.user.User
 import ru.livetyping.zarina.util.library.ktor.setJsonBody

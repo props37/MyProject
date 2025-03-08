@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import javax.inject.Singleton
 
@@ -28,7 +29,7 @@ class MindboxModule {
                 Mindbox.subscribeDeviceUuid { deviceUuid.value = it }
             }
 
-            override fun getMindboxDeviceUuidFlow(): Flow<String?> = deviceUuid
+            override fun getMindboxDeviceUuidFlow(): Flow<String?> = deviceUuid.asStateFlow()
         }
     }
 }
