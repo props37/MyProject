@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -23,9 +24,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.AuthorizationOrLoyaltyCard
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.BuildInfo
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.VersionInfo
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
@@ -96,7 +97,10 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            VersionInfo(versionInfos = profileState.versionInfos)
+            BuildInfo(
+                buildInfo = profileState.buildInfo,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))

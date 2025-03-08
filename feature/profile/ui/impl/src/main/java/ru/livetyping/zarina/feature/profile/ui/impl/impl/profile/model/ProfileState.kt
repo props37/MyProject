@@ -11,5 +11,11 @@ internal data class ProfileState(
     val loyaltyCard: LoyaltyCard?,
     val userCity: City?,
     val menuItems: ImmutableList<ProfileMenuItem>,
-    val versionInfos: ImmutableList<VersionInfo>,
-)
+    val buildInfo: BuildInfo,
+) {
+    @Immutable
+    data class BuildInfo(
+        val appVersion: String,
+        val mindboxDeviceUuid: String?,
+    )
+}

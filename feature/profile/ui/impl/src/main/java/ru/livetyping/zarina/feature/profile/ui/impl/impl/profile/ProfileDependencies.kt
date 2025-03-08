@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
 import ru.livetyping.zarina.core.buildutil.AppVersionName
-import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
@@ -16,6 +15,5 @@ internal class ProfileDependencies @Inject constructor(
     val setUserCity: SetUserCityUseCase,
     @AppVersionName
     val appVersionName: String,
-    val appBuildType: BuildType,
     val mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
 )

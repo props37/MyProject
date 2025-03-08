@@ -8,7 +8,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
@@ -37,7 +35,6 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEv
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.VersionInfo
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel(assistedFactory = ProfileViewModel.Factory::class)
@@ -95,23 +92,12 @@ internal class ProfileViewModel @AssistedInject constructor(
             initialValue = ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList(),
         )
 
-    private val versionInfoFlow = deps.mindboxDeviceUuidProvider.getMindboxDeviceUuidFlow()
+    private val buildInfo = deps.mindboxDeviceUuidProvider.getMindboxDeviceUuidFlow()
         .map { mindboxDeviceUuidValue ->
-            buildList {
-                val appVersionName = VersionInfo(
-                    title = Text.Resource(R.string.profile_app_version),
-                    version = Text.String(deps.appVersionName),
-                )
-                add(appVersionName)
-
-                if (deps.appBuildType != BuildType.RELEASE && mindboxDeviceUuidValue != null) {
-                    val mindboxDeviceUuid = VersionInfo(
-                        title = Text.Resource(R.string.profile_mindbox_device_uuid),
-                        version = Text.String(mindboxDeviceUuidValue),
-                    )
-                    add(mindboxDeviceUuid)
-                }
-            }.toImmutableList()
+            ProfileState.BuildInfo(
+                appVersion = deps.appVersionName,
+                mindboxDeviceUuid = mindboxDeviceUuidValue,
+            )
         }
 
     val profileState: StateFlow<ProfileState> = combine(
@@ -119,14 +105,14 @@ internal class ProfileViewModel @AssistedInject constructor(
         loyaltyCardFlow,
         userCity,
         menuItems,
-        versionInfoFlow,
-    ) { userState, loyaltyCard, userCity, menuItems, versionInfos ->
+        buildInfo,
+    ) { userState, loyaltyCard, userCity, menuItems, buildInfo ->
         ProfileState(
             userState = userState,
             loyaltyCard = loyaltyCard,
             userCity = userCity,
             menuItems = menuItems,
-            versionInfos = versionInfos,
+            buildInfo = buildInfo,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -136,7 +122,10 @@ internal class ProfileViewModel @AssistedInject constructor(
             loyaltyCard = null,
             userCity = null,
             menuItems = ProfileMenuItem.entries.toImmutableList(),
-            versionInfos = persistentListOf(),
+            buildInfo = ProfileState.BuildInfo(
+                appVersion = deps.appVersionName,
+                mindboxDeviceUuid = null,
+            ),
         )
     )
 
