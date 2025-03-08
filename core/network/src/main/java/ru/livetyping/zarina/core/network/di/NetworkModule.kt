@@ -8,12 +8,14 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.buildutil.BuildType
+import ru.livetyping.zarina.core.buildutil.MindboxKey
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
 import ru.livetyping.zarina.core.network.impl.ZarinaHttpClientBearerTokenCleanerImpl
 import ru.livetyping.zarina.core.network.impl.getAnyQueryAutocompleteHttpClient
+import ru.livetyping.zarina.core.network.impl.getMindboxHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.impl.getZarinaUnauthorizedHttpClient
 import javax.inject.Singleton
@@ -77,6 +79,23 @@ internal abstract class NetworkModule {
             return getAnyQueryAutocompleteHttpClient(
                 json = json,
                 buildType = buildType,
+            )
+        }
+
+        @Provides
+        @Singleton
+        @MindboxApi
+        fun provideMindboxHttpClient(
+            @NetworkJson
+            json: Json,
+            buildType: BuildType,
+            @MindboxKey
+            mindboxKey: String,
+        ): HttpClient {
+            return getMindboxHttpClient(
+                json = json,
+                buildType = buildType,
+                mindboxKey = mindboxKey,
             )
         }
 
