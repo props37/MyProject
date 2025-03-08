@@ -60,6 +60,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
+    implementation(projects.core.resource)
     implementation(projects.core.coroutinesUtil)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)

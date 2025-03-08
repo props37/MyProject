@@ -4,8 +4,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -17,13 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
+import ru.livetyping.zarina.feature.webview.ui.impl.impl.component.FloatingBackButton
 
 @Composable
 internal fun WebViewScreen(
@@ -62,21 +61,17 @@ private fun ScreenContent(
         webView?.goBack()
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(UiKitTheme.colors.background.general.regular.default)
             .safeDrawingPadding(),
     ) {
-        ZarinaTopBar(
-            startContent = {
-                ZarinaBackIconButton(
-                    onClick = onBackClicked,
-                    iconSize = 20.dp,
-                    modifier = Modifier.padding(start = 2.dp),
-                )
-            },
-            contentPadding = PaddingValues(vertical = 4.dp),
+        FloatingBackButton(
+            onClick = onBackClicked,
+            modifier = Modifier
+                .zIndex(1f)
+                .padding(top = 16.dp, start = 16.dp),
         )
 
         AndroidView(
