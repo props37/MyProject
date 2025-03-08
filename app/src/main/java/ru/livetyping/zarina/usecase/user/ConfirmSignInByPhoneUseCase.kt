@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.analytics.AppMetricaSignInMethod
+import ru.livetyping.zarina.data.mindbox.MindboxApi
 import ru.livetyping.zarina.data.user.UserRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.common.PhoneNumber
@@ -15,6 +16,7 @@ class ConfirmSignInByPhoneUseCase @Inject constructor(
     dispatcher: CoroutineDispatcher,
     private val userRepository: UserRepository,
     private val setUserWithAuthorizationTokensUseCase: SetUserWithAuthorizationTokensUseCase,
+    private val mindboxApi: MindboxApi,
 ) : UseCase<ConfirmSignInByPhoneUseCase.Params, Unit>(dispatcher) {
 
     override suspend fun execute(params: Params) {
@@ -25,6 +27,8 @@ class ConfirmSignInByPhoneUseCase @Inject constructor(
         val authorizationResult = userRepository.confirmSignInByPhone(phone, otp)
         val tokens = authorizationResult.tokens
         val user = authorizationResult.user
+
+        mindboxApi.userSignedIn(user)
 
         val setUserWithTokensParams = SetUserWithAuthorizationTokensUseCase.Params(user, tokens)
         setUserWithAuthorizationTokensUseCase(setUserWithTokensParams).getOrThrow()

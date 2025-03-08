@@ -16,6 +16,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
+import io.ktor.client.request.header
 import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
@@ -69,6 +70,19 @@ class NetworkModule {
         baseConfig(json)
         install(DefaultRequest) {
             url(ANY_QUERY_BASE_URL_AUTOCOMPLETE)
+        }
+    }
+
+    @Provides
+    @Singleton
+    @Qualifiers.MindboxApi
+    fun provideMindboxHttpClient(
+        json: Json,
+    ): HttpClient = HttpClient(OkHttp) {
+        baseConfig(json)
+        install(DefaultRequest) {
+            url(MINDBOX_BASE_URL)
+            header("Authorization", "SecretKey ${BuildConfig.MINDBOX_KEY}")
         }
     }
 
@@ -133,6 +147,7 @@ class NetworkModule {
 
     companion object {
         private const val ANY_QUERY_BASE_URL_AUTOCOMPLETE = "https://autocomplete.diginetica.net/"
+        private const val MINDBOX_BASE_URL = "https://api.mindbox.ru/"
 
         private const val HEADER_AUTHORIZATION = "Authorization"
 
