@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl.component
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -36,9 +36,9 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldSize
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchMode
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl.component
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search.component
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
@@ -44,8 +44,8 @@ import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchSuggestionItem
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchSuggestionItem
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @OptIn(ExperimentalMaterialApi::class)

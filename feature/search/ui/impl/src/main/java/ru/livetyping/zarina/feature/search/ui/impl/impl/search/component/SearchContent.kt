@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl.component
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -30,8 +30,8 @@ import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
 
 @Composable
 internal fun SearchContent(

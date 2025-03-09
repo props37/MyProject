@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -33,20 +33,19 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
-import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
-import ru.livetyping.zarina.feature.search.ui.impl.impl.component.NothingFoundPlaceholder
-import ru.livetyping.zarina.feature.search.ui.impl.impl.component.SearchBar
-import ru.livetyping.zarina.feature.search.ui.impl.impl.component.SearchContent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchResultEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.NothingFoundPlaceholder
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.SearchBar
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.SearchContent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchMode
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchResultEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
 
 @Composable
 internal fun SearchScreen(
-    navActions: SearchFeature.NavActions,
+    navActions: SearchNavActions,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
@@ -85,7 +84,7 @@ private fun ScreenContent(
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SearchSideEffect>,
-    navActions: SearchFeature.NavActions,
+    navActions: SearchNavActions,
 ) {
     SearchScreenBehavior(
         onLifecycleEvent = onLifecycleEvent,

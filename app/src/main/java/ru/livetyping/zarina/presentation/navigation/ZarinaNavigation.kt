@@ -210,7 +210,7 @@ fun ZarinaNavigation(
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)
         webViewFeature(webViewFeature, webViewNavActions)
-        searchFeature(searchFeature, searchNavActions)
+        searchFeature(navController, searchFeature, searchNavActions)
     }
 }
 

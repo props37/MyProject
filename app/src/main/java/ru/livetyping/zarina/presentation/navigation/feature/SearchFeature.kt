@@ -17,11 +17,13 @@ import ru.livetyping.zarina.presentation.navigation.util.initialDestination
 import ru.livetyping.zarina.presentation.navigation.util.targetDestination
 
 fun NavGraphBuilder.searchFeature(
+    navController: NavHostController,
     feature: SearchFeature,
     actions: SearchFeature.NavActions,
 ) {
     with(feature) {
-        composable(
+        navigation(
+            navController = navController,
             actions = actions,
             resultRetrievers = EmptyNavResultRetrievers,
             enterTransition = {

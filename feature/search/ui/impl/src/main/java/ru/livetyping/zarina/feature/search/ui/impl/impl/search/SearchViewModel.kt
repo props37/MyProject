@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -64,14 +64,14 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchBarState
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchMode
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchResultEvent
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchState
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchStateBuilder
-import ru.livetyping.zarina.feature.search.ui.impl.impl.model.SearchSuggestionItem
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchMode
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchResultEvent
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchStateBuilder
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchSuggestionItem
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 import ru.livetyping.zarina.core.resource.R as RCommon

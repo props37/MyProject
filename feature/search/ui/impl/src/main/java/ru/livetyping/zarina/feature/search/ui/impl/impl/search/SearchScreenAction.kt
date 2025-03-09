@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.Product

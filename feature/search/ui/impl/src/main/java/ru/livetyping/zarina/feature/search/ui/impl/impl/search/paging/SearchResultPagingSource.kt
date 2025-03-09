@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl.paging
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

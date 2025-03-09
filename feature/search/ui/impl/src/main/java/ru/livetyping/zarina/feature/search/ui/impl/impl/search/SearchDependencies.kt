@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
@@ -9,7 +9,7 @@ import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowU
 import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
-import ru.livetyping.zarina.feature.search.ui.impl.impl.paging.SearchResultPager
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.paging.SearchResultPager
 import javax.inject.Inject
 
 internal class SearchDependencies @Inject constructor(

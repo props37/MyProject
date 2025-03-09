@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.search.ui.impl.impl
+package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,13 +13,12 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
-import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 
 @Composable
 internal fun SearchScreenBehavior(
     onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<SearchSideEffect>,
-    navActions: SearchFeature.NavActions,
+    navActions: SearchNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
@@ -53,7 +52,7 @@ internal fun SearchScreenBehavior(
     }
 }
 
-private fun navigate(navActions: SearchFeature.NavActions, action: SearchScreenAction) {
+private fun navigate(navActions: SearchNavActions, action: SearchScreenAction) {
     when (action) {
         SearchScreenAction.BackClicked -> navActions.onBackClicked()
         is SearchScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)

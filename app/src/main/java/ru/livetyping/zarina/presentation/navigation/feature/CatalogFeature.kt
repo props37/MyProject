@@ -28,13 +28,19 @@ fun NavGraphBuilder.catalogFeature(
             resultRetrievers = EmptyNavResultRetrievers,
             exitTransition = {
                 when {
-                    targetDestination.hasRoute<SearchFeature.NavEntry>() -> fadeOutTransition()
+                    targetDestination.hasRoute<SearchFeature.NavEntry.StartNavEntry>() -> {
+                        fadeOutTransition()
+                    }
+
                     else -> null
                 }
             },
             popEnterTransition = {
                 when {
-                    initialDestination.hasRoute<SearchFeature.NavEntry>() -> fadeInTransition()
+                    initialDestination.hasRoute<SearchFeature.NavEntry.StartNavEntry>() -> {
+                        fadeInTransition()
+                    }
+
                     else -> null
                 }
             },
