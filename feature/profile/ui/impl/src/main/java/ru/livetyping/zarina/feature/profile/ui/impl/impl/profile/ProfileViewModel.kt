@@ -92,27 +92,18 @@ internal class ProfileViewModel @AssistedInject constructor(
             initialValue = ProfileMenuItem.entries.minus(ProfileMenuItem.MyOrders).toImmutableList(),
         )
 
-    private val buildInfo = deps.mindboxDeviceUuidProvider.getMindboxDeviceUuidFlow()
-        .map { mindboxDeviceUuidValue ->
-            ProfileState.BuildInfo(
-                appVersion = deps.appVersionName,
-                mindboxDeviceUuid = mindboxDeviceUuidValue,
-            )
-        }
-
     val profileState: StateFlow<ProfileState> = combine(
         userState,
         loyaltyCardFlow,
         userCity,
         menuItems,
-        buildInfo,
-    ) { userState, loyaltyCard, userCity, menuItems, buildInfo ->
+    ) { userState, loyaltyCard, userCity, menuItems ->
         ProfileState(
             userState = userState,
             loyaltyCard = loyaltyCard,
             userCity = userCity,
             menuItems = menuItems,
-            buildInfo = buildInfo,
+            buildInfo = getBuildInfo(),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -122,10 +113,7 @@ internal class ProfileViewModel @AssistedInject constructor(
             loyaltyCard = null,
             userCity = null,
             menuItems = ProfileMenuItem.entries.toImmutableList(),
-            buildInfo = ProfileState.BuildInfo(
-                appVersion = deps.appVersionName,
-                mindboxDeviceUuid = null,
-            ),
+            buildInfo = getBuildInfo(),
         )
     )
 
@@ -237,6 +225,13 @@ internal class ProfileViewModel @AssistedInject constructor(
                 val message = ZarinaToastMessage.error(text)
                 emitSideEffect(ProfileSideEffect.ShowZarinaToast(message))
             }
+    }
+
+    private fun getBuildInfo(): ProfileState.BuildInfo {
+        return ProfileState.BuildInfo(
+            appVersion = deps.appVersionName,
+            mindboxDeviceUuid = deps.mindboxDeviceUuidProvider.getDeviceUuid(),
+        )
     }
 
     private enum class Keys {

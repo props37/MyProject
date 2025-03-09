@@ -5,9 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.BuildConfig
 import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.core.buildutil.MindboxEndpoint
@@ -34,13 +31,13 @@ class MindboxModule {
 
     private fun getMindboxDeviceUuidProvider(): MindboxDeviceUuidProvider {
         return object : MindboxDeviceUuidProvider {
-            private val deviceUuid = MutableStateFlow<String?>(null)
+            private var deviceUuid: String? = null
 
             init {
-                Mindbox.subscribeDeviceUuid { deviceUuid.value = it }
+                Mindbox.subscribeDeviceUuid { deviceUuid = it }
             }
 
-            override fun getMindboxDeviceUuidFlow(): Flow<String?> = deviceUuid.asStateFlow()
+            override fun getDeviceUuid(): String? = deviceUuid
         }
     }
 }
