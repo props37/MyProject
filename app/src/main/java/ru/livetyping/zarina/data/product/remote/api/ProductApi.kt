@@ -9,8 +9,10 @@ import ru.livetyping.zarina.data.common.remote.api.zarina.dto.ProductItemDto
 import ru.livetyping.zarina.data.common.remote.api.zarina.dto.SortingDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
 import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
+import ru.livetyping.zarina.data.product.remote.api.exception.ProductAvailabilityInStoreApiExceptionConverter
 import ru.livetyping.zarina.data.product.remote.api.exception.ProductSuggestionsApiExceptionConverter
 import ru.livetyping.zarina.data.product.remote.api.exception.SubscribeToProductApiExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
@@ -19,7 +21,9 @@ import ru.livetyping.zarina.domain.common.Barcode
 import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.util.library.ktor.setJsonBody
 import javax.inject.Inject
 
@@ -28,6 +32,7 @@ class ProductApi @Inject constructor(
     private val httpClient: HttpClient,
     private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
     private val productSuggestionsApiExceptionConverter: ProductSuggestionsApiExceptionConverter,
+    private val productAvailabilityInStoreApiExceptionConverter: ProductAvailabilityInStoreApiExceptionConverter,
 ) {
     suspend fun getProducts(
         categoryId: Category.Id,
@@ -59,6 +64,17 @@ class ProductApi @Inject constructor(
     suspend fun getProductSimilar(productId: Product.Id): List<ProductItemDto>{
         return productSuggestionsApiExceptionConverter {
             httpClient.get("api/v1/products/${productId.value}/similar_products").body()
+        }
+    }
+
+    suspend fun getProductAvailabilityInStores(
+        offer: ProductOffer,
+        cityKladrId: KladrId,
+    ): List<ProductAvailabilityInStoreDto> {
+        val barcode = offer.barcode.value
+        val kladrId = cityKladrId.value
+        return productAvailabilityInStoreApiExceptionConverter {
+            httpClient.get("/api/products/stock/offers/$barcode/city/$kladrId").body()
         }
     }
 

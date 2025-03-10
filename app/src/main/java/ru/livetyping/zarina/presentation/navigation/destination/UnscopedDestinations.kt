@@ -35,6 +35,8 @@ import ru.livetyping.zarina.presentation.navigation.navtype.ProductOfferParcelab
 import ru.livetyping.zarina.presentation.navigation.navtype.ProductParcelableType
 import ru.livetyping.zarina.presentation.navigation.navtype.TextType
 import java.util.UUID
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import ru.livetyping.zarina.domain.filter.Filters as DomainFilters
 import ru.livetyping.zarina.domain.filter.ListFilter as DomainListFilter
 import ru.livetyping.zarina.domain.product.Product as DomainProduct
@@ -328,6 +330,15 @@ object UnscopedDestinations {
         data class Args(
             val productId: DomainProduct.Id,
         )
+    }
+
+    @Serializable
+    data class ProductAvailabilityInStores(val product: ProductItemParcelable) {
+        companion object {
+            fun typeMap(): Map<KType, NavType<*>> {
+                return mapOf(typeOf<ProductItemParcelable>() to NavType.ProductParcelableType)
+            }
+        }
     }
 
     data object ListFilter : Destination<ListFilter.Args>() {

@@ -9,10 +9,13 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
@@ -47,6 +50,15 @@ class ProductRemoteDataSource @Inject constructor(
     fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> = flow {
         val similar = api.getProductSimilar(productId).mapNotNull { it.toProductItem() }
         emit(similar)
+    }
+
+    fun getProductAvailabilityInStoresFlow(
+        offer: ProductOffer,
+        cityKladrId: KladrId,
+    ): Flow<List<ProductAvailabilityInStore>> = flow {
+        val dtos = api.getProductAvailabilityInStores(offer, cityKladrId)
+        val models = dtos.map { it.toProductAvailabilityInStore() }
+        emit(models)
     }
 
     fun getCategoryProductInfoFlow(

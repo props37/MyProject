@@ -204,6 +204,16 @@ class ProductViewModel @AssistedInject constructor(
         }
     }
 
+    fun onCheckAvailabilityInStoresClicked() {
+        navigationThrottler.throttle {
+            val product = productResult.value?.getOrNull()
+            if (product != null) {
+                val action = ProductScreenAction.CheckAvailabilityInStoresClicked(product)
+                emitSideEffect(SideEffect.Navigate(action))
+            }
+        }
+    }
+
     fun onAddProductToCartClicked(product: Product) {
         if (product.isAvailable) {
             if (product.offers.size > 1) {
