@@ -333,7 +333,7 @@ object ProductScreenComponents {
                         .padding(horizontal = 16.dp)
                         .then(animateItemModifier()),
                 ) {
-                    Text(text = stringResource(R.string.check_availability_in_stores).uppercase())
+                    Text(text = stringResource(R.string.availability_in_stores).uppercase())
                 }
             }
 

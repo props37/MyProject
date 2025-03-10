@@ -11,7 +11,7 @@ import ru.livetyping.zarina.presentation.common.behavior.bottomnavbar.ForcedBott
 import ru.livetyping.zarina.presentation.common.zarinatoast.controller.LocalZarinaToastController
 
 @Composable
-internal fun ProductAvailabilityInStoresScreenBehavior(
+fun ProductAvailabilityInStoresScreenBehavior(
     navigate: (ProductAvailabilityInStoresScreenAction) -> Unit,
     sideEffects: Flow<ProductAvailabilityInStoresViewModel.SideEffect>,
 ) {
