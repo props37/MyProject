@@ -24,6 +24,7 @@ import ru.livetyping.zarina.presentation.navigation.screen.listFilterScreen
 import ru.livetyping.zarina.presentation.navigation.screen.onboardingScreen
 import ru.livetyping.zarina.presentation.navigation.screen.paymentScreen
 import ru.livetyping.zarina.presentation.navigation.screen.permissionRequirementBottomSheetScreen
+import ru.livetyping.zarina.presentation.navigation.screen.productAvailabilityInStoresScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productFiltersScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productScreen
 import ru.livetyping.zarina.presentation.navigation.screen.productSearchFiltersScreen
@@ -71,6 +72,7 @@ fun ZarinaNavigation(
         productSearchScreen(navController)
         productSearchFiltersScreen(navController)
         productScreen(navController)
+        productAvailabilityInStoresScreen(navController)
         listFilterScreen(navController)
         productSubscriptionScreen(navController)
         permissionRequirementBottomSheetScreen(navController)

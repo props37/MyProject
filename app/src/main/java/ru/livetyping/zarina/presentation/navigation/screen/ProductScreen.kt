@@ -1,9 +1,11 @@
 package ru.livetyping.zarina.presentation.navigation.screen
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.presentation.model.product.ProductItemParcelable
 import ru.livetyping.zarina.presentation.navigation.base.composableDestination
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CartGraph
@@ -34,14 +36,26 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
             }
         },
         exitTransition = {
-            when (targetState.destination.route) {
-                UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+            val targetDestination = targetState.destination
+            val targetRoute = targetDestination.route
+            when {
+                targetRoute == UnscopedDestinations.Product.routeSchema -> slideExitTransition()
+                targetDestination.hasRoute<UnscopedDestinations.ProductAvailabilityInStores>() -> {
+                    slideExitTransition()
+                }
+
                 else -> null
             }
         },
         popEnterTransition = {
-            when (initialState.destination.route) {
-                UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+            val initialDestination = initialState.destination
+            val initialRoute = initialDestination.route
+            when {
+                initialRoute == UnscopedDestinations.Product.routeSchema -> slidePopEnterTransition()
+                initialDestination.hasRoute<UnscopedDestinations.ProductAvailabilityInStores>() -> {
+                    slidePopEnterTransition()
+                }
+
                 else -> null
             }
         },
@@ -73,6 +87,13 @@ fun NavGraphBuilder.productScreen(navController: NavHostController) {
                             route = UnscopedDestinations.Product.routeSchema,
                             inclusive = true,
                         )
+                    }
+
+                    is ProductScreenAction.CheckAvailabilityInStoresClicked -> {
+                        val productParcelable = ProductItemParcelable.from(action.product)
+                        val navEntry =
+                            UnscopedDestinations.ProductAvailabilityInStores(productParcelable)
+                        navController.navigate(navEntry)
                     }
 
                     is ProductScreenAction.ProductClicked -> {
