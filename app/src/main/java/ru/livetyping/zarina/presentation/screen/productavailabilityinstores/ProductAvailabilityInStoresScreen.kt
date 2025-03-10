@@ -21,8 +21,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresScreenComponents.Availability
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresScreenComponents.Offers
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresScreenComponents.TopBar
+import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresViewModel.AvailabilityState
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresViewModel.OfferItem
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 
@@ -32,10 +34,13 @@ fun ProductAvailabilityInStoresScreen(
     viewModel: ProductAvailabilityInStoresViewModel = hiltViewModel(),
 ) {
     val offers by viewModel.offers.collectAsStateWithLifecycle()
+    val availabilityState by viewModel.availabilityState.collectAsStateWithLifecycle()
 
     ScreenContent(
         offers = offers,
         onOfferClicked = viewModel::onOfferClicked,
+        availabilityState = availabilityState,
+        onErrorRefreshClicked = viewModel::onErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         navigate = navigate,
         sideEffects = viewModel.sideEffects,
@@ -46,6 +51,8 @@ fun ProductAvailabilityInStoresScreen(
 private fun ScreenContent(
     offers: ImmutableList<OfferItem>,
     onOfferClicked: (OfferItem) -> Unit,
+    availabilityState: AvailabilityState,
+    onErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     navigate: (ProductAvailabilityInStoresScreenAction) -> Unit,
     sideEffects: Flow<ProductAvailabilityInStoresViewModel.SideEffect>,
@@ -76,5 +83,11 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
+
+        Availability(
+            state = availabilityState,
+            onErrorRefreshClicked = onErrorRefreshClicked,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
