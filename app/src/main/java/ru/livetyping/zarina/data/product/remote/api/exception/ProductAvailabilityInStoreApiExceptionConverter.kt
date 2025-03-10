@@ -9,10 +9,7 @@ import javax.inject.Inject
 class ProductAvailabilityInStoreApiExceptionConverter @Inject constructor() : KtorApiExceptionConverter() {
     override suspend fun handle(e: ResponseException): Nothing {
         when (e.response.status) {
-            HttpStatusCode.NotFound, HttpStatusCode.InternalServerError -> {
-                throw ProductNotAvailableException()
-            }
-
+            HttpStatusCode.NotFound -> throw ProductNotAvailableException()
             else -> throw e
         }
     }
