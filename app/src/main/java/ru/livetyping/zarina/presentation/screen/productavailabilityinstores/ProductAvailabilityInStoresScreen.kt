@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.presentation.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresScreenComponents.Availability
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresScreenComponents.Offers
@@ -35,11 +36,13 @@ fun ProductAvailabilityInStoresScreen(
 ) {
     val offers by viewModel.offers.collectAsStateWithLifecycle()
     val availabilityState by viewModel.availabilityState.collectAsStateWithLifecycle()
+    val city by viewModel.city.collectAsStateWithLifecycle()
 
     ScreenContent(
         offers = offers,
         onOfferClicked = viewModel::onOfferClicked,
         availabilityState = availabilityState,
+        city = city,
         onErrorRefreshClicked = viewModel::onErrorRefreshClicked,
         onBackClicked = viewModel::onBackClicked,
         navigate = navigate,
@@ -52,6 +55,7 @@ private fun ScreenContent(
     offers: ImmutableList<OfferItem>,
     onOfferClicked: (OfferItem) -> Unit,
     availabilityState: AvailabilityState,
+    city: City?,
     onErrorRefreshClicked: () -> Unit,
     onBackClicked: () -> Unit,
     navigate: (ProductAvailabilityInStoresScreenAction) -> Unit,
@@ -86,6 +90,7 @@ private fun ScreenContent(
 
         Availability(
             state = availabilityState,
+            city = city,
             onErrorRefreshClicked = onErrorRefreshClicked,
             modifier = Modifier.fillMaxSize(),
         )

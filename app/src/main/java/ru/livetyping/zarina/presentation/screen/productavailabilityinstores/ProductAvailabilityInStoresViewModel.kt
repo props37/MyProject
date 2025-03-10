@@ -16,10 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.domain.product.exception.ProductNotAvailableException
@@ -30,6 +32,7 @@ import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.UnscopedDestinations
 import ru.livetyping.zarina.presentation.screen.productavailabilityinstores.ProductAvailabilityInStoresViewModel.SideEffect
 import ru.livetyping.zarina.usecase.product.GetProductAvailabilityInStoresFlowUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import ru.livetyping.zarina.util.library.coroutines.mapState
@@ -81,6 +84,14 @@ class ProductAvailabilityInStoresViewModel @Inject constructor(
             }
         }
     }
+
+    val city: StateFlow<City?> = interactor.getUserCityFlow()
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileUiSubscribed,
+            initialValue = null,
+        )
 
     val availabilityState: StateFlow<AvailabilityState> = combine(
         availabilityRequester.flow,

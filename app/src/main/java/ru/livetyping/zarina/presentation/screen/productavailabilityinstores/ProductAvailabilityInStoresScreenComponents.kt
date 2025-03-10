@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.domain.geography.City
 import ru.livetyping.zarina.domain.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
@@ -114,6 +115,7 @@ object ProductAvailabilityInStoresScreenComponents {
     @Composable
     fun Availability(
         state: AvailabilityState,
+        city: City?,
         onErrorRefreshClicked: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
@@ -131,7 +133,10 @@ object ProductAvailabilityInStoresScreenComponents {
         ) { state ->
             when (state) {
                 is AvailabilityState.Success -> {
-                    AvailabilitySuccess(state)
+                    AvailabilitySuccess(
+                        state = state,
+                        city = city,
+                    )
                 }
 
                 AvailabilityState.NotAvailable -> {
@@ -159,28 +164,39 @@ object ProductAvailabilityInStoresScreenComponents {
     @Composable
     private fun AvailabilitySuccess(
         state: AvailabilityState.Success,
+        city: City?,
         modifier: Modifier = Modifier,
     ) {
-        val safeDrawingBottomPadding = WindowInsets.safeDrawing
-            .only(WindowInsetsSides.Bottom)
-            .asPaddingValues()
-
-        LazyColumn(
-            contentPadding = safeDrawingBottomPadding.plus(PaddingValues(bottom = 20.dp)),
-            modifier = modifier,
-        ) {
-            itemsIndexed(
-                items = state.availability,
-                key = { _, item -> item.store.id.value },
-            ) { index, availability ->
-                AvailabilityItem(availability)
-
-                if (index < state.availability.lastIndex) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+        Column(modifier = modifier) {
+            if (city != null) {
+                ZarinaItem {
+                    Text(
+                        text = city.name,
+                        style = UiKitTheme.typography.secondary.bold,
                     )
+                }
+            }
+
+            val safeDrawingBottomPadding = WindowInsets.safeDrawing
+                .only(WindowInsetsSides.Bottom)
+                .asPaddingValues()
+
+            LazyColumn(
+                contentPadding = safeDrawingBottomPadding.plus(PaddingValues(bottom = 20.dp)),
+            ) {
+                itemsIndexed(
+                    items = state.availability,
+                    key = { _, item -> item.store.id.value },
+                ) { index, availability ->
+                    AvailabilityItem(availability)
+
+                    if (index < state.availability.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }
