@@ -69,11 +69,7 @@ class ProductAvailabilityInStoresViewModel @Inject constructor(
     }
 
     private fun getInitiallySelectedOfferBarcode(offers: List<ProductOffer>): Barcode? {
-        return if (offers.size > 1) {
-            null
-        } else {
-            offers.firstOrNull()?.barcode
-        }
+        return offers.firstOrNull()?.barcode
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {
