@@ -162,6 +162,7 @@ object ProductScreenComponents {
         productState: ProductState,
         onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
+        onCheckAvailabilityInStoresClicked: () -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
         onProductErrorRefreshClicked: () -> Unit,
@@ -190,6 +191,7 @@ object ProductScreenComponents {
                         product = state.product,
                         onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                         onProductColorClicked = onProductColorClicked,
+                        onCheckAvailabilityInStoresClicked = onCheckAvailabilityInStoresClicked,
                         onAddProductToCartClicked = onAddProductToCartClicked,
                         onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
                         productTotalLookState = productTotalLookState,
@@ -224,6 +226,7 @@ object ProductScreenComponents {
         product: ProductDetails,
         onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
+        onCheckAvailabilityInStoresClicked: () -> Unit,
         onAddProductToCartClicked: (Product) -> Unit,
         onAddProductToFavoritesClicked: (Product) -> Unit,
         productTotalLookState: SuggestedProductListState,
@@ -240,6 +243,7 @@ object ProductScreenComponents {
                 product = product,
                 onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                 onProductColorClicked = onProductColorClicked,
+                onCheckAvailabilityInStoresClicked = onCheckAvailabilityInStoresClicked,
                 productTotalLookState = productTotalLookState,
                 onProductTotalLookErrorRefreshClicked = onProductTotalLookErrorRefreshClicked,
                 productSimilarState = productSimilarState,
@@ -269,6 +273,7 @@ object ProductScreenComponents {
         product: ProductDetails,
         onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
+        onCheckAvailabilityInStoresClicked: () -> Unit,
         productTotalLookState: SuggestedProductListState,
         onProductTotalLookErrorRefreshClicked: () -> Unit,
         productSimilarState: SuggestedProductListState,
@@ -316,6 +321,23 @@ object ProductScreenComponents {
             }
 
             item(
+                key = ProductDetailsListKeyCheckAvailabilityInStores,
+                contentType = ProductDetailsListContentTypeCheckAvailabilityInStores,
+            ) {
+                ZarinaButton(
+                    onClick = onCheckAvailabilityInStoresClicked,
+                    colors = ZarinaButtonDefaults.outlineColors(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp)
+                        .then(animateItemModifier()),
+                ) {
+                    Text(text = stringResource(R.string.check_availability_in_stores).uppercase())
+                }
+            }
+
+            item(
                 key = ProductDetailsListKeyDescription,
                 contentType = ProductDetailsListContentTypeDescription,
             ) {
@@ -323,6 +345,7 @@ object ProductScreenComponents {
                     description = product.description,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 16.dp)
                         .then(animateItemModifier()),
                 )
             }
@@ -1018,6 +1041,8 @@ object ProductScreenComponents {
 
     private const val ProductDetailsListKeyMediaPager = "ProductDetailsListKeyMediaPager"
     private const val ProductDetailsListKeyGeneralInfo = "ProductDetailsListKeyGeneralInfo"
+    private const val ProductDetailsListKeyCheckAvailabilityInStores =
+        "ProductDetailsListKeyCheckAvailabilityInStores"
     private const val ProductDetailsListKeyDescription = "ProductDetailsListKeyDescription"
     private const val ProductDetailsListKeyDeliveryAndPayment =
         "ProductDetailsListKeyDeliveryAndPayment"
@@ -1028,6 +1053,8 @@ object ProductScreenComponents {
         "ProductDetailsListContentTypeMediaPager"
     private const val ProductDetailsListContentTypeGeneralInfo =
         "ProductDetailsListContentTypeGeneralInfo"
+    private const val ProductDetailsListContentTypeCheckAvailabilityInStores =
+        "ProductDetailsListContentTypeCheckAvailabilityInStores"
     private const val ProductDetailsListContentTypeDescription =
         "ProductDetailsListContentTypeDescription"
     private const val ProductDetailsListContentTypeDeliveryAndPayment =

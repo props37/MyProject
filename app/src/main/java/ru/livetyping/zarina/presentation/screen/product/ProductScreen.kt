@@ -54,6 +54,7 @@ fun ProductScreen(
     ScreenContent(
         productState = productState,
         onProductColorClicked = viewModel::onProductColorClicked,
+        onCheckAvailabilityInStoresClicked = viewModel::onCheckAvailabilityInStoresClicked,
         onAddProductToCartClicked = viewModel::onAddProductToCartClicked,
         onAddProductToFavoritesClicked = viewModel::onAddProductToFavoritesClicked,
         onProductErrorRefreshClicked = viewModel::onProductErrorRefreshClicked,
@@ -76,6 +77,7 @@ fun ProductScreen(
 private fun ScreenContent(
     productState: ProductState,
     onProductColorClicked: (ProductColor) -> Unit,
+    onCheckAvailabilityInStoresClicked: () -> Unit,
     onAddProductToCartClicked: (Product) -> Unit,
     onAddProductToFavoritesClicked: (Product) -> Unit,
     onProductErrorRefreshClicked: () -> Unit,
@@ -151,6 +153,7 @@ private fun ScreenContent(
             productState = productState,
             onBonusAccrualForPurchaseClicked = { isZarinaClubBottomSheetVisible = true },
             onProductColorClicked = onProductColorClicked,
+            onCheckAvailabilityInStoresClicked = onCheckAvailabilityInStoresClicked,
             onAddProductToCartClicked = onAddProductToCartClicked,
             onAddProductToFavoritesClicked = onAddProductToFavoritesClicked,
             onProductErrorRefreshClicked = onProductErrorRefreshClicked,

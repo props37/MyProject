@@ -204,6 +204,10 @@ class ProductViewModel @AssistedInject constructor(
         }
     }
 
+    fun onCheckAvailabilityInStoresClicked() {
+        // TODO: [Top] Implement
+    }
+
     fun onAddProductToCartClicked(product: Product) {
         if (product.isAvailable) {
             if (product.offers.size > 1) {
