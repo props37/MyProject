@@ -8,10 +8,13 @@ import ru.livetyping.zarina.domain.common.Email
 import ru.livetyping.zarina.domain.common.Page
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
+import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.product.CategoryProductInfo
 import ru.livetyping.zarina.domain.product.Product
+import ru.livetyping.zarina.domain.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.domain.product.ProductDetails
 import ru.livetyping.zarina.domain.product.ProductItem
+import ru.livetyping.zarina.domain.product.ProductOffer
 import ru.livetyping.zarina.domain.product.ProductsWithFilters
 import javax.inject.Inject
 
@@ -42,6 +45,13 @@ class ProductRepository @Inject constructor(
 
     fun getProductSimilarFlow(productId: Product.Id): Flow<List<ProductItem>> {
         return remoteDataSource.getProductSimilarFlow(productId)
+    }
+
+    fun getProductAvailabilityInStoresFlow(
+        offer: ProductOffer,
+        cityKladrId: KladrId,
+    ): Flow<List<ProductAvailabilityInStore>> {
+        return remoteDataSource.getProductAvailabilityInStoresFlow(offer, cityKladrId)
     }
 
     fun getCategoryProductInfoFlow(
