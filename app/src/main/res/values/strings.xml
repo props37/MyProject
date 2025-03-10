@@ -367,7 +367,7 @@
     <string name="amount_little">Мало</string>
     <string name="amount_enough">Достаточно</string>
     <string name="amount_a_lot">Много</string>
-    <string name="product_is_not_available">Товара нет в наличии</string>
+    <string name="product_is_not_available">Товара нет в наличии в магазинах</string>
 
     <string name="loyalty_card_level_prime">Prime</string>
     <string name="loyalty_card_level_priority">Priority</string>
