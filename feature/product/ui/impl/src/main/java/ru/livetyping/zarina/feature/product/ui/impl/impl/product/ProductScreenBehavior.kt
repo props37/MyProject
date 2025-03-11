@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl.model
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product.model
 
 import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester

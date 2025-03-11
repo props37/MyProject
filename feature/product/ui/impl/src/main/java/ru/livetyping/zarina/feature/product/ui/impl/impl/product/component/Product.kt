@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl.component
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
 
 @Composable
 internal fun Product(

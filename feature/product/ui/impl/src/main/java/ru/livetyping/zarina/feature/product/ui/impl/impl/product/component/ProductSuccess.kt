@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl.component
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product.component
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
@@ -22,10 +22,10 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.feature.product.ui.impl.R
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

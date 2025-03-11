@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -37,12 +37,12 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsStateBuilder
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsStateBuilder
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 

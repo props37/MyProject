@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.impl.impl.ProductNavActions
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.productScreen
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ProductNavActions
 
 public class ProductFeatureImpl : ProductFeature {
     override fun NavGraphBuilder.navigation(

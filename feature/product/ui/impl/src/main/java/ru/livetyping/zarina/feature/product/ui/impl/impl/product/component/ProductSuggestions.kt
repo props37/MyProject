@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl.component
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,8 +28,8 @@ import ru.livetyping.zarina.core.uikit.product.ProductCardSmall
 import ru.livetyping.zarina.core.uikit.product.ProductCardSmallSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.ProductSuggestionsState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsState
 
 @Composable
 internal fun ProductSuggestions(

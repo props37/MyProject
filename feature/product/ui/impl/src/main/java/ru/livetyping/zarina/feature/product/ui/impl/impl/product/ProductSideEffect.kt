@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage

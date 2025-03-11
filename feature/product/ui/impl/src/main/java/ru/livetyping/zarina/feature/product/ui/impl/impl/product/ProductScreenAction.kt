@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer

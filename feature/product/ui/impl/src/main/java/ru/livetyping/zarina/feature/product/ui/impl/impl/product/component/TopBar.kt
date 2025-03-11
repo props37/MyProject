@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.product.ui.impl.impl.component
+package ru.livetyping.zarina.feature.product.ui.impl.impl.product.component
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,9 +28,9 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarMode
-import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarMode
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
