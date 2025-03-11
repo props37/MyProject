@@ -12,6 +12,8 @@ data class ProductOffer(
     val onlineCount: Int,
     val retailCount: Int,
 ) {
+    val isAvailableInStores: Boolean get() = retailCount > 0
+
     @JvmInline
     value class Id(val value: String)
 }

@@ -343,7 +343,12 @@ class ProductViewModel @AssistedInject constructor(
         } else {
             productResult.fold(
                 onSuccess = { product ->
-                    ProductState.Success(product)
+                    val isCheckAvailabilityInStoresButtonVisible =
+                        product.offers.any { it.isAvailableInStores }
+                    ProductState.Success(
+                        product = product,
+                        isCheckAvailabilityInStoresButtonVisible = isCheckAvailabilityInStoresButtonVisible,
+                    )
                 },
                 onFailure = {
                     val state = ErrorState.from(it)
@@ -391,7 +396,10 @@ class ProductViewModel @AssistedInject constructor(
     @Stable
     sealed class ProductState {
         @Immutable
-        data class Success(val product: ProductDetails) : ProductState()
+        data class Success(
+            val product: ProductDetails,
+            val isCheckAvailabilityInStoresButtonVisible: Boolean,
+        ) : ProductState()
 
         data object Loading : ProductState()
 
