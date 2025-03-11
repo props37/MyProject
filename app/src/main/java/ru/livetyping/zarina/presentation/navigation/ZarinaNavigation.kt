@@ -206,7 +206,7 @@ fun ZarinaNavigation(
         signInFeature(navController, signInFeature, signInNavActions)
         signUpFeature(navController, signUpFeature, SignUpFeature.NavActions)
         productListFeature(navController, productListFeature, productListNavActions)
-        productFeature(productFeature, productNavActions)
+        productFeature(navController, productFeature, productNavActions)
         productSubscriptionFeature(productSubscriptionFeature, productSubscriptionNavActions)
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)
         webViewFeature(webViewFeature, webViewNavActions)

@@ -6,28 +6,38 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
-import ru.livetyping.zarina.feature.product.ui.impl.impl.ProductScreen
+import ru.livetyping.zarina.feature.product.ui.impl.impl.ProductNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.productScreen
 
 public class ProductFeatureImpl : ProductFeature {
-    override fun NavGraphBuilder.composable(
+    override fun NavGraphBuilder.navigation(
+        navController: NavHostController,
         actions: ProductFeature.NavActions,
         resultRetrievers: EmptyNavResultRetrievers,
-        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
-        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
-        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
-        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
-        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)?
+        enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
+        exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
+        popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition?)?,
+        popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition?)?,
+        sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> SizeTransform?)?
     ) {
-        composable<ProductFeature.NavEntry>(
+        navigation<ProductFeature.NavEntry>(
+            startDestination = ProductFeature.NavEntry.StartNavEntry::class,
             enterTransition = enterTransition,
             exitTransition = exitTransition,
             popEnterTransition = popEnterTransition,
             popExitTransition = popExitTransition,
+            sizeTransform = sizeTransform,
         ) {
-            ProductScreen(actions)
+            val productNavActions = ProductNavActions(
+                onBackClicked = actions.onBackClicked,
+                onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
+                onProductClicked = actions.onProductClicked,
+            )
+            productScreen(productNavActions)
         }
     }
 }

@@ -9,11 +9,13 @@ import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 
 fun NavGraphBuilder.productFeature(
+    navController: NavHostController,
     feature: ProductFeature,
     actions: ProductFeature.NavActions,
 ) {
     with(feature) {
-        composable(
+        navigation(
+            navController = navController,
             actions = actions,
             resultRetrievers = EmptyNavResultRetrievers,
         )
@@ -22,7 +24,7 @@ fun NavGraphBuilder.productFeature(
 
 @Composable
 fun rememberProductNavActions(
-    navController: NavHostController
+    navController: NavHostController,
 ): ProductFeature.NavActions {
     return remember(navController) {
         ProductFeature.NavActions(

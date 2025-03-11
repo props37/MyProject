@@ -28,7 +28,6 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.Product
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.component.topBarModeAsState
@@ -41,7 +40,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.model.TopBarState
 
 @Composable
 internal fun ProductScreen(
-    navActions: ProductFeature.NavActions,
+    navActions: ProductNavActions,
     viewModel: ProductViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
@@ -72,7 +71,7 @@ private fun ScreenContent(
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
-    navActions: ProductFeature.NavActions,
+    navActions: ProductNavActions,
 ) {
     ProductScreenBehavior(
         sideEffects = sideEffects,
