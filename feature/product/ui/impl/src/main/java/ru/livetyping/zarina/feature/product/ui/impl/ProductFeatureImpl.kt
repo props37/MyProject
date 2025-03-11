@@ -10,6 +10,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.AvailabilityInStoresNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.AvailabilityInStoresNavEntry
+import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.availabilityInStoresScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.productScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ProductNavActions
 
@@ -34,13 +37,19 @@ public class ProductFeatureImpl : ProductFeature {
         ) {
             val productNavActions = ProductNavActions(
                 onBackClicked = actions.onBackClicked,
-                onCheckAvailabilityInStoresClicked = {
-                    // TODO: [Top] Implement
+                onCheckAvailabilityInStoresClicked = { product ->
+                    val availabilityInStoresNavEntry = AvailabilityInStoresNavEntry.from(product)
+                    navController.navigate(availabilityInStoresNavEntry)
                 },
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
             )
             productScreen(productNavActions)
+
+            val availabilityInStoresNavActions = AvailabilityInStoresNavActions(
+                onBackClicked = { navController.navigateUp() },
+            )
+            availabilityInStoresScreen(availabilityInStoresNavActions)
         }
     }
 }

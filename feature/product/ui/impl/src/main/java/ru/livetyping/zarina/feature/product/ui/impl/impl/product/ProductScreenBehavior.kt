@@ -49,7 +49,7 @@ private fun navigate(navActions: ProductNavActions, action: ProductScreenAction)
     when (action) {
         ProductScreenAction.BackClicked -> navActions.onBackClicked()
         is ProductScreenAction.CheckAvailabilityInStoresClicked -> {
-            navActions.onCheckAvailabilityInStoresClicked()
+            navActions.onCheckAvailabilityInStoresClicked(action.product)
         }
 
         is ProductScreenAction.SubscribeToProductClicked -> {

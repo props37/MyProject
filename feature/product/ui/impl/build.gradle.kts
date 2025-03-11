@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -60,10 +61,12 @@ dependencies {
     implementation(projects.feature.product.ui.api)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
+    implementation(projects.core.uiModel)
     implementation(projects.core.uiComponent)
     implementation(projects.core.coroutinesUtil)
     implementation(projects.core.resource)
     implementation(projects.core.platform)
+    implementation(projects.core.navigationUtil)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
@@ -75,6 +78,7 @@ dependencies {
     debugImplementation(libs.jetpack.compose.tooling)
     debugImplementation(libs.jetpack.compose.testManifest)
 
+    implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.immutableCollections)
 
     implementation(libs.hilt)
