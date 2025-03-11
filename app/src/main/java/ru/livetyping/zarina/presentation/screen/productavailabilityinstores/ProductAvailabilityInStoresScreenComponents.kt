@@ -90,6 +90,7 @@ object ProductAvailabilityInStoresScreenComponents {
             ) { item ->
                 ZarinaTag(
                     onClick = { onOfferClicked(item) },
+                    isEnabled = item.offer.isAvailableInStores,
                     isSelected = item.isSelected,
                 ) {
                     val offer = item.offer
