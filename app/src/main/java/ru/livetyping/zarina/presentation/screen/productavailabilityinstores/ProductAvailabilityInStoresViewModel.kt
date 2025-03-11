@@ -52,7 +52,7 @@ class ProductAvailabilityInStoresViewModel @Inject constructor(
     private val product = navEntry.product.toProductItem()
 
     private val selectedOffer: MutableStateFlow<ProductOffer?> = MutableStateFlow(
-        value = product.offers.firstOrNull(),
+        value = getInitiallySelectedOffer(product.offers),
     )
 
     val offers: StateFlow<ImmutableList<OfferItem>> = selectedOffer.mapState(
@@ -138,6 +138,10 @@ class ProductAvailabilityInStoresViewModel @Inject constructor(
 
     fun onErrorRefreshClicked() {
         availabilityRequester.request(AvailabilityRequest)
+    }
+
+    private fun getInitiallySelectedOffer(offers: List<ProductOffer>): ProductOffer? {
+        return offers.firstOrNull { it.isAvailableInStores } ?: offers.firstOrNull()
     }
 
     sealed interface SideEffect : SideEffectSource.SideEffect {

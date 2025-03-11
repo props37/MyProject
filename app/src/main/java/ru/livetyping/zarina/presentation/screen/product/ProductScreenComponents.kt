@@ -189,6 +189,7 @@ object ProductScreenComponents {
                 is ProductState.Success -> {
                     ProductDetailsImpl(
                         product = state.product,
+                        isCheckAvailabilityInStoresButtonVisible = state.isCheckAvailabilityInStoresButtonVisible,
                         onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                         onProductColorClicked = onProductColorClicked,
                         onCheckAvailabilityInStoresClicked = onCheckAvailabilityInStoresClicked,
@@ -224,6 +225,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsImpl(
         product: ProductDetails,
+        isCheckAvailabilityInStoresButtonVisible: Boolean,
         onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onCheckAvailabilityInStoresClicked: () -> Unit,
@@ -241,6 +243,7 @@ object ProductScreenComponents {
         Column(modifier = modifier) {
             ProductDetailsList(
                 product = product,
+                isCheckAvailabilityInStoresButtonVisible = isCheckAvailabilityInStoresButtonVisible,
                 onBonusAccrualForPurchaseClicked = onBonusAccrualForPurchaseClicked,
                 onProductColorClicked = onProductColorClicked,
                 onCheckAvailabilityInStoresClicked = onCheckAvailabilityInStoresClicked,
@@ -271,6 +274,7 @@ object ProductScreenComponents {
     @Composable
     private fun ProductDetailsList(
         product: ProductDetails,
+        isCheckAvailabilityInStoresButtonVisible: Boolean,
         onBonusAccrualForPurchaseClicked: () -> Unit,
         onProductColorClicked: (ProductColor) -> Unit,
         onCheckAvailabilityInStoresClicked: () -> Unit,
@@ -320,20 +324,22 @@ object ProductScreenComponents {
                 )
             }
 
-            item(
-                key = ProductDetailsListKeyCheckAvailabilityInStores,
-                contentType = ProductDetailsListContentTypeCheckAvailabilityInStores,
-            ) {
-                ZarinaButton(
-                    onClick = onCheckAvailabilityInStoresClicked,
-                    colors = ZarinaButtonDefaults.outlineColors(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp)
-                        .padding(horizontal = 16.dp)
-                        .then(animateItemModifier()),
+            if (isCheckAvailabilityInStoresButtonVisible) {
+                item(
+                    key = ProductDetailsListKeyCheckAvailabilityInStores,
+                    contentType = ProductDetailsListContentTypeCheckAvailabilityInStores,
                 ) {
-                    Text(text = stringResource(R.string.availability_in_stores).uppercase())
+                    ZarinaButton(
+                        onClick = onCheckAvailabilityInStoresClicked,
+                        colors = ZarinaButtonDefaults.outlineColors(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp, bottom = 16.dp)
+                            .padding(horizontal = 16.dp)
+                            .then(animateItemModifier()),
+                    ) {
+                        Text(text = stringResource(R.string.availability_in_stores).uppercase())
+                    }
                 }
             }
 
@@ -345,7 +351,6 @@ object ProductScreenComponents {
                     description = product.description,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
                         .then(animateItemModifier()),
                 )
             }
