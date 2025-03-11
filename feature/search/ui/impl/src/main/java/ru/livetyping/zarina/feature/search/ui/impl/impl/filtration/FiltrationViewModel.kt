@@ -4,8 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -20,6 +24,7 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.usecase.search.SearchFlowUseCase
+import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -29,15 +34,19 @@ import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationT
 import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
 import ru.livetyping.zarina.core.uicomponent.filtration.viewmodel.ProductFiltrationComponent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.model.FiltrationStateBuilder
-import javax.inject.Inject
+import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterResult
 
-@HiltViewModel
-internal class FiltrationViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = FiltrationViewModel.Factory::class)
+internal class FiltrationViewModel @AssistedInject constructor(
+    @Assisted
+    listFilterResultFlow: Flow<ListFilterResult?>,
     savedStateHandle: SavedStateHandle,
     private val deps: FiltrationDependencies,
 ) : ViewModel(), SideEffectSource<FiltrationSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navEntry = savedStateHandle.toRoute<FiltrationNavEntry>(
         typeMap = FiltrationNavEntry.typeMap(),
@@ -100,6 +109,10 @@ internal class FiltrationViewModel @Inject constructor(
         initialValue = initialFiltrationState,
     )
 
+    init {
+        handleListFilterResult(listFilterResultFlow)
+    }
+
     fun onTopBarEvent(event: ProductFiltrationTopBarEvent) {
         when (event) {
             ProductFiltrationTopBarEvent.BackClicked -> onBackClicked()
@@ -156,5 +169,28 @@ internal class FiltrationViewModel @Inject constructor(
         searchResultRequester.request(SearchResultRequester)
     }
 
+    private fun handleListFilterResult(resultFlow: Flow<ListFilterResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.LIST_FILTER_RESULT.key,
+            ) { result ->
+                val filter = result.filter.toListFilter()
+                filtrationComponent.updateFiltersWith(filter)
+            }
+        }
+    }
+
+    @AssistedFactory
+    internal interface Factory {
+        fun create(listFilterResultFlow: Flow<ListFilterResult?>): FiltrationViewModel
+    }
+
     private data object SearchResultRequester : FlowRequest
+
+    private enum class Keys {
+        LIST_FILTER_RESULT;
+
+        val key: String get() = name
+    }
 }

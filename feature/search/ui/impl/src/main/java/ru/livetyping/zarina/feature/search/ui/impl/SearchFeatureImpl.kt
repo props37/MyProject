@@ -11,11 +11,16 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
+import ru.livetyping.zarina.core.uimodel.product.filter.ProductListFilterParcelable
 import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationNavActions
 import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationNavEntry
 import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationResult
+import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterNavActions
+import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterNavEntry
+import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterResult
 import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.filtrationScreen
+import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.listFilterScreen
 import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.searchScreen
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.SearchNavActions
 
@@ -56,9 +61,8 @@ public class SearchFeatureImpl : SearchFeature {
                 onBackClicked = internalOnBackClicked,
                 onFilterClicked = { filter ->
                     if (filter is ProductListFilter<*>) {
-                        // TODO: [Top] Implement
-//                        val navEntry = ListFilterNavEntry.create(filter)
-//                        navController.navigate(navEntry)
+                        val navEntry = ListFilterNavEntry.create(filter)
+                        navController.navigate(navEntry)
                     }
                 },
                 onShowProductsClicked = { filters ->
@@ -70,6 +74,18 @@ public class SearchFeatureImpl : SearchFeature {
                 }
             )
             filtrationScreen(filtrationNavActions)
+
+            val listFilterNavActions = ListFilterNavActions(
+                onBackClicked = internalOnBackClicked,
+                onApplyClicked = { listFilter ->
+                    val filterParcelable = ProductListFilterParcelable.from(listFilter)
+                    val result = ListFilterResult(filter = filterParcelable)
+                    navController.navigateUp()
+                    navController.currentBackStackEntry?.savedStateHandle
+                        ?.set(ListFilterResult.KEY, result)
+                },
+            )
+            listFilterScreen(listFilterNavActions)
         }
     }
 }
