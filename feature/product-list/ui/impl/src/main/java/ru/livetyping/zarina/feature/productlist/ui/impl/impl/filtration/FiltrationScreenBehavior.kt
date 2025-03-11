@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,7 @@ internal fun FiltrationScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -25,6 +27,7 @@ internal fun FiltrationScreenBehavior(
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
                     is FiltrationSideEffect.Navigate -> {
+                        currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
