@@ -19,7 +19,6 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +45,7 @@ import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
 @Composable
 internal fun SearchScreen(
     navActions: SearchNavActions,
-    viewModel: SearchViewModel = hiltViewModel(),
+    viewModel: SearchViewModel,
 ) {
     val searchBarState by viewModel.searchBarState.collectAsStateWithLifecycle()
     val searchMode by viewModel.searchMode.collectAsStateWithLifecycle()

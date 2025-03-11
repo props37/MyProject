@@ -55,6 +55,10 @@ internal fun SearchScreenBehavior(
 private fun navigate(navActions: SearchNavActions, action: SearchScreenAction) {
     when (action) {
         SearchScreenAction.BackClicked -> navActions.onBackClicked()
+        is SearchScreenAction.FiltersClicked -> {
+            navActions.onFiltersClicked(action.searchQuery, action.filters)
+        }
+
         is SearchScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
         is SearchScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
         is SearchScreenAction.SubscribeToProductClicked -> {
