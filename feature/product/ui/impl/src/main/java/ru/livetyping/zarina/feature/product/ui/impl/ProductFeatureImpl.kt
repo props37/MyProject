@@ -34,6 +34,9 @@ public class ProductFeatureImpl : ProductFeature {
         ) {
             val productNavActions = ProductNavActions(
                 onBackClicked = actions.onBackClicked,
+                onCheckAvailabilityInStoresClicked = {
+                    // TODO: [Top] Implement
+                },
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
             )

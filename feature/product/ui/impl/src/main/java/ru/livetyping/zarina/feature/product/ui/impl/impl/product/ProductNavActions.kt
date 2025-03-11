@@ -6,6 +6,7 @@ import ru.livetyping.zarina.core.navigation.NavigationActions
 
 internal class ProductNavActions(
     val onBackClicked: () -> Unit,
+    val onCheckAvailabilityInStoresClicked: () -> Unit,
     val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
     val onProductClicked: (Product) -> Unit,
 ) : NavigationActions

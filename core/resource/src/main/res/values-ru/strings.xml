@@ -107,6 +107,7 @@
     <string name="res_search_results">Результаты поиска</string>
     <string name="res_categories">Категории</string>
     <string name="res_search_history">История поиска</string>
+    <string name="res_availability_in_stores">Наличие в магазинах</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

@@ -10,6 +10,7 @@ internal sealed class ProductState {
     @Immutable
     data class Success(
         val product: ProductDetailed,
+        val isCheckAvailabilityInStoresButtonVisible: Boolean,
         val totalLookState: ProductSuggestionsState,
         val similarProductsState: ProductSuggestionsState,
     ) : ProductState()

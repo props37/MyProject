@@ -6,6 +6,8 @@ import ru.livetyping.zarina.core.domain.model.product.ProductColor
 internal sealed interface ProductEvent {
     data class ProductColorClicked(val color: ProductColor) : ProductEvent
 
+    data object CheckAvailabilityInStoresClicked : ProductEvent
+
     data class AddToCartClicked(val product: Product) : ProductEvent
 
     data class AddToWishlistClicked(val product: Product) : ProductEvent

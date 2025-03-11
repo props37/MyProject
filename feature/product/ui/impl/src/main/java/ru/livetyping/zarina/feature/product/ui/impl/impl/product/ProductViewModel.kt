@@ -150,7 +150,14 @@ internal class ProductViewModel @Inject constructor(
         } else {
             productResult.fold(
                 onSuccess = { product ->
-                    ProductState.Success(product, totalLookState, similarProductsState)
+                    val isCheckAvailabilityInStoresButtonVisible =
+                        product.offers.any { it.isAvailableInStores }
+                    ProductState.Success(
+                        product = product,
+                        isCheckAvailabilityInStoresButtonVisible = isCheckAvailabilityInStoresButtonVisible,
+                        totalLookState = totalLookState,
+                        similarProductsState = similarProductsState
+                    )
                 },
                 onFailure = {
                     val errorState = ZarinaErrorScreenState.from(it)
@@ -181,6 +188,7 @@ internal class ProductViewModel @Inject constructor(
                 }
             }
 
+            ProductEvent.CheckAvailabilityInStoresClicked -> onCheckAvailabilityInStoresClicked()
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.ErrorRefreshClicked -> onProductErrorRefreshClicked()
@@ -234,6 +242,18 @@ internal class ProductViewModel @Inject constructor(
                     }
                     showZarinaErrorToast(Text.Resource(messageResId))
                 }
+        }
+    }
+
+    private fun onCheckAvailabilityInStoresClicked() {
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val product = productResult.firstOrNull()?.getOrNull()
+                if (product != null) {
+                    val action = ProductScreenAction.CheckAvailabilityInStoresClicked(product)
+                    emitSideEffect(ProductSideEffect.Navigate(action))
+                }
+            }
         }
     }
 

@@ -48,6 +48,10 @@ internal fun ProductScreenBehavior(
 private fun navigate(navActions: ProductNavActions, action: ProductScreenAction) {
     when (action) {
         ProductScreenAction.BackClicked -> navActions.onBackClicked()
+        is ProductScreenAction.CheckAvailabilityInStoresClicked -> {
+            navActions.onCheckAvailabilityInStoresClicked()
+        }
+
         is ProductScreenAction.SubscribeToProductClicked -> {
             navActions.onSubscribeToProductClicked(action.product, action.offer)
         }

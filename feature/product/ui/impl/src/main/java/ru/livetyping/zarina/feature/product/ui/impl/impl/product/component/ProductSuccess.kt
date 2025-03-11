@@ -81,7 +81,7 @@ private fun ProductList(
     ) {
         item(
             key = ProductListKey.MediaPager,
-            contentType = ProductListContentKey.MediaPager,
+            contentType = ProductListContentType.MediaPager,
         ) {
             ProductMediaPager(
                 media = product.media,
@@ -91,7 +91,7 @@ private fun ProductList(
 
         item(
             key = ProductListKey.GeneralInfo,
-            contentType = ProductListContentKey.GeneralInfo,
+            contentType = ProductListContentType.GeneralInfo,
         ) {
             ProductGeneralInfo(
                 product = product,
@@ -104,9 +104,30 @@ private fun ProductList(
             )
         }
 
+        if (productState.isCheckAvailabilityInStoresButtonVisible) {
+            item(
+                key = ProductListKey.CheckAvailabilityInStoresButton,
+                contentType = ProductListContentType.CheckAvailabilityInStoresButton,
+            ) {
+                ZarinaButton(
+                    onClick = { onProductEvent(ProductEvent.CheckAvailabilityInStoresClicked) },
+                    colors = ZarinaButtonDefaults.outlineColors(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp, bottom = 16.dp)
+                        .padding(horizontal = 16.dp)
+                        .animateZarinaItem(this),
+                ) {
+                    Text(
+                        text = stringResource(RCommon.string.res_availability_in_stores).uppercase(),
+                    )
+                }
+            }
+        }
+
         item(
             key = ProductListKey.Description,
-            contentType = ProductListContentKey.Description,
+            contentType = ProductListContentType.Description,
         ) {
             ProductDescription(
                 description = product.description,
@@ -118,7 +139,7 @@ private fun ProductList(
 
         item(
             key = ProductListKey.DeliveryAndPayment,
-            contentType = ProductListContentKey.DeliveryAndPayment,
+            contentType = ProductListContentType.DeliveryAndPayment,
         ) {
             ProductDeliveryAndPayment(
                 freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
@@ -131,7 +152,7 @@ private fun ProductList(
         if (productState.totalLookState !is ProductSuggestionsState.None) {
             item(
                 key = ProductListKey.TotalLook,
-                contentType = ProductListContentKey.Suggestions,
+                contentType = ProductListContentType.Suggestions,
             ) {
                 ProductSuggestions(
                     title = stringResource(R.string.product_suggestions_title_total_look),
@@ -147,7 +168,7 @@ private fun ProductList(
         if (productState.similarProductsState !is ProductSuggestionsState.None) {
             item(
                 key = ProductListKey.SimilarProducts,
-                contentType = ProductListContentKey.Suggestions,
+                contentType = ProductListContentType.Suggestions,
             ) {
                 ProductSuggestions(
                     title = stringResource(R.string.product_suggestions_title_similar_products),
@@ -210,15 +231,17 @@ private fun BottomBar(
 internal enum class ProductListKey : Parcelable {
     MediaPager,
     GeneralInfo,
+    CheckAvailabilityInStoresButton,
     Description,
     DeliveryAndPayment,
     TotalLook,
     SimilarProducts,
 }
 
-private enum class ProductListContentKey {
+private enum class ProductListContentType {
     MediaPager,
     GeneralInfo,
+    CheckAvailabilityInStoresButton,
     Description,
     DeliveryAndPayment,
     Suggestions,
