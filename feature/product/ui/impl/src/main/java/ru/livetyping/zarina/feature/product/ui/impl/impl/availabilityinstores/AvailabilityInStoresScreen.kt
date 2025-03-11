@@ -2,26 +2,40 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.SizeRow
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.TopBar
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
 
 @Composable
 internal fun AvailabilityInStoresScreen(
     navActions: AvailabilityInStoresNavActions,
     viewModel: AvailabilityInStoresViewModel = hiltViewModel(),
 ) {
+    val availabilityInStoresState by viewModel.availabilityInStoresState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        availabilityInStoresState = availabilityInStoresState,
+        onAvailabilityInStoresEvent = viewModel::onAvailabilityInStoresEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -29,6 +43,8 @@ internal fun AvailabilityInStoresScreen(
 
 @Composable
 private fun ScreenContent(
+    availabilityInStoresState: AvailabilityInStoresState,
+    onAvailabilityInStoresEvent: (AvailabilityInStoresEvent) -> Unit,
     sideEffects: Flow<AvailabilityInStoresSideEffect>,
     navActions: AvailabilityInStoresNavActions,
 ) {
@@ -47,6 +63,24 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
+        TopBar(
+            onBackClicked = {
+                onAvailabilityInStoresEvent(AvailabilityInStoresEvent.BackClicked)
+            },
+        )
+        Spacer(modifier = Modifier.height(8.dp))
 
+        if (availabilityInStoresState.sizes.size > 1) {
+            SizeRow(
+                sizes = availabilityInStoresState.sizes,
+                onSizeClicked = { size ->
+                    onAvailabilityInStoresEvent(AvailabilityInStoresEvent.SizeClicked(size))
+                },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        // TODO: [Top] Implement
     }
 }

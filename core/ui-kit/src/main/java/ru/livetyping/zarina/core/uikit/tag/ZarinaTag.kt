@@ -33,6 +33,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 public fun ZarinaTag(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    isEnabled: Boolean = true,
     isSelected: Boolean = false,
     shape: Shape = ZarinaTagDefaults.Shape,
     interactionSource: MutableInteractionSource? = null,
@@ -40,19 +41,19 @@ public fun ZarinaTag(
     content: @Composable RowScope.() -> Unit,
 ) {
     val backgroundColor = animateColorAsState(
-        targetValue = if (isSelected) {
-            UiKitTheme.colors.background.tag.active
-        } else {
-            UiKitTheme.colors.background.tag.default
+        targetValue = when {
+            !isEnabled -> UiKitTheme.colors.background.general.regular.muted
+            isSelected -> UiKitTheme.colors.background.tag.active
+            else -> UiKitTheme.colors.background.tag.default
         },
         label = "ZarinaTag background color",
     )
 
     val contentColor = animateColorAsState(
-        targetValue = if (isSelected) {
-            UiKitTheme.colors.text.tag.active
-        } else {
-            UiKitTheme.colors.text.tag.default
+        targetValue = when {
+            !isEnabled -> UiKitTheme.colors.text.general.regular.disabled
+            isSelected -> UiKitTheme.colors.text.tag.active
+            else -> UiKitTheme.colors.text.tag.default
         },
         label = "ZarinaTag content color",
     )
@@ -78,7 +79,7 @@ public fun ZarinaTag(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = ripple,
-                    enabled = onClick != null,
+                    enabled = isEnabled && onClick != null,
                     role = Role.Button,
                     onClick = { onClick?.invoke() },
                 )
