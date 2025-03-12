@@ -71,6 +71,8 @@ ru.livetyping.zarina.core.domain.model.product.filter.list.ProductMaterialFilter
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductPickupStoreFilterItem
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSizeFilterItem
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSortFilterItem
+ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
+ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore.Amount
 
 ru.livetyping.zarina.core.domain.model.user.User
 ru.livetyping.zarina.core.domain.model.user.User.Id
