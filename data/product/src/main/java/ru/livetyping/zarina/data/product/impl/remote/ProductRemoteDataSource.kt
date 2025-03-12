@@ -4,10 +4,13 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
@@ -26,6 +29,11 @@ internal interface ProductRemoteDataSource {
     fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>>
 
     fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>>
+
+    fun getProductAvailabilityInStoresFlow(
+        offer: ProductOffer,
+        cityKladrId: KladrId,
+    ): Flow<List<ProductAvailabilityInStore>>
 
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
 
