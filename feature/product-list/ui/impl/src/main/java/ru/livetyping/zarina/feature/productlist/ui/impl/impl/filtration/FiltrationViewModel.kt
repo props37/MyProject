@@ -13,11 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
@@ -72,14 +70,6 @@ internal class FiltrationViewModel @AssistedInject constructor(
             .onEach { filtrationComponent.setIsRefreshing(false) }
     }
 
-    private val categoryInfoResultFlow = categoryInfoRequester.flow
-        .conflate()
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
-
     val topBarState: StateFlow<ProductFiltrationTopBarState> = filtrationComponent.isResetFiltersButtonVisible
         .mapState(
             scope = viewModelScope,
@@ -97,7 +87,7 @@ internal class FiltrationViewModel @AssistedInject constructor(
     )
     val filtrationState: StateFlow<ProductFiltrationState> = combine(
         filtrationComponent.filters,
-        categoryInfoResultFlow,
+        categoryInfoRequester.flow,
         filtrationComponent.isPickupStoreFilterVisible,
         filtrationComponent.isRefreshing,
     ) { filters, categoryInfoResult, isPickupStoreFilterVisible, isRefreshing ->

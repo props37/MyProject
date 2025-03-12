@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -73,7 +72,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private val productResult = productRequester.flow
-        .conflate()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -90,7 +88,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private val productTotalLookResultFlow = productTotalLookRequester.flow
-        .conflate()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
@@ -114,7 +111,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private val similarProductsResultFlow = similarProductsRequester.flow
-        .conflate()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

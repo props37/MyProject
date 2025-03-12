@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.firstOrNull
@@ -157,7 +156,6 @@ internal class SearchViewModel @AssistedInject constructor(
                 val params = GetSearchSuggestionsFlowUseCase.Params(query.toString())
                 deps.getSearchSuggestionsFlow(params)
             }
-            .conflate()
             .shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
@@ -174,7 +172,6 @@ internal class SearchViewModel @AssistedInject constructor(
                 )
                 deps.getLastSearchHistoryQueriesFlow(params)
             }
-            .conflate()
             .shareIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),

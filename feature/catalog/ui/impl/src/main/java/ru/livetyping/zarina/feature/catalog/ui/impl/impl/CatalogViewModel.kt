@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -67,7 +66,6 @@ internal class CatalogViewModel @Inject constructor(
     }
 
     private val categoriesResultFlow = categoriesRequester.flow
-        .conflate()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

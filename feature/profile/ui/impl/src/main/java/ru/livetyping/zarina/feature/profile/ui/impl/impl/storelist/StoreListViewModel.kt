@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -68,7 +67,6 @@ internal class StoreListViewModel @Inject constructor(
     }
 
     private val storeResult = storeRequester.flow
-        .conflate()
         .shareIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),

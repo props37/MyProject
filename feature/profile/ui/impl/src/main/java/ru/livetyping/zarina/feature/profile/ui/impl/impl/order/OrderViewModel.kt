@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
@@ -55,16 +53,8 @@ internal class OrderViewModel @Inject constructor(
         getOrderFlow(params)
     }
 
-    private val orderResult = orderRequester.flow
-        .conflate()
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
-
     val orderState: StateFlow<OrderState> = combine(
-        orderResult,
+        orderRequester.flow,
         orderRequester.loadingState,
     ) { result, loadingState ->
         val isLoading = loadingState.loadingRequest == OrderRequest.LOADING
