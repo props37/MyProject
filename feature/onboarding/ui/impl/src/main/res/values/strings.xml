@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="onboarding_notifications_setup_title">Настроить уведомления</string>
-    <string name="onboarding_notifications_setup_body">Будь в курсе всех акций и новых поступлений, отслеживай статус заказов и получай лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
-    <string name="onboarding_city_selection_title">Определяем твой город</string>
+    <string name="onboarding_notifications_setup_body">Будьте в курсе всех акций и новых поступлений, отслеживайте статус заказов и получайте лучшие предложения. Изменить параметры можно самостоятельно в настройках уведомлений.</string>
+    <string name="onboarding_city_selection_title">Определяем Ваш город</string>
     <string name="onboarding_city_selection_body">Для актуальной информации об акциях и наличии товаров в розничных магазинах ZARINA.</string>
-    <string name="onboarding_city_confirmation_title">Твой город %1$s?</string>
-    <string name="onboarding_city_confirmation_body">Ты можешь изменить геолокацию сейчас или настроить её позже.</string>
+    <string name="onboarding_city_confirmation_title">Ваш город %1$s?</string>
+    <string name="onboarding_city_confirmation_body">Вы можете изменить геолокацию сейчас или настроить её позже.</string>
     <string name="onboarding_detect_city">Определить город</string>
     <string name="onboarding_yes_correct">Да, верно</string>
     <string name="onboarding_no_change">Нет, изменить</string>

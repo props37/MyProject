@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="wishlist_empty_placeholder_title">В избранном пока что пусто</string>
-    <string name="wishlist_empty_placeholder_body">Товары можно добавить через Каталог. Не теряй их, если временно откладываешь покупку</string>
+    <string name="wishlist_empty_placeholder_body">Товары можно добавить через Каталог. Не теряйте их, если временно откладываете покупку</string>
     <string name="wishlist_go_to_catalog">В каталог</string>
     <string name="wishlist_clearing_error">Не удалось очистить избранное</string>
 </resources>

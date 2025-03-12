@@ -7,10 +7,10 @@
     <string name="sign_up_policies_privacy">политикой конфиденциальности</string>
     <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
     <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
-    <string name="sign_up_policies_error">Ознакомься с политикой конфиденциальности и правилами работы интернет-магазина и подтверди согласие с правилами бонусной программы</string>
-    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введи имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
-    <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повтори попытку</string>
-    <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повтори попытку</string>
-    <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуй снова позже</string>
-    <string name="sign_up_invalid_otp_error">Неправильный код. Повтори попытку</string>
+    <string name="sign_up_policies_error">Ознакомьтесь с политикой конфиденциальности и правилами работы интернет-магазина и подтвердите согласие с правилами бонусной программы</string>
+    <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введите имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
+    <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повторите попытку</string>
+    <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повторите попытку</string>
+    <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуйте снова позже</string>
+    <string name="sign_up_invalid_otp_error">Неправильный код. Повторите попытку</string>
 </resources>
