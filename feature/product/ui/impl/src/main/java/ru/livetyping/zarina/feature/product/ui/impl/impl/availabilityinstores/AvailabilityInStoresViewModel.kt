@@ -60,7 +60,7 @@ internal class AvailabilityInStoresViewModel @Inject constructor(
     private val cityFlow = getUserCityFlow(getCityParams).map { it.getOrNull() }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val availabilityRequester = FlowRequester(AvailabilityRequest) { request ->
+    private val availabilityRequester = FlowRequester(AvailabilityRequest, viewModelScope) { request ->
         selectedOffer.flatMapLatest { selectedOffer ->
             if (selectedOffer != null) {
                 markAsLoading(request)

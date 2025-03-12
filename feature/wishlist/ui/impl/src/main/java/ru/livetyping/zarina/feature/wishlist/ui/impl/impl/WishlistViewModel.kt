@@ -88,7 +88,9 @@ internal class WishlistViewModel @Inject constructor(
         initialValue = TopBarState.getInitial(),
     )
 
-    private val wishlistProductsRequester = FlowRequester<PagingData<ProductShort>, WishlistProductsRequest> {
+    private val wishlistProductsRequester = FlowRequester<PagingData<ProductShort>, WishlistProductsRequest>(
+        coroutineScope = viewModelScope,
+    ) {
         deps.wishlistProductPager.getWishlistProductPagingDataFlow()
     }
 

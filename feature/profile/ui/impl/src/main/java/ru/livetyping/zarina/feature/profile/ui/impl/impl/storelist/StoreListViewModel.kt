@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
@@ -61,20 +60,15 @@ internal class StoreListViewModel @Inject constructor(
         )
     }
 
-    private val storeRequester = FlowRequester(StoreRequest) {
+    private val storeRequester = FlowRequester(StoreRequest, viewModelScope) {
         val params = GetStoresFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
         deps.getStoresFlow(params)
     }
 
-    private val storeResult = storeRequester.flow
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
+    private val storeResultFlow = storeRequester.flow
 
     val mapState: StateFlow<StoreListState> = combine(
-        storeResult,
+        storeResultFlow,
         storeRequester.loadingState,
     ) { storeResult, storeLoadingState ->
         createMapState(storeResult, storeLoadingState)
@@ -88,7 +82,7 @@ internal class StoreListViewModel @Inject constructor(
         deps.getUserCityFlow(GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote()))
 
     val listState: StateFlow<StoreListState> = combine(
-        storeResult,
+        storeResultFlow,
         storeRequester.loadingState,
         userCityResultFlow,
     ) { storeResult, storeLoadingState, userCityResult ->
@@ -99,7 +93,7 @@ internal class StoreListViewModel @Inject constructor(
         initialValue = StoreListState.Loading,
     )
 
-    private val currentLocationRequester = FlowRequester(LocationRequest) {
+    private val currentLocationRequester = FlowRequester(LocationRequest, viewModelScope) {
         deps.getCurrentLocationFlow()
     }
 

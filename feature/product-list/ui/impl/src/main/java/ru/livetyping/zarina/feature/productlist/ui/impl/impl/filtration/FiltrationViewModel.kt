@@ -60,7 +60,7 @@ internal class FiltrationViewModel @AssistedInject constructor(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val categoryInfoRequester = FlowRequester(CategoryInfoRequester) {
+    private val categoryInfoRequester = FlowRequester(CategoryInfoRequester, viewModelScope) {
         filtrationComponent.filters
             .onEach { filtrationComponent.setIsRefreshing(true) }
             .flatMapLatest { filters ->

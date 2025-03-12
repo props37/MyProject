@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
@@ -63,7 +62,7 @@ internal class ProductViewModel @Inject constructor(
     private val productId = MutableStateFlow(initialProductId)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productRequester = FlowRequester(ProductRequest) { request ->
+    private val productRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetProductFlowUseCase.Params(productId)
@@ -71,15 +70,10 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
-    private val productResult = productRequester.flow
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
+    private val productResultFlow = productRequester.flow
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productTotalLookRequester = FlowRequester(ProductRequest) { request ->
+    private val productTotalLookRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetProductTotalLookFlowUseCase.Params(productId)
@@ -88,11 +82,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private val productTotalLookResultFlow = productTotalLookRequester.flow
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
 
     private val productTotalLookStateFlow = combine(
         productTotalLookResultFlow,
@@ -102,7 +91,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val similarProductsRequester = FlowRequester(ProductRequest) { request ->
+    private val similarProductsRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetSimilarProductsFlowUseCase.Params(productId)
@@ -111,11 +100,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private val similarProductsResultFlow = similarProductsRequester.flow
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
 
     private val similarProductsStateFlow = combine(
         similarProductsResultFlow,
@@ -124,7 +108,7 @@ internal class ProductViewModel @Inject constructor(
         productSuggestionsStateBuilder.build(result, loadingState)
     }
 
-    val topBarState: StateFlow<TopBarState> = productResult
+    val topBarState: StateFlow<TopBarState> = productResultFlow
         .map { result ->
             val productName = result.getOrNull()?.name
             TopBarState(productName)
@@ -136,7 +120,7 @@ internal class ProductViewModel @Inject constructor(
         )
 
     val productState: StateFlow<ProductState> = combine(
-        productResult,
+        productResultFlow,
         productRequester.loadingState,
         productTotalLookStateFlow,
         similarProductsStateFlow,
@@ -211,7 +195,7 @@ internal class ProductViewModel @Inject constructor(
 
     private fun shareProduct() {
         viewModelScope.launch {
-            val productShareUrl = productResult.firstOrNull()?.getOrNull()?.shareUrl
+            val productShareUrl = productResultFlow.firstOrNull()?.getOrNull()?.shareUrl
             if (productShareUrl != null) {
                 emitSideEffect(ProductSideEffect.Share(productShareUrl.value))
             }
@@ -244,7 +228,7 @@ internal class ProductViewModel @Inject constructor(
     private fun onCheckAvailabilityInStoresClicked() {
         navigationThrottler.throttle {
             viewModelScope.launch {
-                val product = productResult.firstOrNull()?.getOrNull()
+                val product = productResultFlow.firstOrNull()?.getOrNull()
                 if (product != null) {
                     val action = ProductScreenAction.CheckAvailabilityInStoresClicked(product)
                     emitSideEffect(ProductSideEffect.Navigate(action))

@@ -94,7 +94,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val categoryId = navEntry.getCategoryId()
     private val initialFilters = navEntry.filters?.toProductFilters()
 
-    private val categoryRequester = FlowRequester(CategoryRequest) {
+    private val categoryRequester = FlowRequester(CategoryRequest, viewModelScope) {
         val params = GetCategoryFlowUseCase.Params(
             id = categoryId,
             cachePolicy = CachePolicy.LocalFirstThenRemote(),

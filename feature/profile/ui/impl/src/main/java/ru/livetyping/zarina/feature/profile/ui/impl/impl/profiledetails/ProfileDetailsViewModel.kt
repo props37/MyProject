@@ -69,7 +69,9 @@ internal class ProfileDetailsViewModel @Inject constructor(
     private var deleteAccountJob: Job? = null
 
     private val userParams = GetUserFlowUseCase.Params(CachePolicy.Remote())
-    private val userRequester = FlowRequester<Result<User?>, UserRequest> {
+    private val userRequester = FlowRequester<Result<User?>, UserRequest>(
+        coroutineScope = viewModelScope,
+    ) {
         deps.getUserFlow(userParams)
     }
 

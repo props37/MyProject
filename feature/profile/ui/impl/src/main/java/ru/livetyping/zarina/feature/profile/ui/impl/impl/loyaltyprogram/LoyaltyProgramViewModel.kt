@@ -30,7 +30,7 @@ internal class LoyaltyProgramViewModel @Inject constructor(
     private val getLoyaltyCardUseCaseParams =
         GetLoyaltyCardFlowUseCase.Params(CachePolicy.Remote())
 
-    private val loyaltyCardRequester = FlowRequester(LoyaltyCardRequest) {
+    private val loyaltyCardRequester = FlowRequester(LoyaltyCardRequest, viewModelScope) {
         getLoyaltyCardFlow(getLoyaltyCardUseCaseParams)
     }
 
