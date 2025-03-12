@@ -8,4 +8,5 @@
     <string name="product_delivery_and_payment_info_delivery_payment_url" translatable="false">https://zarina.ru/help/delivery-and-payment/</string>
     <string name="product_suggestions_title_total_look">Дополнить образ</string>
     <string name="product_suggestions_title_similar_products">Тебе может понравиться</string>
+    <string name="product_is_not_available">Товара нет в наличии в магазинах</string>
 </resources>

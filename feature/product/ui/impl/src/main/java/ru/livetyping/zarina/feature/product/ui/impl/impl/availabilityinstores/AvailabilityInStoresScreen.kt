@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,8 +21,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.SizeRow
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.StoreList
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
@@ -82,6 +85,21 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // TODO: [Top] Implement
+        if (availabilityInStoresState.city != null) {
+            ZarinaItem {
+                Text(
+                    text = availabilityInStoresState.city.name,
+                    style = UiKitTheme.typography.secondary.bold,
+                )
+            }
+        }
+
+        StoreList(
+            state = availabilityInStoresState.storeListState,
+            onErrorRefreshClicked = {
+                onAvailabilityInStoresEvent(AvailabilityInStoresEvent.ErrorRefreshClicked)
+            },
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }

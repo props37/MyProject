@@ -7,4 +7,5 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 internal data class AvailabilityInStoresState(
     val sizeState: SizeState,
     val city: City?,
+    val storeListState: StoreListState,
 )

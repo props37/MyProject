@@ -153,6 +153,11 @@
     <string name="res_sorting_price_low_to_high">По возрастанию цены</string>
     <string name="res_sorting_price_high_to_low">По убыванию цены</string>
 
+    <string name="res_availability_amount_last_chance">Последний шанс</string>
+    <string name="res_availability_amount_little">Мало</string>
+    <string name="res_availability_amount_enough">Достаточно</string>
+    <string name="res_availability_amount_a_lot">Много</string>
+
     <plurals name="res_product_count">
         <item quantity="zero">%1$s товаров</item>
         <item quantity="one">%1$s товар</item>
