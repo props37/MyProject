@@ -165,7 +165,7 @@ fun ZarinaBottomNavBar(
                         color = topBorderColor,
                         start = Offset.Zero,
                         end = Offset(size.width, 0f),
-                        strokeWidth = 1.dp.toPx(),
+                        strokeWidth = 0.5.dp.toPx(),
                     )
                 }
                 .selectableGroup()
