@@ -85,7 +85,7 @@
     <string name="product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
     <string name="product_removing_from_cart_error">Не удалось удалить товар из корзины</string>
     <string name="product_changing_count_in_cart_error">Не удалось изменить количество товара</string>
-    <string name="product_changing_count_in_cart_count_not_enough_product_error">Такого количества товара нет. Выбери другое количество</string>
+    <string name="product_changing_count_in_cart_count_not_enough_product_error">Такого количества товара нет. Выберите другое количество</string>
     <string name="go_to_catalog">В каталог</string>
     <string name="price_in_rubles_for_one_string">%1$s₽ / шт</string>
     <string name="change_city">Изменить город</string>
@@ -99,7 +99,7 @@
     <string name="delete">Удалить</string>
     <string name="to_favorites">В избранное</string>
     <string name="in_favorites">В избранном</string>
-    <string name="select_count">Выбери количество</string>
+    <string name="select_count">Выберите количество</string>
     <string name="favorites_clearing_error">Не удалось очистить избранное</string>
     <string name="sign_in_or_sign_up">Войдите в аккаунт или зарегистрируйтесь</string>
     <string name="sign_in">Войти</string>
@@ -292,7 +292,7 @@
     <string name="search_streets">Поиск по улицам</string>
     <string name="search_building">Поиск по домам</string>
     <string name="search_apartments_slash_offices">Поиск по квартирам/офисам</string>
-    <string name="choose_delivery_type">Выбери тип доставки</string>
+    <string name="choose_delivery_type">Выберите тип доставки</string>
     <string name="show_details">Показать подробности</string>
     <string name="delivery_date">Дата доставки</string>
     <string name="delivery_time">Время доставки</string>
@@ -322,7 +322,7 @@
     <string name="customer">Покупатель</string>
     <string name="your_order">Ваш заказ</string>
     <string name="payment_method">Способ оплаты</string>
-    <string name="select_payment_method">Выбери способ оплаты</string>
+    <string name="select_payment_method">Выберите способ оплаты</string>
     <string name="pay">Оплатить</string>
     <string name="payment_method_not_selected_error">Сначала выберите способ оплаты</string>
     <string name="cart_has_changed_error">Состав заказ изменился. Проверьте изменения и попробуйте снова</string>
