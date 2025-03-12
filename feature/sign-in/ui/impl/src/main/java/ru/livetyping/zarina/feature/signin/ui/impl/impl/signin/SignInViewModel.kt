@@ -172,8 +172,8 @@ internal class SignInViewModel @Inject constructor(
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> Unit
-            LifecycleEvent.ON_START -> onScreenStarted()
+            LifecycleEvent.ON_CREATE -> onScreenCreated()
+            LifecycleEvent.ON_START -> Unit
             LifecycleEvent.ON_RESUME -> Unit
         }
     }
@@ -223,7 +223,7 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun onScreenStarted() {
+    private fun onScreenCreated() {
         if (credentialManagerJob?.isActive == true) return
         credentialManagerJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
