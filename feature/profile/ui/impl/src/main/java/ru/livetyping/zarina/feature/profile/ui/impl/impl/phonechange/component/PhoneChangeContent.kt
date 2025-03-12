@@ -9,20 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillType
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
@@ -81,10 +81,7 @@ internal fun PhoneChangeContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .focusRequester(focusRequester)
-                .autofill(
-                    autofillType = AutofillType.PhoneNumber,
-                    onFilled = state.phoneTextFieldState::setTextAndPlaceCursorAtEnd,
-                ),
+                .semantics { contentType = ContentType.PhoneNumber },
         )
 
         Spacer(modifier = Modifier.height(32.dp))

@@ -16,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
@@ -29,12 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillType
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
-import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
@@ -192,10 +192,7 @@ private fun ColumnScope.PersonalDataFields(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .focusRequester(nameFocusRequester)
-            .autofill(
-                autofillType = AutofillType.PersonFirstName,
-                onFilled = nameTextFieldState::setTextAndPlaceCursorAtEnd,
-            ),
+            .semantics { contentType = ContentType.PersonFirstName },
     )
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -265,10 +262,7 @@ private fun ColumnScope.PersonalDataFields(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .focusRequester(emailFocusRequester)
-            .autofill(
-                autofillType = AutofillType.EmailAddress,
-                onFilled = emailTextFieldState::setTextAndPlaceCursorAtEnd,
-            ),
+            .semantics { contentType = ContentType.NewUsername },
     )
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -284,10 +278,7 @@ private fun ColumnScope.PersonalDataFields(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .autofill(
-                autofillType = AutofillType.PhoneNumber,
-                onFilled = phoneTextFieldState::setTextAndPlaceCursorAtEnd,
-            ),
+            .semantics { contentType = ContentType.PhoneNumber },
     )
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -303,10 +294,7 @@ private fun ColumnScope.PersonalDataFields(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .autofill(
-                autofillType = AutofillType.NewPassword,
-                onFilled = passwordTextFieldState::setTextAndPlaceCursorAtEnd,
-            ),
+            .semantics { contentType = ContentType.NewPassword },
     )
 }
 

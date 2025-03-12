@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,20 +30,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillType
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
-import ru.livetyping.zarina.core.uicompose.autofill.autofill
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
@@ -181,12 +181,7 @@ private fun SignInByEmail(
                 .onFocusChanged {
                     if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Email
                 }
-                .autofill(
-                    autofillType = AutofillType.EmailAddress,
-                    onFilled = {
-                        emailTextFieldState.setTextAndPlaceCursorAtEnd(it)
-                    },
-                ),
+                .semantics { contentType = ContentType.Username },
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -209,12 +204,7 @@ private fun SignInByEmail(
                 .onFocusChanged {
                     if (it.isFocused) lastFocusTarget = SignInByEmailFocusTarget.Password
                 }
-                .autofill(
-                    autofillType = AutofillType.Password,
-                    onFilled = {
-                        passwordTextFieldState.setTextAndPlaceCursorAtEnd(it)
-                    },
-                ),
+                .semantics { contentType = ContentType.Password },
         )
 
         ZarinaButton(
@@ -279,12 +269,7 @@ private fun SignInByPhone(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .focusRequester(focusRequester)
-                .autofill(
-                    autofillType = AutofillType.PhoneNumber,
-                    onFilled = {
-                        phoneTextFieldState.setTextAndPlaceCursorAtEnd(it)
-                    },
-                ),
+                .semantics { contentType = ContentType.PhoneNumber },
         )
 
         Spacer(modifier = Modifier.height(SignInBottomBlockTopPadding))
