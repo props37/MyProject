@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.Size
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.SizeStateBuilder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,40 +37,29 @@ internal class AvailabilityInStoresViewModel @Inject constructor(
     )
     private val product = navEntry.product.toProductShort()
 
-    private val selectedOffer = MutableStateFlow<ProductOffer?>(
-        value = getInitiallySelectedOffer(product.offers)
-    )
+    private val selectedOffer = MutableStateFlow(getInitiallySelectedOffer(product.offers))
 
-    private val sizes = selectedOffer.mapState(
+    private val sizeStateBuilder = SizeStateBuilder()
+    private val sizeState = selectedOffer.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
     ) { selectedOffer ->
-        val heightSet = product.offers.mapTo(mutableSetOf()) { it.height }
-        val isHeightVisible = heightSet.size > 1
-        product.offers
-            .map { offer ->
-                Size(
-                    offer = offer,
-                    isHeightVisible = isHeightVisible,
-                    isSelected = offer.barcode == selectedOffer?.barcode,
-                )
-            }
-            .toImmutableList()
+        sizeStateBuilder.build(product.offers, selectedOffer)
     }
 
     private val getCityParams = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
     private val cityFlow = getUserCityFlow(getCityParams).map { it.getOrNull() }
 
     val availabilityInStoresState: StateFlow<AvailabilityInStoresState> = combine(
-        sizes,
+        sizeState,
         cityFlow,
-    ) { sizes, city ->
-        AvailabilityInStoresState(sizes, city)
+    ) { sizeState, city ->
+        AvailabilityInStoresState(sizeState, city)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = AvailabilityInStoresState(
-            sizes = sizes.value,
+            sizeState = sizeState.value,
             city = null,
         ),
     )

@@ -10,14 +10,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.Size
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.SizeState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun SizeRow(
-    sizes: ImmutableList<Size>,
+    state: SizeState.Success,
     onSizeClicked: (Size) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -27,7 +27,7 @@ internal fun SizeRow(
         modifier = modifier,
     ) {
         items(
-            items = sizes,
+            items = state.sizes,
             key = { it.offer.barcode.value },
         ) { size ->
             ZarinaTag(

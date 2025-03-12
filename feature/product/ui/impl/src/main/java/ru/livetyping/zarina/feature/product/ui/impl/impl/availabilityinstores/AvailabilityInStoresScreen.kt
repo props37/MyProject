@@ -25,6 +25,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.co
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.SizeState
 
 @Composable
 internal fun AvailabilityInStoresScreen(
@@ -70,9 +71,9 @@ private fun ScreenContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (availabilityInStoresState.sizes.size > 1) {
+        if (availabilityInStoresState.sizeState is SizeState.Success) {
             SizeRow(
-                sizes = availabilityInStoresState.sizes,
+                state = availabilityInStoresState.sizeState,
                 onSizeClicked = { size ->
                     onAvailabilityInStoresEvent(AvailabilityInStoresEvent.SizeClicked(size))
                 },
