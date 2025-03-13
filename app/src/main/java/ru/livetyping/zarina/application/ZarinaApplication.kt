@@ -22,11 +22,9 @@ class ZarinaApplication : Application() {
         appMetricaAppExtension.install(this)
     }
 
-    private companion object {
-        private const val TAG = "ZarinaApplication"
-    }
-
     companion object {
         const val RELEASE_PACKAGE_NAME = "ru.livetyping.zarina"
+
+        private const val TAG = "ZarinaApplication"
     }
 }
