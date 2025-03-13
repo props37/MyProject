@@ -62,7 +62,7 @@ firebase-bom = "33.10.0"
 
 firebase-performance = "1.4.2"
 mindbox = "2.11.2"
-appMetrica = "7.6.0"
+appMetrica = "7.7.0"
 
 junit = "4.13.2"
 
