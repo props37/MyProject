@@ -6,13 +6,13 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
 import androidx.core.graphics.drawable.toBitmapOrNull
+import androidx.core.net.toUri
 import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.pushes.MindboxRemoteMessage
@@ -93,7 +93,11 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             setContentText(message.description)
             setStyle(getNotificationStyle(message))
             val pendingIntent = message.pushLink?.let {
-                getUrlPendingIntent(it)
+                getPendingIntent(
+                    actionUrl = it,
+                    uniquePushKey = message.uniqueKey,
+                    uniquePushButtonKey = null,
+                )
             } ?: getMainActivityPendingIntent()
             setContentIntent(pendingIntent)
             setAutoCancel(true)
@@ -130,7 +134,11 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
         return message.pushActions.mapNotNull { action ->
             if (action.text != null && action.url != null) {
                 val pendingIntent = action.url?.let {
-                    getUrlPendingIntent(it)
+                    getPendingIntent(
+                        actionUrl = it,
+                        uniquePushKey = message.uniqueKey,
+                        uniquePushButtonKey = action.uniqueKey,
+                    )
                 } ?: getMainActivityPendingIntent()
                 NotificationCompat.Action.Builder(null, action.text, pendingIntent)
                     .build()
@@ -140,18 +148,51 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    private fun getUrlPendingIntent(actionUrl: String): PendingIntent? {
+    private fun getPendingIntent(
+        actionUrl: String,
+        uniquePushKey: String?,
+        uniquePushButtonKey: String?,
+    ): PendingIntent? {
+        return when {
+            AppStorePushManager.isAppStorePush(actionUrl) -> getAppStorePendingIntent()
+            else -> getZarinaPendingIntent(actionUrl, uniquePushKey, uniquePushButtonKey)
+        }
+    }
+
+    private fun getZarinaPendingIntent(
+        actionUrl: String,
+        uniquePushKey: String?,
+        uniquePushButtonKey: String?,
+    ): PendingIntent? {
         val intent = Intent(
             /* action = */ Intent.ACTION_VIEW,
-            /* uri = */ Uri.parse(actionUrl),
+            /* uri = */ actionUrl.toUri(),
             /* packageContext = */ this,
             /* cls = */ MainActivity::class.java,
         )
+        if (uniquePushKey != null) {
+            intent.putExtra(MINDBOX_EXTRA_UNIQ_PUSH_KEY, uniquePushKey)
+        }
+        if (uniquePushButtonKey != null) {
+            intent.putExtra(MINDBOX_EXTRA_UNIQ_PUSH_BUTTON_KEY, uniquePushButtonKey)
+        }
+
         val taskBuilder = TaskStackBuilder.create(this).apply {
             addNextIntentWithParentStack(intent)
         }
         return taskBuilder.getPendingIntent(
             /* requestCode = */ 0,
+            /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+    }
+
+    private fun getAppStorePendingIntent(): PendingIntent? {
+        val uri = AppStorePushManager.getAppStorePageUri(this)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        return PendingIntent.getActivity(
+            /* context = */ this,
+            /* requestCode = */ 0,
+            /* intent = */ intent,
             /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
     }
@@ -178,6 +219,11 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     companion object {
+        // Mindbox extra keys used to track push clicks
+        // Copied from cloud.mindbox.mobile_sdk.pushes.PushNotificationManager since they are private
+        private const val MINDBOX_EXTRA_UNIQ_PUSH_KEY = "uniq_push_key"
+        private const val MINDBOX_EXTRA_UNIQ_PUSH_BUTTON_KEY = "uniq_push_button_key"
+
         private const val TAG = "MindboxFirebaseMessagingService"
     }
 }
