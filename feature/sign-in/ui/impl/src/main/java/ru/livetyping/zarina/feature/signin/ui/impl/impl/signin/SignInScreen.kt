@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.signin
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTopBar
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypePager
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypeSelector
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
@@ -74,6 +76,11 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navActions = navActions,
     )
+
+    val isBackHandlerEnabled = signInState.signInByEmailState is SignInByEmailState.PhoneConfirmation
+    BackHandler(isBackHandlerEnabled) {
+        onSignInEvent(SignInEvent.BackClicked)
+    }
 
     Box {
         Column(

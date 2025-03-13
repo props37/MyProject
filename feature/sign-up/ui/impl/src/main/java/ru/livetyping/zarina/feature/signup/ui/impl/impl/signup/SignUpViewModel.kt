@@ -270,7 +270,7 @@ internal class SignUpViewModel @Inject constructor(
 
         deps.smsCodeRetriever.start(
             sender = ZarinaSms.SENDER,
-            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN,
         )
 
         signUpJob = viewModelScope.launch {

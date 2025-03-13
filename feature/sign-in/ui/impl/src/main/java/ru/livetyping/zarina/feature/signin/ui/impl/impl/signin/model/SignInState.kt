@@ -5,10 +5,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 internal data class SignInState(
-    val emailTextFieldState: TextFieldState,
-    val isEmailInvalid: Boolean,
-    val passwordTextFieldState: TextFieldState,
-    val isPasswordInvalid: Boolean,
+    val signInByEmailState: SignInByEmailState,
     val phoneTextFieldState: TextFieldState,
     val isPhoneInvalid: Boolean,
     val isSignInButtonLoading: Boolean,

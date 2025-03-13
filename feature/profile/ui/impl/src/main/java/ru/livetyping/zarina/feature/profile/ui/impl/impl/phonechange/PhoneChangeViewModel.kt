@@ -154,7 +154,7 @@ internal class PhoneChangeViewModel @Inject constructor(
 
         smsCodeRetriever.start(
             sender = ZarinaSms.SENDER,
-            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN,
         )
 
         requestPhoneChangeJob = viewModelScope.launch {

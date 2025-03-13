@@ -27,6 +27,7 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
 import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
+import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPasswordException
@@ -34,8 +35,10 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneNumberExc
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
+import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInPhoneConfirmationUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.core.domain.validation.PhoneValidator
 import ru.livetyping.zarina.core.domain.validation.SignInValidator
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
@@ -52,6 +55,7 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.R
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
@@ -70,6 +74,7 @@ internal class SignInViewModel @Inject constructor(
 
     private var credentialManagerJob: Job? = null
     private var signInJob: Job? = null
+    private var requestPhoneConfirmationJob: Job? = null
 
     private val signInTypes = SignInType.getAll().toImmutableList()
     private val currentSignInType = MutableStateFlow(SignInType.EMAIL)
@@ -108,24 +113,65 @@ internal class SignInViewModel @Inject constructor(
 
     private val isPhoneInvalid = MutableStateFlow(false)
 
+    private val signInByEmailStep = MutableStateFlow(SignInByEmailStep.MAIN)
+
+    private val phoneToConfirmTextFieldState by savedStateHandle.saveable(
+        saver = TextFieldState.Saver,
+        init = { TextFieldState(PHONE_INITIAL_TEXT) },
+    )
+
+    private val isPhoneToConfirmInvalid = MutableStateFlow(false)
+
     private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
     val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
-    val signInState: StateFlow<SignInState> = combine(
+    private val signInByEmailState = combine(
+        signInByEmailStep,
         isEmailInvalid,
         isPasswordInvalid,
+        isPhoneToConfirmInvalid,
+        operationTracker.ongoingOperationKeys,
+    ) { step, isEmailInvalid, isPasswordInvalid, isPhoneToConfirmInvalid, ongoingOperations ->
+        when (step) {
+            SignInByEmailStep.MAIN -> {
+                SignInByEmailState.Main(
+                    emailTextFieldState = emailTextFieldState,
+                    isEmailInvalid = isEmailInvalid,
+                    passwordTextFieldState = passwordTextFieldState,
+                    isPasswordInvalid = isPasswordInvalid,
+                )
+            }
+
+            SignInByEmailStep.PHONE_CONFIRMATION -> {
+                val isGetConfirmationCodeButtonLoading =
+                    RequestPhoneConfirmationOperation in ongoingOperations
+                SignInByEmailState.PhoneConfirmation(
+                    phoneTextFieldState = phoneToConfirmTextFieldState,
+                    isPhoneInvalid = isPhoneToConfirmInvalid,
+                    isGetConfirmationCodeButtonLoading = isGetConfirmationCodeButtonLoading,
+                )
+            }
+        }
+    }
+
+    private val initialSignInByEmailState = SignInByEmailState.Main(
+        emailTextFieldState = emailTextFieldState,
+        isEmailInvalid = isEmailInvalid.value,
+        passwordTextFieldState = passwordTextFieldState,
+        isPasswordInvalid = isPasswordInvalid.value,
+    )
+
+    val signInState: StateFlow<SignInState> = combine(
+        signInByEmailState,
         isPhoneInvalid,
         operationTracker.ongoingOperationKeys,
         yandexCaptchaState,
-    ) { isEmailInvalid, isPasswordInvalid, isPhoneInvalid, ongoingOperations, yandexCaptchaState ->
+    ) { signInByEmailState, isPhoneInvalid, ongoingOperations, yandexCaptchaState ->
         val isSignInButtonLoading = SignInOperation in ongoingOperations
                 || yandexCaptchaState is YandexCaptchaState.Started
 
         SignInState(
-            emailTextFieldState = emailTextFieldState,
-            isEmailInvalid = isEmailInvalid,
-            passwordTextFieldState = passwordTextFieldState,
-            isPasswordInvalid = isPasswordInvalid,
+            signInByEmailState = signInByEmailState,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid,
             isSignInButtonLoading = isSignInButtonLoading,
@@ -134,10 +180,7 @@ internal class SignInViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = SignInState(
-            emailTextFieldState = emailTextFieldState,
-            isEmailInvalid = isEmailInvalid.value,
-            passwordTextFieldState = passwordTextFieldState,
-            isPasswordInvalid = isPasswordInvalid.value,
+            signInByEmailState = initialSignInByEmailState,
             phoneTextFieldState = phoneTextFieldState,
             isPhoneInvalid = isPhoneInvalid.value,
             isSignInButtonLoading = false,
@@ -167,6 +210,7 @@ internal class SignInViewModel @Inject constructor(
             SignInEvent.ForgotPasswordClicked -> onForgotPasswordClicked()
             SignInEvent.SignInClicked -> onSignInClicked()
             SignInEvent.SignUpClicked -> onSignUpClicked()
+            SignInEvent.GetPhoneConfirmationCodeClicked -> onGetPhoneConfirmationCodeClicked()
         }
     }
 
@@ -189,6 +233,7 @@ internal class SignInViewModel @Inject constructor(
                 when (event.reason) {
                     CaptchaReason.SIGN_IN_BY_EMAIL -> signInByEmail(event.token)
                     CaptchaReason.SIGN_IN_BY_PHONE -> signInByPhone(event.token)
+                    CaptchaReason.PHONE_CONFIRMATION -> requestPhoneConfirmation(event.token)
                     null -> Unit
                 }
             }
@@ -196,9 +241,22 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun onBackClicked() {
-        navigationThrottler.throttle {
-            val action = SignInScreenAction.BackClicked
-            emitSideEffect(SignInSideEffect.Navigate(action))
+        if (signInByEmailStep.value == SignInByEmailStep.PHONE_CONFIRMATION) {
+            requestPhoneConfirmationJob?.cancel()
+            val captchaState = yandexCaptchaState.value
+            if (
+                captchaState is YandexCaptchaState.Started
+                && captchaState.reason == CaptchaReason.PHONE_CONFIRMATION
+            ) {
+                _yandexCaptchaState.value = YandexCaptchaState.None
+            }
+            signInByEmailStep.value = SignInByEmailStep.MAIN
+            phoneToConfirmTextFieldState.setTextAndPlaceCursorAtEnd(PHONE_INITIAL_TEXT)
+        } else {
+            navigationThrottler.throttle {
+                val action = SignInScreenAction.BackClicked
+                emitSideEffect(SignInSideEffect.Navigate(action))
+            }
         }
     }
 
@@ -221,6 +279,10 @@ internal class SignInViewModel @Inject constructor(
             val action = SignInScreenAction.SignUpClicked
             emitSideEffect(SignInSideEffect.Navigate(action))
         }
+    }
+
+    private fun onGetPhoneConfirmationCodeClicked() {
+        startPhoneConfirmationRequest()
     }
 
     private fun onScreenCreated() {
@@ -276,6 +338,23 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
+    private fun startPhoneConfirmationRequest() {
+        if (requestPhoneConfirmationJob?.isActive == true) return
+
+        try {
+            val phone = PhoneNumber.create(phoneToConfirmTextFieldState.text.toString())
+            val phoneValidator = PhoneValidator()
+            phoneValidator.validate(phone)
+            requestPhoneConfirmationJob = viewModelScope.launch {
+                showYandexCaptcha(CaptchaReason.PHONE_CONFIRMATION)
+            }
+        } catch (e: PhoneNumberException) {
+            isPhoneToConfirmInvalid.value = true
+            val text = Text.Resource(R.string.sign_in_enter_valid_phone_number)
+            showZarinaErrorToast(text)
+        }
+    }
+
     private fun signInByEmail(yandexCaptchaToken: YandexCaptchaToken) {
         if (signInJob?.isActive == true) return
 
@@ -285,16 +364,8 @@ internal class SignInViewModel @Inject constructor(
                 val password = passwordTextFieldState.text.toString()
                 val params = SignInByEmailUseCase.Params(email, password, yandexCaptchaToken)
                 deps.signInByEmail(params)
-                    .onSuccess {
-                        if (showSaveCredentialPrompt) {
-                            deps.credentialManager.createCredential(
-                                username = email.value,
-                                password = password,
-                            )
-                        }
-
-                        val action = SignInScreenAction.UserSignedIn
-                        emitSideEffect(SignInSideEffect.Navigate(action))
+                    .onSuccess { authResult ->
+                        handleSignInByEmailSuccess(email, password, authResult)
                     }
                     .onFailure(::handleSignInException)
             }
@@ -308,7 +379,7 @@ internal class SignInViewModel @Inject constructor(
             operationTracker.track(SignInOperation) {
                 deps.smsCodeRetriever.start(
                     sender = ZarinaSms.SENDER,
-                    codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN_ZARINA,
+                    codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN,
                 )
                 val phone = PhoneNumber.create(phoneTextFieldState.text.toString())
                 val params = SignInByPhoneUseCase.Params(phone, yandexCaptchaToken)
@@ -318,6 +389,64 @@ internal class SignInViewModel @Inject constructor(
                         emitSideEffect(SignInSideEffect.Navigate(action))
                     }
                     .onFailure(::handleSignInException)
+            }
+        }
+    }
+
+    private fun requestPhoneConfirmation(yandexCaptchaToken: YandexCaptchaToken) {
+        if (requestPhoneConfirmationJob?.isActive == true) return
+
+        deps.smsCodeRetriever.start(
+            sender = ZarinaSms.SENDER,
+            codeRegexPattern = ZarinaSms.CODE_REGEX_PATTERN,
+        )
+
+        requestPhoneConfirmationJob = viewModelScope.launch {
+            operationTracker.track(RequestPhoneConfirmationOperation) {
+                val phone = PhoneNumber.create(phoneToConfirmTextFieldState.text.toString())
+                val params = RequestSignInPhoneConfirmationUseCase.Params(phone, yandexCaptchaToken)
+                deps.requestSignInPhoneConfirmation(params)
+                    .onSuccess {
+                        signInByEmailStep.value = SignInByEmailStep.MAIN
+                        val action = SignInScreenAction.PhoneConfirmationNeeded(phone)
+                        emitSideEffect(SignInSideEffect.Navigate(action))
+                    }
+                    .onFailure {
+                        val text = Text.Resource(R.string.sign_in_phone_confirmation_error)
+                        showZarinaErrorToast(text)
+                    }
+            }
+        }
+    }
+
+    private suspend fun handleSignInByEmailSuccess(
+        email: Email,
+        password: String,
+        authResult: AuthResult,
+    ) {
+        if (showSaveCredentialPrompt) {
+            deps.credentialManager.createCredential(
+                username = email.value,
+                password = password,
+            )
+        }
+
+        val phoneToConfirm = authResult.phoneConfirmation?.phone
+        when {
+            !authResult.isPhoneConfirmationNeeded() -> {
+                val action = SignInScreenAction.UserSignedIn
+                emitSideEffect(SignInSideEffect.Navigate(action))
+            }
+
+            authResult.isPhoneConfirmationNeeded() && phoneToConfirm != null -> {
+                phoneToConfirmTextFieldState.setTextAndPlaceCursorAtEnd(phoneToConfirm.value)
+                signInByEmailStep.value = SignInByEmailStep.PHONE_CONFIRMATION
+                startPhoneConfirmationRequest()
+            }
+
+            else -> {
+                phoneToConfirmTextFieldState.setTextAndPlaceCursorAtEnd(PHONE_INITIAL_TEXT)
+                signInByEmailStep.value = SignInByEmailStep.PHONE_CONFIRMATION
             }
         }
     }
@@ -407,6 +536,9 @@ internal class SignInViewModel @Inject constructor(
         phoneTextFieldState.textAsFlow()
             .onEach { isPhoneInvalid.value = false }
             .launchIn(viewModelScope)
+        phoneToConfirmTextFieldState.textAsFlow()
+            .onEach { isPhoneToConfirmInvalid.value = false }
+            .launchIn(viewModelScope)
     }
 
     private fun showZarinaErrorToast(text: Text) {
@@ -414,11 +546,16 @@ internal class SignInViewModel @Inject constructor(
         emitSideEffect(SignInSideEffect.ShowZarinaToast(toastMessage))
     }
 
+    enum class SignInByEmailStep { MAIN, PHONE_CONFIRMATION }
+
     private data object SignInOperation : OperationKey
+
+    private data object RequestPhoneConfirmationOperation : OperationKey
 
     private enum class CaptchaReason : YandexCaptchaReason {
         SIGN_IN_BY_EMAIL,
         SIGN_IN_BY_PHONE,
+        PHONE_CONFIRMATION,
     }
 
     private companion object {

@@ -8,4 +8,6 @@ internal sealed interface SignInEvent {
     data object SignInClicked : SignInEvent
 
     data object SignUpClicked : SignInEvent
+
+    data object GetPhoneConfirmationCodeClicked : SignInEvent
 }

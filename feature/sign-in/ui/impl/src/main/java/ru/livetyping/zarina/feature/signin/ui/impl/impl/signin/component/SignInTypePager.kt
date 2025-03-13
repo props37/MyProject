@@ -45,11 +45,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
+import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
@@ -58,6 +60,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signin.ui.impl.R
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
@@ -82,14 +85,14 @@ internal fun SignInTypePager(
         when (signInType) {
             SignInType.EMAIL -> {
                 SignInByEmail(
-                    emailTextFieldState = signInState.emailTextFieldState,
-                    isEmailInvalid = signInState.isEmailInvalid,
-                    passwordTextFieldState = signInState.passwordTextFieldState,
-                    isPasswordInvalid = signInState.isPasswordInvalid,
-                    onForgotPasswordClicked = { onSignInEvent(SignInEvent.ForgotPasswordClicked) },
+                    state = signInState.signInByEmailState,
                     isSignInButtonLoading = signInState.isSignInButtonLoading,
+                    onForgotPasswordClicked = { onSignInEvent(SignInEvent.ForgotPasswordClicked) },
                     onSignInClicked = { onSignInEvent(SignInEvent.SignInClicked) },
                     onSignUpClicked = { onSignInEvent(SignInEvent.SignUpClicked) },
+                    onGetConfirmationCodeClicked = {
+                        onSignInEvent(SignInEvent.GetPhoneConfirmationCodeClicked)
+                    },
                     windowInsetsProvider = windowInsetsProvider,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -110,14 +113,58 @@ internal fun SignInTypePager(
     }
 }
 
+@Suppress("NAME_SHADOWING")
 @Composable
 private fun SignInByEmail(
-    emailTextFieldState: TextFieldState,
-    isEmailInvalid: Boolean,
-    passwordTextFieldState: TextFieldState,
-    isPasswordInvalid: Boolean,
-    onForgotPasswordClicked: () -> Unit,
+    state: SignInByEmailState,
     isSignInButtonLoading: Boolean,
+    onForgotPasswordClicked: () -> Unit,
+    onSignInClicked: () -> Unit,
+    onSignUpClicked: () -> Unit,
+    onGetConfirmationCodeClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
+    modifier: Modifier = Modifier,
+) {
+    Crossfade(
+        targetState = state,
+        contentKey = { state ->
+            when (state) {
+                is SignInByEmailState.Main -> SignInByEmailContentKey.Main
+                is SignInByEmailState.PhoneConfirmation -> SignInByEmailContentKey.PhoneConfirmation
+            }
+        },
+        modifier = modifier,
+    ) { state ->
+        when (state) {
+            is SignInByEmailState.Main -> {
+                SignInByEmailMain(
+                    state = state,
+                    isSignInButtonLoading = isSignInButtonLoading,
+                    onForgotPasswordClicked = onForgotPasswordClicked,
+                    onSignInClicked = onSignInClicked,
+                    onSignUpClicked = onSignUpClicked,
+                    windowInsetsProvider = windowInsetsProvider,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+
+            is SignInByEmailState.PhoneConfirmation -> {
+                SignInByEmailPhoneConfirmation(
+                    state = state,
+                    onGetConfirmationCodeClicked = onGetConfirmationCodeClicked,
+                    windowInsetsProvider = windowInsetsProvider,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SignInByEmailMain(
+    state: SignInByEmailState.Main,
+    isSignInButtonLoading: Boolean,
+    onForgotPasswordClicked: () -> Unit,
     onSignInClicked: () -> Unit,
     onSignUpClicked: () -> Unit,
     windowInsetsProvider: @Composable () -> WindowInsets,
@@ -144,10 +191,10 @@ private fun SignInByEmail(
         val keyboardController = LocalSoftwareKeyboardController.current
 
         ZarinaTextField(
-            state = emailTextFieldState,
-            isError = isEmailInvalid,
+            state = state.emailTextFieldState,
+            isError = state.isEmailInvalid,
             label = {
-                val labelResId = if (emailTextFieldState.text.isNotEmpty()) {
+                val labelResId = if (state.emailTextFieldState.text.isNotEmpty()) {
                     stringResource(RCommon.string.res_email)
                 } else ""
 
@@ -158,9 +205,9 @@ private fun SignInByEmail(
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
-                    isVisible = emailTextFieldState.text.isNotEmpty(),
+                    isVisible = state.emailTextFieldState.text.isNotEmpty(),
                     onClick = {
-                        emailTextFieldState.clearText()
+                        state.emailTextFieldState.clearText()
                         if (emailFocusRequester.tryRequestFocus()) {
                             keyboardController?.show()
                         }
@@ -186,8 +233,8 @@ private fun SignInByEmail(
         Spacer(modifier = Modifier.height(16.dp))
 
         ZarinaPasswordTextField(
-            state = passwordTextFieldState,
-            isError = isPasswordInvalid,
+            state = state.passwordTextFieldState,
+            isError = state.isPasswordInvalid,
             keyboardOptions = remember {
                 ZarinaPasswordTextFieldDefaults.KeyboardOptions.copy(
                     imeAction = ImeAction.Done,
@@ -228,6 +275,61 @@ private fun SignInByEmail(
             onSignUpClicked = onSignUpClicked,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
+
+        BottomSpacer(windowInsets = windowInsetsProvider())
+    }
+}
+
+@Composable
+private fun SignInByEmailPhoneConfirmation(
+    state: SignInByEmailState.PhoneConfirmation,
+    onGetConfirmationCodeClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
+    modifier: Modifier = Modifier,
+) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        withFrameMillis {}
+        focusRequester.tryRequestFocus()
+    }
+
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        Spacer(modifier = Modifier.height(TopPadding))
+
+        ZarinaPhoneTextField(
+            state = state.phoneTextFieldState,
+            isError = state.isPhoneInvalid,
+            label = {
+                val labelResId = if (state.phoneTextFieldState.text.isNotEmpty()) {
+                    stringResource(RCommon.string.res_phone)
+                } else ""
+
+                Text(text = labelResId)
+            },
+            placeholder = {
+                Text(text = stringResource(RCommon.string.res_phone))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .focusRequester(focusRequester)
+                .semantics { contentType = ContentType.PhoneNumber },
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+
+        ZarinaButton(
+            onClick = onGetConfirmationCodeClicked,
+            isLoading = state.isGetConfirmationCodeButtonLoading,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        ) {
+            Text(text = stringResource(R.string.sign_in_get_code).uppercase())
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        YandexCaptchaPolicies(modifier = Modifier.padding(horizontal = 16.dp))
 
         BottomSpacer(windowInsets = windowInsetsProvider())
     }
@@ -375,5 +477,10 @@ private fun BottomSpacer(
 
 private val TopPadding: Dp get() = 32.dp
 private val SignInBottomBlockTopPadding: Dp get() = 32.dp
+
+private enum class SignInByEmailContentKey {
+    Main,
+    PhoneConfirmation,
+}
 
 private enum class SignInByEmailFocusTarget { Email, Password }

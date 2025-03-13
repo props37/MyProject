@@ -70,6 +70,11 @@ internal interface UserRemoteDataSource {
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
 
+    suspend fun requestSignInPhoneNumberConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    )
+
     suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 
     suspend fun updateUserNotificationSettings(
