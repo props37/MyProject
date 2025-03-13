@@ -19,4 +19,8 @@ class ZarinaApplication : Application() {
         FirebaseApp.initializeApp(this)
         appMetricaExtension.install(this)
     }
+
+    companion object {
+        const val RELEASE_PACKAGE_NAME = "ru.livetyping.zarina"
+    }
 }

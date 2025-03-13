@@ -93,7 +93,7 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             setContentText(message.description)
             setStyle(getNotificationStyle(message))
             val pendingIntent = message.pushLink?.let {
-                getUrlPendingIntent(
+                getPendingIntent(
                     actionUrl = it,
                     uniquePushKey = message.uniqueKey,
                     uniquePushButtonKey = null,
@@ -134,7 +134,7 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
         return message.pushActions.mapNotNull { action ->
             if (action.text != null && action.url != null) {
                 val pendingIntent = action.url?.let {
-                    getUrlPendingIntent(
+                    getPendingIntent(
                         actionUrl = it,
                         uniquePushKey = message.uniqueKey,
                         uniquePushButtonKey = action.uniqueKey,
@@ -148,7 +148,18 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    private fun getUrlPendingIntent(
+    private fun getPendingIntent(
+        actionUrl: String,
+        uniquePushKey: String?,
+        uniquePushButtonKey: String?,
+    ): PendingIntent? {
+        return when {
+            AppStorePushManager.isAppStorePush(actionUrl) -> getAppStorePendingIntent()
+            else -> getZarinaPendingIntent(actionUrl, uniquePushKey, uniquePushButtonKey)
+        }
+    }
+
+    private fun getZarinaPendingIntent(
         actionUrl: String,
         uniquePushKey: String?,
         uniquePushButtonKey: String?,
@@ -171,6 +182,17 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
         }
         return taskBuilder.getPendingIntent(
             /* requestCode = */ 0,
+            /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+    }
+
+    private fun getAppStorePendingIntent(): PendingIntent? {
+        val uri = AppStorePushManager.getAppStorePageUri(this)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        return PendingIntent.getActivity(
+            /* context = */ this,
+            /* requestCode = */ 0,
+            /* intent = */ intent,
             /* flags = */ PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
     }
