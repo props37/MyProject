@@ -1,5 +1,7 @@
 // Java start
 java.time.LocalDate
+java.math.BigDecimal
+java.math.BigInteger
 // Java end
 
 
