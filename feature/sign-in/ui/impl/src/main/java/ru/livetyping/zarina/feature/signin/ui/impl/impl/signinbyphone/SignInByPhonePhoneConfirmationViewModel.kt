@@ -41,7 +41,7 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var confirmSignInByPhoneJob: Job? = null
+    private var confirmSignInJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
     private val navEntry = savedStateHandle.toRoute<SignInByPhonePhoneConfirmationNavEntry>()
@@ -99,9 +99,9 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
     }
 
     private fun onOtpEntered() {
-        if (confirmSignInByPhoneJob?.isActive == true) return
+        if (confirmSignInJob?.isActive == true) return
 
-        confirmSignInByPhoneJob = viewModelScope.launch {
+        confirmSignInJob = viewModelScope.launch {
             try {
                 otpStateComponent.setIsOtpLoading(true)
                 val params = ConfirmSignInByPhoneUseCase.Params(
