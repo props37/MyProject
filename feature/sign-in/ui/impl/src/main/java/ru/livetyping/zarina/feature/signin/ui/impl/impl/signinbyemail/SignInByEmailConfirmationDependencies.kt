@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailPhon
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import javax.inject.Inject
 
-internal class SignInByEmailPhoneConfirmationDependencies @Inject constructor(
+internal class SignInByEmailConfirmationDependencies @Inject constructor(
     val smsCodeRetriever: SmsCodeRetriever,
     val requestNewSignInByEmailPhoneNumberConfirmationOtp: RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase,
     val confirmSignInByEmail: ConfirmSignInByEmailUseCase,

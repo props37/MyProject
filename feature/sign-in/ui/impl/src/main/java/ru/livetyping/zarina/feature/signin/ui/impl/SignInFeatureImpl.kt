@@ -16,8 +16,8 @@ import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByPhone
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailPhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailPhoneConfirmationNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhoneConfirmationNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
@@ -54,7 +54,7 @@ public class SignInFeatureImpl : SignInFeature {
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
                 onSignUpClicked = actions.onSignUpClicked,
                 onSignInByEmailPhoneConfirmationNeeded = { phone ->
-                    val phoneConfirmationNavEntry = SignInByEmailPhoneConfirmationNavEntry.create(phone)
+                    val phoneConfirmationNavEntry = SignInByEmailConfirmationNavEntry.create(phone)
                     navController.navigate(phoneConfirmationNavEntry)
                 },
             )
@@ -74,13 +74,13 @@ public class SignInFeatureImpl : SignInFeature {
             )
             signInByPhonePhoneConfirmationScreen(signInByPhoneConfirmationNavActions)
 
-            val signInByEmailPhoneConfirmationNavActions = SignInByEmailPhoneConfirmationNavActions(
+            val signInByEmailConfirmationNavActions = SignInByEmailConfirmationNavActions(
                 onBackClicked = navigateUp,
                 onSignInConfirmed = {
                     navController.popBackStack<SignInFeature.NavEntry>(inclusive = true)
                 },
             )
-            signInByEmailPhoneConfirmationScreen(signInByEmailPhoneConfirmationNavActions)
+            signInByEmailPhoneConfirmationScreen(signInByEmailConfirmationNavActions)
         }
     }
 }

@@ -34,14 +34,14 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationEvent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailConfirmationState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.TopBar
 
 @Composable
-internal fun SignInByEmailPhoneConfirmationScreen(
-    navActions: SignInByEmailPhoneConfirmationNavActions,
-    viewModel: SignInByEmailPhoneConfirmationViewModel = hiltViewModel(),
+internal fun SignInByEmailConfirmationScreen(
+    navActions: SignInByEmailConfirmationNavActions,
+    viewModel: SignInByEmailConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.phoneConfirmationState.collectAsStateWithLifecycle()
 
@@ -55,12 +55,12 @@ internal fun SignInByEmailPhoneConfirmationScreen(
 
 @Composable
 private fun ScreenContent(
-    state: SignInByEmailPhoneConfirmationState,
-    onEvent: (SignInByEmailPhoneConfirmationEvent) -> Unit,
-    sideEffects: Flow<SignInByEmailPhoneConfirmationSideEffect>,
-    navActions: SignInByEmailPhoneConfirmationNavActions,
+    state: SignInByEmailConfirmationState,
+    onEvent: (SignInByEmailConfirmationEvent) -> Unit,
+    sideEffects: Flow<SignInByEmailConfirmationSideEffect>,
+    navActions: SignInByEmailConfirmationNavActions,
 ) {
-    SignInByEmailPhoneConfirmationScreenBehavior(
+    SignInByEmailConfirmationScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -76,7 +76,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        TopBar(onBackClicked = { onEvent(SignInByEmailPhoneConfirmationEvent.BackClicked) })
+        TopBar(onBackClicked = { onEvent(SignInByEmailConfirmationEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -90,9 +90,9 @@ private fun ScreenContent(
             SmsOtp(
                 otpState = state.otpState,
                 phone = state.phone,
-                onOtpEntered = { onEvent(SignInByEmailPhoneConfirmationEvent.OtpEntered) },
+                onOtpEntered = { onEvent(SignInByEmailConfirmationEvent.OtpEntered) },
                 onRequestNewOtpClicked = {
-                    onEvent(SignInByEmailPhoneConfirmationEvent.RequestNewOtpClicked)
+                    onEvent(SignInByEmailConfirmationEvent.RequestNewOtpClicked)
                 },
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 modifier = Modifier
