@@ -440,7 +440,6 @@ internal class SignInViewModel @Inject constructor(
 
             authResult.isPhoneConfirmationNeeded() && phoneToConfirm != null -> {
                 phoneToConfirmTextFieldState.setTextAndPlaceCursorAtEnd(phoneToConfirm.value)
-                signInByEmailStep.value = SignInByEmailStep.PHONE_CONFIRMATION
                 startPhoneConfirmationRequest()
             }
 
