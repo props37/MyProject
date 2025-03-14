@@ -4,6 +4,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
+import java.math.BigDecimal
 import java.time.LocalDate
 import ru.livetyping.zarina.core.domain.model.product.Product as ProductDomain
 
@@ -23,7 +24,7 @@ public data class OrderDetailed(
     val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Order() {
-    override val totalPrice: Int
+    override val totalPrice: BigDecimal
         get() = price.totalPrice
 
     // Marked as stable on config/compose/stability_config.txt

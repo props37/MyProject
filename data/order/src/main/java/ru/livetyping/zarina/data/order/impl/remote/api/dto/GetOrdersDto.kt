@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Serializable
@@ -45,7 +46,7 @@ internal data class GetOrdersDto(
         val status: OrderStatusDto? = null,
 
         @SerialName("total_sum")
-        val totalSum: Int? = null,
+        val totalSum: Float? = null,
 
         @SerialName("products")
         val products: List<ProductDto>? = null,
@@ -64,7 +65,7 @@ internal data class GetOrdersDto(
                 productCount = productCount,
                 date = LocalDate.parse(date),
                 status = status.toOrderStatus(),
-                totalPrice = totalSum,
+                totalPrice = BigDecimal(totalSum.toDouble()),
                 products = products.map { it.toProduct() },
             )
         }

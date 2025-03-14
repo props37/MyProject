@@ -47,6 +47,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import java.math.BigDecimal
 import java.time.LocalDate
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -86,7 +87,7 @@ public fun OrderCard(
     orderNumber: String,
     orderStatusName: String,
     orderStatusColor: Color,
-    orderTotalPrice: Int,
+    orderTotalPrice: BigDecimal,
     orderDate: LocalDate,
     orderProductCount: Int,
     orderProductImageUrls: List<String>,

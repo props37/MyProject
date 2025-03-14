@@ -29,17 +29,18 @@ import ru.livetyping.zarina.core.uikit.order.OrderPriceDefaults.TotalPriceTextSt
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 public fun OrderPrice(
-    orderPrice: Int,
-    deliveryPrice: Int,
-    totalPrice: Int,
+    orderPrice: BigDecimal,
+    deliveryPrice: BigDecimal,
+    totalPrice: BigDecimal,
     modifier: Modifier = Modifier,
     backgroundColor: Color = OrderPriceDefaults.BackgroundColor,
     contentColor: Color = OrderPriceDefaults.ContentColor,
-    contentPadding: PaddingValues = OrderPriceDefaults.ContentPadding,
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         Column(
@@ -113,7 +114,7 @@ public fun OrderPriceSkeleton(
 @Composable
 private fun PriceItem(
     name: String,
-    price: Int,
+    price: BigDecimal,
     nameTextStyle: TextStyle,
     priceTextStyle: TextStyle,
     modifier: Modifier = Modifier,
