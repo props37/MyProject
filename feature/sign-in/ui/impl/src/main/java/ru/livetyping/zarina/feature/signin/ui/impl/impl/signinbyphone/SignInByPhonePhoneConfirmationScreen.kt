@@ -38,14 +38,14 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.PhoneConfirmationTopBar
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationEvent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.TopBar
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhonePhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhonePhoneConfirmationState
 
 @Composable
-internal fun PhoneConfirmationScreen(
-    navActions: PhoneConfirmationNavActions,
-    viewModel: PhoneConfirmationViewModel = hiltViewModel(),
+internal fun SignInByPhonePhoneConfirmationScreen(
+    navActions: SignInByPhonePhoneConfirmationNavActions,
+    viewModel: SignInByPhonePhoneConfirmationViewModel = hiltViewModel(),
 ) {
     val state by viewModel.phoneConfirmationState.collectAsStateWithLifecycle()
     val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
@@ -62,14 +62,14 @@ internal fun PhoneConfirmationScreen(
 
 @Composable
 private fun ScreenContent(
-    state: PhoneConfirmationState,
-    onEvent: (PhoneConfirmationEvent) -> Unit,
+    state: SignInByPhonePhoneConfirmationState,
+    onEvent: (SignInByPhonePhoneConfirmationEvent) -> Unit,
     yandexCaptchaState: YandexCaptchaState,
     onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
-    sideEffects: Flow<PhoneConfirmationSideEffect>,
-    navActions: PhoneConfirmationNavActions,
+    sideEffects: Flow<SignInByPhonePhoneConfirmationSideEffect>,
+    navActions: SignInByPhonePhoneConfirmationNavActions,
 ) {
-    PhoneConfirmationScreenBehavior(
+    SignInByPhonePhoneConfirmationScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
     )
@@ -86,7 +86,7 @@ private fun ScreenContent(
                 )
                 .bottomNavBarPadding(WindowInsets.ime),
         ) {
-            PhoneConfirmationTopBar(onBackClicked = { onEvent(PhoneConfirmationEvent.BackClicked) })
+            TopBar(onBackClicked = { onEvent(SignInByPhonePhoneConfirmationEvent.BackClicked) })
 
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -100,9 +100,9 @@ private fun ScreenContent(
                 SmsOtp(
                     otpState = state.otpState,
                     phone = state.phone,
-                    onOtpEntered = { onEvent(PhoneConfirmationEvent.OtpEntered) },
+                    onOtpEntered = { onEvent(SignInByPhonePhoneConfirmationEvent.OtpEntered) },
                     onRequestNewOtpClicked = {
-                        onEvent(PhoneConfirmationEvent.RequestNewOtpClicked)
+                        onEvent(SignInByPhonePhoneConfirmationEvent.RequestNewOtpClicked)
                     },
                     contentPadding = PaddingValues(horizontal = 16.dp),
                     modifier = Modifier

@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone
 
-internal class PhoneConfirmationNavActions(
+internal class SignInByPhonePhoneConfirmationNavActions(
     val onBackClicked: () -> Unit,
     val onPhoneConfirmed: () -> Unit,
 )

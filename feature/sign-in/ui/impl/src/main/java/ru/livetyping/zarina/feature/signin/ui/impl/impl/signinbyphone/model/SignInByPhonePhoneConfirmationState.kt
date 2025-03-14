@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
 
 @Stable
-internal data class PhoneConfirmationState(
+internal data class SignInByPhonePhoneConfirmationState(
     val phone: PhoneNumber,
     val otpState: TextFieldOtpState,
 )

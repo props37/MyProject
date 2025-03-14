@@ -26,16 +26,16 @@ import ru.livetyping.zarina.core.uicomponent.otp.OtpStateComponent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.feature.signin.ui.impl.R
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationEvent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhonePhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhonePhoneConfirmationState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
-internal class PhoneConfirmationViewModel @Inject constructor(
+internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val deps: PhoneConfirmationDependencies,
-) : ViewModel(), SideEffectSource<PhoneConfirmationSideEffect> by SideEffectSourceImpl() {
+    private val deps: SignInByPhonePhoneConfirmationDependencies,
+) : ViewModel(), SideEffectSource<SignInByPhonePhoneConfirmationSideEffect> by SideEffectSourceImpl() {
 
     private val otpStateComponent = OtpStateComponent(savedStateHandle, viewModelScope)
 
@@ -44,18 +44,18 @@ internal class PhoneConfirmationViewModel @Inject constructor(
     private var confirmPhoneJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
-    private val navEntry = savedStateHandle.toRoute<PhoneConfirmationNavEntry>()
+    private val navEntry = savedStateHandle.toRoute<SignInByPhonePhoneConfirmationNavEntry>()
     private val phone = navEntry.getPhone()
 
     private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
     val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
-    val phoneConfirmationState: StateFlow<PhoneConfirmationState> =
+    val phoneConfirmationState: StateFlow<SignInByPhonePhoneConfirmationState> =
         otpStateComponent.otpState.mapState(
             scope = viewModelScope,
             started = SharingStarted.WhileAndroidUiSubscribed,
         ) { otpState ->
-            PhoneConfirmationState(
+            SignInByPhonePhoneConfirmationState(
                 phone = phone,
                 otpState = otpState,
             )
@@ -69,11 +69,11 @@ internal class PhoneConfirmationViewModel @Inject constructor(
         deps.smsCodeRetriever.stop()
     }
 
-    fun onPhoneConfirmationEvent(event: PhoneConfirmationEvent) {
+    fun onPhoneConfirmationEvent(event: SignInByPhonePhoneConfirmationEvent) {
         when (event) {
-            PhoneConfirmationEvent.BackClicked -> onBackClicked()
-            PhoneConfirmationEvent.OtpEntered -> onOtpEntered()
-            PhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+            SignInByPhonePhoneConfirmationEvent.BackClicked -> onBackClicked()
+            SignInByPhonePhoneConfirmationEvent.OtpEntered -> onOtpEntered()
+            SignInByPhonePhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
         }
     }
 
@@ -93,8 +93,8 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private fun onBackClicked() {
         navigationThrottler.throttle {
-            val action = PhoneConfirmationScreenAction.BackClicked
-            emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
+            val action = SignInByPhonePhoneConfirmationScreenAction.BackClicked
+            emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
         }
     }
 
@@ -110,8 +110,8 @@ internal class PhoneConfirmationViewModel @Inject constructor(
                 )
                 deps.confirmSignIn(params)
                     .onSuccess {
-                        val action = PhoneConfirmationScreenAction.PhoneConfirmed
-                        emitSideEffect(PhoneConfirmationSideEffect.Navigate(action))
+                        val action = SignInByPhonePhoneConfirmationScreenAction.PhoneConfirmed
+                        emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
                     }
                     .onFailure(::handlePhoneConfirmationException)
             } finally {
@@ -175,6 +175,6 @@ internal class PhoneConfirmationViewModel @Inject constructor(
 
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
-        emitSideEffect(PhoneConfirmationSideEffect.ShowZarinaToast(message))
+        emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.ShowZarinaToast(message))
     }
 }

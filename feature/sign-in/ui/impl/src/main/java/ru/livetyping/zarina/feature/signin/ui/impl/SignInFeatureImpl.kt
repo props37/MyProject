@@ -11,12 +11,12 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.phoneConfirmationScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByPhonePhoneConfirmationScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.PhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.PhoneConfirmationNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhonePhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhonePhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
@@ -45,7 +45,7 @@ public class SignInFeatureImpl : SignInFeature {
                 onBackClicked = navigateUp,
                 onUserSignedIn = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
                 onSignInByPhoneRequested = { phone ->
-                    val phoneConfirmationNavEntry = PhoneConfirmationNavEntry.create(phone)
+                    val phoneConfirmationNavEntry = SignInByPhonePhoneConfirmationNavEntry.create(phone)
                     navController.navigate(phoneConfirmationNavEntry)
                 },
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
@@ -59,11 +59,11 @@ public class SignInFeatureImpl : SignInFeature {
             )
             passwordRecoveryScreen(passwordRecoveryNavActions)
 
-            val phoneConfirmationNavActions = PhoneConfirmationNavActions(
+            val signInByPhonePhoneConfirmationNavActions = SignInByPhonePhoneConfirmationNavActions(
                 onBackClicked = navigateUp,
                 onPhoneConfirmed = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
             )
-            phoneConfirmationScreen(phoneConfirmationNavActions)
+            signInByPhonePhoneConfirmationScreen(signInByPhonePhoneConfirmationNavActions)
         }
     }
 }
