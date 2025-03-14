@@ -8,4 +8,5 @@ internal class SignInNavActions(
     val onSignInByPhoneRequested: (PhoneNumber) -> Unit,
     val onForgotPasswordClicked: () -> Unit,
     val onSignUpClicked: () -> Unit,
+    val onSignInByEmailPhoneConfirmationNeeded: (PhoneNumber) -> Unit,
 )

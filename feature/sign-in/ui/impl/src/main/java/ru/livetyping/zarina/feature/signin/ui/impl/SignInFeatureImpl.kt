@@ -11,10 +11,13 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByEmailPhoneConfirmationScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByPhonePhoneConfirmationScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailPhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailPhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhonePhoneConfirmationNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhonePhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
@@ -50,6 +53,10 @@ public class SignInFeatureImpl : SignInFeature {
                 },
                 onForgotPasswordClicked = { navController.navigate(PasswordRecoveryNavEntry) },
                 onSignUpClicked = actions.onSignUpClicked,
+                onSignInByEmailPhoneConfirmationNeeded = { phone ->
+                    val phoneConfirmationNavEntry = SignInByEmailPhoneConfirmationNavEntry.create(phone)
+                    navController.navigate(phoneConfirmationNavEntry)
+                },
             )
             signInScreen(signInScreenNavActions)
 
@@ -64,6 +71,9 @@ public class SignInFeatureImpl : SignInFeature {
                 onPhoneConfirmed = { navController.popBackStack<SignInFeature.NavEntry>(inclusive = true) },
             )
             signInByPhonePhoneConfirmationScreen(signInByPhonePhoneConfirmationNavActions)
+
+            val signInByEmailPhoneConfirmationNavActions = SignInByEmailPhoneConfirmationNavActions()
+            signInByEmailPhoneConfirmationScreen(signInByEmailPhoneConfirmationNavActions)
         }
     }
 }
