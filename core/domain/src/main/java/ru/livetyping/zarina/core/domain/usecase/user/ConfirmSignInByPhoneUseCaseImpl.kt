@@ -3,18 +3,18 @@ package ru.livetyping.zarina.core.domain.usecase.user
 import ru.livetyping.zarina.core.domain.impl.UserWithBearerTokensSetter
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
-import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase.Params
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase.Params
 import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class ConfirmSignInUseCaseImpl(
+internal class ConfirmSignInByPhoneUseCaseImpl(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     logger: UseCaseLogger?,
-) : UseCase<Params, Unit>(logger), ConfirmSignInUseCase {
+) : UseCase<Params, Unit>(logger), ConfirmSignInByPhoneUseCase {
 
     override suspend fun execute(params: Params) {
-        val authResult = userRepository.confirmSignIn(params.phone, params.otp)
+        val authResult = userRepository.confirmSignInByPhone(params.phone, params.otp)
 
         val userWithTokensSetter = UserWithBearerTokensSetter(
             authRepository = authRepository,
@@ -28,6 +28,6 @@ internal class ConfirmSignInUseCaseImpl(
     }
 
     private companion object {
-        private const val TAG = "ConfirmSignInUseCaseImpl"
+        private const val TAG = "ConfirmSignInByPhoneUseCaseImpl"
     }
 }

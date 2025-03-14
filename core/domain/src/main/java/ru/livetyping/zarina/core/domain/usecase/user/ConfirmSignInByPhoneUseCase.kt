@@ -5,7 +5,7 @@ import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public interface ConfirmSignInUseCase {
+public interface ConfirmSignInByPhoneUseCase {
     public suspend operator fun invoke(params: Params): Result<Unit>
 
     public data class Params(
@@ -18,8 +18,8 @@ public interface ConfirmSignInUseCase {
             userRepository: UserRepository,
             authRepository: AuthRepository,
             logger: UseCaseLogger?,
-        ): ConfirmSignInUseCase {
-            return ConfirmSignInUseCaseImpl(
+        ): ConfirmSignInByPhoneUseCase {
+            return ConfirmSignInByPhoneUseCaseImpl(
                 userRepository = userRepository,
                 authRepository = authRepository,
                 logger = logger,

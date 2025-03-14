@@ -50,6 +50,6 @@ private fun navigate(
 ) {
     when (action) {
         SignInByPhonePhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
-        SignInByPhonePhoneConfirmationScreenAction.PhoneConfirmed -> navActions.onPhoneConfirmed()
+        SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed -> navActions.onSignInConfirmed()
     }
 }

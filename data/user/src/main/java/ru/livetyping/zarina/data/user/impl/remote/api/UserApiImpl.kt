@@ -22,7 +22,7 @@ import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ChangePhoneNumberRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmPhoneNumberChangeRequestBody
-import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GenderDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GetLoyaltyCardDto
@@ -122,8 +122,8 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
-    override suspend fun confirmSignIn(phone: PhoneNumber, otp: String): AuthDto {
-        val body = ConfirmSignInRequestBody(phone.value, otp)
+    override suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthDto {
+        val body = ConfirmSignInByPhoneRequestBody(phone.value, otp)
         return confirmSignUpApiExceptionConverter {
             httpClient.post("/api/auth/phone/sms/confirmation") {
                 setJsonBody(body)

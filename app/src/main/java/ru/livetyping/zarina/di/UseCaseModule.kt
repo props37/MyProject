@@ -64,7 +64,7 @@ import ru.livetyping.zarina.core.domain.usecase.search.SearchFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
@@ -600,12 +600,12 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideConfirmSignInUseCase(
+    fun provideConfirmSignInByPhoneUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
         logger: UseCaseLogger,
-    ): ConfirmSignInUseCase {
-        return ConfirmSignInUseCase.getInstance(
+    ): ConfirmSignInByPhoneUseCase {
+        return ConfirmSignInByPhoneUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             logger = logger,

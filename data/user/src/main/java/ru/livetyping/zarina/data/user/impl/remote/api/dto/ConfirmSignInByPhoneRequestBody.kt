@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ConfirmSignInRequestBody(
+internal data class ConfirmSignInByPhoneRequestBody(
     @SerialName("phone")
     val phone: String,
 

@@ -15,7 +15,7 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
-import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -41,7 +41,7 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private var confirmPhoneJob: Job? = null
+    private var confirmSignInByPhoneJob: Job? = null
     private var requestNewOtpJob: Job? = null
 
     private val navEntry = savedStateHandle.toRoute<SignInByPhonePhoneConfirmationNavEntry>()
@@ -99,18 +99,18 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
     }
 
     private fun onOtpEntered() {
-        if (confirmPhoneJob?.isActive == true) return
+        if (confirmSignInByPhoneJob?.isActive == true) return
 
-        confirmPhoneJob = viewModelScope.launch {
+        confirmSignInByPhoneJob = viewModelScope.launch {
             try {
                 otpStateComponent.setIsOtpLoading(true)
-                val params = ConfirmSignInUseCase.Params(
+                val params = ConfirmSignInByPhoneUseCase.Params(
                     phone = phone,
                     otp = otpStateComponent.otpState.value.otp,
                 )
-                deps.confirmSignIn(params)
+                deps.confirmSignInByPhone(params)
                     .onSuccess {
-                        val action = SignInByPhonePhoneConfirmationScreenAction.PhoneConfirmed
+                        val action = SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed
                         emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
                     }
                     .onFailure(::handlePhoneConfirmationException)

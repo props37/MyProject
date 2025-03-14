@@ -41,7 +41,7 @@ public interface UserRepository {
 
     public suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
-    public suspend fun confirmSignIn(phone: PhoneNumber, otp: String): AuthResult
+    public suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthResult
 
     public suspend fun signUp(
         firstName: String,
