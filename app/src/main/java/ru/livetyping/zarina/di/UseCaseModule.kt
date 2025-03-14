@@ -1,4 +1,3 @@
-
 package ru.livetyping.zarina.di
 
 import dagger.Module
@@ -64,6 +63,7 @@ import ru.livetyping.zarina.core.domain.usecase.search.SearchFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
@@ -77,6 +77,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestPasswordResetUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInPhoneConfirmationUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
@@ -98,6 +99,30 @@ import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCas
 @Module
 @InstallIn(SingletonComponent::class)
 internal class UseCaseModule {
+
+    @Provides
+    fun provideRequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase {
+        return RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmSignInByEmailUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        logger: UseCaseLogger,
+    ): ConfirmSignInByEmailUseCase {
+        return ConfirmSignInByEmailUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            logger = logger,
+        )
+    }
 
     @Provides
     fun provideFetchUnauthorizedUserBearerTokensUseCase(

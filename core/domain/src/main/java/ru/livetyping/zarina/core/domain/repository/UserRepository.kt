@@ -65,6 +65,10 @@ public interface UserRepository {
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
+    public suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthResult
+
+    public suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber)
+
     public suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 
     public suspend fun updateUserInfo(

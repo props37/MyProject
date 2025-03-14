@@ -244,6 +244,22 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto {
+        val body = ConfirmPhoneNumberChangeRequestBody(phone.value, otp)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/phone/verification/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
+        }
+    }
+
+    override suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber) {
+        val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
+        httpClient.post("/api/phone/verification/sms") {
+            setJsonBody(body)
+        }
+    }
+
     override suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber) {
         val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
         httpClient.post("/api/phone/verification/sms") {

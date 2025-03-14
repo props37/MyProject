@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByEmailUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -81,17 +83,16 @@ internal class SignInByEmailPhoneConfirmationViewModel @Inject constructor(
         confirmSignInJob = viewModelScope.launch {
             try {
                 otpStateComponent.setIsOtpLoading(true)
-                // TODO: [Top] Implement
-//                val params = ConfirmSignInByPhoneUseCase.Params(
-//                    phone = phone,
-//                    otp = otpStateComponent.otpState.value.otp,
-//                )
-//                deps.confirmSignInByPhone(params)
-//                    .onSuccess {
-//                        val action = SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed
-//                        emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
-//                    }
-//                    .onFailure(::handlePhoneConfirmationException)
+                val params = ConfirmSignInByEmailUseCase.Params(
+                    phone = phone,
+                    otp = otpStateComponent.otpState.value.otp,
+                )
+                deps.confirmSignInByEmail(params)
+                    .onSuccess {
+                        val action = SignInByEmailPhoneConfirmationScreenAction.SignInConfirmed
+                        emitSideEffect(SignInByEmailPhoneConfirmationSideEffect.Navigate(action))
+                    }
+                    .onFailure(::handleSignInConfirmationException)
             } finally {
                 otpStateComponent.setIsOtpLoading(false)
             }
@@ -104,14 +105,13 @@ internal class SignInByEmailPhoneConfirmationViewModel @Inject constructor(
         requestNewOtpJob = viewModelScope.launch {
             try {
                 otpStateComponent.setIsRequestNewOtpButtonLoading(true)
-                // TODO: [Top] Implement
-//                val params = RequestNewAuthOtpUseCase.Params(phone, yandexCaptchaToken)
-//                deps.requestNewOtp(params)
-//                    .onSuccess { otpStateComponent.startNewOtpRequestTimeout() }
-//                    .onFailure {
-//                        val text = Text.Resource(R.string.res_new_otp_request_error)
-//                        showZarinaErrorToast(text)
-//                    }
+                val params = RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase.Params(phone)
+                deps.requestNewSignInByEmailPhoneNumberConfirmationOtp(params)
+                    .onSuccess { otpStateComponent.startNewOtpRequestTimeout() }
+                    .onFailure {
+                        val text = Text.Resource(RCommon.string.res_new_otp_request_error)
+                        showZarinaErrorToast(text)
+                    }
             } finally {
                 otpStateComponent.setIsRequestNewOtpButtonLoading(false)
             }
