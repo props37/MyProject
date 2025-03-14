@@ -22,6 +22,7 @@ import ru.livetyping.zarina.core.network.zarina.dto.CityDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.AuthDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ChangePhoneNumberRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmPhoneNumberChangeRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInByEmailRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignInByPhoneRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.ConfirmSignUpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.GenderDto
@@ -30,6 +31,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.LoyaltyProgramBonusHis
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDto
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewAuthOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewPhoneNumberChangeOtpRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewSignInByEmailConfirmationOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestSignInByEmailConfirmationRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
@@ -135,7 +137,7 @@ internal class UserApiImpl @Inject constructor(
     }
 
     override suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto {
-        val body = ConfirmPhoneNumberChangeRequestBody(phone.value, otp)
+        val body = ConfirmSignInByEmailRequestBody(phone.value, otp)
         return confirmSignUpApiExceptionConverter {
             httpClient.post("/api/phone/verification/sms/confirmation") {
                 setJsonBody(body)
@@ -144,7 +146,7 @@ internal class UserApiImpl @Inject constructor(
     }
 
     override suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber) {
-        val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
+        val body = RequestNewSignInByEmailConfirmationOtpRequestBody(phone.value)
         httpClient.post("/api/phone/verification/sms") {
             setJsonBody(body)
         }
