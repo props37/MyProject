@@ -1,12 +1,14 @@
 package ru.livetyping.zarina.core.domain.model.user
 
+import java.math.BigDecimal
+
 // Marked as stable on config/compose/stability_config.txt
 public data class LoyaltyCard(
     val number: Number,
     val level: Level,
     val nextLevelInfo: NextLevelInfo?,
     val bonuses: Bonuses,
-    val totalPurchaseSum: Int,
+    val totalPurchaseSum: BigDecimal,
 ) {
     // Marked as stable on config/compose/stability_config.txt
     @JvmInline
@@ -22,7 +24,7 @@ public data class LoyaltyCard(
     // Marked as stable on config/compose/stability_config.txt
     public data class NextLevelInfo(
         val level: Level,
-        val requiredPurchaseSum: Int,
+        val requiredPurchaseSum: BigDecimal,
     )
 
     // Marked as stable on config/compose/stability_config.txt

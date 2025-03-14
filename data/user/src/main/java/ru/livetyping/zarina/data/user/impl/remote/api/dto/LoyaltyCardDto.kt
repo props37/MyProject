@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import java.math.BigDecimal
 
 @Serializable
 internal data class LoyaltyCardDto(
@@ -17,7 +18,7 @@ internal data class LoyaltyCardDto(
     val nextLevel: LoyaltyCardLevelDto? = null,
 
     @SerialName("next_level_purchases_sum")
-    val nextLevelPurchaseSum: Int? = null,
+    val nextLevelPurchaseSum: Float? = null,
 
     @SerialName("balance")
     val balance: Int? = null,
@@ -29,7 +30,7 @@ internal data class LoyaltyCardDto(
     val bonusPercent: Int? = null,
 
     @SerialName("purchase_total")
-    val purchaseTotal: Int? = null,
+    val purchaseTotal: Float? = null,
 ) {
     fun toLoyaltyCard(): LoyaltyCard {
         checkPropertyNotNull(number) { ::number }
@@ -37,7 +38,7 @@ internal data class LoyaltyCardDto(
         val nextLevelInfo = if (nextLevel != null && nextLevelPurchaseSum != null) {
             LoyaltyCard.NextLevelInfo(
                 level = nextLevel.toLoyaltyCardLevel(),
-                requiredPurchaseSum = nextLevelPurchaseSum,
+                requiredPurchaseSum = BigDecimal(nextLevelPurchaseSum.toDouble()),
             )
         } else null
         val bonuses = LoyaltyCard.Bonuses(
@@ -49,7 +50,7 @@ internal data class LoyaltyCardDto(
             level = currentLevel.toLoyaltyCardLevel(),
             nextLevelInfo = nextLevelInfo,
             bonuses = bonuses,
-            totalPurchaseSum = purchaseTotal ?: 0,
+            totalPurchaseSum = purchaseTotal?.let { BigDecimal(it.toDouble()) } ?: BigDecimal.ZERO,
         )
     }
 }

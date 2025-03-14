@@ -110,6 +110,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.Loyal
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.LoyaltyCardDefaults.RotationTurnThreshold
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.util.nameResId
 import timber.log.Timber
+import java.math.BigDecimal
 import kotlin.enums.EnumEntries
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -469,7 +470,7 @@ private fun FrontSideLevelInfo(
                 val nextLevelInfo = card.nextLevelInfo
                 val remainingPurchaseSum = if (nextLevelInfo != null) {
                     nextLevelInfo.requiredPurchaseSum - card.totalPurchaseSum
-                } else 0
+                } else BigDecimal.ZERO
                 val formattedRemainingPurchaseSum = stringResource(
                     id = RCommon.string.res_price_in_rubles,
                     rememberFormattedPrice(remainingPurchaseSum),
@@ -660,7 +661,7 @@ internal fun LoyaltyCardPlaceholder(
             level = LoyaltyCard.Level.PRIME,
             nextLevelInfo = null,
             bonuses = LoyaltyCard.Bonuses(0, 0),
-            totalPurchaseSum = 0,
+            totalPurchaseSum = BigDecimal.ZERO,
         )
     }
 
@@ -790,7 +791,7 @@ private fun DrawScope.drawProgress(
                             nextLevelInfo.requiredPurchaseSum - card.totalPurchaseSum
                         // Subtract start level required purchase to count from zero
                         val nextLevelRequiredPurchaseSum =
-                            nextLevelInfo.requiredPurchaseSum - startLevelRequiredPurchaseSum
+                            nextLevelInfo.requiredPurchaseSum.toInt() - startLevelRequiredPurchaseSum
                         val levelProgressFraction = 1f -
                                 (nextLevelRemainingPurchaseSum.toFloat() / nextLevelRequiredPurchaseSum)
                         val topLeft = Offset(
