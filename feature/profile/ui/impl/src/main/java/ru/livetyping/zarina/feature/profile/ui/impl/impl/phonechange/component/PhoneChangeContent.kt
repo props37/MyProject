@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
@@ -22,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
@@ -66,7 +66,7 @@ internal fun PhoneChangeContent(
 
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(focusRequester) {
-            delay(FocusRequestDelay)
+            withFrameMillis {}
             focusRequester.tryRequestFocus()
         }
 
@@ -104,5 +104,3 @@ internal fun PhoneChangeContent(
         Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }
 }
-
-private const val FocusRequestDelay = 100L

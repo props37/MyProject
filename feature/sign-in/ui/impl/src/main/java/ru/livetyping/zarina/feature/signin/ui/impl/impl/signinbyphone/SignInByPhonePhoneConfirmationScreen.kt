@@ -22,13 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -93,7 +93,7 @@ private fun ScreenContent(
 
                 val focusRequester = remember { FocusRequester() }
                 LaunchedEffect(Unit) {
-                    delay(FocusRequestDelay)
+                    withFrameMillis {}
                     focusRequester.tryRequestFocus()
                 }
 
@@ -121,5 +121,3 @@ private fun ScreenContent(
         )
     }
 }
-
-private const val FocusRequestDelay = 100L
