@@ -45,6 +45,8 @@ private fun navigate(
     navActions: SignInByEmailPhoneConfirmationNavActions,
     action: SignInByEmailPhoneConfirmationScreenAction
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        SignInByEmailPhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
+        SignInByEmailPhoneConfirmationScreenAction.SignInConfirmed -> navActions.onSignInConfirmed()
+    }
 }

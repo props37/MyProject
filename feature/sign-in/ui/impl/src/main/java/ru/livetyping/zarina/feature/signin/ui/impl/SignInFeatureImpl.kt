@@ -74,7 +74,12 @@ public class SignInFeatureImpl : SignInFeature {
             )
             signInByPhonePhoneConfirmationScreen(signInByPhonePhoneConfirmationNavActions)
 
-            val signInByEmailPhoneConfirmationNavActions = SignInByEmailPhoneConfirmationNavActions()
+            val signInByEmailPhoneConfirmationNavActions = SignInByEmailPhoneConfirmationNavActions(
+                onBackClicked = navigateUp,
+                onSignInConfirmed = {
+                    navController.popBackStack<SignInFeature.NavEntry>(inclusive = true)
+                },
+            )
             signInByEmailPhoneConfirmationScreen(signInByEmailPhoneConfirmationNavActions)
         }
     }
