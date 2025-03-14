@@ -113,7 +113,7 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
                         val action = SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed
                         emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
                     }
-                    .onFailure(::handlePhoneConfirmationException)
+                    .onFailure(::handleSignInConfirmationException)
             } finally {
                 otpStateComponent.setIsOtpLoading(false)
             }
@@ -154,7 +154,7 @@ internal class SignInByPhonePhoneConfirmationViewModel @Inject constructor(
         }
     }
 
-    private fun handlePhoneConfirmationException(t: Throwable) {
+    private fun handleSignInConfirmationException(t: Throwable) {
         if (t is OtpException) {
             otpStateComponent.setIsOtpInvalid(true)
         }
