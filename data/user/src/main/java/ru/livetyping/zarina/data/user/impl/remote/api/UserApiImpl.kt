@@ -31,7 +31,7 @@ import ru.livetyping.zarina.data.user.impl.remote.api.dto.NotificationSettingsDt
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewAuthOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestNewPhoneNumberChangeOtpRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestPasswordResetRequestBody
-import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestSignInPhoneNumberConfirmationRequestBody
+import ru.livetyping.zarina.data.user.impl.remote.api.dto.RequestSignInByEmailConfirmationRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SetUserCityRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignInRequestBody
 import ru.livetyping.zarina.data.user.impl.remote.api.dto.SignOutDto
@@ -126,9 +126,11 @@ internal class UserApiImpl @Inject constructor(
         phone: PhoneNumber,
         yandexCaptchaToken: YandexCaptchaToken
     ) {
-        val body = RequestSignInPhoneNumberConfirmationRequestBody(phone.value, yandexCaptchaToken.value)
-        httpClient.post("/api/phone/verification") {
-            setJsonBody(body)
+        val body = RequestSignInByEmailConfirmationRequestBody(phone.value, yandexCaptchaToken.value)
+        changePhoneNumberApiExceptionConverter {
+            httpClient.post("/api/phone/verification") {
+                setJsonBody(body)
+            }
         }
     }
 
