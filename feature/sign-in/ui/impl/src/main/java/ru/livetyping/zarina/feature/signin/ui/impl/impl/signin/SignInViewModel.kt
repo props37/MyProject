@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.credential.CredentialFetchingResult
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
@@ -126,13 +127,14 @@ internal class SignInViewModel @Inject constructor(
     private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
     val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
 
-    private val signInByEmailState = combine(
+    private val signInByEmailState = combineMore(
         signInByEmailStep,
         isEmailInvalid,
         isPasswordInvalid,
         isPhoneToConfirmInvalid,
         operationTracker.ongoingOperationKeys,
-    ) { step, isEmailInvalid, isPasswordInvalid, isPhoneToConfirmInvalid, ongoingOperations ->
+        yandexCaptchaState,
+    ) { step, isEmailInvalid, isPasswordInvalid, isPhoneToConfirmInvalid, ongoingOperations, yandexCaptchaState ->
         when (step) {
             SignInByEmailStep.MAIN -> {
                 SignInByEmailState.Main(
@@ -144,8 +146,10 @@ internal class SignInViewModel @Inject constructor(
             }
 
             SignInByEmailStep.PHONE_CONFIRMATION -> {
+                val isCaptchaActive = yandexCaptchaState is YandexCaptchaState.Started
+                        && yandexCaptchaState.reason == CaptchaReason.PHONE_CONFIRMATION
                 val isGetConfirmationCodeButtonLoading =
-                    RequestPhoneConfirmationOperation in ongoingOperations
+                    RequestPhoneConfirmationOperation in ongoingOperations || isCaptchaActive
                 SignInByEmailState.PhoneConfirmation(
                     phoneTextFieldState = phoneToConfirmTextFieldState,
                     isPhoneInvalid = isPhoneToConfirmInvalid,
@@ -168,9 +172,12 @@ internal class SignInViewModel @Inject constructor(
         operationTracker.ongoingOperationKeys,
         yandexCaptchaState,
     ) { signInByEmailState, isPhoneInvalid, ongoingOperations, yandexCaptchaState ->
+        val isCaptchaActive = yandexCaptchaState is YandexCaptchaState.Started
+                && (yandexCaptchaState.reason == CaptchaReason.SIGN_IN_BY_EMAIL
+                || yandexCaptchaState.reason == CaptchaReason.SIGN_IN_BY_PHONE)
         val isSignInButtonLoading = SignInOperation in ongoingOperations
                 || RequestPhoneConfirmationOperation in ongoingOperations
-                || yandexCaptchaState is YandexCaptchaState.Started
+                || isCaptchaActive
 
         SignInState(
             signInByEmailState = signInByEmailState,
