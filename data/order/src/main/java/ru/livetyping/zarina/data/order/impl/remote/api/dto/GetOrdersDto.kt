@@ -3,17 +3,17 @@ package ru.livetyping.zarina.data.order.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
 import java.time.LocalDate
-import ru.livetyping.zarina.core.domain.model.order.Order as OrderDomain
 
 @Serializable
 internal data class GetOrdersDto(
     @SerialName("items")
-    val items: List<Order>? = null,
+    val items: List<OrderDto>? = null,
 
     @SerialName("pagination")
     val pagination: PaginationInfoDto? = null,
@@ -28,7 +28,7 @@ internal data class GetOrdersDto(
     }
 
     @Serializable
-    data class Order(
+    data class OrderDto(
         @SerialName("id")
         val id: Long? = null,
 
@@ -48,7 +48,7 @@ internal data class GetOrdersDto(
         val totalSum: Int? = null,
 
         @SerialName("products")
-        val products: List<Product>? = null,
+        val products: List<ProductDto>? = null,
     ) {
         fun toOrderItem(): OrderShort {
             checkPropertyNotNull(id) { ::id }
@@ -59,8 +59,8 @@ internal data class GetOrdersDto(
             checkPropertyNotNull(totalSum) { ::totalSum }
             checkPropertyNotNull(products) { ::products }
             return OrderShort(
-                id = OrderDomain.Id(id.toString()),
-                number = OrderDomain.Number(number),
+                id = Order.Id(id.toString()),
+                number = Order.Number(number),
                 productCount = productCount,
                 date = LocalDate.parse(date),
                 status = status.toOrderStatus(),
@@ -70,7 +70,7 @@ internal data class GetOrdersDto(
         }
 
         @Serializable
-        data class Product(
+        data class ProductDto(
             @SerialName("cover_picture")
             val coverPicture: String? = null,
 

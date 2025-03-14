@@ -25,7 +25,7 @@ internal data class SearchResultDto(
     val totalHits: Int? = null,
 
     @SerialName("facets")
-    val facets: List<Filter>? = null,
+    val facets: List<FilterDto>? = null,
 
     @SerialName("pageCount")
     val pageCount: Int? = null,
@@ -76,7 +76,7 @@ internal data class SearchResultDto(
     }
 
     private fun getPriceFilter(): ProductPriceFilter? {
-        val priceFilter = facets?.find { it.name == Filter.NAME_PRICE }
+        val priceFilter = facets?.find { it.name == FilterDto.NAME_PRICE }
         val min = priceFilter?.values?.find { it.id == "min" }?.value
         val max = priceFilter?.values?.find { it.id == "max" }?.value
         return if (min != null && max != null) {
@@ -85,7 +85,7 @@ internal data class SearchResultDto(
     }
 
     private fun getSizeFilter(): ProductListFilter<ProductSizeFilterItem>? {
-        val sizeFilter = facets?.find { it.name == Filter.NAME_SIZES }
+        val sizeFilter = facets?.find { it.name == FilterDto.NAME_SIZES }
         val items = sizeFilter?.values?.mapNotNull { value ->
             if (value.id != null && value.name != null) {
                 ProductSizeFilterItem(
@@ -105,7 +105,7 @@ internal data class SearchResultDto(
     }
 
     private fun getColorFilter(): ProductListFilter<ProductColorFilterItem>? {
-        val colorFilter = facets?.find { it.name == Filter.NAME_COLORS }
+        val colorFilter = facets?.find { it.name == FilterDto.NAME_COLORS }
         val items = colorFilter?.values?.mapNotNull { value ->
             if (value.id != null && value.name != null) {
                 ProductColorFilterItem(
@@ -126,15 +126,15 @@ internal data class SearchResultDto(
     }
 
     @Serializable
-    data class Filter(
+    data class FilterDto(
         @SerialName("name")
         val name: String? = null,
 
         @SerialName("values")
-        val values: List<Value>? = null,
+        val values: List<ValueDto>? = null,
     ) {
         @Serializable
-        data class Value(
+        data class ValueDto(
             @SerialName("id")
             val id: String? = null,
 

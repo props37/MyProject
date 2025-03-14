@@ -2,20 +2,20 @@ package ru.livetyping.zarina.data.search.impl.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
 import timber.log.Timber
-import ru.livetyping.zarina.core.domain.model.category.Category as DomainCategory
 
 @Serializable
 internal data class SearchSuggestionsDto(
     @SerialName("taps")
-    val taps: List<AutocompleteSuggestion>? = null,
+    val taps: List<AutocompleteSuggestionDto>? = null,
 
     @SerialName("sts")
-    val sts: List<QuerySuggestion>? = null,
+    val sts: List<QuerySuggestionDto>? = null,
 
     @SerialName("categories")
-    val categories: List<Category>? = null,
+    val categories: List<CategoryDto>? = null,
 ) {
     fun toSearchSuggestions(): SearchSuggestions {
         val autocompleteSuggestions = taps
@@ -35,7 +35,7 @@ internal data class SearchSuggestionsDto(
     }
 
     @Serializable
-    data class AutocompleteSuggestion(
+    data class AutocompleteSuggestionDto(
         @SerialName("tap")
         val tap: String? = null,
 
@@ -56,13 +56,13 @@ internal data class SearchSuggestionsDto(
     }
 
     @Serializable
-    data class QuerySuggestion(
+    data class QuerySuggestionDto(
         @SerialName("st")
         val st: String? = null,
     )
 
     @Serializable
-    data class Category(
+    data class CategoryDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -72,7 +72,7 @@ internal data class SearchSuggestionsDto(
         fun toCategory(): SearchSuggestions.Category? {
             return if (id != null && name != null) {
                 SearchSuggestions.Category(
-                    id = DomainCategory.Id(id),
+                    id = Category.Id(id),
                     name = name,
                 )
             } else {

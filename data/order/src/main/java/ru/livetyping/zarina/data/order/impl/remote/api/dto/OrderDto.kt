@@ -2,6 +2,7 @@ package ru.livetyping.zarina.data.order.impl.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.Url
@@ -10,13 +11,12 @@ import ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.order.OrderPrice
 import ru.livetyping.zarina.core.domain.model.order.OrderRecipient
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
-import ru.livetyping.zarina.core.domain.model.common.Color as ColorDomain
-import ru.livetyping.zarina.core.domain.model.product.Product as ProductDomain
 
 @Serializable
 internal data class OrderDto(
@@ -39,19 +39,19 @@ internal data class OrderDto(
     val totalSum: Int? = null,
 
     @SerialName("products")
-    val products: List<Product>? = null,
+    val products: List<ProductDto>? = null,
 
     @SerialName("shipping")
-    val shipping: DeliveryInfo? = null,
+    val shipping: DeliveryInfoDto? = null,
 
     @SerialName("payment_method")
-    val paymentMethod: PaymentMethod? = null,
+    val paymentMethod: PaymentMethodDto? = null,
 
     @SerialName("payment_tool")
-    val paymentTool: PaymentTool? = null,
+    val paymentTool: PaymentToolDto? = null,
 
     @SerialName("contact_info")
-    val contactInfo: ContactInfo? = null,
+    val contactInfo: ContactInfoDto? = null,
 
     @SerialName("address")
     val address: String? = null,
@@ -102,7 +102,7 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class Product(
+    data class ProductDto(
         @SerialName("id")
         val id: Long?,
 
@@ -116,7 +116,7 @@ internal data class OrderDto(
         val size: String? = null,
 
         @SerialName("color")
-        val color: Color? = null,
+        val color: ColorDto? = null,
 
         @SerialName("cover_picture")
         val coverPicture: String? = null,
@@ -138,7 +138,7 @@ internal data class OrderDto(
             checkPropertyNotNull(quantity) { ::quantity }
             return OrderDetailed.Product(
                 id = OrderDetailed.Product.Id(id.toString()),
-                productId = ProductDomain.Id(vendorCode),
+                productId = Product.Id(vendorCode),
                 name = name,
                 size = size,
                 color = getProductColor(),
@@ -156,13 +156,13 @@ internal data class OrderDto(
             return ProductColor(
                 id = ProductColor.Id(color.code),
                 name = color.title,
-                color = ColorDomain(color.code),
-                productId = ProductDomain.Id(vendorCode),
+                color = Color(color.code),
+                productId = Product.Id(vendorCode),
             )
         }
 
         @Serializable
-        data class Color(
+        data class ColorDto(
             @SerialName("title")
             val title: String? = null,
 
@@ -172,9 +172,9 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class DeliveryInfo(
+    data class DeliveryInfoDto(
         @SerialName("shipping_method")
-        val shippingMethod: Method? = null,
+        val shippingMethod: MethodDto? = null,
     ) {
         fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkPropertyNotNull(shippingMethod) { ::shippingMethod }
@@ -185,7 +185,7 @@ internal data class OrderDto(
         }
 
         @Serializable
-        data class Method(
+        data class MethodDto(
             @SerialName("type")
             val type: DeliveryMethodTypeDto? = null,
 
@@ -195,19 +195,19 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class PaymentMethod(
+    data class PaymentMethodDto(
         @SerialName("code")
         val code: PaymentMethodTypeDto? = null,
     )
 
     @Serializable
-    data class PaymentTool(
+    data class PaymentToolDto(
         @SerialName("link") 
         val link: String? = null,
     )
 
     @Serializable
-    data class ContactInfo(
+    data class ContactInfoDto(
         @SerialName("first_name")
         val firstName: String? = null,
 

@@ -34,13 +34,13 @@ internal data class ProductDetailedDto(
     val media: List<MediaDto>? = null,
 
     @SerialName("description")
-    val description: List<DescriptionEntry>? = null,
+    val description: List<DescriptionEntryDto>? = null,
 
     @SerialName("bonus")
     val bonus: Int? = null,
 
     @SerialName("label")
-    val label: Label? = null,
+    val label: LabelDto? = null,
 
     @SerialName("threshold")
     val threshold: Int? = null,
@@ -75,7 +75,7 @@ internal data class ProductDetailedDto(
     }
 
     @Serializable
-    data class Label(
+    data class LabelDto(
         @SerialName("title")
         val name: String? = null,
 
@@ -96,7 +96,7 @@ internal data class ProductDetailedDto(
     }
 
     @Serializable
-    data class DescriptionEntry(
+    data class DescriptionEntryDto(
         @SerialName("title")
         val title: String? = null,
 

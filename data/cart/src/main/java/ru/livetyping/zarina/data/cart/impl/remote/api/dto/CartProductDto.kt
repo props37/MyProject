@@ -7,11 +7,11 @@ import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.ProductPriceDto
 import timber.log.Timber
-import ru.livetyping.zarina.core.domain.model.product.ProductColor as ProductColorDomain
 
 @Serializable
 internal data class CartProductDto(
@@ -19,7 +19,7 @@ internal data class CartProductDto(
     val id: Long? = null,
 
     @SerialName("offer")
-    val offer: Offer? = null,
+    val offer: OfferDto? = null,
 
     @SerialName("quantity")
     val quantity: Int? = null,
@@ -59,7 +59,7 @@ internal data class CartProductDto(
     }
 
     @Serializable
-    data class Offer(
+    data class OfferDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -73,7 +73,7 @@ internal data class CartProductDto(
         val title: String? = null,
 
         @SerialName("color")
-        val color: ProductColor? = null,
+        val color: ProductColorDto? = null,
 
         @SerialName("cover_picture")
         val coverPicture: String? = null,
@@ -97,7 +97,7 @@ internal data class CartProductDto(
         val retailAmount: Int? = null,
     ) {
         @Serializable
-        data class ProductColor(
+        data class ProductColorDto(
             @SerialName("id")
             val id: String? = null,
 
@@ -110,10 +110,10 @@ internal data class CartProductDto(
             @SerialName("product_id")
             val productId: String? = null,
         ) {
-            fun toProductColor(): ProductColorDomain? {
+            fun toProductColor(): ProductColor? {
                 return if (id != null && title != null && code != null && productId != null) {
-                    ProductColorDomain(
-                        id = ProductColorDomain.Id(id),
+                    ProductColor(
+                        id = ProductColor.Id(id),
                         name = title,
                         color = Color(code),
                         productId = Product.Id(productId),

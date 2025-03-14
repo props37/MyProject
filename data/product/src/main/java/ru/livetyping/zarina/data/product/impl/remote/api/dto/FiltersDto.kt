@@ -21,19 +21,19 @@ internal data class FiltersDto(
     val price: PriceFilterDto? = null,
 
     @SerialName("materials")
-    val materials: List<BasicItem>? = null,
+    val materials: List<BasicItemDto>? = null,
 
     @SerialName("sizes")
-    val sizes: List<BasicItem>? = null,
+    val sizes: List<BasicItemDto>? = null,
 
     @SerialName("colors")
-    val colors: List<ColorItem>? = null,
+    val colors: List<ColorItemDto>? = null,
 
     @SerialName("available")
-    val availability: List<Availability>? = null,
+    val availability: List<AvailabilityDto>? = null,
 
     @SerialName("shops")
-    val pickupStores: List<Store>? = null,
+    val pickupStores: List<StoreDto>? = null,
 ) {
     fun toFilters(): ProductFilters {
         val price = price?.let { ProductPriceFilter(min = null, max = null, limits = it.toPriceRange()) }
@@ -75,12 +75,12 @@ internal data class FiltersDto(
         } else null
         val deliveryAvailability = availability?.let { list ->
             list
-                .find { it.id == Availability.DELIVERY_AVAILABILITY_ID }
+                .find { it.id == AvailabilityDto.DELIVERY_AVAILABILITY_ID }
                 ?.toDeliveryAvailabilityFilter()
         }
         val storePickupAvailability = availability?.let { list ->
             list
-                .find { it.id == Availability.STORE_AVAILABILITY_PICKUP_ID }
+                .find { it.id == AvailabilityDto.STORE_AVAILABILITY_PICKUP_ID }
                 ?.toStorePickupAvailabilityFilter()
         }
         val pickupStores = pickupStores?.let { stores ->
@@ -106,7 +106,7 @@ internal data class FiltersDto(
     }
 
     @Serializable
-    data class BasicItem(
+    data class BasicItemDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -149,7 +149,7 @@ internal data class FiltersDto(
     }
 
     @Serializable
-    data class ColorItem(
+    data class ColorItemDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -182,7 +182,7 @@ internal data class FiltersDto(
     }
 
     @Serializable
-    data class Availability(
+    data class AvailabilityDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -216,7 +216,7 @@ internal data class FiltersDto(
     }
 
     @Serializable
-    data class Store(
+    data class StoreDto(
         @SerialName("id")
         val id: String? = null,
 

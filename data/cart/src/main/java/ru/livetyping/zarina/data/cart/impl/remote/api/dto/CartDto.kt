@@ -7,9 +7,9 @@ import ru.livetyping.zarina.core.domain.model.cart.CartPrice
 import ru.livetyping.zarina.core.domain.model.cart.CartSize
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.giftcert.AppliedGiftCertificate
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
+import ru.livetyping.zarina.core.domain.model.user.MyCard
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
-import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate as GiftCertificateDomain
-import ru.livetyping.zarina.core.domain.model.user.MyCard as MyCardDomain
 
 @Serializable
 internal data class CartDto(
@@ -41,13 +41,13 @@ internal data class CartDto(
     val maxBonusToChargeOff: Int? = null,
 
     @SerialName("bonus_action")
-    val bonusAction: BonusAction? = null,
+    val bonusAction: BonusActionDto? = null,
 
     @SerialName("myCard")
-    val myCard: MyCard? = null,
+    val myCard: MyCardDto? = null,
 
     @SerialName("giftCard")
-    val giftCard: GiftCertificate? = null,
+    val giftCard: GiftCertificateDto? = null,
 
     @SerialName("deliveryPrice") 
     val deliveryPrice: Int? = null,
@@ -56,10 +56,10 @@ internal data class CartDto(
     val isPromoCodeApplied: Boolean? = null,
 
     @SerialName("promocode")
-    val promoCode: PromoCode? = null,
+    val promoCode: PromoCodeDto? = null,
 
     @SerialName("limit")
-    val limit: ProductLimit? = null,
+    val limit: ProductLimitDto? = null,
 ) {
     fun toCart(cartType: CartType): Cart {
         checkPropertyNotNull(items) { ::items }
@@ -126,7 +126,7 @@ internal data class CartDto(
         checkPropertyNotNull(myCard.isApplied) { myCard::isApplied }
         checkPropertyNotNull(myCard.productsFirstPriceSum) { myCard::productsFirstPriceSum }
         return Cart.MyCard(
-            number = MyCardDomain.Number(myCard.value),
+            number = MyCard.Number(myCard.value),
             info = myCard.info,
             isApplied = myCard.isApplied,
             productsFirstPriceSum = myCard.productsFirstPriceSum,
@@ -139,7 +139,7 @@ internal data class CartDto(
         val redemptionValue = giftCard.awayAmount?.toIntOrNull()
         checkNotNull(redemptionValue) { "writeOffSize is null" }
         return AppliedGiftCertificate(
-            number = GiftCertificateDomain.Number(giftCard.barcode),
+            number = GiftCertificate.Number(giftCard.barcode),
             balance = giftCard.amount,
             redemptionValue = redemptionValue,
         )
@@ -170,7 +170,7 @@ internal data class CartDto(
     }
 
     @Serializable
-    data class BonusAction(
+    data class BonusActionDto(
         @SerialName("bonus_charge")
         val bonusCharge: Int? = null,
 
@@ -182,7 +182,7 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class MyCard(
+    data class MyCardDto(
         @SerialName("value") 
         val value: String? = null,
 
@@ -197,7 +197,7 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class GiftCertificate(
+    data class GiftCertificateDto(
         @SerialName("barcode")
         val barcode: String? = null,
 
@@ -212,13 +212,13 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class PromoCode(
+    data class PromoCodeDto(
         @SerialName("code")
         val code: String? = null,
     )
 
     @Serializable
-    data class ProductLimit(
+    data class ProductLimitDto(
         @SerialName("max") 
         val max: Int? = null,
     )

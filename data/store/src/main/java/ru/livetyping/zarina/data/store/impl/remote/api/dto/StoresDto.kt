@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
-import ru.livetyping.zarina.core.domain.model.store.Store as StoreDomain
 
 @Serializable
 internal data class StoresDto(
@@ -17,10 +17,10 @@ internal data class StoresDto(
     val name: String? = null,
 
     @SerialName("cities")
-    val cities: List<City>? = null,
+    val cities: List<CityDto>? = null,
 ) {
     @Serializable
-    data class City(
+    data class CityDto(
         @SerialName("id")
         val id: Long? = null,
 
@@ -31,9 +31,9 @@ internal data class StoresDto(
         val kladrId: String? = null,
 
         @SerialName("shops")
-        val shops: List<Store>? = null,
+        val shops: List<StoreDto>? = null,
     ) {
-        fun getStores(country: String): List<StoreDomain> {
+        fun getStores(country: String): List<Store> {
             checkPropertyNotNull(shops) { ::shops }
             return shops.map { store ->
                 checkPropertyNotNull(name) { ::name }
@@ -46,7 +46,7 @@ internal data class StoresDto(
         }
 
         @Serializable
-        data class Store(
+        data class StoreDto(
             @SerialName("id")
             val id: String? = null,
 
@@ -68,15 +68,15 @@ internal data class StoresDto(
             @SerialName("lon")
             val lon: Double? = null,
         ) {
-            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): StoreDomain {
+            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): Store {
                 checkPropertyNotNull(id) { ::id }
                 checkPropertyNotNull(name) { ::name }
                 checkPropertyNotNull(address) { ::address }
                 checkPropertyNotNull(lat) { ::lat }
                 checkPropertyNotNull(lon) { ::lat }
-                val city = cityKladrId?.let { StoreDomain.City(cityKladrId, cityName) }
-                return StoreDomain(
-                    id = StoreDomain.Id(id),
+                val city = cityKladrId?.let { Store.City(cityKladrId, cityName) }
+                return Store(
+                    id = Store.Id(id),
                     name = name,
                     address = address,
                     phone = phone?.let { PhoneNumber.create(it) },
