@@ -15,6 +15,7 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
@@ -122,7 +123,7 @@ internal data class OrderDto(
         val coverPicture: String? = null,
 
         @SerialName("price")
-        val price: Int? = null,
+        val price: Float? = null,
 
         @SerialName("quantity")
         val quantity: Int? = null,
@@ -143,7 +144,7 @@ internal data class OrderDto(
                 size = size,
                 color = getProductColor(),
                 imageUrl = Url.create(coverPicture),
-                price = ProductPrice(price),
+                price = ProductPrice(BigDecimal(price.toDouble())),
                 count = quantity,
             )
         }

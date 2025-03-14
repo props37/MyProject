@@ -53,6 +53,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -324,8 +325,12 @@ private fun Price(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             val textStyle = UiKitTheme.typography.secondary.regular
-            val totalOriginalPrice = rememberFormattedPrice(price.originalPrice * count)
-            val totalCurrentPrice = rememberFormattedPrice(price.currentPrice * count)
+            val totalOriginalPrice = rememberFormattedPrice(
+                price.originalPrice.multiply(BigDecimal(count))
+            )
+            val totalCurrentPrice = rememberFormattedPrice(
+                price.currentPrice.multiply(BigDecimal(count))
+            )
             if (showOriginalPrice && price.currentPrice != price.originalPrice) {
                 Text(
                     text = stringResource(RCommon.string.res_price_in_rubles, totalOriginalPrice),

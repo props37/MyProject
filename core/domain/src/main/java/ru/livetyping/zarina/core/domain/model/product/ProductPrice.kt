@@ -1,19 +1,21 @@
 package ru.livetyping.zarina.core.domain.model.product
 
+import java.math.BigDecimal
+
 // Marked as stable on config/compose/stability_config.txt
 public data class ProductPrice(
-    val originalPrice: Int,
+    val originalPrice: BigDecimal,
     val hasDiscount: Boolean,
-    val discountPrice: Int,
-    val discountPercent: Int,
+    val discountPrice: BigDecimal,
+    val discountPercent: BigDecimal,
 ) {
-    public constructor(originalPrice: Int) : this(
+    public constructor(originalPrice: BigDecimal) : this(
         originalPrice = originalPrice,
         hasDiscount = false,
-        discountPercent = 0,
-        discountPrice = 0,
+        discountPercent = BigDecimal.ZERO,
+        discountPrice = BigDecimal.ZERO,
     )
 
-    val currentPrice: Int
+    val currentPrice: BigDecimal
         get() = if (hasDiscount) discountPrice else originalPrice
 }

@@ -4,27 +4,32 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import java.math.BigDecimal
 
 @Serializable
 public data class ProductPriceDto(
     @SerialName("common_price")
-    val commonPrice: Int? = null,
+    val commonPrice: Float? = null,
 
     @SerialName("has_discount")
     val hasDiscount: Boolean? = null,
 
     @SerialName("discount")
-    val discount: Int? = null,
+    val discount: Float? = null,
 
     @SerialName("discount_price")
-    val discountPrice: Int? = null,
+    val discountPrice: Float? = null,
 ) {
     public fun toProductPrice(): ProductPrice {
+        checkPropertyNotNull(commonPrice) { ::commonPrice }
+        checkPropertyNotNull(hasDiscount) { ::hasDiscount }
+        checkPropertyNotNull(discountPrice) { ::discountPrice }
+        checkPropertyNotNull(discount) { ::discount }
         return ProductPrice(
-            originalPrice = checkPropertyNotNull(commonPrice) { ::commonPrice },
-            hasDiscount = checkPropertyNotNull(hasDiscount) { ::hasDiscount },
-            discountPrice = checkPropertyNotNull(discountPrice) { ::discountPrice },
-            discountPercent = checkPropertyNotNull(discount) { ::discount },
+            originalPrice = BigDecimal(commonPrice.toDouble()),
+            hasDiscount = hasDiscount,
+            discountPrice = BigDecimal(discountPrice.toDouble()),
+            discountPercent = BigDecimal(discount.toDouble()),
         )
     }
 }
