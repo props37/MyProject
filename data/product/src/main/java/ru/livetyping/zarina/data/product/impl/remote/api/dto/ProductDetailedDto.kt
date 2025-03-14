@@ -47,6 +47,9 @@ internal data class ProductDetailedDto(
 
     @SerialName("share_url")
     val shareUrl: String? = null,
+
+    @SerialName("model")
+    val model: ModelDto? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { ::id }
@@ -71,6 +74,7 @@ internal data class ProductDetailedDto(
             bonusAccrualForPurchase = bonus ?: 0,
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
+            modelInfo = model?.toModelInfo(),
         )
     }
 
@@ -113,6 +117,22 @@ internal data class ProductDetailedDto(
                 Timber.tag(TAG).e("Drop description entry $this because its title or body is null")
                 null
             }
+        }
+    }
+
+    @Serializable
+    data class ModelDto(
+        @SerialName("params_model")
+        val paramsModel: String? = null,
+
+        @SerialName("size_on_model")
+        val sizeOnModel: String? = null,
+    ) {
+        fun toModelInfo(): ProductDetailed.ModelInfo {
+            return ProductDetailed.ModelInfo(
+                modelParams = paramsModel,
+                productSize = sizeOnModel,
+            )
         }
     }
 

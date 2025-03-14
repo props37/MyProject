@@ -19,6 +19,7 @@ public data class ProductDetailed(
     val bonusAccrualForPurchase: Int,
     val freeDeliveryTotalPriceThreshold: Int,
     val shareUrl: Url?,
+    val modelInfo: ModelInfo?,
 ) : Product() {
     // Marked as stable on config/compose/stability_config.txt
     public data class Label(
@@ -30,5 +31,11 @@ public data class ProductDetailed(
     public data class DescriptionEntry(
         val title: String,
         val body: String,
+    )
+
+    // Marked as stable on config/compose/stability_config.txt
+    public data class ModelInfo(
+        val modelParams: String?,
+        val productSize: String?,
     )
 }
