@@ -139,6 +139,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartProductItem
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.PagerTabRowIntegration
+import java.math.BigDecimal
 import kotlin.math.roundToInt
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -715,7 +716,7 @@ internal object CartScreenComponents {
     @Composable
     fun CartBottomFloatingBlock(
         isVisible: Boolean,
-        finalPrice: Int,
+        finalPrice: BigDecimal,
         buttonText: String,
         isButtonEnabled: Boolean,
         onButtonClicked: () -> Unit,

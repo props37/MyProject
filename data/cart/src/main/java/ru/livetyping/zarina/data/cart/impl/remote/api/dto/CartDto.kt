@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.domain.model.giftcert.AppliedGiftCertificate
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.user.MyCard
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import java.math.BigDecimal
 
 @Serializable
 internal data class CartDto(
@@ -26,13 +27,13 @@ internal data class CartDto(
     val retailCount: Int? = null,
 
     @SerialName("total_sum")
-    val totalSum: Int? = null,
+    val totalSum: Float? = null,
 
     @SerialName("total_discount")
-    val totalDiscount: Int? = null,
+    val totalDiscount: Float? = null,
 
     @SerialName("discount")
-    val discount: Int? = null,
+    val discount: Float? = null,
 
     @SerialName("bonus_balance")
     val bonusBalance: Int? = null,
@@ -50,7 +51,7 @@ internal data class CartDto(
     val giftCard: GiftCertificateDto? = null,
 
     @SerialName("deliveryPrice") 
-    val deliveryPrice: Int? = null,
+    val deliveryPrice: Float? = null,
 
     @SerialName("is_promocode_applied")
     val isPromoCodeApplied: Boolean? = null,
@@ -88,18 +89,18 @@ internal data class CartDto(
         checkPropertyNotNull(discount) { ::discount }
         checkPropertyNotNull(totalDiscount) { ::totalDiscount }
         checkPropertyNotNull(totalSum) { ::totalSum }
-        val giftCertificateRedemptionValue = giftCard?.awayAmount?.toIntOrNull()
+        val giftCertificateRedemptionValue = giftCard?.awayAmount?.toDoubleOrNull()
         val finalPrice = if (giftCard?.total != null) {
             giftCard.total
         } else {
             totalSum
         }
         return CartPrice(
-            cartPrice = discount,
-            discountSize = totalDiscount,
-            finalPrice = finalPrice,
-            deliveryPrice = deliveryPrice,
-            giftCertificateRedemptionValue = giftCertificateRedemptionValue,
+            cartPrice = BigDecimal(discount.toDouble()),
+            discountSize = BigDecimal(totalDiscount.toDouble()),
+            finalPrice = BigDecimal(finalPrice.toDouble()),
+            deliveryPrice = deliveryPrice?.let { BigDecimal(it.toDouble()) },
+            giftCertificateRedemptionValue = giftCertificateRedemptionValue?.let { BigDecimal(it) },
         )
     }
 
@@ -208,7 +209,7 @@ internal data class CartDto(
         val awayAmount: String? = null,
 
         @SerialName("total")
-        val total: Int? = null,
+        val total: Float? = null,
     )
 
     @Serializable

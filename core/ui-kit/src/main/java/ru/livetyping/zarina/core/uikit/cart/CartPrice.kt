@@ -40,16 +40,17 @@ import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.DefaultPriceTextSt
 import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.TotalPriceNameTextStyle
 import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.TotalPriceTextStyle
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 public fun CartPrice(
-    cartPrice: Int,
-    discountSize: Int,
+    cartPrice: BigDecimal,
+    discountSize: BigDecimal,
     isDeliveryPriceIncluded: Boolean,
-    deliveryPrice: Int?,
-    giftCertificateWriteOffSize: Int?,
-    finalPrice: Int,
+    deliveryPrice: BigDecimal?,
+    giftCertificateWriteOffSize: BigDecimal?,
+    finalPrice: BigDecimal,
     modifier: Modifier = Modifier,
     isGiftCertificateWriteOffSizeButtonVisible: Boolean = false,
     onGiftCertificateWriteOffSizeButtonClicked: (() -> Unit)? = null,
@@ -128,7 +129,7 @@ public fun CartPrice(
 @Composable
 private fun PriceItem(
     name: String,
-    price: Int,
+    price: BigDecimal,
     nameTextStyle: TextStyle,
     priceTextStyle: TextStyle,
     modifier: Modifier = Modifier,
