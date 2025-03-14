@@ -115,6 +115,7 @@ internal class SignInViewModel @Inject constructor(
 
     private val signInByEmailStep = MutableStateFlow(SignInByEmailStep.MAIN)
 
+    @OptIn(SavedStateHandleSaveableApi::class)
     private val phoneToConfirmTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState(PHONE_INITIAL_TEXT) },
@@ -168,6 +169,7 @@ internal class SignInViewModel @Inject constructor(
         yandexCaptchaState,
     ) { signInByEmailState, isPhoneInvalid, ongoingOperations, yandexCaptchaState ->
         val isSignInButtonLoading = SignInOperation in ongoingOperations
+                || RequestPhoneConfirmationOperation in ongoingOperations
                 || yandexCaptchaState is YandexCaptchaState.Started
 
         SignInState(
@@ -302,7 +304,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun startSignInByEmail() {
-        if (signInJob?.isActive == true) return
+        if (isSignInInProgress()) return
 
         try {
             val signInParams = SignInValidator.SignInByEmailParams(
@@ -321,7 +323,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun startSignInByPhone() {
-        if (signInJob?.isActive == true) return
+        if (isSignInInProgress()) return
 
         try {
             val signInParams = SignInValidator.SignInByPhoneParams(
@@ -356,7 +358,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun signInByEmail(yandexCaptchaToken: YandexCaptchaToken) {
-        if (signInJob?.isActive == true) return
+        if (isSignInInProgress()) return
 
         signInJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
@@ -373,7 +375,7 @@ internal class SignInViewModel @Inject constructor(
     }
 
     private fun signInByPhone(yandexCaptchaToken: YandexCaptchaToken) {
-        if (signInJob?.isActive == true) return
+        if (isSignInInProgress()) return
 
         signInJob = viewModelScope.launch {
             operationTracker.track(SignInOperation) {
@@ -523,6 +525,10 @@ internal class SignInViewModel @Inject constructor(
             val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
             showZarinaErrorToast(messageText)
         }
+    }
+
+    private fun isSignInInProgress(): Boolean {
+        return signInJob?.isActive == true || requestPhoneConfirmationJob?.isActive == true
     }
 
     private fun makeFieldsValidOnChange() {
