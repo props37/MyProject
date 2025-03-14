@@ -5,14 +5,14 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 
 @Serializable
-internal class SignInByPhonePhoneConfirmationNavEntry private constructor(
+internal class SignInByPhoneConfirmationNavEntry private constructor(
     private val phone: String,
 ) : NavigationEntry {
     fun getPhone(): PhoneNumber = PhoneNumber.create(phone)
 
     companion object {
-        fun create(phone: PhoneNumber): SignInByPhonePhoneConfirmationNavEntry {
-            return SignInByPhonePhoneConfirmationNavEntry(phone.value)
+        fun create(phone: PhoneNumber): SignInByPhoneConfirmationNavEntry {
+            return SignInByPhoneConfirmationNavEntry(phone.value)
         }
     }
 }

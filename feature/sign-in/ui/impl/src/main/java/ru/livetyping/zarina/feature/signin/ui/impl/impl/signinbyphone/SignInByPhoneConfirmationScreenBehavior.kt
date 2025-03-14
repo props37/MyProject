@@ -12,9 +12,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun SignInByPhonePhoneConfirmationScreenBehavior(
-    sideEffects: Flow<SignInByPhonePhoneConfirmationSideEffect>,
-    navActions: SignInByPhonePhoneConfirmationNavActions,
+internal fun SignInByPhoneConfirmationScreenBehavior(
+    sideEffects: Flow<SignInByPhoneConfirmationSideEffect>,
+    navActions: SignInByPhoneConfirmationNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
@@ -26,12 +26,12 @@ internal fun SignInByPhonePhoneConfirmationScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is SignInByPhonePhoneConfirmationSideEffect.Navigate -> {
+                    is SignInByPhoneConfirmationSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is SignInByPhonePhoneConfirmationSideEffect.ShowZarinaToast -> {
+                    is SignInByPhoneConfirmationSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -45,11 +45,11 @@ internal fun SignInByPhonePhoneConfirmationScreenBehavior(
 }
 
 private fun navigate(
-    navActions: SignInByPhonePhoneConfirmationNavActions,
-    action: SignInByPhonePhoneConfirmationScreenAction,
+    navActions: SignInByPhoneConfirmationNavActions,
+    action: SignInByPhoneConfirmationScreenAction,
 ) {
     when (action) {
-        SignInByPhonePhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
-        SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed -> navActions.onSignInConfirmed()
+        SignInByPhoneConfirmationScreenAction.BackClicked -> navActions.onBackClicked()
+        SignInByPhoneConfirmationScreenAction.SignInConfirmed -> navActions.onSignInConfirmed()
     }
 }
