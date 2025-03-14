@@ -70,14 +70,14 @@ internal interface UserRemoteDataSource {
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
 
-    suspend fun requestSignInPhoneNumberConfirmation(
+    suspend fun requestSignInByEmailConfirmation(
         phone: PhoneNumber,
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
     suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthResult
 
-    suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber)
+    suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber)
 
     suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 

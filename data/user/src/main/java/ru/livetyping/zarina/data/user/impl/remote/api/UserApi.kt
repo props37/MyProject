@@ -35,6 +35,15 @@ internal interface UserApi {
 
     suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
+    suspend fun requestSignInByEmailConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    )
+
+    suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto
+
+    suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber)
+
     suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthDto
 
     suspend fun signUp(
@@ -68,15 +77,6 @@ internal interface UserApi {
     suspend fun changePhoneNumber(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken)
 
     suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
-
-    suspend fun requestSignInPhoneNumberConfirmation(
-        phone: PhoneNumber,
-        yandexCaptchaToken: YandexCaptchaToken,
-    )
-
-    suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto
-
-    suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber)
 
     suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 

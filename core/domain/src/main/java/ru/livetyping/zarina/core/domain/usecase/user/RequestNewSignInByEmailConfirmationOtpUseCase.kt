@@ -4,7 +4,7 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public interface RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase {
+public interface RequestNewSignInByEmailConfirmationOtpUseCase {
     public suspend operator fun invoke(params: Params): Result<Unit>
 
     public data class Params(val phone: PhoneNumber)
@@ -13,8 +13,8 @@ public interface RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase {
         public fun getInstance(
             userRepository: UserRepository,
             logger: UseCaseLogger?,
-        ): RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase {
-            return RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCaseImpl(
+        ): RequestNewSignInByEmailConfirmationOtpUseCase {
+            return RequestNewSignInByEmailConfirmationOtpUseCaseImpl(
                 userRepository = userRepository,
                 logger = logger,
             )

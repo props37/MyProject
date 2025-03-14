@@ -36,7 +36,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.EmptyPhoneNumberExc
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.UserNotFoundException
-import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInPhoneConfirmationUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInByEmailConfirmationUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.validation.PhoneValidator
@@ -413,8 +413,8 @@ internal class SignInViewModel @Inject constructor(
         requestPhoneConfirmationJob = viewModelScope.launch {
             operationTracker.track(RequestPhoneConfirmationOperation) {
                 val phone = PhoneNumber.create(phoneToConfirmTextFieldState.text.toString())
-                val params = RequestSignInPhoneConfirmationUseCase.Params(phone, yandexCaptchaToken)
-                deps.requestSignInPhoneConfirmation(params)
+                val params = RequestSignInByEmailConfirmationUseCase.Params(phone, yandexCaptchaToken)
+                deps.requestSignInByEmailConfirmation(params)
                     .onSuccess {
                         signInByEmailStep.value = SignInByEmailStep.MAIN
                         val action = SignInScreenAction.PhoneConfirmationNeeded(phone)

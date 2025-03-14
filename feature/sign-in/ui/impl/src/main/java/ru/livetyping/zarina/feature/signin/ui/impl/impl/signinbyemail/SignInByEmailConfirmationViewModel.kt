@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByEmailUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailConfirmationOtpUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -105,8 +105,8 @@ internal class SignInByEmailConfirmationViewModel @Inject constructor(
         requestNewOtpJob = viewModelScope.launch {
             try {
                 otpStateComponent.setIsRequestNewOtpButtonLoading(true)
-                val params = RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase.Params(phone)
-                deps.requestNewSignInByEmailPhoneNumberConfirmationOtp(params)
+                val params = RequestNewSignInByEmailConfirmationOtpUseCase.Params(phone)
+                deps.requestNewSignInByEmailConfirmationOtp(params)
                     .onSuccess { otpStateComponent.startNewOtpRequestTimeout() }
                     .onFailure {
                         val text = Text.Resource(RCommon.string.res_new_otp_request_error)

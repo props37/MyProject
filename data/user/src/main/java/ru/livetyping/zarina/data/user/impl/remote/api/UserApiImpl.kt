@@ -122,6 +122,32 @@ internal class UserApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun requestSignInByEmailConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        val body = RequestSignInPhoneNumberConfirmationRequestBody(phone.value, yandexCaptchaToken.value)
+        httpClient.post("/api/phone/verification") {
+            setJsonBody(body)
+        }
+    }
+
+    override suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto {
+        val body = ConfirmPhoneNumberChangeRequestBody(phone.value, otp)
+        return confirmSignUpApiExceptionConverter {
+            httpClient.post("/api/phone/verification/sms/confirmation") {
+                setJsonBody(body)
+            }.body()
+        }
+    }
+
+    override suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber) {
+        val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
+        httpClient.post("/api/phone/verification/sms") {
+            setJsonBody(body)
+        }
+    }
+
     override suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthDto {
         val body = ConfirmSignInByPhoneRequestBody(phone.value, otp)
         return confirmSignUpApiExceptionConverter {
@@ -231,32 +257,6 @@ internal class UserApiImpl @Inject constructor(
             httpClient.post("/api/phone/verification/sms/confirmation") {
                 setJsonBody(body)
             }
-        }
-    }
-
-    override suspend fun requestSignInPhoneNumberConfirmation(
-        phone: PhoneNumber,
-        yandexCaptchaToken: YandexCaptchaToken
-    ) {
-        val body = RequestSignInPhoneNumberConfirmationRequestBody(phone.value, yandexCaptchaToken.value)
-        httpClient.post("/api/phone/verification") {
-            setJsonBody(body)
-        }
-    }
-
-    override suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthDto {
-        val body = ConfirmPhoneNumberChangeRequestBody(phone.value, otp)
-        return confirmSignUpApiExceptionConverter {
-            httpClient.post("/api/phone/verification/sms/confirmation") {
-                setJsonBody(body)
-            }.body()
-        }
-    }
-
-    override suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber) {
-        val body = RequestNewPhoneNumberChangeOtpRequestBody(phone.value)
-        httpClient.post("/api/phone/verification/sms") {
-            setJsonBody(body)
         }
     }
 

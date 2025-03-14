@@ -60,14 +60,14 @@ public interface UserRepository {
 
     public suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String)
 
-    public suspend fun requestSignInPhoneNumberConfirmation(
+    public suspend fun requestSignInByEmailConfirmation(
         phone: PhoneNumber,
         yandexCaptchaToken: YandexCaptchaToken,
     )
 
     public suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthResult
 
-    public suspend fun requestNewSignInByEmailPhoneNumberConfirmationOtp(phone: PhoneNumber)
+    public suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber)
 
     public suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber)
 

@@ -77,9 +77,9 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailConfirmationOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestPasswordResetUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInPhoneConfirmationUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInByEmailConfirmationUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
@@ -104,8 +104,8 @@ internal class UseCaseModule {
     fun provideRequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase(
         userRepository: UserRepository,
         logger: UseCaseLogger,
-    ): RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase {
-        return RequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase.getInstance(
+    ): RequestNewSignInByEmailConfirmationOtpUseCase {
+        return RequestNewSignInByEmailConfirmationOtpUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )
@@ -966,8 +966,8 @@ internal class UseCaseModule {
     fun provideRequestSignInPhoneConfirmationUseCase(
         userRepository: UserRepository,
         logger: UseCaseLogger,
-    ): RequestSignInPhoneConfirmationUseCase {
-        return RequestSignInPhoneConfirmationUseCase.getInstance(
+    ): RequestSignInByEmailConfirmationUseCase {
+        return RequestSignInByEmailConfirmationUseCase.getInstance(
             userRepository = userRepository,
             logger = logger,
         )

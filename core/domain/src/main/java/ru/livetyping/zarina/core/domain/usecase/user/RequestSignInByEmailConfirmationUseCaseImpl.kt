@@ -1,17 +1,17 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.repository.UserRepository
-import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInPhoneConfirmationUseCase.Params
+import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInByEmailConfirmationUseCase.Params
 import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class RequestSignInPhoneConfirmationUseCaseImpl(
+internal class RequestSignInByEmailConfirmationUseCaseImpl(
     private val userRepository: UserRepository,
     logger: UseCaseLogger?,
-) : UseCase<Params, Unit>(logger), RequestSignInPhoneConfirmationUseCase {
+) : UseCase<Params, Unit>(logger), RequestSignInByEmailConfirmationUseCase {
 
     override suspend fun execute(params: Params) {
-        userRepository.requestSignInPhoneNumberConfirmation(params.phone, params.yandexCaptchaToken)
+        userRepository.requestSignInByEmailConfirmation(params.phone, params.yandexCaptchaToken)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {
@@ -19,6 +19,6 @@ internal class RequestSignInPhoneConfirmationUseCaseImpl(
     }
 
     private companion object {
-        private const val TAG = "RequestSignInPhoneConfirmationUseCaseImpl"
+        private const val TAG = "RequestSignInByEmailConfirmationUseCaseImpl"
     }
 }
