@@ -2,24 +2,143 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.model.user.exception.OtpException
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicomponent.otp.OtpStateComponent
+import ru.livetyping.zarina.feature.signin.ui.impl.R
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class SignInByEmailPhoneConfirmationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val deps: SignInByEmailPhoneConfirmationDependencies,
 ) : ViewModel(),
     SideEffectSource<SignInByEmailPhoneConfirmationSideEffect> by SideEffectSourceImpl() {
 
+    private val otpStateComponent = OtpStateComponent(savedStateHandle, viewModelScope)
+
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    fun onBackClicked() {
+    private var confirmSignInJob: Job? = null
+    private var requestNewOtpJob: Job? = null
+
+    private val navEntry = savedStateHandle.toRoute<SignInByEmailPhoneConfirmationNavEntry>()
+    private val phone = navEntry.getPhone()
+
+    val phoneConfirmationState: StateFlow<SignInByEmailPhoneConfirmationState> =
+        otpStateComponent.otpState.mapState(
+            scope = viewModelScope,
+            started = SharingStarted.WhileAndroidUiSubscribed,
+        ) { otpState ->
+            SignInByEmailPhoneConfirmationState(
+                phone = phone,
+                otpState = otpState,
+            )
+        }
+
+    init {
+        listenOtpSms()
+    }
+
+    override fun onCleared() {
+        deps.smsCodeRetriever.stop()
+    }
+
+    fun onPhoneConfirmationEvent(event: SignInByEmailPhoneConfirmationEvent) {
+        when (event) {
+            SignInByEmailPhoneConfirmationEvent.BackClicked -> onBackClicked()
+            SignInByEmailPhoneConfirmationEvent.OtpEntered -> onOtpEntered()
+            SignInByEmailPhoneConfirmationEvent.RequestNewOtpClicked -> onRequestNewOtpClicked()
+        }
+    }
+
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SignInByEmailPhoneConfirmationScreenAction.BackClicked
             emitSideEffect(SignInByEmailPhoneConfirmationSideEffect.Navigate(action))
         }
+    }
+
+    private fun onOtpEntered() {
+        if (confirmSignInJob?.isActive == true) return
+
+        confirmSignInJob = viewModelScope.launch {
+            try {
+                otpStateComponent.setIsOtpLoading(true)
+                // TODO: [Top] Implement
+//                val params = ConfirmSignInByPhoneUseCase.Params(
+//                    phone = phone,
+//                    otp = otpStateComponent.otpState.value.otp,
+//                )
+//                deps.confirmSignInByPhone(params)
+//                    .onSuccess {
+//                        val action = SignInByPhonePhoneConfirmationScreenAction.SignInConfirmed
+//                        emitSideEffect(SignInByPhonePhoneConfirmationSideEffect.Navigate(action))
+//                    }
+//                    .onFailure(::handlePhoneConfirmationException)
+            } finally {
+                otpStateComponent.setIsOtpLoading(false)
+            }
+        }
+    }
+
+    private fun onRequestNewOtpClicked() {
+        if (requestNewOtpJob?.isActive == true) return
+
+        requestNewOtpJob = viewModelScope.launch {
+            try {
+                otpStateComponent.setIsRequestNewOtpButtonLoading(true)
+                // TODO: [Top] Implement
+//                val params = RequestNewAuthOtpUseCase.Params(phone, yandexCaptchaToken)
+//                deps.requestNewOtp(params)
+//                    .onSuccess { otpStateComponent.startNewOtpRequestTimeout() }
+//                    .onFailure {
+//                        val text = Text.Resource(R.string.res_new_otp_request_error)
+//                        showZarinaErrorToast(text)
+//                    }
+            } finally {
+                otpStateComponent.setIsRequestNewOtpButtonLoading(false)
+            }
+        }
+    }
+
+    private fun handleSignInConfirmationException(t: Throwable) {
+        if (t is OtpException) {
+            otpStateComponent.setIsOtpInvalid(true)
+        }
+
+        val messageResId = when (t) {
+            is OtpException -> R.string.sign_in_invalid_otp_error
+            else -> RCommon.string.res_something_went_wrong
+        }
+        showZarinaErrorToast(Text.Resource(messageResId))
+    }
+
+    private fun listenOtpSms() {
+        deps.smsCodeRetriever.addListener { otp ->
+            otpStateComponent.setOtp(otp)
+            onOtpEntered()
+        }
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(SignInByEmailPhoneConfirmationSideEffect.ShowZarinaToast(message))
     }
 }

@@ -2,26 +2,52 @@ package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.otp.SmsOtp
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailPhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.TopBar
 
 @Composable
 internal fun SignInByEmailPhoneConfirmationScreen(
     navActions: SignInByEmailPhoneConfirmationNavActions,
     viewModel: SignInByEmailPhoneConfirmationViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.phoneConfirmationState.collectAsStateWithLifecycle()
+
     ScreenContent(
+        state = state,
+        onEvent = viewModel::onPhoneConfirmationEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -29,6 +55,8 @@ internal fun SignInByEmailPhoneConfirmationScreen(
 
 @Composable
 private fun ScreenContent(
+    state: SignInByEmailPhoneConfirmationState,
+    onEvent: (SignInByEmailPhoneConfirmationEvent) -> Unit,
     sideEffects: Flow<SignInByEmailPhoneConfirmationSideEffect>,
     navActions: SignInByEmailPhoneConfirmationNavActions,
 ) {
@@ -43,10 +71,37 @@ private fun ScreenContent(
             .background(UiKitTheme.colors.background.general.regular.default)
             .windowInsetsPadding(
                 WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
+        TopBar(onBackClicked = { onEvent(SignInByEmailPhoneConfirmationEvent.BackClicked) })
 
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                withFrameMillis {}
+                focusRequester.tryRequestFocus()
+            }
+
+            SmsOtp(
+                otpState = state.otpState,
+                phone = state.phone,
+                onOtpEntered = { onEvent(SignInByEmailPhoneConfirmationEvent.OtpEntered) },
+                onRequestNewOtpClicked = {
+                    onEvent(SignInByEmailPhoneConfirmationEvent.RequestNewOtpClicked)
+                },
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+            )
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+        }
     }
 }
