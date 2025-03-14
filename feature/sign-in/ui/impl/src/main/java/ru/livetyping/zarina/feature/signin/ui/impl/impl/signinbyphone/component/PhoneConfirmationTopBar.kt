@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.component
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

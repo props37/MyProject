@@ -15,8 +15,8 @@ import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.phoneConfirma
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.PhoneConfirmationNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.PhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.PhoneConfirmationNavEntry
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
 

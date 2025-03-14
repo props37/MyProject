@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -26,8 +26,8 @@ import ru.livetyping.zarina.core.uicomponent.otp.OtpStateComponent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.feature.signin.ui.impl.R
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 

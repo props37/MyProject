@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber

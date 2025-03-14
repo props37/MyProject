@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation
+package ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,9 +38,9 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.component.PhoneConfirmationTopBar
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationEvent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.phoneconfirmation.model.PhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.PhoneConfirmationTopBar
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.PhoneConfirmationState
 
 @Composable
 internal fun PhoneConfirmationScreen(
