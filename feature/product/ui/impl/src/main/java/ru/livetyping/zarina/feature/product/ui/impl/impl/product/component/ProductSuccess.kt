@@ -131,6 +131,7 @@ private fun ProductList(
         ) {
             ProductDescription(
                 description = product.description,
+                modelInfo = product.modelInfo,
                 modifier = Modifier
                     .fillMaxWidth()
                     .animateZarinaItem(this),

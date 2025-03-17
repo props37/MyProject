@@ -2,8 +2,11 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,6 +22,7 @@ import ru.livetyping.zarina.feature.product.ui.impl.R
 @Composable
 internal fun ProductDescription(
     description: List<ProductDetailed.DescriptionEntry>,
+    modelInfo: ProductDetailed.ModelInfo?,
     modifier: Modifier = Modifier,
 ) {
     ZarinaExpandableItem(
@@ -27,9 +31,31 @@ internal fun ProductDescription(
         },
         modifier = modifier,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            description.forEach { descriptionEntry ->
-                val text = rememberProductDescriptionEntryText(descriptionEntry)
+        Column {
+            Description(description)
+
+            if (modelInfo != null && !modelInfo.isEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                ModelInfo(modelInfo)
+            }
+        }
+    }
+}
+
+@Composable
+internal fun Description(
+    description: List<ProductDetailed.DescriptionEntry>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = DescriptionArrangement,
+        modifier = modifier,
+    ) {
+        description.forEach { descriptionEntry ->
+            val title = descriptionEntry.title
+            val body = descriptionEntry.body
+            key(title + body) {
+                val text = rememberProductDescriptionText(title, body)
                 Text(text = text)
             }
         }
@@ -37,24 +63,51 @@ internal fun ProductDescription(
 }
 
 @Composable
-private fun rememberProductDescriptionEntryText(
-    descriptionEntry: ProductDetailed.DescriptionEntry,
+internal fun ModelInfo(
+    modelInfo: ProductDetailed.ModelInfo,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = DescriptionArrangement,
+        modifier = modifier,
+    ) {
+        modelInfo.productSize?.let { productSize ->
+            val title = stringResource(R.string.product_size_on_model)
+            val text = rememberProductDescriptionText(title, productSize)
+            Text(text = text)
+        }
+
+        modelInfo.modelParams?.let { modelParams ->
+            val title = stringResource(R.string.product_model_parameters)
+            val text = rememberProductDescriptionText(title, modelParams)
+            Text(text = text)
+        }
+    }
+}
+
+@Composable
+private fun rememberProductDescriptionText(
+    title: String,
+    body: String,
 ): AnnotatedString {
     val titleStyle = UiKitTheme.typography.tertiary.regular
     val bodyStyle = UiKitTheme.typography.tertiary.light
-    return remember(descriptionEntry, titleStyle, bodyStyle) {
+    return remember(title, body, titleStyle, bodyStyle) {
         buildAnnotatedString {
             withStyle(titleStyle.toSpanStyle()) {
-                append(descriptionEntry.title)
+                append(title)
                 append(Colon)
             }
             withStyle(bodyStyle.toSpanStyle()) {
                 append(Space)
-                append(descriptionEntry.body)
+                append(body)
             }
         }
     }
 }
+
+private val DescriptionArrangement: Arrangement.Vertical
+    get() = Arrangement.spacedBy(2.dp)
 
 private const val Colon = ':'
 private const val Space = ' '

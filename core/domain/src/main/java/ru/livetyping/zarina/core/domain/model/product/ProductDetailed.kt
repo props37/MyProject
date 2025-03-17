@@ -37,5 +37,7 @@ public data class ProductDetailed(
     public data class ModelInfo(
         val modelParams: String?,
         val productSize: String?,
-    )
+    ) {
+        public fun isEmpty(): Boolean = modelParams == null && productSize == null
+    }
 }

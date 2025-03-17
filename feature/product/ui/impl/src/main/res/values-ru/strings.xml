@@ -8,4 +8,6 @@
     <string name="product_suggestions_title_total_look">Дополнить образ</string>
     <string name="product_suggestions_title_similar_products">Вам может понравиться</string>
     <string name="product_is_not_available">Товара нет в наличии в магазинах</string>
+    <string name="product_size_on_model">Размер на модели</string>
+    <string name="product_model_parameters">Параметры модели</string>
 </resources>
