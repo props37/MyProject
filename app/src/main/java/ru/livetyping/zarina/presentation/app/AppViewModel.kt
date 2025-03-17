@@ -68,6 +68,7 @@ class AppViewModel @Inject constructor(
 
     init {
         listenToForcedSignOutRequests()
+        forceSignOutIfUserIsNotValid()
         ensureMindboxUserAssociation()
     }
 
@@ -76,6 +77,17 @@ class AppViewModel @Inject constructor(
         interactor.getForcedSignOutRequestFlow()
             .onEach {
                 interactor.forcedSignOut()
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun forceSignOutIfUserIsNotValid() {
+        interactor.getUserFlowUseCase()
+            .onEach { result ->
+                if (result.isFailure) {
+                    Timber.e(result.exceptionOrNull(), "User is not valid. Sign out")
+                    interactor.forcedSignOutCoordinator.requestForcedSignOut()
+                }
             }
             .launchIn(viewModelScope)
     }
