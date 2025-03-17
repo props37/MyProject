@@ -7,7 +7,6 @@ import android.view.Window
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,8 +53,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var features: Features
 
-    private val viewModel by viewModels<MainViewModel>()
-
     private var navController: NavHostController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         intent?.let { Mindbox.onPushClicked(this, it) }
 
         addActivityLifecycleObservers()
-        viewModel.onScreenCreated()
 
         val defaultSystemBarsBehavior = SystemBarsBehavior(
             isStatusBarContentLight = false,

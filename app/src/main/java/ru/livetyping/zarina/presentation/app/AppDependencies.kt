@@ -4,10 +4,14 @@ import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
+import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import javax.inject.Inject
 
@@ -20,4 +24,8 @@ class AppDependencies @Inject constructor(
     val forcedSignOut: ForcedSignOutUseCase,
     val exoPlayerCache: Cache,
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory,
+    val getBearerTokensFlow: GetBearerTokensFlowUseCase,
+    val getUserFlow: GetUserFlowUseCase,
+    val getUserCityFlow: GetUserCityFlowUseCase,
+    val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
 )
