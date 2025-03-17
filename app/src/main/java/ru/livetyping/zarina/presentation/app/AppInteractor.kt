@@ -5,6 +5,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import ru.livetyping.zarina.data.mindbox.MindboxApi
+import ru.livetyping.zarina.data.signout.ForcedSignOutCoordinator
 import ru.livetyping.zarina.usecase.cart.GetCartProductCountFlowUseCase
 import ru.livetyping.zarina.usecase.device.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.usecase.favorite.GetFavoriteProductIdsFlowUseCase
@@ -24,4 +25,5 @@ class AppInteractor @Inject constructor(
     val forcedSignOut: ForcedSignOutUseCase,
     val getUserFlowUseCase: GetUserFlowUseCase,
     val mindboxApi: MindboxApi,
+    val forcedSignOutCoordinator: ForcedSignOutCoordinator,
 )
