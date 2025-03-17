@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         if (BuildConfig.IS_LOGGING_ENABLED) {
             val savedInstanceStateSize = savedInstanceState.getSizeInBytes()
-            Timber.d("onRestoreInstanceState. Size: $savedInstanceStateSize bytes")
+            Timber.d(TAG, "onRestoreInstanceState. Size: $savedInstanceStateSize bytes")
         }
     }
 
@@ -153,5 +153,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private companion object {
+        private const val TAG = "MainActivity"
     }
 }
