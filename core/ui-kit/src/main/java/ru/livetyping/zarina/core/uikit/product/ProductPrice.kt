@@ -67,7 +67,10 @@ public fun ProductPrice(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(RCommon.string.res_discount_percent, price.discountPercent).uppercase(),
+                text = stringResource(
+                    id = RCommon.string.res_discount_percent,
+                    price.discountPercent.toString(),
+                ).uppercase(),
                 style = UiKitTheme.typography.caption2.bold,
                 color = discountColor,
                 maxLines = 1,
