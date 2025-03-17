@@ -80,7 +80,7 @@ public data class UserEntity(
                 phone = user.phone?.value,
                 firstName = user.firstName,
                 lastName = user.lastName,
-                birthDate = user.birthDate.toString(),
+                birthDate = user.birthDate?.toString(),
                 gender = user.gender?.let { GenderEntity.from(it) },
                 notificationSettings = NotificationSettings.from(user.notificationSettings),
             )
