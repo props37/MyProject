@@ -11,13 +11,13 @@ import javax.inject.Inject
 class ZarinaApplication : Application() {
 
     @Inject
-    lateinit var appMetricaAppExtension: AppMetricaAppExtension
+    lateinit var appMetricaExtension: AppMetricaAppExtension
 
     @SuppressLint("LogNotTimber")
     override fun onCreate() {
         super.onCreate()
         Log.v(TAG, "onCreate")
-        appMetricaAppExtension.install(this)
+        appMetricaExtension.install(this)
     }
 
     companion object {
