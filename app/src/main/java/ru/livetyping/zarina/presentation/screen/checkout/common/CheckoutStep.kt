@@ -9,4 +9,4 @@ val CartType.checkoutStepCount: Int
     }
 
 private const val CHECKOUT_STEP_COUNT_DELIVERY = 4
-private const val CHECKOUT_STEP_COUNT_PICKUP = 3
+private const val CHECKOUT_STEP_COUNT_PICKUP = 4

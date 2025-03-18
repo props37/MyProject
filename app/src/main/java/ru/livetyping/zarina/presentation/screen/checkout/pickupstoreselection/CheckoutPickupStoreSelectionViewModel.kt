@@ -7,12 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
@@ -69,14 +66,9 @@ class CheckoutPickupStoreSelectionViewModel @Inject constructor(
         interactor.getCartFlow(params)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val storesRequester = FlowRequester(StoresRequest) {
-        city
-            .filterNotNull()
-            .flatMapLatest { city ->
-                val params = GetPickupStoresFlowUseCase.Params(city)
-                interactor.getPickupStoresFlow(params)
-            }
+        val params = GetPickupStoresFlowUseCase.Params(deliveryMethodType)
+        interactor.getPickupStoresFlow(params)
     }
 
     private val cartResult: StateFlow<Result<Cart>?> = cartRequester.flow
