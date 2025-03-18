@@ -2,6 +2,7 @@ package ru.livetyping.zarina.usecase.order
 
 import kotlinx.coroutines.CoroutineDispatcher
 import ru.livetyping.zarina.base.usecase.UseCase
+import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.data.order.OrderRepository
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.order.Order
@@ -18,6 +19,7 @@ class CancelOrderUseCase @Inject constructor(
         val orderId = params.orderId
         Timber.v("Cancel order $orderId")
         orderRepository.cancelOrder(orderId)
+        AppMetricaHelper.reportOrderCancelled(orderId)
     }
 
     data class Params(val orderId: Order.Id)

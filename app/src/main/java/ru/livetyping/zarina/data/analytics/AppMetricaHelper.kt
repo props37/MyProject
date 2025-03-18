@@ -18,6 +18,7 @@ import ru.livetyping.zarina.domain.common.Gender
 import ru.livetyping.zarina.domain.common.Sorting
 import ru.livetyping.zarina.domain.filter.Filters
 import ru.livetyping.zarina.domain.filter.selected
+import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.product.Product
 import ru.livetyping.zarina.domain.product.currentPrice
@@ -249,6 +250,11 @@ object AppMetricaHelper {
         AppMetrica.reportEvent(EVENT_DUPLICATE_PRODUCTS, parameters)
     }
 
+    fun reportOrderCancelled(orderId: Order.Id) {
+        val parameters = mapOf(KEY_ID to orderId.value)
+        AppMetrica.reportEvent(EVENT_CANCEL_ORDER, parameters)
+    }
+
     private fun reportCartOpened() {
         AppMetrica.reportEvent(EVENT_OPEN_CART)
     }
@@ -350,6 +356,7 @@ object AppMetricaHelper {
     private const val EVENT_USE_BONUSES = "useBonuses"
     private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
     private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
+    private const val EVENT_CANCEL_ORDER = "cancelOrder"
     private const val EVENT_SHOW_ERROR = "_showError"
     private const val EVENT_REFRESH_TOKENS = "_refreshTokens"
     private const val EVENT_DUPLICATE_PRODUCTS = "_duplicateProducts"
@@ -378,6 +385,7 @@ object AppMetricaHelper {
     private const val KEY_TITLE = "title"
     private const val KEY_IS_SUCCESS = "isSuccess"
     private const val KEY_PRODUCTS = "products"
+    private const val KEY_ID = "id"
 
     private const val CURRENCY_UNIT_RUB = "RUB"
 
