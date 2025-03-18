@@ -11,6 +11,7 @@ public val DeliveryMethodType.nameResId: Int
 
         DeliveryMethodType.POST -> RCommon.string.res_delivery_method_post
         DeliveryMethodType.PICKUP -> RCommon.string.res_delivery_method_pick_up_point
+        DeliveryMethodType.PICKUP_IN_STORE -> RCommon.string.res_delivery_method_pick_up_in_store
         DeliveryMethodType.RETAIL -> RCommon.string.res_delivery_method_pick_up_from_store
         DeliveryMethodType.YANDEX -> RCommon.string.res_delivery_method_yandex_express
     }

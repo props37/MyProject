@@ -127,6 +127,7 @@
     <string name="res_delivery_method_express_delivery">Курьерская доставка</string>
     <string name="res_delivery_method_post">Почта России</string>
     <string name="res_delivery_method_pick_up_point">Пункт самовывоза</string>
+    <string name="res_delivery_method_pick_up_in_store">Заказ со склада в магазин</string>
     <string name="res_delivery_method_pick_up_from_store">Забрать из магазина</string>
     <string name="res_delivery_method_yandex_express">Яндекс Экспресс</string>
 
