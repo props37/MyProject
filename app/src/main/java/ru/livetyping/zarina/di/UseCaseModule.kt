@@ -68,7 +68,6 @@ import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
-import ru.livetyping.zarina.core.domain.usecase.user.GetForcedSignOutRequestsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramBonusHistoryPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramExpectedBonusesPageFlowUseCase
@@ -425,17 +424,6 @@ internal class UseCaseModule {
     ): RequestPasswordResetUseCase {
         return RequestPasswordResetUseCase.getInstance(
             userRepository = userRepository,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideGetForcedSignOutRequestsFlowUseCase(
-        forcedSignOutCoordinator: ForcedSignOutCoordinator,
-        logger: UseCaseLogger,
-    ): GetForcedSignOutRequestsFlowUseCase {
-        return GetForcedSignOutRequestsFlowUseCase.getInstance(
-            forcedSignOutCoordinator = forcedSignOutCoordinator,
             logger = logger,
         )
     }

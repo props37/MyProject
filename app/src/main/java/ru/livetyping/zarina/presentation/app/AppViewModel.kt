@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -89,6 +90,7 @@ class AppViewModel @Inject constructor(
         fetchUserCity()
         fetchWishlistProductIdsOnBearerTokenChange()
         fetchCartProductIdsOnBearerTokenChange()
+        forceSignOutIfUserIsNotValid()
         performForcedSignOutOnRequests()
     }
 
@@ -138,15 +140,28 @@ class AppViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private fun forceSignOutIfUserIsNotValid() {
+        deps.getUserFlow(GetUserFlowUseCase.Params(CachePolicy.LocalOnly))
+            .onEach { result ->
+                if (result.isFailure) {
+                    Timber.tag(TAG).e(result.exceptionOrNull(), "User is not valid. Sign out")
+                    deps.forcedSignOutCoordinator.requestForcedSignOut()
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     // TODO: [High] Do something with navigation?
     private fun performForcedSignOutOnRequests() {
-        deps.getForcedSignOutRequestsFlow()
+        deps.forcedSignOutCoordinator.getForcedSignOutRequests()
             .onEach { deps.forcedSignOut() }
             .launchIn(viewModelScope)
     }
 
     private companion object {
         private const val WISHLIST_PRODUCT_IDS_FETCHING_DELAY_MILLIS = 1000L
-        private const val CART_PRODUCT_IDS_FETCHING_DELAY_MILLIS = 1000L
+        private const val CART_PRODUCT_IDS_FETCHING_DELAY_MILLIS = WISHLIST_PRODUCT_IDS_FETCHING_DELAY_MILLIS
+
+        private const val TAG = "AppViewModel"
     }
 }
