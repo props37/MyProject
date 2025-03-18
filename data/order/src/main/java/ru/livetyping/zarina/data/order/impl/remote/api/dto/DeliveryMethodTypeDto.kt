@@ -7,26 +7,26 @@ import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 @JvmInline
 internal value class DeliveryMethodTypeDto(val value: String) {
     fun toDeliveryMethodType(): DeliveryMethodType = when (value) {
-        VALUE_DELIVERY_SERVICE -> DeliveryMethodType.DELIVERY_SERVICE
+        VALUE_DELIVERY_SERVICE -> DeliveryMethodType.COURIER
         VALUE_POST -> DeliveryMethodType.POST
-        VALUE_PICKUP -> DeliveryMethodType.PICKUP
-        VALUE_PICKUP_IN_STORE -> DeliveryMethodType.PICKUP_IN_STORE
-        VALUE_RETAIL -> DeliveryMethodType.RETAIL
-        VALUE_YANDEX -> DeliveryMethodType.YANDEX
-        VALUE_EXPRESS -> DeliveryMethodType.EXPRESS
+        VALUE_PICKUP -> DeliveryMethodType.PICKUP_FROM_PICKUP_POINT
+        VALUE_PICKUP_IN_STORE -> DeliveryMethodType.PICKUP_FROM_STORE_WAREHOUSE
+        VALUE_RETAIL -> DeliveryMethodType.PICKUP_FROM_STORE
+        VALUE_YANDEX -> DeliveryMethodType.YANDEX_EXPRESS
+        VALUE_EXPRESS -> DeliveryMethodType.COURIER_EXPRESS
         else -> error("Unknown delivery method type $value")
     }
 
     companion object {
         fun from(type: DeliveryMethodType): DeliveryMethodTypeDto {
             return when (type) {
-                DeliveryMethodType.DELIVERY_SERVICE -> DeliveryMethodTypeDto(VALUE_DELIVERY_SERVICE)
+                DeliveryMethodType.COURIER -> DeliveryMethodTypeDto(VALUE_DELIVERY_SERVICE)
                 DeliveryMethodType.POST -> DeliveryMethodTypeDto(VALUE_POST)
-                DeliveryMethodType.PICKUP -> DeliveryMethodTypeDto(VALUE_PICKUP)
-                DeliveryMethodType.PICKUP_IN_STORE -> DeliveryMethodTypeDto(VALUE_PICKUP_IN_STORE)
-                DeliveryMethodType.RETAIL -> DeliveryMethodTypeDto(VALUE_RETAIL)
-                DeliveryMethodType.YANDEX -> DeliveryMethodTypeDto(VALUE_YANDEX)
-                DeliveryMethodType.EXPRESS -> DeliveryMethodTypeDto(VALUE_EXPRESS)
+                DeliveryMethodType.PICKUP_FROM_PICKUP_POINT -> DeliveryMethodTypeDto(VALUE_PICKUP)
+                DeliveryMethodType.PICKUP_FROM_STORE_WAREHOUSE -> DeliveryMethodTypeDto(VALUE_PICKUP_IN_STORE)
+                DeliveryMethodType.PICKUP_FROM_STORE -> DeliveryMethodTypeDto(VALUE_RETAIL)
+                DeliveryMethodType.YANDEX_EXPRESS -> DeliveryMethodTypeDto(VALUE_YANDEX)
+                DeliveryMethodType.COURIER_EXPRESS -> DeliveryMethodTypeDto(VALUE_EXPRESS)
             }
         }
 
