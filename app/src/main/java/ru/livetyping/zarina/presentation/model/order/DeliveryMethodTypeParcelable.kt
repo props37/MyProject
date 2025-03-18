@@ -11,7 +11,7 @@ enum class DeliveryMethodTypeParcelable : Parcelable {
     DELIVERY_SERVICE,
     POST,
     PICKUP,
-    PICKUP_STORE,
+    PICKUP_IN_STORE,
     RETAIL,
     YANDEX,
     EXPRESS;
@@ -21,7 +21,7 @@ enum class DeliveryMethodTypeParcelable : Parcelable {
             DELIVERY_SERVICE -> DeliveryMethodType.DELIVERY_SERVICE
             POST -> DeliveryMethodType.POST
             PICKUP -> DeliveryMethodType.PICKUP
-            PICKUP_STORE -> DeliveryMethodType.PICKUP_STORE
+            PICKUP_IN_STORE -> DeliveryMethodType.PICKUP_IN_STORE
             RETAIL -> DeliveryMethodType.RETAIL
             YANDEX -> DeliveryMethodType.YANDEX
             EXPRESS -> DeliveryMethodType.EXPRESS
@@ -34,7 +34,7 @@ enum class DeliveryMethodTypeParcelable : Parcelable {
                 DeliveryMethodType.DELIVERY_SERVICE -> DELIVERY_SERVICE
                 DeliveryMethodType.POST -> POST
                 DeliveryMethodType.PICKUP -> PICKUP
-                DeliveryMethodType.PICKUP_STORE -> PICKUP_STORE
+                DeliveryMethodType.PICKUP_IN_STORE -> PICKUP_IN_STORE
                 DeliveryMethodType.RETAIL -> RETAIL
                 DeliveryMethodType.YANDEX -> YANDEX
                 DeliveryMethodType.EXPRESS -> EXPRESS
