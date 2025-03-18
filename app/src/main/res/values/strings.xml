@@ -386,6 +386,7 @@
     <string name="order_delivery_method_post">Почта России</string>
     <string name="order_delivery_method_pick_up_point">Пункт самовывоза</string>
     <string name="order_delivery_method_pick_up_from_store">Забрать из магазина</string>
+    <string name="order_delivery_method_store_from_warehouse">Заказ со склада в магазин</string>
     <string name="order_delivery_method_yandex_express">Яндекс Экспресс</string>
 
     <string name="order_payment_method_upon_receipt">При получении</string>

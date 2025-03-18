@@ -36,6 +36,7 @@ import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.giftcert.GiftCertificate
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.store.Store
@@ -48,9 +49,13 @@ class CheckoutApi @Inject constructor(
     private val httpClient: HttpClient,
     private val applyGiftCertificateApiExceptionConverter: ApplyGiftCertificateApiExceptionConverter,
 ) {
-    suspend fun getPickupStores(cityKladrId: KladrId): List<StoreDto> {
+    suspend fun getPickupStores(
+        cityKladrId: KladrId,
+        deliveryMethodType: DeliveryMethodType,
+    ): List<StoreDto> {
         return httpClient.get("/api/v1/shipping-methods/shops") {
             parameter("city_kladr_id", cityKladrId.value)
+            parameter("shipping", DeliveryMethodTypeDto.from(deliveryMethodType).value)
         }.body()
     }
 

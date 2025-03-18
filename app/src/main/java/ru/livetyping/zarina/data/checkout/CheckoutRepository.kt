@@ -18,6 +18,7 @@ import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.giftcert.GiftCertificate
+import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.store.Store
@@ -29,8 +30,11 @@ class CheckoutRepository @Inject constructor(
     private val remoteDataSource: CheckoutRemoteDataSource,
     private val localDataSource: CheckoutLocalDataSource,
 ) {
-    fun getPickupStoresFlow(cityKladrId: KladrId): Flow<List<PickupStore>> {
-        return remoteDataSource.getPickupStoresFlow(cityKladrId)
+    fun getPickupStoresFlow(
+        cityKladrId: KladrId,
+        deliveryMethodType: DeliveryMethodType,
+    ): Flow<List<PickupStore>> {
+        return remoteDataSource.getPickupStoresFlow(cityKladrId, deliveryMethodType)
     }
 
     fun getDeliveryMethodsFlow(
