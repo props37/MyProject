@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.Recipient
 internal sealed interface RecipientScreenAction {
     data object CloseClicked : RecipientScreenAction
 
-    data class RecipientValidated(
+    data class ContinueClicked(
         val cartType: CartType,
         val step: Int,
         val recipient: Recipient,

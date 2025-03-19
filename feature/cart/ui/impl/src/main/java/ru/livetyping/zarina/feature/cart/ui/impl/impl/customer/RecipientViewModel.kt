@@ -119,7 +119,7 @@ internal class RecipientViewModel @Inject constructor(
             val recipientValidator = RecipientValidator()
             recipientValidator.validate(recipient)
 
-            val action = RecipientScreenAction.RecipientValidated(
+            val action = RecipientScreenAction.ContinueClicked(
                 cartType = cartType,
                 step = step.value + 1,
                 recipient = recipient,

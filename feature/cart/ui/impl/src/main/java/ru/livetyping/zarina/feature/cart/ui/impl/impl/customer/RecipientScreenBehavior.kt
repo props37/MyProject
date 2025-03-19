@@ -47,6 +47,6 @@ internal fun RecipientScreenBehavior(
 private fun navigate(navActions: RecipientNavActions, action: RecipientScreenAction) {
     when (action) {
         RecipientScreenAction.CloseClicked -> navActions.onCloseClicked()
-        is RecipientScreenAction.RecipientValidated -> TODO() // TODO: [Top] Implement
+        is RecipientScreenAction.ContinueClicked -> TODO() // TODO: [Top] Implement
     }
 }
