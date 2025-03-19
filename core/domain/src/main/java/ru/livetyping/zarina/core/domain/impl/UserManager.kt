@@ -5,11 +5,11 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 
-internal class UserWithBearerTokensSetter(
+internal class UserManager(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) {
-    suspend fun set(user: User, tokens: BearerTokens) {
+    suspend fun setUserWithTokens(user: User, tokens: BearerTokens) {
         authRepository.setBearerTokens(tokens)
         try {
             userRepository.setUser(user)

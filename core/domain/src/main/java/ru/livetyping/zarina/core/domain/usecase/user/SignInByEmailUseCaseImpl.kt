@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
-import ru.livetyping.zarina.core.domain.impl.UserWithBearerTokensSetter
+import ru.livetyping.zarina.core.domain.impl.UserManager
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
@@ -35,11 +35,8 @@ internal class SignInByEmailUseCaseImpl(
 
         if (!authResult.isPhoneConfirmationNeeded()) {
             mindboxRepository.onUserSignedIn(user)
-            val userWithBearerTokensSetter = UserWithBearerTokensSetter(
-                authRepository = authRepository,
-                userRepository = userRepository,
-            )
-            userWithBearerTokensSetter.set(user, tokens)
+            val userManager = UserManager(authRepository, userRepository)
+            userManager.setUserWithTokens(user, tokens)
         } else {
             logger?.v(TAG, "Phone confirmation needed")
         }

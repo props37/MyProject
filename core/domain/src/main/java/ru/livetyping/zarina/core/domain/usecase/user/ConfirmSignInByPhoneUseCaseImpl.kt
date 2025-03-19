@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
-import ru.livetyping.zarina.core.domain.impl.UserWithBearerTokensSetter
+import ru.livetyping.zarina.core.domain.impl.UserManager
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
@@ -20,11 +20,8 @@ internal class ConfirmSignInByPhoneUseCaseImpl(
 
         mindboxRepository.onUserSignedIn(authResult.user)
 
-        val userWithTokensSetter = UserWithBearerTokensSetter(
-            authRepository = authRepository,
-            userRepository = userRepository,
-        )
-        userWithTokensSetter.set(authResult.user, authResult.tokens)
+        val userManager = UserManager(authRepository, userRepository)
+        userManager.setUserWithTokens(authResult.user, authResult.tokens)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {
