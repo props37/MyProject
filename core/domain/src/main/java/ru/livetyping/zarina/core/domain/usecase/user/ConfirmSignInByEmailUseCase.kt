@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.MindboxRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
@@ -17,11 +18,13 @@ public interface ConfirmSignInByEmailUseCase {
         public fun getInstance(
             userRepository: UserRepository,
             authRepository: AuthRepository,
+            mindboxRepository: MindboxRepository,
             logger: UseCaseLogger?,
         ): ConfirmSignInByEmailUseCase {
             return ConfirmSignInByEmailUseCaseImpl(
                 userRepository = userRepository,
                 authRepository = authRepository,
+                mindboxRepository = mindboxRepository,
                 logger = logger,
             )
         }

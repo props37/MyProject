@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.impl.UserWithBearerTokensSetter
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.MindboxRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByEmailUseCase.Params
 import ru.livetyping.zarina.core.usecase.UseCase
@@ -10,6 +11,7 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 internal class ConfirmSignInByEmailUseCaseImpl(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val mindboxRepository: MindboxRepository,
     logger: UseCaseLogger?,
 ) : UseCase<Params, Unit>(logger), ConfirmSignInByEmailUseCase {
 
@@ -17,6 +19,8 @@ internal class ConfirmSignInByEmailUseCaseImpl(
         val authResult = userRepository.confirmSignInByEmail(params.phone, params.otp)
         val user = authResult.user
         val tokens = authResult.tokens
+
+        mindboxRepository.onUserSignedIn(user)
 
         val userWithTokensSetter = UserWithBearerTokensSetter(authRepository, userRepository)
         userWithTokensSetter.set(user, tokens)

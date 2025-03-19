@@ -11,6 +11,7 @@ import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
+import ru.livetyping.zarina.core.domain.repository.MindboxRepository
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
@@ -114,11 +115,13 @@ internal class UseCaseModule {
     fun provideConfirmSignInByEmailUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
         logger: UseCaseLogger,
     ): ConfirmSignInByEmailUseCase {
         return ConfirmSignInByEmailUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
             logger = logger,
         )
     }
@@ -364,11 +367,13 @@ internal class UseCaseModule {
     fun provideSignInByEmailUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
         logger: UseCaseLogger,
     ): SignInByEmailUseCase {
         return SignInByEmailUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
             logger = logger,
         )
     }
@@ -592,11 +597,13 @@ internal class UseCaseModule {
     fun provideConfirmSignUpUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
         logger: UseCaseLogger,
     ): ConfirmSignUpUseCase {
         return ConfirmSignUpUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
             logger = logger,
         )
     }
@@ -616,11 +623,13 @@ internal class UseCaseModule {
     fun provideConfirmSignInByPhoneUseCase(
         userRepository: UserRepository,
         authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
         logger: UseCaseLogger,
     ): ConfirmSignInByPhoneUseCase {
         return ConfirmSignInByPhoneUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
             logger = logger,
         )
     }
