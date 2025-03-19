@@ -65,8 +65,6 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartMyCardS
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartPromoCodeStateHolder
 import ru.livetyping.zarina.core.resource.R as RCommon
 
-// TODO: [Top] Handle city change
-
 @HiltViewModel(assistedFactory = CartViewModel.Factory::class)
 internal class CartViewModel @AssistedInject constructor(
     @Assisted
