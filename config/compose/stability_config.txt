@@ -25,6 +25,7 @@ ru.livetyping.zarina.core.domain.model.category.Categories
 
 ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+ru.livetyping.zarina.core.domain.model.checkout.Recipient
 
 ru.livetyping.zarina.core.domain.model.gender.Gender
 

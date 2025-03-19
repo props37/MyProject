@@ -9,7 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.customer.RecipientNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.customer.RecipientNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
 
 public class CartFeatureImpl : CartFeature {
@@ -36,11 +39,22 @@ public class CartFeatureImpl : CartFeature {
                 onChangeCityClicked = actions.onChangeCityClicked,
                 onGoToCatalogClicked = actions.onGoToCatalogClicked,
                 onProductClicked = actions.onProductClicked,
+                onCheckoutClicked = { cartType ->
+                    val navEntry = RecipientNavEntry.from(cartType)
+                    navController.navigate(navEntry)
+                },
             )
             cartScreen(
                 actions = cartScreenNavActions,
                 selectedCityResultRetriever = resultRetrievers.selectedCityResultRetriever,
             )
+
+            val recipientNavActions = RecipientNavActions(
+                onCloseClicked = {
+                    navController.popBackStack<CartFeature.NavEntry.StartNavEntry>(inclusive = false)
+                },
+            )
+            recipientScreen(recipientNavActions)
         }
     }
 }

@@ -63,7 +63,7 @@ internal fun CartScreenBehavior(
 private fun navigate(navActions: CartNavActions, action: CartScreenAction) {
     when (action) {
         CartScreenAction.BackClicked -> navActions.onBackClicked()
-        is CartScreenAction.CheckoutClicked -> Unit // TODO: [Top] Implement
+        is CartScreenAction.CheckoutClicked -> navActions.onCheckoutClicked(action.cartType)
         is CartScreenAction.ChangeCityClicked -> navActions.onChangeCityClicked(action.currentCity)
         CartScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
         is CartScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
