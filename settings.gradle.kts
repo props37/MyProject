@@ -78,6 +78,7 @@ include(":data:product")
 include(":data:cart")
 include(":data:store")
 include(":data:search")
+include(":data:mindbox")
 
 include(":core:domain")
 include(":core:navigation-util")
