@@ -440,6 +440,8 @@ internal class UseCaseModule {
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
         cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
         logger: UseCaseLogger,
     ): ForcedSignOutUseCase {
         return ForcedSignOutUseCase.getInstance(
@@ -448,6 +450,8 @@ internal class UseCaseModule {
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
             cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
             logger = logger,
         )
     }
@@ -470,6 +474,8 @@ internal class UseCaseModule {
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
         cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
         logger: UseCaseLogger,
     ): SignOutUseCase {
         return SignOutUseCase.getInstance(
@@ -478,6 +484,8 @@ internal class UseCaseModule {
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
             cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
             logger = logger,
         )
     }
@@ -489,6 +497,8 @@ internal class UseCaseModule {
         contentRepository: ContentRepository,
         wishlistRepository: WishlistRepository,
         cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
         logger: UseCaseLogger,
     ): DeleteAccountUseCase {
         return DeleteAccountUseCase.getInstance(
@@ -497,6 +507,8 @@ internal class UseCaseModule {
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
             cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
             logger = logger,
         )
     }

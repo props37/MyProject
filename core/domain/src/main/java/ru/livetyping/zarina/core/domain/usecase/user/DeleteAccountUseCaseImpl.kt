@@ -4,6 +4,8 @@ import ru.livetyping.zarina.core.domain.impl.SignOutCleaner
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
+import ru.livetyping.zarina.core.domain.repository.SearchRepository
+import ru.livetyping.zarina.core.domain.repository.StoreRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.usecase.UseCase
@@ -15,6 +17,8 @@ internal class DeleteAccountUseCaseImpl(
     private val contentRepository: ContentRepository,
     private val wishlistRepository: WishlistRepository,
     private val cartRepository: CartRepository,
+    private val storeRepository: StoreRepository,
+    private val searchRepository: SearchRepository,
     private val logger: UseCaseLogger?,
 ) : UseCase<Unit, Unit>(logger), DeleteAccountUseCase {
 
@@ -27,6 +31,8 @@ internal class DeleteAccountUseCaseImpl(
             contentRepository = contentRepository,
             wishlistRepository = wishlistRepository,
             cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
         )
         signOutCleaner.performSignOutCleanup()
 
