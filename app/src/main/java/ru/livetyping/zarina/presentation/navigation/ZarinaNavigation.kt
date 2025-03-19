@@ -87,7 +87,6 @@ fun ZarinaNavigation(
     @Suppress("NAME_SHADOWING")
     val navController by rememberUpdatedState(navController)
 
-    // TODO: [Top] Refactor
     val homeFeature = features.find<HomeFeature>()
     val homeNavActions = rememberHomeNavActions(navController)
 
