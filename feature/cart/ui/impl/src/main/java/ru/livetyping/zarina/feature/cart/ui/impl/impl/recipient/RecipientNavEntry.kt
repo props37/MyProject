@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.customer
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient
 
 import androidx.navigation.NavType
 import kotlinx.serialization.Serializable

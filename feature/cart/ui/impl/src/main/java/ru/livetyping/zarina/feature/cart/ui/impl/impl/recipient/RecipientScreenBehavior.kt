@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.customer
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

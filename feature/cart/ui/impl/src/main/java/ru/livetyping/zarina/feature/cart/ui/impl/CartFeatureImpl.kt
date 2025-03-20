@@ -9,10 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.customer.RecipientNavActions
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.customer.RecipientNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
 
 public class CartFeatureImpl : CartFeature {
