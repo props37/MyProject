@@ -49,10 +49,12 @@ public class CartFeatureImpl : CartFeature {
                 selectedCityResultRetriever = resultRetrievers.selectedCityResultRetriever,
             )
 
+            val closeCheckout: () -> Unit = {
+                navController.popBackStack<CartFeature.NavEntry.StartNavEntry>(inclusive = false)
+            }
+
             val recipientNavActions = RecipientNavActions(
-                onCloseClicked = {
-                    navController.popBackStack<CartFeature.NavEntry.StartNavEntry>(inclusive = false)
-                },
+                onCloseClicked = closeCheckout,
             )
             recipientScreen(recipientNavActions)
         }
