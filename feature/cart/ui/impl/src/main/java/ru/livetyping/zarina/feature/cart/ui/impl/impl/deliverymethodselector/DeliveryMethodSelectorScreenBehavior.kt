@@ -1,9 +1,8 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -12,13 +11,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun RecipientScreenBehavior(
-    sideEffects: Flow<RecipientSideEffect>,
-    navActions: RecipientNavActions,
+internal fun DeliveryMethodSelectorScreenBehavior(
+    sideEffects: Flow<DeliveryMethodSelectorSideEffect>,
+    navActions: DeliveryMethodSelectorNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
-    val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -26,12 +24,11 @@ internal fun RecipientScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is RecipientSideEffect.Navigate -> {
-                        currentKeyboardController?.hide()
+                    is DeliveryMethodSelectorSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is RecipientSideEffect.ShowZarinaToast -> {
+                    is DeliveryMethodSelectorSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -44,11 +41,10 @@ internal fun RecipientScreenBehavior(
     }
 }
 
-private fun navigate(navActions: RecipientNavActions, action: RecipientScreenAction) {
-    when (action) {
-        RecipientScreenAction.CloseClicked -> navActions.onCloseClicked()
-        is RecipientScreenAction.ContinueClicked -> {
-            navActions.onContinueClicked(action.cartType, action.currentCheckoutStep, action.recipient)
-        }
-    }
+private fun navigate(
+    navActions: DeliveryMethodSelectorNavActions,
+    action: DeliveryMethodSelectorScreenAction
+) {
+    // TODO: [Top] Implement
+    TODO()
 }

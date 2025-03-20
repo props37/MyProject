@@ -11,12 +11,12 @@ import kotlin.reflect.typeOf
 @Serializable
 internal class RecipientNavEntry private constructor(
     val cartType: CartTypeParcelable,
-    val step: Int,
+    val checkoutStep: Int,
 ) : NavigationEntry {
     companion object {
-        fun from(cartType: CartType, step: Int = 1): RecipientNavEntry {
+        fun from(cartType: CartType, checkoutStep: Int = 1): RecipientNavEntry {
             val cartTypeParcelable = CartTypeParcelable.from(cartType)
-            return RecipientNavEntry(cartTypeParcelable, step)
+            return RecipientNavEntry(cartTypeParcelable, checkoutStep)
         }
 
         fun typeMap(): Map<KType, NavType<*>> {

@@ -51,16 +51,16 @@ internal fun RecipientScreen(
     navActions: RecipientNavActions,
     viewModel: RecipientViewModel = hiltViewModel(),
 ) {
-    val step by viewModel.step.collectAsStateWithLifecycle()
-    val stepCount by viewModel.stepCount.collectAsStateWithLifecycle()
+    val checkoutStep by viewModel.checkoutStep.collectAsStateWithLifecycle()
+    val checkoutStepCount by viewModel.checkoutStepCount.collectAsStateWithLifecycle()
     val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
     val isLastNameInvalid by viewModel.isLastNameInvalid.collectAsStateWithLifecycle()
     val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
     val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
 
     ScreenContent(
-        step = step,
-        stepCount = stepCount,
+        checkoutStep = checkoutStep,
+        checkoutStepCount = checkoutStepCount,
         firstNameTextFieldState = viewModel.firstNameTextFieldState,
         isFirstNameInvalid = isFirstNameInvalid,
         lastNameTextFieldState = viewModel.lastNameTextFieldState,
@@ -78,8 +78,8 @@ internal fun RecipientScreen(
 
 @Composable
 private fun ScreenContent(
-    step: Int,
-    stepCount: Int,
+    checkoutStep: Int,
+    checkoutStepCount: Int,
     firstNameTextFieldState: TextFieldState,
     isFirstNameInvalid: Boolean,
     lastNameTextFieldState: TextFieldState,
@@ -110,8 +110,8 @@ private fun ScreenContent(
     ) {
         CheckoutTopBar(
             title = stringResource(R.string.cart_recipient),
-            step = step,
-            stepCount = stepCount,
+            step = checkoutStep,
+            stepCount = checkoutStepCount,
             isBackButtonVisible = false,
             onCloseClicked = onCloseClicked,
         )

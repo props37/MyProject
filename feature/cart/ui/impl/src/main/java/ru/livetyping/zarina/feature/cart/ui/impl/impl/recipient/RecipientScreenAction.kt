@@ -8,7 +8,7 @@ internal sealed interface RecipientScreenAction {
 
     data class ContinueClicked(
         val cartType: CartType,
-        val step: Int,
+        val currentCheckoutStep: Int,
         val recipient: Recipient,
     ) : RecipientScreenAction
 }

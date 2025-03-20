@@ -56,9 +56,9 @@ internal class RecipientViewModel @Inject constructor(
     )
     private val cartType = navEntry.cartType.toCartType()
 
-    val step = ReadOnlyStateFlow(navEntry.step)
+    val checkoutStep = ReadOnlyStateFlow(navEntry.checkoutStep)
 
-    val stepCount = ReadOnlyStateFlow(cartType.checkoutStepCount)
+    val checkoutStepCount = ReadOnlyStateFlow(cartType.checkoutStepCount)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -121,7 +121,7 @@ internal class RecipientViewModel @Inject constructor(
 
             val action = RecipientScreenAction.ContinueClicked(
                 cartType = cartType,
-                step = step.value + 1,
+                currentCheckoutStep = checkoutStep.value + 1,
                 recipient = recipient,
             )
             emitSideEffect(RecipientSideEffect.Navigate(action))
