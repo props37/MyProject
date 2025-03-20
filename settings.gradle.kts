@@ -79,6 +79,7 @@ include(":data:cart")
 include(":data:store")
 include(":data:search")
 include(":data:mindbox")
+include(":data:checkout")
 
 include(":core:domain")
 include(":core:navigation-util")
