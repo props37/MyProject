@@ -29,7 +29,7 @@ sealed class ZarinaBuildType(val name: String) {
         override val versionNameSuffix = "-$name"
         override val signingVariant = ZarinaSigningVariant.INTERNAL
         override val applicationName = "$name $APPLICATION_NAME"
-        override val backendUrl = "https://test7.zarina.ru"
+        override val backendUrl = "https://test8.zarina.ru"
         override val mindboxEndpoint = "zarina-android-sandbox"
         override val mindboxKey = "ofzs2DsV9J5PYHAUOrxO"
         override val appMetricaKey = "d43a0f33-15cd-4eed-9a50-e7b107125fbc"
@@ -41,7 +41,7 @@ sealed class ZarinaBuildType(val name: String) {
         override val versionNameSuffix = "-$name"
         override val signingVariant = ZarinaSigningVariant.INTERNAL
         override val applicationName = "$name $APPLICATION_NAME"
-        override val backendUrl = "https://test7.zarina.ru"
+        override val backendUrl = "https://test8.zarina.ru"
         override val mindboxEndpoint = "zarina-android-sandbox"
         override val mindboxKey = "ofzs2DsV9J5PYHAUOrxO"
         override val appMetricaKey = "d43a0f33-15cd-4eed-9a50-e7b107125fbc"
