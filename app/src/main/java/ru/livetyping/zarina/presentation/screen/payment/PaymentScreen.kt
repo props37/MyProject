@@ -2,8 +2,11 @@ package ru.livetyping.zarina.presentation.screen.payment
 
 import android.content.Context
 import android.content.Intent
+import android.net.http.SslError
+import android.webkit.SslErrorHandler
 import android.webkit.URLUtil
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -27,7 +30,9 @@ import androidx.core.net.MailTo
 import androidx.core.view.isVisible
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.webkit.WebResourceErrorCompat
 import androidx.webkit.WebViewClientCompat
+import androidx.webkit.WebViewFeature
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
@@ -91,7 +96,6 @@ private fun ScreenContent(
                     WebView(context).apply {
                         init(
                             isVisible = isWebViewVisible,
-                            paymentUrl = paymentUrl,
                             onPageLoaded = { isWebViewVisible = true },
                             context = currentContext,
                         )
@@ -112,7 +116,6 @@ private fun ScreenContent(
 
 private fun WebView.init(
     isVisible: Boolean,
-    paymentUrl: Url,
     onPageLoaded: () -> Unit,
     context: Context,
 ) {
@@ -131,9 +134,8 @@ private fun WebView.init(
 
     webViewClient = object : WebViewClientCompat() {
         override fun onPageFinished(view: WebView?, url: String?) {
-            if (!isVisible && url == paymentUrl.value) {
-                onPageLoaded()
-            }
+            Timber.tag(TAG_WEB_VIEW).v("onPageFinished: $url")
+            onPageLoaded()
         }
 
         override fun shouldOverrideUrlLoading(
@@ -167,6 +169,32 @@ private fun WebView.init(
 
                 else -> super.shouldOverrideUrlLoading(view, request)
             }
+        }
+
+        override fun onReceivedError(
+            view: WebView,
+            request: WebResourceRequest,
+            error: WebResourceErrorCompat
+        ) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_ERROR_GET_DESCRIPTION)) {
+                Timber.tag(TAG_WEB_VIEW).e("onReceivedError. Description: ${error.description}")
+            }
+        }
+
+        override fun onReceivedHttpError(
+            view: WebView,
+            request: WebResourceRequest,
+            errorResponse: WebResourceResponse
+        ) {
+            Timber.tag(TAG_WEB_VIEW).e("onReceivedHttpError. Reason: ${errorResponse.reasonPhrase}, status code: ${errorResponse.statusCode}")
+        }
+
+        override fun onReceivedSslError(
+            view: WebView?,
+            handler: SslErrorHandler?,
+            error: SslError?
+        ) {
+            Timber.tag(TAG_WEB_VIEW).e("onReceivedSslError: $error")
         }
     }
 }

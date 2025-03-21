@@ -3,13 +3,14 @@ package ru.livetyping.zarina.data.order.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.cart.Cart
-import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
+import ru.livetyping.zarina.domain.checkout.SberPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.order.OrderCreationParams
 
@@ -28,10 +29,16 @@ data class CreateOrderRequestBody(
     val myCard: MyCard,
     
     @SerialName("paytureWalletUid") 
-    val paytureWalletPaymentId: String? = null,
+    val paytureWalletPaymentId: String?,
     
     @SerialName("paytureInPayUid")
-    val paytureInPayPaymentId: String? = null,
+    val paytureInPayPaymentId: String?,
+
+    @SerialName("sberUid")
+    val sberUid: String?,
+
+    @SerialName("sberOrderId")
+    val sberOrderId: String?,
 ) {
     @Serializable
     data class ContactInfo(
@@ -235,9 +242,15 @@ data class CreateOrderRequestBody(
     companion object {
         fun from(params: OrderCreationParams): CreateOrderRequestBody {
             val checkoutParams = params.checkoutParams
-            val cardPaymentData = params.paymentData as? CardPaymentData
-            val paytureWalletPaymentId = cardPaymentData?.paymentId?.value
-            val paytureInPayPaymentId = cardPaymentData?.paymentId?.value
+
+            val payturePaymentData = params.paymentData as? PayturePaymentData
+            val paytureWalletPaymentId = payturePaymentData?.paymentId?.value
+            val paytureInPayPaymentId = payturePaymentData?.paymentId?.value
+
+            val sberPaymentData = params.paymentData as? SberPaymentData
+            val sberUid = sberPaymentData?.sberUid?.value
+            val sberOrderId = sberPaymentData?.sberOrderId?.value
+
             return CreateOrderRequestBody(
                 contactInfo = ContactInfo.from(checkoutParams.customer),
                 delivery = Delivery.from(checkoutParams),
@@ -245,6 +258,8 @@ data class CreateOrderRequestBody(
                 myCard = MyCard.from(params.cart),
                 paytureWalletPaymentId = paytureWalletPaymentId,
                 paytureInPayPaymentId = paytureInPayPaymentId,
+                sberUid = sberUid,
+                sberOrderId = sberOrderId,
             )
         }
     }

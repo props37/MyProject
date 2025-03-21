@@ -91,12 +91,14 @@ class CheckoutRepository @Inject constructor(
         cart: Cart,
         paymentMethodType: PaymentMethodType,
         userId: User.Id?,
+        deliveryMethodType: DeliveryMethodType,
         pickupStoreId: Store.Id?,
     ): PaymentData {
         return remoteDataSource.getPaymentData(
             cart = cart,
             paymentMethodType = paymentMethodType,
             userId = userId,
+            deliveryMethodType = deliveryMethodType,
             pickupStoreId = pickupStoreId,
         )
     }
