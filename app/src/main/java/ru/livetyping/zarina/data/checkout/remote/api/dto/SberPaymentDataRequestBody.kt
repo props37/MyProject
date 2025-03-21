@@ -2,11 +2,12 @@ package ru.livetyping.zarina.data.checkout.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.data.order.remote.api.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.domain.cart.CartProduct
 import ru.livetyping.zarina.domain.product.currentPrice
 
 @Serializable
-data class CardPaymentDataRequestBody(
+data class SberPaymentDataRequestBody(
     @SerialName("products")
     val products: List<Product>? = null,
 
@@ -16,8 +17,11 @@ data class CardPaymentDataRequestBody(
     @SerialName("userId")
     val userId: String?,
 
-    @SerialName("storeId") 
+    @SerialName("storeId")
     val storeId: String?,
+
+    @SerialName("shipping")
+    val shipping: DeliveryMethodTypeDto,
 ) {
     @Serializable
     data class Product(

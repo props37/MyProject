@@ -5,6 +5,7 @@ import ru.livetyping.zarina.domain.order.PaymentMethodType
 
 val PaymentMethodType.nameResId: Int
     get() = when (this) {
+        PaymentMethodType.SBER -> R.string.order_payment_method_by_card_online
         PaymentMethodType.POSTPAID -> R.string.order_payment_method_upon_receipt
         PaymentMethodType.PAYTURE_IN_PAY -> R.string.order_payment_method_by_card_online
         PaymentMethodType.PAYTURE_WALLET -> R.string.order_payment_method_by_card_online

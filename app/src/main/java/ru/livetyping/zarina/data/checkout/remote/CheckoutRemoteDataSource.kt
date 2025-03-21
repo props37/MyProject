@@ -8,15 +8,16 @@ import ru.livetyping.zarina.data.checkout.remote.api.CheckoutApi
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDtoType
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
 import ru.livetyping.zarina.domain.checkout.DeliveryOption
 import ru.livetyping.zarina.domain.checkout.PaymentData
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPoint
 import ru.livetyping.zarina.domain.checkout.PickupPointDetails
 import ru.livetyping.zarina.domain.checkout.PickupStore
+import ru.livetyping.zarina.domain.checkout.SberPaymentData
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.giftcert.GiftCertificate
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
@@ -99,17 +100,29 @@ class CheckoutRemoteDataSource @Inject constructor(
         cart: Cart,
         paymentMethodType: PaymentMethodType,
         userId: User.Id?,
+        deliveryMethodType: DeliveryMethodType,
         pickupStoreId: Store.Id?,
     ): PaymentData {
         return when (paymentMethodType) {
             PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
-                val dto = api.getCardPaymentData(
+                val dto = api.getPayturePaymentData(
                     cart = cart,
                     paymentMethodType = paymentMethodType,
                     userId = userId,
                     pickupStoreId = pickupStoreId,
                 )
-                dto.toCardPaymentData()
+                dto.toPayturePaymentData()
+            }
+
+            PaymentMethodType.SBER -> {
+                val dto = api.getSberPaymentData(
+                    cart = cart,
+                    paymentMethodType = paymentMethodType,
+                    userId = userId,
+                    deliveryMethodType = deliveryMethodType,
+                    pickupStoreId = pickupStoreId,
+                )
+                dto.toSberPaymentData()
             }
 
             else -> error("Unsupported payment method type $paymentMethodType")
@@ -124,10 +137,19 @@ class CheckoutRemoteDataSource @Inject constructor(
     ) {
         when (paymentMethodType) {
             PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
-                check(paymentData is CardPaymentData) { "Payment data is not CardPaymentData" }
-                awaitCardPaymentCompleted(
+                check(paymentData is PayturePaymentData) { "Payment data must be ${PayturePaymentData::class.simpleName}, but was $paymentData" }
+                awaitPayturePaymentCompleted(
                     paymentData = paymentData,
                     paymentMethodType = paymentMethodType,
+                    pollingDelay = pollingDelay,
+                    onCheck = onCheck,
+                )
+            }
+
+            PaymentMethodType.SBER -> {
+                check(paymentData is SberPaymentData) { "Payment data must be ${SberPaymentData::class.simpleName}, but was $paymentData" }
+                awaitSberPaymentCompleted(
+                    paymentData = paymentData,
                     pollingDelay = pollingDelay,
                     onCheck = onCheck,
                 )
@@ -160,8 +182,8 @@ class CheckoutRemoteDataSource @Inject constructor(
         api.removeGiftCertificate(paymentMethodType)
     }
 
-    private suspend fun awaitCardPaymentCompleted(
-        paymentData: CardPaymentData,
+    private suspend fun awaitPayturePaymentCompleted(
+        paymentData: PayturePaymentData,
         paymentMethodType: PaymentMethodType,
         pollingDelay: Duration,
         onCheck: (suspend () -> Unit)?,
@@ -169,12 +191,35 @@ class CheckoutRemoteDataSource @Inject constructor(
         var errorCount = 0
         while (coroutineContext.isActive) {
             try {
-                val result = api.getCardPaymentResult(
+                val result = api.getPayturePaymentResult(
                     paymentMethodType = paymentMethodType,
                     paymentData = paymentData,
                 )
                 onCheck?.invoke()
                 if (result.success == true) break
+            } catch (e: Exception) {
+                Timber.e(e)
+                errorCount++
+                if (errorCount > PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT) {
+                    throw e
+                }
+            }
+
+            delay(pollingDelay)
+        }
+    }
+
+    private suspend fun awaitSberPaymentCompleted(
+        paymentData: SberPaymentData,
+        pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)?,
+    ) {
+        var errorCount = 0
+        while (coroutineContext.isActive) {
+            try {
+                val result = api.getSberPaymentResult(paymentData)
+                onCheck?.invoke()
+                if (result.isSuccess()) break
             } catch (e: Exception) {
                 Timber.e(e)
                 errorCount++

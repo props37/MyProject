@@ -32,7 +32,7 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.cart.Cart
-import ru.livetyping.zarina.domain.checkout.CardPaymentData
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CheckoutStage
@@ -41,6 +41,7 @@ import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
+import ru.livetyping.zarina.domain.checkout.SberPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.checkout.UrlPaymentData
 import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
@@ -648,7 +649,8 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         when (stage) {
             is CheckoutStage.PaymentStarted -> {
                 val paymentUrl = when (val data = stage.paymentData) {
-                    is CardPaymentData -> data.paymentUrl
+                    is PayturePaymentData -> data.paymentUrl
+                    is SberPaymentData -> data.paymentUrl
                     is UrlPaymentData -> data.paymentUrl
                 }
                 val action = CheckoutOrderPlacingScreenAction.PaymentStarted(paymentUrl)

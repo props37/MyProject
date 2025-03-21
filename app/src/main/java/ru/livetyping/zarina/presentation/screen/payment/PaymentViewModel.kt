@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
-import ru.livetyping.zarina.domain.checkout.CardPaymentData
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
+import ru.livetyping.zarina.domain.checkout.SberPaymentData
 import ru.livetyping.zarina.domain.checkout.UrlPaymentData
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
@@ -49,7 +50,13 @@ class PaymentViewModel @Inject constructor(
             .onEach { result ->
                 val paymentData = result.getOrNull() ?: return@onEach
                 when (paymentData) {
-                    is CardPaymentData -> {
+                    is PayturePaymentData -> {
+                        if (paymentData.paymentUrl == paymentUrl.value) {
+                            closeScreen()
+                        }
+                    }
+
+                    is SberPaymentData -> {
                         if (paymentData.paymentUrl == paymentUrl.value) {
                             closeScreen()
                         }
