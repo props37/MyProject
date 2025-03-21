@@ -48,7 +48,7 @@ class CheckoutUseCase @Inject constructor(
             val user = userRepository.getUserFlow().firstOrNull()
 
             when (paymentMethod.type) {
-                PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
+                PaymentMethodType.SBER, PaymentMethodType.PAYTURE_WALLET, PaymentMethodType.PAYTURE_IN_PAY -> {
                     checkoutWithCardPayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
@@ -273,6 +273,7 @@ class CheckoutUseCase @Inject constructor(
             cart = cart,
             paymentMethodType = paymentMethod.type,
             userId = user?.id,
+            deliveryMethodType = checkoutParams.deliveryMethodType,
             pickupStoreId = pickupStore?.id,
         )
     }

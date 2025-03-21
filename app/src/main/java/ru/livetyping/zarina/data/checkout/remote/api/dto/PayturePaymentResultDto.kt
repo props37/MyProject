@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CardPaymentResultDto(
+data class PayturePaymentResultDto(
     @SerialName("success")
     val success: Boolean? = null,
 )

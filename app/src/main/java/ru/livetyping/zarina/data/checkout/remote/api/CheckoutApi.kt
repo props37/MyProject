@@ -10,17 +10,20 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.data.cart.remote.api.dto.CartTypeDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.ApplyGiftCertificateRequestBody
-import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentDataDto
-import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentDataRequestBody
-import ru.livetyping.zarina.data.checkout.remote.api.dto.CardPaymentResultDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CheckoutCartDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.CheckoutCartRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryMethodDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.DeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PaymentMethodDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.PayturePaymentDataDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.PayturePaymentDataRequestBody
+import ru.livetyping.zarina.data.checkout.remote.api.dto.PayturePaymentResultDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDetailsDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.RemoveGiftCertificateRequestBody
+import ru.livetyping.zarina.data.checkout.remote.api.dto.SberPaymentDataDto
+import ru.livetyping.zarina.data.checkout.remote.api.dto.SberPaymentDataRequestBody
+import ru.livetyping.zarina.data.checkout.remote.api.dto.SberPaymentResultDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.StoreDto
 import ru.livetyping.zarina.data.checkout.remote.api.dto.UpdateOrderPodeliPaymentStatusRequestBody
 import ru.livetyping.zarina.data.checkout.remote.api.exception.ApplyGiftCertificateApiExceptionConverter
@@ -29,10 +32,11 @@ import ru.livetyping.zarina.data.order.remote.api.dto.PaymentMethodTypeDto
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.cart.Cart
 import ru.livetyping.zarina.domain.cart.CartType
-import ru.livetyping.zarina.domain.checkout.CardPaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPoint
+import ru.livetyping.zarina.domain.checkout.SberPaymentData
 import ru.livetyping.zarina.domain.checkout.StorePickupCheckoutParams
 import ru.livetyping.zarina.domain.geography.KladrId
 import ru.livetyping.zarina.domain.giftcert.GiftCertificate
@@ -132,33 +136,68 @@ class CheckoutApi @Inject constructor(
         }.body()
     }
 
-    suspend fun getCardPaymentData(
+    suspend fun getPayturePaymentData(
         cart: Cart,
         paymentMethodType: PaymentMethodType,
         userId: User.Id?,
         pickupStoreId: Store.Id?,
-    ): CardPaymentDataDto {
-        val paymentMethodPath = getCardPaymentMethodPath(paymentMethodType)
-        val parametersDto = CardPaymentDataRequestBody(
-            products = cart.products.map { CardPaymentDataRequestBody.Product.from(it) },
+    ): PayturePaymentDataDto {
+        check(
+            paymentMethodType == PaymentMethodType.PAYTURE_WALLET
+                    || paymentMethodType == PaymentMethodType.PAYTURE_IN_PAY
+        ) { "PaymentMethodType must be ${PaymentMethodType.PAYTURE_IN_PAY} or ${PaymentMethodType.PAYTURE_WALLET}, but was $paymentMethodType" }
+
+        val paymentMethodPath = getPayturePaymentMethodPath(paymentMethodType)
+        val parameterDto = PayturePaymentDataRequestBody(
+            products = cart.products.map { PayturePaymentDataRequestBody.Product.from(it) },
             finalPrice = cart.price.finalPrice,
             userId = userId?.value,
             storeId = pickupStoreId?.value,
         )
-        val parametersString = Json.encodeToString(parametersDto)
+        val parameterString = Json.encodeToString(parameterDto)
         return httpClient.get("/api/$paymentMethodPath/get-link") {
-            parameter("data", parametersString)
+            parameter("data", parameterString)
         }.body()
     }
 
-    suspend fun getCardPaymentResult(
+    suspend fun getSberPaymentData(
+        cart: Cart,
         paymentMethodType: PaymentMethodType,
-        paymentData: CardPaymentData,
-    ): CardPaymentResultDto {
-        val paymentMethodPath = getCardPaymentMethodPath(paymentMethodType)
+        userId: User.Id?,
+        deliveryMethodType: DeliveryMethodType,
+        pickupStoreId: Store.Id?,
+    ): SberPaymentDataDto {
+        check(paymentMethodType == PaymentMethodType.SBER) {
+            "PaymentMethodType must be ${PaymentMethodType.SBER}, but was $paymentMethodType"
+        }
+
+        val parameterDto = SberPaymentDataRequestBody(
+            products = cart.products.map { SberPaymentDataRequestBody.Product.from(it) },
+            finalPrice = cart.price.finalPrice,
+            userId = userId?.value,
+            shipping = DeliveryMethodTypeDto.from(deliveryMethodType),
+            storeId = pickupStoreId?.value,
+        )
+        val parameterString = Json.encodeToString(parameterDto)
+        return httpClient.get("/api/sber/pre-auth") {
+            parameter("data", parameterString)
+        }.body()
+    }
+
+    suspend fun getPayturePaymentResult(
+        paymentMethodType: PaymentMethodType,
+        paymentData: PayturePaymentData,
+    ): PayturePaymentResultDto {
+        val paymentMethodPath = getPayturePaymentMethodPath(paymentMethodType)
         val paymentId = paymentData.paymentId.value
         return httpClient
             .get("/api/$paymentMethodPath/check-payment-status/$paymentId/")
+            .body()
+    }
+
+    suspend fun getSberPaymentResult(paymentData: SberPaymentData): SberPaymentResultDto {
+        return httpClient
+            .get("/api/sber/get-status/${paymentData.sberUid.value}")
             .body()
     }
 
@@ -221,7 +260,7 @@ class CheckoutApi @Inject constructor(
         }
     }
 
-    private fun getCardPaymentMethodPath(paymentMethodType: PaymentMethodType): String {
+    private fun getPayturePaymentMethodPath(paymentMethodType: PaymentMethodType): String {
         return when (paymentMethodType) {
             PaymentMethodType.PAYTURE_WALLET -> "payture-wallet"
             PaymentMethodType.PAYTURE_IN_PAY -> "payture-inpay"
