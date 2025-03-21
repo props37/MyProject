@@ -389,7 +389,6 @@
     <string name="order_delivery_method_store_from_warehouse">Заказ со склада в магазин</string>
     <string name="order_delivery_method_yandex_express">Яндекс Экспресс</string>
 
-    <string name="order_payment_method_sber">Сбер</string>
     <string name="order_payment_method_upon_receipt">При получении</string>
     <string name="order_payment_method_by_card_online">Картой онлайн</string>
     <string name="order_payment_method_sbp">СБП</string>
