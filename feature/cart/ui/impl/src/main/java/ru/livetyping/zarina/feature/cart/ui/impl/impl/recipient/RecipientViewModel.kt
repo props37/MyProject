@@ -121,7 +121,7 @@ internal class RecipientViewModel @Inject constructor(
 
             val action = RecipientScreenAction.ContinueClicked(
                 cartType = cartType,
-                currentCheckoutStep = checkoutStep.value + 1,
+                currentCheckoutStep = checkoutStep.value,
                 recipient = recipient,
             )
             emitSideEffect(RecipientSideEffect.Navigate(action))

@@ -12,13 +12,13 @@ import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
+import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.AddProductToCartRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.ApplyMyCardRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.ApplyPromoCodeRequestBody
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductCountDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartProductIdsDto
-import ru.livetyping.zarina.data.cart.impl.remote.api.dto.CartTypeDto
 import ru.livetyping.zarina.data.cart.impl.remote.api.dto.SetBonusRedemptionRequestBody
 import javax.inject.Inject
 

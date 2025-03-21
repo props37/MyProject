@@ -52,6 +52,7 @@ public class CartFeatureImpl : CartFeature {
                 selectedCityResultRetriever = resultRetrievers.selectedCityResultRetriever,
             )
 
+            val navigateBack: () -> Unit = { navController.navigateUp() }
             val closeCheckout: () -> Unit = {
                 navController.popBackStack<CartFeature.NavEntry.StartNavEntry>(inclusive = false)
             }
@@ -69,7 +70,14 @@ public class CartFeatureImpl : CartFeature {
             )
             recipientScreen(recipientNavActions)
 
-            val deliveryMethodSelectorNavActions = DeliveryMethodSelectorNavActions()
+            val deliveryMethodSelectorNavActions = DeliveryMethodSelectorNavActions(
+                onBackClicked = navigateBack,
+                onCloseClicked = closeCheckout,
+                onDeliveryMethodSelected = { cartType, currentStep, recipient, deliveryMethod ->
+                    TODO()
+                    // TODO: [Top] Implement
+                },
+            )
             deliveryMethodSelectorScreen(deliveryMethodSelectorNavActions)
         }
     }

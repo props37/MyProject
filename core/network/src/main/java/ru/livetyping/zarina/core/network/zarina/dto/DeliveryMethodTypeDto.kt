@@ -1,12 +1,12 @@
-package ru.livetyping.zarina.data.order.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 
 @Serializable
 @JvmInline
-internal value class DeliveryMethodTypeDto(val value: String) {
-    fun toDeliveryMethodType(): DeliveryMethodType = when (value) {
+public value class DeliveryMethodTypeDto(public val value: String) {
+    public fun toDeliveryMethodType(): DeliveryMethodType = when (value) {
         VALUE_DELIVERY_SERVICE -> DeliveryMethodType.COURIER
         VALUE_POST -> DeliveryMethodType.POST
         VALUE_PICKUP -> DeliveryMethodType.PICKUP_FROM_PICKUP_POINT
@@ -17,8 +17,8 @@ internal value class DeliveryMethodTypeDto(val value: String) {
         else -> error("Unknown delivery method type $value")
     }
 
-    companion object {
-        fun from(type: DeliveryMethodType): DeliveryMethodTypeDto {
+    public companion object {
+        public fun from(type: DeliveryMethodType): DeliveryMethodTypeDto {
             return when (type) {
                 DeliveryMethodType.COURIER -> DeliveryMethodTypeDto(VALUE_DELIVERY_SERVICE)
                 DeliveryMethodType.POST -> DeliveryMethodTypeDto(VALUE_POST)

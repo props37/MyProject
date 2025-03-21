@@ -43,8 +43,18 @@ internal fun DeliveryMethodSelectorScreenBehavior(
 
 private fun navigate(
     navActions: DeliveryMethodSelectorNavActions,
-    action: DeliveryMethodSelectorScreenAction
+    action: DeliveryMethodSelectorScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        DeliveryMethodSelectorScreenAction.BackClicked -> navActions.onBackClicked()
+        DeliveryMethodSelectorScreenAction.CloseClicked -> navActions.onCloseClicked()
+        is DeliveryMethodSelectorScreenAction.DeliveryMethodSelected -> {
+            navActions.onDeliveryMethodSelected(
+                action.cartType,
+                action.currentCheckoutStep,
+                action.recipient,
+                action.deliveryMethod,
+            )
+        }
+    }
 }

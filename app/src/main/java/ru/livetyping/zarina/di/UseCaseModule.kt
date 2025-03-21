@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
+import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
@@ -37,6 +38,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
@@ -977,6 +979,19 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): RequestSignInByEmailConfirmationUseCase {
         return RequestSignInByEmailConfirmationUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetDeliveryMethodsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetDeliveryMethodsFlowUseCase {
+        return GetDeliveryMethodsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
             userRepository = userRepository,
             logger = logger,
         )

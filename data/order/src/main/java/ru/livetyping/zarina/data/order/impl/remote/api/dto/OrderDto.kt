@@ -15,6 +15,7 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeParseException

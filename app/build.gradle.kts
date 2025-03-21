@@ -199,6 +199,7 @@ dependencies {
     implementation(projects.data.store)
     implementation(projects.data.search)
     implementation(projects.data.mindbox)
+    implementation(projects.data.checkout)
 
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
