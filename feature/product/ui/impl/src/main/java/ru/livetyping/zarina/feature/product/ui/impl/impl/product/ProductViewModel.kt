@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
@@ -62,7 +63,7 @@ internal class ProductViewModel @Inject constructor(
     private val productId = MutableStateFlow(initialProductId)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
+    private val productRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetProductFlowUseCase.Params(productId)
@@ -70,10 +71,14 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
-    private val productResultFlow = productRequester.flow
+    private val productResultFlow = productRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val productTotalLookRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
+    private val productTotalLookRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetProductTotalLookFlowUseCase.Params(productId)
@@ -81,7 +86,11 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
-    private val productTotalLookResultFlow = productTotalLookRequester.flow
+    private val productTotalLookResultFlow = productTotalLookRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
 
     private val productTotalLookStateFlow = combine(
         productTotalLookResultFlow,
@@ -91,7 +100,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val similarProductsRequester = FlowRequester(ProductRequest, viewModelScope) { request ->
+    private val similarProductsRequester = FlowRequester(ProductRequest) { request ->
         productId.flatMapLatest { productId ->
             markAsLoading(request)
             val params = GetSimilarProductsFlowUseCase.Params(productId)
@@ -99,7 +108,11 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
-    private val similarProductsResultFlow = similarProductsRequester.flow
+    private val similarProductsResultFlow = similarProductsRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
 
     private val similarProductsStateFlow = combine(
         similarProductsResultFlow,

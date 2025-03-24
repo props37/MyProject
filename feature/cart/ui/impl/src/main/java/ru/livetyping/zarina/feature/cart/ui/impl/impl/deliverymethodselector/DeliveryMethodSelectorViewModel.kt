@@ -20,9 +20,9 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
 
@@ -50,7 +50,7 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
 
     val checkoutStepCount: StateFlow<Int> = ReadOnlyStateFlow(cartType.checkoutStepCount)
 
-    private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest, viewModelScope) {
+    private val deliveryMethodsRequester = FlowRequester(DeliveryMethodsRequest) {
         val params = GetDeliveryMethodsFlowUseCase.Params(cartType)
         deps.getDeliveryMethodsFlow(params)
     }

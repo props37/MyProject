@@ -2,7 +2,6 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -40,7 +39,7 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
         )
     )
 
-    private val cartRequester = FlowRequester(CartRequest, viewModelScope) {
+    private val cartRequester = FlowRequester(CartRequest) {
         val params = GetCartFlowUseCase.Params(cartType)
         deps.getCartFlow(params)
     }

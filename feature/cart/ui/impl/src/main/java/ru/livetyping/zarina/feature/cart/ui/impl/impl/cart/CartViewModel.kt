@@ -125,16 +125,12 @@ internal class CartViewModel @AssistedInject constructor(
 
     private val promoCodeStateHolder = CartPromoCodeStateHolder(savedStateHandle)
 
-    private val deliveryCartRequester = FlowRequester<Result<Cart>, CartRequest>(
-        coroutineScope = viewModelScope,
-    ) {
+    private val deliveryCartRequester = FlowRequester<Result<Cart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(CartType.DELIVERY)
         deps.getCartFlow(params)
     }
 
-    private val pickupCartRequester = FlowRequester<Result<Cart>, CartRequest>(
-        coroutineScope = viewModelScope,
-    ) {
+    private val pickupCartRequester = FlowRequester<Result<Cart>, CartRequest> {
         val params = GetCartFlowUseCase.Params(CartType.PICKUP)
         deps.getCartFlow(params)
     }

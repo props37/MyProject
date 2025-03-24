@@ -75,7 +75,7 @@ internal class CitySelectorViewModel @Inject constructor(
     private val hasSelectedCityChanged = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private val cityRequester = FlowRequester(CityRequest, viewModelScope) { request ->
+    private val cityRequester = FlowRequester(CityRequest) { request ->
         citySearchTextFieldState.textAsFlow()
             .debounce { nameQuery ->
                 if (nameQuery.isNotBlank()) CITY_SEARCH_DEBOUNCE_DELAY else Duration.ZERO

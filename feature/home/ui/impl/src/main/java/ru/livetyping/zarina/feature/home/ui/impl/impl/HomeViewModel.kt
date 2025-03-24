@@ -50,7 +50,7 @@ internal class HomeViewModel @Inject constructor(
         )
     }
 
-    private val homeContentRequester = FlowRequester(HomeContentRequest.LOADING, viewModelScope) {
+    private val homeContentRequester = FlowRequester(HomeContentRequest.LOADING) {
         deps.getHomeContentFlow()
     }
 

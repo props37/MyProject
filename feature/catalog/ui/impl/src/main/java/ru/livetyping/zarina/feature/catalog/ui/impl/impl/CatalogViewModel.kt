@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -59,14 +60,20 @@ internal class CatalogViewModel @Inject constructor(
         )
     }
 
-    private val categoriesRequester = FlowRequester(CategoriesRequest, viewModelScope) {
+    private val categoriesRequester = FlowRequester(CategoriesRequest) {
         val params = GetCategoriesFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
         deps.getCategoriesFlow(params)
     }
 
+    private val categoriesResultFlow = categoriesRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
+
     val categoryListState: StateFlow<CategoryListState> = combine(
         categoriesRequester.loadingState,
-        categoriesRequester.flow,
+        categoriesResultFlow,
     ) { loadingState, result ->
         createCategoryListState(loadingState, result)
     }.stateIn(
@@ -78,7 +85,7 @@ internal class CatalogViewModel @Inject constructor(
     private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
 
     val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
-        categoriesRequester.flow,
+        categoriesResultFlow,
         expandedCategories,
     ) { categoriesResult, expandedCategories ->
         createCategoryListItemsState(

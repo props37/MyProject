@@ -1,22 +1,17 @@
 package ru.livetyping.zarina.core.coroutinesutil
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.shareIn
 
 public class FlowRequester<T, R : FlowRequest>(
     initialRequest: R? = null,
-    coroutineScope: CoroutineScope,
     flowBuilder: suspend FlowBuilderScope<R>.(R) -> Flow<T>,
 ) {
     private val requests = Channel<R>(Channel.CONFLATED)
@@ -31,7 +26,7 @@ public class FlowRequester<T, R : FlowRequest>(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    public val flow: SharedFlow<T> = requests.receiveAsFlow()
+    public val flow: Flow<T> = requests.receiveAsFlow()
         .flatMapLatest { request ->
             _loadingState.value = LoadingState.Loading(request)
             flowBuilder(flowBuilderScopeImpl, request)
@@ -39,11 +34,6 @@ public class FlowRequester<T, R : FlowRequest>(
         .onEach {
             _loadingState.value = LoadingState.NotLoading
         }
-        .shareIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
 
     init {
         if (initialRequest != null) {

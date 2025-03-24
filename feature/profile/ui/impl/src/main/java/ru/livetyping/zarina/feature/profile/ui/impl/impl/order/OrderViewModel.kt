@@ -48,7 +48,7 @@ internal class OrderViewModel @Inject constructor(
     private val navEntry = savedStateHandle.toRoute<OrderNavEntry>()
     private val orderId = navEntry.getOrderId()
 
-    private val orderRequester = FlowRequester(OrderRequest.LOADING, viewModelScope) {
+    private val orderRequester = FlowRequester(OrderRequest.LOADING) {
         val params = GetOrderFlowUseCase.Params(orderId)
         getOrderFlow(params)
     }
