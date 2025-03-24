@@ -43,6 +43,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.components.CheckoutTopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -57,9 +58,9 @@ internal fun RecipientScreen(
 
     ScreenContent(
         topBarState = topBarState,
+        onTopBarEvent = viewModel::onTopBarEvent,
         recipientState = recipientState,
         onContinueClicked = viewModel::onContinueClicked,
-        onCloseClicked = viewModel::onClosedClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -68,9 +69,9 @@ internal fun RecipientScreen(
 @Composable
 private fun ScreenContent(
     topBarState: CheckoutTopBarState,
+    onTopBarEvent: (CheckoutTopBarEvent) -> Unit,
     recipientState: RecipientState,
     onContinueClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     sideEffects: Flow<RecipientSideEffect>,
     navActions: RecipientNavActions,
 ) {
@@ -92,8 +93,7 @@ private fun ScreenContent(
         CheckoutTopBar(
             state = topBarState,
             title = stringResource(R.string.cart_recipient),
-            isBackButtonVisible = false,
-            onCloseClicked = onCloseClicked,
+            onEvent = onTopBarEvent,
         )
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {

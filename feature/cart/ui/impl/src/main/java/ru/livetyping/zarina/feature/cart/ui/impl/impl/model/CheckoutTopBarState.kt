@@ -6,4 +6,5 @@ import androidx.compose.runtime.Immutable
 internal data class CheckoutTopBarState(
     val checkoutStep: Int,
     val checkoutStepCount: Int,
+    val isBackButtonVisible: Boolean,
 )

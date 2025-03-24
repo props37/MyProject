@@ -42,6 +42,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
@@ -66,6 +67,7 @@ internal class RecipientViewModel @Inject constructor(
         CheckoutTopBarState(
             checkoutStep = checkoutStep,
             checkoutStepCount = cartType.checkoutStepCount,
+            isBackButtonVisible = false,
         )
     )
 
@@ -139,10 +141,10 @@ internal class RecipientViewModel @Inject constructor(
         resetTextFieldErrorsOnChange()
     }
 
-    fun onClosedClicked() {
-        navigationThrottler.throttle {
-            val action = RecipientScreenAction.CloseClicked
-            emitSideEffect(RecipientSideEffect.Navigate(action))
+    fun onTopBarEvent(event: CheckoutTopBarEvent) {
+        when (event) {
+            CheckoutTopBarEvent.BackClicked -> Unit
+            CheckoutTopBarEvent.CloseClicked -> onClosedClicked()
         }
     }
 
@@ -165,6 +167,13 @@ internal class RecipientViewModel @Inject constructor(
             emitSideEffect(RecipientSideEffect.Navigate(action))
         } catch (e: Exception) {
             handleCustomerValidationException(e)
+        }
+    }
+
+    private fun onClosedClicked() {
+        navigationThrottler.throttle {
+            val action = RecipientScreenAction.CloseClicked
+            emitSideEffect(RecipientSideEffect.Navigate(action))
         }
     }
 

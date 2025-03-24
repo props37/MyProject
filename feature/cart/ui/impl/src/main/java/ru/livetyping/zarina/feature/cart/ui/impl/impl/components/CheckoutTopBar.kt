@@ -14,22 +14,21 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 
 @Composable
 internal fun CheckoutTopBar(
     state: CheckoutTopBarState,
     title: String,
-    isBackButtonVisible: Boolean,
-    onCloseClicked: () -> Unit,
+    onEvent: (CheckoutTopBarEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onBackClicked: (() -> Unit)? = null,
 ) {
     ZarinaTopBar(
         startContent = {
-            if (isBackButtonVisible) {
+            if (state.isBackButtonVisible) {
                 ZarinaBackIconButton(
-                    onClick = { onBackClicked?.invoke() },
+                    onClick = { onEvent(CheckoutTopBarEvent.BackClicked) },
                     iconSize = 20.dp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -51,7 +50,7 @@ internal fun CheckoutTopBar(
         },
         endContent = {
             ZarinaCloseIconButton(
-                onClick = onCloseClicked,
+                onClick = { onEvent(CheckoutTopBarEvent.CloseClicked) },
                 iconSize = 20.dp,
                 modifier = Modifier.padding(end = 2.dp),
             )

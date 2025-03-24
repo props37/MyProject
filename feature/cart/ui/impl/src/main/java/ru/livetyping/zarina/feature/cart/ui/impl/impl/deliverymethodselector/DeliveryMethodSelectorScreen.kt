@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.components.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorComponents.DeliveryMethodSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -28,18 +29,15 @@ internal fun DeliveryMethodSelectorScreen(
     navActions: DeliveryMethodSelectorNavActions,
     viewModel: DeliveryMethodSelectorViewModel = hiltViewModel(),
 ) {
-    val checkoutStep by viewModel.checkoutStep.collectAsStateWithLifecycle()
-    val checkoutStepCount by viewModel.checkoutStepCount.collectAsStateWithLifecycle()
+    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val deliveryMethodSelectorState by viewModel.deliveryMethodSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        checkoutStep = checkoutStep,
-        checkoutStepCount = checkoutStepCount,
+        topBarState = topBarState,
+        onTopBarEvent = viewModel::onTopBarEvent,
         deliveryMethodSelectorState = deliveryMethodSelectorState,
         onDeliveryMethodClicked = viewModel::onDeliveryMethodClicked,
         onDeliveryMethodsErrorRefreshClicked = viewModel::onDeliveryMethodsErrorRefreshClicked,
-        onBackClicked = viewModel::onBackClicked,
-        onCloseClicked = viewModel::onCloseClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -47,13 +45,11 @@ internal fun DeliveryMethodSelectorScreen(
 
 @Composable
 private fun ScreenContent(
-    checkoutStep: Int,
-    checkoutStepCount: Int,
+    topBarState: CheckoutTopBarState,
+    onTopBarEvent: (CheckoutTopBarEvent) -> Unit,
     deliveryMethodSelectorState: DeliveryMethodSelectorState,
     onDeliveryMethodClicked: (DeliveryMethod) -> Unit,
     onDeliveryMethodsErrorRefreshClicked: () -> Unit,
-    onBackClicked: () -> Unit,
-    onCloseClicked: () -> Unit,
     sideEffects: Flow<DeliveryMethodSelectorSideEffect>,
     navActions: DeliveryMethodSelectorNavActions,
 ) {
@@ -72,11 +68,9 @@ private fun ScreenContent(
             ),
     ) {
         CheckoutTopBar(
-            state = CheckoutTopBarState(checkoutStep, checkoutStepCount),
+            state = topBarState,
             title = stringResource(RCommon.string.res_delivery_method),
-            isBackButtonVisible = true,
-            onBackClicked = onBackClicked,
-            onCloseClicked = onCloseClicked,
+            onEvent = onTopBarEvent,
         )
 
         DeliveryMethodSelector(

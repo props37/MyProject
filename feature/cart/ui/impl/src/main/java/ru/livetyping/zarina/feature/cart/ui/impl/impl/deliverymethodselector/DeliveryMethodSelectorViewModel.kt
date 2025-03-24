@@ -21,6 +21,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
 
@@ -36,8 +38,15 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
         typeMap = DeliveryMethodSelectorNavEntry.typeMap(),
     )
     private val cartType = navEntry.cartType.toCartType()
+    private val checkoutStep = navEntry.checkoutStep
 
-    val checkoutStep: StateFlow<Int> = ReadOnlyStateFlow(navEntry.checkoutStep)
+    val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
+        CheckoutTopBarState(
+            checkoutStep = checkoutStep,
+            checkoutStepCount = cartType.checkoutStepCount,
+            isBackButtonVisible = true,
+        )
+    )
 
     val checkoutStepCount: StateFlow<Int> = ReadOnlyStateFlow(cartType.checkoutStepCount)
 
@@ -73,17 +82,10 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
         initialValue = DeliveryMethodSelectorState.Loading,
     )
 
-    fun onBackClicked() {
-        navigationThrottler.throttle {
-            val action = DeliveryMethodSelectorScreenAction.BackClicked
-            emitSideEffect(DeliveryMethodSelectorSideEffect.Navigate(action))
-        }
-    }
-
-    fun onCloseClicked() {
-        navigationThrottler.throttle {
-            val action = DeliveryMethodSelectorScreenAction.CloseClicked
-            emitSideEffect(DeliveryMethodSelectorSideEffect.Navigate(action))
+    fun onTopBarEvent(event: CheckoutTopBarEvent) {
+        when (event) {
+            CheckoutTopBarEvent.BackClicked -> onBackClicked()
+            CheckoutTopBarEvent.CloseClicked -> onCloseClicked()
         }
     }
 
@@ -92,7 +94,7 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
             // TODO: [Top] Report AppMetrica event
             val action = DeliveryMethodSelectorScreenAction.DeliveryMethodSelected(
                 cartType = cartType,
-                currentCheckoutStep = checkoutStep.value,
+                currentCheckoutStep = checkoutStep,
                 recipient = navEntry.recipient.toRecipient(),
                 deliveryMethod = deliveryMethod,
             )
@@ -102,6 +104,20 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
 
     fun onDeliveryMethodsErrorRefreshClicked() {
         deliveryMethodsRequester.request(DeliveryMethodsRequest)
+    }
+
+    private fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = DeliveryMethodSelectorScreenAction.BackClicked
+            emitSideEffect(DeliveryMethodSelectorSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onCloseClicked() {
+        navigationThrottler.throttle {
+            val action = DeliveryMethodSelectorScreenAction.CloseClicked
+            emitSideEffect(DeliveryMethodSelectorSideEffect.Navigate(action))
+        }
     }
 
     private data object DeliveryMethodsRequest : FlowRequest
