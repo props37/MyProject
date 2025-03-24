@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
+import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 @Stable
@@ -13,6 +14,7 @@ internal sealed class PickupStoreSelectorState {
     data class Success(
         val stores: ImmutableList<PickupStore>,
         val cartItemCount: Int,
+        val city: City?,
     ) : PickupStoreSelectorState()
 
     data object Loading : PickupStoreSelectorState()

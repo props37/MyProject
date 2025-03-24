@@ -33,6 +33,8 @@
     <string name="cart_contacts">Контакты</string>
     <string name="cart_select_delivery_method">Выбрать метод доставки</string>
     <string name="cart_store_selection">Выбор магазина</string>
+    <string name="cart_select_store">Выбрать магазин</string>
+    <string name="cart_all_products_are_available">Доступны все товары</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>
@@ -50,5 +52,14 @@
         <item quantity="few">Можно списать %1$s бонуса</item>
         <item quantity="many">Можно списать %1$s бонусов</item>
         <item quantity="other">Можно списать %1$s бонусов</item>
+    </plurals>
+
+    <plurals name="cart_available_products">
+        <item quantity="zero">Нет доступных товаров</item>
+        <item quantity="one">Доступны %1$d из %2$d товара</item>
+        <item quantity="two">Доступны %1$d из %2$d товаров</item>
+        <item quantity="few">Доступны %1$d из %2$d товаров</item>
+        <item quantity="many">Доступны %1$d из %2$d товаров</item>
+        <item quantity="other">Доступны %1$d из %2$d товаров</item>
     </plurals>
 </resources>
