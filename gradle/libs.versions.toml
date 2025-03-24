@@ -59,7 +59,7 @@ googlePlayServices-auth-api-phone = "18.1.0"
 
 recaptcha = "18.6.1"
 
-firebase-bom = "33.10.0"
+firebase-bom = "33.11.0"
 
 firebase-performance = "1.4.2"
 mindbox = "2.13.0"
