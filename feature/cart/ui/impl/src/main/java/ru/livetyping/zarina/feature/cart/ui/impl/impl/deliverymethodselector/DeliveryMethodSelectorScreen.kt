@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorComponents.DeliveryMethodSelector
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.component.DeliveryMethodSelector
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
