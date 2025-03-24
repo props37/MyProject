@@ -253,8 +253,7 @@ class CheckoutUseCase @Inject constructor(
         availablePaymentMethods: List<PaymentMethod>,
     ): PaymentMethod {
         val paymentMethod = availablePaymentMethods.find {
-            it.type == PaymentMethodType.PAYTURE_WALLET
-                    || it.type == PaymentMethodType.PAYTURE_IN_PAY
+            it.type == PaymentMethodType.SBER
         }
         checkNotNull(paymentMethod) {
             "Failed to find payment method for remaining price after gift certificate"
