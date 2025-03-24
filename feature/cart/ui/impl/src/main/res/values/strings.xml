@@ -32,6 +32,7 @@
     <string name="cart_personal_data">Личные данные</string>
     <string name="cart_contacts">Контакты</string>
     <string name="cart_select_delivery_method">Выбрать метод доставки</string>
+    <string name="cart_store_selection">Выбор магазина</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>
