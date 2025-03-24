@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.components.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorComponents.DeliveryMethodSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -71,9 +72,8 @@ private fun ScreenContent(
             ),
     ) {
         CheckoutTopBar(
+            state = CheckoutTopBarState(checkoutStep, checkoutStepCount),
             title = stringResource(RCommon.string.res_delivery_method),
-            step = checkoutStep,
-            stepCount = checkoutStepCount,
             isBackButtonVisible = true,
             onBackClicked = onBackClicked,
             onCloseClicked = onCloseClicked,

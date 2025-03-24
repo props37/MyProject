@@ -10,13 +10,16 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.checkout.Recipient
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -39,6 +42,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -55,10 +60,14 @@ internal class RecipientViewModel @Inject constructor(
         typeMap = RecipientNavEntry.typeMap(),
     )
     private val cartType = navEntry.cartType.toCartType()
+    private val checkoutStep = navEntry.checkoutStep
 
-    val checkoutStep = ReadOnlyStateFlow(navEntry.checkoutStep)
-
-    val checkoutStepCount = ReadOnlyStateFlow(cartType.checkoutStepCount)
+    val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
+        CheckoutTopBarState(
+            checkoutStep = checkoutStep,
+            checkoutStepCount = cartType.checkoutStepCount,
+        )
+    )
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val firstNameTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -66,8 +75,7 @@ internal class RecipientViewModel @Inject constructor(
         init = { TextFieldState() },
     )
 
-    private val _isFirstNameInvalid = MutableStateFlow(false)
-    val isFirstNameInvalid: StateFlow<Boolean> = _isFirstNameInvalid.asStateFlow()
+    private val isFirstNameInvalid = MutableStateFlow(false)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val lastNameTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -75,8 +83,7 @@ internal class RecipientViewModel @Inject constructor(
         init = { TextFieldState() },
     )
 
-    private val _isLastNameInvalid = MutableStateFlow(false)
-    val isLastNameInvalid: StateFlow<Boolean> = _isLastNameInvalid.asStateFlow()
+    private val isLastNameInvalid = MutableStateFlow(false)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val phoneTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -84,8 +91,7 @@ internal class RecipientViewModel @Inject constructor(
         init = { TextFieldState(PHONE_INITIAL_VALUE) },
     )
 
-    private val _isPhoneInvalid = MutableStateFlow(false)
-    val isPhoneInvalid: StateFlow<Boolean> = _isPhoneInvalid.asStateFlow()
+    private val isPhoneInvalid = MutableStateFlow(false)
 
     @OptIn(SavedStateHandleSaveableApi::class)
     val emailTextFieldState: TextFieldState by savedStateHandle.saveable(
@@ -93,8 +99,40 @@ internal class RecipientViewModel @Inject constructor(
         init = { TextFieldState() },
     )
 
-    private val _isEmailInvalid = MutableStateFlow(false)
-    val isEmailInvalid: StateFlow<Boolean> = _isEmailInvalid.asStateFlow()
+    private val isEmailInvalid = MutableStateFlow(false)
+
+    private val initialRecipientState = RecipientState(
+        firstNameTextFieldState = firstNameTextFieldState,
+        isFirstNameInvalid = false,
+        lastNameTextFieldState = lastNameTextFieldState,
+        isLastNameInvalid = false,
+        phoneTextFieldState = phoneTextFieldState,
+        isPhoneInvalid = false,
+        emailTextFieldState = emailTextFieldState,
+        isEmailInvalid = false,
+    )
+
+    val recipientState: StateFlow<RecipientState> = combine(
+        isFirstNameInvalid,
+        isLastNameInvalid,
+        isPhoneInvalid,
+        isEmailInvalid,
+    ) { isFirstNameInvalid, isLastNameInvalid, isPhoneInvalid, isEmailInvalid ->
+        RecipientState(
+            firstNameTextFieldState = firstNameTextFieldState,
+            isFirstNameInvalid = isFirstNameInvalid,
+            lastNameTextFieldState = lastNameTextFieldState,
+            isLastNameInvalid = isLastNameInvalid,
+            phoneTextFieldState = phoneTextFieldState,
+            isPhoneInvalid = isPhoneInvalid,
+            emailTextFieldState = emailTextFieldState,
+            isEmailInvalid = isEmailInvalid,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = initialRecipientState,
+    )
 
     init {
         fetchUser()
@@ -121,7 +159,7 @@ internal class RecipientViewModel @Inject constructor(
 
             val action = RecipientScreenAction.ContinueClicked(
                 cartType = cartType,
-                currentCheckoutStep = checkoutStep.value,
+                currentCheckoutStep = checkoutStep,
                 recipient = recipient,
             )
             emitSideEffect(RecipientSideEffect.Navigate(action))
@@ -134,7 +172,7 @@ internal class RecipientViewModel @Inject constructor(
         when (e) {
             is CombinedValidationException -> handleCustomerCombinedValidationException(e)
             is FirstNameException -> {
-                _isFirstNameInvalid.value = true
+                isFirstNameInvalid.value = true
                 val messageResId = when (e) {
                     is EmptyFirstNameException -> R.string.cart_recipient_empty_fields_error
                     else -> R.string.cart_recipient_validation_error
@@ -143,7 +181,7 @@ internal class RecipientViewModel @Inject constructor(
             }
 
             is LastNameException -> {
-                _isLastNameInvalid.value = true
+                isLastNameInvalid.value = true
                 val messageResId = when (e) {
                     is EmptyLastNameException -> R.string.cart_recipient_empty_fields_error
                     else -> R.string.cart_recipient_validation_error
@@ -152,7 +190,7 @@ internal class RecipientViewModel @Inject constructor(
             }
 
             is PhoneNumberException -> {
-                _isPhoneInvalid.value = true
+                isPhoneInvalid.value = true
                 val messageResId = when (e) {
                     is EmptyPhoneNumberException -> R.string.cart_recipient_empty_fields_error
                     else -> R.string.cart_recipient_validation_error
@@ -161,7 +199,7 @@ internal class RecipientViewModel @Inject constructor(
             }
 
             is EmailException -> {
-                _isEmailInvalid.value = true
+                isEmailInvalid.value = true
                 val messageResId = when (e) {
                     is EmptyEmailException -> R.string.cart_recipient_empty_fields_error
                     else -> R.string.cart_recipient_validation_error
@@ -180,10 +218,10 @@ internal class RecipientViewModel @Inject constructor(
         val causes = e.causes
         causes.forEach { cause ->
             when (cause) {
-                is FirstNameException -> _isFirstNameInvalid.value = true
-                is LastNameException -> _isLastNameInvalid.value = true
-                is PhoneNumberException -> _isPhoneInvalid.value = true
-                is EmailException -> _isEmailInvalid.value = true
+                is FirstNameException -> isFirstNameInvalid.value = true
+                is LastNameException -> isLastNameInvalid.value = true
+                is PhoneNumberException -> isPhoneInvalid.value = true
+                is EmailException -> isEmailInvalid.value = true
             }
         }
 
@@ -218,16 +256,16 @@ internal class RecipientViewModel @Inject constructor(
 
     private fun resetTextFieldErrorsOnChange() {
         firstNameTextFieldState.textAsFlow()
-            .onEach { _isFirstNameInvalid.value = false }
+            .onEach { isFirstNameInvalid.value = false }
             .launchIn(viewModelScope)
         lastNameTextFieldState.textAsFlow()
-            .onEach { _isLastNameInvalid.value = false }
+            .onEach { isLastNameInvalid.value = false }
             .launchIn(viewModelScope)
         phoneTextFieldState.textAsFlow()
-            .onEach { _isPhoneInvalid.value = false }
+            .onEach { isPhoneInvalid.value = false }
             .launchIn(viewModelScope)
         emailTextFieldState.textAsFlow()
-            .onEach { _isEmailInvalid.value = false }
+            .onEach { isEmailInvalid.value = false }
             .launchIn(viewModelScope)
     }
 

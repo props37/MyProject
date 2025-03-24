@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -44,6 +43,8 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.components.CheckoutTopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -51,24 +52,12 @@ internal fun RecipientScreen(
     navActions: RecipientNavActions,
     viewModel: RecipientViewModel = hiltViewModel(),
 ) {
-    val checkoutStep by viewModel.checkoutStep.collectAsStateWithLifecycle()
-    val checkoutStepCount by viewModel.checkoutStepCount.collectAsStateWithLifecycle()
-    val isFirstNameInvalid by viewModel.isFirstNameInvalid.collectAsStateWithLifecycle()
-    val isLastNameInvalid by viewModel.isLastNameInvalid.collectAsStateWithLifecycle()
-    val isPhoneInvalid by viewModel.isPhoneInvalid.collectAsStateWithLifecycle()
-    val isEmailInvalid by viewModel.isEmailInvalid.collectAsStateWithLifecycle()
+    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
+    val recipientState by viewModel.recipientState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        checkoutStep = checkoutStep,
-        checkoutStepCount = checkoutStepCount,
-        firstNameTextFieldState = viewModel.firstNameTextFieldState,
-        isFirstNameInvalid = isFirstNameInvalid,
-        lastNameTextFieldState = viewModel.lastNameTextFieldState,
-        isLastNameInvalid = isLastNameInvalid,
-        phoneTextFieldState = viewModel.phoneTextFieldState,
-        isPhoneInvalid = isPhoneInvalid,
-        emailTextFieldState = viewModel.emailTextFieldState,
-        isEmailInvalid = isEmailInvalid,
+        topBarState = topBarState,
+        recipientState = recipientState,
         onContinueClicked = viewModel::onContinueClicked,
         onCloseClicked = viewModel::onClosedClicked,
         sideEffects = viewModel.sideEffects,
@@ -78,16 +67,8 @@ internal fun RecipientScreen(
 
 @Composable
 private fun ScreenContent(
-    checkoutStep: Int,
-    checkoutStepCount: Int,
-    firstNameTextFieldState: TextFieldState,
-    isFirstNameInvalid: Boolean,
-    lastNameTextFieldState: TextFieldState,
-    isLastNameInvalid: Boolean,
-    phoneTextFieldState: TextFieldState,
-    isPhoneInvalid: Boolean,
-    emailTextFieldState: TextFieldState,
-    isEmailInvalid: Boolean,
+    topBarState: CheckoutTopBarState,
+    recipientState: RecipientState,
     onContinueClicked: () -> Unit,
     onCloseClicked: () -> Unit,
     sideEffects: Flow<RecipientSideEffect>,
@@ -109,9 +90,8 @@ private fun ScreenContent(
             .imePadding(),
     ) {
         CheckoutTopBar(
+            state = topBarState,
             title = stringResource(R.string.cart_recipient),
-            step = checkoutStep,
-            stepCount = checkoutStepCount,
             isBackButtonVisible = false,
             onCloseClicked = onCloseClicked,
         )
@@ -126,9 +106,10 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val lastNameTextFieldState = recipientState.lastNameTextFieldState
             ZarinaTextField(
                 state = lastNameTextFieldState,
-                isError = isLastNameInvalid,
+                isError = recipientState.isLastNameInvalid,
                 label = {
                     val label = if (lastNameTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_last_name)
@@ -156,9 +137,10 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val firstNameTextFieldState = recipientState.firstNameTextFieldState
             ZarinaTextField(
                 state = firstNameTextFieldState,
-                isError = isFirstNameInvalid,
+                isError = recipientState.isFirstNameInvalid,
                 label = {
                     val label = if (firstNameTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_first_name)
@@ -194,9 +176,10 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val phoneTextFieldState = recipientState.phoneTextFieldState
             ZarinaPhoneTextField(
                 state = phoneTextFieldState,
-                isError = isPhoneInvalid,
+                isError = recipientState.isPhoneInvalid,
                 keyboardOptions = remember {
                     KeyboardOptions(
                         keyboardType = KeyboardType.Phone,
@@ -209,9 +192,10 @@ private fun ScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            val emailTextFieldState = recipientState.emailTextFieldState
             ZarinaTextField(
                 state = emailTextFieldState,
-                isError = isEmailInvalid,
+                isError = recipientState.isEmailInvalid,
                 label = {
                     val label = if (emailTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_email)

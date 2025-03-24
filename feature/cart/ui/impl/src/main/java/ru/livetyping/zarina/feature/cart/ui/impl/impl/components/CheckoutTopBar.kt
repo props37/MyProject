@@ -14,12 +14,12 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 
 @Composable
 internal fun CheckoutTopBar(
+    state: CheckoutTopBarState,
     title: String,
-    step: Int,
-    stepCount: Int,
     isBackButtonVisible: Boolean,
     onCloseClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -40,7 +40,11 @@ internal fun CheckoutTopBar(
                 Text(text = title)
 
                 Text(
-                    text = stringResource(R.string.cart_checkout_step_number, step, stepCount),
+                    text = stringResource(
+                        id = R.string.cart_checkout_step_number,
+                        state.checkoutStep,
+                        state.checkoutStepCount,
+                    ),
                     style = UiKitTheme.typography.tertiary.light,
                 )
             }
