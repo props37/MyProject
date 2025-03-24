@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.model
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar
 
 import androidx.compose.runtime.Immutable
 

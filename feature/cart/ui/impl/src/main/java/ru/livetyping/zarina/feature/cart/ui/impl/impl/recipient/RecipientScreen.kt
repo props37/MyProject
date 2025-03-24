@@ -42,9 +42,9 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.components.CheckoutTopBar
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.core.resource.R as RCommon
 

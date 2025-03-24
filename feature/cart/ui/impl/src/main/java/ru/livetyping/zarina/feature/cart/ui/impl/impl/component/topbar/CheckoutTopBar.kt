@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.components
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,8 +14,6 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarEvent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.model.CheckoutTopBarState
 
 @Composable
 internal fun CheckoutTopBar(
