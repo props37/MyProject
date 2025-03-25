@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
-import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
+import ru.livetyping.zarina.core.navigationutil.parcelableNavType
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature.NavActions
@@ -35,13 +35,11 @@ public interface CitySelectorFeature :
             }
 
             public fun typeMap(): Map<KType, NavType<*>> {
-                val textType = ParcelableNavType<Text?>(
+                val textType = parcelableNavType<Text?>(
                     isNullableAllowed = true,
-                    serializer = kotlinx.serialization.serializer(),
                 )
-                val cityType = ParcelableNavType<CityParcelable?>(
+                val cityType = parcelableNavType<CityParcelable?>(
                     isNullableAllowed = true,
-                    serializer = kotlinx.serialization.serializer(),
                 )
                 return mapOf(
                     typeOf<Text?>() to textType,

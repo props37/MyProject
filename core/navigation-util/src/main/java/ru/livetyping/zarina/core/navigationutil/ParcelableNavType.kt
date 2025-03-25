@@ -7,6 +7,10 @@ import androidx.navigation.NavType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
+/**
+ * Consider using [parcelableNavType] function to create instances of
+ * [ParcelableNavType].
+ */
 public open class ParcelableNavType<T : Parcelable?>(
     override val isNullableAllowed: Boolean,
     private val serializer: KSerializer<T>,

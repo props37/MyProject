@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.navigation.NavigationEntry
-import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
+import ru.livetyping.zarina.core.navigationutil.parcelableNavType
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -26,9 +26,8 @@ internal class FiltrationNavEntry private constructor(
         }
 
         fun typeMap(): Map<KType, NavType<*>> {
-            val filtersType = ParcelableNavType<ProductFiltersParcelable?>(
+            val filtersType = parcelableNavType<ProductFiltersParcelable?>(
                 isNullableAllowed = true,
-                serializer = kotlinx.serialization.serializer(),
             )
             return mapOf(typeOf<ProductFiltersParcelable?>() to filtersType)
         }

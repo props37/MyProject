@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.feature.ComposableFeatureEntry
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.core.navigation.NavigationEntry
-import ru.livetyping.zarina.core.navigationutil.ParcelableNavType
+import ru.livetyping.zarina.core.navigationutil.parcelableNavType
 import ru.livetyping.zarina.core.uimodel.product.ProductOfferParcelable
 import ru.livetyping.zarina.core.uimodel.product.ProductShortParcelable
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature.NavActions
@@ -33,13 +33,11 @@ public interface ProductSubscriptionFeature :
             }
 
             public fun typeMap(): Map<KType, NavType<*>> {
-                val productType = ParcelableNavType<ProductShortParcelable?>(
+                val productType = parcelableNavType<ProductShortParcelable?>(
                     isNullableAllowed = true,
-                    serializer = kotlinx.serialization.serializer(),
                 )
-                val offerType = ParcelableNavType<ProductOfferParcelable?>(
+                val offerType = parcelableNavType<ProductOfferParcelable?>(
                     isNullableAllowed = true,
-                    serializer = kotlinx.serialization.serializer(),
                 )
                 return mapOf(
                     typeOf<ProductShortParcelable>() to productType,
