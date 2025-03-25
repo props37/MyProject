@@ -98,7 +98,13 @@ public class CartFeatureImpl : CartFeature {
             )
             deliveryMethodSelectorScreen(deliveryMethodSelectorNavActions)
 
-            val pickupStoreSelectorNavActions = PickupStoreSelectorNavActions()
+            val pickupStoreSelectorNavActions = PickupStoreSelectorNavActions(
+                onBackClicked = navigateBack,
+                onCloseClicked = closeCheckout,
+                onStoreSelected = { cartType, currentStep, recipient, deliveryMethodType, city, store, availableProducts ->
+                    // TODO: [Top] Implement
+                },
+            )
             pickupStoreSelectorScreen(pickupStoreSelectorNavActions)
         }
     }

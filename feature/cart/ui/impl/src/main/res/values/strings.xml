@@ -35,6 +35,7 @@
     <string name="cart_store_selection">Выбор магазина</string>
     <string name="cart_select_store">Выбрать магазин</string>
     <string name="cart_all_products_are_available">Доступны все товары</string>
+    <string name="cart_there_are_no_products_in_selected_store">В выбранном магазине нет доступных товаров</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

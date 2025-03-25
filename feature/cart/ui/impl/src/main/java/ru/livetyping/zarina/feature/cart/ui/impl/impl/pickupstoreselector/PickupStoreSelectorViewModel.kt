@@ -23,15 +23,19 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.model.PickupStoreSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.model.PickupStoreSelectorStateBuilder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class PickupStoreSelectorViewModel @Inject constructor(
@@ -104,12 +108,45 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
             CheckoutTopBarEvent.BackClicked -> onBackClicked()
-            CheckoutTopBarEvent.CloseClicked -> TODO() // TODO: [Top] Implement
+            CheckoutTopBarEvent.CloseClicked -> onCloseClicked()
         }
     }
 
     fun onStoreClicked(store: PickupStore) {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val cart = cartResultFlow.firstOrNull()?.getOrNull()
+                if (cart == null) {
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                    showZarinaErrorToast(text)
+                    return@launch
+                }
+                val availableProducts = cart.products.filter { it.offerId in store.availableItemIds }
+                if (availableProducts.isEmpty()) {
+                    val text = Text.Resource(R.string.cart_there_are_no_products_in_selected_store)
+                    showZarinaErrorToast(text)
+                    return@launch
+                }
+
+                val city = cityFlow.firstOrNull()
+                if (city == null) {
+                    val text = Text.Resource(RCommon.string.res_something_went_wrong)
+                    showZarinaErrorToast(text)
+                    return@launch
+                }
+
+                val action = PickupStoreSelectorScreenAction.StoreSelected(
+                    cartType = cartType,
+                    currentCheckoutStep = checkoutStep,
+                    recipient = navEntry.recipient.toRecipient(),
+                    deliveryMethodType = deliveryMethodType,
+                    city = city,
+                    store = store.store,
+                    availableProducts = availableProducts,
+                )
+                emitSideEffect(PickupStoreSelectorSideEffect.Navigate(action))
+            }
+        }
     }
 
     fun onStoresErrorRefreshClicked() {
@@ -128,6 +165,18 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
             val action = PickupStoreSelectorScreenAction.BackClicked
             emitSideEffect(PickupStoreSelectorSideEffect.Navigate(action))
         }
+    }
+
+    private fun onCloseClicked() {
+        navigationThrottler.throttle {
+            val action = PickupStoreSelectorScreenAction.CloseClicked
+            emitSideEffect(PickupStoreSelectorSideEffect.Navigate(action))
+        }
+    }
+
+    private fun showZarinaErrorToast(text: Text) {
+        val message = ZarinaToastMessage.error(text)
+        emitSideEffect(PickupStoreSelectorSideEffect.ShowZarinaToast(message))
     }
 
     private data object CartRequest : FlowRequest
