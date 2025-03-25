@@ -2,11 +2,12 @@ package ru.livetyping.zarina.data.order.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
+import timber.log.Timber
 
 @Serializable
 @JvmInline
 value class DeliveryMethodTypeDto(val value: String) {
-    fun toDeliveryMethodType(): DeliveryMethodType = when (value) {
+    fun toDeliveryMethodType(): DeliveryMethodType? = when (value) {
         VALUE_DELIVERY_SERVICE -> DeliveryMethodType.DELIVERY_SERVICE
         VALUE_POST -> DeliveryMethodType.POST
         VALUE_PICKUP -> DeliveryMethodType.PICKUP
@@ -14,7 +15,10 @@ value class DeliveryMethodTypeDto(val value: String) {
         VALUE_RETAIL -> DeliveryMethodType.RETAIL
         VALUE_YANDEX -> DeliveryMethodType.YANDEX
         VALUE_EXPRESS -> DeliveryMethodType.EXPRESS
-        else -> error("Unknown delivery method type $value")
+        else -> {
+            Timber.e("Unknown delivery method type $value")
+            null
+        }
     }
 
     companion object {
