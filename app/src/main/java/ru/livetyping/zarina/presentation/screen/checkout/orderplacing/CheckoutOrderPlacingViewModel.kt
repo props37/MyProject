@@ -32,13 +32,13 @@ import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
 import ru.livetyping.zarina.base.throttler.Throttler
 import ru.livetyping.zarina.data.analytics.AppMetricaHelper
 import ru.livetyping.zarina.domain.cart.Cart
-import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.CheckoutAddress
 import ru.livetyping.zarina.domain.checkout.CheckoutParams
 import ru.livetyping.zarina.domain.checkout.CheckoutStage
 import ru.livetyping.zarina.domain.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.Customer
 import ru.livetyping.zarina.domain.checkout.PaymentMethod
+import ru.livetyping.zarina.domain.checkout.PayturePaymentData
 import ru.livetyping.zarina.domain.checkout.PickupPointDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.domain.checkout.SberPaymentData
@@ -689,14 +689,14 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     }
 
     private suspend fun completeCheckout(completedCheckoutStage: CheckoutStage.CheckoutCompleted) {
-        val order = completedCheckoutStage.order
+        var order = completedCheckoutStage.order
         operationTracker.track(Operation.CHECKOUT) {
             if (completedCheckoutStage.shouldUpdateOrderStatus) {
                 updateOrderPaymentStatus(order.id, order.paymentMethodType)
+                val updatedOrder = getOrder(order.id)
+                if (updatedOrder != null) order = updatedOrder
             }
-            val updatedOrder = getOrder(order.id)
-            val resultOrder = updatedOrder ?: order
-            val action = CheckoutOrderPlacingScreenAction.OrderConfirmed(resultOrder)
+            val action = CheckoutOrderPlacingScreenAction.OrderConfirmed(order)
             emitSideEffect(SideEffect.Navigate(action))
         }
     }
