@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.data.order.remote.api.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.domain.checkout.DeliveryMethod
+import timber.log.Timber
 
 @Serializable
 data class DeliveryMethodDto(
@@ -19,15 +20,18 @@ data class DeliveryMethodDto(
     @SerialName("description")
     val description: String? = null,
 ) {
-    fun toDeliveryMethod(): DeliveryMethod {
-        checkNotNull(id) { "id is null" }
-        checkNotNull(type) { "type is null" }
-        checkNotNull(name) { "name is null" }
-        return DeliveryMethod(
-            id = DeliveryMethod.Id(id),
-            type = type.toDeliveryMethodType(),
-            name = name,
-            description = description?.takeIf { it.isNotBlank() },
-        )
+    fun toDeliveryMethod(): DeliveryMethod? {
+        val deliveryMethodType = type?.toDeliveryMethodType()
+        return if (id != null && deliveryMethodType != null && name != null && description != null) {
+            DeliveryMethod(
+                id = DeliveryMethod.Id(id),
+                type = deliveryMethodType,
+                name = name,
+                description = description?.takeIf { it.isNotBlank() },
+            )
+        } else {
+            Timber.e("Drop $this because it can't be converted to DeliveryMethod")
+            null
+        }
     }
 }

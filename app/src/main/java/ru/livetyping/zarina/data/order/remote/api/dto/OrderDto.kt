@@ -180,9 +180,9 @@ data class OrderDto(
         fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkNotNull(method) { "method is null" }
             checkNotNull(method.type) { "method is null" }
-            return OrderDeliveryInfo(
-                type = method.type.toDeliveryMethodType(),
-            )
+            val deliveryMethodType = method.type.toDeliveryMethodType()
+            checkNotNull(deliveryMethodType) { "deliveryMethodType is null" }
+            return OrderDeliveryInfo(type = deliveryMethodType)
         }
 
         @Serializable
