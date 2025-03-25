@@ -10,6 +10,7 @@ import ru.livetyping.zarina.domain.order.OrderContactInfo
 import ru.livetyping.zarina.domain.order.OrderDeliveryInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPrice
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
@@ -58,6 +59,11 @@ data class OrderDto(
     @SerialName("is_cancelable")
     val isCancelable: Boolean? = null,
 ) {
+    fun toOrderStatus(): OrderStatus {
+        checkNotNull(status) { "status is null" }
+        return status.toOrderStatus()
+    }
+
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
         checkNotNull(number) { "number is null" }
