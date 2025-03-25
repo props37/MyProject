@@ -20,6 +20,7 @@ import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.user.User
 import timber.log.Timber
@@ -120,8 +121,10 @@ class CheckoutUseCase @Inject constructor(
 
         AppMetricaHelper.reportOrderConfirmed(order)
 
-        val updatedOrder = getOrder(order.id)
-        if (updatedOrder != null) order = updatedOrder
+        val updatedOrderStatus = getOrderStatus(order.id)
+        if (updatedOrderStatus != null) {
+            order = order.copy(status = updatedOrderStatus)
+        }
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -224,8 +227,10 @@ class CheckoutUseCase @Inject constructor(
 
             AppMetricaHelper.reportOrderConfirmed(order)
 
-            val updatedOrder = getOrder(order.id)
-            if (updatedOrder != null) order = updatedOrder
+            val updatedOrderStatus = getOrderStatus(order.id)
+            if (updatedOrderStatus != null) {
+                order = order.copy(status = updatedOrderStatus)
+            }
 
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
@@ -325,9 +330,9 @@ class CheckoutUseCase @Inject constructor(
             }
     }
 
-    private suspend fun getOrder(id: Order.Id): OrderDetails? {
+    private suspend fun getOrderStatus(id: Order.Id): OrderStatus? {
         return try {
-            orderRepository.getOrderFlow(id).firstOrNull()
+            orderRepository.getOrderStatus(id)
         } catch (e: Exception) {
             null
         }

@@ -8,6 +8,7 @@ import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderItem
+import ru.livetyping.zarina.domain.order.OrderStatus
 import javax.inject.Inject
 
 class OrderRemoteDataSource @Inject constructor(
@@ -21,6 +22,11 @@ class OrderRemoteDataSource @Inject constructor(
     fun getOrderFlow(orderId: Order.Id): Flow<OrderDetails> = flow {
         val order = api.getOrder(orderId).first().toOrderDetails()
         emit(order)
+    }
+
+    suspend fun getOrderStatus(orderId: Order.Id): OrderStatus {
+        val dto = api.getOrder(orderId).first()
+        return dto.toOrderStatus()
     }
 
     suspend fun createOrder(params: OrderCreationParams): OrderDetails {

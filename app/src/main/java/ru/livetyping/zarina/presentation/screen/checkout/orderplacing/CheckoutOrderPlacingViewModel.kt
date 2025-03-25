@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -48,7 +47,7 @@ import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.domain.order.DeliveryMethodType
 import ru.livetyping.zarina.domain.order.Order
-import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.presentation.base.text.Text
 import ru.livetyping.zarina.presentation.common.error.ErrorState
@@ -77,7 +76,7 @@ import ru.livetyping.zarina.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import ru.livetyping.zarina.usecase.giftcert.RemoveGiftCertificateUseCase
-import ru.livetyping.zarina.usecase.order.GetOrderFlowUseCase
+import ru.livetyping.zarina.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.FlowRequester
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
@@ -693,8 +692,10 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         operationTracker.track(Operation.CHECKOUT) {
             if (completedCheckoutStage.shouldUpdateOrderStatus) {
                 updateOrderPaymentStatus(order.id, order.paymentMethodType)
-                val updatedOrder = getOrder(order.id)
-                if (updatedOrder != null) order = updatedOrder
+                val updatedOrderStatus = getOrderStatus(order.id)
+                if (updatedOrderStatus != null) {
+                    order = order.copy(status = updatedOrderStatus)
+                }
             }
             val action = CheckoutOrderPlacingScreenAction.OrderConfirmed(order)
             emitSideEffect(SideEffect.Navigate(action))
@@ -709,9 +710,9 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
         interactor.updateOrderPaymentStatus(params)
     }
 
-    private suspend fun getOrder(orderId: Order.Id): OrderDetails? {
-        val params = GetOrderFlowUseCase.Params(orderId)
-        return interactor.getOrderFlow(params).firstOrNull()?.getOrNull()
+    private suspend fun getOrderStatus(orderId: Order.Id): OrderStatus? {
+        val params = GetOrderStatusUseCase.Params(orderId)
+        return interactor.getOrderStatus(params).getOrNull()
     }
 
     private fun getDeliveryInfo(checkoutParams: CheckoutParams): DeliveryInfo {
