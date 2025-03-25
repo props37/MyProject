@@ -679,6 +679,10 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
     }
 
     private fun onCheckoutFailure(t: Throwable) {
+        if (t is CartChangedException) {
+            cartRequester.request(CartRequest.REFRESHING)
+        }
+
         val messageText = when (t) {
             is CartChangedException -> Text.Resource(R.string.cart_has_changed_error)
             else -> Text.Resource(R.string.something_went_wrong)
