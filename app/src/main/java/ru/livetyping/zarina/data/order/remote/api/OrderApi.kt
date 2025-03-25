@@ -10,6 +10,7 @@ import ru.livetyping.zarina.data.order.remote.api.dto.CreateOrderDto
 import ru.livetyping.zarina.data.order.remote.api.dto.CreateOrderRequestBody
 import ru.livetyping.zarina.data.order.remote.api.dto.GetOrdersDto
 import ru.livetyping.zarina.data.order.remote.api.dto.OrderDto
+import ru.livetyping.zarina.data.order.remote.api.exception.OrderCreationExceptionConverter
 import ru.livetyping.zarina.di.Qualifiers
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class OrderApi @Inject constructor(
     @Qualifiers.ZarinaApi(Qualifiers.ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val orderCreationExceptionConverter: OrderCreationExceptionConverter,
 ) {
     suspend fun getOrders(page: Int): GetOrdersDto {
         return httpClient.get("/api/v1/orders") {
@@ -32,9 +34,11 @@ class OrderApi @Inject constructor(
 
     suspend fun createOrder(params: OrderCreationParams): CreateOrderDto {
         val body = CreateOrderRequestBody.from(params)
-        return httpClient.post("/api/orders/") {
-            setJsonBody(body)
-        }.body()
+        return orderCreationExceptionConverter {
+            httpClient.post("/api/orders/") {
+                setJsonBody(body)
+            }.body()
+        }
     }
 
     suspend fun cancelOrder(orderId: Order.Id) {
