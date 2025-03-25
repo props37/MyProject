@@ -2,11 +2,12 @@ package ru.livetyping.zarina.data.order.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.domain.order.PaymentMethodType
+import timber.log.Timber
 
 @Serializable
 @JvmInline
 value class PaymentMethodTypeDto(val value: String) {
-    fun toPaymentMethodType(): PaymentMethodType = when (value) {
+    fun toPaymentMethodType(): PaymentMethodType? = when (value) {
         VALUE_SBER -> PaymentMethodType.SBER
         VALUE_POSTPAID -> PaymentMethodType.POSTPAID
         VALUE_PAYTURE_IN_PAY -> PaymentMethodType.PAYTURE_IN_PAY
@@ -16,7 +17,10 @@ value class PaymentMethodTypeDto(val value: String) {
         VALUE_PREPAID -> PaymentMethodType.PREPAID
         VALUE_GIFT_CERTIFICATE -> PaymentMethodType.GIFT_CERTIFICATE
         VALUE_FREE -> PaymentMethodType.FREE
-        else -> error("Unknown payment method $value")
+        else -> {
+            Timber.e("Unknown payment method $value")
+            null
+        }
     }
 
     companion object {

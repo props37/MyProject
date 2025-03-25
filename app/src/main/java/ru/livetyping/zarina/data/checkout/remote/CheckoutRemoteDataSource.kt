@@ -91,7 +91,7 @@ class CheckoutRemoteDataSource @Inject constructor(
         cart: Cart,
     ): Flow<List<PaymentMethod>> = flow {
         val dtos = api.getPaymentMethods(checkoutParams, cart)
-        val paymentMethods = dtos.map { it.toPaymentMethod() }
+        val paymentMethods = dtos.mapNotNull { it.toPaymentMethod() }
         check(paymentMethods.isNotEmpty()) { "PaymentMethod list is empty" }
         emit(paymentMethods)
     }

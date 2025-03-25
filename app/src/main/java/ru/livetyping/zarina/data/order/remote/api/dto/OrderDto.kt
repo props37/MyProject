@@ -83,6 +83,8 @@ data class OrderDto(
             deliveryPrice = deliveryPrice,
             totalPrice = totalPrice,
         )
+        val paymentType = paymentMethod.type.toPaymentMethodType()
+        checkNotNull(paymentType) { "paymentType is null" }
         return OrderDetails(
             id = Order.Id(id),
             number = Order.Number(number),
@@ -91,7 +93,7 @@ data class OrderDto(
             status = status.toOrderStatus(),
             products = products.map { it.toOrderProduct() },
             price = price,
-            paymentMethodType = paymentMethod.type.toPaymentMethodType(),
+            paymentMethodType = paymentType,
             paymentUrl = paymentTool?.link?.let { Url(it) },
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
