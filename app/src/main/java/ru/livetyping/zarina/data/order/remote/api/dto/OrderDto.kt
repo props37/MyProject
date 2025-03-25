@@ -10,6 +10,7 @@ import ru.livetyping.zarina.domain.order.OrderContactInfo
 import ru.livetyping.zarina.domain.order.OrderDeliveryInfo
 import ru.livetyping.zarina.domain.order.OrderDetails
 import ru.livetyping.zarina.domain.order.OrderPrice
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.product.Price
 import ru.livetyping.zarina.domain.product.ProductColor
 import java.time.LocalDate
@@ -58,6 +59,11 @@ data class OrderDto(
     @SerialName("is_cancelable")
     val isCancelable: Boolean? = null,
 ) {
+    fun toOrderStatus(): OrderStatus {
+        checkNotNull(status) { "status is null" }
+        return status.toOrderStatus()
+    }
+
     fun toOrderDetails(): OrderDetails {
         checkNotNull(id) { "id is null" }
         checkNotNull(number) { "number is null" }
@@ -83,6 +89,8 @@ data class OrderDto(
             deliveryPrice = deliveryPrice,
             totalPrice = totalPrice,
         )
+        val paymentType = paymentMethod.type.toPaymentMethodType()
+        checkNotNull(paymentType) { "paymentType is null" }
         return OrderDetails(
             id = Order.Id(id),
             number = Order.Number(number),
@@ -91,7 +99,7 @@ data class OrderDto(
             status = status.toOrderStatus(),
             products = products.map { it.toOrderProduct() },
             price = price,
-            paymentMethodType = paymentMethod.type.toPaymentMethodType(),
+            paymentMethodType = paymentType,
             paymentUrl = paymentTool?.link?.let { Url(it) },
             deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             contactInfo = contactInfo.toOrderContactInfo(),
@@ -178,9 +186,9 @@ data class OrderDto(
         fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkNotNull(method) { "method is null" }
             checkNotNull(method.type) { "method is null" }
-            return OrderDeliveryInfo(
-                type = method.type.toDeliveryMethodType(),
-            )
+            val deliveryMethodType = method.type.toDeliveryMethodType()
+            checkNotNull(deliveryMethodType) { "deliveryMethodType is null" }
+            return OrderDeliveryInfo(type = deliveryMethodType)
         }
 
         @Serializable

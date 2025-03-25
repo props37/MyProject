@@ -47,7 +47,7 @@ class CheckoutRemoteDataSource @Inject constructor(
         cityKladrId: KladrId,
     ): Flow<List<DeliveryMethod>> = flow {
         val dto = api.getDeliveryMethods(cartType, cityKladrId)
-        val methods = dto.map { it.toDeliveryMethod() }
+        val methods = dto.mapNotNull { it.toDeliveryMethod() }
         emit(methods)
     }
 
@@ -91,7 +91,7 @@ class CheckoutRemoteDataSource @Inject constructor(
         cart: Cart,
     ): Flow<List<PaymentMethod>> = flow {
         val dtos = api.getPaymentMethods(checkoutParams, cart)
-        val paymentMethods = dtos.map { it.toPaymentMethod() }
+        val paymentMethods = dtos.mapNotNull { it.toPaymentMethod() }
         check(paymentMethods.isNotEmpty()) { "PaymentMethod list is empty" }
         emit(paymentMethods)
     }

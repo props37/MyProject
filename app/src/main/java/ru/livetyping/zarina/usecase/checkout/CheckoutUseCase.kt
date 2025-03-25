@@ -20,6 +20,7 @@ import ru.livetyping.zarina.domain.checkout.exception.CartChangedException
 import ru.livetyping.zarina.domain.order.Order
 import ru.livetyping.zarina.domain.order.OrderCreationParams
 import ru.livetyping.zarina.domain.order.OrderDetails
+import ru.livetyping.zarina.domain.order.OrderStatus
 import ru.livetyping.zarina.domain.order.PaymentMethodType
 import ru.livetyping.zarina.domain.user.User
 import timber.log.Timber
@@ -110,7 +111,7 @@ class CheckoutUseCase @Inject constructor(
         checkoutRepository.onPaymentCompleted(paymentData)
         emit(CheckoutStage.PaymentCompleted)
 
-        val order = createOrder(
+        var order = createOrder(
             cart = cart,
             paymentMethod = paymentMethod,
             checkoutParams = checkoutParams,
@@ -119,6 +120,11 @@ class CheckoutUseCase @Inject constructor(
         updateOrderPaymentStatus(order, paymentMethod)
 
         AppMetricaHelper.reportOrderConfirmed(order)
+
+        val updatedOrderStatus = getOrderStatus(order.id)
+        if (updatedOrderStatus != null) {
+            order = order.copy(status = updatedOrderStatus)
+        }
 
         val checkoutCompleted = CheckoutStage.CheckoutCompleted(
             order = order,
@@ -210,7 +216,7 @@ class CheckoutUseCase @Inject constructor(
             emit(CheckoutStage.PaymentCompleted)
 
             // Use the original payment method to create an order
-            val order = createOrder(
+            var order = createOrder(
                 cart = cart,
                 paymentMethod = paymentMethod,
                 checkoutParams = checkoutParams,
@@ -220,6 +226,11 @@ class CheckoutUseCase @Inject constructor(
             updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
             AppMetricaHelper.reportOrderConfirmed(order)
+
+            val updatedOrderStatus = getOrderStatus(order.id)
+            if (updatedOrderStatus != null) {
+                order = order.copy(status = updatedOrderStatus)
+            }
 
             val checkoutCompleted = CheckoutStage.CheckoutCompleted(
                 order = order,
@@ -317,6 +328,14 @@ class CheckoutUseCase @Inject constructor(
             .onFailure { t ->
                 Timber.e(t, "Failed to update order payment status")
             }
+    }
+
+    private suspend fun getOrderStatus(id: Order.Id): OrderStatus? {
+        return try {
+            orderRepository.getOrderStatus(id)
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private suspend fun checkCartChanges(

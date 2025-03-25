@@ -2,9 +2,11 @@ package ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSource
 import ru.livetyping.zarina.base.sideeffectsource.SideEffectSourceImpl
@@ -17,6 +19,8 @@ import ru.livetyping.zarina.presentation.common.util.getNavigationThrottler
 import ru.livetyping.zarina.presentation.common.zarinatoast.ZarinaToastMessage
 import ru.livetyping.zarina.presentation.navigation.destination.graph.CheckoutGraph
 import ru.livetyping.zarina.presentation.screen.checkout.orderconfirmed.CheckoutOrderConfirmedViewModel.SideEffect
+import ru.livetyping.zarina.usecase.cart.FetchCartProductIdsUseCase
+import ru.livetyping.zarina.util.base.usecase.invoke
 import ru.livetyping.zarina.util.library.coroutines.ImmutableStateFlow
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckoutOrderConfirmedViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val fetchCartProductIds: FetchCartProductIdsUseCase,
 ) : ViewModel(), SideEffectSource<SideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -39,6 +44,10 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
     )
 
     val buttonType: StateFlow<ButtonType> = ImmutableStateFlow(getButtonType(order.value))
+
+    init {
+        refreshCart()
+    }
 
     fun onReturnToHomeScreenClicked() {
         navigationThrottler.throttle {
@@ -96,6 +105,12 @@ class CheckoutOrderConfirmedViewModel @Inject constructor(
             }
 
             else -> ButtonType.PAY_FOR_ORDER
+        }
+    }
+
+    private fun refreshCart() {
+        viewModelScope.launch {
+            fetchCartProductIds()
         }
     }
 
