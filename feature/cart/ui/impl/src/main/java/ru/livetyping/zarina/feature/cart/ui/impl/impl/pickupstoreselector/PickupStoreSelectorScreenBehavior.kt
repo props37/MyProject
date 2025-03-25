@@ -53,7 +53,7 @@ private fun navigate(
                 action.cartType,
                 action.currentCheckoutStep,
                 action.recipient,
-                action.deliveryMethodType,
+                action.deliveryMethod,
                 action.city,
                 action.store,
                 action.availableProducts,

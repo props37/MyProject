@@ -29,3 +29,12 @@ public open class ParcelableNavType<T : Parcelable?>(
         return Uri.encode(Json.encodeToString(serializer, value))
     }
 }
+
+public inline fun <reified T : Parcelable?> parcelableNavType(
+    isNullableAllowed: Boolean,
+): ParcelableNavType<T> {
+    return ParcelableNavType(
+        isNullableAllowed = isNullableAllowed,
+        serializer = kotlinx.serialization.serializer(),
+    )
+}

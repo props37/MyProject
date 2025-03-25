@@ -87,7 +87,7 @@ public class CartFeatureImpl : CartFeature {
                                 cartType = cartType,
                                 checkoutStep = currentStep + 1,
                                 recipient = recipient,
-                                deliveryMethodType = deliveryMethod.type,
+                                deliveryMethod = deliveryMethod,
                             )
                             navController.navigate(pickupStoreSelectorNavEntry)
                         }

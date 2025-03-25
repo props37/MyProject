@@ -49,7 +49,7 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
         typeMap = PickupStoreSelectorNavEntry.typeMap(),
     )
     private val cartType = navEntry.cartType.toCartType()
-    private val deliveryMethodType = navEntry.deliveryMethodType.toDeliveryMethodType()
+    private val deliveryMethod = navEntry.deliveryMethod.toDeliveryMethod()
     private val checkoutStep = navEntry.checkoutStep
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
@@ -75,7 +75,7 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
     )
 
     private val storeRequester = FlowRequester(StoreRequester) {
-        val params = GetPickupStoresFlowUseCase.Params(deliveryMethodType)
+        val params = GetPickupStoresFlowUseCase.Params(deliveryMethod.type)
         deps.getPickupStoresFlow(params)
     }
     private val storeResultFlow = storeRequester.flow.shareIn(
@@ -139,7 +139,7 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
                     cartType = cartType,
                     currentCheckoutStep = checkoutStep,
                     recipient = navEntry.recipient.toRecipient(),
-                    deliveryMethodType = deliveryMethodType,
+                    deliveryMethod = deliveryMethod,
                     city = city,
                     store = store.store,
                     availableProducts = availableProducts,
