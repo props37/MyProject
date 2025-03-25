@@ -687,7 +687,7 @@ class CheckoutOrderPlacingViewModel @AssistedInject constructor(
             is CartChangedException -> Text.Resource(R.string.cart_has_changed_error)
             else -> Text.Resource(R.string.something_went_wrong)
         }
-        val message = ZarinaToastMessage.error(messageText)
+        val message = ZarinaToastMessage.error(messageText, ZarinaToastMessage.DURATION_LONG)
         emitSideEffect(SideEffect.ShowZarinaToast(message))
     }
 
