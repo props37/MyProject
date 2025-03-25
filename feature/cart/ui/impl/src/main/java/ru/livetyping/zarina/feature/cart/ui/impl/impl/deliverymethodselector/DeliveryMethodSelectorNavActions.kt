@@ -8,5 +8,10 @@ import ru.livetyping.zarina.core.navigation.NavigationActions
 internal class DeliveryMethodSelectorNavActions(
     val onBackClicked: () -> Unit,
     val onCloseClicked: () -> Unit,
-    val onDeliveryMethodSelected: (CartType, currentCheckoutStep: Int, Recipient, DeliveryMethod) -> Unit,
+    val onDeliveryMethodSelected: (
+        cartType: CartType,
+        currentCheckoutStep: Int,
+        recipient: Recipient,
+        deliveryMethod: DeliveryMethod,
+    ) -> Unit,
 ) : NavigationActions
