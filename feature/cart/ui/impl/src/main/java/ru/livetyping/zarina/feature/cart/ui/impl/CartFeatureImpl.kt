@@ -101,7 +101,7 @@ public class CartFeatureImpl : CartFeature {
             val pickupStoreSelectorNavActions = PickupStoreSelectorNavActions(
                 onBackClicked = navigateBack,
                 onCloseClicked = closeCheckout,
-                onStoreSelected = { cartType, currentStep, recipient, deliveryMethodType, city, store, availableProducts ->
+                onStoreSelected = { cartType, currentStep, recipient, deliveryMethod, city, store, availableProducts ->
                     // TODO: [Top] Implement
                 },
             )
