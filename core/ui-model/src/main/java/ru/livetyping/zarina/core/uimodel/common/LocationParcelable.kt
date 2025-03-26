@@ -12,7 +12,7 @@ public data class LocationParcelable(
     val longitude: Double,
 ) : Parcelable {
     public fun toLocation(): Location {
-        Location(
+        return Location(
             latitude = latitude,
             longitude = longitude,
         )
