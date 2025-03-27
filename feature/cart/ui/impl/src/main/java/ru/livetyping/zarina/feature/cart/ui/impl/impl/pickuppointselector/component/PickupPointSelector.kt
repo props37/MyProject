@@ -1,0 +1,73 @@
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.component
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.uicompose.animateFastScrollToItem
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorState
+
+@Composable
+internal fun PickupPointSelector(
+    state: PickupPointSelectorState,
+    onEvent: (PickupPointSelectorEvent) -> Unit,
+    modifier: Modifier = Modifier,
+    windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(modifier = modifier) {
+        Filtration(
+            filterTextFieldState = state.filterTextFieldState,
+            filters = state.filters,
+            onFilterClicked = { onEvent(PickupPointSelectorEvent.FilterClicked(it)) },
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val viewModePagerState = rememberPagerStateWithTabRow(
+            tabs = state.viewModeSelectorState.tabs,
+            currentTab = state.viewModeSelectorState.currentTab,
+            onTabChanged = { mode ->
+                val tabRowEvent = TabRowEvent.TabChanged(mode)
+                onEvent(PickupPointSelectorEvent.ViewModeSelectorEvent(tabRowEvent))
+            },
+            pageCount = { state.viewModeSelectorState.tabs.size },
+        )
+
+        val pickupPointListState = rememberLazyListState()
+
+        ViewModeSelector(
+            state = state.viewModeSelectorState,
+            onEvent = { event ->
+                if (event is TabRowEvent.TabReselected) {
+                    coroutineScope.launch {
+                        pickupPointListState.animateFastScrollToItem(
+                            item = 0,
+                            distanceThreshold = PickupPointListFastScrollThreshold,
+                        )
+                    }
+                }
+                onEvent(PickupPointSelectorEvent.ViewModeSelectorEvent(event))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
+
+        // TODO: [Top] Implement
+    }
+}
+
+private const val PickupPointListFastScrollThreshold = 10

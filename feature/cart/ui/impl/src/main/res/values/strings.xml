@@ -37,6 +37,10 @@
     <string name="cart_all_products_are_available">Доступны все товары</string>
     <string name="cart_there_are_no_products_in_selected_store">В выбранном магазине нет доступных товаров</string>
     <string name="cart_these_products_are_available_in_this_store">В магазине доступны следующие товары:</string>
+    <string name="cart_delivery_to_pickup_point">Доставка в пункт самовывоза</string>
+    <string name="cart_address_or_name">Адрес или название</string>
+    <string name="cart_payment_by_card">Оплата картой</string>
+    <string name="cart_fitting_available">С примеркой</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

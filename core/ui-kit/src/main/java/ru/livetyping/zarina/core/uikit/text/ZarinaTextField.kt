@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -657,7 +658,7 @@ public object ZarinaTextFieldDefaults {
             onClick = onClick,
             size = ZarinaButtonSize.Small,
             colors = ZarinaButtonDefaults.backlessColors(),
-            modifier = modifier,
+            modifier = modifier.heightIn(min = 36.dp),
         ) {
             Text(
                 text = stringResource(R.string.res_cancel).uppercase(),
