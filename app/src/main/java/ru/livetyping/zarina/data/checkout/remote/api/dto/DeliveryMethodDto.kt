@@ -22,7 +22,7 @@ data class DeliveryMethodDto(
 ) {
     fun toDeliveryMethod(): DeliveryMethod? {
         val deliveryMethodType = type?.toDeliveryMethodType()
-        return if (id != null && deliveryMethodType != null && name != null && description != null) {
+        return if (id != null && deliveryMethodType != null && name != null) {
             DeliveryMethod(
                 id = DeliveryMethod.Id(id),
                 type = deliveryMethodType,
