@@ -17,6 +17,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodS
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupStoreScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavActions
@@ -81,14 +82,24 @@ public class CartFeatureImpl : CartFeature {
                 onBackClicked = navigateBack,
                 onCloseClicked = closeCheckout,
                 onDeliveryMethodSelected = { cartType, currentStep, recipient, deliveryMethod ->
+                    val checkoutStep = currentStep + 1
                     when (deliveryMethod.type) {
                         DeliveryMethodType.COURIER_EXPRESS -> TODO()
                         DeliveryMethodType.POST -> TODO()
-                        DeliveryMethodType.PICKUP_FROM_PICKUP_POINT -> TODO()
+                        DeliveryMethodType.PICKUP_FROM_PICKUP_POINT -> {
+                            val pickupPointSelectorNavEntry = PickupPointSelectorNavEntry.from(
+                                cartType = cartType,
+                                checkoutStep = checkoutStep,
+                                recipient = recipient,
+                                deliveryMethod = deliveryMethod,
+                            )
+                            navController.navigate(pickupPointSelectorNavEntry)
+                        }
+
                         DeliveryMethodType.PICKUP_FROM_STORE, DeliveryMethodType.PICKUP_FROM_STORE_WAREHOUSE -> {
                             val pickupStoreSelectorNavEntry = PickupStoreSelectorNavEntry.from(
                                 cartType = cartType,
-                                checkoutStep = currentStep + 1,
+                                checkoutStep = checkoutStep,
                                 recipient = recipient,
                                 deliveryMethod = deliveryMethod,
                             )
