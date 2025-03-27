@@ -87,6 +87,8 @@ internal data class OrderDto(
             deliveryPrice = BigDecimal(deliveryPrice.toDouble()),
             totalPrice = BigDecimal(totalSum.toDouble()),
         )
+        val paymentMethod = paymentMethod.code.toPaymentMethodType()
+        checkNotNull(paymentMethod) { "paymentMethod is null" }
         return OrderDetailed(
             id = Order.Id(id.toString()),
             number = Order.Number(number),
@@ -95,7 +97,7 @@ internal data class OrderDto(
             status = status.toOrderStatus(),
             products = products.map { it.toOrderProduct() },
             price = price,
-            paymentMethodType = paymentMethod.code.toPaymentMethodType(),
+            paymentMethodType = paymentMethod,
             paymentUrl = paymentTool?.link?.let { Url.create(it) },
             deliveryInfo = shipping.toOrderDeliveryInfo(),
             recipient = contactInfo.toOrderRecipient(),
