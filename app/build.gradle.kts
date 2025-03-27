@@ -1,4 +1,8 @@
 import com.android.build.api.dsl.VariantDimension
+import com.android.build.api.variant.impl.VariantOutputImpl
+import com.android.build.gradle.internal.tasks.FinalizeBundleTask
+import name.remal.gradle_plugins.dsl.extensions.get
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -102,6 +106,39 @@ android {
 
                 matchingFallbacks += buildType.matchingFallbacks
             }
+        }
+    }
+
+    // Rename output .apk files
+    androidComponents {
+        onVariants { variant ->
+            variant.outputs
+                .mapNotNull { it as? VariantOutputImpl }
+                .forEach { output ->
+                    val fileName = getVariantOutputFileName(
+                        versionName = output.versionName.get(),
+                        flavorName = variant.flavorName,
+                        buildTypeName = variant.buildType,
+                        outputType = VariantOutputType.APK,
+                    )
+                    output.outputFileName = fileName
+                }
+        }
+    }
+
+    // Rename output .aab files
+    applicationVariants.configureEach {
+        val taskName = "sign${flavorName.uppercaseFirstChar()}${buildType.name.uppercaseFirstChar()}Bundle"
+        tasks.named<FinalizeBundleTask>(taskName) {
+            val file = finalBundleFile.asFile.get()
+            val fileName = getVariantOutputFileName(
+                versionName = versionName,
+                flavorName = flavorName,
+                buildTypeName = buildType.name,
+                outputType = VariantOutputType.AAB,
+            )
+            val finalFile = File(file.parentFile, fileName)
+            finalBundleFile.set(finalFile)
         }
     }
 
@@ -297,6 +334,30 @@ dependencies {
     coreLibraryDesugaring(libs.coreLibraryDesugaring)
 }
 
+fun getVariantOutputFileName(
+    versionName: String,
+    flavorName: String?,
+    buildTypeName: String?,
+    outputType: VariantOutputType,
+): String {
+    val formattedVersionName = versionName.replace('.', '_')
+    return buildString {
+        append("zarina")
+        append("_$formattedVersionName")
+        if (!flavorName.isNullOrEmpty()) {
+            append("_$flavorName")
+        }
+        if (buildTypeName != null) {
+            append("_$buildTypeName")
+        }
+        val ext = when (outputType) {
+            VariantOutputType.APK -> ".apk"
+            VariantOutputType.AAB -> ".aab"
+        }
+        append(ext)
+    }
+}
+
 fun VariantDimension.buildConfigStringField(name: String, value: String) {
     buildConfigField("String", name, "\"$value\"")
 }
@@ -317,3 +378,5 @@ fun VariantDimension.assetLink(backendUrl: String) {
                 "}]\n",
     )
 }
+
+enum class VariantOutputType { APK, AAB }
