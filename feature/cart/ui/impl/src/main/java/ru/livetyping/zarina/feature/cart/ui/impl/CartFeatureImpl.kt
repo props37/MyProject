@@ -16,10 +16,13 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupStoreScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.SelectedPickupStoreNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.SelectedPickupStoreNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
 
 public class CartFeatureImpl : CartFeature {
@@ -102,10 +105,27 @@ public class CartFeatureImpl : CartFeature {
                 onBackClicked = navigateBack,
                 onCloseClicked = closeCheckout,
                 onStoreSelected = { cartType, currentStep, recipient, deliveryMethod, city, store, availableProducts ->
-                    // TODO: [Top] Implement
+                    val selectedPickupStoreNavEntry = SelectedPickupStoreNavEntry.from(
+                        cartType = cartType,
+                        checkoutStep = currentStep + 1,
+                        recipient = recipient,
+                        deliveryMethod = deliveryMethod,
+                        city = city,
+                        store = store,
+                        availableProducts = availableProducts,
+                    )
+                    navController.navigate(selectedPickupStoreNavEntry)
                 },
             )
             pickupStoreSelectorScreen(pickupStoreSelectorNavActions)
+
+            val selectedPickupStoreNavActions = SelectedPickupStoreNavActions(
+                onBackClicked = navigateBack,
+                onContinueClicked = { currentStep, checkoutParams ->
+                    // TODO: [Top] Implement
+                },
+            )
+            selectedPickupStoreScreen(selectedPickupStoreNavActions)
         }
     }
 }
