@@ -18,7 +18,7 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         cityKladrId: KladrId,
     ): Flow<List<DeliveryMethod>> = flow {
         val dto = api.getDeliveryMethods(cartType, cityKladrId)
-        val methods = dto.map { it.toDeliveryMethod() }
+        val methods = dto.mapNotNull { it.toDeliveryMethod() }
         emit(methods)
     }
 

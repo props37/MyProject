@@ -2,11 +2,12 @@ package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import timber.log.Timber
 
 @Serializable
 @JvmInline
 public value class DeliveryMethodTypeDto(public val value: String) {
-    public fun toDeliveryMethodType(): DeliveryMethodType = when (value) {
+    public fun toDeliveryMethodType(): DeliveryMethodType? = when (value) {
         VALUE_DELIVERY_SERVICE -> DeliveryMethodType.COURIER
         VALUE_POST -> DeliveryMethodType.POST
         VALUE_PICKUP -> DeliveryMethodType.PICKUP_FROM_PICKUP_POINT
@@ -14,7 +15,10 @@ public value class DeliveryMethodTypeDto(public val value: String) {
         VALUE_RETAIL -> DeliveryMethodType.PICKUP_FROM_STORE
         VALUE_YANDEX -> DeliveryMethodType.YANDEX_EXPRESS
         VALUE_EXPRESS -> DeliveryMethodType.COURIER_EXPRESS
-        else -> error("Unknown delivery method type $value")
+        else -> {
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to DeliveryMethodType")
+            null
+        }
     }
 
     public companion object {
@@ -37,5 +41,7 @@ public value class DeliveryMethodTypeDto(public val value: String) {
         private const val VALUE_RETAIL = "retail"
         private const val VALUE_YANDEX = "yandex"
         private const val VALUE_EXPRESS = "express"
+
+        private const val TAG = "DeliveryMethodTypeDto"
     }
 }

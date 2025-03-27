@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
+import timber.log.Timber
 
 @Serializable
 internal data class DeliveryMethodDto(
@@ -19,15 +20,22 @@ internal data class DeliveryMethodDto(
     @SerialName("description")
     val description: String? = null,
 ) {
-    fun toDeliveryMethod(): DeliveryMethod {
-        checkNotNull(id) { "id is null" }
-        checkNotNull(type) { "type is null" }
-        checkNotNull(name) { "name is null" }
-        return DeliveryMethod(
-            id = DeliveryMethod.Id(id),
-            type = type.toDeliveryMethodType(),
-            name = name,
-            description = description?.takeIf { it.isNotBlank() },
-        )
+    fun toDeliveryMethod(): DeliveryMethod? {
+        val deliveryMethodType = type?.toDeliveryMethodType()
+        return if (id != null && deliveryMethodType != null && name != null) {
+            DeliveryMethod(
+                id = DeliveryMethod.Id(id),
+                type = deliveryMethodType,
+                name = name,
+                description = description?.takeIf { it.isNotBlank() },
+            )
+        } else {
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to DeliveryMethod")
+            null
+        }
+    }
+
+    private companion object {
+        private const val TAG = "DeliveryMethodDto"
     }
 }

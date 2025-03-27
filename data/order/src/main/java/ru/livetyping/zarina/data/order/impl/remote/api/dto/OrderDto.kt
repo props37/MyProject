@@ -184,9 +184,9 @@ internal data class OrderDto(
         fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkPropertyNotNull(shippingMethod) { ::shippingMethod }
             checkPropertyNotNull(shippingMethod.type) { shippingMethod::type }
-            return OrderDeliveryInfo(
-                type = shippingMethod.type.toDeliveryMethodType(),
-            )
+            val deliveryMethodType = shippingMethod.type.toDeliveryMethodType()
+            checkNotNull(deliveryMethodType) { "deliveryMethodType is null" }
+            return OrderDeliveryInfo(deliveryMethodType)
         }
 
         @Serializable
