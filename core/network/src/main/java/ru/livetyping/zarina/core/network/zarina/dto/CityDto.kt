@@ -29,8 +29,12 @@ public data class CityDto(
                 region = region,
             )
         } else {
-            Timber.e("Drop City because its name or kladrId is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to City")
             null
         }
+    }
+
+    private companion object {
+        private const val TAG = "CityDto"
     }
 }

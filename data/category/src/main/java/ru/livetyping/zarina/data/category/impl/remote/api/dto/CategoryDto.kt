@@ -37,7 +37,7 @@ internal data class CategoryDto(
                 children = children?.mapNotNull { it.toCategory() },
             )
         } else {
-            Timber.tag(TAG).e("Drop CategoryDto $this because its id or name is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to Category")
             null
         }
     }

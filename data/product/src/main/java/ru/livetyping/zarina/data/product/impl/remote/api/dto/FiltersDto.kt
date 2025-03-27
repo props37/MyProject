@@ -128,7 +128,7 @@ internal data class FiltersDto(
                     isSelected = isApplied,
                 )
             } else {
-                Timber.tag(TAG).e("Drop MaterialFilterItem $this because its ID, name or isApplied is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductMaterialFilterItem")
                 null
             }
         }
@@ -142,7 +142,7 @@ internal data class FiltersDto(
                     isSelected = isApplied,
                 )
             } else {
-                Timber.tag(TAG).e("Drop SizeFilterItem $this because its ID, name or isApplied is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductSizeFilterItem")
                 null
             }
         }
@@ -175,7 +175,7 @@ internal data class FiltersDto(
                     color = Color(code),
                 )
             } else {
-                Timber.tag(TAG).e("Drop ColorFilterItem $this because its ID, name, color code or isApplied is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductColorFilterItem")
                 null
             }
         }
@@ -235,7 +235,7 @@ internal data class FiltersDto(
                     isSelected = false,
                 )
             } else {
-                Timber.tag(TAG).e("Drop PickupStoreFilterItem $this because its ID or name is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductPickupStoreFilterItem")
                 null
             }
         }

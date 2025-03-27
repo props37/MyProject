@@ -52,7 +52,7 @@ public data class ProductOfferDto(
                 retailCount = retailQuantity,
             )
         } else {
-            Timber.tag(TAG).e("Drop ProductOfferDto because its ID, size, isAvailable, barcode, onlineQuantity or retailQuantity is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductOffer")
             null
         }
     }

@@ -119,7 +119,7 @@ internal data class CartProductDto(
                         productId = Product.Id(productId),
                     )
                 } else {
-                    Timber.tag(TAG).e("Drop ProductColor $this because its ID, name, color code or product ID is null")
+                    Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductColor")
                     null
                 }
             }

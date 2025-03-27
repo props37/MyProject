@@ -28,7 +28,7 @@ public data class MediaDto(
                 type = type,
             )
         } else {
-            Timber.tag(TAG).e("Drop MediaDto because its urls or type is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to Media")
             null
         }
     }

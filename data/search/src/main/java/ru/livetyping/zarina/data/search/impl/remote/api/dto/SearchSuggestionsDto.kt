@@ -49,7 +49,7 @@ internal data class SearchSuggestionsDto(
                     resultQuery = relatedSearch,
                 )
             } else {
-                Timber.e("Drop AutocompleteSuggestion $this because its text or resultQuery is null")
+                Timber.e("Ignore $this because it can't be mapped to SearchSuggestions.AutocompleteSuggestion")
                 null
             }
         }
@@ -76,9 +76,13 @@ internal data class SearchSuggestionsDto(
                     name = name,
                 )
             } else {
-                Timber.e("Drop Category $this because its ID or name is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to SearchSuggestions.Category")
                 null
             }
         }
+    }
+
+    private companion object {
+        private const val TAG = "SearchSuggestionsDto"
     }
 }

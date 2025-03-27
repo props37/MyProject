@@ -30,7 +30,7 @@ public data class ProductColorDto(
                 productId = Product.Id(productId),
             )
         } else {
-            Timber.tag(TAG).e("Drop ProductColorDto because its id, name, code or productId is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductColor")
             null
         }
     }

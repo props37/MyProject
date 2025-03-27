@@ -93,7 +93,7 @@ internal data class ProductDetailedDto(
                     color = Color(color.trim()),
                 )
             } else {
-                Timber.tag(TAG).e("Drop label $this because its name or color is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.Label")
                 null
             }
         }
@@ -114,7 +114,7 @@ internal data class ProductDetailedDto(
                     body = body,
                 )
             } else {
-                Timber.tag(TAG).e("Drop description entry $this because its title or body is null")
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.DescriptionEntry")
                 null
             }
         }

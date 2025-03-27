@@ -36,7 +36,7 @@ internal data class BannerDto(
                 clickAction = click?.toClickAction(),
             )
         } else {
-            Timber.tag(TAG).e("Drop BannerDto $this because its id, mediaType or mediaUrl is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to Banner")
             null
         }
     }

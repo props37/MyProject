@@ -55,7 +55,7 @@ public data class ProductShortDto(
                 isInCart = false,
             )
         } else {
-            Timber.tag(TAG).e("Drop ProductShortDto because its id, name, price, offers, colors or media is null")
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductShort")
             null
         }
     }
