@@ -39,6 +39,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
@@ -1005,6 +1006,19 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetPickupStoresFlowUseCase {
         return GetPickupStoresFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPickupPointsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetPickupPointsFlowUseCase {
+        return GetPickupPointsFlowUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             userRepository = userRepository,
             logger = logger,
