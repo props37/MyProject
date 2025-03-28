@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
 import javax.inject.Inject
 
@@ -26,6 +27,12 @@ internal class CheckoutApiImpl @Inject constructor(
         return httpClient.get("/api/shipping-methods") {
             parameter("cart_type", CartTypeDto.from(cartType).value)
             parameter("address_kladr", cityKladrId.value)
+        }.body()
+    }
+
+    override suspend fun getPickupPoints(cityKladrId: KladrId): List<PickupPointDto> {
+        return httpClient.get("/api/shipping-methods/pickup_points") {
+            parameter("city_kladr_id", cityKladrId.value)
         }.body()
     }
 

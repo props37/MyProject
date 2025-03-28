@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
@@ -18,6 +19,10 @@ internal class CheckoutRepositoryImpl @Inject constructor(
         cityKladrId: KladrId
     ): Flow<List<DeliveryMethod>> {
         return remoteDataSource.getDeliveryMethodsFlow(cartType, cityKladrId)
+    }
+
+    override fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>> {
+        return remoteDataSource.getPickupPointsFlow(cityKladrId)
     }
 
     override fun getPickupStoresFlow(
