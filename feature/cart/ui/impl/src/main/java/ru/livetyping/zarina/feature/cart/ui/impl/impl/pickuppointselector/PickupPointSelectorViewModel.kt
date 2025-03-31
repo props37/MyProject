@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicomponent.location.CurrentLocationComponent
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -45,6 +46,11 @@ internal class PickupPointSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val deps: PickupPointSelectorDependencies,
 ) : ViewModel(), SideEffectSource<PickupPointSelectorSideEffect> by SideEffectSourceImpl() {
+
+    private val currentLocationComponent = CurrentLocationComponent(
+        coroutineScope = viewModelScope,
+        getCurrentLocationFlowUseCase = deps.getCurrentLocationFlow,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -129,18 +135,7 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         initialValue = initialPickupPointSelectorState,
     )
 
-    private val currentLocationRequester = FlowRequester(CurrentLocationRequest) {
-        deps.getCurrentLocationFlow()
-    }
-
-    // TODO: [Top] Extract
-    val currentLocation: StateFlow<Location?> = currentLocationRequester.flow
-        .map { it.getOrNull() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileAndroidUiSubscribed,
-            initialValue = null,
-        )
+    val currentLocation: StateFlow<Location?> = currentLocationComponent.currentLocation
 
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
@@ -185,6 +180,4 @@ internal class PickupPointSelectorViewModel @Inject constructor(
     }
 
     private data object PickupPointRequest : FlowRequest
-
-    private data object CurrentLocationRequest : FlowRequest
 }

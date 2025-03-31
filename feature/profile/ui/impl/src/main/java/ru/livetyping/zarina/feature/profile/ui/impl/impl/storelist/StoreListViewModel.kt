@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,6 +18,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicomponent.location.CurrentLocationComponent
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
@@ -45,6 +46,11 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal class StoreListViewModel @Inject constructor(
     private val deps: StoreListDependencies,
 ) : ViewModel(), SideEffectSource<StoreListSideEffect> by SideEffectSourceImpl() {
+
+    private val currentLocationComponent = CurrentLocationComponent(
+        coroutineScope = viewModelScope,
+        getCurrentLocationFlowUseCase = deps.getCurrentLocationFlow,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -98,17 +104,7 @@ internal class StoreListViewModel @Inject constructor(
         initialValue = StoreListState.Loading,
     )
 
-    private val currentLocationRequester = FlowRequester(LocationRequest) {
-        deps.getCurrentLocationFlow()
-    }
-
-    val currentLocation = currentLocationRequester.flow
-        .map { it.getOrNull() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileAndroidUiSubscribed,
-            initialValue = null,
-        )
+    val currentLocation: StateFlow<Location?> = currentLocationComponent.currentLocation
 
     private val _permissionRequiredDialogState =
         MutableStateFlow<PermissionRequiredDialogState>(PermissionRequiredDialogState.None)
@@ -158,12 +154,12 @@ internal class StoreListViewModel @Inject constructor(
             val fineLocationPermissionState =
                 deps.permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
             if (fineLocationPermissionState.isGranted) {
-                currentLocationRequester.request(LocationRequest)
+                currentLocationComponent.refreshCurrentLocation()
             } else {
                 val newPermissionsState =
                     deps.permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
                 if (newPermissionsState.any { it.value.isGranted }) {
-                    currentLocationRequester.request(LocationRequest)
+                    currentLocationComponent.refreshCurrentLocation()
                 } else {
                     _permissionRequiredDialogState.value = PermissionRequiredDialogState.Visible(
                         permission = RequiredPermission.LOCATION,
@@ -221,8 +217,6 @@ internal class StoreListViewModel @Inject constructor(
     }
 
     private data object StoreRequest : FlowRequest
-
-    private data object LocationRequest : FlowRequest
 
     private companion object {
         private val LOCATION_PERMISSIONS: List<String>

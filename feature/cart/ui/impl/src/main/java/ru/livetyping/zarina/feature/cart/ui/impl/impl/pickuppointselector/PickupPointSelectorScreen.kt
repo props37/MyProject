@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
@@ -36,12 +37,14 @@ internal fun PickupPointSelectorScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val pickupPointSelectorState by viewModel.pickupPointSelectorState.collectAsStateWithLifecycle()
+    val currentLocation = viewModel.currentLocation.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         pickupPointSelectorState = pickupPointSelectorState,
         onPickupPointSelectorEvent = viewModel::onPickupPointSelectorEvent,
+        currentLocationProvider = { currentLocation.value },
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -53,6 +56,7 @@ private fun ScreenContent(
     onTopBarEvent: (CheckoutTopBarEvent) -> Unit,
     pickupPointSelectorState: PickupPointSelectorState,
     onPickupPointSelectorEvent: (PickupPointSelectorEvent) -> Unit,
+    currentLocationProvider: () -> Location?,
     sideEffects: Flow<PickupPointSelectorSideEffect>,
     navActions: PickupPointSelectorNavActions,
 ) {
