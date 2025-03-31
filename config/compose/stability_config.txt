@@ -121,6 +121,11 @@ ru.livetyping.zarina.core.domain.model.checkout.PickupPoint.Id
 ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 ru.livetyping.zarina.core.domain.model.checkout.Recipient
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.Id
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.DateTimePeriod
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.DateTimePeriod.Id
 // :core:domain end
 
 
