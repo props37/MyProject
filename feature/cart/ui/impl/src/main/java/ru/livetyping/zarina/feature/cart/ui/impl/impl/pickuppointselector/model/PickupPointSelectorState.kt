@@ -10,4 +10,5 @@ internal data class PickupPointSelectorState(
     val filterTextFieldState: TextFieldState,
     val filters: ImmutableList<ToggleableFilter>,
     val viewModeSelectorState: TabRowState<ViewMode>,
+    val pickupPointListState: PickupPointListState,
 )

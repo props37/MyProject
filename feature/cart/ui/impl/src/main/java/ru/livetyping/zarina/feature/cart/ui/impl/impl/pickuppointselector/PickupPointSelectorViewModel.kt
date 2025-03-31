@@ -17,16 +17,22 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.Filter
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointListState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointListStateBuilder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.ToggleableFilter
@@ -37,6 +43,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class PickupPointSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val deps: PickupPointSelectorDependencies,
 ) : ViewModel(), SideEffectSource<PickupPointSelectorSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -83,22 +90,57 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         filterTextFieldState = filterTextFieldState,
         filters = persistentListOf(),
         viewModeSelectorState = TabRowState(viewModes, currentViewMode.value),
+        pickupPointListState = PickupPointListState.Loading,
     )
+
+    private val pickupPointRequester = FlowRequester(PickupPointRequest) {
+        deps.getPickupPointsFlow()
+    }
+
+    private val pickupPointListStateBuilder = PickupPointListStateBuilder()
+    private val pickupPointListState = combine(
+        pickupPointRequester.flow,
+        pickupPointRequester.loadingState,
+        filterTextFieldState.textAsFlow(),
+        appliedFilters,
+    ) { pickupPointResult, pickupPointLoadingState, filterQuery, appliedFilters ->
+        pickupPointListStateBuilder.build(
+            pickupPointResult = pickupPointResult,
+            pickupPointLoadingState = pickupPointLoadingState,
+            filterQuery = filterQuery.toString(),
+            appliedFilters = appliedFilters.toList(),
+        )
+    }
 
     val pickupPointSelectorState: StateFlow<PickupPointSelectorState> = combine(
         filters,
         viewModeSelectorState,
-    ) { filters, viewModeSelectorState ->
+        pickupPointListState,
+    ) { filters, viewModeSelectorState, pickupPointListState ->
         PickupPointSelectorState(
             filterTextFieldState = filterTextFieldState,
             filters = filters,
             viewModeSelectorState = viewModeSelectorState,
+            pickupPointListState = pickupPointListState,
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = initialPickupPointSelectorState,
     )
+
+    private val currentLocationRequester = FlowRequester(CurrentLocationRequest) {
+        deps.getCurrentLocationFlow()
+    }
+
+    // TODO: [Top] Extract
+    val currentLocation: StateFlow<Location?> = currentLocationRequester.flow
+        .map { it.getOrNull() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileAndroidUiSubscribed,
+            initialValue = null,
+        )
 
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
@@ -141,4 +183,8 @@ internal class PickupPointSelectorViewModel @Inject constructor(
             is TabRowEvent.TabReselected<ViewMode> -> Unit
         }
     }
+
+    private data object PickupPointRequest : FlowRequest
+
+    private data object CurrentLocationRequest : FlowRequest
 }

@@ -46,14 +46,14 @@ internal fun PickupPointSelector(
             pageCount = { state.viewModeSelectorState.tabs.size },
         )
 
-        val pickupPointListState = rememberLazyListState()
+        val pickupPointLazyListState = rememberLazyListState()
 
         ViewModeSelector(
             state = state.viewModeSelectorState,
             onEvent = { event ->
                 if (event is TabRowEvent.TabReselected) {
                     coroutineScope.launch {
-                        pickupPointListState.animateFastScrollToItem(
+                        pickupPointLazyListState.animateFastScrollToItem(
                             item = 0,
                             distanceThreshold = PickupPointListFastScrollThreshold,
                         )
