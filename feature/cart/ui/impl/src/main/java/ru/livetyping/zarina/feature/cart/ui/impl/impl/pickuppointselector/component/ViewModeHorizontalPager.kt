@@ -71,7 +71,23 @@ internal fun ViewModeHorizontalPager(
             }
 
             ViewMode.LIST -> {
-                // TODO: [Top] Implement
+                PickupPointListScaffold(
+                    state = pickupPointListState,
+                    onErrorRefreshClicked = onErrorRefreshClicked,
+                    successContent = { state ->
+                        PickupPointList(
+                            state = state,
+                            onPickupPointClicked = onPickupPointClicked,
+                            lazyListState = pickupPointLazyListState,
+                            windowInsetsProvider = windowInsetsProvider,
+                        )
+                    },
+                    loadingContent = {
+                        PickupPointListLoading(windowInsetsProvider = windowInsetsProvider)
+                    },
+                    windowInsetsProvider = windowInsetsProvider,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }
