@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.compo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicompose.animateFastScrollToItem
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
@@ -23,6 +25,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.
 internal fun PickupPointSelector(
     state: PickupPointSelectorState,
     onEvent: (PickupPointSelectorEvent) -> Unit,
+    currentLocationProvider: () -> Location?,
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.safeDrawing },
 ) {
@@ -66,7 +69,18 @@ internal fun PickupPointSelector(
                 .padding(horizontal = 16.dp),
         )
 
-        // TODO: [Top] Implement
+        ViewModeHorizontalPager(
+            pagerState = viewModePagerState,
+            viewModes = state.viewModeSelectorState.tabs,
+            pickupPointListState = state.pickupPointListState,
+            pickupPointLazyListState = pickupPointLazyListState,
+            onPickupPointClicked = { onEvent(PickupPointSelectorEvent.PickupPointClicked(it)) },
+            onErrorRefreshClicked = { onEvent(PickupPointSelectorEvent.ErrorRefreshClicked) },
+            currentLocationProvider = currentLocationProvider,
+            onMyLocationClicked = { onEvent(PickupPointSelectorEvent.MyLocationClicked) },
+            windowInsetsProvider = windowInsetsProvider,
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 

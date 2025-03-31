@@ -86,6 +86,7 @@ private fun ScreenContent(
         PickupPointSelector(
             state = pickupPointSelectorState,
             onEvent = onPickupPointSelectorEvent,
+            currentLocationProvider = currentLocationProvider,
         )
     }
 }

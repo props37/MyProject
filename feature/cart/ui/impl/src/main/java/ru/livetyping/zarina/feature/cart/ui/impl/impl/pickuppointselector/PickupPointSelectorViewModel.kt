@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector
 
+import android.Manifest
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
@@ -148,6 +150,9 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         when (event) {
             is PickupPointSelectorEvent.FilterClicked -> onFilterClicked(event)
             is PickupPointSelectorEvent.ViewModeSelectorEvent -> onViewModeSelectorEvent(event)
+            is PickupPointSelectorEvent.PickupPointClicked -> TODO() // TODO: [Top] Implement
+            PickupPointSelectorEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
+            PickupPointSelectorEvent.MyLocationClicked -> onMyLocationClicked()
         }
     }
 
@@ -179,5 +184,36 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         }
     }
 
+    private fun onErrorRefreshClicked() {
+        pickupPointRequester.request(PickupPointRequest)
+    }
+
+    private fun onMyLocationClicked() {
+        val permissionManager = deps.permissionManager
+        viewModelScope.launch {
+            val fineLocationPermissionState =
+                permissionManager.getPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (fineLocationPermissionState.isGranted) {
+                currentLocationComponent.refreshCurrentLocation()
+            } else {
+                val newPermissionState =
+                    permissionManager.requestMultiplePermissions(LOCATION_PERMISSIONS)
+                if (newPermissionState.any { it.value.isGranted }) {
+                    currentLocationComponent.refreshCurrentLocation()
+                } else {
+                    // TODO: [Top] Show PermissionRequired dialog
+                }
+            }
+        }
+    }
+
     private data object PickupPointRequest : FlowRequest
+
+    private companion object {
+        private val LOCATION_PERMISSIONS: List<String>
+            get() = listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+    }
 }

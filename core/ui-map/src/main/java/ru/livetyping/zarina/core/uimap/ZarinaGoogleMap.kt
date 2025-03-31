@@ -41,7 +41,7 @@ public fun ZarinaGoogleMap(
     onMyLocationClicked: () -> Unit,
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    myLocationButtonWindowInsetsProvider: () -> WindowInsets = { WindowInsets.none },
+    myLocationButtonWindowInsetsProvider: @Composable () -> WindowInsets = { WindowInsets.none },
     content: @Composable @GoogleMapComposable () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
