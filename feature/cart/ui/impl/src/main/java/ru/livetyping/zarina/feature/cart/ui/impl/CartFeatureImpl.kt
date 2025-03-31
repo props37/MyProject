@@ -17,6 +17,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodS
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupPointScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupStoreScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavEntry
@@ -24,6 +25,8 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.Pickup
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.RecipientNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.SelectedPickupPointNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.SelectedPickupPointNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.SelectedPickupStoreNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.SelectedPickupStoreNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.CartNavActions as CartScreenNavActions
@@ -144,10 +147,20 @@ public class CartFeatureImpl : CartFeature {
                 onBackClicked = navigateBack,
                 onCloseClicked = closeCheckout,
                 onPickupPointSelected = { cartType, currentStep, recipient, deliveryMethod, pickupPoint ->
-                    // TODO: [Top] Implement
+                    val selectedPickupPointNavEntry = SelectedPickupPointNavEntry.from(
+                        cartType = cartType,
+                        checkoutStep = currentStep + 1,
+                        recipient = recipient,
+                        deliveryMethod = deliveryMethod,
+                        pickupPoint = pickupPoint,
+                    )
+                    navController.navigate(selectedPickupPointNavEntry)
                 },
             )
             pickupPointSelectorScreen(pickupPointSelectorNavActions)
+
+            val selectedPickupPointNavActions = SelectedPickupPointNavActions()
+            selectedPickupPointScreen(selectedPickupPointNavActions)
         }
     }
 }
