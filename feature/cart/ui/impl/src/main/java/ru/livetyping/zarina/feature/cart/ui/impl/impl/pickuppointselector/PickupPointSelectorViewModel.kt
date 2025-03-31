@@ -167,7 +167,7 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         when (event) {
             is PickupPointSelectorEvent.FilterClicked -> onFilterClicked(event)
             is PickupPointSelectorEvent.ViewModeSelectorEvent -> onViewModeSelectorEvent(event)
-            is PickupPointSelectorEvent.PickupPointClicked -> TODO() // TODO: [Top] Implement
+            is PickupPointSelectorEvent.PickupPointClicked -> onPickupPointClicked(event)
             PickupPointSelectorEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
             PickupPointSelectorEvent.MyLocationClicked -> onMyLocationClicked()
         }
@@ -214,6 +214,19 @@ internal class PickupPointSelectorViewModel @Inject constructor(
         when (event.event) {
             is TabRowEvent.TabChanged<ViewMode> -> currentViewMode.value = event.event.tab
             is TabRowEvent.TabReselected<ViewMode> -> Unit
+        }
+    }
+
+    private fun onPickupPointClicked(event: PickupPointSelectorEvent.PickupPointClicked) {
+        navigationThrottler.throttle {
+            val action = PickupPointSelectorScreenAction.PickupPointSelected(
+                cartType = cartType,
+                currentCheckoutStep = navEntry.checkoutStep,
+                recipient = navEntry.recipient.toRecipient(),
+                deliveryMethod = navEntry.deliveryMethod.toDeliveryMethod(),
+                pickupPoint = event.pickupPoint,
+            )
+            emitSideEffect(PickupPointSelectorSideEffect.Navigate(action))
         }
     }
 

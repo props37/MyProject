@@ -50,8 +50,19 @@ internal fun PickupPointSelectorScreenBehavior(
 
 private fun navigate(
     navActions: PickupPointSelectorNavActions,
-    action: PickupPointSelectorScreenAction
+    action: PickupPointSelectorScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        PickupPointSelectorScreenAction.BackClicked -> navActions.onBackClicked()
+        PickupPointSelectorScreenAction.CloseClicked -> navActions.onCloseClicked()
+        is PickupPointSelectorScreenAction.PickupPointSelected -> {
+            navActions.onPickupPointSelected(
+                action.cartType,
+                action.currentCheckoutStep,
+                action.recipient,
+                action.deliveryMethod,
+                action.pickupPoint,
+            )
+        }
+    }
 }
