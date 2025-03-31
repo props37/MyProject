@@ -126,7 +126,11 @@ internal class PickupPointSelectorViewModel @Inject constructor(
             filterQuery = filterQuery.toString(),
             appliedFilters = appliedFilters.toList(),
         )
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = PickupPointListState.Loading,
+    )
 
     val pickupPointSelectorState: StateFlow<PickupPointSelectorState> = combine(
         filters,
