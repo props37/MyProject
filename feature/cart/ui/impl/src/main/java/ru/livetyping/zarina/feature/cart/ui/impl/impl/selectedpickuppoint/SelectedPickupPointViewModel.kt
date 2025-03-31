@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -14,6 +15,10 @@ internal class SelectedPickupPointViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<SelectedPickupPointSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val navEntry = savedStateHandle.toRoute<SelectedPickupPointNavEntry>(
+        typeMap = SelectedPickupPointNavEntry.typeMap(),
+    )
 
     fun onBackClicked() {
         navigationThrottler.throttle {
