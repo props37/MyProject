@@ -2,8 +2,10 @@ package ru.livetyping.zarina.data.checkout.impl.remote.api
 
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailedDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
 
@@ -14,6 +16,11 @@ internal interface CheckoutApi {
     ): List<DeliveryMethodDto>
 
     suspend fun getPickupPoints(cityKladrId: KladrId): List<PickupPointDto>
+
+    suspend fun getPickupPoint(
+        cityKladrId: KladrId,
+        pickupPointId: PickupPoint.Id,
+    ): PickupPointDetailedDto
 
     suspend fun getPickupStores(
         cityKladrId: KladrId,

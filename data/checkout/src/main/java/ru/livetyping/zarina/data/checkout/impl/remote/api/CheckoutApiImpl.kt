@@ -6,12 +6,14 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailsDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
 import javax.inject.Inject
@@ -34,6 +36,17 @@ internal class CheckoutApiImpl @Inject constructor(
         return httpClient.get("/api/shipping-methods/pickup_points") {
             parameter("city_kladr_id", cityKladrId.value)
         }.body()
+    }
+
+    override suspend fun getPickupPoint(
+        cityKladrId: KladrId,
+        pickupPointId: PickupPoint.Id,
+    ): PickupPointDetailsDto {
+        // Why do we always use payment_method=paytureinpay?
+        return httpClient.get(
+            "/api/shipping-methods/cities/${cityKladrId.value}/pickup_points/" +
+                    "${pickupPointId.value}/?payment_method=paytureinpay"
+        ).body()
     }
 
     override suspend fun getPickupStores(

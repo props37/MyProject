@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -12,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SelectedPickupPointViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    getPickupPointFlow: GetPickupPointFlowUseCase,
 ) : ViewModel(), SideEffectSource<SelectedPickupPointSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
