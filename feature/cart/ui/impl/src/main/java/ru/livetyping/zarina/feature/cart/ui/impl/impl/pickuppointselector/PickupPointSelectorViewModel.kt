@@ -14,6 +14,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,11 +25,18 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.platform.PackageName
+import ru.livetyping.zarina.core.platform.settings.SystemSettings
+import ru.livetyping.zarina.core.resource.R
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicomponent.location.CurrentLocationComponent
 import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uikit.permission.RequiredPermission
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
@@ -139,6 +147,11 @@ internal class PickupPointSelectorViewModel @Inject constructor(
 
     val currentLocation: StateFlow<Location?> = currentLocationComponent.currentLocation
 
+    private val _permissionRequiredDialogState =
+        MutableStateFlow<PermissionRequiredDialogState>(PermissionRequiredDialogState.None)
+    val permissionRequiredDialogState: StateFlow<PermissionRequiredDialogState> =
+        _permissionRequiredDialogState.asStateFlow()
+
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
             CheckoutTopBarEvent.BackClicked -> onBackClicked()
@@ -153,6 +166,22 @@ internal class PickupPointSelectorViewModel @Inject constructor(
             is PickupPointSelectorEvent.PickupPointClicked -> TODO() // TODO: [Top] Implement
             PickupPointSelectorEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
             PickupPointSelectorEvent.MyLocationClicked -> onMyLocationClicked()
+        }
+    }
+
+    fun onRequiredPermissionDialogEvent(event: PermissionRequiredDialogEvent) {
+        when (event) {
+            PermissionRequiredDialogEvent.CloseClicked -> {
+                _permissionRequiredDialogState.value = PermissionRequiredDialogState.None
+            }
+
+            is PermissionRequiredDialogEvent.GoToSettingsClicked -> {
+                if (event.permission == RequiredPermission.LOCATION) {
+                    val systemSettings = SystemSettings.ApplicationDetails(PackageName.Own)
+                    emitSideEffect(PickupPointSelectorSideEffect.OpenSystemSettings(systemSettings))
+                }
+                _permissionRequiredDialogState.value = PermissionRequiredDialogState.None
+            }
         }
     }
 
@@ -201,7 +230,11 @@ internal class PickupPointSelectorViewModel @Inject constructor(
                 if (newPermissionState.any { it.value.isGranted }) {
                     currentLocationComponent.refreshCurrentLocation()
                 } else {
-                    // TODO: [Top] Show PermissionRequired dialog
+                    _permissionRequiredDialogState.value = PermissionRequiredDialogState.Visible(
+                        permission = RequiredPermission.LOCATION,
+                        title = Text.Resource(R.string.res_grant_location_permission),
+                        body = Text.Resource(R.string.res_it_will_help_us_to_detect_your_location),
+                    )
                 }
             }
         }

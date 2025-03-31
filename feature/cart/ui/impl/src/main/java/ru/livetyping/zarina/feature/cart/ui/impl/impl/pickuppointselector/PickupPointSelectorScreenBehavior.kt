@@ -3,10 +3,12 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.platform.settings.openSystemSettings
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
@@ -17,6 +19,7 @@ internal fun PickupPointSelectorScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val currentContext by rememberUpdatedState(LocalContext.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -30,6 +33,10 @@ internal fun PickupPointSelectorScreenBehavior(
 
                     is PickupPointSelectorSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
+                    }
+
+                    is PickupPointSelectorSideEffect.OpenSystemSettings -> {
+                        currentContext.openSystemSettings(sideEffect.settings)
                     }
                 }
             }

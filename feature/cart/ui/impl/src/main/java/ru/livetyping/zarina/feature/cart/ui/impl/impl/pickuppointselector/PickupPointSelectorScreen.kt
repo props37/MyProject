@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,6 +22,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
+import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
@@ -38,6 +42,7 @@ internal fun PickupPointSelectorScreen(
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val pickupPointSelectorState by viewModel.pickupPointSelectorState.collectAsStateWithLifecycle()
     val currentLocation = viewModel.currentLocation.collectAsStateWithLifecycle()
+    val permissionRequiredDialogState by viewModel.permissionRequiredDialogState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
@@ -45,11 +50,14 @@ internal fun PickupPointSelectorScreen(
         pickupPointSelectorState = pickupPointSelectorState,
         onPickupPointSelectorEvent = viewModel::onPickupPointSelectorEvent,
         currentLocationProvider = { currentLocation.value },
+        permissionRequiredDialogState = permissionRequiredDialogState,
+        onPermissionRequiredDialogEvent = viewModel::onRequiredPermissionDialogEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
     topBarState: CheckoutTopBarState,
@@ -57,12 +65,19 @@ private fun ScreenContent(
     pickupPointSelectorState: PickupPointSelectorState,
     onPickupPointSelectorEvent: (PickupPointSelectorEvent) -> Unit,
     currentLocationProvider: () -> Location?,
+    permissionRequiredDialogState: PermissionRequiredDialogState,
+    onPermissionRequiredDialogEvent: (PermissionRequiredDialogEvent) -> Unit,
     sideEffects: Flow<PickupPointSelectorSideEffect>,
     navActions: PickupPointSelectorNavActions,
 ) {
     PickupPointSelectorScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
+    )
+
+    PermissionRequiredModalBottomSheet(
+        state = permissionRequiredDialogState,
+        onEvent = onPermissionRequiredDialogEvent,
     )
 
     Column(

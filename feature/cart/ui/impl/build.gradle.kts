@@ -69,6 +69,7 @@ dependencies {
     implementation(projects.core.permission)
     implementation(projects.core.uiComponent)
     implementation(projects.core.uiMap)
+    implementation(projects.core.platform)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
