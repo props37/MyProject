@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.checkout
 
 import ru.livetyping.zarina.core.domain.model.common.Location
 
+// Marked as stable on config/compose/stability_config.txt
 public sealed class PickupPoint(
     public open val id: Id,
     public open val title: String,
@@ -11,6 +12,7 @@ public sealed class PickupPoint(
     public open val isPaymentByCardAvailable: Boolean,
     public open val availablePaymentMethods: Set<PaymentMethod>,
 ) {
+    // Marked as stable on config/compose/stability_config.txt
     @JvmInline
     public value class Id(public val value: String)
 
