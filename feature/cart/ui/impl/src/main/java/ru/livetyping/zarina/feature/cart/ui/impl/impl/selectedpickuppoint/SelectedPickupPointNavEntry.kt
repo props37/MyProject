@@ -20,8 +20,12 @@ internal class SelectedPickupPointNavEntry(
     val checkoutStep: Int,
     val recipient: RecipientParcelable,
     val deliveryMethod: DeliveryMethodParcelable,
-    val pickupPointId: String,
+    private val pickupPointId: String,
 ) : NavigationEntry {
+    fun getPickupPointId(): PickupPoint.Id {
+        return PickupPoint.Id(pickupPointId)
+    }
+
     companion object {
         fun from(
             cartType: CartType,
