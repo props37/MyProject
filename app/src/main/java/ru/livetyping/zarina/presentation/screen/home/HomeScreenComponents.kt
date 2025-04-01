@@ -391,16 +391,35 @@ object HomeScreenComponents {
         onBannerDisplayed: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        ZarinaVideoPlayer(
-            url = banner.media.originalUrl,
-            isOnScreen = isOnScreen,
-            onReadyToPlay = onBannerDisplayed,
+        Box(
             modifier = modifier
                 .clickable(
                     enabled = banner.clickAction != null,
                     onClick = { onBannerClicked(banner) },
                 )
-        )
+        ) {
+            var isVideoPlaceholderVisible by remember(banner) { mutableStateOf(true) }
+
+            ZarinaVideoPlayer(
+                url = banner.media.originalUrl,
+                isOnScreen = isOnScreen,
+                onReadyToPlay = {
+                    isVideoPlaceholderVisible = false
+                    onBannerDisplayed()
+                },
+                modifier = Modifier.matchParentSize(),
+            )
+
+            if (isVideoPlaceholderVisible && banner.videoPlaceholder != null) {
+                AsyncImage(
+                    model = banner.videoPlaceholder.value,
+                    contentDescription = banner.title,
+                    contentScale = ContentScale.Crop,
+                    onSuccess = { onBannerDisplayed() },
+                    modifier = Modifier.matchParentSize(),
+                )
+            }
+        }
     }
 
     @Composable
