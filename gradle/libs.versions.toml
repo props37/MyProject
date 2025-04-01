@@ -20,7 +20,7 @@ jetpack-navigation = "2.8.9"
 jetpack-datastore = "1.1.2"
 jetpack-room = "2.6.1"
 jetpack-splashScreen = "1.0.1"
-jetpack-media3 = "1.5.1"
+jetpack-media3 = "1.6.0"
 jetpack-paging = "3.3.5"
 jetpack-security-cripto = "1.0.0"
 jetpack-browser = "1.8.0"
@@ -85,6 +85,7 @@ jetpack-room-compiler = { group = "androidx.room", name = "room-compiler", versi
 jetpack-splashScreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "jetpack-splashScreen" }
 jetpack-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "jetpack-media3" }
 jetpack-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "jetpack-media3" }
+jetpack-media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", version.ref = "jetpack-media3" }
 jetpack-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "jetpack-paging" }
 jetpack-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "jetpack-security-cripto" }
 jetpack-browser = { group = "androidx.browser", name = "browser", version.ref = "jetpack-browser" }
