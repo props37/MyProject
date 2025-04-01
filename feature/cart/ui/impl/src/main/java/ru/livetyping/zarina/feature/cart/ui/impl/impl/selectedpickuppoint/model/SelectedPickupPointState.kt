@@ -6,15 +6,15 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
 @Stable
-internal sealed class PickupPointState {
+internal sealed class SelectedPickupPointState {
     @Immutable
     class Success(
         val pickupPoint: PickupPointDetailed,
         val selectedDeliveryTypeId: PickupPointDetailed.DeliveryType.Id,
-    ) : PickupPointState()
+    ) : SelectedPickupPointState()
 
-    data object Loading : PickupPointState()
+    data object Loading : SelectedPickupPointState()
 
     @Immutable
-    data class Error(val state: ZarinaErrorScreenState) : PickupPointState()
+    data class Error(val state: ZarinaErrorScreenState) : SelectedPickupPointState()
 }

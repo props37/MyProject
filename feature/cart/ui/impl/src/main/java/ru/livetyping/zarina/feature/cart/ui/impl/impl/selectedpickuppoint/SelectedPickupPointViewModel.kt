@@ -18,8 +18,8 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCa
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.PickupPointState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.PickupPointStateBuilder
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointStateBuilder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,13 +42,13 @@ internal class SelectedPickupPointViewModel @Inject constructor(
     private val selectedDeliveryTypeId =
         MutableStateFlow<PickupPointDetailed.DeliveryType.Id?>(null)
 
-    private val pickupPointStateBuilder = PickupPointStateBuilder()
-    val pickupPointState: StateFlow<PickupPointState> = combine(
+    private val selectedPickupPointStateBuilder = SelectedPickupPointStateBuilder()
+    val selectedPickupPointState: StateFlow<SelectedPickupPointState> = combine(
         pickupPointRequester.flow,
         pickupPointRequester.loadingState,
         selectedDeliveryTypeId,
     ) { result, loadingState, selectedDeliveryTypeId ->
-        pickupPointStateBuilder.build(
+        selectedPickupPointStateBuilder.build(
             pickupPointResult = result,
             pickupPointLoadingState = loadingState,
             selectedDeliveryTypeId = selectedDeliveryTypeId,
@@ -56,7 +56,7 @@ internal class SelectedPickupPointViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = PickupPointState.Loading,
+        initialValue = SelectedPickupPointState.Loading,
     )
 
     fun onBackClicked() {

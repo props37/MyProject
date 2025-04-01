@@ -4,18 +4,18 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 
-internal class PickupPointStateBuilder {
+internal class SelectedPickupPointStateBuilder {
     fun build(
         pickupPointResult: Result<PickupPointDetailed>,
         pickupPointLoadingState: FlowRequester.LoadingState,
         selectedDeliveryTypeId: PickupPointDetailed.DeliveryType.Id?,
-    ): PickupPointState {
+    ): SelectedPickupPointState {
         return if (pickupPointLoadingState.isLoading()) {
-            PickupPointState.Loading
+            SelectedPickupPointState.Loading
         } else {
             pickupPointResult.fold(
                 onSuccess = { pickupPoint ->
-                    PickupPointState.Success(
+                    SelectedPickupPointState.Success(
                         pickupPoint = pickupPoint,
                         selectedDeliveryTypeId = selectedDeliveryTypeId
                             ?: pickupPoint.deliveryTypes.first().id,
@@ -23,7 +23,7 @@ internal class PickupPointStateBuilder {
                 },
                 onFailure = { t ->
                     val errorState = ZarinaErrorScreenState.from(t)
-                    PickupPointState.Error(errorState)
+                    SelectedPickupPointState.Error(errorState)
                 },
             )
         }
