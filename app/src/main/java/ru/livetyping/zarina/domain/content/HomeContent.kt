@@ -2,6 +2,7 @@ package ru.livetyping.zarina.domain.content
 
 import ru.livetyping.zarina.domain.common.ClickAction
 import ru.livetyping.zarina.domain.common.Media
+import ru.livetyping.zarina.domain.common.Url
 
 data class HomeContent(
     val womenBanners: List<BannerContainer>,
@@ -24,8 +25,13 @@ data class HomeContent(
 
     data class Banner(
         val id: Id,
-        val media: Media,
         val title: String?,
+        val media: Media,
+
+        /**
+         * Image that might be used as a placeholder while the video is loading
+         */
+        val videoPlaceholder: Url?,
         val clickAction: ClickAction?,
     ) {
         @JvmInline

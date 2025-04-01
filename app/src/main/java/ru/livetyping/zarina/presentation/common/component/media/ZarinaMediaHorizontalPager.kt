@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.presentation.common.component.media
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -19,6 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.media3.common.C
+import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.domain.common.Media
@@ -28,6 +31,7 @@ import ru.livetyping.zarina.presentation.common.component.skeleton.rememberZarin
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.kotlin.loopingGet
 
+@OptIn(UnstableApi::class)
 @Composable
 fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
@@ -68,8 +72,10 @@ fun ZarinaMediaHorizontalPager(
                 }
 
                 MediaType.VIDEO -> {
-                    ZarinaVideoPlayer(
-                        url = media.originalUrl,
+                    ZarinaSimpleVideoPlayer(
+                        url = media.originalUrl.value,
+                        contentScale = ContentScale.Crop,
+                        videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING,
                         onReadyToPlay = { isMediaDisplayed = true },
                         modifier = Modifier.matchParentSize(),
                     )

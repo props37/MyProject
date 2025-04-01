@@ -70,6 +70,9 @@ data class HomeBannersDto(
             @SerialName("media_url")
             val mediaUrl: String? = null,
 
+            @SerialName("poster")
+            val poster: String? = null,
+
             @SerialName("title")
             val title: String? = null,
 
@@ -82,8 +85,9 @@ data class HomeBannersDto(
                     val media = Media(url = Url(mediaUrl), type = mediaType)
                     return HomeContent.Banner(
                         id = HomeContent.Banner.Id(id),
-                        media = media,
                         title = title,
+                        media = media,
+                        videoPlaceholder = poster?.let { Url(it) },
                         clickAction = clickAction?.toClickAction(),
                     )
                 } else {
