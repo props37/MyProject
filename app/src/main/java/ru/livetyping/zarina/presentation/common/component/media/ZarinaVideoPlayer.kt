@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -39,21 +40,15 @@ fun ZarinaVideoPlayer(
     repeatMode: Int = Player.REPEAT_MODE_ONE,
     isVolumeEnabled: Boolean = false,
     resizeMode: Int = AspectRatioFrameLayout.RESIZE_MODE_ZOOM,
+    videoScalingMode: Int = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING,
     useCache: Boolean = true,
     onReadyToPlay: (() -> Unit)? = null,
 ) {
     val exoPlayer = rememberExoPlayer(
         repeatMode = repeatMode,
         isVolumeEnabled = isVolumeEnabled,
+        videoScalingMode = videoScalingMode,
     )
-
-    // Update repeatMode and volume
-    DisposableEffect(exoPlayer, repeatMode, isVolumeEnabled) {
-        exoPlayer.repeatMode = repeatMode
-        exoPlayer.volume = if (isVolumeEnabled) 1f else 0f
-
-        onDispose {}
-    }
 
     // Set onReadyToPlay listener
     DisposableEffect(exoPlayer, onReadyToPlay) {
@@ -168,6 +163,7 @@ fun ZarinaVideoPlayer(
                     useController = false
                     player = exoPlayer
                     this.resizeMode = resizeMode
+                    setEnableComposeSurfaceSyncWorkaround(true)
                 }
                 .also { playerViewState.value = it }
         },
