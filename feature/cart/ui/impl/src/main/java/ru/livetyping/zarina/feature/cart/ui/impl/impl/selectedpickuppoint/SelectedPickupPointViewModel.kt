@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCa
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointStateBuilder
 import javax.inject.Inject
@@ -59,11 +60,29 @@ internal class SelectedPickupPointViewModel @Inject constructor(
         initialValue = SelectedPickupPointState.Loading,
     )
 
-    fun onBackClicked() {
+    // TODO: [Top] Implement
+    fun onSelectedPickupPointEvent(event: SelectedPickupPointEvent) {
+        when (event) {
+            SelectedPickupPointEvent.BackClicked -> onBackClicked()
+            SelectedPickupPointEvent.ContinueClicked -> TODO()
+            is SelectedPickupPointEvent.DeliveryTypeClicked -> onDeliveryTypeClicked(event)
+            SelectedPickupPointEvent.ErrorRefreshClicked -> onErrorRefreshClicked()
+        }
+    }
+
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = SelectedPickupPointScreenAction.BackClicked
             emitSideEffect(SelectedPickupPointSideEffect.Navigate(action))
         }
+    }
+
+    private fun onDeliveryTypeClicked(event: SelectedPickupPointEvent.DeliveryTypeClicked) {
+        selectedDeliveryTypeId.value = event.deliveryType.id
+    }
+
+    private fun onErrorRefreshClicked() {
+        pickupPointRequester.request(PickupPointRequest)
     }
 
     private data object PickupPointRequest : FlowRequest

@@ -41,6 +41,7 @@
     <string name="cart_address_or_name">Адрес или название</string>
     <string name="cart_payment_by_card">Оплата картой</string>
     <string name="cart_fitting_available">С примеркой</string>
+    <string name="cart_pickup_point_info">Информация о пункте</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>
