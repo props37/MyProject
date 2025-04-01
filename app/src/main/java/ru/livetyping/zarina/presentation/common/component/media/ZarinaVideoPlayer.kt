@@ -40,29 +40,8 @@ fun ZarinaVideoPlayer(
         repeatMode = repeatMode,
         isVolumeEnabled = isVolumeEnabled,
         videoScalingMode = videoScalingMode,
+        onReadyToPlay = onReadyToPlay,
     )
-
-    // Set onReadyToPlay listener
-    DisposableEffect(exoPlayer, onReadyToPlay) {
-        val listener: Player.Listener? = onReadyToPlay?.let {
-            object : Player.Listener {
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    if (playbackState == Player.STATE_READY) {
-                        onReadyToPlay()
-                    }
-                }
-            }
-        }
-        if (listener != null) {
-            exoPlayer.addListener(listener)
-        }
-
-        onDispose {
-            if (listener != null) {
-                exoPlayer.removeListener(listener)
-            }
-        }
-    }
 
     // Release player
     DisposableEffect(exoPlayer) {
