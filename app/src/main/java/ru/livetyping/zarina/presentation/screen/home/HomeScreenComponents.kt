@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
@@ -58,7 +59,7 @@ import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonDef
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaButtonSize
 import ru.livetyping.zarina.presentation.common.component.logo.ZarinaLogo
 import ru.livetyping.zarina.presentation.common.component.logo.ZarinaLogoAspectRatio
-import ru.livetyping.zarina.presentation.common.component.media.ZarinaVideoPlayer
+import ru.livetyping.zarina.presentation.common.component.media.ZarinaSimpleVideoPlayer
 import ru.livetyping.zarina.presentation.common.component.screen.ZarinaLoadingScreen
 import ru.livetyping.zarina.presentation.common.component.tab.ZarinaLooseTabRow
 import ru.livetyping.zarina.presentation.screen.home.HomeViewModel.GenderTab
@@ -400,9 +401,11 @@ object HomeScreenComponents {
         ) {
             var isVideoPlaceholderVisible by remember(banner) { mutableStateOf(true) }
 
-            ZarinaVideoPlayer(
-                url = banner.media.originalUrl,
+            ZarinaSimpleVideoPlayer(
+                url = banner.media.originalUrl.value,
                 isOnScreen = isOnScreen,
+                contentScale = ContentScale.Crop,
+                videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING,
                 onReadyToPlay = {
                     isVideoPlaceholderVisible = false
                     onBannerDisplayed()

@@ -147,7 +147,7 @@ dependencies {
     ksp(libs.jetpack.room.compiler)
     implementation(libs.jetpack.splashScreen)
     implementation(libs.jetpack.media3.exoplayer)
-    implementation(libs.jetpack.media3.ui)
+    implementation(libs.jetpack.media3.ui.compose)
     implementation(libs.jetpack.paging.compose)
     implementation(libs.jetpack.security.crypto)
     implementation(libs.jetpack.browser)
