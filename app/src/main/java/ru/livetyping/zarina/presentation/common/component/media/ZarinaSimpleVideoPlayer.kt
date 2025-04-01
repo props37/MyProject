@@ -21,6 +21,7 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.compose.SURFACE_TYPE_SURFACE_VIEW
+import io.appmetrica.analytics.AppMetrica
 import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
 import timber.log.Timber
 
@@ -101,6 +102,7 @@ private fun initPlayer(
 
                     override fun onPlayerError(error: PlaybackException) {
                         Timber.tag(Tag).e(error)
+                        AppMetrica.reportError(Tag, null, error)
                     }
                 }
                 addListener(listener)
