@@ -12,6 +12,21 @@ public sealed class CheckoutParams(
     public open val recipient: Recipient,
 )
 
+public data class PickupFromPickupPointCheckoutParams(
+    override val cartType: CartType,
+    override val deliveryMethod: DeliveryMethod,
+    override val recipient: Recipient,
+    val city: City,
+    val pickupPoint: PickupPointDetailed,
+    val deliveryType: PickupPointDetailed.DeliveryType,
+    val dateTimePeriod: PickupPointDetailed.DeliveryType.DateTimePeriod,
+) : CheckoutParams(
+    cartType = cartType,
+    deliveryMethod = deliveryMethod,
+    cityKladrId = city.id,
+    recipient = recipient,
+)
+
 public data class PickupFromStoreCheckoutParams(
     override val cartType: CartType,
     override val deliveryMethod: DeliveryMethod,

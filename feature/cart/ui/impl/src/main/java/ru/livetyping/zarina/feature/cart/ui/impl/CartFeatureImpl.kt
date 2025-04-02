@@ -161,6 +161,9 @@ public class CartFeatureImpl : CartFeature {
 
             val selectedPickupPointNavActions = SelectedPickupPointNavActions(
                 onBackClicked = navigateBack,
+                onContinueClicked = { currentStep, checkoutParams ->
+                    // TODO: [Top] Implement
+                },
             )
             selectedPickupPointScreen(selectedPickupPointNavActions)
         }

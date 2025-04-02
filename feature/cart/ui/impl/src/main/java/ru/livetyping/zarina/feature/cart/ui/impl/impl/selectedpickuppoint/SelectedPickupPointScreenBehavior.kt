@@ -47,5 +47,11 @@ private fun navigate(
 ) {
     when (action) {
         SelectedPickupPointScreenAction.BackClicked -> navActions.onBackClicked()
+        is SelectedPickupPointScreenAction.ContinueClicked -> {
+            navActions.onContinueClicked(
+                action.currentCheckoutStep,
+                action.checkoutParams,
+            )
+        }
     }
 }
