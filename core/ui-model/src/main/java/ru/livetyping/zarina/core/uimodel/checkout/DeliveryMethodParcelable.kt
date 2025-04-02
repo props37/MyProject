@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 @Parcelize
 @Serializable
 public data class DeliveryMethodParcelable(
-    val id: Int,
+    val id: String,
     val type: DeliveryMethodTypeParcelable,
     val name: String,
     val description: String?,

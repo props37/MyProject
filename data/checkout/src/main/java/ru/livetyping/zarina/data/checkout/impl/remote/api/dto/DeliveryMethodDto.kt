@@ -24,7 +24,7 @@ internal data class DeliveryMethodDto(
         val deliveryMethodType = type?.toDeliveryMethodType()
         return if (id != null && deliveryMethodType != null && name != null) {
             DeliveryMethod(
-                id = DeliveryMethod.Id(id),
+                id = DeliveryMethod.Id(id.toString()),
                 type = deliveryMethodType,
                 name = name,
                 description = description?.takeIf { it.isNotBlank() },

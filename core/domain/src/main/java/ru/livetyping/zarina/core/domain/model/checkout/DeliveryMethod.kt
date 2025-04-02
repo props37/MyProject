@@ -7,5 +7,5 @@ public data class DeliveryMethod(
     val description: String?,
 ) {
     @JvmInline
-    public value class Id(public val value: Int)
+    public value class Id(public val value: String)
 }
