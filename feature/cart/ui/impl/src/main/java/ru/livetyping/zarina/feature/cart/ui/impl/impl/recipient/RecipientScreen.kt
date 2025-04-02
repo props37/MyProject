@@ -92,7 +92,6 @@ private fun ScreenContent(
     ) {
         CheckoutTopBar(
             state = topBarState,
-            title = stringResource(R.string.cart_recipient),
             onEvent = onTopBarEvent,
         )
 

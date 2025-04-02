@@ -6,9 +6,11 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
@@ -27,6 +29,7 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         value = CheckoutTopBarState(
+            title = Text.Resource(R.string.cart_courier_delivery),
             checkoutStep = navEntry.checkoutStep,
             checkoutStepCount = navEntry.cartType.toCartType().checkoutStepCount,
             isBackButtonVisible = true,

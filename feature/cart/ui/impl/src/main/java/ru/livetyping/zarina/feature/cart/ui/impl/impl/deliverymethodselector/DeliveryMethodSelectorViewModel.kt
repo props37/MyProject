@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -25,6 +26,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutT
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class DeliveryMethodSelectorViewModel @Inject constructor(
@@ -42,6 +44,7 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         CheckoutTopBarState(
+            title = Text.Resource(RCommon.string.res_delivery_method),
             checkoutStep = checkoutStep,
             checkoutStepCount = cartType.checkoutStepCount,
             isBackButtonVisible = true,

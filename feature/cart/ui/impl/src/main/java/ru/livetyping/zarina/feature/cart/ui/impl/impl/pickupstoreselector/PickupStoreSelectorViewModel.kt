@@ -54,6 +54,7 @@ internal class PickupStoreSelectorViewModel @Inject constructor(
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         CheckoutTopBarState(
+            title = Text.Resource(R.string.cart_store_selection),
             checkoutStep = checkoutStep,
             checkoutStepCount = cartType.checkoutStepCount,
             isBackButtonVisible = true,

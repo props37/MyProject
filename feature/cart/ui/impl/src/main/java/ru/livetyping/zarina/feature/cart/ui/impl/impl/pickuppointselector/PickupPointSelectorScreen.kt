@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,7 +25,6 @@ import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
@@ -93,7 +91,6 @@ private fun ScreenContent(
     ) {
         CheckoutTopBar(
             state = topBarState,
-            title = stringResource(R.string.cart_delivery_to_pickup_point),
             onEvent = onTopBarEvent,
         )
         Spacer(modifier = Modifier.height(4.dp))

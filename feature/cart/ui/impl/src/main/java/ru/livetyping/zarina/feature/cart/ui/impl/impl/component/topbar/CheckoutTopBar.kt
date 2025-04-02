@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -18,7 +19,6 @@ import ru.livetyping.zarina.feature.cart.ui.impl.R
 @Composable
 internal fun CheckoutTopBar(
     state: CheckoutTopBarState,
-    title: String,
     onEvent: (CheckoutTopBarEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -34,7 +34,7 @@ internal fun CheckoutTopBar(
         },
         centerContent = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = title)
+                Text(text = textString(state.title))
 
                 Text(
                     text = stringResource(

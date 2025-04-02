@@ -65,6 +65,7 @@ internal class RecipientViewModel @Inject constructor(
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         CheckoutTopBarState(
+            title = Text.Resource(R.string.cart_recipient),
             checkoutStep = checkoutStep,
             checkoutStepCount = cartType.checkoutStepCount,
             isBackButtonVisible = false,

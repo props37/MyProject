@@ -27,7 +27,6 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.platform.PackageName
 import ru.livetyping.zarina.core.platform.settings.SystemSettings
-import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -39,6 +38,7 @@ import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
 import ru.livetyping.zarina.core.uikit.permission.RequiredPermission
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.Filter
@@ -50,6 +50,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.ViewMode
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class PickupPointSelectorViewModel @Inject constructor(
@@ -71,6 +72,7 @@ internal class PickupPointSelectorViewModel @Inject constructor(
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         value = CheckoutTopBarState(
+            title = Text.Resource(R.string.cart_delivery_to_pickup_point),
             checkoutStep = navEntry.checkoutStep,
             checkoutStepCount = cartType.checkoutStepCount,
             isBackButtonVisible = true,
@@ -249,8 +251,8 @@ internal class PickupPointSelectorViewModel @Inject constructor(
                 } else {
                     _permissionRequiredDialogState.value = PermissionRequiredDialogState.Visible(
                         permission = RequiredPermission.LOCATION,
-                        title = Text.Resource(R.string.res_grant_location_permission),
-                        body = Text.Resource(R.string.res_it_will_help_us_to_detect_your_location),
+                        title = Text.Resource(RCommon.string.res_grant_location_permission),
+                        body = Text.Resource(RCommon.string.res_it_will_help_us_to_detect_your_location),
                     )
                 }
             }

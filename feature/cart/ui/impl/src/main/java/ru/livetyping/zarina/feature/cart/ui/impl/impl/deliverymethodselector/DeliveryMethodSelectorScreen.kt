@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,6 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutT
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.component.DeliveryMethodSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
-import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun DeliveryMethodSelectorScreen(
@@ -69,7 +67,6 @@ private fun ScreenContent(
     ) {
         CheckoutTopBar(
             state = topBarState,
-            title = stringResource(RCommon.string.res_delivery_method),
             onEvent = onTopBarEvent,
         )
 
