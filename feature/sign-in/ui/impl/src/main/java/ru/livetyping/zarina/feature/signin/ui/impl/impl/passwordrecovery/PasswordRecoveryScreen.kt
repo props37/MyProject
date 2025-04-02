@@ -16,9 +16,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.component.PasswordRecoveryContent
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.component.PasswordRecoveryTopBar
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.model.PasswordRecoveryState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.ui.PasswordRecoveryContent
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.ui.TopBar
 
 @Composable
 internal fun PasswordRecoveryScreen(
@@ -59,7 +59,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        PasswordRecoveryTopBar(onBackClicked = onBackClicked)
+        TopBar(onBackClicked = onBackClicked)
 
         PasswordRecoveryContent(
             state = passwordRecoveryState,

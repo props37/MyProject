@@ -29,14 +29,14 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.EmptyProductsPlaceholder
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TagList
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.TopBar
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.EmptyProductsPlaceholder
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TagList
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TopBar
 
 @Composable
 internal fun ProductListScreen(

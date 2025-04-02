@@ -25,10 +25,6 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.AccountDeletionDialog
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsContent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.ProfileDetailsTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.component.SignOutDialog
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.AccountDeletionDialogState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
@@ -37,6 +33,10 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.Pr
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.SignOutDialogState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ui.AccountDeletionDialog
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ui.ProfileDetailsContent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ui.SignOutDialog
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.ui.TopBar
 import java.time.LocalDate
 
 @Composable
@@ -129,7 +129,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        ProfileDetailsTopBar(
+        TopBar(
             state = topBarState,
             onEvent = onTopBarEvent,
         )

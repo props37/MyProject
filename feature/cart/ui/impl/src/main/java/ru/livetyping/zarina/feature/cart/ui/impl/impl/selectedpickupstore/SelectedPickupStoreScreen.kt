@@ -20,9 +20,9 @@ import ru.livetyping.zarina.core.domain.model.cart.CartProduct
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.component.ContinueButton
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.component.ProductList
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.component.TopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.ContinueButton
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.ProductList
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.TopBar
 
 @Composable
 internal fun SelectedPickupStoreScreen(

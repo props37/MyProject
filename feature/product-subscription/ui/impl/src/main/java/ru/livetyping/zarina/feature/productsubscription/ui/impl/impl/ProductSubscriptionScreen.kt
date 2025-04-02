@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.ProductSubscriptionContent
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui.ProductSubscriptionContent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui.TopBar
 
 @Composable
 internal fun ProductSubscriptionScreen(

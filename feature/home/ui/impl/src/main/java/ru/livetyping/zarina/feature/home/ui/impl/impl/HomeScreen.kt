@@ -14,9 +14,9 @@ import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
-import ru.livetyping.zarina.feature.home.ui.impl.impl.component.HomeContent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentEvent
 import ru.livetyping.zarina.feature.home.ui.impl.impl.model.HomeContentState
+import ru.livetyping.zarina.feature.home.ui.impl.impl.ui.HomeContent
 
 @Composable
 internal fun HomeScreen(

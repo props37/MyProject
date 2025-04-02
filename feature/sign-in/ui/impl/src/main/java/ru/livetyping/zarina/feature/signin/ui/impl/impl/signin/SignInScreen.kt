@@ -29,13 +29,13 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTopBar
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypePager
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.component.SignInTypeSelector
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInType
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.ui.SignInTypePager
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.ui.SignInTypeSelector
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.ui.TopBar
 
 @Composable
 internal fun SignInScreen(
@@ -93,7 +93,7 @@ private fun ScreenContent(
                 )
                 .bottomNavBarPadding(),
         ) {
-            SignInTopBar(
+            TopBar(
                 onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
             )
 

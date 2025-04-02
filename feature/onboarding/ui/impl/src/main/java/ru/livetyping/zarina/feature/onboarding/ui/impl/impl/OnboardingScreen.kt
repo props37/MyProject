@@ -25,11 +25,11 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Banner
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.Onboarding
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.component.ProgressIndicator
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.Banner
+import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.Onboarding
+import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.ProgressIndicator
 
 @Composable
 internal fun OnboardingScreen(

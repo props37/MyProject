@@ -36,7 +36,7 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailConfirmationEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.model.SignInByEmailConfirmationState
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.TopBar
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.ui.TopBar
 
 @Composable
 internal fun SignInByEmailConfirmationScreen(

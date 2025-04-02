@@ -32,15 +32,15 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
-import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.NothingFoundPlaceholder
-import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.SearchBar
-import ru.livetyping.zarina.feature.search.ui.impl.impl.search.component.SearchContent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchMode
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchResultEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.ui.NothingFoundPlaceholder
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.ui.SearchBar
+import ru.livetyping.zarina.feature.search.ui.impl.impl.search.ui.SearchContent
 
 @Composable
 internal fun SearchScreen(

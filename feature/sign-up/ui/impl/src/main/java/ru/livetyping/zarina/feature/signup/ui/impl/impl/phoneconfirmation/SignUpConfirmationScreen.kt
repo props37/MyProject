@@ -38,9 +38,9 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.component.SignUpConfirmationTopBar
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.model.SignUpConfirmationState
+import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.ui.TopBar
 
 @Composable
 internal fun SignUpConfirmationScreen(
@@ -86,7 +86,7 @@ private fun ScreenContent(
                 )
                 .bottomNavBarPadding(WindowInsets.ime),
         ) {
-            SignUpConfirmationTopBar(onBackClicked = { onEvent(SignUpConfirmationEvent.BackClicked) })
+            TopBar(onBackClicked = { onEvent(SignUpConfirmationEvent.BackClicked) })
 
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Spacer(modifier = Modifier.height(24.dp))

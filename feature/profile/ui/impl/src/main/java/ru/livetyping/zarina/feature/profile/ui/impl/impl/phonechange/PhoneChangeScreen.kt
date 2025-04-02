@@ -21,10 +21,10 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.component.PhoneChangeContent
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.component.PhoneChangeTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.ui.PhoneChangeContent
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.ui.TopBar
 
 @Composable
 internal fun PhoneChangeScreen(
@@ -70,7 +70,7 @@ private fun ScreenContent(
                 )
                 .bottomNavBarPadding(WindowInsets.ime),
         ) {
-            PhoneChangeTopBar(
+            TopBar(
                 onBackClicked = { onEvent(PhoneChangeEvent.BackClicked) },
             )
 

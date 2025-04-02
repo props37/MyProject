@@ -25,12 +25,12 @@ import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredModalBottomSheet
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.component.PickupPointSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.ui.PickupPointSelector
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 
 @Composable
 internal fun PickupPointSelectorScreen(

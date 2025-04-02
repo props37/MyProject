@@ -38,9 +38,9 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.component.TopBar
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhoneConfirmationEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhoneConfirmationState
+import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.ui.TopBar
 
 @Composable
 internal fun SignInByPhoneConfirmationScreen(

@@ -23,10 +23,10 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryPager
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTabRow
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.component.BonusHistoryTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.model.BonusHistoryTab
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.ui.BonusHistoryPager
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.ui.BonusHistoryTabRow
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.ui.TopBar
 
 @Composable
 internal fun BonusHistoryScreen(
@@ -71,7 +71,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        BonusHistoryTopBar(onBackClicked = onBackClicked)
+        TopBar(onBackClicked = onBackClicked)
 
         BonusHistoryTabRow(
             state = tabRowState,

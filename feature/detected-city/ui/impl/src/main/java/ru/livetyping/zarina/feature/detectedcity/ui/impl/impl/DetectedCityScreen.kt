@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.R
-import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.component.rememberBodyText
+import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.ui.rememberBodyText
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

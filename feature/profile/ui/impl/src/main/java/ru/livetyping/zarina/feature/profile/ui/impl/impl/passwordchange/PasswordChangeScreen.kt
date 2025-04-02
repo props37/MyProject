@@ -42,9 +42,9 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.component.PasswordChangeTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.ui.TopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -85,7 +85,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        PasswordChangeTopBar(
+        TopBar(
             onBackClicked = { onEvent(PasswordChangeEvent.BackClicked) },
         )
 

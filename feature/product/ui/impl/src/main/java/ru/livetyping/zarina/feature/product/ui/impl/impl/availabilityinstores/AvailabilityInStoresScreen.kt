@@ -23,12 +23,12 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.SizeRow
-import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.StoreList
-import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.component.TopBar
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.SizeState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.ui.SizeRow
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.ui.StoreList
+import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.ui.TopBar
 
 @Composable
 internal fun AvailabilityInStoresScreen(

@@ -39,8 +39,6 @@ import ru.livetyping.zarina.core.uikit.permission.RequiredPermission
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.cart.ui.impl.R
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.Filter
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointListState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointListStateBuilder
@@ -48,6 +46,8 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.ToggleableFilter
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.ViewMode
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon

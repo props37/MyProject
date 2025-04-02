@@ -44,9 +44,9 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.component.EmailChangeTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.ui.TopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -87,7 +87,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        EmailChangeTopBar(onBackClicked = { onEvent(EmailChangeEvent.BackClicked) })
+        TopBar(onBackClicked = { onEvent(EmailChangeEvent.BackClicked) })
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(24.dp))

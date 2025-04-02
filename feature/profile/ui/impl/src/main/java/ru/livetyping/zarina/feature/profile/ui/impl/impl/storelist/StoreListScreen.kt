@@ -30,13 +30,13 @@ import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredModalBottomS
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListStoreModalBottomSheet
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListTopBar
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModePager
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.component.StoreListViewModeSelector
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListViewMode
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.ui.StoreListStoreModalBottomSheet
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.ui.StoreListViewModePager
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.ui.StoreListViewModeSelector
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.ui.TopBar
 
 @Composable
 internal fun StoreListScreen(
@@ -105,7 +105,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        StoreListTopBar(
+        TopBar(
             onBackClicked = { onStoreListEvent(StoreListEvent.BackClicked) },
         )
 

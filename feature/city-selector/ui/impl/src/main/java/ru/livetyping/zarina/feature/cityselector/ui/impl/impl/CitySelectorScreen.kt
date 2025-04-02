@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CityList
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.CitySearchTextField
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.CityList
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.CitySearchTextField
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.TopBar
 
 @Composable
 internal fun CitySelectorScreen(

@@ -16,13 +16,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.Order
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderCancellationDialog
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.component.OrderTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderCancellationDialogEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderCancellationDialogState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.Order
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.OrderCancellationDialog
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.TopBar
 
 // TODO: [Top] Add ability to pay for the order
 
@@ -75,7 +75,7 @@ private fun ScreenContent(
     ) {
         val order = (orderState as? OrderState.Success)?.order
 
-        OrderTopBar(
+        TopBar(
             orderNumber = order?.number,
             onBackClicked = { onOrderEvent(OrderEvent.BackClicked) },
         )

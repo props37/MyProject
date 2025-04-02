@@ -34,9 +34,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.component.PhoneChangeConfirmationTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.model.PhoneChangeConfirmationState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechangeconfirmation.ui.TopBar
 
 @Composable
 internal fun PhoneChangeConfirmationScreen(
@@ -76,7 +76,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
-        PhoneChangeConfirmationTopBar(
+        TopBar(
             onBackClicked = { onEvent(PhoneChangeConfirmationEvent.BackClicked) },
         )
 

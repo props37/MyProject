@@ -23,13 +23,13 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.AuthorizationOrLoyaltyCard
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.BuildInfo
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileMenu
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.component.ProfileTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileUserState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.AuthorizationOrLoyaltyCard
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.BuildInfo
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.ProfileMenu
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.TopBar
 
 @Composable
 internal fun ProfileScreen(
@@ -74,7 +74,7 @@ private fun ScreenContent(
         val userState = profileState.userState
         val user = (userState as? ProfileUserState.Success)?.user
 
-        ProfileTopBar(
+        TopBar(
             userFirstName = user?.firstName,
             isProfileDetailsButtonVisible = user != null,
             onProfileDetailsClicked = { onProfileEvent(ProfileEvent.ProfileDetailsClicked) },

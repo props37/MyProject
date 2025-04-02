@@ -29,11 +29,11 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.EmptyWishlistPlaceholder
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.component.TopBar
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.EmptyWishlistPlaceholder
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.TopBar
 
 @Composable
 internal fun WishlistScreen(

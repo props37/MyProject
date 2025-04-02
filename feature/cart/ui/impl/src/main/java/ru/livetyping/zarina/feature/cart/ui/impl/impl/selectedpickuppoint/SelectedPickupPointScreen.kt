@@ -17,10 +17,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.component.SelectedPickupPoint
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.component.TopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.ui.SelectedPickupPoint
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.ui.TopBar
 
 @Composable
 internal fun SelectedPickupPointScreen(

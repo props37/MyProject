@@ -28,15 +28,15 @@ import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.Product
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.TopBar
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.topBarModeAsState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarMode
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.Product
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.TopBar
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.topBarModeAsState
 
 @Composable
 internal fun ProductScreen(

@@ -16,11 +16,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBar
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarEvent
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.component.topbar.CheckoutTopBarState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.component.PickupStoreSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.model.PickupStoreSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.ui.PickupStoreSelector
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 
 @Composable
 internal fun PickupStoreSelectorScreen(

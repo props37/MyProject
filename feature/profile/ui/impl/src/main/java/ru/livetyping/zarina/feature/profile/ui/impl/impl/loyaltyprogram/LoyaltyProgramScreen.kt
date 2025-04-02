@@ -16,10 +16,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.component.LoyaltyProgram
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.component.LoyaltyProgramTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramState
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.ui.LoyaltyProgram
+import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.ui.TopBar
 
 @Composable
 internal fun LoyaltyProgramScreen(
@@ -58,7 +58,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        LoyaltyProgramTopBar(onBackClicked = { onEvent(LoyaltyProgramEvent.BackClicked) })
+        TopBar(onBackClicked = { onEvent(LoyaltyProgramEvent.BackClicked) })
 
         LoyaltyProgram(
             state = state,

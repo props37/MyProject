@@ -29,12 +29,12 @@ import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderCategoryPager
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderSelector
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.SearchBar
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.GenderCategoryPager
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.GenderSelector
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.SearchBar
 
 @Composable
 internal fun CatalogScreen(
