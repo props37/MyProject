@@ -10,9 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddressSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
@@ -166,6 +168,9 @@ public class CartFeatureImpl : CartFeature {
                 },
             )
             selectedPickupPointScreen(selectedPickupPointNavActions)
+
+            val deliveryAddressSelectorNavActions = DeliveryAddressSelectorNavActions()
+            deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
         }
     }
 }
