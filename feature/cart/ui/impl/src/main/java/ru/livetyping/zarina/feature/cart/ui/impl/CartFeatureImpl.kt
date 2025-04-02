@@ -123,7 +123,7 @@ public class CartFeatureImpl : CartFeature {
                 onStoreSelected = { cartType, currentStep, recipient, deliveryMethod, city, store, availableProducts ->
                     val selectedPickupStoreNavEntry = SelectedPickupStoreNavEntry.from(
                         cartType = cartType,
-                        checkoutStep = currentStep + 1,
+                        checkoutStep = currentStep,
                         recipient = recipient,
                         deliveryMethod = deliveryMethod,
                         city = city,
@@ -149,7 +149,7 @@ public class CartFeatureImpl : CartFeature {
                 onPickupPointSelected = { cartType, currentStep, recipient, deliveryMethod, pickupPoint ->
                     val selectedPickupPointNavEntry = SelectedPickupPointNavEntry.from(
                         cartType = cartType,
-                        checkoutStep = currentStep + 1,
+                        checkoutStep = currentStep,
                         recipient = recipient,
                         deliveryMethod = deliveryMethod,
                         pickupPoint = pickupPoint,
