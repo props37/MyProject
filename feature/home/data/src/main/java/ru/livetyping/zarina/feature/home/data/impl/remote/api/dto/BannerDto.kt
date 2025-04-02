@@ -19,6 +19,9 @@ internal data class BannerDto(
     @SerialName("media_url")
     val mediaUrl: String? = null,
 
+    @SerialName("poster")
+    val poster: String? = null,
+
     @SerialName("title")
     val title: String? = null,
 
@@ -31,8 +34,9 @@ internal data class BannerDto(
             val media = Media(url = Url.create(mediaUrl), type = mediaType)
             return Banner(
                 id = Banner.Id(id.toString()),
-                media = media,
                 title = title,
+                media = media,
+                videoPlaceholderUrl = poster?.let { Url.create(it) },
                 clickAction = click?.toClickAction(),
             )
         } else {
