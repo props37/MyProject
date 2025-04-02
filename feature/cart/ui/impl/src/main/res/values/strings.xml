@@ -42,6 +42,14 @@
     <string name="cart_payment_by_card">Оплата картой</string>
     <string name="cart_fitting_available">С примеркой</string>
     <string name="cart_pickup_point_info">Информация о пункте</string>
+    <string name="cart_shelf_time">Срок хранения</string>
+    <string name="cart_tentative_delivery_date">Ориентировочная дата доставки</string>
+    <string name="cart_working_hours">Время работы</string>
+    <string name="cart_by_cash">Наличными</string>
+    <string name="cart_by_card">Банковской картой</string>
+    <string name="cart_or">%1$s или %2$s</string>
+    <string name="cart_payment">Оплата</string>
+    <string name="cart_choose_delivery_terms">Выберите условия доставки</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>
@@ -68,5 +76,14 @@
         <item quantity="few">Доступны %1$d из %2$d товаров</item>
         <item quantity="many">Доступны %1$d из %2$d товаров</item>
         <item quantity="other">Доступны %1$d из %2$d товаров</item>
+    </plurals>
+
+    <plurals name="cart_days">
+        <item quantity="zero">%1$d дней</item>
+        <item quantity="one">%1$d день</item>
+        <item quantity="two">%1$d дня</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дней</item>
     </plurals>
 </resources>

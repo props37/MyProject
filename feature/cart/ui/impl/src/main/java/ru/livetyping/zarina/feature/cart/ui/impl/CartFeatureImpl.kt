@@ -159,7 +159,9 @@ public class CartFeatureImpl : CartFeature {
             )
             pickupPointSelectorScreen(pickupPointSelectorNavActions)
 
-            val selectedPickupPointNavActions = SelectedPickupPointNavActions()
+            val selectedPickupPointNavActions = SelectedPickupPointNavActions(
+                onBackClicked = navigateBack,
+            )
             selectedPickupPointScreen(selectedPickupPointNavActions)
         }
     }

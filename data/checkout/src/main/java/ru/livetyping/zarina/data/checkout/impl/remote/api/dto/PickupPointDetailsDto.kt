@@ -63,7 +63,7 @@ internal data class PickupPointDetailedDto(
             availablePaymentMethods = getAvailablePaymentMethods(availablePayments),
             schedule = schedule,
             expectedDeliveryDate = estimatedDelivery,
-            shelfTime = shelfTime,
+            shelfTimeInDays = shelfTime,
             deliveryTypes = levels.map { it.toDeliveryType() },
         )
     }

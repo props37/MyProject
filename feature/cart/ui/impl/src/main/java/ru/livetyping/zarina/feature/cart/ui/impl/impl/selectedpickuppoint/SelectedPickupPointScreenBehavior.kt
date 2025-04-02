@@ -43,8 +43,9 @@ internal fun SelectedPickupPointScreenBehavior(
 
 private fun navigate(
     navActions: SelectedPickupPointNavActions,
-    action: SelectedPickupPointScreenAction
+    action: SelectedPickupPointScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        SelectedPickupPointScreenAction.BackClicked -> navActions.onBackClicked()
+    }
 }

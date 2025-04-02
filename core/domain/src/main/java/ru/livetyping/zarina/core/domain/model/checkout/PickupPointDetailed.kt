@@ -13,7 +13,7 @@ public data class PickupPointDetailed(
     override val availablePaymentMethods: Set<PaymentMethod>,
     val schedule: String,
     val expectedDeliveryDate: String,
-    val shelfTime: Int,
+    val shelfTimeInDays: Int,
     val deliveryTypes: List<DeliveryType>,
 ) : PickupPoint(
     id = id,
