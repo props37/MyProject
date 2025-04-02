@@ -18,6 +18,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import ru.livetyping.zarina.core.mediacompose.LocalExoPlayerCacheDataSourceFactoryProvider
+import ru.livetyping.zarina.core.mediacompose.rememberExoPlayerCacheDataSourceFactoryProvider
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
@@ -28,8 +30,6 @@ import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
-import ru.livetyping.zarina.presentation.common.media.exoplayer.LocalExoPlayerCacheHolder
-import ru.livetyping.zarina.presentation.common.media.exoplayer.rememberExoPlayerCacheHolder
 import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastController
 import ru.livetyping.zarina.presentation.common.toastcontroller.rememberToastController
 import ru.livetyping.zarina.presentation.feature.Features
@@ -56,8 +56,7 @@ fun App(
 
     val bottomNavBarSizeTracker = rememberBottomNavBarSizeTracker()
 
-    val exoPlayerCacheHolder = rememberExoPlayerCacheHolder(
-        cache = viewModel.exoPlayerCache,
+    val exoPlayerCacheDataSourceFactoryProvider = rememberExoPlayerCacheDataSourceFactoryProvider(
         cacheDataSourceFactory = viewModel.exoPlayerCacheDataSourceFactory,
     )
 
@@ -67,7 +66,7 @@ fun App(
         LocalToastController provides toastController,
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
         LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
-        LocalExoPlayerCacheHolder provides exoPlayerCacheHolder,
+        LocalExoPlayerCacheDataSourceFactoryProvider provides exoPlayerCacheDataSourceFactoryProvider,
         LocalZarinaToastController provides zarinaToastController,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {

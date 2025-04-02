@@ -248,6 +248,7 @@ dependencies {
     implementation(projects.core.navigationUtil)
     implementation(projects.core.credential)
     implementation(projects.core.googlePlayServices)
+    implementation(projects.core.mediaCompose)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
