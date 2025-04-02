@@ -42,7 +42,7 @@ public data class PickupPointDetailed(
         ) {
             // Marked as stable on config/compose/stability_config.txt
             @JvmInline
-            public value class Id(public val value: Long)
+            public value class Id(public val value: String)
         }
     }
 }

@@ -108,7 +108,7 @@ internal data class PickupPointDetailedDto(
                 checkPropertyNotNull(id) { ::id }
                 checkPropertyNotNull(title) { ::title }
                 return PickupPointDetailed.DeliveryType.DateTimePeriod(
-                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id),
+                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id.toString()),
                     title = title,
                 )
             }
