@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.uikit.media
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -19,16 +20,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.media3.common.C
+import androidx.media3.common.util.UnstableApi
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType
-import ru.livetyping.zarina.core.mediacompose.VideoPlayer
+import ru.livetyping.zarina.core.mediacompose.SimpleVideoPlayer
 import ru.livetyping.zarina.core.uikit.impl.util.loopingGet
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
+@OptIn(UnstableApi::class)
 @Composable
 public fun ZarinaMediaHorizontalPager(
     pagerState: PagerState,
@@ -69,8 +73,10 @@ public fun ZarinaMediaHorizontalPager(
                 }
 
                 MediaType.VIDEO -> {
-                    VideoPlayer(
+                    SimpleVideoPlayer(
                         url = media.originalUrl.value,
+                        contentScale = ContentScale.Crop,
+                        videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING,
                         onReadyToPlay = { isMediaDisplayed = true },
                         modifier = Modifier.matchParentSize(),
                     )

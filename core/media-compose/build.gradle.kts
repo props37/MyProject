@@ -52,7 +52,7 @@ dependencies {
     api(projects.core.media)
 
     api(libs.jetpack.media3.exoplayer)
-    implementation(libs.jetpack.media3.ui)
+    implementation(libs.jetpack.media3.ui.compose)
 
     implementation(platform(libs.jetpack.compose.bom.beta))
     implementation(libs.jetpack.compose.foundation)
