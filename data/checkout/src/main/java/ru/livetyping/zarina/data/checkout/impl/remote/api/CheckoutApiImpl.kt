@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
-import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailsDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailedDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
 import javax.inject.Inject
@@ -41,7 +41,7 @@ internal class CheckoutApiImpl @Inject constructor(
     override suspend fun getPickupPoint(
         cityKladrId: KladrId,
         pickupPointId: PickupPoint.Id,
-    ): PickupPointDetailsDto {
+    ): PickupPointDetailedDto {
         // Why do we always use payment_method=paytureinpay?
         return httpClient.get(
             "/api/shipping-methods/cities/${cityKladrId.value}/pickup_points/" +
