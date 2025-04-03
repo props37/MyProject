@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.component.AddressComponent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
@@ -19,7 +21,16 @@ import javax.inject.Inject
 @HiltViewModel
 internal class DeliveryAddressSelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    deps: DeliveryAddressSelectorDependencies,
 ) : ViewModel(), SideEffectSource<DeliveryAddressSelectorSideEffect> by SideEffectSourceImpl() {
+
+    private val addressComponent = AddressComponent(
+        savedStateHandle = savedStateHandle,
+        coroutineScope = viewModelScope,
+        getUserCityFlowUseCase = deps.getUserCityFlow,
+        getCityStreetsFlowUseCase = deps.getCityStreetsFlow,
+        getStreetBuildingsFlowUseCase = deps.getStreetBuildingsFlow,
+    )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
