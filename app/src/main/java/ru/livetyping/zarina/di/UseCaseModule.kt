@@ -45,7 +45,9 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseC
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
@@ -1035,6 +1037,30 @@ internal class UseCaseModule {
         return GetPickupPointFlowUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCityStreetsFlowUseCase(
+        geographyRepository: GeographyRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetCityStreetsFlowUseCase {
+        return GetCityStreetsFlowUseCase.getInstance(
+            geographyRepository = geographyRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetStreetBuildingsFlowUseCase(
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetStreetBuildingsFlowUseCase {
+        return GetStreetBuildingsFlowUseCase.getInstance(
+            geographyRepository = geographyRepository,
             logger = logger,
         )
     }
