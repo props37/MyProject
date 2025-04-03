@@ -3,7 +3,10 @@ package ru.livetyping.zarina.data.geography.impl.remote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.domain.model.geo.Building
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApi
 import javax.inject.Inject
 
@@ -19,5 +22,20 @@ internal class GeographyRemoteDataSourceImpl @Inject constructor(
     override fun getCitiesFlow(nameQuery: String?): Flow<List<City>> = flow {
         val cities = api.getCities(nameQuery).mapNotNull { it.toCity() }
         emit(cities)
+    }
+
+    override fun getCityStreetsFlow(cityKladrId: KladrId, nameQuery: String): Flow<List<Street>> = flow {
+        val dto = api.getCityStreets(cityKladrId, nameQuery)
+        val streets = dto.mapNotNull { it.toStreet() }
+        emit(streets)
+    }
+
+    override fun getStreetBuildings(
+        streetKladrId: KladrId,
+        nameQuery: String,
+    ): Flow<List<Building>> = flow {
+        val dto = api.getStreetBuildings(streetKladrId, nameQuery)
+        val buildings = dto.mapNotNull { it.toBuilding() }
+        emit(buildings)
     }
 }

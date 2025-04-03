@@ -6,14 +6,19 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
+import ru.livetyping.zarina.data.geography.impl.remote.api.dto.BuildingDto
+import ru.livetyping.zarina.data.geography.impl.remote.api.dto.StreetDto
+import ru.livetyping.zarina.data.geography.impl.remote.api.exception.AddressApiExceptionConverter
 import javax.inject.Inject
 
 internal class GeographyApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
+    private val addressApiExceptionConverter: AddressApiExceptionConverter,
 ) : GeographyApi {
     override suspend fun getCityByLocation(location: Location): CityDto {
         return httpClient.post("/api/v1/location/city") {
@@ -26,5 +31,26 @@ internal class GeographyApiImpl @Inject constructor(
         return httpClient.get("/api/location/city/list") {
             parameter("name", nameQuery)
         }.body()
+    }
+
+    override suspend fun getCityStreets(cityKladrId: KladrId, nameQuery: String): List<StreetDto> {
+        return addressApiExceptionConverter {
+            httpClient.get("/api/adresses/suggest/street") {
+                parameter("city_id", cityKladrId.value)
+                parameter("name", nameQuery)
+            }.body()
+        }
+    }
+
+    override suspend fun getStreetBuildings(
+        streetKladrId: KladrId,
+        nameQuery: String,
+    ): List<BuildingDto> {
+        return addressApiExceptionConverter {
+            httpClient.get("/api/adresses/suggest/buildings") {
+                parameter("city_id", streetKladrId.value)
+                parameter("name", nameQuery)
+            }.body()
+        }
     }
 }
