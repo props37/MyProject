@@ -5,14 +5,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.component.AddressComponent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
@@ -38,6 +46,8 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         typeMap = DeliveryAddressSelectorNavEntry.typeMap(),
     )
 
+    private val deliveryType = getDeliveryType(navEntry.deliveryMethod.toDeliveryMethod())
+
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
         value = CheckoutTopBarState(
             title = Text.Resource(R.string.cart_courier_delivery),
@@ -46,6 +56,31 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             isBackButtonVisible = true,
         )
     )
+
+    private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(
+        deliveryType = deliveryType,
+        streetTextFieldState = addressComponent.streetTextFieldState,
+        buildingTextFieldState = addressComponent.buildingTextFieldState,
+        apartmentTextFieldState = addressComponent.apartmentTextFieldState,
+        isBuildingSelectionEnabled = false,
+    )
+
+    val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> =
+        addressComponent.isBuildingSelectionEnabled
+            .map { isBuildingSelectionEnabled ->
+                DeliveryAddressSelectorState(
+                    deliveryType = deliveryType,
+                    streetTextFieldState = addressComponent.streetTextFieldState,
+                    buildingTextFieldState = addressComponent.buildingTextFieldState,
+                    apartmentTextFieldState = addressComponent.apartmentTextFieldState,
+                    isBuildingSelectionEnabled = isBuildingSelectionEnabled,
+                )
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileAndroidUiSubscribed,
+                initialValue = initialDeliveryAddressSelectorState,
+            )
 
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
@@ -66,5 +101,17 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             val action = DeliveryAddressSelectorScreenAction.CloseClicked
             emitSideEffect(DeliveryAddressSelectorSideEffect.Navigate(action))
         }
+    }
+
+    private fun getDeliveryType(deliveryMethod: DeliveryMethod): DeliveryType {
+        return when (deliveryMethod.type) {
+            DeliveryMethodType.COURIER_EXPRESS -> DeliveryType.COURIER
+            DeliveryMethodType.POST -> DeliveryType.POST
+            else -> error("Delivery method $deliveryMethod is not supported")
+        }
+    }
+
+    private companion object {
+        private const val TAG = "DeliveryAddressSelectorViewModel"
     }
 }

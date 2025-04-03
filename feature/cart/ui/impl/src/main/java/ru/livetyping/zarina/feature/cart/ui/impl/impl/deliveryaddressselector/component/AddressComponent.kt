@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -78,6 +80,9 @@ internal class AddressComponent(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
+
+    val isBuildingSelectionEnabled: Flow<Boolean> =
+        selectedStreetValueHolder.stateFlow.map { it != null }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val streetsRequester = FlowRequester(AddressRequest) {
