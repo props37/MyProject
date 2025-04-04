@@ -5,14 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -101,27 +97,28 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
 
     private val visibleAddressSearchBottomSheetType = MutableStateFlow<AddressSearchType?>(null)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val addressSearchBottomSheetState: StateFlow<AddressSearchBottomSheetState> =
-        visibleAddressSearchBottomSheetType.flatMapLatest { type ->
+        combine(
+            visibleAddressSearchBottomSheetType,
+            addressComponent.streetSearchState,
+            addressComponent.buildingSearchState,
+        ) { type, streetSearchState, buildingSearchState ->
             if (type != null) {
                 val searchTextFieldState = when (type) {
                     AddressSearchType.Street -> addressComponent.streetSearchTextFieldState
                     AddressSearchType.Building -> addressComponent.buildingSearchTextFieldState
                 }
-                val searchStateFlow = when (type) {
-                    AddressSearchType.Street -> addressComponent.streetSearchState
-                    AddressSearchType.Building -> addressComponent.buildingSearchState
+                val searchState = when (type) {
+                    AddressSearchType.Street -> streetSearchState
+                    AddressSearchType.Building -> buildingSearchState
                 }
-                searchStateFlow.map { searchState ->
-                    AddressSearchBottomSheetState.Visible(
-                        type = type,
-                        searchTextFieldState = searchTextFieldState,
-                        searchState = searchState,
-                    )
-                }
+                AddressSearchBottomSheetState.Visible(
+                    type = type,
+                    searchTextFieldState = searchTextFieldState,
+                    searchState = searchState,
+                )
             } else {
-                flowOf(AddressSearchBottomSheetState.Hidden)
+                AddressSearchBottomSheetState.Hidden
             }
         }.stateIn(
             scope = viewModelScope,
