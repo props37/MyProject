@@ -8,8 +8,8 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 internal data class DeliveryAddressSelectorState(
     val deliveryType: DeliveryType,
     val city: City?,
-    val streetTextFieldState: TextFieldState,
-    val buildingTextFieldState: TextFieldState,
-    val apartmentTextFieldState: TextFieldState,
+    val streetSelectorTextFieldState: TextFieldState,
+    val buildingSelectorTextFieldState: TextFieldState,
+    val apartmentSelectorTextFieldState: TextFieldState,
     val isBuildingSelectionEnabled: Boolean,
 )

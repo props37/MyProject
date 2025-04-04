@@ -53,27 +53,27 @@ internal class AddressComponent(
             initialValue = null,
         )
 
-    val streetTextFieldState: TextFieldState by savedStateHandle.saveable(
+    val streetSelectorTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    val buildingTextFieldState: TextFieldState by savedStateHandle.saveable(
+    val buildingSelectorTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    val apartmentTextFieldState: TextFieldState by savedStateHandle.saveable(
+    val apartmentSelectorTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    val searchStreetTextFieldState: TextFieldState by savedStateHandle.saveable(
+    val streetSearchTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    val searchBuildingTextFieldState: TextFieldState by savedStateHandle.saveable(
+    val buildingSearchTextFieldState: TextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
@@ -88,7 +88,7 @@ internal class AddressComponent(
         cityFlow,
         selectedStreetValueHolder.stateFlow,
         selectedBuildingValueHolder.stateFlow,
-        apartmentTextFieldState.textAsFlow(),
+        apartmentSelectorTextFieldState.textAsFlow(),
     ) { city, streetParcelable, buildingParcelable, apartment ->
         if (city != null && streetParcelable != null && buildingParcelable != null) {
             Address(
@@ -104,7 +104,7 @@ internal class AddressComponent(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val streetsRequester = FlowRequester(AddressRequest) {
-        val queryFlow = searchStreetTextFieldState
+        val queryFlow = streetSearchTextFieldState
             .textAsFlow()
             .debounce(SEARCH_QUERY_DEBOUNCE_MILLIS)
         queryFlow.flatMapLatest { query ->
@@ -116,7 +116,7 @@ internal class AddressComponent(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val buildingsRequester = FlowRequester(AddressRequest) {
         val streetParcelableFlow = selectedStreetValueHolder.stateFlow
-        val queryFlow = searchBuildingTextFieldState
+        val queryFlow = buildingSearchTextFieldState
             .textAsFlow()
             .debounce(SEARCH_QUERY_DEBOUNCE_MILLIS)
         combine(streetParcelableFlow, queryFlow) { streetParcelable, query ->
@@ -168,8 +168,8 @@ internal class AddressComponent(
             name = streetItem.address.name,
         )
         selectedStreetValueHolder.set(parcelable)
-        streetTextFieldState.setTextAndPlaceCursorAtEnd(streetItem.address.name)
-        searchStreetTextFieldState.setTextAndPlaceCursorAtEnd(streetItem.address.name)
+        streetSelectorTextFieldState.setTextAndPlaceCursorAtEnd(streetItem.address.name)
+        streetSearchTextFieldState.setTextAndPlaceCursorAtEnd(streetItem.address.name)
     }
 
     fun onBuildingSelected(building: AddressSearchItem) {
@@ -178,8 +178,8 @@ internal class AddressComponent(
             name = building.address.name,
         )
         selectedBuildingValueHolder.set(parcelable)
-        buildingTextFieldState.setTextAndPlaceCursorAtEnd(building.address.name)
-        searchBuildingTextFieldState.setTextAndPlaceCursorAtEnd(building.address.name)
+        buildingSelectorTextFieldState.setTextAndPlaceCursorAtEnd(building.address.name)
+        buildingSearchTextFieldState.setTextAndPlaceCursorAtEnd(building.address.name)
     }
 
     fun onStreetSearchErrorRefreshClicked() {
@@ -196,8 +196,8 @@ internal class AddressComponent(
 
     private fun clearSelectedBuilding() {
         selectedBuildingValueHolder.set(null)
-        buildingTextFieldState.setTextAndPlaceCursorAtEnd("")
-        searchBuildingTextFieldState.setTextAndPlaceCursorAtEnd("")
+        buildingSelectorTextFieldState.setTextAndPlaceCursorAtEnd("")
+        buildingSearchTextFieldState.setTextAndPlaceCursorAtEnd("")
     }
 
     private data object AddressRequest : FlowRequest

@@ -51,6 +51,9 @@
     <string name="cart_payment">Оплата</string>
     <string name="cart_choose_delivery_terms">Выберите условия доставки</string>
     <string name="cart_courier_delivery">Курьерская доставка</string>
+    <string name="cart_street">Улица</string>
+    <string name="cart_building">Дом</string>
+    <string name="cart_apartment_or_office">Квартира/офис</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

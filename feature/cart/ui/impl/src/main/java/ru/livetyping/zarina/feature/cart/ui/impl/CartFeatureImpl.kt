@@ -11,6 +11,7 @@ import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
@@ -91,8 +92,16 @@ public class CartFeatureImpl : CartFeature {
                 onDeliveryMethodSelected = { cartType, currentStep, recipient, deliveryMethod ->
                     val checkoutStep = currentStep + 1
                     when (deliveryMethod.type) {
-                        DeliveryMethodType.COURIER_EXPRESS -> TODO()
-                        DeliveryMethodType.POST -> TODO()
+                        DeliveryMethodType.COURIER_EXPRESS, DeliveryMethodType.POST -> {
+                            val deliveryAddressSelectorNavEntry = DeliveryAddressSelectorNavEntry.from(
+                                cartType = cartType,
+                                checkoutStep = checkoutStep,
+                                recipient = recipient,
+                                deliveryMethod = deliveryMethod,
+                            )
+                            navController.navigate(deliveryAddressSelectorNavEntry)
+                        }
+
                         DeliveryMethodType.PICKUP_FROM_PICKUP_POINT -> {
                             val pickupPointSelectorNavEntry = PickupPointSelectorNavEntry.from(
                                 cartType = cartType,

@@ -8,17 +8,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.component.AddressComponent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
@@ -60,22 +64,26 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(
         deliveryType = deliveryType,
         city = null,
-        streetTextFieldState = addressComponent.streetTextFieldState,
-        buildingTextFieldState = addressComponent.buildingTextFieldState,
-        apartmentTextFieldState = addressComponent.apartmentTextFieldState,
+        streetSelectorTextFieldState = addressComponent.streetSelectorTextFieldState,
+        buildingSelectorTextFieldState = addressComponent.buildingSelectorTextFieldState,
+        apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
         isBuildingSelectionEnabled = false,
     )
 
+    private val getUserCityUseCaseParams = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
+    private val cityFlow = deps.getUserCityFlow(getUserCityUseCaseParams)
+        .map { it.getOrNull() }
+
     val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
-        addressComponent.currentAddress,
+        cityFlow,
         addressComponent.isBuildingSelectionEnabled,
-    ) { currentAddress, isBuildingSelectionEnabled ->
+    ) { city, isBuildingSelectionEnabled ->
         DeliveryAddressSelectorState(
             deliveryType = deliveryType,
-            city = currentAddress?.city,
-            streetTextFieldState = addressComponent.streetTextFieldState,
-            buildingTextFieldState = addressComponent.buildingTextFieldState,
-            apartmentTextFieldState = addressComponent.apartmentTextFieldState,
+            city = city,
+            streetSelectorTextFieldState = addressComponent.streetSelectorTextFieldState,
+            buildingSelectorTextFieldState = addressComponent.buildingSelectorTextFieldState,
+            apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
             isBuildingSelectionEnabled = isBuildingSelectionEnabled,
         )
     }.stateIn(
@@ -88,6 +96,14 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         when (event) {
             CheckoutTopBarEvent.BackClicked -> onBackClicked()
             CheckoutTopBarEvent.CloseClicked -> onCloseClicked()
+        }
+    }
+
+    // TODO: [Top] Implement
+    fun onDeliveryAddressSelectorEvent(event: DeliveryAddressSelectorEvent) {
+        when (event) {
+            DeliveryAddressSelectorEvent.StreetSelectorClicked -> TODO()
+            DeliveryAddressSelectorEvent.BuildingSelectorClicked -> TODO()
         }
     }
 

@@ -17,6 +17,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.ui.DeliveryAddressSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
@@ -32,6 +35,8 @@ internal fun DeliveryAddressSelectorScreen(
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
+        deliveryAddressSelectorState = deliveryAddressSelectorState,
+        onDeliveryAddressSelectorEvent = viewModel::onDeliveryAddressSelectorEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -41,6 +46,8 @@ internal fun DeliveryAddressSelectorScreen(
 private fun ScreenContent(
     topBarState: CheckoutTopBarState,
     onTopBarEvent: (CheckoutTopBarEvent) -> Unit,
+    deliveryAddressSelectorState: DeliveryAddressSelectorState,
+    onDeliveryAddressSelectorEvent: (DeliveryAddressSelectorEvent) -> Unit,
     sideEffects: Flow<DeliveryAddressSelectorSideEffect>,
     navActions: DeliveryAddressSelectorNavActions,
 ) {
@@ -65,6 +72,9 @@ private fun ScreenContent(
             onEvent = onTopBarEvent,
         )
 
-
+        DeliveryAddressSelector(
+            state = deliveryAddressSelectorState,
+            onEvent = onDeliveryAddressSelectorEvent,
+        )
     }
 }
