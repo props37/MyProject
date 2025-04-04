@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search
 
 import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search
 
 import androidx.compose.runtime.Immutable
 import ru.livetyping.zarina.core.domain.model.geo.AddressPart

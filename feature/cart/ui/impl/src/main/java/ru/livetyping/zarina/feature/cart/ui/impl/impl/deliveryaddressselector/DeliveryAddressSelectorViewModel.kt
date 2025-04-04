@@ -5,9 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -22,6 +27,9 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.co
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
@@ -91,6 +99,36 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         initialValue = initialDeliveryAddressSelectorState,
     )
 
+    private val visibleAddressSearchBottomSheetType = MutableStateFlow<AddressSearchType?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val addressSearchBottomSheetState: StateFlow<AddressSearchBottomSheetState> =
+        visibleAddressSearchBottomSheetType.flatMapLatest { type ->
+            if (type != null) {
+                val searchTextFieldState = when (type) {
+                    AddressSearchType.Street -> addressComponent.streetSearchTextFieldState
+                    AddressSearchType.Building -> addressComponent.buildingSearchTextFieldState
+                }
+                val searchStateFlow = when (type) {
+                    AddressSearchType.Street -> addressComponent.streetSearchState
+                    AddressSearchType.Building -> addressComponent.buildingSearchState
+                }
+                searchStateFlow.map { searchState ->
+                    AddressSearchBottomSheetState.Visible(
+                        type = type,
+                        searchTextFieldState = searchTextFieldState,
+                        searchState = searchState,
+                    )
+                }
+            } else {
+                flowOf(AddressSearchBottomSheetState.Hidden)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileAndroidUiSubscribed,
+            initialValue = AddressSearchBottomSheetState.Hidden,
+        )
+
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
             CheckoutTopBarEvent.BackClicked -> onBackClicked()
@@ -101,8 +139,35 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     // TODO: [Top] Implement
     fun onDeliveryAddressSelectorEvent(event: DeliveryAddressSelectorEvent) {
         when (event) {
-            DeliveryAddressSelectorEvent.StreetSelectorClicked -> TODO()
-            DeliveryAddressSelectorEvent.BuildingSelectorClicked -> TODO()
+            DeliveryAddressSelectorEvent.StreetSelectorClicked -> {
+                visibleAddressSearchBottomSheetType.value = AddressSearchType.Street
+            }
+
+            DeliveryAddressSelectorEvent.BuildingSelectorClicked -> {
+                visibleAddressSearchBottomSheetType.value = AddressSearchType.Building
+            }
+        }
+    }
+
+    fun onAddressSearchEvent(event: AddressSearchEvent) {
+        when (event) {
+            AddressSearchEvent.CloseClicked -> {
+                visibleAddressSearchBottomSheetType.value = null
+            }
+
+            is AddressSearchEvent.AddressItemClicked -> {
+                when (event.type) {
+                    AddressSearchType.Street -> addressComponent.onStreetSelected(event.item)
+                    AddressSearchType.Building -> addressComponent.onBuildingSelected(event.item)
+                }
+            }
+
+            is AddressSearchEvent.ErrorRefreshClicked -> {
+                when (event.type) {
+                    AddressSearchType.Street -> addressComponent.onStreetSearchErrorRefreshClicked()
+                    AddressSearchType.Building -> addressComponent.onBuildingSearchErrorRefreshClicked()
+                }
+            }
         }
     }
 

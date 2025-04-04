@@ -30,9 +30,9 @@ import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.BuildingParcelable
 import ru.livetyping.zarina.core.uimodel.geo.StreetParcelable
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.AddressSearchItem
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.AddressSearchState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.AddressSearchStateBuilder
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchItem
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchStateBuilder
 
 @OptIn(SavedStateHandleSaveableApi::class)
 internal class AddressComponent(

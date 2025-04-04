@@ -46,9 +46,11 @@ internal fun DeliveryAddressSelector(
                     onEvent(DeliveryAddressSelectorEvent.StreetSelectorClicked)
                 },
                 onBuildingSelectorClicked = {
-                    onEvent(DeliveryAddressSelectorEvent.StreetSelectorClicked)
+                    onEvent(DeliveryAddressSelectorEvent.BuildingSelectorClicked)
                 },
             )
+
+            // TODO: [Top] Implement
         }
     }
 }

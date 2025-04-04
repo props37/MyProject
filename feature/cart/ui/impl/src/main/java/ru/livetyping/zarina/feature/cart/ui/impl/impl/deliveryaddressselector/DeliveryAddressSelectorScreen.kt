@@ -19,6 +19,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchModalBottomSheet
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.ui.DeliveryAddressSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
@@ -31,12 +34,15 @@ internal fun DeliveryAddressSelectorScreen(
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val deliveryAddressSelectorState by viewModel.deliveryAddressSelectorState.collectAsStateWithLifecycle()
+    val addressSearchBottomSheetState by viewModel.addressSearchBottomSheetState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
         deliveryAddressSelectorState = deliveryAddressSelectorState,
         onDeliveryAddressSelectorEvent = viewModel::onDeliveryAddressSelectorEvent,
+        addressSearchBottomSheetState = addressSearchBottomSheetState,
+        onAddressSearchEvent = viewModel::onAddressSearchEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -48,12 +54,19 @@ private fun ScreenContent(
     onTopBarEvent: (CheckoutTopBarEvent) -> Unit,
     deliveryAddressSelectorState: DeliveryAddressSelectorState,
     onDeliveryAddressSelectorEvent: (DeliveryAddressSelectorEvent) -> Unit,
+    addressSearchBottomSheetState: AddressSearchBottomSheetState,
+    onAddressSearchEvent: (AddressSearchEvent) -> Unit,
     sideEffects: Flow<DeliveryAddressSelectorSideEffect>,
     navActions: DeliveryAddressSelectorNavActions,
 ) {
     DeliveryAddressSelectorScreenBehavior(
         sideEffects = sideEffects,
         navActions = navActions,
+    )
+
+    AddressSearchModalBottomSheet(
+        state = addressSearchBottomSheetState,
+        onEvent = onAddressSearchEvent,
     )
 
     Column(

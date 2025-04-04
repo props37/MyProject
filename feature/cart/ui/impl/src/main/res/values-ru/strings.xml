@@ -55,6 +55,8 @@
     <string name="cart_street">Улица</string>
     <string name="cart_building">Дом</string>
     <string name="cart_apartment_or_office">Квартира/офис</string>
+    <string name="cart_search_streets">Поиск по улицам</string>
+    <string name="cart_search_building">Поиск по домам</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>
