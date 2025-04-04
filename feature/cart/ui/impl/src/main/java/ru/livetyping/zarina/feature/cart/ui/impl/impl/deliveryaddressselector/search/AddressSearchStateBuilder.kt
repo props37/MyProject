@@ -13,7 +13,7 @@ internal class AddressSearchStateBuilder {
         loadingState: FlowRequester.LoadingState,
     ): AddressSearchState {
         return if (loadingState.isLoading()) {
-            AddressSearchState.Loading
+            AddressSearchState.Empty
         } else {
             searchResult.fold(
                 onSuccess = { addressList ->

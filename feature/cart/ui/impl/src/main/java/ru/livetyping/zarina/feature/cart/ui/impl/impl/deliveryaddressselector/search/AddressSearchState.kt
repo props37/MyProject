@@ -12,8 +12,6 @@ internal sealed class AddressSearchState {
 
     data object Empty : AddressSearchState()
 
-    data object Loading : AddressSearchState()
-
     @Immutable
     data class Error(val state: ZarinaErrorScreenState) : AddressSearchState()
 }
