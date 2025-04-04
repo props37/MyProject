@@ -7,7 +7,7 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -59,28 +59,30 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
 
     private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(
         deliveryType = deliveryType,
+        city = null,
         streetTextFieldState = addressComponent.streetTextFieldState,
         buildingTextFieldState = addressComponent.buildingTextFieldState,
         apartmentTextFieldState = addressComponent.apartmentTextFieldState,
         isBuildingSelectionEnabled = false,
     )
 
-    val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> =
-        addressComponent.isBuildingSelectionEnabled
-            .map { isBuildingSelectionEnabled ->
-                DeliveryAddressSelectorState(
-                    deliveryType = deliveryType,
-                    streetTextFieldState = addressComponent.streetTextFieldState,
-                    buildingTextFieldState = addressComponent.buildingTextFieldState,
-                    apartmentTextFieldState = addressComponent.apartmentTextFieldState,
-                    isBuildingSelectionEnabled = isBuildingSelectionEnabled,
-                )
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileAndroidUiSubscribed,
-                initialValue = initialDeliveryAddressSelectorState,
-            )
+    val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
+        addressComponent.currentAddress,
+        addressComponent.isBuildingSelectionEnabled,
+    ) { currentAddress, isBuildingSelectionEnabled ->
+        DeliveryAddressSelectorState(
+            deliveryType = deliveryType,
+            city = currentAddress?.city,
+            streetTextFieldState = addressComponent.streetTextFieldState,
+            buildingTextFieldState = addressComponent.buildingTextFieldState,
+            apartmentTextFieldState = addressComponent.apartmentTextFieldState,
+            isBuildingSelectionEnabled = isBuildingSelectionEnabled,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileAndroidUiSubscribed,
+        initialValue = initialDeliveryAddressSelectorState,
+    )
 
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {

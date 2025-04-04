@@ -27,6 +27,7 @@ internal fun DeliveryAddressSelectorScreen(
     viewModel: DeliveryAddressSelectorViewModel = hiltViewModel(),
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
+    val deliveryAddressSelectorState by viewModel.deliveryAddressSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
@@ -63,5 +64,7 @@ private fun ScreenContent(
             state = topBarState,
             onEvent = onTopBarEvent,
         )
+
+
     }
 }
