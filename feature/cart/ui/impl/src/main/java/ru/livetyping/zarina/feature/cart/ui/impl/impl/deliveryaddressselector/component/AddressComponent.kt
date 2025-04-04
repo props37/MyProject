@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -23,8 +22,6 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.Address
-import ru.livetyping.zarina.core.domain.model.geo.Building
-import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase
@@ -84,6 +81,27 @@ internal class AddressComponent(
     val isBuildingSelectionEnabled: Flow<Boolean> =
         selectedStreetValueHolder.stateFlow.map { it != null }
 
+    private val getCityUseCaseParams = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
+    private val cityFlow = getUserCityFlowUseCase(getCityUseCaseParams).map { it.getOrNull() }
+
+    val currentAddress = combine(
+        cityFlow,
+        selectedStreetValueHolder.stateFlow,
+        selectedBuildingValueHolder.stateFlow,
+        apartmentTextFieldState.textAsFlow(),
+    ) { city, streetParcelable, buildingParcelable, apartment ->
+        if (city != null && streetParcelable != null && buildingParcelable != null) {
+            Address(
+                city = city,
+                street = streetParcelable.toStreet(),
+                building = buildingParcelable.toBuilding(),
+                apartment = apartment.toString(),
+            )
+        } else {
+            null
+        }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val streetsRequester = FlowRequester(AddressRequest) {
         val queryFlow = searchStreetTextFieldState
@@ -139,22 +157,6 @@ internal class AddressComponent(
         initialValue = AddressSearchState.Empty,
     )
 
-    suspend fun getCurrentAddress(): Address? {
-        val city = getCurrentCity()
-        val street = getSelectedStreet()
-        val building = getSelectedBuilding()
-        return if (city != null && street != null && building != null) {
-            Address(
-                city = city,
-                street = street,
-                building = building,
-                apartment = getCurrentApartment(),
-            )
-        } else {
-            null
-        }
-    }
-
     fun onStreetSelected(streetItem: AddressSearchItem) {
         val currentStreet = getSelectedStreet()
         if (streetItem.address.id != currentStreet?.id) {
@@ -188,21 +190,8 @@ internal class AddressComponent(
         buildingsRequester.request(AddressRequest)
     }
 
-    private suspend fun getCurrentCity(): City? {
-        val params = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
-        return getUserCityFlowUseCase(params).firstOrNull()?.getOrNull()
-    }
-
     private fun getSelectedStreet(): Street? {
         return selectedStreetValueHolder.get()?.toStreet()
-    }
-
-    private fun getSelectedBuilding(): Building? {
-        return selectedBuildingValueHolder.get()?.toBuilding()
-    }
-
-    private fun getCurrentApartment(): String? {
-        return apartmentTextFieldState.text.toString().takeIf { it.isNotBlank() }
     }
 
     private fun clearSelectedBuilding() {
