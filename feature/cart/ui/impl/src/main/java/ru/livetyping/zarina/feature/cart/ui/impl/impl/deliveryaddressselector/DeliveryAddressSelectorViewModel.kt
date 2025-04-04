@@ -53,12 +53,18 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     private val deliveryType = getDeliveryType(navEntry.deliveryMethod.toDeliveryMethod())
 
     val topBarState: StateFlow<CheckoutTopBarState> = ReadOnlyStateFlow(
-        value = CheckoutTopBarState(
-            title = Text.Resource(R.string.cart_courier_delivery),
-            checkoutStep = navEntry.checkoutStep,
-            checkoutStepCount = navEntry.cartType.toCartType().checkoutStepCount,
-            isBackButtonVisible = true,
-        )
+        value = run {
+            val titleResId = when (deliveryType) {
+                DeliveryType.COURIER -> R.string.cart_courier_delivery
+                DeliveryType.POST -> R.string.cart_post_delivery
+            }
+            CheckoutTopBarState(
+                title = Text.Resource(titleResId),
+                checkoutStep = navEntry.checkoutStep,
+                checkoutStepCount = navEntry.cartType.toCartType().checkoutStepCount,
+                isBackButtonVisible = true,
+            )
+        }
     )
 
     private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(

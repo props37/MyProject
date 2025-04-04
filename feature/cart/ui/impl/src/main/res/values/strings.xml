@@ -51,6 +51,7 @@
     <string name="cart_payment">Оплата</string>
     <string name="cart_choose_delivery_terms">Выберите условия доставки</string>
     <string name="cart_courier_delivery">Курьерская доставка</string>
+    <string name="cart_post_delivery">Доставка Почтой России</string>
     <string name="cart_street">Улица</string>
     <string name="cart_building">Дом</string>
     <string name="cart_apartment_or_office">Квартира/офис</string>
