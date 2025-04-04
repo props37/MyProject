@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.cart.Cart
+import ru.livetyping.zarina.core.domain.model.cart.CartType
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
@@ -24,20 +27,33 @@ internal class GetCartFlowUseCaseImpl(
     override fun execute(params: Params): Flow<Cart> {
         val wishlistProductIdsFlow =
             wishlistRepository.getWishlistProductIdsFlow(CachePolicy.LocalOnly)
-        return userRepository.getUserCityFlow(CachePolicy.LocalOnly)
-            .flatMapLatest { city ->
-                cartRepository.getCartFlow(params.cartType, city?.id)
-            }
+        return if (params.cityKladrId != null) {
+            getCartFlow(params.cartType, params.cityKladrId, wishlistProductIdsFlow)
+        } else {
+            userRepository.getUserCityFlow(CachePolicy.LocalOnly)
+                .flatMapLatest { city ->
+                    getCartFlow(params.cartType, city?.id, wishlistProductIdsFlow)
+                    cartRepository.getCartFlow(params.cartType, city?.id)
+                }
+        }
+    }
+
+    override fun invoke(params: Params): Flow<Result<Cart>> {
+        return call(params)
+    }
+
+    private fun getCartFlow(
+        cartType: CartType,
+        cityKladrId: KladrId?,
+        wishlistProductIdsFlow: Flow<Set<Product.Id>>,
+    ): Flow<Cart> {
+        return cartRepository.getCartFlow(cartType, cityKladrId)
             .combine(wishlistProductIdsFlow) { cart, wishlistProductIds ->
                 val products = cart.products.map { product ->
                     product.copy(isInWishlist = product.productId in wishlistProductIds)
                 }
                 cart.copy(products = products)
             }
-    }
-
-    override fun invoke(params: Params): Flow<Result<Cart>> {
-        return call(params)
     }
 
     private companion object {

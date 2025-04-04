@@ -27,7 +27,7 @@ internal class CheckoutRepositoryImpl @Inject constructor(
         return remoteDataSource.getPickupPointsFlow(cityKladrId)
     }
 
-    override suspend fun getPickupPointFlow(
+    override fun getPickupPointFlow(
         cityKladrId: KladrId,
         pickupPointId: PickupPoint.Id
     ): Flow<PickupPointDetailed> {

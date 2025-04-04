@@ -31,7 +31,7 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         emit(pickupPoints)
     }
 
-    override suspend fun getPickupPointFlow(
+    override fun getPickupPointFlow(
         cityKladrId: KladrId,
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetailed> = flow {

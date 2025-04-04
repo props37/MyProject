@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase.Params
@@ -20,17 +22,28 @@ internal class GetPickupStoresFlowUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<List<PickupStore>> {
-        return userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
-            checkNotNull(city) { "city is null" }
-            checkoutRepository.getPickupStoresFlow(city.id, params.deliveryMethodType)
-                .map { stores ->
-                    stores.sortedByDescending { it.availableItemCount }
-                }
+        return if (params.cityKladrId != null) {
+            getPickupStoresFlow(params.cityKladrId, params.deliveryMethodType)
+        } else {
+            userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
+                checkNotNull(city) { "city is null" }
+                getPickupStoresFlow(city.id, params.deliveryMethodType)
+            }
         }
     }
 
     override fun invoke(params: Params): Flow<Result<List<PickupStore>>> {
         return call(params)
+    }
+
+    private fun getPickupStoresFlow(
+        cityKladrId: KladrId,
+        deliveryMethodType: DeliveryMethodType,
+    ): Flow<List<PickupStore>> {
+        return checkoutRepository.getPickupStoresFlow(cityKladrId, deliveryMethodType)
+            .map { stores ->
+                stores.sortedByDescending { it.availableItemCount }
+            }
     }
 
     private companion object {

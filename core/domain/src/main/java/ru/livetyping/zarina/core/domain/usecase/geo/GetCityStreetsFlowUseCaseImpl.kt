@@ -25,9 +25,13 @@ internal class GetCityStreetsFlowUseCaseImpl(
             return flow { throw EmptySearchQueryException() }
         }
 
-        return userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
-            checkNotNull(city) { "city is null" }
-            geographyRepository.getCityStreetsFlow(city.id, params.nameQuery)
+        return if (params.cityKladrId != null) {
+            geographyRepository.getCityStreetsFlow(params.cityKladrId, params.nameQuery)
+        } else {
+            userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
+                checkNotNull(city) { "city is null" }
+                geographyRepository.getCityStreetsFlow(city.id, params.nameQuery)
+            }
         }
     }
 

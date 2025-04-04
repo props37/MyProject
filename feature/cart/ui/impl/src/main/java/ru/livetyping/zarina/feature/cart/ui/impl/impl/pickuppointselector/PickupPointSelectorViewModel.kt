@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Location
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.core.platform.PackageName
 import ru.livetyping.zarina.core.platform.settings.SystemSettings
 import ru.livetyping.zarina.core.text.Text
@@ -112,7 +113,8 @@ internal class PickupPointSelectorViewModel @Inject constructor(
     )
 
     private val pickupPointRequester = FlowRequester(PickupPointRequest) {
-        deps.getPickupPointsFlow()
+        val params = GetPickupPointsFlowUseCase.Params()
+        deps.getPickupPointsFlow(params)
     }
 
     private val pickupPointListStateBuilder = PickupPointListStateBuilder()

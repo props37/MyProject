@@ -18,7 +18,7 @@ public interface CheckoutRepository {
 
     public fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>>
 
-    public suspend fun getPickupPointFlow(
+    public fun getPickupPointFlow(
         cityKladrId: KladrId,
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetailed>

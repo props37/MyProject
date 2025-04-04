@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.domain.usecase.checkout
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
+import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
@@ -10,7 +11,10 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 public interface GetPickupPointFlowUseCase {
     public operator fun invoke(params: Params): Flow<Result<PickupPointDetailed>>
 
-    public data class Params(val pickupPointId: PickupPoint.Id)
+    public data class Params(
+        val pickupPointId: PickupPoint.Id,
+        val cityKladrId: KladrId? = null,
+    )
 
     public companion object {
         public fun getInstance(

@@ -18,7 +18,7 @@ internal interface CheckoutRemoteDataSource {
 
     fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>>
 
-    suspend fun getPickupPointFlow(
+    fun getPickupPointFlow(
         cityKladrId: KladrId,
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetailed>
