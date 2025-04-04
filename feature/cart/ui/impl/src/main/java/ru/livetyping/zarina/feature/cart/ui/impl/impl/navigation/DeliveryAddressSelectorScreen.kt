@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavEntry
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.CourierDeliverySelectorScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorScreen
 
 internal fun NavGraphBuilder.deliveryAddressSelectorScreen(
     actions: DeliveryAddressSelectorNavActions,
@@ -12,6 +12,6 @@ internal fun NavGraphBuilder.deliveryAddressSelectorScreen(
     composable<DeliveryAddressSelectorNavEntry>(
         typeMap = DeliveryAddressSelectorNavEntry.typeMap(),
     ) {
-        CourierDeliverySelectorScreen(actions)
+        DeliveryAddressSelectorScreen(actions)
     }
 }

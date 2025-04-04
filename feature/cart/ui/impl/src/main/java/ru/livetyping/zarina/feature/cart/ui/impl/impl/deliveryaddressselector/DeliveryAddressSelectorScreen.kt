@@ -22,7 +22,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEv
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 
 @Composable
-internal fun CourierDeliverySelectorScreen(
+internal fun DeliveryAddressSelectorScreen(
     navActions: DeliveryAddressSelectorNavActions,
     viewModel: DeliveryAddressSelectorViewModel = hiltViewModel(),
 ) {
