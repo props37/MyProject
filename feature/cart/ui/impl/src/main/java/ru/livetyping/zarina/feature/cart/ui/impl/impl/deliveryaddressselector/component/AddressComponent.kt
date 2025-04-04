@@ -38,7 +38,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.se
 internal class AddressComponent(
     savedStateHandle: SavedStateHandle,
     coroutineScope: CoroutineScope,
-    private val getUserCityFlowUseCase: GetUserCityFlowUseCase,
+    getUserCityFlowUseCase: GetUserCityFlowUseCase,
     private val getCityStreetsFlowUseCase: GetCityStreetsFlowUseCase,
     private val getStreetBuildingsFlowUseCase: GetStreetBuildingsFlowUseCase,
 ) {
