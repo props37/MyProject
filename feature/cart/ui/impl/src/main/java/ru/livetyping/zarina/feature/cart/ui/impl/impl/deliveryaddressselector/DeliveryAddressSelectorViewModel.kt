@@ -8,14 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
-import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -76,12 +73,8 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         isBuildingSelectionEnabled = false,
     )
 
-    private val getUserCityUseCaseParams = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
-    private val cityFlow = deps.getUserCityFlow(getUserCityUseCaseParams)
-        .map { it.getOrNull() }
-
     val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
-        cityFlow,
+        addressComponent.cityFlow,
         addressComponent.isBuildingSelectionEnabled,
     ) { city, isBuildingSelectionEnabled ->
         DeliveryAddressSelectorState(

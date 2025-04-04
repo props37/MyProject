@@ -82,7 +82,7 @@ internal class AddressComponent(
         selectedStreetValueHolder.stateFlow.map { it != null }
 
     private val getCityUseCaseParams = GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly)
-    private val cityFlow = getUserCityFlowUseCase(getCityUseCaseParams).map { it.getOrNull() }
+    val cityFlow = getUserCityFlowUseCase(getCityUseCaseParams).map { it.getOrNull() }
 
     val currentAddress = combine(
         cityFlow,
