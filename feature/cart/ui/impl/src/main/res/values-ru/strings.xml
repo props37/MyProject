@@ -57,6 +57,8 @@
     <string name="cart_apartment_or_office">Квартира/офис</string>
     <string name="cart_search_streets">Поиск по улицам</string>
     <string name="cart_search_building">Поиск по домам</string>
+    <string name="cart_choose_delivery_option">Выберите тип доставки</string>
+    <string name="cart_change_delivery_date">Изменить дату доставки</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

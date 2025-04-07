@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import java.math.BigDecimal
 
 @Serializable
 internal data class DeliveryOptionsDto(
@@ -43,7 +44,7 @@ internal data class DeliveryOptionsDto(
                 id = DeliveryOption.Id(id),
                 title = title,
                 description = description,
-                price = price,
+                price = BigDecimal(price.toDouble()),
                 dateTimePeriods = dateTimePeriods,
             )
         }

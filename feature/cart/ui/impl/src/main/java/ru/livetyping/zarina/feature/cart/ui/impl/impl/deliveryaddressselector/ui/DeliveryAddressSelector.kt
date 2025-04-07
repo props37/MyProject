@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -50,7 +51,26 @@ internal fun DeliveryAddressSelector(
                 },
             )
 
-            // TODO: [Top] Implement
+            DeliveryOptions(
+                state = state.deliveryOptionsState,
+                onDeliveryOptionClicked = {
+                    onEvent(DeliveryAddressSelectorEvent.DeliveryOptionClicked(it))
+                },
+                onDeliveryOptionDateClicked = {
+                    onEvent(DeliveryAddressSelectorEvent.DeliveryOptionDateClicked(it))
+                },
+                onDeliveryOptionTimeClicked = {
+                    onEvent(DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked(it))
+                },
+                onDeliveryOptionShowDetailsClicked = {
+                    // TODO: [Top] Implement
+                },
+                onErrorRefreshClicked = {
+                    onEvent(DeliveryAddressSelectorEvent.ErrorRefreshClicked)
+                },
+                windowInsetsProvider = windowInsetsProvider,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
         }
     }
 }

@@ -5,15 +5,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
+import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -22,6 +30,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.component.AddressComponent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionsState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
@@ -68,6 +77,55 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         }
     )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest) {
+        addressComponent.currentAddress.flatMapLatest { address ->
+            if (address?.building != null) {
+                markAsLoading(DeliveryOptionsRequest)
+                when (deliveryType) {
+                    DeliveryType.COURIER -> {
+                        val params = GetCourierDeliveryOptionsFlowUseCase.Params(address.building.id)
+                        deps.getCourierDeliveryOptionsFlow(params)
+                    }
+
+                    DeliveryType.POST -> {
+                        val params = GetPostDeliveryOptionsFlowUseCase.Params(address.building.id)
+                        deps.getPostDeliveryOptionsFlow(params)
+                    }
+                }
+            } else {
+                flowOf(null)
+            }
+        }
+    }
+
+    private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOption.Id?>(null)
+
+    private val deliveryOptionToSelectedDateTimePeriod =
+        MutableStateFlow<Map<DeliveryOption.Id, DeliveryOption.DateTimePeriod>>(emptyMap())
+
+    private val deliveryOptionsStateBuilder = DeliveryOptionsState.Builder()
+    private val deliveryOptionsState = combine(
+        deliveryOptionsRequester.flow,
+        deliveryOptionsRequester.loadingState,
+        selectedDeliveryOptionId,
+        deliveryOptionToSelectedDateTimePeriod,
+    ) { result, loadingState, selectedDeliveryOptionId, deliveryOptionToSelectedDateTimePeriod ->
+        deliveryOptionsStateBuilder.build(
+            deliveryOptionsResult = result,
+            isLoading = loadingState.isLoading(),
+            selectedDeliveryOptionId = selectedDeliveryOptionId,
+            deliveryOptionSelectedDateTimePeriodProvider = { deliveryOption ->
+                deliveryOptionToSelectedDateTimePeriod[deliveryOption.id]
+                    ?: deliveryOption.dateTimePeriods.first()
+            },
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = DeliveryOptionsState.None,
+    )
+
     private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(
         deliveryType = deliveryType,
         city = null,
@@ -75,12 +133,14 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         buildingSelectorTextFieldState = addressComponent.buildingSelectorTextFieldState,
         apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
         isBuildingSelectionEnabled = false,
+        deliveryOptionsState = deliveryOptionsState.value,
     )
 
     val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
         addressComponent.cityFlow,
         addressComponent.isBuildingSelectionEnabled,
-    ) { city, isBuildingSelectionEnabled ->
+        deliveryOptionsState,
+    ) { city, isBuildingSelectionEnabled, deliveryOptionsState ->
         DeliveryAddressSelectorState(
             deliveryType = deliveryType,
             city = city,
@@ -88,6 +148,7 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             buildingSelectorTextFieldState = addressComponent.buildingSelectorTextFieldState,
             apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
             isBuildingSelectionEnabled = isBuildingSelectionEnabled,
+            deliveryOptionsState = deliveryOptionsState,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -142,6 +203,22 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             DeliveryAddressSelectorEvent.BuildingSelectorClicked -> {
                 visibleAddressSearchBottomSheetType.value = AddressSearchType.Building
             }
+
+            is DeliveryAddressSelectorEvent.DeliveryOptionClicked -> {
+                selectedDeliveryOptionId.value = event.deliveryOption.id
+            }
+
+            is DeliveryAddressSelectorEvent.DeliveryOptionDateClicked -> {
+                onDeliveryOptionDateClicked(event)
+            }
+
+            is DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked -> {
+                onDeliveryOptionTimeClicked(event)
+            }
+
+            DeliveryAddressSelectorEvent.ErrorRefreshClicked -> {
+                deliveryOptionsRequester.request(DeliveryOptionsRequest)
+            }
         }
     }
 
@@ -181,6 +258,14 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         }
     }
 
+    private fun onDeliveryOptionDateClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionDateClicked) {
+        // TODO: [Top] Implement
+    }
+
+    private fun onDeliveryOptionTimeClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked) {
+        // TODO: [Top] Implement
+    }
+
     private fun getDeliveryType(deliveryMethod: DeliveryMethod): DeliveryType {
         return when (deliveryMethod.type) {
             DeliveryMethodType.COURIER_EXPRESS -> DeliveryType.COURIER
@@ -188,6 +273,8 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             else -> error("Delivery method $deliveryMethod is not supported")
         }
     }
+
+    private data object DeliveryOptionsRequest : FlowRequest
 
     private companion object {
         private const val TAG = "DeliveryAddressSelectorViewModel"

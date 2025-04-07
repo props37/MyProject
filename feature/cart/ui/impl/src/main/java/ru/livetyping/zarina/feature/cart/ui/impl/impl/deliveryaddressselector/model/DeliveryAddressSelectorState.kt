@@ -12,4 +12,5 @@ internal data class DeliveryAddressSelectorState(
     val buildingSelectorTextFieldState: TextFieldState,
     val apartmentSelectorTextFieldState: TextFieldState,
     val isBuildingSelectionEnabled: Boolean,
+    val deliveryOptionsState: DeliveryOptionsState,
 )
