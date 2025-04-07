@@ -133,7 +133,6 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         }
     }
 
-    // TODO: [Top] Implement
     fun onDeliveryAddressSelectorEvent(event: DeliveryAddressSelectorEvent) {
         when (event) {
             DeliveryAddressSelectorEvent.StreetSelectorClicked -> {

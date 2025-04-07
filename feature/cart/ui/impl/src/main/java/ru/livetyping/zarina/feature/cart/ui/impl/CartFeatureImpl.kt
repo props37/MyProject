@@ -178,7 +178,10 @@ public class CartFeatureImpl : CartFeature {
             )
             selectedPickupPointScreen(selectedPickupPointNavActions)
 
-            val deliveryAddressSelectorNavActions = DeliveryAddressSelectorNavActions()
+            val deliveryAddressSelectorNavActions = DeliveryAddressSelectorNavActions(
+                onBackClicked = navigateBack,
+                onCloseClicked = closeCheckout,
+            )
             deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
         }
     }

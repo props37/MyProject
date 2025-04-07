@@ -45,6 +45,8 @@ private fun navigate(
     navActions: DeliveryAddressSelectorNavActions,
     action: DeliveryAddressSelectorScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        DeliveryAddressSelectorScreenAction.BackClicked -> navActions.onBackClicked()
+        DeliveryAddressSelectorScreenAction.CloseClicked -> navActions.onCloseClicked()
+    }
 }
