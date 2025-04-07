@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -126,6 +127,10 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         initialValue = DeliveryOptionsState.None,
     )
 
+    private val isContinueButtonVisible = deliveryOptionsState.map {
+        it.findSelectedDeliveryOption() != null
+    }
+
     private val initialDeliveryAddressSelectorState = DeliveryAddressSelectorState(
         deliveryType = deliveryType,
         city = null,
@@ -134,13 +139,15 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
         isBuildingSelectionEnabled = false,
         deliveryOptionsState = deliveryOptionsState.value,
+        isContinueButtonVisible = false,
     )
 
     val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
         addressComponent.cityFlow,
         addressComponent.isBuildingSelectionEnabled,
         deliveryOptionsState,
-    ) { city, isBuildingSelectionEnabled, deliveryOptionsState ->
+        isContinueButtonVisible,
+    ) { city, isBuildingSelectionEnabled, deliveryOptionsState, isContinueButtonVisible ->
         DeliveryAddressSelectorState(
             deliveryType = deliveryType,
             city = city,
@@ -149,6 +156,7 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             apartmentSelectorTextFieldState = addressComponent.apartmentSelectorTextFieldState,
             isBuildingSelectionEnabled = isBuildingSelectionEnabled,
             deliveryOptionsState = deliveryOptionsState,
+            isContinueButtonVisible = isContinueButtonVisible,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -219,6 +227,8 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             DeliveryAddressSelectorEvent.ErrorRefreshClicked -> {
                 deliveryOptionsRequester.request(DeliveryOptionsRequest)
             }
+
+            DeliveryAddressSelectorEvent.ContinueClicked -> onContinueClicked()
         }
     }
 
@@ -263,6 +273,10 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     }
 
     private fun onDeliveryOptionTimeClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked) {
+        // TODO: [Top] Implement
+    }
+
+    private fun onContinueClicked() {
         // TODO: [Top] Implement
     }
 
