@@ -18,10 +18,11 @@ internal data class ProductAvailabilityInStoreDto(
     val amount: AmountDto? = null,
 ) {
     fun toProductAvailabilityInStore(): ProductAvailabilityInStore {
-        checkPropertyNotNull(shop) { ::shop }
+        val store = shop?.toStore()
+        checkNotNull(store) { "store is null" }
         checkPropertyNotNull(amount) { ::amount }
         return ProductAvailabilityInStore(
-            store = shop.toStore(),
+            store = store,
             amount = amount.toAmount(),
         )
     }
@@ -49,25 +50,23 @@ internal data class ProductAvailabilityInStoreDto(
         @SerialName("lon")
         val lon: Double? = null,
     ) {
-        fun toStore(): Store {
-            checkPropertyNotNull(id) { ::id }
-            checkPropertyNotNull(name) { ::name }
-            checkPropertyNotNull(address) { ::address }
-            checkPropertyNotNull(schedule) { ::schedule }
-            checkPropertyNotNull(phone) { ::phone }
-            checkPropertyNotNull(lat) { ::lat }
-            checkPropertyNotNull(lon) { ::lon }
-            val location = Location(lat, lon)
-            return Store(
-                id = Store.Id(id),
-                name = name,
-                address = address,
-                phone = PhoneNumber.create(phone),
-                schedule = schedule,
-                location = location,
-                country = null, // Not provided
-                city = null, // Not provided
-            )
+        fun toStore(): Store? {
+            return if (id != null && name != null && address != null && lat != null && lon != null) {
+                val location = Location(lat, lon)
+                Store(
+                    id = Store.Id(id),
+                    name = name,
+                    address = address,
+                    phone = phone?.let { PhoneNumber.create(it) },
+                    schedule = schedule,
+                    location = location,
+                    country = null, // Not provided
+                    city = null, // Not provided
+                )
+            } else {
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to Store")
+                null
+            }
         }
     }
 
@@ -93,5 +92,9 @@ internal data class ProductAvailabilityInStoreDto(
 
             private const val TAG = "AmountDto"
         }
+    }
+
+    private companion object {
+        private const val TAG = "ProductAvailabilityInStoreDto"
     }
 }

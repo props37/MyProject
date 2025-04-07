@@ -49,7 +49,6 @@ internal data class PickupPointDetailedDto(
         checkPropertyNotNull(location) { ::location }
         checkPropertyNotNull(schedule) { ::schedule }
         checkPropertyNotNull(estimatedDelivery) { ::estimatedDelivery }
-        checkPropertyNotNull(availablePayments) { ::availablePayments }
         checkPropertyNotNull(shelfTime) { ::shelfTime }
         checkPropertyNotNull(levels) { ::levels }
         check(levels.isNotEmpty()) { "levels is empty" }
@@ -60,7 +59,9 @@ internal data class PickupPointDetailedDto(
             location = location.toLocation(),
             isFittingAvailable = isTryingAvailable ?: false,
             isPaymentByCardAvailable = isCardPaymentAvailable ?: false,
-            availablePaymentMethods = getAvailablePaymentMethods(availablePayments),
+            availablePaymentMethods = availablePayments
+                ?.let { getAvailablePaymentMethods(availablePayments) }
+                ?: emptySet(),
             schedule = schedule,
             expectedDeliveryDate = estimatedDelivery,
             shelfTimeInDays = shelfTime,

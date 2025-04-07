@@ -6,6 +6,7 @@ import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
+import timber.log.Timber
 import java.time.LocalDate
 
 @Serializable
@@ -23,9 +24,7 @@ internal data class LoyaltyProgramBonusHistoryDto(
         checkPropertyNotNull(items) { ::items }
         checkPropertyNotNull(itemCount) { ::itemCount }
         checkPropertyNotNull(pagination) { ::pagination }
-        val data = items.map {
-            it.toLoyaltyProgramBonusAction()
-        }
+        val data = items.mapNotNull { it.toLoyaltyProgramBonusAction() }
         return Page(
             data = data,
             paginationInfo = pagination.toPaginationInfo(itemCount),
@@ -49,32 +48,40 @@ internal data class LoyaltyProgramBonusHistoryDto(
         @SerialName("type")
         val type: Type? = null,
     ) {
-        fun toLoyaltyProgramBonusAction(): LoyaltyProgramBonusAction {
-            checkPropertyNotNull(bonusCount) { ::bonusCount }
-            checkPropertyNotNull(title) { ::title }
-            checkPropertyNotNull(type) { ::type }
-            val date = date
-                ?.takeIf { it.isNotBlank() }
-                ?.let { LocalDate.parse(it) }
-            val expirationDate = expirate
-                ?.takeIf { it.isNotBlank() }
-                ?.let { LocalDate.parse(it) }
-            return LoyaltyProgramBonusAction(
-                bonusCount = bonusCount,
-                title = title,
-                type = type.toLoyaltyProgramBonusActionType(),
-                date = date,
-                expirationDate = expirationDate,
-            )
+        fun toLoyaltyProgramBonusAction(): LoyaltyProgramBonusAction? {
+            val type = type?.toLoyaltyProgramBonusActionType()
+            return if (bonusCount != null && title != null && type != null) {
+                val date = date
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { LocalDate.parse(it) }
+                val expirationDate = expirate
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { LocalDate.parse(it) }
+                return LoyaltyProgramBonusAction(
+                    bonusCount = bonusCount,
+                    title = title,
+                    type = type,
+                    date = date,
+                    expirationDate = expirationDate,
+                )
+            } else {
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to LoyaltyProgramBonusAction")
+                null
+            }
         }
 
         @Serializable
         @JvmInline
         value class Type(private val value: String) {
-            fun toLoyaltyProgramBonusActionType(): LoyaltyProgramBonusAction.Type = when (value) {
-                EARNED -> LoyaltyProgramBonusAction.Type.EARNED
-                SPENT -> LoyaltyProgramBonusAction.Type.SPENT
-                else -> error("Unknown LoyaltyProgramBonusActionType $value")
+            fun toLoyaltyProgramBonusActionType(): LoyaltyProgramBonusAction.Type? {
+                return when (value) {
+                    EARNED -> LoyaltyProgramBonusAction.Type.EARNED
+                    SPENT -> LoyaltyProgramBonusAction.Type.SPENT
+                    else -> {
+                        Timber.tag(TAG).e("Unknown LoyaltyProgramBonusActionType $value")
+                        null
+                    }
+                }
             }
 
             companion object {
@@ -82,5 +89,9 @@ internal data class LoyaltyProgramBonusHistoryDto(
                 private const val SPENT = "charge-off"
             }
         }
+    }
+
+    private companion object {
+        private const val TAG = "LoyaltyProgramBonusHistoryDto"
     }
 }

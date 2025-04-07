@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.store.Store
-import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import timber.log.Timber
 
 @Serializable
 internal data class PickupStoreDto(
@@ -20,18 +20,21 @@ internal data class PickupStoreDto(
     @SerialName("available_items_ids")
     val availableItemIds: List<String>? = null,
 ) {
-    fun toPickupStore(): PickupStore {
-        checkPropertyNotNull(shop) { ::shop }
-        checkPropertyNotNull(itemCount) { ::itemCount }
-        checkPropertyNotNull(availableItemIds) { ::availableItemIds }
-        val availableItemIds = availableItemIds
-            .mapTo(mutableSetOf()) { ProductOffer.Id(it) }
-            .toSet()
-        return PickupStore(
-            store = shop.toStore(),
-            availableItemCount = itemCount,
-            availableItemIds = availableItemIds,
-        )
+    fun toPickupStore(): PickupStore? {
+        val store = shop?.toStore()
+        return if (store != null && itemCount != null && availableItemIds != null) {
+            val availableItemIds = availableItemIds
+                .mapTo(mutableSetOf()) { ProductOffer.Id(it) }
+                .toSet()
+            PickupStore(
+                store = store,
+                availableItemCount = itemCount,
+                availableItemIds = availableItemIds,
+            )
+        } else {
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to PickupStore")
+            null
+        }
     }
 
     @Serializable
@@ -60,25 +63,27 @@ internal data class PickupStoreDto(
         @SerialName("city")
         val city: String? = null,
     ) {
-        fun toStore(): Store {
-            checkPropertyNotNull(id) { ::id }
-            checkPropertyNotNull(name) { ::name }
-            checkPropertyNotNull(address) { ::address }
-            checkPropertyNotNull(schedule) { ::schedule }
-            checkPropertyNotNull(phone) { ::phone }
-            checkPropertyNotNull(lat) { ::lat }
-            checkPropertyNotNull(lon) { ::lon }
-            val location = Location(lat, lon)
-            return Store(
-                id = Store.Id(id),
-                name = name,
-                address = address,
-                phone = PhoneNumber.create(phone),
-                schedule = schedule,
-                location = location,
-                country = null, // Not provided
-                city = null, // Not provided
-            )
+        fun toStore(): Store? {
+            return if (id != null && name != null && address != null && lat != null && lon != null) {
+                val location = Location(lat, lon)
+                return Store(
+                    id = Store.Id(id),
+                    name = name,
+                    address = address,
+                    phone = phone?.let { PhoneNumber.create(it) },
+                    schedule = schedule,
+                    location = location,
+                    country = null, // Not provided
+                    city = null, // Not provided
+                )
+            } else {
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to Store")
+                null
+            }
         }
+    }
+
+    private companion object {
+        private const val TAG = "PickupStoreDto"
     }
 }

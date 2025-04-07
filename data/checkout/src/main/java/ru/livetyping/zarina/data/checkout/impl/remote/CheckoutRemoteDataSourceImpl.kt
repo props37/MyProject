@@ -29,7 +29,7 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
 
     override fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>> = flow {
         val dto = api.getPickupPoints(cityKladrId)
-        val pickupPoints = dto.map { it.toPickupPointShort() }
+        val pickupPoints = dto.mapNotNull { it.toPickupPointShort() }
         emit(pickupPoints)
     }
 
@@ -46,7 +46,7 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         deliveryMethodType: DeliveryMethodType
     ): Flow<List<PickupStore>> = flow {
         val dto = api.getPickupStores(cityKladrId, deliveryMethodType)
-        val stores = dto.map { it.toPickupStore() }
+        val stores = dto.mapNotNull { it.toPickupStore() }
         emit(stores)
     }
 

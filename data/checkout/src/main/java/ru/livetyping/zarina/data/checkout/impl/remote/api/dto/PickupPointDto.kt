@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
-import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import timber.log.Timber
 
 @Serializable
 internal data class PickupPointDto(
@@ -29,21 +29,23 @@ internal data class PickupPointDto(
     @SerialName("available_payments")
     val availablePaymentMethods: List<String>? = null,
 ) {
-    fun toPickupPointShort(): PickupPointShort {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(title) { ::title }
-        checkPropertyNotNull(address) { ::address }
-        checkPropertyNotNull(location) { ::location }
-        checkPropertyNotNull(availablePaymentMethods) { ::availablePaymentMethods }
-        return PickupPointShort(
-            id = PickupPoint.Id(id.toString()),
-            title = title,
-            address = address,
-            location = location.toLocation(),
-            isFittingAvailable = isTryingAvailable ?: false,
-            isPaymentByCardAvailable = isCardPaymentAvailable ?: false,
-            availablePaymentMethods = getAvailablePaymentMethods(availablePaymentMethods),
-        )
+    fun toPickupPointShort(): PickupPointShort? {
+        return if (id != null && title != null && address != null && location != null) {
+            PickupPointShort(
+                id = PickupPoint.Id(id.toString()),
+                title = title,
+                address = address,
+                location = location.toLocation(),
+                isFittingAvailable = isTryingAvailable ?: false,
+                isPaymentByCardAvailable = isCardPaymentAvailable ?: false,
+                availablePaymentMethods = availablePaymentMethods
+                    ?.let { getAvailablePaymentMethods(it) }
+                    ?: emptySet(),
+            )
+        } else {
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to PickupPointShort")
+            null
+        }
     }
 
     companion object {
@@ -59,5 +61,7 @@ internal data class PickupPointDto(
 
         private const val PAYMENT_METHOD_CASH = "наличными"
         private const val PAYMENT_METHOD_CARD = "банковской картой"
+
+        private const val TAG = "PickupPointDto"
     }
 }

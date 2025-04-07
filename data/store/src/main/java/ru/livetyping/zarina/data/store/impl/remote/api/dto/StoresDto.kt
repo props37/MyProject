@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import timber.log.Timber
 
 @Serializable
 internal data class StoresDto(
@@ -35,7 +36,7 @@ internal data class StoresDto(
     ) {
         fun getStores(country: String): List<Store> {
             checkPropertyNotNull(shops) { ::shops }
-            return shops.map { store ->
+            return shops.mapNotNull { store ->
                 checkPropertyNotNull(name) { ::name }
                 store.toStore(
                     cityKladrId = kladrId?.let { KladrId(it) },
@@ -68,24 +69,28 @@ internal data class StoresDto(
             @SerialName("lon")
             val lon: Double? = null,
         ) {
-            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): Store {
-                checkPropertyNotNull(id) { ::id }
-                checkPropertyNotNull(name) { ::name }
-                checkPropertyNotNull(address) { ::address }
-                checkPropertyNotNull(lat) { ::lat }
-                checkPropertyNotNull(lon) { ::lat }
-                val city = cityKladrId?.let { Store.City(cityKladrId, cityName) }
-                return Store(
-                    id = Store.Id(id),
-                    name = name,
-                    address = address,
-                    phone = phone?.let { PhoneNumber.create(it) },
-                    schedule = schedule,
-                    location = Location(lat, lon),
-                    country = country,
-                    city = city,
-                )
+            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): Store? {
+                return if (id != null && name != null && lat != null && lon != null) {
+                    val city = cityKladrId?.let { Store.City(cityKladrId, cityName) }
+                    Store(
+                        id = Store.Id(id),
+                        name = name,
+                        address = address.orEmpty(),
+                        phone = phone?.let { PhoneNumber.create(it) },
+                        schedule = schedule,
+                        location = Location(lat, lon),
+                        country = country,
+                        city = city,
+                    )
+                } else {
+                    Timber.tag(TAG).e("Ignore $this because it can't be mapped to Store")
+                    null
+                }
             }
         }
+    }
+
+    private companion object {
+        private const val TAG = "StoresDto"
     }
 }
