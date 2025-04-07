@@ -32,7 +32,7 @@ internal data class BannerContainerDto(
                 }
 
                 else -> {
-                    Timber.e("Unknown viewType $view")
+                    Timber.tag(TAG).e("Unknown viewType $view")
                     null
                 }
             }
