@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
@@ -27,4 +28,8 @@ public interface CheckoutRepository {
         cityKladrId: KladrId,
         deliveryMethodType: DeliveryMethodType,
     ): Flow<List<PickupStore>>
+
+    public fun getCourierDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>>
+
+    public fun getPostDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>>
 }

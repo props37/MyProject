@@ -5,6 +5,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailedDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
@@ -26,4 +27,8 @@ internal interface CheckoutApi {
         cityKladrId: KladrId,
         deliveryMethodType: DeliveryMethodType,
     ): List<PickupStoreDto>
+
+    suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto
+
+    suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto
 }

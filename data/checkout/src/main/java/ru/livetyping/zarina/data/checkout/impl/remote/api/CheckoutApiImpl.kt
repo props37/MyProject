@@ -13,6 +13,7 @@ import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryMethodDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryOptionsDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDetailedDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupStoreDto
@@ -56,6 +57,18 @@ internal class CheckoutApiImpl @Inject constructor(
         return httpClient.get("/api/v1/shipping-methods/shops") {
             parameter("city_kladr_id", cityKladrId.value)
             parameter("shipping", DeliveryMethodTypeDto.from(deliveryMethodType).value)
+        }.body()
+    }
+
+    override suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
+        return httpClient.get("/api/shipping-methods/express") {
+            parameter("address_kladr", buildingKladrId.value)
+        }.body()
+    }
+
+    override suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
+        return httpClient.get("/api/shipping-methods/post") {
+            parameter("address_kladr", buildingKladrId.value)
         }.body()
     }
 }
