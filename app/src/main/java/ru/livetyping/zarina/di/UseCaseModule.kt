@@ -38,10 +38,12 @@ import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
@@ -1061,6 +1063,28 @@ internal class UseCaseModule {
     ): GetStreetBuildingsFlowUseCase {
         return GetStreetBuildingsFlowUseCase.getInstance(
             geographyRepository = geographyRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCourierDeliveryOptionsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCourierDeliveryOptionsFlowUseCase {
+        return GetCourierDeliveryOptionsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPostDeliveryOptionsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetPostDeliveryOptionsFlowUseCase {
+        return GetPostDeliveryOptionsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
             logger = logger,
         )
     }
