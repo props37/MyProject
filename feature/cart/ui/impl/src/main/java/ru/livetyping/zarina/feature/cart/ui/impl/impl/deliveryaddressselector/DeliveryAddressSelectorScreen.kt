@@ -19,10 +19,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.GenericBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchModalBottomSheet
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.ui.DeliveryAddressSelector
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.ui.GenericModalBottomSheet
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
@@ -35,6 +37,7 @@ internal fun DeliveryAddressSelectorScreen(
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val deliveryAddressSelectorState by viewModel.deliveryAddressSelectorState.collectAsStateWithLifecycle()
     val addressSearchBottomSheetState by viewModel.addressSearchBottomSheetState.collectAsStateWithLifecycle()
+    val genericBottomSheetState by viewModel.genericBottomSheetState.collectAsStateWithLifecycle()
 
     ScreenContent(
         topBarState = topBarState,
@@ -43,6 +46,7 @@ internal fun DeliveryAddressSelectorScreen(
         onDeliveryAddressSelectorEvent = viewModel::onDeliveryAddressSelectorEvent,
         addressSearchBottomSheetState = addressSearchBottomSheetState,
         onAddressSearchEvent = viewModel::onAddressSearchEvent,
+        genericBottomSheetState = genericBottomSheetState,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -56,6 +60,7 @@ private fun ScreenContent(
     onDeliveryAddressSelectorEvent: (DeliveryAddressSelectorEvent) -> Unit,
     addressSearchBottomSheetState: AddressSearchBottomSheetState,
     onAddressSearchEvent: (AddressSearchEvent) -> Unit,
+    genericBottomSheetState: GenericBottomSheetState,
     sideEffects: Flow<DeliveryAddressSelectorSideEffect>,
     navActions: DeliveryAddressSelectorNavActions,
 ) {
@@ -67,6 +72,13 @@ private fun ScreenContent(
     AddressSearchModalBottomSheet(
         state = addressSearchBottomSheetState,
         onEvent = onAddressSearchEvent,
+    )
+
+    GenericModalBottomSheet(
+        state = genericBottomSheetState,
+        onClose = {
+            onDeliveryAddressSelectorEvent(DeliveryAddressSelectorEvent.GenericBottomSheetClosed)
+        },
     )
 
     Column(

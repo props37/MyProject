@@ -119,6 +119,7 @@
     <string name="res_address">Адрес</string>
     <string name="res_delivery_date">Дата доставки</string>
     <string name="res_delivery_time">Время доставки</string>
+    <string name="res_understood">Понятно</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

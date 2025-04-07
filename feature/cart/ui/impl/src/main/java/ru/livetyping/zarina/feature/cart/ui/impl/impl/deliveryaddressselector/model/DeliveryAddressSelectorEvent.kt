@@ -16,7 +16,12 @@ internal sealed interface DeliveryAddressSelectorEvent {
     data class DeliveryOptionTimeClicked(val deliveryOption: DeliveryOption) :
         DeliveryAddressSelectorEvent
 
+    data class ShowDeliveryOptionDetails(val deliveryOption: DeliveryOption) :
+        DeliveryAddressSelectorEvent
+
     data object ContinueClicked : DeliveryAddressSelectorEvent
 
     data object ErrorRefreshClicked : DeliveryAddressSelectorEvent
+
+    data object GenericBottomSheetClosed : DeliveryAddressSelectorEvent
 }

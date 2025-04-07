@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -33,6 +34,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.mo
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionsState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.GenericBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchType
@@ -40,6 +42,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEv
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class DeliveryAddressSelectorViewModel @Inject constructor(
@@ -195,6 +198,11 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
             initialValue = AddressSearchBottomSheetState.Hidden,
         )
 
+    private val _genericBottomSheetState =
+        MutableStateFlow<GenericBottomSheetState>(GenericBottomSheetState.Hidden)
+    val genericBottomSheetState: StateFlow<GenericBottomSheetState> =
+        _genericBottomSheetState.asStateFlow()
+
     fun onTopBarEvent(event: CheckoutTopBarEvent) {
         when (event) {
             CheckoutTopBarEvent.BackClicked -> onBackClicked()
@@ -224,11 +232,19 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
                 onDeliveryOptionTimeClicked(event)
             }
 
+            is DeliveryAddressSelectorEvent.ShowDeliveryOptionDetails -> {
+                onShowDeliveryOptionDetails(event)
+            }
+
+            DeliveryAddressSelectorEvent.ContinueClicked -> onContinueClicked()
+
             DeliveryAddressSelectorEvent.ErrorRefreshClicked -> {
                 deliveryOptionsRequester.request(DeliveryOptionsRequest)
             }
 
-            DeliveryAddressSelectorEvent.ContinueClicked -> onContinueClicked()
+            DeliveryAddressSelectorEvent.GenericBottomSheetClosed -> {
+                _genericBottomSheetState.value = GenericBottomSheetState.Hidden
+            }
         }
     }
 
@@ -274,6 +290,16 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
 
     private fun onDeliveryOptionTimeClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked) {
         // TODO: [Top] Implement
+    }
+
+    private fun onShowDeliveryOptionDetails(event: DeliveryAddressSelectorEvent.ShowDeliveryOptionDetails) {
+        val bottomSheetState = GenericBottomSheetState.Visible(
+            body = Text.String(event.deliveryOption.description),
+            buttonState = GenericBottomSheetState.ButtonState(
+                text = Text.Resource(RCommon.string.res_understood),
+            ),
+        )
+        _genericBottomSheetState.value = bottomSheetState
     }
 
     private fun onContinueClicked() {

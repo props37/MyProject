@@ -74,7 +74,7 @@ internal fun DeliveryAddressSelector(
                     onEvent(DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked(it))
                 },
                 onDeliveryOptionShowDetailsClicked = {
-                    // TODO: [Top] Implement
+                    onEvent(DeliveryAddressSelectorEvent.ShowDeliveryOptionDetails(it))
                 },
                 onErrorRefreshClicked = {
                     onEvent(DeliveryAddressSelectorEvent.ErrorRefreshClicked)
