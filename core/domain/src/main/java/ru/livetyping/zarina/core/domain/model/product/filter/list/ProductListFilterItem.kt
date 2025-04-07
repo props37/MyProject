@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.core.domain.model.product.filter.list
 
-// Marked as stable on config/compose/stability_config.txt
 public sealed class ProductListFilterItem {
     public abstract val id: Id
     public abstract val name: String

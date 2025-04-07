@@ -2,7 +2,6 @@ package ru.livetyping.zarina.core.domain.model.product
 
 import ru.livetyping.zarina.core.domain.model.media.Media
 
-// Marked as stable on config/compose/stability_config.txt
 public sealed class Product {
     public abstract val id: Id
     public abstract val name: String

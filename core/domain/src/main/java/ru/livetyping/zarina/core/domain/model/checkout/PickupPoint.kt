@@ -2,7 +2,6 @@ package ru.livetyping.zarina.core.domain.model.checkout
 
 import ru.livetyping.zarina.core.domain.model.common.Location
 
-// Marked as stable on config/compose/stability_config.txt
 public sealed class PickupPoint(
     public open val id: Id,
     public open val title: String,

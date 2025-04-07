@@ -37,7 +37,6 @@ ru.livetyping.zarina.core.domain.model.geo.Building
 ru.livetyping.zarina.core.domain.model.media.Media
 ru.livetyping.zarina.core.domain.model.media.MediaType
 
-ru.livetyping.zarina.core.domain.model.order.Order
 ru.livetyping.zarina.core.domain.model.order.Order.Id
 ru.livetyping.zarina.core.domain.model.order.Order.Number
 ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
@@ -58,7 +57,6 @@ ru.livetyping.zarina.core.domain.model.product.ProductPrice
 ru.livetyping.zarina.core.domain.model.product.ProductOffer
 ru.livetyping.zarina.core.domain.model.product.ProductColor
 ru.livetyping.zarina.core.domain.model.product.ProductColor.Id
-ru.livetyping.zarina.core.domain.model.product.Product
 ru.livetyping.zarina.core.domain.model.product.Product.Id
 ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 ru.livetyping.zarina.core.domain.model.product.ProductDetailed.Label
@@ -71,7 +69,6 @@ ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 ru.livetyping.zarina.core.domain.model.product.filter.ProductToggleFilter
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductColorFilterItem
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilter
-ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilterItem
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFilterItem.Id
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductMaterialFilterItem
 ru.livetyping.zarina.core.domain.model.product.filter.list.ProductPickupStoreFilterItem
@@ -118,7 +115,6 @@ ru.livetyping.zarina.core.domain.model.search.SearchSuggestions.Category
 ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
 ru.livetyping.zarina.core.domain.model.search.SearchResult
 
-ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 ru.livetyping.zarina.core.domain.model.checkout.PickupPoint.Id
 ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 ru.livetyping.zarina.core.domain.model.checkout.PickupStore
@@ -128,6 +124,14 @@ ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType
 ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.Id
 ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.DateTimePeriod
 ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.DateTimePeriod.Id
+ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed.DeliveryType.DateTimePeriod.Id
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod.Id
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption.Id
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption.DateTimePeriod
+ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption.DateTimePeriod.Id
 // :core:domain end
 
 

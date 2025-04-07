@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.domain.model.order
 import java.math.BigDecimal
 import java.time.LocalDate
 
-// Marked as stable on config/compose/stability_config.txt
 public sealed class Order {
     public abstract val id: Id
     public abstract val number: Number
