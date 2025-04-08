@@ -243,7 +243,6 @@ dependencies {
     implementation(projects.core.database)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
-    implementation(projects.core.sharedpreferences)
     implementation(projects.core.permission)
     implementation(projects.core.navigationUtil)
     implementation(projects.core.credential)
