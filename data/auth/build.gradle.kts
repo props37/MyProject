@@ -43,7 +43,7 @@ kotlin {
 
 dependencies {
     implementation(projects.core.domain)
-    implementation(projects.core.sharedpreferences)
+    implementation(projects.core.datastore)
     implementation(projects.core.network)
 
     implementation(libs.hilt)
