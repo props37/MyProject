@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -103,6 +104,12 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         }
     }
 
+    private val deliveryOptionsResultFlow = deliveryOptionsRequester.flow.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        replay = 1,
+    )
+
     private val selectedDeliveryOptionId = MutableStateFlow<DeliveryOption.Id?>(null)
 
     private val deliveryOptionToSelectedDateTimePeriod =
@@ -110,7 +117,7 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
 
     private val deliveryOptionsStateBuilder = DeliveryOptionsState.Builder()
     private val deliveryOptionsState = combine(
-        deliveryOptionsRequester.flow,
+        deliveryOptionsResultFlow,
         deliveryOptionsRequester.loadingState,
         selectedDeliveryOptionId,
         deliveryOptionToSelectedDateTimePeriod,
