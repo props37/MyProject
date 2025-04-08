@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
+// TODO: [Top] Remove since it is not working as expected when flowBuilder constructs Flow using reactive transformation
 public class FlowRequester<T, R : FlowRequest>(
     initialRequest: R? = null,
     flowBuilder: suspend FlowBuilderScope<R>.(R) -> Flow<T>,
