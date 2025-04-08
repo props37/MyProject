@@ -33,6 +33,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.component.AddressComponent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionDateTimeType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionsState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.GenericBottomSheetState
@@ -292,11 +293,33 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     }
 
     private fun onDeliveryOptionDateClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionDateClicked) {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val datePeriods = event.deliveryOption.dateTimePeriods.distinctBy { it.date }
+            val action = DeliveryAddressSelectorScreenAction.SelectDeliveryOptionDateTimeClicked(
+                type = DeliveryOptionDateTimeType.DATE,
+                deliveryOption = event.deliveryOption,
+                dateTimePeriods = datePeriods,
+            )
+            emitSideEffect(DeliveryAddressSelectorSideEffect.Navigate(action))
+        }
     }
 
     private fun onDeliveryOptionTimeClicked(event: DeliveryAddressSelectorEvent.DeliveryOptionTimeClicked) {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val option = event.deliveryOption
+            val selectedDateTimePeriod =
+                deliveryOptionToSelectedDateTimePeriod.value[option.id]
+                    ?: option.dateTimePeriods.first()
+            val timePeriods = option.dateTimePeriods.filter {
+                it.date == selectedDateTimePeriod.date
+            }
+            val action = DeliveryAddressSelectorScreenAction.SelectDeliveryOptionDateTimeClicked(
+                type = DeliveryOptionDateTimeType.TIME,
+                deliveryOption = event.deliveryOption,
+                dateTimePeriods = timePeriods,
+            )
+            emitSideEffect(DeliveryAddressSelectorSideEffect.Navigate(action))
+        }
     }
 
     private fun onShowDeliveryOptionDetails(event: DeliveryAddressSelectorEvent.ShowDeliveryOptionDetails) {

@@ -12,11 +12,16 @@ import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionDateTimeType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddressSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryOptionDateTimeSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
@@ -181,8 +186,24 @@ public class CartFeatureImpl : CartFeature {
             val deliveryAddressSelectorNavActions = DeliveryAddressSelectorNavActions(
                 onBackClicked = navigateBack,
                 onCloseClicked = closeCheckout,
+                onDeliveryOptionDateTimeClicked = { type, deliveryOption, dateTimePeriods ->
+                    val type = when (type) {
+                        DeliveryOptionDateTimeType.DATE -> DeliveryOptionDateTimeSelectorType.DATE
+                        DeliveryOptionDateTimeType.TIME -> DeliveryOptionDateTimeSelectorType.TIME
+                    }
+                    val deliveryOptionDateTimeSelectorNavEntry =
+                        DeliveryOptionDateTimeSelectorNavEntry.from(
+                            type = type,
+                            deliveryOption = deliveryOption,
+                            dateTimePeriods = dateTimePeriods,
+                        )
+                    navController.navigate(deliveryOptionDateTimeSelectorNavEntry)
+                },
             )
             deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
+
+            val deliveryOptionDateTimeSelectorNavActions = DeliveryOptionDateTimeSelectorNavActions()
+            deliveryOptionDateTimeSelectorScreen(deliveryOptionDateTimeSelectorNavActions)
         }
     }
 }

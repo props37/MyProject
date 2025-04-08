@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,9 +11,9 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavio
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
-internal fun DeliveryAddressSelectorScreenBehavior(
-    sideEffects: Flow<DeliveryAddressSelectorSideEffect>,
-    navActions: DeliveryAddressSelectorNavActions,
+internal fun DeliveryOptionDateTimeSelectorScreenBehavior(
+    sideEffects: Flow<DeliveryOptionDateTimeSelectorSideEffect>,
+    navActions: DeliveryOptionDateTimeSelectorNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
@@ -24,11 +24,11 @@ internal fun DeliveryAddressSelectorScreenBehavior(
         val job = lifecycleScope.launch {
             sideEffects.collect { sideEffect ->
                 when (sideEffect) {
-                    is DeliveryAddressSelectorSideEffect.Navigate -> {
+                    is DeliveryOptionDateTimeSelectorSideEffect.Navigate -> {
                         navigate(currentNavActions, sideEffect.action)
                     }
 
-                    is DeliveryAddressSelectorSideEffect.ShowZarinaToast -> {
+                    is DeliveryOptionDateTimeSelectorSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
                 }
@@ -42,18 +42,9 @@ internal fun DeliveryAddressSelectorScreenBehavior(
 }
 
 private fun navigate(
-    navActions: DeliveryAddressSelectorNavActions,
-    action: DeliveryAddressSelectorScreenAction,
+    navActions: DeliveryOptionDateTimeSelectorNavActions,
+    action: DeliveryOptionDateTimeSelectorScreenAction
 ) {
-    when (action) {
-        DeliveryAddressSelectorScreenAction.BackClicked -> navActions.onBackClicked()
-        DeliveryAddressSelectorScreenAction.CloseClicked -> navActions.onCloseClicked()
-        is DeliveryAddressSelectorScreenAction.SelectDeliveryOptionDateTimeClicked -> {
-            navActions.onDeliveryOptionDateTimeClicked(
-                action.type,
-                action.deliveryOption,
-                action.dateTimePeriods,
-            )
-        }
-    }
+    // TODO: [Top] Implement
+    TODO()
 }
