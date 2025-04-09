@@ -13,7 +13,7 @@ sealed class ZarinaBuildType(val name: String) {
 
     open val applicationName = APPLICATION_NAME
 
-    open val backendUrl = "https://zarina.ru"
+    open val backendUrl = "https://api.zarina.ru"
     open val mindboxEndpoint = "ZarinaAppAndroid"
     open val mindboxKey = "GvAwDWq8TZ8eRh340LsM"
     open val anyQueryKey = "L1WU1VJBYK"

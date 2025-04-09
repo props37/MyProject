@@ -2,7 +2,8 @@ package ru.livetyping.zarina.util.library.coroutines
 
 import kotlinx.coroutines.flow.SharingStarted
 
-private const val AndroidUiSubscriptionDelayMillis = 5000L
+// TODO: [Top] Temporary fix that allows to bypass FlowRequester bug
+private const val AndroidUiSubscriptionDelayMillis = Long.MAX_VALUE
 
 /**
  * UI specific version of [SharingStarted.WhileSubscribed] that is used to not cancel
