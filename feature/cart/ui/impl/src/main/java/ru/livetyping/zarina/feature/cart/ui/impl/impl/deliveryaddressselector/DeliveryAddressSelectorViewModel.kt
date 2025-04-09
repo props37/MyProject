@@ -4,8 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +20,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
@@ -25,6 +31,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
+import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -40,14 +47,16 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.mo
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchType
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorScreenResult
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
-import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 
-@HiltViewModel
-internal class DeliveryAddressSelectorViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = DeliveryAddressSelectorViewModel.Factory::class)
+internal class DeliveryAddressSelectorViewModel @AssistedInject constructor(
+    @Assisted
+    private val deliveryOptionDateTimeSelectorResultFlow: Flow<DeliveryOptionDateTimeSelectorScreenResult?>,
     savedStateHandle: SavedStateHandle,
     deps: DeliveryAddressSelectorDependencies,
 ) : ViewModel(), SideEffectSource<DeliveryAddressSelectorSideEffect> by SideEffectSourceImpl() {
@@ -61,6 +70,8 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
     )
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navEntry = savedStateHandle.toRoute<DeliveryAddressSelectorNavEntry>(
         typeMap = DeliveryAddressSelectorNavEntry.typeMap(),
@@ -152,6 +163,10 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         deliveryOptionsState = deliveryOptionsState.value,
         isContinueButtonVisible = false,
     )
+
+    init {
+        handleDeliveryOptionDateTimeSelectorResult(deliveryOptionDateTimeSelectorResultFlow)
+    }
 
     val deliveryAddressSelectorState: StateFlow<DeliveryAddressSelectorState> = combine(
         addressComponent.cityFlow,
@@ -344,7 +359,36 @@ internal class DeliveryAddressSelectorViewModel @Inject constructor(
         }
     }
 
+    private fun handleDeliveryOptionDateTimeSelectorResult(
+        resultFlow: Flow<DeliveryOptionDateTimeSelectorScreenResult?>,
+    ) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.DELIVERY_OPTION_DATE_TIME_SELECTOR_RESULT.key,
+            ) { result ->
+                val deliveryOptionId = result.getDeliveryOptionId()
+                deliveryOptionToSelectedDateTimePeriod.update {
+                    it + (deliveryOptionId to result.dateTimePeriod.toDateTimePeriod())
+                }
+            }
+        }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            deliveryOptionDateTimeSelectorResultFlow: Flow<DeliveryOptionDateTimeSelectorScreenResult?>,
+        ): DeliveryAddressSelectorViewModel
+    }
+
     private data object DeliveryOptionsRequest : FlowRequest
+
+    private enum class Keys {
+        DELIVERY_OPTION_DATE_TIME_SELECTOR_RESULT;
+
+        val key: String get() = name
+    }
 
     private companion object {
         private const val TAG = "DeliveryAddressSelectorViewModel"

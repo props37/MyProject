@@ -13,12 +13,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.model.DateTimeItem
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.model.DateTimeSelectorState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class DeliveryOptionDateTimeSelectorViewModel @Inject constructor(
@@ -75,7 +78,24 @@ internal class DeliveryOptionDateTimeSelectorViewModel @Inject constructor(
     }
 
     fun onContinueClicked() {
-        // TODO: [Top] Implement
+        val dateTimePeriod = dateTimePeriods.find {
+            it.id == selectedDateTimePeriodId.value
+        }
+
+        if (dateTimePeriod != null) {
+            navigationThrottler.throttle {
+                val action = DeliveryOptionDateTimeSelectorScreenAction.DateTimePeriodSelected(
+                    selectorType = selectorType,
+                    deliveryOptionId = deliveryOptionId,
+                    dateTimePeriod = dateTimePeriod,
+                )
+                emitSideEffect(DeliveryOptionDateTimeSelectorSideEffect.Navigate(action))
+            }
+        } else {
+            val messageText = Text.Resource(RCommon.string.res_something_went_wrong)
+            val message = ZarinaToastMessage.error(messageText)
+            emitSideEffect(DeliveryOptionDateTimeSelectorSideEffect.ShowZarinaToast(message))
+        }
     }
 
     private fun getDateTimeItems(

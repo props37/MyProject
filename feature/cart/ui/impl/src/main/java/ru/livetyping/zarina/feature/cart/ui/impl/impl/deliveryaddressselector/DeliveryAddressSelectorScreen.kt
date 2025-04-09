@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -32,7 +31,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarSt
 @Composable
 internal fun DeliveryAddressSelectorScreen(
     navActions: DeliveryAddressSelectorNavActions,
-    viewModel: DeliveryAddressSelectorViewModel = hiltViewModel(),
+    viewModel: DeliveryAddressSelectorViewModel,
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val deliveryAddressSelectorState by viewModel.deliveryAddressSelectorState.collectAsStateWithLifecycle()

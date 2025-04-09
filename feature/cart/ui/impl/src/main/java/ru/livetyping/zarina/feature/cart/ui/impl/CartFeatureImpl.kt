@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
+import ru.livetyping.zarina.core.uimodel.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.DeliveryAddressSelectorNavEntry
@@ -17,6 +18,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.Del
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.DeliveryMethodSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorScreenResult
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddressSelectorScreen
@@ -202,7 +204,21 @@ public class CartFeatureImpl : CartFeature {
             )
             deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
 
-            val deliveryOptionDateTimeSelectorNavActions = DeliveryOptionDateTimeSelectorNavActions()
+            val deliveryOptionDateTimeSelectorNavActions = DeliveryOptionDateTimeSelectorNavActions(
+                onBackClicked = navigateBack,
+                onDateTimePeriodSelected = { selectorType, deliveryOptionId, dateTimePeriod ->
+                    val dateTimePeriodParcelable =
+                        DeliveryOptionParcelable.DateTimePeriodParcelable.from(dateTimePeriod)
+                    val result = DeliveryOptionDateTimeSelectorScreenResult(
+                        selectorType = selectorType,
+                        deliveryOptionId = deliveryOptionId.value,
+                        dateTimePeriod = dateTimePeriodParcelable,
+                    )
+                    navController.navigateUp()
+                    navController.currentBackStackEntry?.savedStateHandle
+                        ?.set(DeliveryOptionDateTimeSelectorScreenResult.KEY, result)
+                },
+            )
             deliveryOptionDateTimeSelectorScreen(deliveryOptionDateTimeSelectorNavActions)
         }
     }

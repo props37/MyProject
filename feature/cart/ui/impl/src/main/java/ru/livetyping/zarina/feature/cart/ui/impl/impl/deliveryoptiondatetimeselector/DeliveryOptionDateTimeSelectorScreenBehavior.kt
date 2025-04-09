@@ -43,8 +43,16 @@ internal fun DeliveryOptionDateTimeSelectorScreenBehavior(
 
 private fun navigate(
     navActions: DeliveryOptionDateTimeSelectorNavActions,
-    action: DeliveryOptionDateTimeSelectorScreenAction
+    action: DeliveryOptionDateTimeSelectorScreenAction,
 ) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        DeliveryOptionDateTimeSelectorScreenAction.BackClicked -> navActions.onBackClicked()
+        is DeliveryOptionDateTimeSelectorScreenAction.DateTimePeriodSelected -> {
+            navActions.onDateTimePeriodSelected(
+                action.selectorType,
+                action.deliveryOptionId,
+                action.dateTimePeriod,
+            )
+        }
+    }
 }
