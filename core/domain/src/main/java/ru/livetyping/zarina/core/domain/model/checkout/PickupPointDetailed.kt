@@ -15,15 +15,7 @@ public data class PickupPointDetailed(
     val expectedDeliveryDate: String,
     val shelfTimeInDays: Int,
     val deliveryTypes: List<DeliveryType>,
-) : PickupPoint(
-    id = id,
-    title = title,
-    address = address,
-    location = location,
-    isFittingAvailable = isFittingAvailable,
-    isPaymentByCardAvailable = isPaymentByCardAvailable,
-    availablePaymentMethods = availablePaymentMethods,
-) {
+) : PickupPoint() {
     // Marked as stable on config/compose/stability_config.txt
     public data class DeliveryType(
         val id: Id,
