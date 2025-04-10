@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -41,11 +39,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.jetpack.credentials)
-    implementation(libs.jetpack.credentials.compat)
-
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    api(libs.jetpack.credentials)
+    api(libs.jetpack.credentials.compat)
 
     implementation(libs.timber)
 

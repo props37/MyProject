@@ -23,32 +23,27 @@
           {
             "fieldPath": "phone",
             "columnName": "user_phone",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "firstName",
             "columnName": "user_first_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "lastName",
             "columnName": "user_last_name",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "birthDate",
             "columnName": "user_birth_date",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "gender",
             "columnName": "user_gender",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "notificationSettings.receiveSms",
@@ -68,9 +63,7 @@
           "columnNames": [
             "user_id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "search_history_query",
@@ -107,11 +100,9 @@
             ],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_search_history_query_search_history_query_timestamp_millis` ON `${TABLE_NAME}` (`search_history_query_timestamp_millis` DESC)"
           }
-        ],
-        "foreignKeys": []
+        ]
       }
     ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7171131f22aa96fac087d89e095376f')"

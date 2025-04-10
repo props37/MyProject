@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+class NetworkModuleOld {
 
     @Provides
     @Singleton

@@ -12,19 +12,14 @@ import androidx.activity.result.ActivityResultRegistry
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.livetyping.zarina.core.googleplayservices.impl.BundleCompat
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever.Listener
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
 
-internal class SmsCodeRetrieverImpl @Inject constructor(
-    @ApplicationContext
-    private val context: Context,
-) : SmsCodeRetriever {
+internal class SmsCodeRetrieverImpl(private val context: Context) : SmsCodeRetriever {
     private val activityResultRegistryRef = AtomicReference<ActivityResultRegistry?>(null)
 
     private val listeners = mutableListOf<Listener>()

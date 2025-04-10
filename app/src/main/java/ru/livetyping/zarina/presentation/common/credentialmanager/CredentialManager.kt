@@ -18,8 +18,9 @@ import javax.inject.Inject
 class CredentialManager @Inject constructor(
     @ApplicationContext
     private val context: Context,
-    private val credentialManagerImpl: CredentialManager,
 ) {
+    private val credentialManagerImpl: CredentialManager = CredentialManager.create(context)
+
     suspend fun createCredential(username: String, password: String): CredentialCreationResult {
         return try {
             val request = CreatePasswordRequest(id = username, password = password)

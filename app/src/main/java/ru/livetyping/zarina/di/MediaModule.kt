@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.media.di
+package ru.livetyping.zarina.di
 
 import android.content.Context
 import androidx.annotation.OptIn
@@ -10,21 +10,20 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.livetyping.zarina.core.media.impl.getCache
-import ru.livetyping.zarina.core.media.impl.getCacheDataSourceFactory
+import ru.livetyping.zarina.core.media.CacheCreator
+import ru.livetyping.zarina.core.media.CacheDataSourceFactoryCreator
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal class MediaModule {
-
+class MediaModule {
     @OptIn(UnstableApi::class)
     @Provides
     @Singleton
     fun provideCacheDataSourceFactory(
         cache: Cache,
     ): CacheDataSource.Factory {
-        return getCacheDataSourceFactory(cache)
+        return CacheDataSourceFactoryCreator.create(cache)
     }
 
     @OptIn(UnstableApi::class)
@@ -34,6 +33,6 @@ internal class MediaModule {
         @ApplicationContext
         context: Context,
     ): Cache {
-        return getCache(context)
+        return CacheCreator.create(context)
     }
 }

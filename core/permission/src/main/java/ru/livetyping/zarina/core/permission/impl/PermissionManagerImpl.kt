@@ -12,10 +12,9 @@ import ru.livetyping.zarina.core.permission.PermissionState
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
-import javax.inject.Inject
 import kotlin.coroutines.resume
 
-internal class PermissionManagerImpl @Inject constructor() : PermissionManager {
+internal class PermissionManagerImpl : PermissionManager {
     private var activityRef = AtomicReference<ComponentActivity?>(null)
 
     override fun isPermissionGranted(permission: String): Boolean {
