@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -45,9 +43,6 @@ dependencies {
     api(libs.kotlin.coroutines.googlePlayServices)
     implementation(libs.jetpack.activity)
     implementation(libs.googlePlayServices.auth.api.phone)
-
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
 
     implementation(libs.timber)
 
