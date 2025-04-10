@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.permission
 
 import androidx.activity.ComponentActivity
+import ru.livetyping.zarina.core.permission.impl.PermissionManagerImpl
 
 public interface PermissionManager {
     public fun isPermissionGranted(permission: String): Boolean
@@ -37,4 +38,8 @@ public interface PermissionManager {
      * @see [unsetActivity]
      */
     public fun release()
+
+    public companion object {
+        public fun createInstance(): PermissionManager = PermissionManagerImpl()
+    }
 }
