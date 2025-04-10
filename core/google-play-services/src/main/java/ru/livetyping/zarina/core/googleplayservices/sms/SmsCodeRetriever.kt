@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.core.googleplayservices.sms
 
+import android.content.Context
 import androidx.activity.result.ActivityResultRegistry
+import ru.livetyping.zarina.core.googleplayservices.impl.sms.SmsCodeRetrieverImpl
 
 public interface SmsCodeRetriever {
     public fun start(sender: String, codeRegexPattern: String)
@@ -19,5 +21,11 @@ public interface SmsCodeRetriever {
 
     public fun interface Listener {
         public fun onCodeReceived(code: String)
+    }
+
+    public companion object {
+        public fun createInstance(context: Context): SmsCodeRetriever {
+            return SmsCodeRetrieverImpl(context)
+        }
     }
 }
