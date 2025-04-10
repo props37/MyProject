@@ -41,7 +41,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(projects.core.analytics.api)
+    api(projects.core.analytics.api)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
