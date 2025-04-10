@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector
 
+import ru.livetyping.zarina.core.domain.model.checkout.CheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionDateTimeType
 
@@ -12,5 +13,10 @@ internal sealed interface DeliveryAddressSelectorScreenAction {
         val type: DeliveryOptionDateTimeType,
         val deliveryOption: DeliveryOption,
         val dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
+    ) : DeliveryAddressSelectorScreenAction
+
+    data class ContinueClicked(
+        val currentCheckoutStep: Int,
+        val checkoutParams: CheckoutParams,
     ) : DeliveryAddressSelectorScreenAction
 }

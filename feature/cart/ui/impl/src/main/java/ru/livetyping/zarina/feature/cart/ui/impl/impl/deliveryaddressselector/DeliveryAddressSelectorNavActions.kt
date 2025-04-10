@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector
 
+import ru.livetyping.zarina.core.domain.model.checkout.CheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.core.navigation.NavigationActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionDateTimeType
@@ -11,5 +12,9 @@ internal class DeliveryAddressSelectorNavActions(
         type: DeliveryOptionDateTimeType,
         deliveryOption: DeliveryOption,
         dateTimePeriods: List<DeliveryOption.DateTimePeriod>,
+    ) -> Unit,
+    val onContinueClicked: (
+        currentCheckoutStep: Int,
+        checkoutParams: CheckoutParams,
     ) -> Unit,
 ) : NavigationActions

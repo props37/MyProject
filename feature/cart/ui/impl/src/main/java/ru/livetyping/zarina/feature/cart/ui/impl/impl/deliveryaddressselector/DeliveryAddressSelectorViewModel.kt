@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -27,9 +28,11 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.model.checkout.CourierDeliveryCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
+import ru.livetyping.zarina.core.domain.model.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
@@ -353,7 +356,46 @@ internal class DeliveryAddressSelectorViewModel @AssistedInject constructor(
     }
 
     private fun onContinueClicked() {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val address = addressComponent.currentAddress.firstOrNull()
+                val selectedDeliveryOption = deliveryOptionsState.value.findSelectedDeliveryOption()
+
+                if (address != null && selectedDeliveryOption != null) {
+                    val cartType = navEntry.cartType.toCartType()
+                    val deliveryMethod = navEntry.deliveryMethod.toDeliveryMethod()
+                    val recipient = navEntry.recipient.toRecipient()
+                    val checkoutParams = when (deliveryType) {
+                        DeliveryType.COURIER -> {
+                            CourierDeliveryCheckoutParams(
+                                cartType = cartType,
+                                deliveryMethod = deliveryMethod,
+                                recipient = recipient,
+                                address = address,
+                                deliveryOption = selectedDeliveryOption.deliveryOption,
+                                dateTimePeriod = selectedDeliveryOption.selectedDateTimePeriod,
+                            )
+                        }
+
+                        DeliveryType.POST -> {
+                            PostDeliveryCheckoutParams(
+                                cartType = cartType,
+                                deliveryMethod = deliveryMethod,
+                                recipient = recipient,
+                                address = address,
+                                deliveryOption = selectedDeliveryOption.deliveryOption,
+                                dateTimePeriod = selectedDeliveryOption.selectedDateTimePeriod,
+                            )
+                        }
+                    }
+                    val action = DeliveryAddressSelectorScreenAction.ContinueClicked(
+                        currentCheckoutStep = navEntry.checkoutStep,
+                        checkoutParams = checkoutParams,
+                    )
+                    emitSideEffect(DeliveryAddressSelectorSideEffect.Navigate(action))
+                }
+            }
+        }
     }
 
     private fun getDeliveryType(deliveryMethod: DeliveryMethod): DeliveryType {

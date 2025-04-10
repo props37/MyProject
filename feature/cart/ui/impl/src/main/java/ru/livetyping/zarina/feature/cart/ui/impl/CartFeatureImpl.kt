@@ -201,6 +201,9 @@ public class CartFeatureImpl : CartFeature {
                         )
                     navController.navigate(deliveryOptionDateTimeSelectorNavEntry)
                 },
+                onContinueClicked = { currentStep, checkoutParams ->
+                    // TODO: [Top] Implement
+                },
             )
             deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
 

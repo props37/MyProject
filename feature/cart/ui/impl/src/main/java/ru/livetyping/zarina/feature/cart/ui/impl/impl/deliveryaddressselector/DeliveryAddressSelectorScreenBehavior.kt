@@ -55,5 +55,9 @@ private fun navigate(
                 action.dateTimePeriods,
             )
         }
+
+        is DeliveryAddressSelectorScreenAction.ContinueClicked -> {
+            navActions.onContinueClicked(action.currentCheckoutStep, action.checkoutParams)
+        }
     }
 }
