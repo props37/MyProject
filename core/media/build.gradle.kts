@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -42,9 +40,6 @@ kotlin {
 
 dependencies {
     api(libs.jetpack.media3.exoplayer)
-
-    implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
