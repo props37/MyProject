@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -96,24 +97,28 @@ internal class DeliveryAddressSelectorViewModel @AssistedInject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val deliveryOptionsRequester = FlowRequester(DeliveryOptionsRequest) {
-        addressComponent.currentAddress.flatMapLatest { address ->
-            if (address?.building != null) {
-                markAsLoading(DeliveryOptionsRequest)
-                when (deliveryType) {
-                    DeliveryType.COURIER -> {
-                        val params = GetCourierDeliveryOptionsFlowUseCase.Params(address.building.id)
-                        deps.getCourierDeliveryOptionsFlow(params)
-                    }
+        addressComponent.currentAddress
+            .distinctUntilChangedBy { it?.building }
+            .flatMapLatest { address ->
+                if (address?.building != null) {
+                    markAsLoading(DeliveryOptionsRequest)
+                    when (deliveryType) {
+                        DeliveryType.COURIER -> {
+                            val params =
+                                GetCourierDeliveryOptionsFlowUseCase.Params(address.building.id)
+                            deps.getCourierDeliveryOptionsFlow(params)
+                        }
 
-                    DeliveryType.POST -> {
-                        val params = GetPostDeliveryOptionsFlowUseCase.Params(address.building.id)
-                        deps.getPostDeliveryOptionsFlow(params)
+                        DeliveryType.POST -> {
+                            val params =
+                                GetPostDeliveryOptionsFlowUseCase.Params(address.building.id)
+                            deps.getPostDeliveryOptionsFlow(params)
+                        }
                     }
+                } else {
+                    flowOf(null)
                 }
-            } else {
-                flowOf(null)
             }
-        }
     }
 
     private val deliveryOptionsResultFlow = deliveryOptionsRequester.flow.shareIn(
