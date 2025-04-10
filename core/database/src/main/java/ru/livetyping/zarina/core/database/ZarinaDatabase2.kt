@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.database.impl.database
+package ru.livetyping.zarina.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -11,7 +11,11 @@ import ru.livetyping.zarina.core.database.user.UserEntity
     version = 2,
     entities = [UserEntity::class, SearchHistoryQueryEntity::class],
 )
-internal abstract class ZarinaDatabase2 : RoomDatabase() {
-    abstract fun getUserDao(): UserDao
-    abstract fun getSearchHistoryQueryDao(): SearchHistoryQueryDao
+public abstract class ZarinaDatabase2 : RoomDatabase() {
+    public abstract fun getUserDao(): UserDao
+    public abstract fun getSearchHistoryQueryDao(): SearchHistoryQueryDao
+
+    public companion object {
+        public const val DATABASE_NAME: String = "zarina_database_2"
+    }
 }
