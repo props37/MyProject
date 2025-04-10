@@ -4,7 +4,6 @@ import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
@@ -71,11 +71,10 @@ class AppViewModel @Inject constructor(
         )
 
     @OptIn(UnstableApi::class)
-    val exoPlayerCache: Cache = deps.exoPlayerCache
-
-    @OptIn(UnstableApi::class)
     val exoPlayerCacheDataSourceFactory: CacheDataSource.Factory =
         deps.exoPlayerCacheDataSourceFactory
+
+    val appMetrica: AppMetrica = deps.appMetrica
 
     private val bearerTokensFlow = deps.getBearerTokensFlow()
         .map { it.getOrNull() }
