@@ -241,6 +241,7 @@ dependencies {
     implementation(projects.core.buildUtil)
     implementation(projects.core.network)
     implementation(projects.core.database)
+    implementation(projects.core.datastore)
     implementation(projects.core.uiCompose)
     implementation(projects.core.uiKit)
     implementation(projects.core.permission)
