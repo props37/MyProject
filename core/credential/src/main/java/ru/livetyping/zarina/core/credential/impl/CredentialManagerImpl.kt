@@ -10,16 +10,13 @@ import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.livetyping.zarina.core.credential.CredentialCreationResult
 import ru.livetyping.zarina.core.credential.CredentialFetchingResult
 import ru.livetyping.zarina.core.credential.CredentialManager
 import timber.log.Timber
-import javax.inject.Inject
 import androidx.credentials.CredentialManager as JetpackCredentialManager
 
-internal class CredentialManagerImpl @Inject constructor(
-    @ApplicationContext
+internal class CredentialManagerImpl(
     private val context: Context,
     private val jetpackCredentialManager: JetpackCredentialManager,
 ) : CredentialManager {
