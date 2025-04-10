@@ -24,11 +24,14 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddressSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryOptionDateTimeSelectorScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.orderPlacingScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupPointScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupStoreScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickupstoreselector.PickupStoreSelectorNavActions
@@ -156,7 +159,11 @@ public class CartFeatureImpl : CartFeature {
             val selectedPickupStoreNavActions = SelectedPickupStoreNavActions(
                 onBackClicked = navigateBack,
                 onContinueClicked = { currentStep, checkoutParams ->
-                    // TODO: [Top] Implement
+                    val orderPlacingNavEntry = OrderPlacingNavEntry.from(
+                        checkoutStep = currentStep + 1,
+                        checkoutParams = checkoutParams,
+                    )
+                    navController.navigate(orderPlacingNavEntry)
                 },
             )
             selectedPickupStoreScreen(selectedPickupStoreNavActions)
@@ -180,7 +187,11 @@ public class CartFeatureImpl : CartFeature {
             val selectedPickupPointNavActions = SelectedPickupPointNavActions(
                 onBackClicked = navigateBack,
                 onContinueClicked = { currentStep, checkoutParams ->
-                    // TODO: [Top] Implement
+                    val orderPlacingNavEntry = OrderPlacingNavEntry.from(
+                        checkoutStep = currentStep + 1,
+                        checkoutParams = checkoutParams,
+                    )
+                    navController.navigate(orderPlacingNavEntry)
                 },
             )
             selectedPickupPointScreen(selectedPickupPointNavActions)
@@ -202,7 +213,11 @@ public class CartFeatureImpl : CartFeature {
                     navController.navigate(deliveryOptionDateTimeSelectorNavEntry)
                 },
                 onContinueClicked = { currentStep, checkoutParams ->
-                    // TODO: [Top] Implement
+                    val orderPlacingNavEntry = OrderPlacingNavEntry.from(
+                        checkoutStep = currentStep + 1,
+                        checkoutParams = checkoutParams,
+                    )
+                    navController.navigate(orderPlacingNavEntry)
                 },
             )
             deliveryAddressSelectorScreen(deliveryAddressSelectorNavActions)
@@ -223,6 +238,9 @@ public class CartFeatureImpl : CartFeature {
                 },
             )
             deliveryOptionDateTimeSelectorScreen(deliveryOptionDateTimeSelectorNavActions)
+
+            val orderPlacingNavActions = OrderPlacingNavActions()
+            orderPlacingScreen(orderPlacingNavActions)
         }
     }
 }
