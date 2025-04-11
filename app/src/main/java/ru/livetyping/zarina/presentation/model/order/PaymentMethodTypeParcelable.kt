@@ -4,6 +4,7 @@ import ru.livetyping.zarina.domain.order.PaymentMethodType
 
 enum class PaymentMethodTypeParcelable {
     SBER,
+    SBER_SBP,
     POSTPAID,
     PAYTURE_IN_PAY,
     PAYTURE_WALLET,
@@ -15,6 +16,7 @@ enum class PaymentMethodTypeParcelable {
 
     fun toPaymentMethodType(): PaymentMethodType = when (this) {
         SBER -> PaymentMethodType.SBER
+        SBER_SBP -> PaymentMethodType.SBER_SBP
         POSTPAID -> PaymentMethodType.POSTPAID
         PAYTURE_IN_PAY -> PaymentMethodType.PAYTURE_IN_PAY
         PAYTURE_WALLET -> PaymentMethodType.PAYTURE_WALLET
@@ -28,6 +30,7 @@ enum class PaymentMethodTypeParcelable {
     companion object {
         fun from(type: PaymentMethodType): PaymentMethodTypeParcelable = when (type) {
             PaymentMethodType.SBER -> SBER
+            PaymentMethodType.SBER_SBP -> SBER_SBP
             PaymentMethodType.POSTPAID -> POSTPAID
             PaymentMethodType.PAYTURE_IN_PAY -> PAYTURE_IN_PAY
             PaymentMethodType.PAYTURE_WALLET -> PAYTURE_WALLET
