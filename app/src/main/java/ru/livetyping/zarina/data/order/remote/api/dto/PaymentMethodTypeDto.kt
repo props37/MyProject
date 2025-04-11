@@ -9,6 +9,7 @@ import timber.log.Timber
 value class PaymentMethodTypeDto(val value: String) {
     fun toPaymentMethodType(): PaymentMethodType? = when (value) {
         VALUE_SBER -> PaymentMethodType.SBER
+        VALUE_SBER_SBP -> PaymentMethodType.SBER_SBP
         VALUE_POSTPAID -> PaymentMethodType.POSTPAID
         VALUE_PAYTURE_IN_PAY -> PaymentMethodType.PAYTURE_IN_PAY
         VALUE_PAYTURE_WALLET -> PaymentMethodType.PAYTURE_WALLET
@@ -27,6 +28,7 @@ value class PaymentMethodTypeDto(val value: String) {
         fun from(paymentMethodType: PaymentMethodType): PaymentMethodTypeDto {
             val value = when (paymentMethodType) {
                 PaymentMethodType.SBER -> VALUE_SBER
+                PaymentMethodType.SBER_SBP -> VALUE_SBER_SBP
                 PaymentMethodType.POSTPAID -> VALUE_POSTPAID
                 PaymentMethodType.PAYTURE_IN_PAY -> VALUE_PAYTURE_IN_PAY
                 PaymentMethodType.PAYTURE_WALLET -> VALUE_PAYTURE_WALLET
@@ -40,6 +42,7 @@ value class PaymentMethodTypeDto(val value: String) {
         }
 
         private const val VALUE_SBER = "sber"
+        private const val VALUE_SBER_SBP = "sbersbp"
         private const val VALUE_POSTPAID = "postpaid"
         private const val VALUE_PAYTURE_IN_PAY = "paytureinpay"
         private const val VALUE_PAYTURE_WALLET = "payturewallet"

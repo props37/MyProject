@@ -58,7 +58,7 @@ class CheckoutUseCase @Inject constructor(
                     )
                 }
 
-                PaymentMethodType.QR, PaymentMethodType.PODELI -> {
+                PaymentMethodType.SBER_SBP, PaymentMethodType.QR, PaymentMethodType.PODELI -> {
                     checkoutWithOptionalPayment(
                         cart = cart,
                         paymentMethod = paymentMethod,
