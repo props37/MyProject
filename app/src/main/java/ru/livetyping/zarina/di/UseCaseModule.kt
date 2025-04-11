@@ -103,7 +103,7 @@ import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageF
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
-import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentFlowUseCase
+import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentUseCase
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -193,11 +193,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetHomeContentFlowUseCase(
+    fun provideGetHomeContentUseCase(
         homeContentRepository: HomeContentRepository,
         logger: UseCaseLogger,
-    ): GetHomeContentFlowUseCase {
-        return GetHomeContentFlowUseCase.getInstance(
+    ): GetHomeContentUseCase {
+        return GetHomeContentUseCase.getInstance(
             homeContentRepository = homeContentRepository,
             logger = logger,
         )

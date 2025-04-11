@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,16 +13,15 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -37,6 +37,10 @@ internal class HomeViewModel @Inject constructor(
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
+    private val operationTracker = OperationTracker()
+
+    private var homeContentJob: Job? = null
+
     private val genders = GenderTab.getTabs().toImmutableList()
     private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
 
@@ -50,20 +54,27 @@ internal class HomeViewModel @Inject constructor(
         )
     }
 
-    private val homeContentRequester = FlowRequester(HomeContentRequest.LOADING) {
-        deps.getHomeContentFlow()
-    }
+    private val homeContentResult = MutableStateFlow<Result<HomeContent>?>(null)
 
+    private val homeContentStateBuilder = HomeContentState.Builder()
     val homeContentState: StateFlow<HomeContentState> = combine(
-        homeContentRequester.flow,
-        homeContentRequester.loadingState,
-    ) { result, loadingState ->
-        createHomeContentState(result, loadingState)
+        homeContentResult,
+        operationTracker.ongoingOperationKeys,
+    ) { result, ongoingOperations ->
+        homeContentStateBuilder.build(
+            result = result,
+            isLoading = HomeContentRequest.LOADING in ongoingOperations,
+            isRefreshing = HomeContentRequest.REFRESHING in ongoingOperations,
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = HomeContentState.Loading,
     )
+
+    init {
+        fetchHomeContent(HomeContentRequest.LOADING)
+    }
 
     fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
         when (event) {
@@ -89,12 +100,17 @@ internal class HomeViewModel @Inject constructor(
                 }
             }
 
-            HomeContentEvent.RefreshTriggered -> {
-                homeContentRequester.request(HomeContentRequest.REFRESHING)
-            }
+            HomeContentEvent.RefreshTriggered -> fetchHomeContent(HomeContentRequest.REFRESHING)
+            HomeContentEvent.ErrorRefreshClicked -> fetchHomeContent(HomeContentRequest.LOADING)
+        }
+    }
 
-            HomeContentEvent.ErrorRefreshClicked -> {
-                homeContentRequester.request(HomeContentRequest.LOADING)
+    private fun fetchHomeContent(request: HomeContentRequest) {
+        if (homeContentJob?.isActive == true) return
+
+        homeContentJob = viewModelScope.launch {
+            operationTracker.track(request) {
+                homeContentResult.value = deps.getHomeContent()
             }
         }
     }
@@ -107,28 +123,5 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun createHomeContentState(
-        result: Result<HomeContent>,
-        loadingState: FlowRequester.LoadingState,
-    ): HomeContentState {
-        val isLoading =
-            loadingState.isLoading() && loadingState.loadingRequest == HomeContentRequest.LOADING
-        return if (isLoading) {
-            HomeContentState.Loading
-        } else {
-            result.fold(
-                onSuccess = { homeContent ->
-                    val isRefreshing = loadingState.isLoading()
-                            && loadingState.loadingRequest == HomeContentRequest.REFRESHING
-                    HomeContentState.Success(homeContent, isRefreshing)
-                },
-                onFailure = { t ->
-                    val errorState = ZarinaErrorScreenState.from(t)
-                    HomeContentState.Error(errorState)
-                },
-            )
-        }
-    }
-
-    private enum class HomeContentRequest : FlowRequest { LOADING, REFRESHING }
+    private enum class HomeContentRequest : OperationKey { LOADING, REFRESHING }
 }

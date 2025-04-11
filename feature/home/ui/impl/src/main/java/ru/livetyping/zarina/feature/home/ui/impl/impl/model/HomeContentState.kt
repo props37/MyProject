@@ -23,4 +23,26 @@ internal sealed class HomeContentState {
     data class Error(val state: ZarinaErrorScreenState) : HomeContentState() {
         override val isRefreshing = false
     }
+
+    class Builder {
+        fun build(
+            result: Result<HomeContent>?,
+            isLoading: Boolean,
+            isRefreshing: Boolean,
+        ): HomeContentState {
+            return if (isLoading || result == null) {
+                Loading
+            } else {
+                result.fold(
+                    onSuccess = { homeContent ->
+                        Success(homeContent, isRefreshing)
+                    },
+                    onFailure = { t ->
+                        val errorState = ZarinaErrorScreenState.from(t)
+                        Error(errorState)
+                    },
+                )
+            }
+        }
+    }
 }
