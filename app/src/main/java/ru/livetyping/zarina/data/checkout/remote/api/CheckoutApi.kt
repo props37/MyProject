@@ -206,9 +206,12 @@ class CheckoutApi @Inject constructor(
         paymentMethodType: PaymentMethodType,
     ) {
         when (paymentMethodType) {
+            PaymentMethodType.SBER, PaymentMethodType.SBER_SBP -> {
+                updateOrderSberPaymentState(orderId)
+            }
+
             PaymentMethodType.PAYTURE_WALLET -> updateOrderPaytureWalletPaymentState(orderId)
             PaymentMethodType.PAYTURE_IN_PAY -> updateOrderPaytureInPayPaymentState(orderId)
-            PaymentMethodType.SBER -> updateOrderSberPaymentState(orderId)
             PaymentMethodType.QR -> updateOrderQrPaymentState(orderId)
             PaymentMethodType.PODELI -> updateOrderPodeliPaymentState(orderId)
             else -> error("Unsupported payment method type $paymentMethodType")
