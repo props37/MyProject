@@ -2,12 +2,14 @@ package ru.livetyping.zarina.core.domain.model.checkout
 
 // Marked as stable on config/compose/stability_config.txt
 public enum class PaymentMethodType {
-    POSTPAID,
+    SBER,
+    SBER_SBP,
     PAYTURE_IN_PAY,
     PAYTURE_WALLET,
-    QR,
+    SBP, // qr on backend
     PODELI,
     PREPAID,
+    POSTPAID,
     GIFT_CERTIFICATE,
     FREE,
 }
