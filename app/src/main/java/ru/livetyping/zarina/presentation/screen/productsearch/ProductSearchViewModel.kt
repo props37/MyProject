@@ -134,7 +134,9 @@ class ProductSearchViewModel @AssistedInject constructor(
         ) { result ->
             result?.fold(
                 onSuccess = { suggestions ->
-                    suggestions.autocompleteSuggestions.toImmutableList()
+                    suggestions.autocompleteSuggestions
+                        .distinctBy { it.text }
+                        .toImmutableList()
                 },
                 onFailure = { persistentListOf() },
             ) ?: persistentListOf()
