@@ -21,7 +21,9 @@ internal class SearchStateBuilder {
     ): SearchState {
         return searchSuggestionsResult.fold(
             onSuccess = { suggestions ->
-                val autocompleteSuggestions = suggestions.autocompleteSuggestions.toImmutableList()
+                val autocompleteSuggestions = suggestions.autocompleteSuggestions
+                    .distinctBy { it.text }
+                    .toImmutableList()
                 val searchSuggestionItems = suggestions.toSearchSuggestionItems()
                 val suggestionState = if (searchSuggestionItems.isNotEmpty()) {
                     val searchHistoryQueryItems =
