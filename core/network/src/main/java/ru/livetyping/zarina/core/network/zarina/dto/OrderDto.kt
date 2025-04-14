@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.order.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -11,17 +11,17 @@ import ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.order.OrderPrice
 import ru.livetyping.zarina.core.domain.model.order.OrderRecipient
+import ru.livetyping.zarina.core.domain.model.order.OrderStatus
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductPrice
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
-import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
 @Serializable
-internal data class OrderDto(
+public data class OrderDto(
     @SerialName("id")
     val id: Long? = null,
 
@@ -61,7 +61,12 @@ internal data class OrderDto(
     @SerialName("is_cancelable")
     val isCancelable: Boolean? = null,
 ) {
-    fun toOrderDetailed(): OrderDetailed {
+    public fun toOrderStatus(): OrderStatus {
+        checkPropertyNotNull(status) { ::status }
+        return status.toOrderStatus()
+    }
+
+    public fun toOrder(): OrderDetailed {
         checkPropertyNotNull(id) { ::id }
         checkPropertyNotNull(number) { ::number }
         checkPropertyNotNull(productCount) { ::productCount }
@@ -107,7 +112,7 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class ProductDto(
+    public data class ProductDto(
         @SerialName("id")
         val id: Long?,
 
@@ -132,7 +137,7 @@ internal data class OrderDto(
         @SerialName("quantity")
         val quantity: Int? = null,
     ) {
-        fun toOrderProduct(): OrderDetailed.Product {
+        internal fun toOrderProduct(): OrderDetailed.Product {
             checkPropertyNotNull(id) { ::id }
             checkPropertyNotNull(vendorCode) { ::vendorCode }
             checkPropertyNotNull(name) { ::name }
@@ -167,7 +172,7 @@ internal data class OrderDto(
         }
 
         @Serializable
-        data class ColorDto(
+        public data class ColorDto(
             @SerialName("title")
             val title: String? = null,
 
@@ -177,11 +182,11 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class DeliveryInfoDto(
+    public data class DeliveryInfoDto(
         @SerialName("shipping_method")
         val shippingMethod: MethodDto? = null,
     ) {
-        fun toOrderDeliveryInfo(): OrderDeliveryInfo {
+        internal fun toOrderDeliveryInfo(): OrderDeliveryInfo {
             checkPropertyNotNull(shippingMethod) { ::shippingMethod }
             checkPropertyNotNull(shippingMethod.type) { shippingMethod::type }
             val deliveryMethodType = shippingMethod.type.toDeliveryMethodType()
@@ -190,7 +195,7 @@ internal data class OrderDto(
         }
 
         @Serializable
-        data class MethodDto(
+        public data class MethodDto(
             @SerialName("type")
             val type: DeliveryMethodTypeDto? = null,
 
@@ -200,19 +205,19 @@ internal data class OrderDto(
     }
 
     @Serializable
-    data class PaymentMethodDto(
+    public data class PaymentMethodDto(
         @SerialName("code")
         val code: PaymentMethodTypeDto? = null,
     )
 
     @Serializable
-    data class PaymentToolDto(
+    public data class PaymentToolDto(
         @SerialName("link") 
         val link: String? = null,
     )
 
     @Serializable
-    data class ContactInfoDto(
+    public data class ContactInfoDto(
         @SerialName("first_name")
         val firstName: String? = null,
 
@@ -225,7 +230,7 @@ internal data class OrderDto(
         @SerialName("phone")
         val phone: String? = null,
     ) {
-        fun toOrderRecipient(): OrderRecipient {
+        internal fun toOrderRecipient(): OrderRecipient {
             checkPropertyNotNull(firstName) { ::firstName }
             checkPropertyNotNull(email) { ::email }
             return OrderRecipient(

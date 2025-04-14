@@ -1,12 +1,12 @@
-package ru.livetyping.zarina.data.order.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.order.OrderStatus
 
 @Serializable
 @JvmInline
-internal value class OrderStatusDto(val value: String) {
-    fun toOrderStatus(): OrderStatus = when (value) {
+public value class OrderStatusDto(public val value: String) {
+    public fun toOrderStatus(): OrderStatus = when (value) {
         "opened" -> OrderStatus.OPENED
         "approved" -> OrderStatus.APPROVED
         "paid" -> OrderStatus.PAID

@@ -59,6 +59,13 @@
     <string name="cart_search_building">Поиск по домам</string>
     <string name="cart_choose_delivery_option">Выберите тип доставки</string>
     <string name="cart_change_delivery_date">Изменить дату доставки</string>
+    <string name="cart_gift_certificate_applying_error">Не удалось применить подарочный сертификат. Попробуйте снова</string>
+    <string name="cart_gift_certificate_withdraw_error">Не удалось отменить действие подарочного сертификата. Попробуйте снова</string>
+    <string name="cart_gift_certificate_write_off_info">Забронировали %1$s ₽ на сертификате. При отменённом заказе вернём эту сумму в течение часа</string>
+    <string name="cart_gift_certificate_user_need_to_pay_difference">Доплата проведётся банковской картой онлайн, после перенаправления на страницу оплаты. Если после оформления заказа оплата не поступит в течение часа, то деньги вернутся на подарочный сертификат</string>
+    <string name="cart_gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если Вы отмените заказ, то деньги вернутся на сертификат в течение часа</string>
+    <string name="cart_payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
+    <string name="cart_has_changed_error">Состав заказ изменился. Проверьте изменения и попробуйте снова</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

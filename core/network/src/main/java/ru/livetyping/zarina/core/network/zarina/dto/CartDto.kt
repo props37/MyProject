@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.cart.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import java.math.BigDecimal
 
 @Serializable
-internal data class CartDto(
+public data class CartDto(
     @SerialName("items")
     val items: List<CartProductDto>? = null,
 
@@ -62,7 +62,7 @@ internal data class CartDto(
     @SerialName("limit")
     val limit: ProductLimitDto? = null,
 ) {
-    fun toCart(cartType: CartType): Cart {
+    public fun toCart(cartType: CartType): Cart {
         checkPropertyNotNull(items) { ::items }
         return Cart(
             products = items.map { it.toCartProduct() },
@@ -171,7 +171,7 @@ internal data class CartDto(
     }
 
     @Serializable
-    data class BonusActionDto(
+    public data class BonusActionDto(
         @SerialName("bonus_charge")
         val bonusCharge: Int? = null,
 
@@ -183,7 +183,7 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class MyCardDto(
+    public data class MyCardDto(
         @SerialName("value") 
         val value: String? = null,
 
@@ -198,7 +198,7 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class GiftCertificateDto(
+    public data class GiftCertificateDto(
         @SerialName("barcode")
         val barcode: String? = null,
 
@@ -213,13 +213,13 @@ internal data class CartDto(
     )
 
     @Serializable
-    data class PromoCodeDto(
+    public data class PromoCodeDto(
         @SerialName("code")
         val code: String? = null,
     )
 
     @Serializable
-    data class ProductLimitDto(
+    public data class ProductLimitDto(
         @SerialName("max") 
         val max: Int? = null,
     )

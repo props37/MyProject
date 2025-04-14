@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.order.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
@@ -6,8 +6,8 @@ import timber.log.Timber
 
 @Serializable
 @JvmInline
-internal value class PaymentMethodTypeDto(val value: String) {
-    fun toPaymentMethodType(): PaymentMethodType? = when (value) {
+public value class PaymentMethodTypeDto(public val value: String) {
+    public fun toPaymentMethodType(): PaymentMethodType? = when (value) {
         VALUE_SBER -> PaymentMethodType.SBER
         VALUE_SBER_SBP -> PaymentMethodType.SBER_SBP
         VALUE_PAYTURE_IN_PAY -> PaymentMethodType.PAYTURE_IN_PAY
@@ -24,8 +24,8 @@ internal value class PaymentMethodTypeDto(val value: String) {
         }
     }
 
-    companion object {
-        fun from(paymentMethodType: PaymentMethodType): PaymentMethodTypeDto {
+    public companion object {
+        public fun from(paymentMethodType: PaymentMethodType): PaymentMethodTypeDto {
             val value = when (paymentMethodType) {
                 PaymentMethodType.SBER -> VALUE_SBER
                 PaymentMethodType.SBER_SBP -> VALUE_SBER_SBP

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.cart.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,11 +10,10 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
-import ru.livetyping.zarina.core.network.zarina.dto.ProductPriceDto
 import timber.log.Timber
 
 @Serializable
-internal data class CartProductDto(
+public data class CartProductDto(
     @SerialName("id")
     val id: Long? = null,
 
@@ -24,7 +23,7 @@ internal data class CartProductDto(
     @SerialName("quantity")
     val quantity: Int? = null,
 ) {
-    fun toCartProduct(): CartProduct {
+    public fun toCartProduct(): CartProduct {
         checkPropertyNotNull(id) { ::id }
         checkPropertyNotNull(offer) { ::offer }
         val color = offer.color?.toProductColor()
@@ -59,7 +58,7 @@ internal data class CartProductDto(
     }
 
     @Serializable
-    data class OfferDto(
+    public data class OfferDto(
         @SerialName("id")
         val id: String? = null,
 
@@ -97,7 +96,7 @@ internal data class CartProductDto(
         val retailAmount: Int? = null,
     ) {
         @Serializable
-        data class ProductColorDto(
+        public data class ProductColorDto(
             @SerialName("id")
             val id: String? = null,
 
@@ -110,7 +109,7 @@ internal data class CartProductDto(
             @SerialName("product_id")
             val productId: String? = null,
         ) {
-            fun toProductColor(): ProductColor? {
+            public fun toProductColor(): ProductColor? {
                 return if (id != null && title != null && code != null && productId != null) {
                     ProductColor(
                         id = ProductColor.Id(id),

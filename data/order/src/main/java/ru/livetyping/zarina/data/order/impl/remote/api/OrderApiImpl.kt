@@ -8,8 +8,8 @@ import io.ktor.client.request.parameter
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
+import ru.livetyping.zarina.core.network.zarina.dto.OrderDto
 import ru.livetyping.zarina.data.order.impl.remote.api.dto.GetOrdersDto
-import ru.livetyping.zarina.data.order.impl.remote.api.dto.OrderDto
 import javax.inject.Inject
 
 internal class OrderApiImpl @Inject constructor(

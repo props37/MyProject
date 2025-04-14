@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import ru.livetyping.zarina.core.network.zarina.dto.OrderStatusDto
 import ru.livetyping.zarina.core.network.zarina.dto.PaginationInfoDto
 import timber.log.Timber
 import java.math.BigDecimal

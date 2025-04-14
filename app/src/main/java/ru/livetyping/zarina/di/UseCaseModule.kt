@@ -38,12 +38,17 @@ import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.CheckoutUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPaymentMethodsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.WithdrawGiftCertificateUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
@@ -57,6 +62,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingComple
 import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
@@ -1084,6 +1090,76 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): GetPostDeliveryOptionsFlowUseCase {
         return GetPostDeliveryOptionsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCheckoutUseCase(
+        checkoutRepository: CheckoutRepository,
+        orderRepository: OrderRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): CheckoutUseCase {
+        return CheckoutUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            orderRepository = orderRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCheckoutCartFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCheckoutCartFlowUseCase {
+        return GetCheckoutCartFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOrderStatusUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): GetOrderStatusUseCase {
+        return GetOrderStatusUseCase.getInstance(
+            orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPaymentMethodsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetPaymentMethodsFlowUseCase {
+        return GetPaymentMethodsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideUpdateOrderPaymentStatusUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): UpdateOrderPaymentStatusUseCase {
+        return UpdateOrderPaymentStatusUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideWithdrawGiftCertificateUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): WithdrawGiftCertificateUseCase {
+        return WithdrawGiftCertificateUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             logger = logger,
         )

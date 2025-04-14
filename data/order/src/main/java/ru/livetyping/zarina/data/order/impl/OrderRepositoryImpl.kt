@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.order.OrderShort
+import ru.livetyping.zarina.core.domain.model.order.OrderStatus
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
 import ru.livetyping.zarina.data.order.impl.remote.OrderRemoteDataSource
@@ -18,6 +19,10 @@ internal class OrderRepositoryImpl @Inject constructor(
 
     override fun getOrderFlow(orderId: Order.Id): Flow<OrderDetailed> {
         return remoteDataSource.getOrderFlow(orderId)
+    }
+
+    override suspend fun getOrderStatus(orderId: Order.Id): OrderStatus {
+        return remoteDataSource.getOrderStatus(orderId)
     }
 
     override suspend fun cancelOrder(orderId: Order.Id) {
