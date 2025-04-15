@@ -68,7 +68,7 @@ internal class HomeViewModel @Inject constructor(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileSubscribed(5000), // TODO: [Low] Migrate to extension
         initialValue = HomeContentState.Loading,
     )
 
