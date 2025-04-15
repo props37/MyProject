@@ -30,6 +30,7 @@ object FakeDataGenerator {
         level: LoyaltyCardLevel = LoyaltyCardLevel.PRIME,
         nextLevelInfo: LoyaltyCard.NextLevelInfo? = LoyaltyCard.NextLevelInfo(
             level = LoyaltyCardLevel.PRIORITY,
+            levelName = "PRIORITY",
             requiredPurchaseSum = 10000,
         ),
         bonuses: LoyaltyCard.Bonuses = LoyaltyCard.Bonuses(
@@ -39,7 +40,8 @@ object FakeDataGenerator {
         totalPurchaseSum: Int = 2500,
     ): LoyaltyCard = LoyaltyCard(
         number = number,
-        level = level,
+        currentLevel = level,
+        currentLevelName = level.name,
         nextLevelInfo = nextLevelInfo,
         bonuses = bonuses,
         totalPurchaseSum = totalPurchaseSum,

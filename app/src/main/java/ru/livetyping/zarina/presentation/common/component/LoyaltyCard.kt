@@ -97,7 +97,6 @@ import ru.livetyping.zarina.domain.user.requiredPurchaseSum
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaIconButton
 import ru.livetyping.zarina.presentation.common.tooling.FakeDataGenerator
 import ru.livetyping.zarina.presentation.common.tooling.preview.ZarinaPreview
-import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.common.util.rememberFormattedPrice
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import timber.log.Timber
@@ -114,7 +113,7 @@ fun LoyaltyCard(
     val density = LocalDensity.current
 
     val contentColor by animateColorAsState(
-        targetValue = card.level.contentColor,
+        targetValue = card.currentLevel.contentColor,
         label = "contentColor",
     )
 
@@ -152,7 +151,7 @@ fun LoyaltyCard(
                 },
         ) {
             Background(
-                level = card.level,
+                level = card.currentLevel,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -193,7 +192,8 @@ fun LoyaltyCardPlaceholder(
     val placeholderCard = remember {
         LoyaltyCard(
             number = LoyaltyCard.Number(""),
-            level = LoyaltyCardLevel.PRIME,
+            currentLevel = LoyaltyCardLevel.PRIME,
+            currentLevelName = "",
             nextLevelInfo = null,
             bonuses = LoyaltyCard.Bonuses(0, 0),
             totalPurchaseSum = 0,
@@ -436,7 +436,7 @@ private fun FrontSideLevelInfo(
         val fullInfoAlpha = if (card.nextLevelInfo != null) 1f else 0f
         Column(modifier = Modifier.alpha(fullInfoAlpha)) {
             Text(
-                text = stringResource(card.level.nameResId),
+                text = card.currentLevelName,
                 style = levelNameTextStyle,
             )
 
@@ -466,7 +466,7 @@ private fun FrontSideLevelInfo(
             modifier = Modifier.alpha(shortInfoAlpha),
         ) {
             Text(
-                text = stringResource(card.level.nameResId),
+                text = card.currentLevelName,
                 style = levelNameTextStyle,
                 modifier = Modifier.weight(1f),
             )
@@ -482,7 +482,7 @@ private fun FrontSideProgressBar(
     modifier: Modifier = Modifier,
 ) {
     val trackColor = animateColorAsState(
-        targetValue = when (card.level) {
+        targetValue = when (card.currentLevel) {
             LoyaltyCardLevel.PRIME, LoyaltyCardLevel.PRIORITY -> {
                 UiKitTheme.colors.text.general.inversed.default
             }
@@ -538,7 +538,7 @@ private fun FrontSideProgressBar(
 
         // Draw dots
         drawDots(
-            cardLevel = card.level,
+            cardLevel = card.currentLevel,
             levelToDotCenterX = levelToDotCenterX,
             dotRadius = dotRadius,
             trackColor = trackColor.value,
@@ -552,7 +552,7 @@ private fun BackSideQrCode(
     card: LoyaltyCard,
     modifier: Modifier = Modifier,
 ) {
-    val color = card.level.contentColor
+    val color = card.currentLevel.contentColor
     val bitmap: Bitmap? = remember(card.number, color) {
         val byteArray = QRCode.ofSquares()
             .withBackgroundColor(Color.Transparent.toArgb())
@@ -683,7 +683,7 @@ private fun DrawScope.drawProgress(
             val endLevel = levelPair[1]
 
             when {
-                endLevel in card.level -> {
+                endLevel in card.currentLevel -> {
                     val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
                     val endLevelDotCenterX = levelToDotCenterX[endLevel] ?: 0f
                     val topLeft = Offset(
@@ -701,7 +701,7 @@ private fun DrawScope.drawProgress(
                     )
                 }
 
-                startLevel in card.level -> {
+                startLevel in card.currentLevel -> {
                     val nextLevelInfo = card.nextLevelInfo
                     if (nextLevelInfo != null) {
                         val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
@@ -767,6 +767,7 @@ private fun PreviewPrime() {
                     level = level,
                     nextLevelInfo = LoyaltyCard.NextLevelInfo(
                         level = nextLevel,
+                        levelName = "PRIORITY",
                         requiredPurchaseSum = 10000,
                     ),
                     totalPurchaseSum = totalPurchaseSum,
@@ -795,6 +796,7 @@ private fun PreviewPriority() {
                     level = level,
                     nextLevelInfo = LoyaltyCard.NextLevelInfo(
                         level = nextLevel,
+                        levelName = "STAR",
                         requiredPurchaseSum = 30000,
                     ),
                     totalPurchaseSum = totalPurchaseSum,
