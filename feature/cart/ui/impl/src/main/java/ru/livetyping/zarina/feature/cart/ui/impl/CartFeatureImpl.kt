@@ -239,7 +239,28 @@ public class CartFeatureImpl : CartFeature {
             )
             deliveryOptionDateTimeSelectorScreen(deliveryOptionDateTimeSelectorNavActions)
 
-            val orderPlacingNavActions = OrderPlacingNavActions()
+            val orderPlacingNavActions = OrderPlacingNavActions(
+                onBackClicked = navigateBack,
+                onCloseClicked = closeCheckout,
+                onChangeRecipientClicked = {
+                    navController.popBackStack<RecipientNavEntry>(inclusive = false)
+                },
+                onChangeDeliveryClicked = {
+                    navController.popBackStack<DeliveryMethodSelectorNavEntry>(inclusive = false)
+                },
+                onGiftCertificateSelected = { cartType, cart ->
+                    // TODO: [Top] Implement
+                    TODO()
+                },
+                onPaymentStarted = { url ->
+                    // TODO: [Top] Implement
+                    TODO()
+                },
+                onOrderConfirmed = { order ->
+                    // TODO: [Top] Implement
+                    TODO()
+                },
+            )
             orderPlacingScreen(orderPlacingNavActions)
         }
     }

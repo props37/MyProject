@@ -66,6 +66,13 @@
     <string name="cart_gift_certificate_covers_whole_price">Заказ полностью оплатится подарочным сертификатом. Если Вы отмените заказ, то деньги вернутся на сертификат в течение часа</string>
     <string name="cart_payment_status_check_error">Не удалось проверить статус оплаты заказа</string>
     <string name="cart_has_changed_error">Состав заказ изменился. Проверьте изменения и попробуйте снова</string>
+    <string name="cart_your_order">Ваш заказ</string>
+    <string name="cart_select_payment_method">Выберите способ оплаты</string>
+    <string name="cart_payment_policies">Нажимая на кнопку «Оплатить», Вы принимаете правила работы интернет-магазина и подтверждаете, что ознакомлены с политикой конфиденциальности. Также даёте согласие на обработку персональных данных с целью получения информационной рассылки</string>
+    <string name="cart_payment_policies_online_store">правила работы интернет-магазина</string>
+    <string name="cart_payment_policies_privacy">политикой конфиденциальности</string>
+    <string name="cart_payment_policies_personal_data">согласие на обработку персональных данных</string>
+    <string name="cart_order_confirmation">Подтверждение заказа</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

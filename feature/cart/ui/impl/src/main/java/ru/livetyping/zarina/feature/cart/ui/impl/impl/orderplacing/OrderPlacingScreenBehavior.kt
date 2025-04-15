@@ -15,15 +15,22 @@ import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun OrderPlacingScreenBehavior(
+    onScreenOpened: () -> Unit,
     sideEffects: Flow<OrderPlacingSideEffect>,
     navActions: OrderPlacingNavActions,
 ) {
+    val currentOnScreenOpened by rememberUpdatedState(onScreenOpened)
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val currentContext by rememberUpdatedState(LocalContext.current)
     val currentFocusManager by rememberUpdatedState(LocalFocusManager.current)
 
     BottomNavBarBehavior(isVisible = false)
+
+    LifecycleStartEffect(Unit) {
+        currentOnScreenOpened()
+        onStopOrDispose {}
+    }
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
@@ -53,6 +60,16 @@ internal fun OrderPlacingScreenBehavior(
 }
 
 private fun navigate(navActions: OrderPlacingNavActions, action: OrderPlacingScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        OrderPlacingScreenAction.BackClicked -> navActions.onBackClicked()
+        OrderPlacingScreenAction.CloseClicked -> navActions.onCloseClicked()
+        OrderPlacingScreenAction.ChangeRecipientClicked -> navActions.onChangeRecipientClicked()
+        OrderPlacingScreenAction.ChangeDeliveryClicked -> navActions.onChangeDeliveryClicked()
+        is OrderPlacingScreenAction.GiftCertificateSelected -> {
+            navActions.onGiftCertificateSelected(action.cartType, action.cart)
+        }
+
+        is OrderPlacingScreenAction.PaymentStarted -> navActions.onPaymentStarted(action.paymentUrl)
+        is OrderPlacingScreenAction.OrderConfirmed -> navActions.onOrderConfirmed(action.order)
+    }
 }
