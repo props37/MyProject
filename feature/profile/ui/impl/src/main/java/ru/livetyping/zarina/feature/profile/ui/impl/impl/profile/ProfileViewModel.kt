@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -61,7 +63,7 @@ internal class ProfileViewModel @AssistedInject constructor(
         )
 
     private val getLoyaltyCardUseCaseParams =
-        GetLoyaltyCardFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+        GetLoyaltyCardFlowUseCase.Params(CachePolicy.LocalOnly)
     private val loyaltyCardFlow = deps.getLoyaltyCardFlow(getLoyaltyCardUseCaseParams)
         .map { it.getOrNull() }
 
@@ -135,6 +137,21 @@ internal class ProfileViewModel @AssistedInject constructor(
         navigationThrottler.throttle {
             val action = ProfileScreenAction.BackClicked
             emitSideEffect(ProfileSideEffect.Navigate(action))
+        }
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> Unit
+            LifecycleEvent.ON_START -> fetchLoyaltyCard()
+            LifecycleEvent.ON_RESUME -> Unit
+        }
+    }
+
+    private fun fetchLoyaltyCard() {
+        viewModelScope.launch {
+            val params = GetLoyaltyCardFlowUseCase.Params(CachePolicy.Remote())
+            deps.getLoyaltyCardFlow(params).firstOrNull()
         }
     }
 

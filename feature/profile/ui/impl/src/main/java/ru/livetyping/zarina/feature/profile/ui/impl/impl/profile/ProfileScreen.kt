@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -44,6 +45,7 @@ internal fun ProfileScreen(
     ScreenContent(
         profileState = profileState,
         onProfileEvent = viewModel::onProfileEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -53,10 +55,12 @@ internal fun ProfileScreen(
 private fun ScreenContent(
     profileState: ProfileState,
     onProfileEvent: (ProfileEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProfileSideEffect>,
     navActions: ProfileNavActions,
 ) {
     ProfileScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
