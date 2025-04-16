@@ -47,7 +47,7 @@ internal data class LoyaltyCardDto(
         )
         return LoyaltyCard(
             number = LoyaltyCard.Number(number),
-            level = currentLevel.toLoyaltyCardLevel(),
+            currentLevel = currentLevel.toLoyaltyCardLevel(),
             nextLevelInfo = nextLevelInfo,
             bonuses = bonuses,
             totalPurchaseSum = purchaseTotal?.let { BigDecimal(it.toDouble()) } ?: BigDecimal.ZERO,

@@ -5,7 +5,7 @@ import java.math.BigDecimal
 // Marked as stable on config/compose/stability_config.txt
 public data class LoyaltyCard(
     val number: Number,
-    val level: Level,
+    val currentLevel: Level,
     val nextLevelInfo: NextLevelInfo?,
     val bonuses: Bonuses,
     val totalPurchaseSum: BigDecimal,

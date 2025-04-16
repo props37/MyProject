@@ -172,7 +172,7 @@ private fun LoyaltyCardImpl(
     val density = LocalDensity.current
 
     val contentColor by animateColorAsState(
-        targetValue = card.level.contentColor,
+        targetValue = card.currentLevel.contentColor,
         label = "contentColor",
     )
 
@@ -210,7 +210,7 @@ private fun LoyaltyCardImpl(
                 },
         ) {
             Background(
-                level = card.level,
+                level = card.currentLevel,
                 modifier = Modifier.matchParentSize(),
             )
 
@@ -460,7 +460,7 @@ private fun FrontSideLevelInfo(
         val fullInfoAlpha = if (card.nextLevelInfo != null) 1f else 0f
         Column(modifier = Modifier.alpha(fullInfoAlpha)) {
             Text(
-                text = stringResource(card.level.nameResId),
+                text = stringResource(card.currentLevel.nameResId),
                 style = levelNameTextStyle,
             )
 
@@ -491,7 +491,7 @@ private fun FrontSideLevelInfo(
             modifier = Modifier.alpha(shortInfoAlpha),
         ) {
             Text(
-                text = stringResource(card.level.nameResId),
+                text = stringResource(card.currentLevel.nameResId),
                 style = levelNameTextStyle,
                 modifier = Modifier.weight(1f),
             )
@@ -507,7 +507,7 @@ private fun FrontSideProgressBar(
     modifier: Modifier = Modifier,
 ) {
     val trackColor = animateColorAsState(
-        targetValue = when (card.level) {
+        targetValue = when (card.currentLevel) {
             LoyaltyCard.Level.PRIME, LoyaltyCard.Level.PRIORITY -> {
                 UiKitTheme.colors.text.general.inversed.default
             }
@@ -563,7 +563,7 @@ private fun FrontSideProgressBar(
 
         // Draw dots
         drawDots(
-            cardLevel = card.level,
+            cardLevel = card.currentLevel,
             levelToDotCenterX = levelToDotCenterX,
             dotRadius = dotRadius,
             trackColor = trackColor.value,
@@ -577,7 +577,7 @@ private fun BackSideQrCode(
     card: LoyaltyCard,
     modifier: Modifier = Modifier,
 ) {
-    val color = card.level.contentColor
+    val color = card.currentLevel.contentColor
     val bitmap: Bitmap? = remember(card.number, color) {
         val byteArray = QRCode.ofSquares()
             .withBackgroundColor(Color.Transparent.toArgb())
@@ -658,7 +658,7 @@ internal fun LoyaltyCardPlaceholder(
     val placeholderCard = remember {
         LoyaltyCard(
             number = LoyaltyCard.Number(""),
-            level = LoyaltyCard.Level.PRIME,
+            currentLevel = LoyaltyCard.Level.PRIME,
             nextLevelInfo = null,
             bonuses = LoyaltyCard.Bonuses(0, 0),
             totalPurchaseSum = BigDecimal.ZERO,
@@ -763,7 +763,7 @@ private fun DrawScope.drawProgress(
             val endLevel = levelPair[1]
 
             when {
-                endLevel in card.level -> {
+                endLevel in card.currentLevel -> {
                     val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f
                     val endLevelDotCenterX = levelToDotCenterX[endLevel] ?: 0f
                     val topLeft = Offset(
@@ -781,7 +781,7 @@ private fun DrawScope.drawProgress(
                     )
                 }
 
-                startLevel in card.level -> {
+                startLevel in card.currentLevel -> {
                     val nextLevelInfo = card.nextLevelInfo
                     if (nextLevelInfo != null) {
                         val startLevelDotCenterX = levelToDotCenterX[startLevel] ?: 0f

@@ -132,7 +132,7 @@ private fun LoyaltyProgramInfo(
     Column(modifier = modifier) {
         LoyaltyProgramInfoItem(
             headerText = stringResource(R.string.profile_loyalty_program_level),
-            bodyText = loyaltyCard?.level?.nameResId?.let { stringResource(it) },
+            bodyText = loyaltyCard?.currentLevel?.nameResId?.let { stringResource(it) },
         )
 
         divider()
