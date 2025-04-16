@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.store.Store
@@ -30,6 +31,14 @@ internal class CheckoutRepositoryImpl @Inject constructor(
     private val remoteDataSource: CheckoutRemoteDataSource,
     private val localDataSource: CheckoutLocalDataSource,
 ) : CheckoutRepository {
+    override suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    ) {
+        remoteDataSource.applyGiftCertificate(giftCertificate, cartFinalPrice, cartType)
+    }
+
     override suspend fun withdrawGiftCertificate(paymentMethodType: PaymentMethodType) {
         remoteDataSource.withdrawGiftCertificate(paymentMethodType)
     }

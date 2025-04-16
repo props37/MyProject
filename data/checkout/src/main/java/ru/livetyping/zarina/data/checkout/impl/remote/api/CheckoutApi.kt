@@ -11,6 +11,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.model.user.User
@@ -28,6 +29,12 @@ import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.SberPaymentDataDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.SberPaymentResultDto
 
 internal interface CheckoutApi {
+    suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    )
+
     suspend fun withdrawGiftCertificate(paymentMethodType: PaymentMethodType)
 
     suspend fun getDeliveryMethods(

@@ -21,6 +21,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.store.Store
@@ -35,6 +36,14 @@ import kotlin.time.Duration
 internal class CheckoutRemoteDataSourceImpl @Inject constructor(
     private val api: CheckoutApi,
 ) : CheckoutRemoteDataSource {
+    override suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    ) {
+        api.applyGiftCertificate(giftCertificate, cartFinalPrice, cartType)
+    }
+
     override suspend fun withdrawGiftCertificate(paymentMethodType: PaymentMethodType) {
         api.withdrawGiftCertificate(paymentMethodType)
     }

@@ -73,6 +73,14 @@
     <string name="cart_payment_policies_privacy">политикой конфиденциальности</string>
     <string name="cart_payment_policies_personal_data">согласие на обработку персональных данных</string>
     <string name="cart_order_confirmation">Подтверждение заказа</string>
+    <string name="cart_gift_certificate_description">Воспользуйтесь электронным или пластиковым подарочным сертификатом. Проверочный код указан в письме, которое пришло после покупки сертификата</string>
+    <string name="cart_certificate_number">Номер сертификата</string>
+    <string name="cart_verification_code">Проверочный код</string>
+    <string name="cart_unknown_gift_certificate_error">Такого сертификата нет, или срок его действия истёк. Введите данные заново</string>
+    <string name="cart_cart_gift_certificate_reserved_error">Подарочный сертификат зарезервирован другим заказом и будет разблокирован в течение часа</string>
+    <string name="cart_gift_certificate_fields_empty_error">Поля ввода пусты. Для применения сертификата введите его номер и проверочный код</string>
+    <string name="cart_gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введите его номер</string>
+    <string name="cart_gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введите проверочный код</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

@@ -9,4 +9,8 @@ import java.util.UUID
 internal data class GiftCertificateScreenResult(
     val isGiftCertificateApplied: Boolean,
     override val id: String = UUID.randomUUID().toString(),
-) : ScreenResult, Parcelable
+) : ScreenResult, Parcelable {
+    companion object {
+        const val KEY = "gift_certificate_result"
+    }
+}

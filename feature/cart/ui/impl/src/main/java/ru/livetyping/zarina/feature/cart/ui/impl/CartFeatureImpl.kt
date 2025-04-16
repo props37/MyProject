@@ -20,10 +20,14 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimesele
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorScreenResult
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.DeliveryOptionDateTimeSelectorType
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcert.GiftCertificateNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcert.GiftCertificateNavEntry
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcert.GiftCertificateScreenResult
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.cartScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddressSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryOptionDateTimeSelectorScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.giftCertificateScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.orderPlacingScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
@@ -249,8 +253,9 @@ public class CartFeatureImpl : CartFeature {
                     navController.popBackStack<DeliveryMethodSelectorNavEntry>(inclusive = false)
                 },
                 onGiftCertificateSelected = { cartType, cart ->
-                    // TODO: [Top] Implement
-                    TODO()
+                    val giftCertificateNavEntry =
+                        GiftCertificateNavEntry.from(cartType, cart.price.finalPrice.toInt())
+                    navController.navigate(giftCertificateNavEntry)
                 },
                 onPaymentStarted = { url ->
                     // TODO: [Top] Implement
@@ -262,6 +267,18 @@ public class CartFeatureImpl : CartFeature {
                 },
             )
             orderPlacingScreen(orderPlacingNavActions)
+
+            val giftCertificateNavActions = GiftCertificateNavActions(
+                onBackClicked = navigateBack,
+                onGiftCertificateApplied = {
+                    navController.navigateUp()
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        key = GiftCertificateScreenResult.KEY,
+                        value = GiftCertificateScreenResult(isGiftCertificateApplied = true)
+                    )
+                },
+            )
+            giftCertificateScreen(giftCertificateNavActions)
         }
     }
 }

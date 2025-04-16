@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.store.Store
@@ -23,6 +24,12 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import kotlin.time.Duration
 
 internal interface CheckoutRemoteDataSource {
+    suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    )
+
     suspend fun withdrawGiftCertificate(paymentMethodType: PaymentMethodType)
 
     fun getDeliveryMethodsFlow(

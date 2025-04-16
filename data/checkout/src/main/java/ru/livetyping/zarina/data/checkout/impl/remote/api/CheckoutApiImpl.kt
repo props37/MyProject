@@ -19,6 +19,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupFromStoreCheckoutPa
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.model.user.User
@@ -28,6 +29,7 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.CartTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.DeliveryMethodTypeDto
 import ru.livetyping.zarina.core.network.zarina.dto.PaymentMethodTypeDto
+import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.ApplyGiftCertificateRequestBody
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.CheckoutCartDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.CheckoutCartRequestBody
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.CreateOrderRequestBody
@@ -46,6 +48,7 @@ import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.SberPaymentDataReq
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.SberPaymentResultDto
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.UpdateOrderPodeliPaymentStatusRequestBody
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.WithdrawGiftCertificateRequestBody
+import ru.livetyping.zarina.data.checkout.impl.remote.api.exception.ApplyGiftCertificateApiExceptionConverter
 import ru.livetyping.zarina.data.checkout.impl.remote.api.exception.OrderCreationExceptionConverter
 import javax.inject.Inject
 
@@ -53,7 +56,26 @@ internal class CheckoutApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
     private val orderCreationExceptionConverter: OrderCreationExceptionConverter,
+    private val applyGiftCertificateApiExceptionConverter: ApplyGiftCertificateApiExceptionConverter,
 ) : CheckoutApi {
+    override suspend fun applyGiftCertificate(
+        giftCertificate: GiftCertificate,
+        cartFinalPrice: Int,
+        cartType: CartType,
+    ) {
+        val body = ApplyGiftCertificateRequestBody(
+            certificateNumber = giftCertificate.number.value,
+            certificateVerificationCode = giftCertificate.verificationCode,
+            cartFinalPrice = cartFinalPrice,
+            cartType = CartTypeDto.from(cartType),
+        )
+        applyGiftCertificateApiExceptionConverter {
+            httpClient.post("/api/gift-card/apply") {
+                setJsonBody(body)
+            }
+        }
+    }
+
     override suspend fun withdrawGiftCertificate(paymentMethodType: PaymentMethodType) {
         val body = WithdrawGiftCertificateRequestBody(
             paymentMethodType = PaymentMethodTypeDto.from(paymentMethodType),

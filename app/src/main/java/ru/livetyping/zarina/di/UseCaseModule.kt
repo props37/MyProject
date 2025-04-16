@@ -38,6 +38,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.ApplyGiftCertificateUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCheckoutCartFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
@@ -1160,6 +1161,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): WithdrawGiftCertificateUseCase {
         return WithdrawGiftCertificateUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideApplyGiftCertificateUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): ApplyGiftCertificateUseCase {
+        return ApplyGiftCertificateUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             logger = logger,
         )
