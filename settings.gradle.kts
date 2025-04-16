@@ -65,6 +65,8 @@ include(":feature:webview:ui:impl")
 include(":feature:search:ui:api")
 include(":feature:search:ui:impl")
 
+include(":feature:payment:ui:api")
+
 include(":data:content")
 include(":data:auth")
 include(":data:category")
