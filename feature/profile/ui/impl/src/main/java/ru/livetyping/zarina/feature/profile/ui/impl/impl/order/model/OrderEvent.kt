@@ -7,7 +7,7 @@ internal sealed interface OrderEvent {
 
     data object OrderErrorRefreshClicked : OrderEvent
 
-    data object PayForOrderClicked : OrderEvent
+    data object PayClicked : OrderEvent
 
     data object CancelOrderClicked : OrderEvent
 }

@@ -41,7 +41,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun OrderSuccess(
     order: OrderDetailed,
-    onPayForOrderClicked: () -> Unit,
+    onPayClicked: () -> Unit,
     onCancelOrderClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,7 +137,7 @@ internal fun OrderSuccess(
                 contentType = OrderListContentType.PayButton,
             ) {
                 ZarinaButton(
-                    onClick = onPayForOrderClicked,
+                    onClick = onPayClicked,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)

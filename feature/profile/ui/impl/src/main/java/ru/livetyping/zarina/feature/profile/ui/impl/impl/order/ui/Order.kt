@@ -54,7 +54,7 @@ internal fun Order(
                 is OrderState.Success -> {
                     OrderSuccess(
                         order = state.order,
-                        onPayForOrderClicked = { onEvent(OrderEvent.PayForOrderClicked) },
+                        onPayClicked = { onEvent(OrderEvent.PayClicked) },
                         onCancelOrderClicked = { onEvent(OrderEvent.CancelOrderClicked) },
                     )
                 }

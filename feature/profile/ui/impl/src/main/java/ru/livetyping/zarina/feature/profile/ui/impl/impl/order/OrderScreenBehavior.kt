@@ -44,5 +44,6 @@ internal fun OrderScreenBehavior(
 private fun navigate(navActions: OrderNavActions, action: OrderScreenAction) {
     when (action) {
         OrderScreenAction.BackClicked -> navActions.onBackClicked()
+        is OrderScreenAction.PayClicked -> navActions.onPayClicked(action.paymentUrl)
     }
 }

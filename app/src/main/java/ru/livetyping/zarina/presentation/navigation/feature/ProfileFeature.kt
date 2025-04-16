@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
+import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileSelectedCityResult
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
@@ -47,7 +48,11 @@ fun rememberProfileNavActions(
                     currentCity = currentCity,
                 )
                 navController.navigate(citySelectorNavEntry)
-            }
+            },
+            onPayClicked = { paymentUrl ->
+                val paymentNavEntry = PaymentFeature.NavEntry(paymentUrl.value)
+                navController.navigate(paymentNavEntry)
+            },
         )
     }
 }

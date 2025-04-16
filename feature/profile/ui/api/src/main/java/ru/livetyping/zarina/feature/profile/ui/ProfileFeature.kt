@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.profile.ui
 
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import ru.livetyping.zarina.core.navigation.NavigationActions
@@ -25,6 +26,7 @@ public interface ProfileFeature :
         public val onSignInClicked: () -> Unit,
         public val onSignUpClicked: () -> Unit,
         public val onChangeCityClicked: (currentCity: City?) -> Unit,
+        public val onPayClicked: (Url) -> Unit,
     ) : NavigationActions
 
     public class ProfileNavResultRetrievers(

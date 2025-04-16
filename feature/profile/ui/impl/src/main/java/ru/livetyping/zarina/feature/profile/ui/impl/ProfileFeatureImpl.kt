@@ -101,7 +101,10 @@ public class ProfileFeatureImpl : ProfileFeature {
             )
             orderListScreen(orderListNavActions)
 
-            val orderNavActions = OrderNavActions(onBackClicked = navigateUp)
+            val orderNavActions = OrderNavActions(
+                onBackClicked = navigateUp,
+                onPayClicked = actions.onPayClicked,
+            )
             orderScreen(orderNavActions)
 
             val loyaltyProgramNavActions = LoyaltyProgramNavActions(

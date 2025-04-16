@@ -31,6 +31,7 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderCancel
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.model.OrderState
 import javax.inject.Inject
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class OrderViewModel @Inject constructor(
@@ -102,7 +103,7 @@ internal class OrderViewModel @Inject constructor(
             OrderEvent.PullRefreshTriggered -> orderRequester.request(OrderRequest.REFRESHING)
             OrderEvent.OrderErrorRefreshClicked -> orderRequester.request(OrderRequest.LOADING)
             OrderEvent.CancelOrderClicked -> isOrderCancellationDialogVisible.value = true // TODO: [Top] Test
-            OrderEvent.PayForOrderClicked -> TODO() // TODO: [Top] Implement
+            OrderEvent.PayClicked -> onPayClicked()
         }
     }
 
@@ -120,6 +121,20 @@ internal class OrderViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = OrderScreenAction.BackClicked
             emitSideEffect(OrderSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onPayClicked() {
+        val paymentUrl = (orderState.value as? OrderState.Success)?.order?.paymentUrl
+        if (paymentUrl != null) {
+            navigationThrottler.throttle {
+                val action = OrderScreenAction.PayClicked(paymentUrl)
+                emitSideEffect(OrderSideEffect.Navigate(action))
+            }
+        } else {
+            val text = Text.Resource(RCommon.string.res_something_went_wrong)
+            val message = ZarinaToastMessage.error(text)
+            emitSideEffect(OrderSideEffect.ShowZarinaToast(message))
         }
     }
 
