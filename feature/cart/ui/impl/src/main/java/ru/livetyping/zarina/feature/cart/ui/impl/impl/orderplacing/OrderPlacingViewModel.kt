@@ -12,6 +12,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -85,9 +86,9 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel(assistedFactory = OrderPlacingViewModel.Factory::class)
 internal class OrderPlacingViewModel @AssistedInject constructor(
     @Assisted
-    private val giftCertificateResultFlow: StateFlow<GiftCertificateScreenResult?>,
+    private val giftCertificateResultFlow: Flow<GiftCertificateScreenResult?>,
     @Assisted
-    private val paymentResultFlow: StateFlow<PaymentResult?>,
+    private val paymentResultFlow: Flow<PaymentResult?>,
     savedStateHandle: SavedStateHandle,
     private val deps: OrderPlacingDependencies,
 ) : ViewModel(), SideEffectSource<OrderPlacingSideEffect> by SideEffectSourceImpl() {
@@ -869,8 +870,8 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            giftCertificateResultFlow: StateFlow<GiftCertificateScreenResult?>,
-            paymentResultFlow: StateFlow<PaymentResult?>,
+            giftCertificateResultFlow: Flow<GiftCertificateScreenResult?>,
+            paymentResultFlow: Flow<PaymentResult?>,
         ): OrderPlacingViewModel
     }
 

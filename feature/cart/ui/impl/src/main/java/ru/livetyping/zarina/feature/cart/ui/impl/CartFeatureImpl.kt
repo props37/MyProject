@@ -263,7 +263,10 @@ public class CartFeatureImpl : CartFeature {
                     TODO()
                 },
             )
-            orderPlacingScreen(orderPlacingNavActions)
+            orderPlacingScreen(
+                actions = orderPlacingNavActions,
+                paymentResultRetriever = resultRetrievers.paymentResultRetriever,
+            )
 
             val giftCertificateNavActions = GiftCertificateNavActions(
                 onBackClicked = navigateBack,

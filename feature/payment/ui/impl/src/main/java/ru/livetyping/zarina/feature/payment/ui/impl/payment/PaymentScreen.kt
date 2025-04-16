@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.payment.ui.impl.payment
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,6 +25,8 @@ internal fun PaymentScreen(
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
     val paymentUrl by viewModel.paymentUrl.collectAsStateWithLifecycle()
+
+    BackHandler(onBack = viewModel::onBackClicked)
 
     ScreenContent(
         paymentUrl = paymentUrl,
