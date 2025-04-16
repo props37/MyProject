@@ -30,7 +30,6 @@ import ru.livetyping.zarina.presentation.common.component.divider.ZarinaDivider
 import ru.livetyping.zarina.presentation.common.component.item.ZarinaItem
 import ru.livetyping.zarina.presentation.common.component.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
-import ru.livetyping.zarina.presentation.common.util.domain.nameResId
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
 import ru.livetyping.zarina.util.compose.animation.Crossfade
 
@@ -96,8 +95,7 @@ object LoyaltyProgramScreenComponents {
             LoyaltyProgramInfoItem(
                 title = stringResource(R.string.loyalty_program_level),
                 body = {
-                    val text = loyaltyCard?.let { stringResource(it.level.nameResId) }
-                    body(text)
+                    body(loyaltyCard?.currentLevelName)
                 },
             )
             divider()
