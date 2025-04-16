@@ -459,6 +459,7 @@ internal class UseCaseModule {
         cartRepository: CartRepository,
         storeRepository: StoreRepository,
         searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
         logger: UseCaseLogger,
     ): ForcedSignOutUseCase {
         return ForcedSignOutUseCase.getInstance(
@@ -469,6 +470,7 @@ internal class UseCaseModule {
             cartRepository = cartRepository,
             storeRepository = storeRepository,
             searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
             logger = logger,
         )
     }
@@ -493,6 +495,7 @@ internal class UseCaseModule {
         cartRepository: CartRepository,
         storeRepository: StoreRepository,
         searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
         logger: UseCaseLogger,
     ): SignOutUseCase {
         return SignOutUseCase.getInstance(
@@ -503,6 +506,7 @@ internal class UseCaseModule {
             cartRepository = cartRepository,
             storeRepository = storeRepository,
             searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
             logger = logger,
         )
     }
@@ -516,6 +520,7 @@ internal class UseCaseModule {
         cartRepository: CartRepository,
         storeRepository: StoreRepository,
         searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
         logger: UseCaseLogger,
     ): DeleteAccountUseCase {
         return DeleteAccountUseCase.getInstance(
@@ -526,6 +531,7 @@ internal class UseCaseModule {
             cartRepository = cartRepository,
             storeRepository = storeRepository,
             searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
             logger = logger,
         )
     }

@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.impl
 
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
+import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
@@ -16,6 +17,7 @@ internal class SignOutCleaner(
     private val cartRepository: CartRepository,
     private val storeRepository: StoreRepository,
     private val searchRepository: SearchRepository,
+    private val checkoutRepository: CheckoutRepository,
 ) {
     suspend fun performSignOutCleanup() {
         authRepository.clear()
@@ -25,6 +27,6 @@ internal class SignOutCleaner(
         cartRepository.clear()
         storeRepository.clear()
         searchRepository.clear()
-        // TODO: [Top] Clear CheckoutRepository
+        checkoutRepository.clear()
     }
 }

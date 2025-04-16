@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
+import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
@@ -21,6 +22,7 @@ public interface ForcedSignOutUseCase {
             cartRepository: CartRepository,
             storeRepository: StoreRepository,
             searchRepository: SearchRepository,
+            checkoutRepository: CheckoutRepository,
             logger: UseCaseLogger?,
         ): ForcedSignOutUseCase {
             return ForcedSignOutUseCaseImpl(
@@ -31,6 +33,7 @@ public interface ForcedSignOutUseCase {
                 cartRepository = cartRepository,
                 storeRepository = storeRepository,
                 searchRepository = searchRepository,
+                checkoutRepository = checkoutRepository,
                 logger = logger,
             )
         }

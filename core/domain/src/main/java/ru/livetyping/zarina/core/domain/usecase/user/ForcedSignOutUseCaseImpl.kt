@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 import ru.livetyping.zarina.core.domain.impl.SignOutCleaner
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
+import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.core.domain.repository.SearchRepository
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
@@ -19,6 +20,7 @@ internal class ForcedSignOutUseCaseImpl(
     private val cartRepository: CartRepository,
     private val storeRepository: StoreRepository,
     private val searchRepository: SearchRepository,
+    private val checkoutRepository: CheckoutRepository,
     logger: UseCaseLogger?,
 ) : UseCase<Unit, Unit>(logger), ForcedSignOutUseCase {
 
@@ -31,6 +33,7 @@ internal class ForcedSignOutUseCaseImpl(
             cartRepository = cartRepository,
             storeRepository = storeRepository,
             searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
         )
         cleaner.performSignOutCleanup()
     }
