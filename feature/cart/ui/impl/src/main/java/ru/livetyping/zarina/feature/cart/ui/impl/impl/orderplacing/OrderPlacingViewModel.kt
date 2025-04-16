@@ -76,7 +76,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartStateBuilde
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartBonusAccountStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartMyCardStateHolder
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.viewmodel.CartPromoCodeStateHolder
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcertificate.GiftCertificateScreenResult
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcert.GiftCertificateScreenResult
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.checkoutStepCount
 import java.math.BigDecimal
 import kotlin.time.Duration.Companion.seconds
