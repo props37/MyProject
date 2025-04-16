@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.product
 
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.FirstNameException
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
@@ -46,7 +46,7 @@ internal class SubscribeToProductUseCaseImpl(
         val exceptions = listOfNotNull(firstNameException, emailException)
         when {
             exceptions.size == 1 -> throw exceptions.first()
-            exceptions.size > 1 -> throw CombinedValidationException(exceptions)
+            exceptions.size > 1 -> throw CombinedException(exceptions)
         }
     }
 

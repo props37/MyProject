@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.text.Text
@@ -117,7 +117,7 @@ internal class EmailChangeViewModel @Inject constructor(
 
     private fun onEmailChangeFailure(t: Throwable) {
         when (t) {
-            is CombinedValidationException -> {
+            is CombinedException -> {
                 val causes = t.causes
                 if (causes.any { it is EmailException }) {
                     handleEmailException()

@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.core.domain.validation
 
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.giftcert.exception.EmptyGiftCertificateNumberException
 import ru.livetyping.zarina.core.domain.model.giftcert.exception.EmptyGiftCertificateVerificationCodeException
@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.giftcert.exception.GiftCertificate
 
 /**
  * @throws GiftCertificateException
- * @throws CombinedValidationException
+ * @throws CombinedException
  */
 public class GiftCertificateValidator : Validator<GiftCertificate> {
     override fun validate(input: GiftCertificate) {
@@ -26,7 +26,7 @@ public class GiftCertificateValidator : Validator<GiftCertificate> {
         val exceptions = listOfNotNull(numberException, verificationCodeException)
         when {
             exceptions.size == 1 -> throw exceptions.first()
-            exceptions.size > 1 -> throw CombinedValidationException(exceptions)
+            exceptions.size > 1 -> throw CombinedException(exceptions)
         }
     }
 }

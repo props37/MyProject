@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.giftcert.exception.EmptyGiftCertificateNumberException
 import ru.livetyping.zarina.core.domain.model.giftcert.exception.EmptyGiftCertificateVerificationCodeException
@@ -136,7 +136,7 @@ internal class GiftCertificateViewModel @Inject constructor(
     private fun onApplyFailure(t: Throwable) {
         when (t) {
             is GiftCertificateException -> handleGiftCertificateException(t)
-            is CombinedValidationException -> handleCombinedValidationException(t)
+            is CombinedException -> handleCombinedException(t)
             !is IOException -> {
                 isGiftCertificateNumberInvalid.value = true
                 isGiftCertificateVerificationCodeInvalid.value = true
@@ -178,7 +178,7 @@ internal class GiftCertificateViewModel @Inject constructor(
         }
     }
 
-    private fun handleCombinedValidationException(e: CombinedValidationException) {
+    private fun handleCombinedException(e: CombinedException) {
         val causes = e.causes
         val isNumberEmpty = causes.any { it is EmptyGiftCertificateNumberException }
         val isVerificationCodeEmpty =

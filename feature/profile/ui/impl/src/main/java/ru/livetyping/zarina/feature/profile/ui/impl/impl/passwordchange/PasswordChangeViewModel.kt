@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.OldPasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
@@ -131,7 +131,7 @@ internal class PasswordChangeViewModel @Inject constructor(
 
     private fun onPasswordChangeFailure(t: Throwable) {
         when (t) {
-            is CombinedValidationException -> {
+            is CombinedException -> {
                 val causes = t.causes
                 causes.forEach { cause ->
                     when (cause) {

@@ -24,7 +24,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.checkout.Recipient
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyEmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmptyFirstNameException
@@ -180,7 +180,7 @@ internal class RecipientViewModel @Inject constructor(
 
     private fun handleCustomerValidationException(e: Exception) {
         when (e) {
-            is CombinedValidationException -> handleCustomerCombinedValidationException(e)
+            is CombinedException -> handleCustomerCombinedException(e)
             is FirstNameException -> {
                 isFirstNameInvalid.value = true
                 val messageResId = when (e) {
@@ -224,7 +224,7 @@ internal class RecipientViewModel @Inject constructor(
         }
     }
 
-    private fun handleCustomerCombinedValidationException(e: CombinedValidationException) {
+    private fun handleCustomerCombinedException(e: CombinedException) {
         val causes = e.causes
         causes.forEach { cause ->
             when (cause) {

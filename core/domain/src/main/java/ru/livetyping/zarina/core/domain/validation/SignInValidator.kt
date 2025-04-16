@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.domain.validation
 
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
 import ru.livetyping.zarina.core.domain.model.user.exception.PasswordException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberException
@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberExceptio
  * @throws EmailException
  * @throws PasswordException
  * @throws PhoneNumberException
- * @throws CombinedValidationException
+ * @throws CombinedException
  */
 public class SignInValidator : Validator<SignInValidator.Params> {
     override fun validate(input: Params) {
@@ -40,7 +40,7 @@ public class SignInValidator : Validator<SignInValidator.Params> {
         val exceptions = listOfNotNull(emailException, passwordException)
         when {
             exceptions.size == 1 -> throw exceptions.first()
-            exceptions.size > 1 -> throw CombinedValidationException(exceptions)
+            exceptions.size > 1 -> throw CombinedException(exceptions)
         }
     }
 

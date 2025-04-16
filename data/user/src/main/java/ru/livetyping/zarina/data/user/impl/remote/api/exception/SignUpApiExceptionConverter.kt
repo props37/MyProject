@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailAlreadyUsedException
 import ru.livetyping.zarina.core.domain.model.user.exception.OtpTimeoutException
 import ru.livetyping.zarina.core.network.KtorApiExceptionConverter
@@ -42,7 +42,7 @@ internal class SignUpApiExceptionConverter @Inject constructor(
         val validationExceptions = validationErrorDtos.map { it.toException() }
         throw when {
             validationExceptions.size == 1 -> validationExceptions.first()
-            validationExceptions.size > 1 -> CombinedValidationException(validationExceptions)
+            validationExceptions.size > 1 -> CombinedException(validationExceptions)
             else -> originalException
         }
     }

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidPhoneNumberException
 import ru.livetyping.zarina.core.domain.model.user.exception.PhoneNumberAlreadyUsedException
@@ -173,7 +173,7 @@ internal class PhoneChangeViewModel @Inject constructor(
 
     private fun onPhoneNumberChangeFailure(t: Throwable) {
         when (t) {
-            is CombinedValidationException -> {
+            is CombinedException -> {
                 val causes = t.causes
                 causes.forEach { cause ->
                     when (cause) {

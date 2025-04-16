@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
@@ -111,7 +111,7 @@ internal class UpdateUserInfoUseCaseImpl(
         )
         when {
             exceptions.size == 1 -> throw exceptions.first()
-            exceptions.size > 1 -> throw CombinedValidationException(exceptions)
+            exceptions.size > 1 -> throw CombinedException(exceptions)
         }
     }
 

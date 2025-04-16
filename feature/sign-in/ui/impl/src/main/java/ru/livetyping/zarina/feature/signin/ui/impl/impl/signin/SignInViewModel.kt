@@ -26,7 +26,7 @@ import ru.livetyping.zarina.core.credential.CredentialFetchingResult
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailException
@@ -461,7 +461,7 @@ internal class SignInViewModel @Inject constructor(
 
     private fun handleSignInException(t: Throwable) {
         when (t) {
-            is CombinedValidationException -> handleSignInCombinedValidationException(t)
+            is CombinedException -> handleSignInCombinedException(t)
             is EmailException -> {
                 isEmailInvalid.value = true
                 val textResId = when (t) {
@@ -501,7 +501,7 @@ internal class SignInViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignInCombinedValidationException(e: CombinedValidationException) {
+    private fun handleSignInCombinedException(e: CombinedException) {
         val causes = e.causes
         causes.forEach { cause ->
             when (cause) {

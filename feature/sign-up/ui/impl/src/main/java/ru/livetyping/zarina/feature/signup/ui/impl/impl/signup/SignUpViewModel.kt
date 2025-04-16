@@ -21,7 +21,7 @@ import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.common.exception.CombinedValidationException
+import ru.livetyping.zarina.core.domain.model.common.exception.CombinedException
 import ru.livetyping.zarina.core.domain.model.sms.ZarinaSms
 import ru.livetyping.zarina.core.domain.model.user.exception.BirthDateException
 import ru.livetyping.zarina.core.domain.model.user.exception.EmailAlreadyUsedException
@@ -309,7 +309,7 @@ internal class SignUpViewModel @Inject constructor(
     private fun handleSignUpException(t: Throwable) {
         Timber.tag(TAG).e(t)
         when (t) {
-            is CombinedValidationException -> handleSignUpCombinedValidationException(t)
+            is CombinedException -> handleSignUpCombinedException(t)
             is FirstNameException -> {
                 isNameInvalid.value = true
                 val textResId = when (t) {
@@ -368,7 +368,7 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignUpCombinedValidationException(e: CombinedValidationException) {
+    private fun handleSignUpCombinedException(e: CombinedException) {
         val causes = e.causes
         causes.forEach { cause ->
             when (cause) {
