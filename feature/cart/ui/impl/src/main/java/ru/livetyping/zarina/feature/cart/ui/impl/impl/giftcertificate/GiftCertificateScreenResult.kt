@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.giftcertificate
+package ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcertificate
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
