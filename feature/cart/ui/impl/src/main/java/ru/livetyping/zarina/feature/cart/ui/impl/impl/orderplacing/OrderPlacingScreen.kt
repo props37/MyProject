@@ -67,6 +67,8 @@ internal fun OrderPlacingScreen(
     val isPayButtonLoading by viewModel.isPayButtonLoading.collectAsStateWithLifecycle()
     val infoModalBottomSheetState by viewModel.infoModalBottomSheetState.collectAsStateWithLifecycle()
 
+    BackHandler(onBack = viewModel::onBackClicked)
+
     ScreenContent(
         step = state,
         stepCount = stepCount,
@@ -150,8 +152,6 @@ private fun ScreenContent(
         sideEffects = sideEffects,
         navActions = navActions,
     )
-
-    BackHandler(onBack = onBackClicked)
 
     InfoModalBottomSheet(
         state = infoModalBottomSheetState,

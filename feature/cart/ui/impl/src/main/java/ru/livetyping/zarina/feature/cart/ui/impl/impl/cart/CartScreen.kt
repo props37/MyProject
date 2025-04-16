@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -81,6 +82,8 @@ internal fun CartScreen(
     val isPullRefreshing by viewModel.isPullRefreshing.collectAsStateWithLifecycle()
     val productCountSelectorState by viewModel.productCountSelectorState.collectAsStateWithLifecycle()
 
+    BackHandler(onBack = viewModel::onBackClicked)
+
     ScreenContent(
         cartProductCount = cartProductCount,
         cartSize = cartSize,
@@ -107,7 +110,6 @@ internal fun CartScreen(
         onPromoCodeImeDoneClicked = viewModel::onPromoCodeImeDoneClicked,
         onCheckoutClicked = viewModel::onCheckoutClicked,
         onScreenCreated = viewModel::onScreenCreated,
-        onBackClicked = viewModel::onBackClicked,
         productCountSelectorState = productCountSelectorState,
         onProductCountSelectorEvent = viewModel::onProductCountSelectorEvent,
         sideEffects = viewModel.sideEffects,
@@ -143,14 +145,12 @@ private fun ScreenContent(
     onPromoCodeImeDoneClicked: () -> Unit,
     onCheckoutClicked: () -> Unit,
     onScreenCreated: () -> Unit,
-    onBackClicked: () -> Unit,
     productCountSelectorState: ProductCountSelectorState,
     onProductCountSelectorEvent: (ProductCountSelectorEvent) -> Unit,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
 ) {
     CartScreenBehavior(
-        onBackClicked = onBackClicked,
         onScreenCreated = onScreenCreated,
         sideEffects = sideEffects,
         navActions = navActions,

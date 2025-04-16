@@ -17,15 +17,12 @@ import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 @Composable
 internal fun WishlistScreenBehavior(
     onLifecycleEvent: (LifecycleEvent) -> Unit,
-    onBackClicked: () -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistFeature.NavActions,
 ) {
     val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
-
-    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 

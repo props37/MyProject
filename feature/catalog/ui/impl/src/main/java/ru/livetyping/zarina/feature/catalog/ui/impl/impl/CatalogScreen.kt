@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -45,6 +46,8 @@ internal fun CatalogScreen(
     val categoryListState by viewModel.categoryListState.collectAsStateWithLifecycle()
     val categoryListItemsState by viewModel.categoryListItemsState.collectAsStateWithLifecycle()
 
+    BackHandler(onBack = viewModel::onBackClicked)
+
     ScreenContent(
         genderSelectorState = genderSelectorState,
         onGenderSelectorEvent = viewModel::onGenderSelectorEvent,
@@ -52,7 +55,6 @@ internal fun CatalogScreen(
         onCategoryListEvent = viewModel::onCategoryListEvent,
         categoryListItemsState = categoryListItemsState,
         onSearchBarClicked = viewModel::onSearchBarClicked,
-        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -66,12 +68,10 @@ private fun ScreenContent(
     onCategoryListEvent: (CategoryListEvent) -> Unit,
     categoryListItemsState: CategoryListItemsState,
     onSearchBarClicked: () -> Unit,
-    onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogFeature.NavActions,
 ) {
     CatalogScreenBehavior(
-        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

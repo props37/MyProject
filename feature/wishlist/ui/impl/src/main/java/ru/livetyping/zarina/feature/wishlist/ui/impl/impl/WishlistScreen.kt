@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -43,6 +44,8 @@ internal fun WishlistScreen(
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
     val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
 
+    BackHandler(onBack = viewModel::onBackClicked)
+
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
@@ -51,7 +54,6 @@ internal fun WishlistScreen(
         sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
         onLifecycleEvent = viewModel::onLifecycleEvent,
-        onBackClicked = viewModel::onBackClicked,
         productGridSideEffects = viewModel.productGridSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -67,14 +69,12 @@ private fun ScreenContent(
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
     onLifecycleEvent: (LifecycleEvent) -> Unit,
-    onBackClicked: () -> Unit,
     productGridSideEffects: Flow<ProductGridSideEffect>,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistFeature.NavActions,
 ) {
     WishlistScreenBehavior(
         onLifecycleEvent = onLifecycleEvent,
-        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

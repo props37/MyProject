@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,10 +39,11 @@ internal fun ProfileScreen(
 ) {
     val profileState by viewModel.profileState.collectAsStateWithLifecycle()
 
+    BackHandler(onBack = viewModel::onBackClicked)
+
     ScreenContent(
         profileState = profileState,
         onProfileEvent = viewModel::onProfileEvent,
-        onBackClicked = viewModel::onBackClicked,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -51,12 +53,10 @@ internal fun ProfileScreen(
 private fun ScreenContent(
     profileState: ProfileState,
     onProfileEvent: (ProfileEvent) -> Unit,
-    onBackClicked: () -> Unit,
     sideEffects: Flow<ProfileSideEffect>,
     navActions: ProfileNavActions,
 ) {
     ProfileScreenBehavior(
-        onBackClicked = onBackClicked,
         sideEffects = sideEffects,
         navActions = navActions,
     )

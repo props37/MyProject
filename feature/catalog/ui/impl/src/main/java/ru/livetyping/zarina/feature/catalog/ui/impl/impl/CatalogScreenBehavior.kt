@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -13,13 +12,10 @@ import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 
 @Composable
 internal fun CatalogScreenBehavior(
-    onBackClicked: () -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogFeature.NavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
-
-    BackHandler(onBack = onBackClicked)
 
     BottomNavBarBehavior(isVisible = true)
 

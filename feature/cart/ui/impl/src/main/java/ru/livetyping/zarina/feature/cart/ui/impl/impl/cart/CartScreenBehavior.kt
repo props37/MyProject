@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -17,7 +16,6 @@ import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun CartScreenBehavior(
-    onBackClicked: () -> Unit,
     onScreenCreated: () -> Unit,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
@@ -27,8 +25,6 @@ internal fun CartScreenBehavior(
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
     val currentOnScreenCreated by rememberUpdatedState(onScreenCreated)
-
-    BackHandler(onBack = onBackClicked)
 
     LifecycleEventEffect(Lifecycle.Event.ON_CREATE) {
         currentOnScreenCreated()
