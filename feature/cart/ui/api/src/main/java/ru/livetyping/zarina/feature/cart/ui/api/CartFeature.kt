@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.cart.ui.api
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import ru.livetyping.zarina.core.navigation.NavigationActions
@@ -27,9 +28,11 @@ public interface CartFeature :
         public val onChangeCityClicked: (City?) -> Unit,
         public val onGoToCatalogClicked: () -> Unit,
         public val onProductClicked: (CartProduct) -> Unit,
+        public val onPaymentStarted: (Url) -> Unit,
     ) : NavigationActions
 
     public class NavResultRetrievers(
         public val selectedCityResultRetriever: ScreenResultRetriever<CartSelectedCityResult>,
+        public val paymentResultRetriever: ScreenResultRetriever<PaymentResult>,
     ) : NavigationResultRetrievers
 }

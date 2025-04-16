@@ -131,6 +131,10 @@ internal class CheckoutRepositoryImpl @Inject constructor(
         return remoteDataSource.createOrder(params)
     }
 
+    override fun getCompletedPaymentsFlow(): Flow<PaymentData> {
+        return localDataSource.getCompletedPaymentsFlow()
+    }
+
     override fun onPaymentCompleted(paymentData: PaymentData): Flow<PaymentData> {
         return localDataSource.getCompletedPaymentsFlow()
     }

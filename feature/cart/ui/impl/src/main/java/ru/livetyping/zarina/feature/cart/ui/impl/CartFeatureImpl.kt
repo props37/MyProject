@@ -257,10 +257,7 @@ public class CartFeatureImpl : CartFeature {
                         GiftCertificateNavEntry.from(cartType, cart.price.finalPrice.toInt())
                     navController.navigate(giftCertificateNavEntry)
                 },
-                onPaymentStarted = { url ->
-                    // TODO: [Top] Implement
-                    TODO()
-                },
+                onPaymentStarted = actions.onPaymentStarted,
                 onOrderConfirmed = { order ->
                     // TODO: [Top] Implement
                     TODO()

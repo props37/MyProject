@@ -122,6 +122,7 @@
     <string name="res_understood">Понятно</string>
     <string name="res_payment_method">Способ оплаты</string>
     <string name="res_gift_certificate">Подарочный сертификат</string>
+    <string name="res_application_not_found">Приложение не найдено</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

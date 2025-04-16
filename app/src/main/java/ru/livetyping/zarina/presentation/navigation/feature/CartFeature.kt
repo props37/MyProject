@@ -11,11 +11,14 @@ import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
+import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
+import ru.livetyping.zarina.feature.payment.ui.api.PaymentResult
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.popBackStackToBottomNavBarItem
 import ru.livetyping.zarina.core.resource.R as RCommon
+import ru.livetyping.zarina.feature.cart.ui.api.PaymentResult as CartPaymentResult
 
 fun NavGraphBuilder.cartFeature(
     navController: NavHostController,
@@ -55,6 +58,10 @@ fun rememberCartNavActions(
                 val productNavEntry = ProductFeature.NavEntry.create(product.productId)
                 navController.navigate(productNavEntry)
             },
+            onPaymentStarted = { url ->
+                val paymentNavEntry = PaymentFeature.NavEntry(url.value)
+                navController.navigate(paymentNavEntry)
+            },
         )
     }
 }
@@ -64,16 +71,26 @@ fun rememberCartNavResultRetrievers(): CartFeature.NavResultRetrievers {
     return remember {
         val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
             navBackStackEntry.savedStateHandle
-                .getStateFlow<CitySelectorResult?>(CitySelectorResult.KEY, null)
+                .getStateFlow<CitySelectorResult?>(CitySelectorResult.KEY, initialValue = null)
                 .map { citySelectorResult ->
                     citySelectorResult?.let {
                         CartSelectedCityResult(id = it.id, city = it.city.toCity())
                     }
                 }
         }
+        val paymentResultRetriever = ScreenResultRetriever { navBackStackEntry ->
+            navBackStackEntry.savedStateHandle
+                .getStateFlow<PaymentResult?>(PaymentResult.KEY, initialValue = null)
+                .map { paymentResult ->
+                    paymentResult?.let {
+                        CartPaymentResult(it.id)
+                    }
+                }
+        }
 
         CartFeature.NavResultRetrievers(
             selectedCityResultRetriever = selectedCityResultRetriever,
+            paymentResultRetriever = paymentResultRetriever,
         )
     }
 }

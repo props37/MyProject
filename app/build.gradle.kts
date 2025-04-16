@@ -222,6 +222,9 @@ dependencies {
     implementation(projects.feature.search.ui.api)
     implementation(projects.feature.search.ui.impl)
 
+    implementation(projects.feature.payment.ui.api)
+    implementation(projects.feature.payment.ui.impl)
+
     implementation(projects.data.content)
     implementation(projects.data.auth)
     implementation(projects.data.category)

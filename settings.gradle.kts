@@ -66,6 +66,7 @@ include(":feature:search:ui:api")
 include(":feature:search:ui:impl")
 
 include(":feature:payment:ui:api")
+include(":feature:payment:ui:impl")
 
 include(":data:content")
 include(":data:auth")

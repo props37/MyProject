@@ -85,5 +85,7 @@ public interface CheckoutRepository {
 
     public suspend fun createOrder(params: OrderCreationParams): OrderDetailed
 
+    public fun getCompletedPaymentsFlow(): Flow<PaymentData>
+
     public fun onPaymentCompleted(paymentData: PaymentData): Flow<PaymentData>
 }

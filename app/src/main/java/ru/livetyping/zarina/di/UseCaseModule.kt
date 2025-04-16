@@ -41,6 +41,7 @@ import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.ApplyGiftCertificateUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.CheckoutUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCheckoutCartFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCompletedPaymentsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPaymentMethodsFlowUseCase
@@ -1172,6 +1173,17 @@ internal class UseCaseModule {
         logger: UseCaseLogger,
     ): ApplyGiftCertificateUseCase {
         return ApplyGiftCertificateUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCompletedPaymentsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCompletedPaymentsFlowUseCase {
+        return GetCompletedPaymentsFlowUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             logger = logger,
         )

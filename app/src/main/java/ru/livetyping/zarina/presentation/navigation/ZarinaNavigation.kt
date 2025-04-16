@@ -28,6 +28,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
@@ -49,6 +50,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature
 import ru.livetyping.zarina.presentation.navigation.feature.detectedCityFeature
 import ru.livetyping.zarina.presentation.navigation.feature.homeFeature
 import ru.livetyping.zarina.presentation.navigation.feature.onboardingFeature
+import ru.livetyping.zarina.presentation.navigation.feature.paymentFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productListFeature
 import ru.livetyping.zarina.presentation.navigation.feature.productSubscriptionFeature
@@ -61,6 +63,7 @@ import ru.livetyping.zarina.presentation.navigation.feature.rememberDetectedCity
 import ru.livetyping.zarina.presentation.navigation.feature.rememberHomeNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberOnboardingNavResultRetrievers
+import ru.livetyping.zarina.presentation.navigation.feature.rememberPaymentNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductListNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductNavActions
 import ru.livetyping.zarina.presentation.navigation.feature.rememberProductSubscriptionNavActions
@@ -133,6 +136,9 @@ fun ZarinaNavigation(
 
     val searchFeature = features.find<SearchFeature>()
     val searchNavActions = rememberSearchNavActions(navController)
+
+    val paymentFeature = features.find<PaymentFeature>()
+    val paymentNavActions = rememberPaymentNavActions(navController)
 
     val startDestination = when (startFeature) {
         AppStartFeature.ONBOARDING -> OnboardingFeature.NavEntry
@@ -210,6 +216,7 @@ fun ZarinaNavigation(
         detectedCityFeature(detectedCityFeature, detectedCityNavActions)
         webViewFeature(webViewFeature, webViewNavActions)
         searchFeature(navController, searchFeature, searchNavActions)
+        paymentFeature(navController, paymentFeature, paymentNavActions)
     }
 }
 
