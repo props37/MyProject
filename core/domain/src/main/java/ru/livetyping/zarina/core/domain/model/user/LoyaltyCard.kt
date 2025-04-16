@@ -6,6 +6,7 @@ import java.math.BigDecimal
 public data class LoyaltyCard(
     val number: Number,
     val currentLevel: Level,
+    val currentLevelName: String,
     val nextLevelInfo: NextLevelInfo?,
     val bonuses: Bonuses,
     val totalPurchaseSum: BigDecimal,
@@ -24,6 +25,7 @@ public data class LoyaltyCard(
     // Marked as stable on config/compose/stability_config.txt
     public data class NextLevelInfo(
         val level: Level,
+        val levelName: String,
         val requiredPurchaseSum: BigDecimal,
     )
 

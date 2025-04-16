@@ -14,8 +14,14 @@ internal data class LoyaltyCardDto(
     @SerialName("current_level")
     val currentLevel: LoyaltyCardLevelDto? = null,
 
+    @SerialName("current_level_description")
+    val currentLevelDescription: String? = null,
+
     @SerialName("next_level")
     val nextLevel: LoyaltyCardLevelDto? = null,
+
+    @SerialName("next_level_description")
+    val nextLevelDescription: String? = null,
 
     @SerialName("next_level_purchases_sum")
     val nextLevelPurchaseSum: Float? = null,
@@ -35,9 +41,11 @@ internal data class LoyaltyCardDto(
     fun toLoyaltyCard(): LoyaltyCard {
         checkPropertyNotNull(number) { ::number }
         checkPropertyNotNull(currentLevel) { ::currentLevel }
-        val nextLevelInfo = if (nextLevel != null && nextLevelPurchaseSum != null) {
+        checkPropertyNotNull(currentLevelDescription) { ::currentLevelDescription }
+        val nextLevelInfo = if (nextLevel != null && nextLevelDescription != null && nextLevelPurchaseSum != null) {
             LoyaltyCard.NextLevelInfo(
                 level = nextLevel.toLoyaltyCardLevel(),
+                levelName = nextLevelDescription,
                 requiredPurchaseSum = BigDecimal(nextLevelPurchaseSum.toDouble()),
             )
         } else null
@@ -48,6 +56,7 @@ internal data class LoyaltyCardDto(
         return LoyaltyCard(
             number = LoyaltyCard.Number(number),
             currentLevel = currentLevel.toLoyaltyCardLevel(),
+            currentLevelName = currentLevelDescription,
             nextLevelInfo = nextLevelInfo,
             bonuses = bonuses,
             totalPurchaseSum = purchaseTotal?.let { BigDecimal(it.toDouble()) } ?: BigDecimal.ZERO,

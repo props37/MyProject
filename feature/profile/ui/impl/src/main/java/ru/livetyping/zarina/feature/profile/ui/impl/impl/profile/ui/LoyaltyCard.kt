@@ -108,7 +108,6 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardD
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.RotationBackSide
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.RotationFrontSide
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.RotationTurnThreshold
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.util.nameResId
 import timber.log.Timber
 import java.math.BigDecimal
 import kotlin.enums.EnumEntries
@@ -460,7 +459,7 @@ private fun FrontSideLevelInfo(
         val fullInfoAlpha = if (card.nextLevelInfo != null) 1f else 0f
         Column(modifier = Modifier.alpha(fullInfoAlpha)) {
             Text(
-                text = stringResource(card.currentLevel.nameResId),
+                text = card.currentLevelName,
                 style = levelNameTextStyle,
             )
 
@@ -491,7 +490,7 @@ private fun FrontSideLevelInfo(
             modifier = Modifier.alpha(shortInfoAlpha),
         ) {
             Text(
-                text = stringResource(card.currentLevel.nameResId),
+                text = card.currentLevelName,
                 style = levelNameTextStyle,
                 modifier = Modifier.weight(1f),
             )
@@ -659,6 +658,7 @@ internal fun LoyaltyCardPlaceholder(
         LoyaltyCard(
             number = LoyaltyCard.Number(""),
             currentLevel = LoyaltyCard.Level.PRIME,
+            currentLevelName = "",
             nextLevelInfo = null,
             bonuses = LoyaltyCard.Bonuses(0, 0),
             totalPurchaseSum = BigDecimal.ZERO,

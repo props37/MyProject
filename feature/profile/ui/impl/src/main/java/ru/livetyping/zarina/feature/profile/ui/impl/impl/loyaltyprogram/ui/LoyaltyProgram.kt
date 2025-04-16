@@ -38,7 +38,6 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramState
-import ru.livetyping.zarina.feature.profile.ui.impl.impl.util.nameResId
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -132,7 +131,7 @@ private fun LoyaltyProgramInfo(
     Column(modifier = modifier) {
         LoyaltyProgramInfoItem(
             headerText = stringResource(R.string.profile_loyalty_program_level),
-            bodyText = loyaltyCard?.currentLevel?.nameResId?.let { stringResource(it) },
+            bodyText = loyaltyCard?.currentLevelName,
         )
 
         divider()
