@@ -427,7 +427,7 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
         val currentPaymentMethod = selectedPaymentMethod.value
 
         if (paymentMethod.type != currentPaymentMethod?.type) {
-            // TODO: [Top] Implement
+            // TODO: [Top] Report AppMetrica event
 //            AppMetricaHelper.reportPaymentMethodSelected(paymentMethod)
         }
 

@@ -24,8 +24,6 @@ import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.Order
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.OrderCancellationDialog
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui.TopBar
 
-// TODO: [Top] Add ability to pay for the order
-
 @Composable
 internal fun OrderScreen(
     navActions: OrderNavActions,
