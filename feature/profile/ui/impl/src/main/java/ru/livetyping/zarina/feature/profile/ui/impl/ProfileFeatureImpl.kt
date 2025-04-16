@@ -9,7 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavActions
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.BonusHistoryNavEntry
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.EmailChangeNavActions
@@ -47,7 +46,7 @@ public class ProfileFeatureImpl : ProfileFeature {
     override fun NavGraphBuilder.navigation(
         navController: NavHostController,
         actions: ProfileFeature.NavActions,
-        resultRetrievers: ProfileNavResultRetrievers,
+        resultRetrievers: ProfileFeature.ProfileNavResultRetrievers,
         enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,
         exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)?,
         popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)?,

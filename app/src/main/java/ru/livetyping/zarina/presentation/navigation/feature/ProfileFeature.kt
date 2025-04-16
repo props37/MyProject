@@ -11,7 +11,6 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
-import ru.livetyping.zarina.feature.profile.ui.ProfileNavResultRetrievers
 import ru.livetyping.zarina.feature.profile.ui.ProfileSelectedCityResult
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
@@ -22,7 +21,7 @@ fun NavGraphBuilder.profileFeature(
     navController: NavHostController,
     feature: ProfileFeature,
     actions: ProfileFeature.NavActions,
-    resultRetrievers: ProfileNavResultRetrievers,
+    resultRetrievers: ProfileFeature.ProfileNavResultRetrievers,
 ) {
     with(feature) {
         navigation(
@@ -54,7 +53,7 @@ fun rememberProfileNavActions(
 }
 
 @Composable
-fun rememberProfileNavResultRetrievers(): ProfileNavResultRetrievers {
+fun rememberProfileNavResultRetrievers(): ProfileFeature.ProfileNavResultRetrievers {
     return remember {
         val selectedCityResultRetriever = ScreenResultRetriever { navBackStackEntry ->
             navBackStackEntry.savedStateHandle
@@ -66,7 +65,7 @@ fun rememberProfileNavResultRetrievers(): ProfileNavResultRetrievers {
                 }
         }
 
-        ProfileNavResultRetrievers(
+        ProfileFeature.ProfileNavResultRetrievers(
             selectedCityResultRetriever = selectedCityResultRetriever,
         )
     }
