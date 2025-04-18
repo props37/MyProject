@@ -17,19 +17,20 @@ internal class ToggleProductInWishlistUseCaseImpl(
 
     override suspend fun execute(params: Params): Boolean {
         val productId = params.productId
+        val appMetricaProduct = when (params) {
+            is Params.CartProduct -> params.product.toAppMetricaProduct()
+            is Params.Product -> params.product.toAppMetricaProduct()
+        }
 
         val wishlistProductIds =
             wishlistRepository.getWishlistProductIdsFlow(CachePolicy.LocalOnly).firstOrNull()
                 ?: emptySet()
         val isProductInWishlist = if (productId in wishlistProductIds) {
             wishlistRepository.removeProductFromWishlist(productId)
+            appMetrica.reportProductRemovedFromWishlist(appMetricaProduct)
             false
         } else {
             wishlistRepository.addProductToWishlist(productId)
-            val appMetricaProduct = when (params) {
-                is Params.CartProduct -> params.product.toAppMetricaProduct()
-                is Params.Product -> params.product.toAppMetricaProduct()
-            }
             appMetrica.reportProductAddedToWishlist(appMetricaProduct)
             true
         }

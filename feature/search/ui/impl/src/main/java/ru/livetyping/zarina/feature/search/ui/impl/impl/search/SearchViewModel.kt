@@ -357,8 +357,6 @@ internal class SearchViewModel @AssistedInject constructor(
                         val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
-                    } else {
-                        // TODO: [Top] Report AppMetrica event
                     }
                 }
                 .onFailure {
