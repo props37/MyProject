@@ -285,7 +285,7 @@ internal class UserRepositoryImpl @Inject constructor(
     private suspend fun userCacheUpdatePolicyImpl(user: User, policy: CacheUpdatePolicy) {
         when (policy) {
             CacheUpdatePolicy.NONE -> Unit
-            CacheUpdatePolicy.CLEAR -> TODO() // TODO: [Top] Implement
+            CacheUpdatePolicy.CLEAR -> localDataSource.setUser(null)
             CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
         }
     }

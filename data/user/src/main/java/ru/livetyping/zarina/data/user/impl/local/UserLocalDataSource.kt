@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.user.User
 internal interface UserLocalDataSource {
     fun getUserFlow(): Flow<User?>
 
-    suspend fun setUser(user: User)
+    suspend fun setUser(user: User?)
 
     fun getUserCityFlow(): Flow<City?>
 

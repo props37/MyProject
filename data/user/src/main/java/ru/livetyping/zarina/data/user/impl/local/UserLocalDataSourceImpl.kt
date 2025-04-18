@@ -22,10 +22,12 @@ internal class UserLocalDataSourceImpl @Inject constructor(
         return userDao.getUserFlow().map { it?.toUser() }
     }
 
-    override suspend fun setUser(user: User) {
+    override suspend fun setUser(user: User?) {
         databaseTransactionManager.withTransaction {
             userDao.clear()
-            userDao.saveUser(UserEntity.from(user))
+            if (user != null) {
+                userDao.saveUser(UserEntity.from(user))
+            }
         }
     }
 
