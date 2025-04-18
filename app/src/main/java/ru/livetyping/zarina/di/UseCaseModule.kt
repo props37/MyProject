@@ -260,10 +260,12 @@ internal class UseCaseModule {
     @Provides
     fun provideToggleProductInWishlistUseCase(
         wishlistRepository: WishlistRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): ToggleProductInWishlistUseCase {
         return ToggleProductInWishlistUseCase.getInstance(
             wishlistRepository = wishlistRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

@@ -350,14 +350,13 @@ internal class SearchViewModel @AssistedInject constructor(
 
     private fun onAddToWishlistClicked(event: SearchResultEvent.AddToWishlistClicked) {
         viewModelScope.launch {
-            val params = ToggleProductInWishlistUseCase.Params(event.product.id)
+            val params = ToggleProductInWishlistUseCase.Params.Product(event.product)
             deps.toggleProductInWishlist(params)
                 .onSuccess { isInWishlist ->
                     if (isInWishlist) {
                         val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
                         val message = ZarinaToastMessage(text)
                         emitSideEffect(SearchSideEffect.ShowZarinaToast(message))
-                        // TODO: [Top] Report AppMetrica event
                     } else {
                         // TODO: [Top] Report AppMetrica event
                     }

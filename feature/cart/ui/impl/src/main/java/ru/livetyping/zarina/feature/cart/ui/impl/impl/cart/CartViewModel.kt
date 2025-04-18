@@ -340,7 +340,7 @@ internal class CartViewModel @AssistedInject constructor(
 
     fun onAddProductToWishlistClicked(product: CartProduct) {
         viewModelScope.launch {
-            val params = ToggleProductInWishlistUseCase.Params(product.productId)
+            val params = ToggleProductInWishlistUseCase.Params.CartProduct(product)
             deps.toggleProductInWishlist(params)
                 .onSuccess { isProductInFavorites ->
                     if (isProductInFavorites) {

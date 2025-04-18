@@ -323,7 +323,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     private fun onAddProductToWishlistClicked(event: ProductEvent.AddToWishlistClicked) {
         viewModelScope.launch {
             val product = event.product
-            val params = ToggleProductInWishlistUseCase.Params(product.id)
+            val params = ToggleProductInWishlistUseCase.Params.Product(product)
             deps.toggleProductInWishlist(params)
                 .onSuccess { isInWishlist ->
                     if (isInWishlist) {

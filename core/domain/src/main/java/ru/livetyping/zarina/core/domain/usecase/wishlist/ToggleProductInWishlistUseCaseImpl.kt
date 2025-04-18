@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.core.domain.usecase.wishlist
 
 import kotlinx.coroutines.flow.firstOrNull
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase.Params
@@ -9,6 +11,7 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 internal class ToggleProductInWishlistUseCaseImpl(
     private val wishlistRepository: WishlistRepository,
+    private val appMetrica: AppMetrica,
     private val logger: UseCaseLogger?,
 ) : UseCase<Params, Boolean>(logger), ToggleProductInWishlistUseCase {
 
@@ -23,6 +26,11 @@ internal class ToggleProductInWishlistUseCaseImpl(
             false
         } else {
             wishlistRepository.addProductToWishlist(productId)
+            val appMetricaProduct = when (params) {
+                is Params.CartProduct -> params.product.toAppMetricaProduct()
+                is Params.Product -> params.product.toAppMetricaProduct()
+            }
+            appMetrica.reportProductAddedToWishlist(appMetricaProduct)
             true
         }
 

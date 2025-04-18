@@ -177,7 +177,7 @@ internal class WishlistViewModel @Inject constructor(
     private fun onAddProductToWishlistClicked(event: WishlistEvent.AddToWishlistClicked) {
         viewModelScope.launch {
             val product = event.product
-            val params = ToggleProductInWishlistUseCase.Params(product.id)
+            val params = ToggleProductInWishlistUseCase.Params.Product(product)
             deps.toggleProductInWishlist(params)
                 .onSuccess { isInWishlist ->
                     if (isInWishlist) {
