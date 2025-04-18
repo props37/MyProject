@@ -47,9 +47,6 @@ internal data class ProductDetailedDto(
 
     @SerialName("share_url")
     val shareUrl: String? = null,
-
-    @SerialName("model")
-    val model: ModelDto? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { ::id }
@@ -74,7 +71,7 @@ internal data class ProductDetailedDto(
             bonusAccrualForPurchase = bonus ?: 0,
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
-            modelInfo = model?.toModelInfo(),
+            modelInfo = null,
         )
     }
 
