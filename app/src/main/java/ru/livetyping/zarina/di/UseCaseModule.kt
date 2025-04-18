@@ -598,10 +598,12 @@ internal class UseCaseModule {
     @Provides
     fun provideRemoveProductFromCartUseCase(
         cartRepository: CartRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): RemoveProductFromCartUseCase {
         return RemoveProductFromCartUseCase.getInstance(
             cartRepository = cartRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

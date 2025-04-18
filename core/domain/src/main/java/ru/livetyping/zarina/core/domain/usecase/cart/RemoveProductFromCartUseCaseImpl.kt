@@ -1,6 +1,8 @@
 package ru.livetyping.zarina.core.domain.usecase.cart
 
 import kotlinx.coroutines.flow.firstOrNull
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCartProduct
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase.Params
@@ -9,14 +11,16 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 internal class RemoveProductFromCartUseCaseImpl(
     private val cartRepository: CartRepository,
+    private val appMetrica: AppMetrica,
     private val logger: UseCaseLogger?,
 ) : UseCase<Params, Unit>(logger), RemoveProductFromCartUseCase {
 
     override suspend fun execute(params: Params) {
         cartRepository.removeProductFromCart(
-            productId = params.productId,
+            productId = params.product.productId,
             barcode = params.barcode,
         )
+        appMetrica.reportProductRemovedFromCart(params.product.toAppMetricaCartProduct())
 
         if (!cartRepository.areCartProductIdsFetched()) {
             fetchCartProductIds()

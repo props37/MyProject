@@ -362,7 +362,7 @@ internal class CartViewModel @AssistedInject constructor(
 
     fun onDeleteProductFromCartClicked(product: CartProduct) {
         viewModelScope.launch {
-            val params = RemoveProductFromCartUseCase.Params(product.productId, product.barcode)
+            val params = RemoveProductFromCartUseCase.Params(product, product.barcode)
             deps.removeProductFromCart(params)
                 .onSuccess {
                     requestCarts(CartRequest.REFRESHING)
