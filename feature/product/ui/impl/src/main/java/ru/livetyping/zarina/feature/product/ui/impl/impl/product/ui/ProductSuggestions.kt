@@ -15,10 +15,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
+import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
+import ru.livetyping.zarina.core.analytics.model.Screen
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uicompose.getHorizontalPaddingValues
@@ -107,6 +111,15 @@ private fun ProductSuggestionsSuccess(
             items = state.products,
             key = { it.id.value },
         ) { product ->
+            val appMetrica = LocalAppMetrica.current
+            DisposableEffect(Unit) {
+                appMetrica?.reportShowProductCardEvent(
+                    product = product.toAppMetricaProduct(),
+                    screen = Screen.Product,
+                )
+                onDispose {}
+            }
+
             ProductCardSmall(
                 product = product,
                 onClick = onProductClicked,

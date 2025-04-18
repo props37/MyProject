@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
+import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
+import ru.livetyping.zarina.core.analytics.model.Screen
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
 import ru.livetyping.zarina.core.uikit.button.ZarinaAddToCartIconButton
@@ -50,7 +54,16 @@ public fun ProductCard(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     backgroundColor: Color = ProductCardDefaults.BackgroundColor,
+    appMetricaScreen: Screen? = null,
 ) {
+    val appMetrica = LocalAppMetrica.current
+    DisposableEffect(Unit) {
+        if (appMetricaScreen != null) {
+            appMetrica?.reportShowProductCardEvent(product.toAppMetricaProduct(), appMetricaScreen)
+        }
+        onDispose {}
+    }
+
     Column(
         modifier = modifier
             .background(backgroundColor)

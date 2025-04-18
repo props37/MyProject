@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.paging.retryAppendPrependErrors
@@ -83,6 +84,7 @@ public fun ProductGrid(
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
     sideEffects: Flow<ProductGridSideEffect>? = null,
+    appMetricaScreen: Screen? = null,
 ) {
     val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
@@ -175,6 +177,7 @@ public fun ProductGrid(
                             onAddToCartClicked = onAddToCartClicked,
                             onSubscribeClicked = onSubscribeClicked,
                             emptyProductsPlaceholder = emptyProductsPlaceholder,
+                            appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .pullRefresh(pullRefreshState),
@@ -224,6 +227,7 @@ private fun ProductGridImpl(
     onAddToCartClicked: (Product) -> Unit,
     onSubscribeClicked: (Product) -> Unit,
     emptyProductsPlaceholder: @Composable () -> Unit,
+    appMetricaScreen: Screen?,
     modifier: Modifier = Modifier,
 ) {
     val placeholderShimmer = rememberZarinaSkeletonShimmer()
@@ -259,6 +263,7 @@ private fun ProductGridImpl(
                             onSubscribeClicked = onSubscribeClicked,
                             shimmer = placeholderShimmer,
                             modifier = itemModifier,
+                            appMetricaScreen = appMetricaScreen,
                         )
                     } else {
                         ProductCardSkeleton(

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
@@ -141,6 +142,7 @@ private fun ScreenContent(
                     )
                 },
                 sideEffects = productGridSideEffects,
+                appMetricaScreen = Screen.ProductList(categoryPath = null),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)

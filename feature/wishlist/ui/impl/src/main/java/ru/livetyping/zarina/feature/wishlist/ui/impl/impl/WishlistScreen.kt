@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -115,6 +116,7 @@ private fun ScreenContent(
                 )
             },
             sideEffects = productGridSideEffects,
+            appMetricaScreen = Screen.Wishlist,
             modifier = Modifier.fillMaxSize(),
         )
     }
