@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCartProduct
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
@@ -493,6 +494,13 @@ internal class CartViewModel @AssistedInject constructor(
 
     fun onCheckoutClicked() {
         navigationThrottler.throttle {
+            val cartType = currentCartType.value
+            val cart = getCart(cartType)
+            if (cart != null) {
+                val products = cart.products.map { it.toAppMetricaCartProduct() }
+                deps.appMetrica.reportCheckoutStarted(products)
+            }
+
             val action = CartScreenAction.CheckoutClicked(currentCartType.value)
             emitSideEffect(CartSideEffect.Navigate(action))
         }
