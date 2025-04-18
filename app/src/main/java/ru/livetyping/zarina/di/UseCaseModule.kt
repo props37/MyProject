@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
@@ -584,10 +585,12 @@ internal class UseCaseModule {
     @Provides
     fun provideAddProductToCartUseCase(
         cartRepository: CartRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): AddProductToCartUseCase {
         return AddProductToCartUseCase.getInstance(
             cartRepository = cartRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

@@ -285,7 +285,7 @@ internal class ProductViewModel @Inject constructor(
     private fun addProductToCart(product: Product, offer: ProductOffer) {
         viewModelScope.launch {
             val params = AddProductToCartUseCase.Params(
-                productId = product.id,
+                product = product,
                 barcode = offer.barcode,
                 count = 1,
             )
