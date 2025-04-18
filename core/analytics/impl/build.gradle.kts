@@ -41,6 +41,8 @@ kotlin {
 dependencies {
     api(projects.core.analytics.api)
 
+    implementation(libs.appMetrica)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.jetpack.test.junit)
     androidTestImplementation(libs.jetpack.espresso)
