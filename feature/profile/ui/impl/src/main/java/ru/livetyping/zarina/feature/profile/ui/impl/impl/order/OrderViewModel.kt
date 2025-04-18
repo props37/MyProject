@@ -102,7 +102,7 @@ internal class OrderViewModel @Inject constructor(
             OrderEvent.BackClicked -> onBackClicked()
             OrderEvent.PullRefreshTriggered -> orderRequester.request(OrderRequest.REFRESHING)
             OrderEvent.OrderErrorRefreshClicked -> orderRequester.request(OrderRequest.LOADING)
-            OrderEvent.CancelOrderClicked -> isOrderCancellationDialogVisible.value = true // TODO: [Top] Test
+            OrderEvent.CancelOrderClicked -> isOrderCancellationDialogVisible.value = true
             OrderEvent.PayClicked -> onPayClicked()
         }
     }
