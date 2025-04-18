@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
@@ -27,4 +28,5 @@ internal class OrderPlacingDependencies @Inject constructor(
     val updateOrderPaymentStatus: UpdateOrderPaymentStatusUseCase,
     val getOrderStatus: GetOrderStatusUseCase,
     val withdrawGiftCertificate: WithdrawGiftCertificateUseCase,
+    val appMetrica: AppMetrica,
 )

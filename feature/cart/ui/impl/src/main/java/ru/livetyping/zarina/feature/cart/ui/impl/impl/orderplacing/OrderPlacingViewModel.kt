@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaPaymentMethodType
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.checkout.CheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.CheckoutStep
@@ -427,8 +428,8 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
         val currentPaymentMethod = selectedPaymentMethod.value
 
         if (paymentMethod.type != currentPaymentMethod?.type) {
-            // TODO: [Top] Report AppMetrica event
-//            AppMetricaHelper.reportPaymentMethodSelected(paymentMethod)
+            val appMetricaType = paymentMethod.type.toAppMetricaPaymentMethodType()
+            deps.appMetrica.reportPaymentMethodSelected(appMetricaType)
         }
 
         when {
