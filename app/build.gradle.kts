@@ -252,8 +252,9 @@ dependencies {
     implementation(projects.core.credential)
     implementation(projects.core.googlePlayServices)
     implementation(projects.core.mediaCompose)
+    implementation(projects.core.analytics.api)
+    implementation(projects.core.analytics.apiCompose)
     implementation(projects.core.analytics.impl)
-    implementation(projects.core.analytics.implCompose)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

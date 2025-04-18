@@ -18,7 +18,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.core.analytics.impl.compose.LocalAppMetrica
+import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.mediacompose.LocalExoPlayerCacheDataSourceFactoryProvider
 import ru.livetyping.zarina.core.mediacompose.rememberExoPlayerCacheDataSourceFactoryProvider
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior

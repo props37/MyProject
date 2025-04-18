@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.analytics.impl.compose
+package ru.livetyping.zarina.core.analytics.compose
 
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
