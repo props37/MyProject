@@ -42,6 +42,8 @@ internal fun OrderConfirmedScreenBehavior(
 }
 
 private fun navigate(navActions: OrderConfirmedNavActions, action: OrderConfirmedScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        OrderConfirmedScreenAction.ReturnToHomeClicked -> navActions.onReturnToHomeClicked()
+        is OrderConfirmedScreenAction.PayClicked -> navActions.onPayClicked(action.paymentUrl)
+    }
 }
