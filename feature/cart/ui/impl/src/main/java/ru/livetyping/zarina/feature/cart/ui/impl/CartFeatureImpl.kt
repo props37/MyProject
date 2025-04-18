@@ -8,6 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
+import androidx.navigation.navOptions
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.uimodel.checkout.DeliveryOptionParcelable
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
@@ -28,12 +29,15 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryAddress
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryMethodSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.deliveryOptionDateTimeSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.giftCertificateScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.orderConfirmedScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.orderPlacingScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupPointSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.pickupStoreSelectorScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.recipientScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupPointScreen
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.navigation.selectedPickupStoreScreen
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.OrderConfirmedNavActions
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.OrderConfirmedNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingNavActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingNavEntry
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.PickupPointSelectorNavActions
@@ -259,8 +263,11 @@ public class CartFeatureImpl : CartFeature {
                 },
                 onPaymentStarted = actions.onPaymentStarted,
                 onOrderConfirmed = { order ->
-                    // TODO: [Top] Implement
-                    TODO()
+                    val orderConfirmedNavEntry = OrderConfirmedNavEntry.from(order)
+                    val navOptions = navOptions {
+                        popUpTo<CartFeature.NavEntry> { inclusive = true }
+                    }
+                    navController.navigate(orderConfirmedNavEntry, navOptions)
                 },
             )
             orderPlacingScreen(
@@ -279,6 +286,15 @@ public class CartFeatureImpl : CartFeature {
                 },
             )
             giftCertificateScreen(giftCertificateNavActions)
+
+            val orderConfirmedNavActions = OrderConfirmedNavActions(
+                onReturnToHomeClicked = {
+                    navController.navigateUp()
+                    actions.onReturnToHomeClicked()
+                },
+                onPayClicked = actions.onPaymentStarted,
+            )
+            orderConfirmedScreen(orderConfirmedNavActions)
         }
     }
 }

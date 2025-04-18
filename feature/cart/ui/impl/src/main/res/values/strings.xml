@@ -81,6 +81,12 @@
     <string name="cart_gift_certificate_fields_empty_error">Поля ввода пусты. Для применения сертификата введите его номер и проверочный код</string>
     <string name="cart_gift_certificate_number_empty_error">Поле ввода пусто. Для применения сертификата введите его номер</string>
     <string name="cart_gift_certificate_verification_code_empty_error">Поле ввода пусто. Для применения сертификата введите проверочный код</string>
+    <string name="cart_payment_starting_error">Не удалось начать процесс оплату</string>
+    <string name="cart_thanks_for_order">Спасибо за заказ!</string>
+    <string name="cart_to_home_screen">На главную</string>
+    <string name="cart_order_confirmed_description_paid">Ваш заказ %1$s оплачен. Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный</string>
+    <string name="cart_order_confirmed_description_should_be_paid">Ваш заказ %1$s принят. В течение часа Вам необходимо оплатить заказ. После оплаты Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный.</string>
+    <string name="cart_order_confirmed_description_should_be_paid_upon_receipt">Ваш заказ %1$s принят. Вы будете получать информацию об изменении статусов заказа на почту %2$s.\n\nЕсли у Вас возникли вопросы, позвоните на нашу горячую линию %3$s. Звонок бесплатный.</string>
 
     <plurals name="cart_you_have_bonuses">
         <item quantity="zero">У Вас нет бонусов</item>

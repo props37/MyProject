@@ -4,8 +4,10 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.getSystemService
 import java.util.Locale
+import androidx.core.net.toUri
 
 public fun Context.getLocale(): Locale {
     val locales = this.resources.configuration.locales
@@ -30,6 +32,15 @@ public fun Context.shareText(text: String) {
     val shareIntent = Intent.createChooser(intent, null)
     if (shareIntent.resolveActivity(packageManager) != null) {
         startActivity(shareIntent)
+    }
+}
+
+public fun Context.dialPhoneNumber(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL).apply {
+        data = "tel:$phoneNumber".toUri()
+    }
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
     }
 }
 

@@ -25,6 +25,7 @@ public interface CartFeature :
 
     public class NavActions(
         public val onBackClicked: () -> Unit,
+        public val onReturnToHomeClicked: () -> Unit,
         public val onChangeCityClicked: (City?) -> Unit,
         public val onGoToCatalogClicked: () -> Unit,
         public val onProductClicked: (CartProduct) -> Unit,

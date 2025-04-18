@@ -39,3 +39,13 @@ public fun rememberAnnotatedStringWithLinks(
         }
     }
 }
+
+public fun AnnotatedString.Builder.addStyle(
+    substring: String,
+    spanStyle: SpanStyle,
+) {
+    val substringBounds = this.toAnnotatedString().findSubstringBounds(substring)
+    if (substringBounds != null) {
+        addStyle(spanStyle, substringBounds.first, substringBounds.last)
+    }
+}
