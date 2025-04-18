@@ -10,10 +10,10 @@ import io.appmetrica.analytics.ecommerce.ECommerceScreen
 import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.analytics.impl.util.toECommerceScreen
 import ru.livetyping.zarina.core.analytics.impl.util.toNameList
+import ru.livetyping.zarina.core.analytics.model.AppliedFilters
 import ru.livetyping.zarina.core.analytics.model.CartProduct
 import ru.livetyping.zarina.core.analytics.model.Category
 import ru.livetyping.zarina.core.analytics.model.DeliveryMethodType
-import ru.livetyping.zarina.core.analytics.model.AppliedFilters
 import ru.livetyping.zarina.core.analytics.model.Order
 import ru.livetyping.zarina.core.analytics.model.PaymentMethodType
 import ru.livetyping.zarina.core.analytics.model.Product
@@ -164,12 +164,12 @@ public class AppMetricaImpl : AppMetrica {
         val filterParameters = buildMap {
             appliedFilters.sorting?.getName()?.let { put(KEY_SORTING, it) }
 
-            val priceParameters = buildMap {
-                appliedFilters.price?.first?.let { put(KEY_MIN, it) }
-                appliedFilters.price?.last?.let { put(KEY_MAX, it) }
-            }.takeIf { it.isNotEmpty() }
-            if (priceParameters != null) {
-                put(KEY_PRICE, priceParameters)
+            if (appliedFilters.price?.first != null || appliedFilters.price?.last != null) {
+                val map = buildMap {
+                    appliedFilters.price?.first?.let { put(KEY_MIN, it) }
+                    appliedFilters.price?.last?.let { put(KEY_MAX, it) }
+                }
+                put(KEY_PRICE, map)
             }
 
             appliedFilters.materials?.takeIf { it.isNotEmpty() }
@@ -191,14 +191,10 @@ public class AppMetricaImpl : AppMetrica {
                 }
 
             appliedFilters.isDeliveryAvailable?.takeIf { it }
-                ?.let {
-                    put(KEY_DELIVERY_AVAILABILITY, it)
-                }
+                ?.let { put(KEY_DELIVERY_AVAILABILITY, it) }
 
             appliedFilters.isStorePickupAvailable?.takeIf { it }
-                ?.let {
-                    put(KEY_STORE_PICKUP_AVAILABILITY, it)
-                }
+                ?.let { put(KEY_STORE_PICKUP_AVAILABILITY, it) }
 
             appliedFilters.pickupStores?.takeIf { it.isNotEmpty() }
                 ?.let { items ->
@@ -281,9 +277,7 @@ public class AppMetricaImpl : AppMetrica {
         private const val EVENT_OPEN_PRODUCT_LIST = "openProductList"
         private const val EVENT_APPLY_PRODUCT_FILTERS = "applyProductFilters"
         private const val EVENT_CANCEL_ORDER = "cancelOrder"
-        private const val EVENT_SHOW_ERROR = "_showError"
         private const val EVENT_REFRESH_TOKENS = "_refreshTokens"
-        private const val EVENT_DUPLICATE_PRODUCTS = "_duplicateProducts"
 
         private const val KEY_SKU = "sku"
         private const val KEY_NAME = "name"
@@ -306,9 +300,7 @@ public class AppMetricaImpl : AppMetrica {
         private const val KEY_DELIVERY_AVAILABILITY = "deliveryAvailability"
         private const val KEY_STORE_PICKUP_AVAILABILITY = "storePickupAvailability"
         private const val KEY_PICKUP_STORES = "pickupStores"
-        private const val KEY_TITLE = "title"
         private const val KEY_IS_SUCCESS = "isSuccess"
-        private const val KEY_PRODUCTS = "products"
         private const val KEY_ID = "id"
 
         private const val CURRENCY_UNIT_RUB = "RUB"
