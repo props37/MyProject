@@ -3,6 +3,7 @@ package ru.livetyping.zarina.data.category.impl.local
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import javax.inject.Inject
 
 internal class CategoryLocalDataSourceImpl @Inject constructor(
@@ -18,5 +19,9 @@ internal class CategoryLocalDataSourceImpl @Inject constructor(
 
     override fun setCategories(categories: Categories?) {
         dataHolder.setCategories(categories)
+    }
+
+    override fun getCategoryPath(id: Category.Id): CategoryPath? {
+        return dataHolder.getCategoryPath(id)
     }
 }

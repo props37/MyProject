@@ -13,10 +13,12 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
@@ -102,6 +104,14 @@ internal class HomeViewModel @Inject constructor(
 
             HomeContentEvent.RefreshTriggered -> fetchHomeContent(HomeContentRequest.REFRESHING)
             HomeContentEvent.ErrorRefreshClicked -> fetchHomeContent(HomeContentRequest.LOADING)
+        }
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> deps.appMetrica.reportScreenOpened(Screen.Home)
+            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 

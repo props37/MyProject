@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
@@ -15,4 +16,5 @@ internal class WishlistDependencies @Inject constructor(
     val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     val addProductToCart: AddProductToCartUseCase,
     val clearWishlist: ClearWishlistUseCase,
+    val appMetrica: AppMetrica,
 )

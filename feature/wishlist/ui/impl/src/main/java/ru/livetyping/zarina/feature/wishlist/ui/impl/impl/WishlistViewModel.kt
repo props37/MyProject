@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -236,6 +237,7 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onScreenCreated() {
         wishlistProductsRequester.request(WishlistProductsRequest)
+        deps.appMetrica.reportScreenOpened(Screen.Wishlist)
     }
 
     private fun onScreenStarted() {

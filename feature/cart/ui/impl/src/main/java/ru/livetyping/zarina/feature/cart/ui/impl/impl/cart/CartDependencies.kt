@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.cart
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
@@ -33,4 +34,5 @@ internal class CartDependencies @Inject constructor(
     val redeemBonuses: RedeemBonusesUseCase,
     val cancelBonusRedemption: CancelBonusRedemptionUseCase,
     val changeProductCount: ChangeProductCountInCartUseCase,
+    val appMetrica: AppMetrica,
 )

@@ -20,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
@@ -55,6 +56,7 @@ internal fun ProductScreen(
         onProductSuggestionsEvent = viewModel::onProductSuggestionsEvent,
         sizeSelectorState = sizeSelectorState,
         onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -70,10 +72,12 @@ private fun ScreenContent(
     onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
     sizeSelectorState: SizeSelectorState,
     onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
     ProductScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )

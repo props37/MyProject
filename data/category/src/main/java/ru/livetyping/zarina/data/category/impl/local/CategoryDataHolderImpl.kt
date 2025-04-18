@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import ru.livetyping.zarina.core.domain.model.category.find
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,6 +30,41 @@ internal class CategoryDataHolderImpl @Inject constructor() : CategoryDataHolder
     override fun setCategories(categories: Categories?) {
         this.categories.value = categories
         Timber.tag(TAG).v("Categories set: $categories")
+    }
+
+    override fun getCategoryPath(id: Category.Id): CategoryPath? {
+        val categories = categories.value ?: return null
+
+        var gender = Gender.FEMALE
+        var categoryChain = getCategoryChain(id, categories.women)
+        if (categoryChain == null) {
+            gender = Gender.MALE
+            categoryChain = getCategoryChain(id, categories.men)
+        }
+
+        return categoryChain?.let { chain -> CategoryPath(gender, chain) }
+    }
+
+    private fun getCategoryChain(
+        targetCategoryId: Category.Id,
+        categories: List<Category>,
+    ): List<Category>? {
+        for (category in categories) {
+            if (category.id == targetCategoryId) return listOf(category)
+
+            val children = category.children
+            if (children != null) {
+                val nextCategories = getCategoryChain(targetCategoryId, children)
+                if (nextCategories != null) {
+                    return buildList {
+                        add(category)
+                        addAll(nextCategories)
+                    }
+                }
+            }
+        }
+
+        return null
     }
 
     private companion object {

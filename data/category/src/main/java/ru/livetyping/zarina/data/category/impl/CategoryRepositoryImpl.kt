@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.category.Categories
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import ru.livetyping.zarina.core.domain.model.category.find
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSource
@@ -40,6 +41,17 @@ internal class CategoryRepositoryImpl @Inject constructor(
             }
 
             is CachePolicy.Remote -> getCategoryFlowRemote(id, cachePolicy)
+        }
+    }
+
+    override suspend fun getCategoryPath(id: Category.Id, cachePolicy: CachePolicy): CategoryPath? {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getCategoryPath(id)
+            is CachePolicy.LocalFirstThenRemote -> {
+                getCategoryPathLocalFirstThenRemote(id, cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getCategoryPathRemote(id, cachePolicy)
         }
     }
 
@@ -96,6 +108,33 @@ internal class CategoryRepositoryImpl @Inject constructor(
             .map { categories ->
                 categories.find { it.id == id }
             }
+    }
+
+    private suspend fun getCategoryPathLocalFirstThenRemote(
+        id: Category.Id,
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): CategoryPath? {
+        // TODO: [Low] Add support for CacheExpirationPolicy
+        Timber.tag(TAG).w("CategoryPath CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
+        val cached = localDataSource.getCategoryPath(id)
+        return if (cached != null) {
+            cached
+        } else {
+            val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
+            checkNotNull(categories) { "Failed to fetch categories" }
+            categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
+            localDataSource.getCategoryPath(id)
+        }
+    }
+
+    private suspend fun getCategoryPathRemote(
+        id: Category.Id,
+        cachePolicy: CachePolicy.Remote,
+    ): CategoryPath? {
+        val categories = remoteDataSource.getCategoriesFlow().firstOrNull()
+        checkNotNull(categories) { "Failed to fetch categories" }
+        categoriesCacheUpdatePolicyImpl(categories, cachePolicy.updatePolicy)
+        return localDataSource.getCategoryPath(id)
     }
 
     private fun categoriesCacheUpdatePolicyImpl(categories: Categories, policy: CacheUpdatePolicy) {

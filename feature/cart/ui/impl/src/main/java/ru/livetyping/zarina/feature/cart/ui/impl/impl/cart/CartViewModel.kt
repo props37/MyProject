@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -271,6 +272,7 @@ internal class CartViewModel @AssistedInject constructor(
             val params = GetCartProductIdsFlowUseCase.Params(CachePolicy.Remote())
             deps.getCartProductIdsFlow(params).firstOrNull()
         }
+        deps.appMetrica.reportScreenOpened(Screen.Cart)
     }
 
     fun onClearCartClicked() {

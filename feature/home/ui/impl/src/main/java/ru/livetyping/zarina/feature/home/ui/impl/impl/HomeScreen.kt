@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
@@ -31,6 +32,7 @@ internal fun HomeScreen(
         onGenderSelectorEvent = viewModel::onGenderSelectorEvent,
         homeContentState = homeContentState,
         onHomeContentEvent = viewModel::onHomeContentEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -42,10 +44,12 @@ private fun ScreenContent(
     onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
     homeContentState: HomeContentState,
     onHomeContentEvent: (HomeContentEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<HomeSideEffect>,
     navActions: HomeFeature.NavActions,
 ) {
     HomeScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )

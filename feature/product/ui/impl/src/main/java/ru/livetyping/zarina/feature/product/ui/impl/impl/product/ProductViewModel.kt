@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,9 +17,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
@@ -27,6 +30,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowU
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -52,6 +56,8 @@ internal class ProductViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<ProductSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var reportScreenCreatedJob: Job? = null
 
     private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
@@ -178,6 +184,7 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.ProductColorClicked -> {
                 if (event.color.productId != productId.value) {
                     productId.value = event.color.productId
+                    reportScreenCreated()
                 }
             }
 
@@ -197,6 +204,14 @@ internal class ProductViewModel @Inject constructor(
 
     fun onSizeSelectorEvent(event: SizeSelectorEvent) {
         sizeSelectorComponent.onEvent(event)
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> reportScreenCreated()
+            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_RESUME -> Unit
+        }
     }
 
     private fun onBackClicked() {
@@ -310,6 +325,20 @@ internal class ProductViewModel @Inject constructor(
             val similarProductsResult = similarProductsResultFlow.firstOrNull()
             if (similarProductsResult?.isSuccess != true) {
                 similarProductsRequester.request(ProductRequest)
+            }
+        }
+    }
+
+    private fun reportScreenCreated() {
+        deps.appMetrica.reportScreenOpened(Screen.Product)
+
+        reportScreenCreatedJob?.cancel()
+        reportScreenCreatedJob = viewModelScope.launch {
+            val productSuccessState = productState
+                .firstOrNull { it is ProductState.Success } as? ProductState.Success
+            val product = productSuccessState?.product
+            if (product != null) {
+                deps.appMetrica.reportProductScreenOpened(product.toAppMetricaProduct())
             }
         }
     }

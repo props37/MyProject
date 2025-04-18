@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.search.ui.impl.impl.search
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
@@ -23,4 +24,5 @@ internal class SearchDependencies @Inject constructor(
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
     val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     val addProductToCart: AddProductToCartUseCase,
+    val appMetrica: AppMetrica,
 )

@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
@@ -264,7 +265,7 @@ internal class SearchViewModel @AssistedInject constructor(
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> Unit // TODO: [Top] Report AppMetrica event
+            LifecycleEvent.ON_CREATE -> deps.appMetrica.reportScreenOpened(Screen.Search)
             LifecycleEvent.ON_START -> Unit
             LifecycleEvent.ON_RESUME -> Unit
         }

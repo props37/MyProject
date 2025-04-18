@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -27,6 +28,7 @@ import ru.livetyping.zarina.core.domain.model.category.withFlattenedChildren
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -137,6 +139,14 @@ internal class CatalogViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = CatalogScreenAction.BackClicked
             emitSideEffect(CatalogSideEffect.Navigate(action))
+        }
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> deps.appMetrica.reportScreenOpened(Screen.Catalog)
+            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 

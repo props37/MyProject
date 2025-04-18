@@ -14,6 +14,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,13 +30,16 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCategoryPath
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
@@ -45,10 +49,12 @@ import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -78,6 +84,8 @@ internal class ProductListViewModel @AssistedInject constructor(
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var reportScreenCreatedJob: Job? = null
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
@@ -220,6 +228,7 @@ internal class ProductListViewModel @AssistedInject constructor(
                 val tag = event.tag
                 if (tag.children.isNullOrEmpty()) {
                     selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
+                    reportScreenCreated()
                 } else {
                     navigationThrottler.throttle {
                         viewModelScope.launch {
@@ -262,6 +271,14 @@ internal class ProductListViewModel @AssistedInject constructor(
             selectedTagId.value = null
         } else {
             onBackClicked()
+        }
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> reportScreenCreated()
+            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 
@@ -384,6 +401,22 @@ internal class ProductListViewModel @AssistedInject constructor(
     private fun showZarinaErrorToast(text: Text) {
         val message = ZarinaToastMessage.error(text)
         emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
+    }
+
+    private fun reportScreenCreated() {
+        reportScreenCreatedJob?.cancel()
+        reportScreenCreatedJob = viewModelScope.launch {
+            val currentCategoryPath = getCurrentCategoryPath()
+            val appMetricaScreen =
+                Screen.ProductList(currentCategoryPath?.toAppMetricaCategoryPath())
+            deps.appMetrica.reportScreenOpened(appMetricaScreen)
+        }
+    }
+
+    private suspend fun getCurrentCategoryPath(): CategoryPath? {
+        val currentCategoryId = selectedTagId.value ?: categoryId
+        val params = GetCategoryPathUseCase.Params(currentCategoryId, CachePolicy.LocalOnly)
+        return deps.getCategoryPath(params).getOrNull()
     }
 
     private fun handleFiltrationResult(resultFlow: Flow<FiltrationResult?>) {

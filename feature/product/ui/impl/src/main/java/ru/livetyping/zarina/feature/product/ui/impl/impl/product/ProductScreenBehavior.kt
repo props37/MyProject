@@ -9,11 +9,14 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.platform.shareText
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 
 @Composable
 internal fun ProductScreenBehavior(
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
@@ -22,6 +25,8 @@ internal fun ProductScreenBehavior(
     val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
 
     BottomNavBarBehavior(isVisible = true)
+
+    LifecycleEventEffect(onLifecycleEvent = onLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {

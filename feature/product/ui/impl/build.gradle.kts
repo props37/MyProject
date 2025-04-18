@@ -67,6 +67,7 @@ dependencies {
     implementation(projects.core.resource)
     implementation(projects.core.platform)
     implementation(projects.core.navigationUtil)
+    implementation(projects.core.analytics.api)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)

@@ -18,6 +18,7 @@ kotlin {
 
 dependencies {
     api(projects.core.usecase)
+    implementation(projects.core.analytics.api)
 
     api(libs.kotlin.coroutines.core)
 }

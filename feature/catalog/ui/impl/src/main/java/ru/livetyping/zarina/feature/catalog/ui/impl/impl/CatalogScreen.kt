@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
@@ -55,6 +56,7 @@ internal fun CatalogScreen(
         onCategoryListEvent = viewModel::onCategoryListEvent,
         categoryListItemsState = categoryListItemsState,
         onSearchBarClicked = viewModel::onSearchBarClicked,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -68,10 +70,12 @@ private fun ScreenContent(
     onCategoryListEvent: (CategoryListEvent) -> Unit,
     categoryListItemsState: CategoryListItemsState,
     onSearchBarClicked: () -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<CatalogSideEffect>,
     navActions: CatalogFeature.NavActions,
 ) {
     CatalogScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
