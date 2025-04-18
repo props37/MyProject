@@ -13,7 +13,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -78,9 +76,6 @@ internal class ProductListViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     private val deps: ProductListDependencies,
 ) : ViewModel(), SideEffectSource<ProductListSideEffect> by SideEffectSourceImpl() {
-
-    // TODO: [Medium] Inject dispatcher
-    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -165,7 +160,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             TagListState.Loading
         }
     }.stateIn(
-        scope = viewModelScopeDefault,
+        scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = TagListState.Loading,
     )
@@ -193,10 +188,10 @@ internal class ProductListViewModel @AssistedInject constructor(
         )
     }
         .flatMapLatest { it }
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
         .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .transformProductPagingData()
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
 
     val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 

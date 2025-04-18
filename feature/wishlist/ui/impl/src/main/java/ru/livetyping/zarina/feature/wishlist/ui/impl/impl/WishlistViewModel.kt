@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
@@ -54,10 +52,6 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal class WishlistViewModel @Inject constructor(
     private val deps: WishlistDependencies,
 ) : ViewModel(), SideEffectSource<WishlistSideEffect> by SideEffectSourceImpl() {
-
-    // TODO: [Medium] Inject dispatcher
-    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
-
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val operationTracker = OperationTracker()
@@ -100,7 +94,7 @@ internal class WishlistViewModel @Inject constructor(
     val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
 
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
         .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .combine(
             localWishlistProductIdsResultFlow,
@@ -115,7 +109,7 @@ internal class WishlistViewModel @Inject constructor(
                 )
             }
         }
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
 
     val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 

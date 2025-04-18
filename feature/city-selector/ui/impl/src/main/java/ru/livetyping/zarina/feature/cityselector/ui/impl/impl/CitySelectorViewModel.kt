@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
@@ -51,10 +49,6 @@ internal class CitySelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getCitiesFlow: GetCitiesFlowUseCase,
 ) : ViewModel(), SideEffectSource<CitySelectorSideEffect> by SideEffectSourceImpl() {
-
-    // TODO: [Medium] Inject dispatcher
-    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
-
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val navEntry = savedStateHandle.toRoute<CitySelectorFeature.NavEntry>(
@@ -116,7 +110,7 @@ internal class CitySelectorViewModel @Inject constructor(
             isChangeCityButtonVisible = hasSelectedCityChanged,
         )
     }.stateIn(
-        scope = viewModelScopeDefault,
+        scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = CityListState.Loading,
     )

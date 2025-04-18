@@ -15,7 +15,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -33,7 +32,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.plus
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
@@ -87,9 +85,6 @@ internal class SearchViewModel @AssistedInject constructor(
     savedStateHandle: SavedStateHandle,
     private val deps: SearchDependencies,
 ) : ViewModel(), SideEffectSource<SearchSideEffect> by SideEffectSourceImpl() {
-
-    private val viewModelScopeDefault = viewModelScope + Dispatchers.Default
-
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
@@ -187,7 +182,7 @@ internal class SearchViewModel @AssistedInject constructor(
     ) { searchHistoryQueriesResult, searchSuggestionResult, query ->
         searchStateBuilder.build(searchHistoryQueriesResult, searchSuggestionResult, query.toString())
     }.stateIn(
-        scope = viewModelScopeDefault,
+        scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
         initialValue = SearchState(
             autocompleteSuggestions = persistentListOf(),
@@ -222,10 +217,10 @@ internal class SearchViewModel @AssistedInject constructor(
         )
     }
         .flatMapLatest { it }
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
         .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .transformProductPagingData()
-        .cachedIn(viewModelScopeDefault)
+        .cachedIn(viewModelScope)
 
     val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
