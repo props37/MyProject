@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.util.library.activity
+package ru.livetyping.zarina.presentation.activity.util
 
 import android.graphics.Color
 import androidx.activity.SystemBarStyle

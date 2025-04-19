@@ -36,10 +36,10 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme
 import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLifecycleObserver
+import ru.livetyping.zarina.presentation.activity.util.DefaultDarkScrim
+import ru.livetyping.zarina.presentation.activity.util.DefaultLightScrim
 import ru.livetyping.zarina.presentation.app.App
-import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
-import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
-import ru.livetyping.zarina.util.library.activity.DefaultLightScrim
+import ru.livetyping.zarina.util.library.material.rememberBottomSheetNavigator
 import ru.livetyping.zarina.util.platform.getSizeInBytes
 import timber.log.Timber
 import javax.inject.Inject

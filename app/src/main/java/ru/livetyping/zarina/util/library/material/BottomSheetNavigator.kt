@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.util.library.accompanist
+package ru.livetyping.zarina.util.library.material
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.spring
