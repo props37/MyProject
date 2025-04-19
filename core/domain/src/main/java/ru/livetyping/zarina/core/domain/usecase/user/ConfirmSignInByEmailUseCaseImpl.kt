@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.analytics.model.SignInMethod
 import ru.livetyping.zarina.core.domain.impl.UserManager
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
@@ -12,6 +14,7 @@ internal class ConfirmSignInByEmailUseCaseImpl(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val mindboxRepository: MindboxRepository,
+    private val appMetrica: AppMetrica,
     logger: UseCaseLogger?,
 ) : UseCase<Params, Unit>(logger), ConfirmSignInByEmailUseCase {
 
@@ -24,6 +27,8 @@ internal class ConfirmSignInByEmailUseCaseImpl(
 
         val userManager = UserManager(authRepository, userRepository)
         userManager.setUserWithTokens(user, tokens)
+
+        appMetrica.reportUserSignedIn(SignInMethod.PASSWORD)
     }
 
     override suspend fun invoke(params: Params): Result<Unit> {

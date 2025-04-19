@@ -135,12 +135,14 @@ internal class UseCaseModule {
         userRepository: UserRepository,
         authRepository: AuthRepository,
         mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): ConfirmSignInByEmailUseCase {
         return ConfirmSignInByEmailUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
@@ -389,12 +391,14 @@ internal class UseCaseModule {
         userRepository: UserRepository,
         authRepository: AuthRepository,
         mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): SignInByEmailUseCase {
         return SignInByEmailUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
@@ -680,12 +684,14 @@ internal class UseCaseModule {
         userRepository: UserRepository,
         authRepository: AuthRepository,
         mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): ConfirmSignInByPhoneUseCase {
         return ConfirmSignInByPhoneUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

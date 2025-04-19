@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.analytics.model.SignInMethod
 import ru.livetyping.zarina.core.domain.impl.UserManager
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
@@ -15,6 +17,7 @@ internal class SignInByEmailUseCaseImpl(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
     private val mindboxRepository: MindboxRepository,
+    private val appMetrica: AppMetrica,
     private val logger: UseCaseLogger?,
 ) : UseCase<Params, AuthResult>(logger), SignInByEmailUseCase {
 
@@ -37,6 +40,7 @@ internal class SignInByEmailUseCaseImpl(
             mindboxRepository.onUserSignedIn(user)
             val userManager = UserManager(authRepository, userRepository)
             userManager.setUserWithTokens(user, tokens)
+            appMetrica.reportUserSignedIn(SignInMethod.PASSWORD)
         } else {
             logger?.v(TAG, "Phone confirmation needed")
         }

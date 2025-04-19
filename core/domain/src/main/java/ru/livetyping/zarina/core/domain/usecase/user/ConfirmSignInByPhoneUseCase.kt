@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
@@ -19,12 +20,14 @@ public interface ConfirmSignInByPhoneUseCase {
             userRepository: UserRepository,
             authRepository: AuthRepository,
             mindboxRepository: MindboxRepository,
+            appMetrica: AppMetrica,
             logger: UseCaseLogger?,
         ): ConfirmSignInByPhoneUseCase {
             return ConfirmSignInByPhoneUseCaseImpl(
                 userRepository = userRepository,
                 authRepository = authRepository,
                 mindboxRepository = mindboxRepository,
+                appMetrica = appMetrica,
                 logger = logger,
             )
         }

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.user.AuthResult
@@ -22,12 +23,14 @@ public interface SignInByEmailUseCase {
             userRepository: UserRepository,
             authRepository: AuthRepository,
             mindboxRepository: MindboxRepository,
+            appMetrica: AppMetrica,
             logger: UseCaseLogger?,
         ): SignInByEmailUseCase {
             return SignInByEmailUseCaseImpl(
                 userRepository = userRepository,
                 authRepository = authRepository,
                 mindboxRepository = mindboxRepository,
+                appMetrica = appMetrica,
                 logger = logger,
             )
         }
