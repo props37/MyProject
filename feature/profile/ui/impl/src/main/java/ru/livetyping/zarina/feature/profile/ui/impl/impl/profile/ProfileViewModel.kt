@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +51,8 @@ internal class ProfileViewModel @AssistedInject constructor(
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private var reportScreenCreatedJob: Job? = null
 
     private val getUserUseCaseParams = GetUserFlowUseCase.Params(CachePolicy.LocalOnly)
     private val userState: StateFlow<ProfileUserState> = deps.getUserFlow(getUserUseCaseParams)
@@ -142,9 +145,17 @@ internal class ProfileViewModel @AssistedInject constructor(
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
-            LifecycleEvent.ON_CREATE -> Unit
+            LifecycleEvent.ON_CREATE -> reportScreenCreated()
             LifecycleEvent.ON_START -> fetchLoyaltyCard()
             LifecycleEvent.ON_RESUME -> Unit
+        }
+    }
+
+    private fun reportScreenCreated() {
+        reportScreenCreatedJob?.cancel()
+        reportScreenCreatedJob = viewModelScope.launch {
+            val user = (userState.value as? ProfileUserState.Success)?.user
+            deps.appMetrica.reportProfileOpened(isUserSignedIn = user != null)
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.profile.ui.impl.impl.profile
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.buildutil.AppVersionName
 import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
@@ -16,4 +17,5 @@ internal class ProfileDependencies @Inject constructor(
     @AppVersionName
     val appVersionName: String,
     val mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
+    val appMetrica: AppMetrica,
 )
