@@ -14,6 +14,7 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaDeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
 import ru.livetyping.zarina.core.text.Text
@@ -94,7 +95,8 @@ internal class DeliveryMethodSelectorViewModel @Inject constructor(
 
     fun onDeliveryMethodClicked(deliveryMethod: DeliveryMethod) {
         navigationThrottler.throttle {
-            // TODO: [Top] Report AppMetrica event
+            val appMetricaType = deliveryMethod.type.toAppMetricaDeliveryMethodType()
+            deps.appMetrica.reportDeliveryMethodSelected(appMetricaType)
             val action = DeliveryMethodSelectorScreenAction.DeliveryMethodSelected(
                 cartType = cartType,
                 currentCheckoutStep = checkoutStep,
