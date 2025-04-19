@@ -208,8 +208,8 @@ internal class SearchViewModel @AssistedInject constructor(
         searchQueryValueHolder.stateFlow.filter { it.isNotBlank() },
         filters,
     ) { query, filters ->
-        // TODO: [Top] Report AppMetrica event
-         val sorting = filters.sorting?.selected ?: ProductSorting.getDefault()
+        deps.appMetrica.reportProductSearch(query)
+        val sorting = filters.sorting?.selected ?: ProductSorting.getDefault()
         deps.searchResultPager.getSearchResultPagingDataFlow(
             query = query,
             sorting = sorting,
