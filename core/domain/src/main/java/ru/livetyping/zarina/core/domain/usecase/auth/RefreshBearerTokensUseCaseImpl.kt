@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.auth
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
@@ -10,6 +11,7 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 internal class RefreshBearerTokensUseCaseImpl(
     private val authRepository: AuthRepository,
     private val forcedSignOutCoordinator: ForcedSignOutCoordinator,
+    private val appMetrica: AppMetrica,
     private val logger: UseCaseLogger?,
 ) : UseCase<Params, BearerTokens>(logger), RefreshBearerTokensUseCase {
 
@@ -31,13 +33,15 @@ internal class RefreshBearerTokensUseCaseImpl(
             val newTokens = authRepository.refreshBearerTokens(oldTokens)
             authRepository.setBearerTokens(newTokens)
             logger?.v(TAG, "Bearer tokens refreshed")
+            appMetrica.reportTokenRefreshAttempted(isSuccess = true)
             newTokens
         } catch (e: Exception) {
             logger?.e(TAG, e, "Failed to refresh Bearer tokens")
-            logger?.e(TAG, e, "Request force signout")
+            logger?.v(TAG, e, "Request force signout")
+            appMetrica.reportTokenRefreshAttempted(isSuccess = false)
             forcedSignOutCoordinator.requestForcedSignOut()
 
-            logger?.e(TAG, e, "Fetch new unauthorized user tokens")
+            logger?.v(TAG, e, "Fetch new unauthorized user tokens")
             // TODO: [Top] Test!
             try {
                 fetchNewUnauthorizedUserBearerTokens()

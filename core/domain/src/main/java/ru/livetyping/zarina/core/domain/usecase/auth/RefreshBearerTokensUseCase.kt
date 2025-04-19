@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.auth
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
@@ -14,11 +15,13 @@ public interface RefreshBearerTokensUseCase {
         public fun getInstance(
             authRepository: AuthRepository,
             forcedSignOutCoordinator: ForcedSignOutCoordinator,
+            appMetrica: AppMetrica,
             logger: UseCaseLogger?,
         ): RefreshBearerTokensUseCase {
             return RefreshBearerTokensUseCaseImpl(
                 authRepository = authRepository,
                 forcedSignOutCoordinator = forcedSignOutCoordinator,
+                appMetrica = appMetrica,
                 logger = logger,
             )
         }

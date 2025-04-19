@@ -173,11 +173,13 @@ internal class UseCaseModule {
     fun provideRefreshBearerTokensUseCase(
         authRepository: AuthRepository,
         forcedSignOutCoordinator: ForcedSignOutCoordinator,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): RefreshBearerTokensUseCase {
         return RefreshBearerTokensUseCase.getInstance(
             authRepository = authRepository,
             forcedSignOutCoordinator = forcedSignOutCoordinator,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
