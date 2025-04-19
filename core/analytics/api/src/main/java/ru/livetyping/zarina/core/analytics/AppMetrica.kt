@@ -45,7 +45,6 @@ public interface AppMetrica {
 
     public fun reportBonusesUsed(bonusCount: Int)
 
-    // TODO: [Top] Use
     public fun reportProductFiltersApplied(category: Category, appliedFilters: AppliedFilters)
 
     public fun reportTokenRefreshAttempted(isSuccess: Boolean)
