@@ -26,9 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.livetyping.zarina.R
+import ru.livetyping.zarina.core.platform.isPermissionGranted
 import ru.livetyping.zarina.presentation.activity.MainActivity
 import ru.livetyping.zarina.presentation.notification.ZarinaNotificationChannel
-import ru.livetyping.zarina.util.platform.isPermissionGranted
 import timber.log.Timber
 import javax.inject.Inject
 

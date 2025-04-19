@@ -255,6 +255,8 @@ dependencies {
     implementation(projects.core.analytics.api)
     implementation(projects.core.analytics.apiCompose)
     implementation(projects.core.analytics.impl)
+    implementation(projects.core.platform)
+    implementation(projects.core.coroutinesUtil)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

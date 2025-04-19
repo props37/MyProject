@@ -22,13 +22,13 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
-import ru.livetyping.zarina.util.library.coroutines.WhileUiSubscribed
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -56,7 +56,7 @@ class AppViewModel @Inject constructor(
                 result.getOrNull()?.size ?: 0
             }.stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileUiSubscribed,
+                started = SharingStarted.WhileAndroidUiSubscribed,
                 initialValue = 0,
             )
 
@@ -66,7 +66,7 @@ class AppViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileUiSubscribed,
+            started = SharingStarted.WhileAndroidUiSubscribed,
             initialValue = 0,
         )
 

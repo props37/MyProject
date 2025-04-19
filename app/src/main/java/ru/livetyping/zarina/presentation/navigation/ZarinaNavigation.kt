@@ -22,10 +22,12 @@ import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTr
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
 import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
+import ru.livetyping.zarina.feature.find
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
@@ -42,8 +44,6 @@ import ru.livetyping.zarina.presentation.app.AppStartFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItems
 import ru.livetyping.zarina.presentation.bottomnavbar.toFeatureNavEntry
-import ru.livetyping.zarina.presentation.feature.Features
-import ru.livetyping.zarina.presentation.feature.find
 import ru.livetyping.zarina.presentation.navigation.feature.cartFeature
 import ru.livetyping.zarina.presentation.navigation.feature.catalogFeature
 import ru.livetyping.zarina.presentation.navigation.feature.citySelectorFeature

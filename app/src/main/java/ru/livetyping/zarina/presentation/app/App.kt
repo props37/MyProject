@@ -26,14 +26,12 @@ import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBe
 import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
 import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
+import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
-import ru.livetyping.zarina.presentation.common.component.bottomsheet.ZarinaBottomSheetDefaults
-import ru.livetyping.zarina.presentation.common.toastcontroller.LocalToastController
-import ru.livetyping.zarina.presentation.common.toastcontroller.rememberToastController
-import ru.livetyping.zarina.presentation.feature.Features
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
 
 @Composable
@@ -44,8 +42,6 @@ fun App(
     modifier: Modifier = Modifier,
     viewModel: AppViewModel = hiltViewModel(),
 ) {
-    val toastController = rememberToastController()
-
     val defaultBottomNavBarBehavior = remember(viewModel.startFeature) {
         when (viewModel.startFeature) {
             AppStartFeature.ONBOARDING -> BottomNavBarBehavior.Hidden(isAnimated = false)
@@ -64,7 +60,6 @@ fun App(
     val zarinaToastController = rememberZarinaToastController()
 
     CompositionLocalProvider(
-        LocalToastController provides toastController,
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
         LocalBottomNavBarSizeTracker provides bottomNavBarSizeTracker,
         LocalExoPlayerCacheDataSourceFactoryProvider provides exoPlayerCacheDataSourceFactoryProvider,

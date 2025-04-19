@@ -32,11 +32,11 @@ import ru.livetyping.zarina.core.uicompose.screenbrightness.toWindowManagerBrigh
 import ru.livetyping.zarina.core.uicompose.systembars.LocalSystemBarsBehaviorController
 import ru.livetyping.zarina.core.uicompose.systembars.SystemBarsBehavior
 import ru.livetyping.zarina.core.uicompose.systembars.SystemBarsBehaviorController
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme
+import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.presentation.app.App
 import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
-import ru.livetyping.zarina.presentation.feature.Features
-import ru.livetyping.zarina.presentation.theme.UiKitTheme
-import ru.livetyping.zarina.presentation.theme.ZarinaTheme
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
 import ru.livetyping.zarina.util.library.activity.DefaultLightScrim

@@ -4,7 +4,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import java.util.Locale
 import androidx.core.net.toUri
@@ -42,6 +44,11 @@ public fun Context.dialPhoneNumber(phoneNumber: String) {
     if (intent.resolveActivity(packageManager) != null) {
         startActivity(intent)
     }
+}
+
+public fun Context.isPermissionGranted(permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(this, permission) ==
+            PackageManager.PERMISSION_GRANTED
 }
 
 private const val MIME_TYPE_TEXT_PLAIN = "text/plain"
