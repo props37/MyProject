@@ -835,10 +835,12 @@ internal class UseCaseModule {
     @Provides
     fun provideApplyPromoCodeUseCase(
         cartRepository: CartRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): ApplyPromoCodeUseCase {
         return ApplyPromoCodeUseCase.getInstance(
             cartRepository = cartRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
