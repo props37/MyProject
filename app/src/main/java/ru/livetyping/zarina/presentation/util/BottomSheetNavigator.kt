@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.util.library.material
+package ru.livetyping.zarina.presentation.util
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.spring

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.util.platform
+package ru.livetyping.zarina.util
 
 import android.os.Bundle
 import android.os.Parcel

@@ -39,8 +39,8 @@ import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLife
 import ru.livetyping.zarina.presentation.activity.util.DefaultDarkScrim
 import ru.livetyping.zarina.presentation.activity.util.DefaultLightScrim
 import ru.livetyping.zarina.presentation.app.App
-import ru.livetyping.zarina.util.library.material.rememberBottomSheetNavigator
-import ru.livetyping.zarina.util.platform.getSizeInBytes
+import ru.livetyping.zarina.presentation.util.rememberBottomSheetNavigator
+import ru.livetyping.zarina.util.getSizeInBytes
 import timber.log.Timber
 import javax.inject.Inject
 
