@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.presentation.base.activity.lifecycleobserver
+package ru.livetyping.zarina.presentation.activity.lifecycleobserver
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.Lifecycle

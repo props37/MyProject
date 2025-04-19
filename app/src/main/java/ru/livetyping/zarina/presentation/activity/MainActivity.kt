@@ -35,8 +35,8 @@ import ru.livetyping.zarina.core.uicompose.systembars.SystemBarsBehaviorControll
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme
 import ru.livetyping.zarina.feature.Features
+import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLifecycleObserver
 import ru.livetyping.zarina.presentation.app.App
-import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
 import ru.livetyping.zarina.util.library.accompanist.rememberBottomSheetNavigator
 import ru.livetyping.zarina.util.library.activity.DefaultDarkScrim
 import ru.livetyping.zarina.util.library.activity.DefaultLightScrim

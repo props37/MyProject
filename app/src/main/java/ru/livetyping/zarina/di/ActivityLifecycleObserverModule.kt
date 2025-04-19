@@ -5,10 +5,10 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
+import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLifecycleObserver
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityResultRegistryHolderLifecycleObserver
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.PermissionManagerInitializer
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.SmsCodeRetrieverInitializer
-import ru.livetyping.zarina.presentation.base.activity.lifecycleobserver.ActivityLifecycleObserver
 
 @Module
 @InstallIn(SingletonComponent::class)
