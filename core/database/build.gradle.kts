@@ -47,7 +47,7 @@ kotlin {
 dependencies {
     api(projects.core.domain)
 
-    implementation(libs.jetpack.room)
+    api(libs.jetpack.room)
     ksp(libs.jetpack.room.compiler)
 
     implementation(libs.timber)
