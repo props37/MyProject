@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.analytics.model
 
 public data class AppliedFilters(
     val sorting: Sorting?,
-    val price: IntRange?,
+    val price: PriceRange?,
     val materials: List<FilterItem>?,
     val sizes: List<FilterItem>?,
     val colors: List<FilterItem>?,
@@ -17,6 +17,11 @@ public data class AppliedFilters(
         PRICE_LOW_TO_HIGH,
         PRICE_HIGH_TO_LOW;
     }
+
+    public data class PriceRange(
+        val min: Int?,
+        val max: Int?,
+    )
 
     public data class FilterItem(val name: String)
 }

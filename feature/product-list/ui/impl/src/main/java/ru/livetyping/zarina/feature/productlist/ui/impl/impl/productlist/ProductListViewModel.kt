@@ -36,7 +36,9 @@ import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCategory
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCategoryPath
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaFilters
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryPath
@@ -426,8 +428,25 @@ internal class ProductListViewModel @AssistedInject constructor(
                 key = Keys.FILTRATION_RESULT.key,
             ) { result ->
                 filtersValueHolder.set(result.filters)
+                reportFiltersApplied(result.filters.toProductFilters())
             }
         }
+    }
+
+    private suspend fun reportFiltersApplied(filters: ProductFilters) {
+        val currentCategoryId = selectedTagId.value ?: categoryId
+        val category = getCategory(currentCategoryId)
+        if (category != null) {
+            deps.appMetrica.reportProductFiltersApplied(
+                category = category.toAppMetricaCategory(),
+                appliedFilters = filters.toAppMetricaFilters(),
+            )
+        }
+    }
+
+    private suspend fun getCategory(categoryId: Category.Id): Category? {
+        val params = GetCategoryFlowUseCase.Params(categoryId, CachePolicy.LocalOnly)
+        return deps.getCategoryFlow(params).firstOrNull()?.getOrNull()
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {

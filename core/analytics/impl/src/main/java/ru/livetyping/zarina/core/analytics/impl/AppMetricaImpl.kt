@@ -164,10 +164,10 @@ public class AppMetricaImpl : AppMetrica {
         val filterParameters = buildMap {
             appliedFilters.sorting?.getName()?.let { put(KEY_SORTING, it) }
 
-            if (appliedFilters.price?.first != null || appliedFilters.price?.last != null) {
+            if (appliedFilters.price?.min != null || appliedFilters.price?.max != null) {
                 val map = buildMap {
-                    appliedFilters.price?.first?.let { put(KEY_MIN, it) }
-                    appliedFilters.price?.last?.let { put(KEY_MAX, it) }
+                    appliedFilters.price?.min?.let { put(KEY_MIN, it) }
+                    appliedFilters.price?.max?.let { put(KEY_MAX, it) }
                 }
                 put(KEY_PRICE, map)
             }
