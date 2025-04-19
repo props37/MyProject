@@ -50,6 +50,7 @@ composeCompiler {
 
 dependencies {
     api(projects.core.media)
+    implementation(projects.core.analytics.apiCompose)
 
     api(libs.jetpack.media3.exoplayer)
     implementation(libs.jetpack.media3.ui.compose)

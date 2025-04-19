@@ -219,6 +219,10 @@ public class AppMetricaImpl : AppMetrica {
         AppMetricaInstance.reportEvent(EVENT_CANCEL_ORDER, parameters)
     }
 
+    override fun reportError(identifier: String, message: String?, error: Throwable?) {
+        AppMetricaInstance.reportError(identifier, message, error)
+    }
+
     private fun reportProductListOpened(screen: Screen.ProductList) {
         val parameters = screen.categoryPath?.let { path ->
             val categoryPathNameList = path.toNameList().takeIf { it.isNotEmpty() }

@@ -52,5 +52,5 @@ public interface AppMetrica {
 
     public fun reportOrderCancelled(orderId: String)
 
-    // TODO: [Top] Add reportError
+    public fun reportError(identifier: String, message: String?, error: Throwable?)
 }
