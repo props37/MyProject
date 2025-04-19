@@ -5,11 +5,10 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
-import java.util.Locale
 import androidx.core.net.toUri
+import java.util.Locale
 
 public fun Context.getLocale(): Locale {
     val locales = this.resources.configuration.locales

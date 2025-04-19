@@ -3,9 +3,9 @@ package ru.livetyping.zarina.core.domain.usecase.checkout
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase.Params
 import ru.livetyping.zarina.core.usecase.FlowUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
-import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase.Params
 
 internal class GetCourierDeliveryOptionsFlowUseCaseImpl(
     private val checkoutRepository: CheckoutRepository,

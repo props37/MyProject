@@ -1,9 +1,9 @@
 package ru.livetyping.zarina.core.analytics
 
+import ru.livetyping.zarina.core.analytics.model.AppliedFilters
 import ru.livetyping.zarina.core.analytics.model.CartProduct
 import ru.livetyping.zarina.core.analytics.model.Category
 import ru.livetyping.zarina.core.analytics.model.DeliveryMethodType
-import ru.livetyping.zarina.core.analytics.model.AppliedFilters
 import ru.livetyping.zarina.core.analytics.model.Order
 import ru.livetyping.zarina.core.analytics.model.PaymentMethodType
 import ru.livetyping.zarina.core.analytics.model.Product

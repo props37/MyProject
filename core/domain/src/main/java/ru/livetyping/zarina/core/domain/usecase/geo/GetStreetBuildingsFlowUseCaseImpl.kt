@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.common.exception.EmptySearchQueryException
 import ru.livetyping.zarina.core.domain.model.geo.Building
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
+import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase.Params
 import ru.livetyping.zarina.core.usecase.FlowUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
-import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase.Params
 
 internal class GetStreetBuildingsFlowUseCaseImpl(
     private val geographyRepository: GeographyRepository,

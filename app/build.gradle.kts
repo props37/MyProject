@@ -1,10 +1,14 @@
 import com.android.build.api.dsl.VariantDimension
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.internal.tasks.FinalizeBundleTask
-import name.remal.gradle_plugins.dsl.extensions.get
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import java.io.FileInputStream
 import java.util.Properties
+import kotlin.collections.forEach
+import kotlin.collections.listOf
+import kotlin.collections.mapNotNull
+import kotlin.collections.plusAssign
+import kotlin.collections.set
 
 plugins {
     alias(libs.plugins.android.application)
