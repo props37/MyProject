@@ -652,12 +652,14 @@ internal class UseCaseModule {
         userRepository: UserRepository,
         authRepository: AuthRepository,
         mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): ConfirmSignUpUseCase {
         return ConfirmSignUpUseCase.getInstance(
             userRepository = userRepository,
             authRepository = authRepository,
             mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
