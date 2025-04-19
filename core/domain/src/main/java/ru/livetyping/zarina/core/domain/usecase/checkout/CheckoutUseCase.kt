@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.checkout
 
 import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.checkout.CheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.CheckoutStep
@@ -25,12 +26,14 @@ public interface CheckoutUseCase {
             checkoutRepository: CheckoutRepository,
             orderRepository: OrderRepository,
             userRepository: UserRepository,
+            appMetrica: AppMetrica,
             logger: UseCaseLogger?,
         ): CheckoutUseCase {
             return CheckoutUseCaseImpl(
                 checkoutRepository = checkoutRepository,
                 orderRepository = orderRepository,
                 userRepository = userRepository,
+                appMetrica = appMetrica,
                 logger = logger,
             )
         }

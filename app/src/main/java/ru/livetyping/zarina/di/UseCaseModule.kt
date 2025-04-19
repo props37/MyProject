@@ -1127,12 +1127,14 @@ internal class UseCaseModule {
         checkoutRepository: CheckoutRepository,
         orderRepository: OrderRepository,
         userRepository: UserRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): CheckoutUseCase {
         return CheckoutUseCase.getInstance(
             checkoutRepository = checkoutRepository,
             orderRepository = orderRepository,
             userRepository = userRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

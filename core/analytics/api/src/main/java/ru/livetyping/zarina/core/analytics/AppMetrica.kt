@@ -50,4 +50,6 @@ public interface AppMetrica {
     public fun reportTokenRefreshAttempted(isSuccess: Boolean)
 
     public fun reportOrderCancelled(orderId: String)
+
+    // TODO: [Top] Add reportError
 }

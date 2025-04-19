@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.domain.analytics.toAppMetricaOrder
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.checkout.CheckoutParams
@@ -32,6 +34,7 @@ internal class CheckoutUseCaseImpl(
     private val checkoutRepository: CheckoutRepository,
     private val orderRepository: OrderRepository,
     private val userRepository: UserRepository,
+    private val appMetrica: AppMetrica,
     private val logger: UseCaseLogger?,
 ) : FlowUseCase<Params, CheckoutStep>(logger), CheckoutUseCase {
 
@@ -124,8 +127,7 @@ internal class CheckoutUseCaseImpl(
         )
         updateOrderPaymentStatus(order, paymentMethod)
 
-        // TODO: [Top] Report AppMetrica order confirmed event
-//        AppMetricaHelper.reportOrderConfirmed(order)
+        appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
 
         val updatedOrderStatus = getOrderStatus(order.id)
         if (updatedOrderStatus != null) {
@@ -160,8 +162,7 @@ internal class CheckoutUseCaseImpl(
             logger?.v(TAG, "Order payment URL is not provided")
         }
 
-        // TODO: [Top] Report AppMetrica order confirmed event
-//        AppMetricaHelper.reportOrderConfirmed(order)
+        appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
 
         val checkoutCompleted = CheckoutStep.CheckoutCompleted(
             order = order,
@@ -184,8 +185,7 @@ internal class CheckoutUseCaseImpl(
             paymentData = null,
         )
 
-        // TODO: [Top] Report AppMetrica order confirmed event
-//        AppMetricaHelper.reportOrderConfirmed(order)
+        appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
 
         val checkoutCompleted = CheckoutStep.CheckoutCompleted(
             order = order,
@@ -233,8 +233,7 @@ internal class CheckoutUseCaseImpl(
             // Use the payment method used to pay the remaining amount
             updateOrderPaymentStatus(order, paymentMethodForRemainingPrice)
 
-            // TODO: [Top] Report AppMetrica order confirmed event
-//            AppMetricaHelper.reportOrderConfirmed(order)
+            appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
 
             val updatedOrderStatus = getOrderStatus(order.id)
             if (updatedOrderStatus != null) {
@@ -257,8 +256,7 @@ internal class CheckoutUseCaseImpl(
                 paymentData = null,
             )
 
-            // TODO: [Top] Report AppMetrica order confirmed event
-//            AppMetricaHelper.reportOrderConfirmed(order)
+            appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
 
             val checkoutCompleted = CheckoutStep.CheckoutCompleted(
                 order = order,
