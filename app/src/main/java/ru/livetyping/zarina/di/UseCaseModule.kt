@@ -896,10 +896,12 @@ internal class UseCaseModule {
     @Provides
     fun provideCancelOrderUseCase(
         orderRepository: OrderRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): CancelOrderUseCase {
         return CancelOrderUseCase.getInstance(
             orderRepository = orderRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }

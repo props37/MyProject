@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.order
 
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
@@ -12,10 +13,12 @@ public interface CancelOrderUseCase {
     public companion object {
         public fun getInstance(
             orderRepository: OrderRepository,
+            appMetrica: AppMetrica,
             logger: UseCaseLogger?,
         ): CancelOrderUseCase {
             return CancelOrderUseCaseImpl(
                 orderRepository = orderRepository,
+                appMetrica = appMetrica,
                 logger = logger,
             )
         }
