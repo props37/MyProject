@@ -859,10 +859,12 @@ internal class UseCaseModule {
     @Provides
     fun provideRedeemBonusesUseCase(
         cartRepository: CartRepository,
+        appMetrica: AppMetrica,
         logger: UseCaseLogger,
     ): RedeemBonusesUseCase {
         return RedeemBonusesUseCase.getInstance(
             cartRepository = cartRepository,
+            appMetrica = appMetrica,
             logger = logger,
         )
     }
