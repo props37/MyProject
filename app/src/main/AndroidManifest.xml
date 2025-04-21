@@ -60,18 +60,6 @@
                     android:pathPattern="/catalog"
                     android:scheme="https" />
             </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pwa.zarina.ru"
-                    android:pathPattern="/catalog"
-                    android:scheme="https" />
-            </intent-filter>
             <!-- Catalog deep links end -->
 
             <!-- Products deep links start -->
@@ -86,18 +74,6 @@
                     android:pathPattern="/catalog/.*"
                     android:scheme="https" />
             </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pwa.zarina.ru"
-                    android:pathPattern="/catalog/.*"
-                    android:scheme="https" />
-            </intent-filter>
             <!-- Products deep links end -->
 
             <!-- Product deep links start -->
@@ -109,18 +85,6 @@
 
                 <data
                     android:host="zarina.ru"
-                    android:pathPattern="/catalog/product/.*"
-                    android:scheme="https" />
-            </intent-filter>
-
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="pwa.zarina.ru"
                     android:pathPattern="/catalog/product/.*"
                     android:scheme="https" />
             </intent-filter>
