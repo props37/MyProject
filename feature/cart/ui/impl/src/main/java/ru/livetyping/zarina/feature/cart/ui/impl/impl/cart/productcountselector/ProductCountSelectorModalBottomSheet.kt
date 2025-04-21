@@ -118,10 +118,7 @@ private fun Content(
             .plus(additionalPadding, LocalLayoutDirection.current)
 
         LazyColumn(contentPadding = contentPadding) {
-            itemsIndexed(
-                items = state.countItems,
-                key = { _, item -> item.count },
-            ) { index, item ->
+            itemsIndexed(items = state.countItems) { index, item ->
                 CountItem(
                     item = item,
                     onClick = {

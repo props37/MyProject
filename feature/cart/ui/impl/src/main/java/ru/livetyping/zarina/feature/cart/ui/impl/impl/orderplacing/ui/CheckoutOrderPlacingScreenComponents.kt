@@ -782,7 +782,7 @@ internal object CheckoutOrderPlacingScreenComponents {
     ) {
         AnimatedContent(
             targetState = paymentMethodsState,
-            transitionSpec = { fadeIn() togetherWith  fadeOut() },
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
             contentKey = {
                 when (it) {
                     is PaymentMethodsState.Success -> PaymentMethodsBottomSheetContentKeySuccess
