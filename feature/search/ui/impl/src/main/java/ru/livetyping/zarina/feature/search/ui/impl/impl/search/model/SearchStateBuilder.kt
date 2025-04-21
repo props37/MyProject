@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.search.ui.impl.impl.search.model
 
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.intl.LocaleList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
@@ -92,7 +93,7 @@ internal class SearchStateBuilder {
                 val items = historyQueries
                     .take(SearchState.SEARCH_HISTORY_QUERY_MAX_COUNT)
                     .map { query ->
-                        SearchSuggestionItem.HistoryQueryItem(query.text.capitalize())
+                        SearchSuggestionItem.HistoryQueryItem(query.text.capitalize(LocaleList.current))
                     }
                 addAll(items)
             }
