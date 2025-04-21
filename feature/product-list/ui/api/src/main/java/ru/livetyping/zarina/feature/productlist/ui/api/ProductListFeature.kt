@@ -18,7 +18,7 @@ public interface ProductListFeature :
     @Serializable
     public class NavEntry private constructor(
         override val categoryId: String,
-        override val filters: ProductFiltersParcelable?,
+        override val filters: ProductFiltersParcelable? = null,
     ) : ProductListNavEntry() {
         public companion object {
             public fun create(
