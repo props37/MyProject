@@ -107,8 +107,8 @@ public class ProductListFeatureImpl : ProductListFeature {
             val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
             ZarinaWebLinkUris.forEach { uri ->
                 // TODO: [Low] Migrate to navDeepLink<ProductListNavEntry>?
-                add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}" })
-                add(navDeepLink { uriPattern = "$uri/catalog/product/{$categoryId}/" })
+                add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}" })
+                add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}/" })
             }
         }
     }
