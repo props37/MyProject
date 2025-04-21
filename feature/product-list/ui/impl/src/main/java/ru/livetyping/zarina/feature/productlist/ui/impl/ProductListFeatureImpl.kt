@@ -103,12 +103,13 @@ public class ProductListFeatureImpl : ProductListFeature {
     }
 
     private companion object {
-        private val DeepLinks = buildList {
-            val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
-            ZarinaWebLinkUris.forEach { uri ->
-                // TODO: [Low] Migrate to navDeepLink<ProductListNavEntry>?
-                add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}" })
-                add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}/" })
+        private val DeepLinks by lazy {
+            buildList {
+                val categoryId = ProductListNavEntry.CATEGORY_ID_PROPERTY_NAME
+                ZarinaWebLinkUris.forEach { uri ->
+                    add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}" })
+                    add(navDeepLink { uriPattern = "$uri/catalog/{$categoryId}/" })
+                }
             }
         }
     }

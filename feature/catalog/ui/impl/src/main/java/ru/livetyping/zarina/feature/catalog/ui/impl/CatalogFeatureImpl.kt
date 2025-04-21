@@ -41,11 +41,12 @@ public class CatalogFeatureImpl : CatalogFeature {
     }
 
     private companion object {
-        private val DeepLinks = buildList {
-            // TODO: [Low] Migrate to navDeepLink<CatalogNavEntry>?
-            ZarinaWebLinkUris.forEach { uri ->
-                add(navDeepLink { uriPattern = "$uri/catalog" })
-                add(navDeepLink { uriPattern = "$uri/catalog/" })
+        private val DeepLinks by lazy {
+            buildList {
+                ZarinaWebLinkUris.forEach { uri ->
+                    add(navDeepLink { uriPattern = "$uri/catalog" })
+                    add(navDeepLink { uriPattern = "$uri/catalog/" })
+                }
             }
         }
     }
