@@ -38,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
@@ -952,29 +953,25 @@ object CheckoutOrderPlacingScreenComponents {
         val policiesRawText = stringResource(R.string.payment_policies)
         val onlineStorePolicy = stringResource(R.string.payment_policies_online_store)
         val privacyPolicy = stringResource(R.string.payment_policies_privacy)
-        val personalDataPolicy = stringResource(R.string.payment_policies_personal_data)
         val onlineStorePolicyUrl = stringResource(R.string.online_store_policy_url)
         val privacyPolicyUrl = stringResource(R.string.privacy_policy_url)
-        val personalDataPolicyUrl = stringResource(R.string.personal_data_policy_url)
 
         val substringToUrl = remember(
             onlineStorePolicy,
             onlineStorePolicyUrl,
             privacyPolicy,
             privacyPolicyUrl,
-            personalDataPolicy,
-            personalDataPolicyUrl,
         ) {
             mapOf(
                 onlineStorePolicy to onlineStorePolicyUrl,
                 privacyPolicy to privacyPolicyUrl,
-                personalDataPolicy to personalDataPolicyUrl,
             )
         }
         val text = rememberStringWithLinks(
             baseString = policiesRawText,
             substringToUrl = substringToUrl,
-            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+                .copy(textDecoration = TextDecoration.Underline),
             onUrlClicked = onUrlClicked,
         )
 
