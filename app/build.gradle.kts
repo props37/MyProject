@@ -321,12 +321,12 @@ fun getVariantOutputFileName(
     val formattedVersionName = versionName.replace('.', '_')
     return buildString {
         append("zarina")
-        append("_$formattedVersionName")
+        append("-$formattedVersionName")
         if (!flavorName.isNullOrEmpty()) {
-            append("_$flavorName")
+            append("-$flavorName")
         }
         if (buildTypeName != null) {
-            append("_$buildTypeName")
+            append("-$buildTypeName")
         }
         val ext = when (outputType) {
             VariantOutputType.APK -> ".apk"
