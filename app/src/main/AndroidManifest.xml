@@ -62,7 +62,7 @@
             </intent-filter>
             <!-- Catalog deep links end -->
 
-            <!-- Products deep links start -->
+            <!-- Product list deep links start -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,7 +74,7 @@
                     android:pathPattern="/catalog/.*"
                     android:scheme="https" />
             </intent-filter>
-            <!-- Products deep links end -->
+            <!-- Product list deep links end -->
 
             <!-- Product deep links start -->
             <intent-filter android:autoVerify="true">
