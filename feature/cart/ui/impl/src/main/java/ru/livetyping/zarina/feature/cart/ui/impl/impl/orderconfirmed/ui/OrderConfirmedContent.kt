@@ -2,9 +2,11 @@ package ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.order.OrderCard
 import ru.livetyping.zarina.core.uikit.order.color
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.model.ButtonType
@@ -37,6 +40,7 @@ internal fun OrderConfirmedContent(
     state: OrderConfirmedState,
     onReturnToHomeClicked: () -> Unit,
     onPayClicked: () -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -79,8 +83,7 @@ internal fun OrderConfirmedContent(
             onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 20.dp),
+                .padding(horizontal = 16.dp),
         ) {
             val textResId = when (state.buttonType) {
                 ButtonType.RETURN_TO_HOME -> R.string.cart_to_home_screen
@@ -88,6 +91,9 @@ internal fun OrderConfirmedContent(
             }
             Text(text = stringResource(textResId).uppercase())
         }
+
+        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
     }
 }
 

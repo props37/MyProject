@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -68,6 +69,7 @@ private fun ScreenContent(
             state = orderConfirmedState,
             onReturnToHomeClicked = onReturnToHomeClicked,
             onPayClicked = onPayClicked,
+            windowInsetsProvider = { WindowInsets.safeDrawing },
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState()),
