@@ -20,7 +20,11 @@ public interface ProductFeature :
         @Serializable
         public class StartNavEntry private constructor(
             override val productId: String,
-        ) : ProductNavEntry()
+        ) : ProductNavEntry() {
+            public companion object {
+                public const val PRODUCT_ID_PROPERTY_NAME: String = "productId"
+            }
+        }
 
         public companion object {
             public fun create(productId: Product.Id): NavEntry = NavEntry(productId.value)

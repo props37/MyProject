@@ -8,6 +8,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
+import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.AvailabilityInStoresNavActions
@@ -44,12 +46,24 @@ public class ProductFeatureImpl : ProductFeature {
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
             )
-            productScreen(productNavActions)
+            productScreen(productNavActions, DeepLinks)
 
             val availabilityInStoresNavActions = AvailabilityInStoresNavActions(
                 onBackClicked = { navController.navigateUp() },
             )
             availabilityInStoresScreen(availabilityInStoresNavActions)
+        }
+    }
+
+    internal companion object {
+        val DeepLinks by lazy {
+            buildList {
+                val productId = ProductFeature.NavEntry.StartNavEntry.PRODUCT_ID_PROPERTY_NAME
+                ZarinaWebLinkUris.forEach { uri ->
+                    add(navDeepLink { uriPattern = "$uri/catalog/product/{$productId}" })
+                    add(navDeepLink { uriPattern = "$uri/catalog/product/{$productId}/" })
+                }
+            }
         }
     }
 }

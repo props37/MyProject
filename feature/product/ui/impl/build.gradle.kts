@@ -68,6 +68,7 @@ dependencies {
     implementation(projects.core.platform)
     implementation(projects.core.navigationUtil)
     implementation(projects.core.analytics.api)
+    implementation(projects.core.deepLink)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
