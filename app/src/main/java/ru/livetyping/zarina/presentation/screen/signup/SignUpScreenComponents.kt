@@ -1,5 +1,8 @@
 package ru.livetyping.zarina.presentation.screen.signup
 
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,16 +14,21 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import ru.livetyping.zarina.R
 import ru.livetyping.zarina.domain.common.Url
 import ru.livetyping.zarina.presentation.common.component.button.ZarinaBackIconButton
 import ru.livetyping.zarina.presentation.common.component.checkbox.ZarinaCheckbox
 import ru.livetyping.zarina.presentation.common.component.topbar.ZarinaTopBar
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
+import ru.livetyping.zarina.util.compose.animation.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.util.compose.text.rememberStringWithLinks
 
 @Suppress("ConstPropertyName")
@@ -78,6 +86,42 @@ object SignUpScreenComponents {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun SubscriptionPolicy(
+        isVisible: Boolean,
+        isAccepted: Boolean,
+        onAcceptedChanged: (Boolean) -> Unit,
+        isErrorVisible: Boolean,
+        modifier: Modifier = Modifier,
+        contentPadding: PaddingValues = PaddingValues(),
+    ) {
+        AnimatedContent(
+            targetState = isVisible,
+            transitionSpec = {
+                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+            },
+            contentAlignment = Alignment.Center,
+            modifier = modifier,
+        ) { isVisible ->
+            if (isVisible) {
+                Row(modifier = Modifier.padding(contentPadding)) {
+                    SubscriptionPolicyText(modifier = Modifier.weight(1f))
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                        ZarinaCheckbox(
+                            isChecked = isAccepted,
+                            onCheckedChanged = onAcceptedChanged,
+                            isError = isErrorVisible,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     @Composable
     private fun PoliciesText(
         onUrlClicked: (Url) -> Unit,
@@ -108,8 +152,42 @@ object SignUpScreenComponents {
         val stringWithLinks = rememberStringWithLinks(
             baseString = stringResource(R.string.sign_up_policies),
             substringToUrl = substringToUrl,
-            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+                .copy(textDecoration = TextDecoration.Underline),
             onUrlClicked = { onUrlClicked(Url(it)) },
+        )
+
+        Text(
+            text = stringWithLinks,
+            style = UiKitTheme.typography.footnote.light,
+            color = UiKitTheme.colors.text.general.regular.default,
+            modifier = modifier,
+        )
+    }
+
+    @Composable
+    private fun SubscriptionPolicyText(
+        modifier: Modifier = Modifier,
+    ) {
+        val context = LocalContext.current
+
+        val agreement = stringResource(R.string.sign_up_subscription_policy_agreement)
+        val agreementUrl = stringResource(R.string.sign_up_subscription_policy_url)
+
+        val substringToUrl = remember(agreement, agreementUrl) {
+            mapOf(agreement to agreementUrl)
+        }
+        val stringWithLinks = rememberStringWithLinks(
+            baseString = stringResource(R.string.sign_up_subscription_policy),
+            substringToUrl = substringToUrl,
+            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+                .copy(textDecoration = TextDecoration.Underline),
+            onUrlClicked = { url ->
+                val customTabsIntent = CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .build()
+                customTabsIntent.launchUrl(context, url.toUri())
+            },
         )
 
         Text(

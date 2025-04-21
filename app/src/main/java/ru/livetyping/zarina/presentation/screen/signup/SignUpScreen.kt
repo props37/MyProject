@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -67,6 +68,7 @@ import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialo
 import ru.livetyping.zarina.presentation.common.yandexcaptcha.YandexCaptchaDialogState
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.DatePickerMinYear
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.Policies
+import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.SubscriptionPolicy
 import ru.livetyping.zarina.presentation.screen.signup.SignUpScreenComponents.TopBar
 import ru.livetyping.zarina.presentation.screen.signup.SignUpViewModel.SideEffect
 import ru.livetyping.zarina.presentation.theme.UiKitTheme
@@ -104,6 +106,9 @@ fun SignUpScreen(
     val receiveSms by viewModel.receiveSms.collectAsStateWithLifecycle()
     val arePoliciesAccepted by viewModel.arePoliciesAccepted.collectAsStateWithLifecycle()
     val isPoliciesErrorVisible by viewModel.isPoliciesErrorVisible.collectAsStateWithLifecycle()
+    val isSubscriptionPolicyVisible by viewModel.isSubscriptionPolicyVisible.collectAsStateWithLifecycle()
+    val isSubscriptionPolicyAccepted by viewModel.isSubscriptionPolicyAccepted.collectAsStateWithLifecycle()
+    val isSubscriptionPolicyErrorVisible by viewModel.isSubscriptionPolicyErrorVisible.collectAsStateWithLifecycle()
     val isSignUpButtonLoading by viewModel.isSignUpButtonLoading.collectAsStateWithLifecycle()
     val yandexCaptchaDialogState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
 
@@ -131,6 +136,10 @@ fun SignUpScreen(
         arePoliciesAccepted = arePoliciesAccepted,
         onPoliciesAcceptedChanged = viewModel::onPoliciesAcceptedChanged,
         isPoliciesErrorVisible = isPoliciesErrorVisible,
+        isSubscriptionPolicyVisible = isSubscriptionPolicyVisible,
+        isSubscriptionPolicyAccepted = isSubscriptionPolicyAccepted,
+        onSubscriptionPolicyAcceptedChanged = viewModel::onSubscriptionPolicyAcceptedChanged,
+        isSubscriptionPolicyErrorVisible = isSubscriptionPolicyErrorVisible,
         onUrlClicked = viewModel::onUrlClicked,
         onSignUpClicked = viewModel::onSignUpClicked,
         isSignUpButtonLoading = isSignUpButtonLoading,
@@ -168,6 +177,10 @@ private fun ScreenContent(
     arePoliciesAccepted: Boolean,
     onPoliciesAcceptedChanged: (Boolean) -> Unit,
     isPoliciesErrorVisible: Boolean,
+    isSubscriptionPolicyVisible: Boolean,
+    isSubscriptionPolicyAccepted: Boolean,
+    onSubscriptionPolicyAcceptedChanged: (Boolean) -> Unit,
+    isSubscriptionPolicyErrorVisible: Boolean,
     onUrlClicked: (Url) -> Unit,
     onSignUpClicked: () -> Unit,
     isSignUpButtonLoading: Boolean,
@@ -416,6 +429,17 @@ private fun ScreenContent(
                         .padding(horizontal = 16.dp),
                 )
 
+                SubscriptionPolicy(
+                    isVisible = isSubscriptionPolicyVisible,
+                    isAccepted = isSubscriptionPolicyAccepted,
+                    onAcceptedChanged = onSubscriptionPolicyAcceptedChanged,
+                    isErrorVisible = isSubscriptionPolicyErrorVisible,
+                    contentPadding = PaddingValues(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+
                 Spacer(modifier = Modifier.height(36.dp))
 
                 ZarinaButton(
@@ -481,6 +505,10 @@ private fun Preview() {
             arePoliciesAccepted = false,
             onPoliciesAcceptedChanged = {},
             isPoliciesErrorVisible = false,
+            isSubscriptionPolicyVisible = false,
+            isSubscriptionPolicyAccepted = false,
+            onSubscriptionPolicyAcceptedChanged = {},
+            isSubscriptionPolicyErrorVisible = false,
             onUrlClicked = {},
             onSignUpClicked = {},
             isSignUpButtonLoading = false,

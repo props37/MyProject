@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.R
@@ -110,6 +111,16 @@ class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
+    private val isSubscriptionPolicyAcceptedValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_IS_SUBSCRIPTION_POLICY_ACCEPTED,
+        initialValue = false,
+    )
+
+    private val isSubscriptionPolicyErrorVisibleValueHolder = savedStateHandle.createValueHolder(
+        key = KEY_IS_SUBSCRIPTION_POLICY_ERROR_VISIBLE,
+        initialValue = false,
+    )
+
     val firstName: StateFlow<String> = firstNameValueHolder.stateFlow
 
     private val _isFirstNameInvalid = MutableStateFlow(false)
@@ -142,6 +153,28 @@ class SignUpViewModel @Inject constructor(
     val arePoliciesAccepted: StateFlow<Boolean> = arePoliciesAcceptedValueHolder.stateFlow
 
     val isPoliciesErrorVisible: StateFlow<Boolean> = isPoliciesErrorVisibleValueHolder.stateFlow
+
+    val isSubscriptionPolicyVisible: StateFlow<Boolean> =
+        combine(receiveEmails, receiveSms) { receiveEmails, receiveSms ->
+            receiveEmails || receiveSms
+        }
+            .onEach { isVisible ->
+                if (isVisible) {
+                    isSubscriptionPolicyAcceptedValueHolder.set(false)
+                    isSubscriptionPolicyErrorVisibleValueHolder.set(false)
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileUiSubscribed,
+                initialValue = false,
+            )
+
+    val isSubscriptionPolicyAccepted: StateFlow<Boolean> =
+        isSubscriptionPolicyAcceptedValueHolder.stateFlow
+
+    val isSubscriptionPolicyErrorVisible: StateFlow<Boolean> =
+        isSubscriptionPolicyErrorVisibleValueHolder.stateFlow
 
     private val _yandexCaptchaState =
         MutableStateFlow<YandexCaptchaDialogState>(YandexCaptchaDialogState.Hidden)
@@ -207,6 +240,13 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    fun onSubscriptionPolicyAcceptedChanged(accepted: Boolean) {
+        isSubscriptionPolicyAcceptedValueHolder.set(accepted)
+        if (accepted) {
+            isSubscriptionPolicyErrorVisibleValueHolder.set(false)
+        }
+    }
+
     fun onUrlClicked(url: Url) {
         navigationThrottler.throttle {
             emitSideEffect(SideEffect.OpenUrl(url))
@@ -219,6 +259,14 @@ class SignUpViewModel @Inject constructor(
         if (!arePoliciesAccepted.value) {
             isPoliciesErrorVisibleValueHolder.set(true)
             val text = Text.Resource(R.string.sign_up_agreement_error)
+            val message = ZarinaToastMessage.error(text)
+            emitSideEffect(SideEffect.ShowZarinaToast(message))
+            return
+        }
+
+        if (isSubscriptionPolicyVisible.value && !isSubscriptionPolicyAccepted.value) {
+            isSubscriptionPolicyErrorVisibleValueHolder.set(true)
+            val text = Text.Resource(R.string.sign_up_subscription_agreement_error)
             val message = ZarinaToastMessage.error(text)
             emitSideEffect(SideEffect.ShowZarinaToast(message))
             return
@@ -398,6 +446,9 @@ class SignUpViewModel @Inject constructor(
         private const val KEY_RECEIVE_SMS = "receive_sms"
         private const val KEY_ARE_POLICIES_ACCEPTED = "are_policies_accepted"
         private const val KEY_IS_POLICIES_ERROR_VISIBLE = "is_policies_error_visible"
+        private const val KEY_IS_SUBSCRIPTION_POLICY_ACCEPTED = "is_subscription_policy_accepted"
+        private const val KEY_IS_SUBSCRIPTION_POLICY_ERROR_VISIBLE =
+            "is_subscription_policy_error_visible"
 
         private const val PHONE_NUMBER_INITIAL_VALUE = "+7"
     }
