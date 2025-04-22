@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -31,7 +32,7 @@ public fun YandexCaptchaPolicies(
     val textWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(RCommon.string.res_yandex_captcha_policies),
         substringToUrl = substringToUrl,
-        urlStyle = linkStyle.toSpanStyle(),
+        urlStyle = linkStyle.toSpanStyle().copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
 

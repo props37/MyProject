@@ -41,6 +41,7 @@ import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -452,7 +453,8 @@ private fun Policies(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = baseString,
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
 

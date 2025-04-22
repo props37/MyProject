@@ -39,6 +39,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
@@ -402,7 +403,8 @@ private fun PoliciesText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.sign_up_policies),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
 

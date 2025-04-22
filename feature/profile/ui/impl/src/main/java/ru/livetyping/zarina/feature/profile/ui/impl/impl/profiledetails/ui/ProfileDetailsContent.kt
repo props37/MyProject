@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -442,7 +443,8 @@ private fun Policies(
     val text = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.profile_newsletter_subscription_policies),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle(),
+        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = context::openUrlInCustomTabs,
     )
 
