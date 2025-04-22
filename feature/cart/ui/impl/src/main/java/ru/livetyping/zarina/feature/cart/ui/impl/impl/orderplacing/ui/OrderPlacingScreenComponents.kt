@@ -80,7 +80,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingV
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Suppress("ConstPropertyName")
-internal object CheckoutOrderPlacingScreenComponents {
+internal object OrderPlacingScreenComponents {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable

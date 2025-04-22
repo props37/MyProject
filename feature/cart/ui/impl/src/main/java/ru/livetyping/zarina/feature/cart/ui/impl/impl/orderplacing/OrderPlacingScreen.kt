@@ -43,9 +43,9 @@ import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingViewModel.DeliveryInfo
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingViewModel.InfoModalBottomSheetState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingViewModel.PaymentMethodsState
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.CheckoutOrderPlacingScreenComponents.InfoModalBottomSheet
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.CheckoutOrderPlacingScreenComponents.OrderPlacing
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.CheckoutOrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.OrderPlacingScreenComponents.InfoModalBottomSheet
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.OrderPlacingScreenComponents.OrderPlacing
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.ui.OrderPlacingScreenComponents.PaymentMethodSelectorBottomSheet
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBarState
