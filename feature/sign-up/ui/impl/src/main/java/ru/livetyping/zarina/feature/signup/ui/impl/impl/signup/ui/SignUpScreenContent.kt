@@ -3,35 +3,28 @@ package ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
@@ -39,17 +32,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.kotlinutil.LocalDateUtil
 import ru.livetyping.zarina.core.uicommon.DateTimeUtils
-import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
-import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
-import ru.livetyping.zarina.core.uikit.checkbox.ZarinaCheckbox
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
@@ -111,6 +100,18 @@ internal fun SignUpScreenContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
         )
+
+        SubscriptionPolicy(
+            isVisible = signUpState.isSubscriptionPolicyVisible,
+            isAccepted = signUpState.isSubscriptionPolicyAccepted,
+            onAcceptedChanged = { onSignUpEvent(SignUpEvent.SubscriptionPolicyAcceptedChanged(it)) },
+            isError = signUpState.isSubscriptionPolicyInvalid,
+            contentPadding = PaddingValues(top = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
+
         Spacer(modifier = Modifier.height(36.dp))
 
         ZarinaButton(
@@ -346,72 +347,5 @@ private fun ColumnScope.SubscriptionSetup(
             )
         },
         modifier = Modifier.fillMaxWidth(),
-    )
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun Policies(
-    areAccepted: Boolean,
-    onAcceptedChanged: (Boolean) -> Unit,
-    isError: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Row(modifier = modifier) {
-        PoliciesText(modifier = Modifier.weight(1f))
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-            ZarinaCheckbox(
-                isChecked = areAccepted,
-                onCheckedChanged = onAcceptedChanged,
-                isError = isError,
-            )
-        }
-    }
-}
-
-@Composable
-private fun PoliciesText(
-    modifier: Modifier = Modifier,
-) {
-    val currentContext by rememberUpdatedState(LocalContext.current)
-
-    val privacy = stringResource(R.string.sign_up_policies_privacy)
-    val onlineStore = stringResource(R.string.sign_up_policies_online_store)
-    val loyalty = stringResource(R.string.sign_up_policies_loyalty)
-
-    val privacyUrl = stringResource(RCommon.string.res_zarina_privacy_policy_url)
-    val onlineStoreUrl = stringResource(RCommon.string.res_zarina_online_store_policy_url)
-    val loyaltyUrl = stringResource(RCommon.string.res_zarina_loyalty_policy_url)
-
-    val substringToUrl = remember(
-        privacy,
-        onlineStore,
-        loyalty,
-        privacyUrl,
-        onlineStoreUrl,
-        loyaltyUrl,
-    ) {
-        mapOf(
-            privacy to privacyUrl,
-            onlineStore to onlineStoreUrl,
-            loyalty to loyaltyUrl,
-        )
-    }
-    val stringWithLinks = rememberAnnotatedStringWithLinks(
-        baseString = stringResource(R.string.sign_up_policies),
-        substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
-            .copy(textDecoration = TextDecoration.Underline),
-        onUrlClicked = currentContext::openUrlInCustomTabs,
-    )
-
-    Text(
-        text = stringWithLinks,
-        style = UiKitTheme.typography.footnote.light,
-        color = UiKitTheme.colors.text.general.regular.default,
-        modifier = modifier,
     )
 }

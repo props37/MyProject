@@ -8,6 +8,9 @@
     <string name="sign_up_policies_online_store">правилами работы интернет-магазина</string>
     <string name="sign_up_policies_loyalty">правилами бонусной программы</string>
     <string name="sign_up_policies_error">Ознакомьтесь с политикой конфиденциальности и правилами работы интернет-магазина и подтвердите согласие с правилами бонусной программы</string>
+    <string name="sign_up_subscription_policy">Подписываясь на рассылку, я даю свое согласие на обработку персональных данных</string>
+    <string name="sign_up_subscription_policy_agreement">согласие</string>
+    <string name="sign_up_subscription_policy_error">Подтвердите согласие на обработку персональных данных</string>
     <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введите имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повторите попытку</string>
     <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повторите попытку</string>

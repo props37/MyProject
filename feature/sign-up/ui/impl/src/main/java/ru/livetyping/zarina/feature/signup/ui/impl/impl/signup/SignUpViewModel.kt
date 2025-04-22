@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -124,8 +126,50 @@ internal class SignUpViewModel @Inject constructor(
         initialValue = false,
     )
 
+    private val isSubscriptionPolicyAcceptedValueHolder = savedStateHandle.createValueHolder(
+        key = Keys.IS_SUBSCRIPTION_POLICY_ACCEPTED.key,
+        initialValue = false,
+    )
+
+    private val isSubscriptionPolicyInvalid = MutableStateFlow(false)
+
     private val _yandexCaptchaState = MutableStateFlow<YandexCaptchaState>(YandexCaptchaState.None)
     val yandexCaptchaState: StateFlow<YandexCaptchaState> = _yandexCaptchaState.asStateFlow()
+
+    private val isSubscriptionPolicyVisible = combine(
+        receiveEmailsValueHolder.stateFlow,
+        receiveSmsValueHolder.stateFlow,
+    ) { receiveEmails, receiveSms ->
+        receiveEmails || receiveSms
+    }
+        .distinctUntilChanged()
+        .onEach { isVisible ->
+            if (isVisible) {
+                isSubscriptionPolicyAcceptedValueHolder.set(false)
+                isSubscriptionPolicyInvalid.value = false
+            }
+        }
+
+    private val signUpInitialState = SignUpState(
+        nameTextFieldState = nameTextFieldState,
+        isNameInvalid = isNameInvalid.value,
+        birthDateEpochMillis = birthDateEpochMillisValueHolder.get(),
+        isBirthDateInvalid = isBirthDateInvalid.value,
+        emailTextFieldState = emailTextFieldState,
+        isEmailInvalid = isEmailInvalid.value,
+        phoneTextFieldState = phoneTextFieldState,
+        isPhoneInvalid = isPhoneInvalid.value,
+        passwordTextFieldState = passwordTextFieldState,
+        isPasswordInvalid = isPasswordInvalid.value,
+        receiveEmails = receiveEmailsValueHolder.get(),
+        receiveSms = receiveSmsValueHolder.get(),
+        arePoliciesAccepted = false,
+        arePoliciesInvalid = false,
+        isSubscriptionPolicyVisible = false,
+        isSubscriptionPolicyAccepted = false,
+        isSubscriptionPolicyInvalid = false,
+        isSignUpButtonLoading = false,
+    )
 
     val signUpState: StateFlow<SignUpState> = combineMore(
         isNameInvalid,
@@ -138,11 +182,14 @@ internal class SignUpViewModel @Inject constructor(
         arePoliciesInvalid,
         receiveEmailsValueHolder.stateFlow,
         receiveSmsValueHolder.stateFlow,
+        isSubscriptionPolicyVisible,
+        isSubscriptionPolicyAcceptedValueHolder.stateFlow,
+        isSubscriptionPolicyInvalid,
         yandexCaptchaState,
         operationTracker.ongoingOperationKeys,
     ) { isNameInvalid, birthDateEpochMillis, isBirthDateInvalid, isEmailInvalid,
         isPhoneInvalid, isPasswordInvalid, arePoliciesAccepted, arePoliciesInvalid,
-        receiveEmails, receiveSms, yandexCaptchaState, ongoingOperations ->
+        receiveEmails, receiveSms, isSubscriptionPolicyVisible, isSubscriptionPolicyAccepted, isSubscriptionPolicyInvalid, yandexCaptchaState, ongoingOperations ->
 
         val isSignUpButtonLoading = SignUpOperation in ongoingOperations
                 || yandexCaptchaState is YandexCaptchaState.Started
@@ -162,28 +209,15 @@ internal class SignUpViewModel @Inject constructor(
             receiveSms = receiveSms,
             arePoliciesAccepted = arePoliciesAccepted,
             arePoliciesInvalid = arePoliciesInvalid,
+            isSubscriptionPolicyVisible = isSubscriptionPolicyVisible,
+            isSubscriptionPolicyAccepted = isSubscriptionPolicyAccepted,
+            isSubscriptionPolicyInvalid = isSubscriptionPolicyInvalid,
             isSignUpButtonLoading = isSignUpButtonLoading,
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = SignUpState(
-            nameTextFieldState = nameTextFieldState,
-            isNameInvalid = isNameInvalid.value,
-            birthDateEpochMillis = birthDateEpochMillisValueHolder.get(),
-            isBirthDateInvalid = isBirthDateInvalid.value,
-            emailTextFieldState = emailTextFieldState,
-            isEmailInvalid = isEmailInvalid.value,
-            phoneTextFieldState = phoneTextFieldState,
-            isPhoneInvalid = isPhoneInvalid.value,
-            passwordTextFieldState = passwordTextFieldState,
-            isPasswordInvalid = isPasswordInvalid.value,
-            receiveEmails = receiveEmailsValueHolder.get(),
-            receiveSms = receiveSmsValueHolder.get(),
-            arePoliciesAccepted = false,
-            arePoliciesInvalid = false,
-            isSignUpButtonLoading = false,
-        ),
+        initialValue = signUpInitialState,
     )
 
     init {
@@ -197,15 +231,12 @@ internal class SignUpViewModel @Inject constructor(
     fun onSignUpEvent(event: SignUpEvent) {
         when (event) {
             SignUpEvent.BackClicked -> onBackClicked()
-            is SignUpEvent.BirthDateEpochMillisChanged -> {
-                birthDateEpochMillisValueHolder.set(event.millis)
-                isBirthDateInvalid.value = false
-            }
-
+            is SignUpEvent.BirthDateEpochMillisChanged -> onBirthDateEpochMillisChanged(event)
             is SignUpEvent.ReceiveEmailsChanged -> receiveEmailsValueHolder.set(event.receive)
             is SignUpEvent.ReceiveSmsChanged -> receiveSmsValueHolder.set(event.receive)
-            is SignUpEvent.PoliciesAcceptedChanged -> {
-                arePoliciesAcceptedValueHolder.set(event.isAccepted)
+            is SignUpEvent.PoliciesAcceptedChanged -> onPoliciesAcceptedChanged(event)
+            is SignUpEvent.SubscriptionPolicyAcceptedChanged -> {
+                onSubscriptionPolicyAcceptedChanged(event)
             }
 
             SignUpEvent.SignUpClicked -> startSignUp()
@@ -232,11 +263,34 @@ internal class SignUpViewModel @Inject constructor(
         }
     }
 
+    private fun onBirthDateEpochMillisChanged(event: SignUpEvent.BirthDateEpochMillisChanged) {
+        birthDateEpochMillisValueHolder.set(event.millis)
+        isBirthDateInvalid.value = false
+    }
+
+    private fun onPoliciesAcceptedChanged(event: SignUpEvent.PoliciesAcceptedChanged) {
+        arePoliciesAcceptedValueHolder.set(event.isAccepted)
+        arePoliciesInvalid.value = false
+    }
+
+    private fun onSubscriptionPolicyAcceptedChanged(event: SignUpEvent.SubscriptionPolicyAcceptedChanged) {
+        isSubscriptionPolicyAcceptedValueHolder.set(event.isAccepted)
+        isSubscriptionPolicyInvalid.value = false
+    }
+
     private fun startSignUp() {
         if (signUpJob?.isActive == true) return
 
         if (!arePoliciesAcceptedValueHolder.get()) {
             showPoliciesNotAcceptedError()
+            return
+        }
+
+        if (
+            signUpState.value.isSubscriptionPolicyVisible
+            && !isSubscriptionPolicyAcceptedValueHolder.get()
+        ) {
+            showSubscriptionPolicyNotAcceptedError()
             return
         }
 
@@ -265,6 +319,14 @@ internal class SignUpViewModel @Inject constructor(
 
         if (!arePoliciesAcceptedValueHolder.get()) {
             showPoliciesNotAcceptedError()
+            return
+        }
+
+        if (
+            signUpState.value.isSubscriptionPolicyVisible
+            && !isSubscriptionPolicyAcceptedValueHolder.get()
+        ) {
+            showSubscriptionPolicyNotAcceptedError()
             return
         }
 
@@ -400,6 +462,12 @@ internal class SignUpViewModel @Inject constructor(
         showZarinaErrorToast(text)
     }
 
+    private fun showSubscriptionPolicyNotAcceptedError() {
+        isSubscriptionPolicyInvalid.value = true
+        val text = Text.Resource(R.string.sign_up_subscription_policy_error)
+        showZarinaErrorToast(text)
+    }
+
     private suspend fun showYandexCaptcha() {
         val captcha = deps.getYandexCaptcha().getOrNull()
         if (captcha != null) {
@@ -436,7 +504,8 @@ internal class SignUpViewModel @Inject constructor(
         BIRTH_DATE_EPOCH_MILLIS,
         RECEIVE_EMAILS,
         RECEIVE_SMS,
-        IS_POLICIES_ACCEPTED;
+        IS_POLICIES_ACCEPTED,
+        IS_SUBSCRIPTION_POLICY_ACCEPTED;
 
         val key: String get() = name
     }

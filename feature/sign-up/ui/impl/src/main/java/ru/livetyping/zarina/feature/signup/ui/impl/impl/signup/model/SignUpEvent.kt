@@ -11,5 +11,7 @@ internal sealed interface SignUpEvent {
 
     data class PoliciesAcceptedChanged(val isAccepted: Boolean) : SignUpEvent
 
+    data class SubscriptionPolicyAcceptedChanged(val isAccepted: Boolean) : SignUpEvent
+
     data object SignUpClicked : SignUpEvent
 }

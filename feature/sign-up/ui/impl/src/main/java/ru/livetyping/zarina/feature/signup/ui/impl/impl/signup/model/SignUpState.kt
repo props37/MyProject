@@ -19,5 +19,8 @@ internal data class SignUpState(
     val receiveSms: Boolean,
     val arePoliciesAccepted: Boolean,
     val arePoliciesInvalid: Boolean,
+    val isSubscriptionPolicyVisible: Boolean,
+    val isSubscriptionPolicyAccepted: Boolean,
+    val isSubscriptionPolicyInvalid: Boolean,
     val isSignUpButtonLoading: Boolean,
 )
