@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityLifecycleObserver
-import ru.livetyping.zarina.presentation.activity.lifecycleobserver.ActivityResultRegistryHolderLifecycleObserver
+import ru.livetyping.zarina.presentation.activity.lifecycleobserver.InAppReviewManagerInitializer
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.PermissionManagerInitializer
 import ru.livetyping.zarina.presentation.activity.lifecycleobserver.SmsCodeRetrieverInitializer
 
@@ -28,7 +28,7 @@ abstract class ActivityLifecycleObserverModule {
 
     @Binds
     @IntoSet
-    abstract fun bindActivityResultRegistryHolderLifecycleObserver(
-        impl: ActivityResultRegistryHolderLifecycleObserver,
+    abstract fun bindInAppReviewManagerInitializer(
+        impl: InAppReviewManagerInitializer,
     ): ActivityLifecycleObserver
 }

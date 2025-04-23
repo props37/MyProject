@@ -39,10 +39,13 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.analytics.api)
+
     api(libs.googlePlayServices.location)
     api(libs.kotlin.coroutines.googlePlayServices)
     implementation(libs.jetpack.activity)
     implementation(libs.googlePlayServices.auth.api.phone)
+    implementation(libs.googlePlayServices.review)
 
     implementation(libs.timber)
 

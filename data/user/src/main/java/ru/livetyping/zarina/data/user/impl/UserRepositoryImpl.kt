@@ -206,6 +206,14 @@ internal class UserRepositoryImpl @Inject constructor(
         return remoteDataSource.getYandexCaptcha()
     }
 
+    override fun getInAppReviewRequestFlow(): Flow<Unit> {
+        return localDataSource.getInAppReviewRequestFlow()
+    }
+
+    override fun requestInAppReview() {
+        localDataSource.requestInAppReview()
+    }
+
     override suspend fun clear() {
         localDataSource.clear()
     }

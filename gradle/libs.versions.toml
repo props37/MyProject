@@ -56,6 +56,7 @@ googlePlayServices-location = "21.3.0"
 googlePlayServices-maps = "19.1.0"
 googlePlayServices-maps-compose = "6.5.2"
 googlePlayServices-auth-api-phone = "18.2.0"
+googlePlayServices-review = "2.0.2"
 
 recaptcha = "18.6.1"
 
@@ -162,6 +163,7 @@ googlePlayServices-maps = { group = "com.google.android.gms", name = "play-servi
 googlePlayServices-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlePlayServices-maps-compose" }
 googlePlayServices-maps-compose-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "googlePlayServices-maps-compose" }
 googlePlayServices-auth-api-phone = { group = "com.google.android.gms", name = "play-services-auth-api-phone", version.ref = "googlePlayServices-auth-api-phone" }
+googlePlayServices-review = { group = "com.google.android.play", name = "review-ktx", version.ref = "googlePlayServices-review" }
 
 recaptcha = { group = "com.google.android.recaptcha", name = "recaptcha", version.ref = "recaptcha" }
 

@@ -18,5 +18,9 @@ internal interface UserLocalDataSource {
 
     fun setLoyaltyCard(card: LoyaltyCard?)
 
+    fun getInAppReviewRequestFlow(): Flow<Unit>
+
+    fun requestInAppReview()
+
     suspend fun clear()
 }
