@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.googleplayservices.review.InAppReviewManager
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import javax.inject.Singleton
@@ -34,7 +35,7 @@ class GooglePlayServicesModule {
 
     @Provides
     @Singleton
-    fun provideInAppReviewManager(): InAppReviewManager {
-        return InAppReviewManager.createInstance()
+    fun provideInAppReviewManager(appMetrica: AppMetrica): InAppReviewManager {
+        return InAppReviewManager.createInstance(appMetrica)
     }
 }

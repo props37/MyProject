@@ -5,11 +5,12 @@ import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
+import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.googleplayservices.review.InAppReviewManager
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 
-internal class InAppReviewManagerImpl : InAppReviewManager {
+internal class InAppReviewManagerImpl(private val appMetrica: AppMetrica?) : InAppReviewManager {
     private val activityRef = AtomicReference<Activity?>(null)
 
     private val reviewManagerRef = AtomicReference<ReviewManager?>(null)
@@ -19,7 +20,8 @@ internal class InAppReviewManagerImpl : InAppReviewManager {
         val reviewInfo = try {
             reviewManager.requestReview()
         } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "Failed to request ReviewInfo")
+            Timber.tag(TAG).e(e, REVIEW_INFO_ERROR_MESSAGE)
+            appMetrica?.reportError(InAppReviewManager.ERROR_TAG, REVIEW_INFO_ERROR_MESSAGE, e)
             null
         }
 
@@ -28,7 +30,8 @@ internal class InAppReviewManagerImpl : InAppReviewManager {
             try {
                 reviewManager.launchReview(activity, reviewInfo)
             } catch (e: Exception) {
-                Timber.tag(TAG).e(e, "Failed to launch review flow")
+                Timber.tag(TAG).e(e, REVIEW_FLOW_ERROR_MESSAGE)
+                appMetrica?.reportError(InAppReviewManager.ERROR_TAG, REVIEW_FLOW_ERROR_MESSAGE, e)
             }
         }
     }
@@ -72,6 +75,9 @@ internal class InAppReviewManagerImpl : InAppReviewManager {
     }
 
     private companion object {
+        private const val REVIEW_INFO_ERROR_MESSAGE = "Failed to request ReviewInfo"
+        private const val REVIEW_FLOW_ERROR_MESSAGE = "Failed to launch review flow"
+
         private const val TAG = "InAppReviewManagerImpl"
     }
 }

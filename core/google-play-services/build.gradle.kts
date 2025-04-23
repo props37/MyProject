@@ -39,6 +39,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(projects.core.analytics.api)
+
     api(libs.googlePlayServices.location)
     api(libs.kotlin.coroutines.googlePlayServices)
     implementation(libs.jetpack.activity)
