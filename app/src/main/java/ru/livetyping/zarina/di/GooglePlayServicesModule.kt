@@ -35,7 +35,11 @@ class GooglePlayServicesModule {
 
     @Provides
     @Singleton
-    fun provideInAppReviewManager(appMetrica: AppMetrica): InAppReviewManager {
-        return InAppReviewManager.createInstance(appMetrica)
+    fun provideInAppReviewManager(
+        @ApplicationContext
+        context: Context,
+        appMetrica: AppMetrica,
+    ): InAppReviewManager {
+        return InAppReviewManager.createInstance(context, appMetrica)
     }
 }
