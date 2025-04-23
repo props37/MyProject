@@ -88,12 +88,14 @@ import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetInAppReviewRequestFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramBonusHistoryPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramExpectedBonusesPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestInAppReviewUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailConfirmationOtpUseCase
@@ -1228,6 +1230,28 @@ internal class UseCaseModule {
     ): GetCompletedPaymentsFlowUseCase {
         return GetCompletedPaymentsFlowUseCase.getInstance(
             checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestInAppReviewUseCaseUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestInAppReviewUseCase {
+        return RequestInAppReviewUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetInAppReviewRequestFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetInAppReviewRequestFlowUseCase {
+        return GetInAppReviewRequestFlowUseCase.getInstance(
+            userRepository = userRepository,
             logger = logger,
         )
     }

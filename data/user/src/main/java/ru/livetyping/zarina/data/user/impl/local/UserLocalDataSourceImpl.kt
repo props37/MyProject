@@ -10,12 +10,14 @@ import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.data.user.impl.local.city.UserCityDataHolder
 import ru.livetyping.zarina.data.user.impl.local.loyaltycard.LoyaltyCardDataHolder
+import ru.livetyping.zarina.data.user.impl.local.review.InAppReviewDataHolder
 import javax.inject.Inject
 
 internal class UserLocalDataSourceImpl @Inject constructor(
     private val userDao: UserDao,
     private val userCityDataHolder: UserCityDataHolder,
     private val loyaltyCardDataHolder: LoyaltyCardDataHolder,
+    private val inAppReviewDataHolder: InAppReviewDataHolder,
     private val databaseTransactionManager: ZarinaDatabaseTransactionManager,
 ) : UserLocalDataSource {
     override fun getUserFlow(): Flow<User?> {
@@ -45,6 +47,14 @@ internal class UserLocalDataSourceImpl @Inject constructor(
 
     override fun setLoyaltyCard(card: LoyaltyCard?) {
         loyaltyCardDataHolder.setLoyaltyCard(card)
+    }
+
+    override fun getInAppReviewRequestFlow(): Flow<Unit> {
+        return inAppReviewDataHolder.getInAppReviewRequestFlow()
+    }
+
+    override fun requestInAppReview() {
+        inAppReviewDataHolder.requestInAppReview()
     }
 
     override suspend fun clear() {

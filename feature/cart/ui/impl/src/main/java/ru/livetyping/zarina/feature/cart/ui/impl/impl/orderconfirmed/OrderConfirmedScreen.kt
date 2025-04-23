@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,6 +31,8 @@ internal fun OrderConfirmedScreen(
     viewModel: OrderConfirmedViewModel = hiltViewModel(),
 ) {
     val orderConfirmedState by viewModel.orderConfirmedState.collectAsStateWithLifecycle()
+
+    BackHandler(onBack = viewModel::onBackClicked)
 
     ScreenContent(
         orderConfirmedState = orderConfirmedState,

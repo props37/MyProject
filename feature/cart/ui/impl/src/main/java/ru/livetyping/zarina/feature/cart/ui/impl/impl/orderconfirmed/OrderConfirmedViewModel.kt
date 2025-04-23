@@ -12,6 +12,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestInAppReviewUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -27,6 +28,7 @@ import javax.inject.Inject
 internal class OrderConfirmedViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
+    private val requestInAppReview: RequestInAppReviewUseCase,
 ) : ViewModel(), SideEffectSource<OrderConfirmedSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -49,10 +51,15 @@ internal class OrderConfirmedViewModel @Inject constructor(
         refreshCart()
     }
 
+    fun onBackClicked() {
+        onReturnToHomeClicked()
+    }
+
     fun onReturnToHomeClicked() {
         navigationThrottler.throttle {
             val action = OrderConfirmedScreenAction.ReturnToHomeClicked
             emitSideEffect(OrderConfirmedSideEffect.Navigate(action))
+            requestInAppReview()
         }
     }
 

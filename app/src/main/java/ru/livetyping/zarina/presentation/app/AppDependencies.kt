@@ -10,9 +10,11 @@ import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseC
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetInAppReviewRequestFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.googleplayservices.review.InAppReviewManager
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
@@ -28,4 +30,6 @@ class AppDependencies @Inject constructor(
     val getUserFlow: GetUserFlowUseCase,
     val getUserCityFlow: GetUserCityFlowUseCase,
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,
+    val inAppReviewManager: InAppReviewManager,
+    val getInAppReviewRequestFlow: GetInAppReviewRequestFlowUseCase,
 )

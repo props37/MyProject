@@ -23,6 +23,8 @@ import ru.livetyping.zarina.data.user.impl.local.city.UserCityDataHolderImpl
 import ru.livetyping.zarina.data.user.impl.local.city.entity.CityEntity
 import ru.livetyping.zarina.data.user.impl.local.loyaltycard.LoyaltyCardDataHolder
 import ru.livetyping.zarina.data.user.impl.local.loyaltycard.LoyaltyCardDataHolderImpl
+import ru.livetyping.zarina.data.user.impl.local.review.InAppReviewDataHolder
+import ru.livetyping.zarina.data.user.impl.local.review.InAppReviewDataHolderImpl
 import ru.livetyping.zarina.data.user.impl.remote.UserRemoteDataSource
 import ru.livetyping.zarina.data.user.impl.remote.UserRemoteDataSourceImpl
 import ru.livetyping.zarina.data.user.impl.remote.api.UserApi
@@ -65,6 +67,12 @@ internal abstract class UserRepositoryModule {
     abstract fun bindLoyaltyCardDataHolder(
         impl: LoyaltyCardDataHolderImpl,
     ): LoyaltyCardDataHolder
+
+    @Binds
+    @Singleton
+    abstract fun bindInAppReviewDataHolder(
+        impl: InAppReviewDataHolderImpl,
+    ): InAppReviewDataHolder
 
     companion object {
         @Provides

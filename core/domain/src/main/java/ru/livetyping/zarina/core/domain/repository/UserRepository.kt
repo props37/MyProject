@@ -97,5 +97,9 @@ public interface UserRepository {
 
     public fun getYandexCaptcha(): YandexCaptcha
 
+    public fun getInAppReviewRequestFlow(): Flow<Unit>
+
+    public fun requestInAppReview()
+
     public suspend fun clear()
 }

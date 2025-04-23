@@ -91,6 +91,7 @@ class AppViewModel @Inject constructor(
         fetchCartProductIdsOnBearerTokenChange()
         forceSignOutIfUserIsNotValid()
         performForcedSignOutOnRequests()
+        launchInAppReviewFlowOnRequest()
     }
 
     private fun fetchUser() {
@@ -154,6 +155,12 @@ class AppViewModel @Inject constructor(
     private fun performForcedSignOutOnRequests() {
         deps.forcedSignOutCoordinator.getForcedSignOutRequests()
             .onEach { deps.forcedSignOut() }
+            .launchIn(viewModelScope)
+    }
+
+    private fun launchInAppReviewFlowOnRequest() {
+        deps.getInAppReviewRequestFlow()
+            .onEach { deps.inAppReviewManager.launchReviewFlow() }
             .launchIn(viewModelScope)
     }
 
