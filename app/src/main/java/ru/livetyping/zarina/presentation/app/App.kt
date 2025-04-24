@@ -76,6 +76,7 @@ fun App(
                     .fillMaxWidth(),
             )
 
+            // TODO: [High] Add support for sheetGesturesEnabled override
             ModalBottomSheetLayout(
                 bottomSheetNavigator = bottomSheetNavigator,
                 sheetShape = RectangleShape,
