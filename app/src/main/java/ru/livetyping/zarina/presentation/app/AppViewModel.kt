@@ -31,7 +31,6 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
@@ -161,7 +160,7 @@ class AppViewModel @Inject constructor(
 
     private fun launchInAppReviewFlowOnRequest() {
         deps.getInAppReviewRequestFlow()
-            .onEach { deps.inAppReviewManager.launchReviewFlow(Duration.ZERO) }
+            .onEach { deps.inAppReviewManager.launchReviewFlow() }
             .launchIn(viewModelScope)
     }
 
