@@ -65,7 +65,7 @@ dependencies {
 
     implementation(libs.jetpack.activity.compose)
 
-    implementation(platform(libs.jetpack.compose.bom.beta))
+    implementation(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.ui)
     api(libs.jetpack.compose.material)
     api(libs.jetpack.compose.material3)

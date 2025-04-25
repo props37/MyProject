@@ -55,7 +55,7 @@ dependencies {
     api(projects.core.uiCommon)
     implementation(projects.core.kotlinUtil)
 
-    implementation(platform(libs.jetpack.compose.bom.beta))
+    implementation(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.foundation)
     api(libs.jetpack.compose.ui)
     api(libs.jetpack.compose.animation)

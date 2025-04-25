@@ -41,7 +41,7 @@ kotlin {
 dependencies {
     api(projects.core.analytics.api)
 
-    implementation(platform(libs.jetpack.compose.bom.beta))
+    implementation(platform(libs.jetpack.compose.bom))
     api(libs.jetpack.compose.runtime)
 
     testImplementation(libs.junit)
