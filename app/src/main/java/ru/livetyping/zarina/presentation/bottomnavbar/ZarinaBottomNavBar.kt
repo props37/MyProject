@@ -10,9 +10,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomNavBar
-import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomNavBarDefaults
-import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomNavBarItem
+import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBar
+import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBarDefaults
+import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBarItem
 
 @Composable
 fun ZarinaBottomNavBar(
@@ -20,9 +20,9 @@ fun ZarinaBottomNavBar(
     wishlistProductCountProvider: () -> Int,
     cartProductCountProvider: () -> Int,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = ZarinaBottomNavBarDefaults.DefaultWindowInsets,
+    windowInsets: WindowInsets = ZarinaBottomBarDefaults.DefaultWindowInsets,
 ) {
-    ZarinaBottomNavBar(
+    ZarinaBottomBar(
         windowInsets = windowInsets,
         modifier = modifier,
     ) {
@@ -40,7 +40,7 @@ fun ZarinaBottomNavBar(
                     else -> null
                 }
 
-                ZarinaBottomNavBarItem(
+                ZarinaBottomBarItem(
                     title = stringResource(item.titleResId),
                     iconResId = item.iconResId,
                     isSelected = isSelected,

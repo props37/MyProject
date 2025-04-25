@@ -30,7 +30,7 @@ import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-public fun ZarinaBottomNavBarItem(
+public fun ZarinaBottomBarItem(
     title: String,
     @DrawableRes
     iconResId: Int,

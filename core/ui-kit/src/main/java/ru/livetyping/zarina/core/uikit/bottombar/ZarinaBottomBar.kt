@@ -50,9 +50,9 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDividerDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable
-public fun ZarinaBottomNavBar(
+public fun ZarinaBottomBar(
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = ZarinaBottomNavBarDefaults.DefaultWindowInsets,
+    windowInsets: WindowInsets = ZarinaBottomBarDefaults.DefaultWindowInsets,
     content: @Composable RowScope.() -> Unit,
 ) {
     val behaviorController = LocalBottomNavBarBehaviorController.current
@@ -80,14 +80,14 @@ public fun ZarinaBottomNavBar(
         visibleState = visibleState,
         enter = remember(isBottomNavBarAnimated) {
             if (isBottomNavBarAnimated) {
-                expandVertically(ZarinaBottomNavBarDefaults.BottomNavBarAnimationSpec)
+                expandVertically(ZarinaBottomBarDefaults.BottomNavBarAnimationSpec)
             } else {
                 EnterTransition.None
             }
         },
         exit = remember(isBottomNavBarAnimated) {
             if (isBottomNavBarAnimated) {
-                shrinkVertically(ZarinaBottomNavBarDefaults.BottomNavBarAnimationSpec)
+                shrinkVertically(ZarinaBottomBarDefaults.BottomNavBarAnimationSpec)
             } else {
                 ExitTransition.None
             }
@@ -108,14 +108,14 @@ public fun ZarinaBottomNavBar(
                 .animateEnterExit(
                     enter = remember(isBottomNavBarAnimated) {
                         if (isBottomNavBarAnimated) {
-                            slideInVertically(ZarinaBottomNavBarDefaults.BottomNavBarContentAnimationSpec) { it }
+                            slideInVertically(ZarinaBottomBarDefaults.BottomNavBarContentAnimationSpec) { it }
                         } else {
                             EnterTransition.None
                         }
                     },
                     exit = remember(isBottomNavBarAnimated) {
                         if (isBottomNavBarAnimated) {
-                            slideOutVertically(ZarinaBottomNavBarDefaults.BottomNavBarContentAnimationSpec) { it }
+                            slideOutVertically(ZarinaBottomBarDefaults.BottomNavBarContentAnimationSpec) { it }
                         } else {
                             ExitTransition.None
                         }
@@ -140,7 +140,7 @@ public fun ZarinaBottomNavBar(
     }
 }
 
-public object ZarinaBottomNavBarDefaults {
+public object ZarinaBottomBarDefaults {
     public val DefaultWindowInsets: WindowInsets
         @Composable
         get() = WindowInsets.navigationBars
