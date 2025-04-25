@@ -13,7 +13,6 @@
     <string name="sign_up_subscription_policy_error">Подтвердите согласие на обработку персональных данных</string>
     <string name="sign_up_empty_fields_error">Поля ввода пусты. Для регистрации введите имя, дату рождения, адрес электронной почты, номер телефона и пароль</string>
     <string name="sign_up_email_already_in_use_error">Пользователь с таким адресом электронной почты уже существует. Повторите попытку</string>
-    <string name="sign_up_phone_number_already_in_use_error">Пользователь с таким номером телефона уже существует. Повторите попытку</string>
     <string name="sign_up_otp_timeout_error">Прошло недостаточно времени с предыдущей попытки получить код на номер телефона. Попробуйте снова позже</string>
     <string name="sign_up_invalid_otp_error">Неправильный код. Повторите попытку</string>
 </resources>
