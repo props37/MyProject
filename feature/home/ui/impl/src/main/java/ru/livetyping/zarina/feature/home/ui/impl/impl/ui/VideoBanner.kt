@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import coil.compose.AsyncImage
 import ru.livetyping.zarina.core.mediacompose.SimpleVideoPlayer
 import ru.livetyping.zarina.feature.home.domain.model.Banner
@@ -43,6 +44,7 @@ internal fun VideoBanner(
                 isVideoPlaceholderVisible = false
                 onBannerDisplayed()
             },
+            surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
             modifier = Modifier.matchParentSize(),
         )
 
