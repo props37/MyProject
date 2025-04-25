@@ -74,7 +74,7 @@ fun ZarinaBottomNavBar(
                 }
 
                 ZarinaBottomBarItem(
-                    title = stringResource(item.titleResId),
+                    title = stringResource(item.titleResId).uppercase(),
                     iconResId = item.iconResId,
                     isSelected = isSelected,
                     onClick = {

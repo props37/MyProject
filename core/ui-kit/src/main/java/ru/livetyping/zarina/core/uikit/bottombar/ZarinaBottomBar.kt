@@ -42,7 +42,7 @@ public fun ZarinaBottomBar(
             .selectableGroup()
             .windowInsetsPadding(windowInsets)
             .clipToBounds()
-            .padding(top = 6.dp, bottom = 4.dp),
+            .padding(top = 8.dp, bottom = 4.dp),
         content = content,
     )
 }

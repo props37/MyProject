@@ -81,7 +81,7 @@ public fun ZarinaBottomBarItem(
 
         Text(
             text = title,
-            style = UiKitTheme.typography.caption2.regular,
+            style = UiKitTheme2.typography.caption,
             color = color,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
