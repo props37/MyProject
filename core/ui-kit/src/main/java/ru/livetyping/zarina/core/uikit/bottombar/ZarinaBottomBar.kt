@@ -19,20 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.divider.ZarinaDividerDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaBottomBar(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = UiKitTheme2.colors.white,
     windowInsets: WindowInsets = ZarinaBottomBarDefaults.WindowInsets,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val backgroundColor = UiKitTheme.colors.background.general.regular.default
-    val topBorderColor = UiKitTheme.colors.border.general.default
-
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
@@ -41,13 +38,6 @@ public fun ZarinaBottomBar(
             .heightIn(min = 56.dp)
             .drawBehind {
                 drawRect(backgroundColor)
-
-                drawLine(
-                    color = topBorderColor,
-                    start = Offset.Zero,
-                    end = Offset(size.width, 0f),
-                    strokeWidth = ZarinaDividerDefaults.Thickness.toPx(),
-                )
             }
             .selectableGroup()
             .windowInsetsPadding(windowInsets)
