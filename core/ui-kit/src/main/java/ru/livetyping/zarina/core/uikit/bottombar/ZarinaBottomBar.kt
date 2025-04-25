@@ -52,7 +52,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 @Composable
 public fun ZarinaBottomBar(
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = ZarinaBottomBarDefaults.DefaultWindowInsets,
+    windowInsets: WindowInsets = ZarinaBottomBarDefaults.WindowInsets,
     content: @Composable RowScope.() -> Unit,
 ) {
     val behaviorController = LocalBottomNavBarBehaviorController.current
@@ -141,10 +141,10 @@ public fun ZarinaBottomBar(
 }
 
 public object ZarinaBottomBarDefaults {
-    public val DefaultWindowInsets: WindowInsets
+    public val WindowInsets: WindowInsets
         @Composable
-        get() = WindowInsets.navigationBars
-            .union(WindowInsets.displayCutout)
+        get() = androidx.compose.foundation.layout.WindowInsets.navigationBars
+            .union(androidx.compose.foundation.layout.WindowInsets.displayCutout)
             .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
 
     private const val BottomNavBarAnimationSpringStiffness = Spring.StiffnessMedium

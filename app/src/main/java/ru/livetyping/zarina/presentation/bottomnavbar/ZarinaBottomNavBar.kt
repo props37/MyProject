@@ -20,7 +20,7 @@ fun ZarinaBottomNavBar(
     wishlistProductCountProvider: () -> Int,
     cartProductCountProvider: () -> Int,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = ZarinaBottomBarDefaults.DefaultWindowInsets,
+    windowInsets: WindowInsets = ZarinaBottomBarDefaults.WindowInsets,
 ) {
     ZarinaBottomBar(
         windowInsets = windowInsets,
