@@ -285,6 +285,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.haze)
 
     implementation(libs.timber)
 

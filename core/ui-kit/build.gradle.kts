@@ -74,7 +74,6 @@ dependencies {
     debugImplementation(libs.jetpack.compose.testManifest)
 
     implementation(libs.coil.compose)
-    implementation(libs.haze)
 
     api(libs.composeShimmer)
 

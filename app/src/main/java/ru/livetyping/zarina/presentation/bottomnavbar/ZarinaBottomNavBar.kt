@@ -23,30 +23,39 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
 import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBar
 import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBarDefaults
 import ru.livetyping.zarina.core.uikit.bottombar.ZarinaBottomBarItem
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.LocalBottomNavBarBehaviorController
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 fun ZarinaBottomNavBar(
     navController: NavHostController,
     wishlistProductCountProvider: () -> Int,
     cartProductCountProvider: () -> Int,
+    hazeState: HazeState,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = ZarinaBottomBarDefaults.WindowInsets,
 ) {
     AnimatedZarinaBottomBar(
+        hazeState = hazeState,
         windowInsets = windowInsets,
         modifier = modifier,
     ) {
@@ -85,6 +94,7 @@ fun ZarinaBottomNavBar(
 
 @Composable
 private fun AnimatedZarinaBottomBar(
+    hazeState: HazeState,
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = ZarinaBottomBarDefaults.WindowInsets,
     content: @Composable RowScope.() -> Unit,
@@ -129,10 +139,23 @@ private fun AnimatedZarinaBottomBar(
                 sizeTracker.onSizeChanged(size)
             },
     ) {
+        val hazeBackgroundColor = UiKitTheme2.colors.white
+        val hazeTint = rememberHazeTint(hazeBackgroundColor, hazeState.blurEnabled)
+
         ZarinaBottomBar(
+            backgroundColor = Color.Transparent,
             windowInsets = windowInsets,
             content = content,
             modifier = Modifier
+                .hazeEffect(
+                    state = hazeState,
+                    style = HazeStyle(
+                        backgroundColor = hazeBackgroundColor,
+                        blurRadius = BlurRadius,
+                        tint = hazeTint,
+                        noiseFactor = BlurNoiseFactor,
+                    ),
+                )
                 .animateEnterExit(
                     enter = if (isBottomNavBarAnimated) {
                         contentEnterTransition
@@ -146,6 +169,18 @@ private fun AnimatedZarinaBottomBar(
                     },
                 ),
         )
+    }
+}
+
+@Composable
+private fun rememberHazeTint(backgroundColor: Color, isBlurEnabled: Boolean): HazeTint {
+    return remember(backgroundColor, isBlurEnabled) {
+        val color = if (isBlurEnabled) {
+            backgroundColor.copy(alpha = BackgroundAlphaWithBlur)
+        } else {
+            backgroundColor.copy(alpha = BackgroundAlphaWithoutBlur)
+        }
+        HazeTint(color)
     }
 }
 
@@ -163,6 +198,11 @@ private fun isItemSelected(
     return lastBottomNavBarItemBackStackEntry?.destination
         ?.hasRoute(bottomNavBarItemFeatureEntry::class) ?: false
 }
+
+private val BlurRadius = 20.dp
+private const val BlurNoiseFactor = 0f
+private const val BackgroundAlphaWithBlur = 0.7f
+private const val BackgroundAlphaWithoutBlur = BackgroundAlphaWithBlur
 
 private const val BottomBarAnimationSpringStiffness = Spring.StiffnessMedium
 
