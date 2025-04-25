@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.unscalable
 import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaBottomBarItem(
@@ -39,7 +40,8 @@ public fun ZarinaBottomBarItem(
     modifier: Modifier = Modifier,
     counterValueProvider: (() -> Int?)? = null,
 ) {
-    val selectedColor = UiKitTheme.colors.text.general.regular.default
+    val selectedColor = UiKitTheme2.colors.mainBlack
+    val unselectedColor = selectedColor.copy(alpha = 0.5f)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,12 +56,8 @@ public fun ZarinaBottomBarItem(
             ),
     ) {
         val color by animateColorAsState(
-            targetValue = if (isSelected) {
-                UiKitTheme.colors.text.general.regular.default
-            } else {
-                UiKitTheme.colors.text.general.regular.disabled
-            },
-            label = "ZarinaBottomNavBarItem color",
+            targetValue = if (isSelected) selectedColor else unselectedColor,
+            label = "ZarinaBottomBarItem color",
         )
 
         Box(
@@ -70,7 +68,7 @@ public fun ZarinaBottomBarItem(
                 imageVector = ImageVector.vectorResource(iconResId),
                 contentDescription = title,
                 tint = color,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(25.dp),
             )
 
             ItemCounter(
