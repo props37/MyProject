@@ -27,7 +27,7 @@ private val CirceLight: Font
         weight = FontWeight.W350,
     )
 
-private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
+internal val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
 public data class UiKitTypography(
     val heading1: Heading1 = Heading1(),
