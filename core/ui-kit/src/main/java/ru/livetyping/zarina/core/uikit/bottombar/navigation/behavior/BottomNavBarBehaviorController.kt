@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.bottomnavbar.behavior
+package ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

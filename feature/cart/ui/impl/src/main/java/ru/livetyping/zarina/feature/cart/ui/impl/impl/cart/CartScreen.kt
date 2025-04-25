@@ -39,7 +39,7 @@ import ru.livetyping.zarina.core.domain.model.cart.CartSize
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.uicompose.Crossfade
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.error.rememberZarinaErrorButtonState

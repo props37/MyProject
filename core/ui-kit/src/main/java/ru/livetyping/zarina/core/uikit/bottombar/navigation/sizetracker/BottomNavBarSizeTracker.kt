@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker
+package ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal

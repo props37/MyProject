@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.platform.settings.openSystemSettings
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
 
 @Composable
 internal fun StoreListScreenBehavior(

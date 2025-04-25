@@ -21,11 +21,11 @@ import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.mediacompose.LocalExoPlayerCacheDataSourceFactoryProvider
 import ru.livetyping.zarina.core.mediacompose.rememberExoPlayerCacheDataSourceFactoryProvider
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
-import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
-import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.LocalBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.rememberBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.rememberBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
