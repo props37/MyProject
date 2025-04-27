@@ -36,23 +36,23 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @Composable
-public fun ZarinaTab2(
+public fun ZarinaBracketTab(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     addBrackets: Boolean = isSelected,
-    selectedTextStyle: TextStyle = ZarinaTab2Defaults.SelectedTextStyle,
-    unselectedTextStyle: TextStyle = ZarinaTab2Defaults.UnselectedTextStyle,
-    selectedColor: Color = ZarinaTab2Defaults.SelectedColor,
-    unselectedColor: Color = ZarinaTab2Defaults.UnselectedColor,
-    bracketPadding: Dp = ZarinaTab2Defaults.BracketPadding,
-    contentPadding: PaddingValues = ZarinaTab2Defaults.ContentPadding,
+    selectedTextStyle: TextStyle = ZarinaBracketTabDefaults.SelectedTextStyle,
+    unselectedTextStyle: TextStyle = ZarinaBracketTabDefaults.UnselectedTextStyle,
+    selectedColor: Color = ZarinaBracketTabDefaults.SelectedColor,
+    unselectedColor: Color = ZarinaBracketTabDefaults.UnselectedColor,
+    bracketPadding: Dp = ZarinaBracketTabDefaults.BracketPadding,
+    contentPadding: PaddingValues = ZarinaBracketTabDefaults.ContentPadding,
 ) {
     val textStyle = if (isSelected) selectedTextStyle else unselectedTextStyle
     val color by animateColorAsState(
         targetValue = if (isSelected) selectedColor else unselectedColor,
-        label = "ZarinaTab color",
+        label = "ZarinaBracketTab color",
     )
 
     Row(
@@ -99,8 +99,8 @@ private fun RowScope.Bracket(
     modifier: Modifier = Modifier,
 ) {
     val char = when (bracket) {
-        Bracket.Start -> ZarinaTab2Defaults.StartBracket
-        Bracket.End -> ZarinaTab2Defaults.EndBracket
+        Bracket.Start -> ZarinaBracketTabDefaults.StartBracket
+        Bracket.End -> ZarinaBracketTabDefaults.EndBracket
     }
     val expandFrom = when (bracket) {
         Bracket.Start -> Alignment.Start
@@ -115,15 +115,15 @@ private fun RowScope.Bracket(
         visible = isVisible,
         enter = expandHorizontally(
             expandFrom = expandFrom,
-            animationSpec = ZarinaTab2Defaults.BracketPlacementAnimationSpec,
+            animationSpec = ZarinaBracketTabDefaults.BracketPlacementAnimationSpec,
         ) + fadeIn(
-            animationSpec = ZarinaTab2Defaults.BracketFadeAnimationSpec,
+            animationSpec = ZarinaBracketTabDefaults.BracketFadeAnimationSpec,
         ),
         exit = shrinkHorizontally(
             shrinkTowards = shrinkTowards,
-            animationSpec = ZarinaTab2Defaults.BracketPlacementAnimationSpec,
+            animationSpec = ZarinaBracketTabDefaults.BracketPlacementAnimationSpec,
         ) + fadeOut(
-            animationSpec = ZarinaTab2Defaults.BracketFadeAnimationSpec,
+            animationSpec = ZarinaBracketTabDefaults.BracketFadeAnimationSpec,
         ),
         modifier = modifier,
     ) {
@@ -147,7 +147,7 @@ private fun Preview() {
     var isSelected by remember { mutableStateOf(true) }
 
     ZarinaTheme2 {
-        ZarinaTab2(
+        ZarinaBracketTab(
             text = "ЖЕНЩИНАМ",
             isSelected = isSelected,
             onClick = { isSelected = !isSelected },
@@ -156,7 +156,7 @@ private fun Preview() {
     }
 }
 
-public object ZarinaTab2Defaults {
+public object ZarinaBracketTabDefaults {
     public val SelectedTextStyle: TextStyle
         @Composable
         get() = UiKitTheme2.typography.body
