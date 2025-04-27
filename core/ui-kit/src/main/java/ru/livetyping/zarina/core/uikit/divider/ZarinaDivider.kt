@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaDivider(
@@ -22,9 +22,9 @@ public fun ZarinaDivider(
 }
 
 public object ZarinaDividerDefaults {
-    public val Thickness: Dp = 0.5.dp
+    public val Thickness: Dp = 1.dp
 
     public val Color: Color
         @Composable
-        get() = UiKitTheme.colors.border.general.default
+        get() = UiKitTheme2.colors.lightGray
 }
