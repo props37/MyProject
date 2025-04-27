@@ -176,8 +176,6 @@ public object ZarinaTab2Defaults {
     internal val ContentPadding: PaddingValues
         get() = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
 
-    internal val MinHeight: Dp get() = 48.dp
-
     internal const val StartBracket = '['
     internal const val EndBracket = ']'
 
