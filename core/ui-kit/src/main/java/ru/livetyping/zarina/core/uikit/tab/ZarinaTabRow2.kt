@@ -20,11 +20,12 @@ import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 public fun ZarinaTabRow2(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     tabs: @Composable RowScope.() -> Unit,
 ) {
     Row(
         horizontalArrangement = horizontalArrangement,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = verticalAlignment,
         content = tabs,
         modifier = modifier,
     )

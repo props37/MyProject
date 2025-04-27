@@ -58,11 +58,11 @@ public fun ZarinaTab2(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .minimumInteractiveComponentSize()
             .clickable(
                 role = Role.Tab,
                 onClick = onClick,
             )
-            .minimumInteractiveComponentSize()
             .padding(contentPadding),
     ) {
         Bracket(
