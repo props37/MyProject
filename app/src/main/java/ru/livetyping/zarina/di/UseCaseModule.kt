@@ -53,8 +53,6 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseC
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.WithdrawGiftCertificateUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
@@ -182,28 +180,6 @@ internal class UseCaseModule {
             authRepository = authRepository,
             forcedSignOutCoordinator = forcedSignOutCoordinator,
             appMetrica = appMetrica,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideGetLastContentGenderFlowUseCase(
-        contentRepository: ContentRepository,
-        logger: UseCaseLogger,
-    ): GetLastContentGenderFlowUseCase {
-        return GetLastContentGenderFlowUseCase.getInstance(
-            contentRepository = contentRepository,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideSetLastContentGenderUseCase(
-        contentRepository: ContentRepository,
-        logger: UseCaseLogger,
-    ): SetLastContentGenderUseCase {
-        return SetLastContentGenderUseCase.getInstance(
-            contentRepository = contentRepository,
             logger = logger,
         )
     }
