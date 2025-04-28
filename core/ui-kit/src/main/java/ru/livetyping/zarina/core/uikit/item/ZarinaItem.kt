@@ -5,20 +5,22 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Text
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @Composable
 public fun ZarinaItem(
@@ -55,13 +57,13 @@ public fun ZarinaItem(
 ) {
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
-        LocalTextStyle provides UiKitTheme.typography.primary.regular,
+        LocalTextStyle provides UiKitTheme2.typography.body,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .defaultMinSize(minHeight = ZarinaItemDefaults.MinHeight)
                 .drawBehind { drawRect(backgroundColor) }
+                .minimumInteractiveComponentSize()
                 .padding(contentPadding),
         ) {
             Row(
@@ -77,16 +79,26 @@ public fun ZarinaItem(
     }
 }
 
+@Composable
+@Preview
+private fun Preview() {
+    ZarinaTheme2 {
+        ZarinaItem(
+            onClick = {},
+        ) {
+            Text("Одежда".uppercase())
+        }
+    }
+}
+
 public object ZarinaItemDefaults {
-    public val BackgroundColor: Color
+    internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
-    public val ContentColor: Color
+    internal val ContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.general.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
-    public val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-
-    public val MinHeight: Dp get() = 56.dp
+    internal val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 }
