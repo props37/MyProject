@@ -156,7 +156,7 @@ internal fun OrderSuccess(
             ) {
                 ZarinaButton(
                     onClick = onCancelOrderClicked,
-                    colors = ZarinaButtonDefaults.backlessErrorColors(),
+                    colors = ZarinaButtonDefaults.filledColors(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)

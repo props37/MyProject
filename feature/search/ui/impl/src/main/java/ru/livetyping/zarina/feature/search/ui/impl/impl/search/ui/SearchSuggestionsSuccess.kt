@@ -93,7 +93,7 @@ internal fun SearchSuggestionsSuccess(
                             ZarinaButton(
                                 onClick = onClearSearchHistoryClicked,
                                 size = ZarinaButtonSize.Medium,
-                                colors = ZarinaButtonDefaults.backlessColors(),
+                                colors = ZarinaButtonDefaults.outlinedColors(),
                                 modifier = Modifier.heightIn(min = 32.dp),
                             ) {
                                 Text(text = stringResource(RCommon.string.res_clear).uppercase())

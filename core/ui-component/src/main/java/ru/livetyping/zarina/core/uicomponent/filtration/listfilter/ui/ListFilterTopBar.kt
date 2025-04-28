@@ -52,7 +52,7 @@ internal fun ListFilterTopBar(
                 ZarinaButton(
                     onClick = { onEvent(ListFilterTopBarEvent.ResetFilterClicked) },
                     size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.backlessColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
                     Text(

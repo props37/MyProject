@@ -258,7 +258,7 @@ private fun SignInByEmailMain(
         ZarinaButton(
             onClick = onForgotPasswordClicked,
             size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.backlessColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             contentPadding = PaddingValues(vertical = 8.dp),
             indication = null,
             modifier = Modifier.padding(horizontal = 16.dp),

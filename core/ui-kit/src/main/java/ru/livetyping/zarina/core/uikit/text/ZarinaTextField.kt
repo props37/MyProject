@@ -657,7 +657,7 @@ public object ZarinaTextFieldDefaults {
         ZarinaButton(
             onClick = onClick,
             size = ZarinaButtonSize.Small,
-            colors = ZarinaButtonDefaults.backlessColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = modifier.heightIn(min = 36.dp),
         ) {
             Text(

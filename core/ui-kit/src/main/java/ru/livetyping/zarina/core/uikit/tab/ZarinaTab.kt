@@ -29,7 +29,7 @@ public fun ZarinaTab(
     ZarinaButton(
         onClick = onClick,
         size = ZarinaButtonSize.Medium,
-        colors = ZarinaButtonDefaults.backlessColors(contentColor = contentColor),
+        colors = ZarinaButtonDefaults.outlinedColors(contentColor = contentColor),
         contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         textStyle = textStyle,
         modifier = modifier,

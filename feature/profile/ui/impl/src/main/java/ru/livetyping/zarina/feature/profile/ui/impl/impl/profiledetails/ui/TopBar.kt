@@ -52,7 +52,7 @@ internal fun TopBar(
                 ZarinaButton(
                     onClick = { onEvent(ProfileDetailsTopBarEvent.SaveChangesClicked) },
                     size = ZarinaButtonSize.Medium,
-                    colors = ZarinaButtonDefaults.backlessColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier
                         .heightIn(min = 40.dp)
                         .padding(end = 8.dp),

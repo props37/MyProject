@@ -172,7 +172,7 @@ private fun ProfileDetailsImpl(
 
         ZarinaButton(
             onClick = { onEvent(ProfileDetailsEvent.DeleteAccountClicked) },
-            colors = ZarinaButtonDefaults.backlessErrorColors(),
+            colors = ZarinaButtonDefaults.filledColors(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),

@@ -162,7 +162,7 @@ public object ZarinaPromoCodeTextFieldDefaults {
                 ZarinaButton(
                     onClick = onClick,
                     size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.backlessColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = modifier,
                 ) {
                     Text(

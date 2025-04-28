@@ -44,7 +44,7 @@ internal fun TopBar(
                     onClick = { onEvent(TopBarEvent.ClearWishlistClicked) },
                     isLoading = state.isClearButtonLoading,
                     size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.backlessColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     textStyle = UiKitTheme.typography.caption1.regular,
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
