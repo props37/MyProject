@@ -5,6 +5,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.IndicationNodeFactory
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,10 +14,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
+import androidx.compose.material.Text
+import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
@@ -31,6 +35,7 @@ import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
@@ -38,6 +43,7 @@ import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.uikit.ripple.DarkRipple
 import ru.livetyping.zarina.core.uikit.ripple.LightRipple
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @Composable
 public fun ZarinaButton(
@@ -46,7 +52,7 @@ public fun ZarinaButton(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
-    size: ZarinaButtonSize = ZarinaButtonSize.Large,
+    size: ZarinaButtonSize = ZarinaButtonSize.Small,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.filledColors(),
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
@@ -80,6 +86,7 @@ public fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
+                .minimumInteractiveComponentSize()
                 .defaultMinSize(minSize, minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
@@ -112,6 +119,73 @@ public fun ZarinaButton(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewSmall() {
+    ZarinaTheme2 {
+        ZarinaButton(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Text("КНОПКА")
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewSmallOutlined() {
+    ZarinaTheme2 {
+        ZarinaButton(
+            onClick = {},
+            colors = ZarinaButtonDefaults.outlinedColors(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Text("КНОПКА")
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewMedium() {
+    ZarinaTheme2 {
+        ZarinaButton(
+            onClick = {},
+            size = ZarinaButtonSize.Medium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Text("КНОПКА")
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewLarge() {
+    ZarinaTheme2 {
+        ZarinaButton(
+            onClick = {},
+            size = ZarinaButtonSize.Large,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(16.dp),
+        ) {
+            Text("КНОПКА")
         }
     }
 }
@@ -190,15 +264,17 @@ public object ZarinaButtonDefaults {
 
     @Composable
     internal fun textStyleFromSize(size: ZarinaButtonSize): TextStyle = when (size) {
-        ZarinaButtonSize.Large -> UiKitTheme2.typography.body2
+        ZarinaButtonSize.Large -> UiKitTheme2.typography.body
         ZarinaButtonSize.Medium -> UiKitTheme2.typography.body
-        ZarinaButtonSize.Small -> UiKitTheme2.typography.body
+        ZarinaButtonSize.Small -> UiKitTheme2.typography.body2
     }
 
     @Stable
     internal fun indicationFromColors(colors: ZarinaButtonColors): IndicationNodeFactory {
         val backgroundColor = colors.backgroundColor
-        return if (backgroundColor.isSpecified) {
+        return if (backgroundColor == Color.Transparent) {
+            DarkRipple
+        } else if (backgroundColor.isSpecified) {
             val backgroundColorLuminance = colors.backgroundColor.luminance()
             if (backgroundColorLuminance <= MaxBackgroundColorLuminanceForLightRipple) {
                 LightRipple
