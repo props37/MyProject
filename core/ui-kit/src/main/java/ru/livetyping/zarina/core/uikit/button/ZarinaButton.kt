@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.luminance
@@ -129,7 +129,8 @@ public data class ZarinaButtonColors(
 public enum class ZarinaButtonSize { Large, Medium, Small }
 
 public object ZarinaButtonDefaults {
-    public val Shape: Shape = RoundedCornerShape(2.dp)
+    // TODO: [Top] Remove when migration is done
+    public val Shape: Shape = RectangleShape
 
     public val SizeLarge: Dp get() = 56.dp
     public val SizeMedium: Dp get() = 48.dp
