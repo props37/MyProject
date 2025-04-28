@@ -148,10 +148,6 @@ public object ZarinaButtonDefaults {
     public val ContentPaddingEven: PaddingValues
         get() = PaddingValues(8.dp)
 
-    public val IconSizeLarge: Dp get() = 20.dp
-    public val IconSizeMedium: Dp get() = 16.dp
-    public val IconSizeSmall: Dp get() = 12.dp
-
     @Composable
     public fun filledColors(
         backgroundColor: Color = UiKitTheme2.colors.mainBlack,
