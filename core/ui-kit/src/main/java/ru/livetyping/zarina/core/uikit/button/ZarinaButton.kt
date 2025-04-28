@@ -276,9 +276,9 @@ public object ZarinaButtonDefaults {
 
     @Composable
     internal fun textStyleFromSize(size: ZarinaButtonSize): TextStyle = when (size) {
-        ZarinaButtonSize.Large -> UiKitTheme.typography.tertiary.regular
-        ZarinaButtonSize.Medium -> UiKitTheme.typography.caption1.regular
-        ZarinaButtonSize.Small -> UiKitTheme.typography.caption3.regular
+        ZarinaButtonSize.Large -> UiKitTheme2.typography.body2
+        ZarinaButtonSize.Medium -> UiKitTheme2.typography.body
+        ZarinaButtonSize.Small -> UiKitTheme2.typography.body
     }
 
     @Stable
