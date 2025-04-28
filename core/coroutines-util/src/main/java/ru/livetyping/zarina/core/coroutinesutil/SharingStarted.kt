@@ -2,8 +2,15 @@ package ru.livetyping.zarina.core.coroutinesutil
 
 import kotlinx.coroutines.flow.SharingStarted
 
-// TODO: [Top] Temporary fix that allows to bypass FlowRequester bug
-private const val AndroidUiSubscriptionStopTimeoutMillis = Long.MAX_VALUE
+private const val UiSubscriptionStopTimeoutMillis = 5_000L
+
+@Deprecated(
+    message = "Use WhileUiSubscribed instead",
+    replaceWith = ReplaceWith("WhileUiSubscribed"),
+    level = DeprecationLevel.ERROR,
+)
+public val SharingStarted.Companion.WhileAndroidUiSubscribed: SharingStarted
+    get() = WhileSubscribed(Long.MAX_VALUE)
 
 /**
  * Android UI specific version of [SharingStarted.WhileSubscribed] that is used to not cancel
@@ -13,5 +20,5 @@ private const val AndroidUiSubscriptionStopTimeoutMillis = Long.MAX_VALUE
  * See [Migrating from LiveData to Kotlin’s Flow](https://medium.com/androiddevelopers/migrating-from-livedata-to-kotlins-flow-379292f419fb)
  * Medium article for more details
  */
-public val SharingStarted.Companion.WhileAndroidUiSubscribed: SharingStarted
-    get() = WhileSubscribed(AndroidUiSubscriptionStopTimeoutMillis)
+public val SharingStarted.Companion.WhileUiSubscribed: SharingStarted
+    get() = WhileSubscribed(UiSubscriptionStopTimeoutMillis)
