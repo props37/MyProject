@@ -418,7 +418,7 @@ private fun SignInBottomBlock(
 
         ZarinaButton(
             onClick = onSignUpClicked,
-            colors = ZarinaButtonDefaults.outlineColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(text = stringResource(R.string.sign_in_sign_up).uppercase())

@@ -36,7 +36,7 @@ internal fun AccountDeletionDialog(
             buttons = {
                 ZarinaButton(
                     onClick = { onEvent(AccountDeletionDialogEvent.DismissRequested) },
-                    colors = ZarinaButtonDefaults.outlineColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(

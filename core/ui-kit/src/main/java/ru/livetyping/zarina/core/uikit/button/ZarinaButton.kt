@@ -38,6 +38,7 @@ import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.uikit.ripple.DarkRipple
 import ru.livetyping.zarina.core.uikit.ripple.LightRipple
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaButton(
@@ -47,7 +48,7 @@ public fun ZarinaButton(
     isLoading: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
     size: ZarinaButtonSize = ZarinaButtonSize.Large,
-    colors: ZarinaButtonColors = ZarinaButtonDefaults.primaryColors(),
+    colors: ZarinaButtonColors = ZarinaButtonDefaults.filledColors(),
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
     textStyle: TextStyle = ZarinaButtonDefaults.textStyleFromSize(size),
@@ -151,13 +152,13 @@ public object ZarinaButtonDefaults {
     public val IconSizeSmall: Dp get() = 12.dp
 
     @Composable
-    public fun primaryColors(
-        backgroundColor: Color = UiKitTheme.colors.background.button.primary.default,
-        contentColor: Color = UiKitTheme.colors.text.button.primary.default,
-        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.primary.disabled,
-        disabledContentColor: Color = UiKitTheme.colors.text.button.primary.disabled,
+    public fun filledColors(
+        backgroundColor: Color = UiKitTheme2.colors.mainBlack,
+        contentColor: Color = UiKitTheme2.colors.white,
+        disabledBackgroundColor: Color = backgroundColor,
+        disabledContentColor: Color = contentColor,
         borderColor: Color = Color.Unspecified,
-        disabledBorderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = borderColor,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
@@ -202,13 +203,13 @@ public object ZarinaButtonDefaults {
     )
 
     @Composable
-    public fun outlineColors(
-        backgroundColor: Color = UiKitTheme.colors.background.button.outline.default,
-        contentColor: Color = UiKitTheme.colors.text.button.outline.default,
-        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.outline.disabled,
-        disabledContentColor: Color = UiKitTheme.colors.text.button.outline.disabled,
-        borderColor: Color = UiKitTheme.colors.border.button.default,
-        disabledBorderColor: Color = UiKitTheme.colors.border.button.disabled,
+    public fun outlinedColors(
+        backgroundColor: Color = Color.Transparent,
+        contentColor: Color = UiKitTheme2.colors.mainBlack,
+        disabledBackgroundColor: Color = backgroundColor,
+        disabledContentColor: Color = contentColor,
+        borderColor: Color = UiKitTheme2.colors.mainBlack,
+        disabledBorderColor: Color = borderColor,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,

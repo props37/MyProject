@@ -160,7 +160,7 @@ private fun ProfileDetailsImpl(
 
         ZarinaButton(
             onClick = { onEvent(ProfileDetailsEvent.SignOutClicked) },
-            colors = ZarinaButtonDefaults.outlineColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),

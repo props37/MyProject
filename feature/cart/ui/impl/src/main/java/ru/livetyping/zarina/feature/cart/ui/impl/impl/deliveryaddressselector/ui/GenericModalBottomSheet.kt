@@ -56,7 +56,7 @@ internal fun GenericModalBottomSheet(
                                 .launch { sheetState.hide() }
                                 .invokeOnCompletion { onClose() }
                         },
-                        colors = ZarinaButtonDefaults.outlineColors(),
+                        colors = ZarinaButtonDefaults.outlinedColors(),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),

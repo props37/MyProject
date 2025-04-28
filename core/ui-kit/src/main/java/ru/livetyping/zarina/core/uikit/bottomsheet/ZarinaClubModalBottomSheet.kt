@@ -110,7 +110,7 @@ private fun ZarinaClubModalBottomSheetContent(
         val learnMoreUrlText = stringResource(RCommon.string.res_zarina_loyalty_policy_url)
         ZarinaButton(
             onClick = { context.openUrlInCustomTabs(learnMoreUrlText) },
-            colors = ZarinaButtonDefaults.outlineColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)

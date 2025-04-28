@@ -182,7 +182,7 @@ private fun CityConfirmation(
             ZarinaButton(
                 onClick = onSelectCityClicked,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.outlineColors(),
+                colors = ZarinaButtonDefaults.outlinedColors(),
             ) {
                 Text(text = stringResource(R.string.onboarding_no_change).uppercase())
             }
