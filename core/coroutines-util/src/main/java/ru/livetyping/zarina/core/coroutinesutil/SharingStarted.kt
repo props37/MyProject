@@ -7,7 +7,7 @@ private const val UiSubscriptionStopTimeoutMillis = 5_000L
 @Deprecated(
     message = "Use WhileUiSubscribed instead",
     replaceWith = ReplaceWith("WhileUiSubscribed"),
-    level = DeprecationLevel.ERROR,
+    level = DeprecationLevel.WARNING,
 )
 public val SharingStarted.Companion.WhileAndroidUiSubscribed: SharingStarted
     get() = WhileSubscribed(Long.MAX_VALUE)
