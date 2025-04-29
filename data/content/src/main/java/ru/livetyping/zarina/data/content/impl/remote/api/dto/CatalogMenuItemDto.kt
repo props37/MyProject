@@ -39,8 +39,8 @@ internal data class CatalogMenuItemDto(
             CatalogMenuItem(
                 id = id,
                 title = title,
-                label = sign,
-                color = color?.let { Color(it) },
+                label = sign?.takeIf { it.isNotBlank() },
+                color = color?.takeIf { it.isNotBlank() }?.let { Color(it) },
                 clickAction = clickAction,
                 children = children,
             )
