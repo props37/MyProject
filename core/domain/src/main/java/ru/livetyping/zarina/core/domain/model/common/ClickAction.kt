@@ -1,7 +1,6 @@
-package ru.livetyping.zarina.feature.home.domain.model
+package ru.livetyping.zarina.core.domain.model.common
 
 import ru.livetyping.zarina.core.domain.model.category.Category
-import ru.livetyping.zarina.core.domain.model.common.Url
 
 public sealed interface ClickAction {
     public data class OpenProductList(val categoryId: Category.Id) : ClickAction

@@ -1,14 +1,14 @@
-package ru.livetyping.zarina.feature.home.data.impl.remote.api.dto
+package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.common.Url
-import ru.livetyping.zarina.feature.home.domain.model.ClickAction
 import timber.log.Timber
 
 @Serializable
-internal data class ClickActionDto(
+public data class ClickActionDto(
     @SerialName("type")
     val type: String? = null,
 
@@ -16,7 +16,7 @@ internal data class ClickActionDto(
     val payload: Payload? = null,
 ) {
     @Serializable
-    data class Payload(
+    public data class Payload(
         @SerialName("category_id")
         val categoryId: Long? = null,
 
@@ -24,7 +24,7 @@ internal data class ClickActionDto(
         val link: String? = null,
     )
 
-    fun toClickAction(): ClickAction? {
+    public fun toClickAction(): ClickAction? {
         if (type == null || payload == null) return null
         return when (type) {
             TYPE_PRODUCT_LIST -> toClickActionOpenProductList()
@@ -49,7 +49,7 @@ internal data class ClickActionDto(
         return ClickAction.OpenUrl(url = Url.create(payload.link))
     }
 
-    companion object {
+    private companion object {
         private const val TYPE_PRODUCT_LIST = "products-list"
         private const val TYPE_LOOKBOOK = "lookbook"
         private const val TYPE_WEB_VIEW = "web-view"

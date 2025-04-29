@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.home.domain.model
 
+import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.media.Media
 
