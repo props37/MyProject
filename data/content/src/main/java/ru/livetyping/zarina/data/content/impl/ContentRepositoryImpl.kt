@@ -23,7 +23,7 @@ internal class ContentRepositoryImpl @Inject constructor(
                 cached
             }
 
-            is CachePolicy.LocalFirstThenRemote -> TODO()
+            is CachePolicy.LocalFirstThenRemote -> getCatalogMenuLocalFirstThenRemote(cachePolicy)
             is CachePolicy.Remote -> getCatalogMenuRemote(cachePolicy)
         }
     }
