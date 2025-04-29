@@ -8,13 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.uicompose.toComposeColor
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 
-// TODO: [Top] Add colors
 @Composable
 internal fun MenuItemBasic(
     item: MenuItem.Basic,
@@ -47,9 +48,12 @@ internal fun MenuItemBasic(
             item.item.title.uppercase()
         }
 
+        val color = item.item.color?.toComposeColor() ?: Color.Unspecified
+
         Text(
             text = text,
             style = UiKitTheme2.typography.body,
+            color = color,
         )
 
         val label = item.item.label
@@ -57,6 +61,7 @@ internal fun MenuItemBasic(
             Text(
                 text = label.uppercase().withZarinaBrackets(),
                 style = UiKitTheme2.typography.caption2,
+                color = color,
                 modifier = Modifier
                     .align(Alignment.Top)
                     .padding(start = 8.dp),
