@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
+import ru.livetyping.zarina.core.domain.usecase.catalog.GetCatalogMenuUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
@@ -1228,6 +1229,17 @@ internal class UseCaseModule {
     ): GetInAppReviewRequestFlowUseCase {
         return GetInAppReviewRequestFlowUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCatalogMenuUseCase(
+        contentRepository: ContentRepository,
+        logger: UseCaseLogger,
+    ): GetCatalogMenuUseCase {
+        return GetCatalogMenuUseCase.getInstance(
+            contentRepository = contentRepository,
             logger = logger,
         )
     }
