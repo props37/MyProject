@@ -9,9 +9,7 @@ import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 
-internal class GenderPickerComponent(
-    viewModelScope: CoroutineScope,
-) {
+internal class GenderPickerComponent(viewModelScope: CoroutineScope) {
     private val tabs = GenderTab.getTabs().toImmutableList()
     private val currentTab = MutableStateFlow(GenderTab.WOMEN)
 

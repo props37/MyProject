@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -15,11 +17,12 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderPickerC
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    private val deps: CatalogDependencies,
+    deps: CatalogDependencies,
 ) : ViewModel(), SideEffectSource<CatalogSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -29,18 +32,31 @@ internal class CatalogViewModel @Inject constructor(
 
     private val catalogInitialState = CatalogState(
         genderPickerState = genderPickerComponent.genderPickerState.value,
+        menuState = MenuState.Loading,
     )
 
+    private val catalogStateBuilder = CatalogState.Builder()
     val catalogState: StateFlow<CatalogState> = combine(
         genderPickerComponent.genderPickerState,
         menuComponent.menuResult,
-    ) { genderPickerState, menuResult ->
-        CatalogState(genderPickerState)
+        menuComponent.isMenuLoading,
+        menuComponent.expandedMenuItemIds,
+    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds ->
+        catalogStateBuilder.build(
+            genderPickerState = genderPickerState,
+            menuResult = menuResult,
+            isMenuLoading = isMenuLoading,
+            expandedMenuItemIds = expandedMenuItemIds,
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
         initialValue = catalogInitialState,
     )
+
+    init {
+        fetchMenu()
+    }
 
     fun onCatalogEvent(event: CatalogEvent) {
         when (event) {
@@ -61,6 +77,12 @@ internal class CatalogViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = CatalogScreenAction.SearchClicked
             emitSideEffect(CatalogSideEffect.Navigate(action))
+        }
+    }
+
+    private fun fetchMenu() {
+        viewModelScope.launch {
+            menuComponent.fetchMenu(CachePolicy.LocalFirstThenRemote())
         }
     }
 }
