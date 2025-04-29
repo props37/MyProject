@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
 }
 
@@ -42,12 +43,15 @@ kotlin {
 
 dependencies {
     implementation(projects.core.domain)
+    implementation(projects.core.network)
     implementation(projects.core.datastore)
     implementation(projects.core.buildUtil)
     implementation(projects.core.kotlinUtil)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.kotlin.serialization.json)
 
     implementation(libs.timber)
 
