@@ -2,9 +2,11 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
@@ -12,7 +14,6 @@ import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 
-// TODO: [Top] Add labels
 // TODO: [Top] Add colors
 @Composable
 internal fun MenuItemBasic(
@@ -50,5 +51,16 @@ internal fun MenuItemBasic(
             text = text,
             style = UiKitTheme2.typography.body,
         )
+
+        val label = item.item.label
+        if (label != null) {
+            Text(
+                text = label.uppercase().withZarinaBrackets(),
+                style = UiKitTheme2.typography.caption2,
+                modifier = Modifier
+                    .align(Alignment.Top)
+                    .padding(start = 8.dp),
+            )
+        }
     }
 }
