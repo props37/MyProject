@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.uikit.bottombar.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
 import androidx.compose.runtime.Composable
@@ -31,6 +32,20 @@ public fun bottomNavBarHeightAsState(): State<Dp> {
     return remember(density) {
         derivedStateOf {
             with(density) { bottomNavBarSizePx.height.toDp() }
+        }
+    }
+}
+
+@Composable
+public fun bottomNavBarPaddingAsState(): State<PaddingValues> {
+    val bottomNavBarSizeTracker = LocalBottomNavBarSizeTracker.current
+    val bottomNavBarSizePx by bottomNavBarSizeTracker.sizePx
+    val density = LocalDensity.current
+    return remember(density) {
+        derivedStateOf {
+            with(density) {
+                PaddingValues(bottom = bottomNavBarSizePx.height.toDp())
+            }
         }
     }
 }
