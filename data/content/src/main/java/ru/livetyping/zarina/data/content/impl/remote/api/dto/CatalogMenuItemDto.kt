@@ -30,11 +30,14 @@ internal data class CatalogMenuItemDto(
     fun toCatalogMenuItem(): CatalogMenuItem? {
         val clickAction = click?.toClickAction()
         return if (id != null && title != null && clickAction != null) {
+            // Create custom ID because the result can contain "See all" items that share
+            // the same IDs with their parent
+            val id = CatalogMenuItem.Id("$id-$title")
             val children = children
                 ?.mapNotNull { it.toCatalogMenuItem() }
                 ?.takeIf { it.isNotEmpty() }
             CatalogMenuItem(
-                id = CatalogMenuItem.Id(id.toString()),
+                id = id,
                 title = title,
                 label = sign,
                 color = color?.let { Color(it) },
