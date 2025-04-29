@@ -3,10 +3,8 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
@@ -65,6 +63,7 @@ private fun ScreenContent(
                 genderPickerState = catalogState.genderPickerState,
                 onGenderSelected = { onCatalogEvent(CatalogEvent.GenderSelected(it)) },
                 modifier = Modifier
+                    .padding(bottom = 8.dp)
                     .graphicsLayer {
                         alpha = 1f - topBarScrollBehavior.state.collapsedFraction
                     },
@@ -83,7 +82,6 @@ private fun ScreenContent(
                 .padding(padding)
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
             SearchButton(
                 onClick = { onCatalogEvent(CatalogEvent.SearchClicked) },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
