@@ -6,13 +6,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderPickerComponent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
 import javax.inject.Inject
@@ -25,15 +25,16 @@ internal class CatalogViewModel @Inject constructor(
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val genderPickerComponent = GenderPickerComponent(viewModelScope)
+    private val menuComponent = MenuComponent(deps.getCatalogMenu)
 
     private val catalogInitialState = CatalogState(
         genderPickerState = genderPickerComponent.genderPickerState.value,
     )
 
     val catalogState: StateFlow<CatalogState> = combine(
-        flowOf(Unit),
         genderPickerComponent.genderPickerState,
-    ) { _, genderPickerState ->
+        menuComponent.menuResult,
+    ) { genderPickerState, menuResult ->
         CatalogState(genderPickerState)
     }.stateIn(
         scope = viewModelScope,
