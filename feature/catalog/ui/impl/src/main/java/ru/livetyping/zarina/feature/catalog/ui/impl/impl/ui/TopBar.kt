@@ -39,9 +39,9 @@ internal fun TopBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        ZarinaLogo(modifier = Modifier.height(16.dp))
+        ZarinaLogo(modifier = Modifier.height(18.dp))
 
         Spacer(modifier = Modifier.height(12.dp))
 
