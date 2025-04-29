@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.toImmutableList
+import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenu
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
@@ -47,17 +48,8 @@ internal data class CatalogState(
                             GenderTab.MEN -> menuByGender.men
                         }
 
-                        val topItems = menu.top?.let {
-                            buildMenuItems(it, expandedMenuItemIds, addBrackets = false)
-                        }?.toImmutableList()
-                        val middleItems = menu.middle?.let {
-                            buildMenuItems(it, expandedMenuItemIds, addBrackets = false)
-                        }?.toImmutableList()
-                        val bottomItems = menu.bottom?.let {
-                            buildMenuItems(it, expandedMenuItemIds, addBrackets = true)
-                        }?.toImmutableList()
-
-                        MenuState.Success(topItems, middleItems, bottomItems)
+                        val items = buildMenuItems(menu, expandedMenuItemIds).toImmutableList()
+                        MenuState.Success(items)
                     },
                     onFailure = { MenuState.Error },
                 )
@@ -65,33 +57,68 @@ internal data class CatalogState(
         }
 
         private fun buildMenuItems(
+            menu: CatalogMenu,
+            expandedMenuItemIds: Set<CatalogMenuItem.Id>,
+        ): List<MenuItem> {
+            return buildList {
+                menu.top?.let {
+                    addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = false)
+                }
+
+                addSpacerIfAbsent()
+                menu.middle?.let {
+                    addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = false)
+                }
+
+                addSpacerIfAbsent()
+                menu.bottom?.let {
+                    addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = true)
+                }
+            }
+        }
+
+        private fun MutableList<MenuItem>.addCatalogMenuItems(
             items: List<CatalogMenuItem>,
             expandedItemIds: Set<CatalogMenuItem.Id>,
             addBrackets: Boolean,
-        ): List<MenuItem> {
-            return buildList {
-                items.forEach { parent ->
-                    val isParentExpanded = parent.isExpandable && parent.id in expandedItemIds
-                    val parentItem = MenuItem(
-                        item = parent,
-                        isExpanded = isParentExpanded,
-                        addBrackets = addBrackets,
-                        addStartPadding = false,
-                    )
+        ) {
+            items.forEach { parent ->
+                val isParentExpanded = parent.isExpandable && parent.id in expandedItemIds
+                val parentItem = MenuItem.Basic(
+                    item = parent,
+                    isExpanded = isParentExpanded,
+                    addBrackets = addBrackets,
+                    addStartPadding = false,
+                    isHighlighted = isParentExpanded,
+                )
+
+                if (isParentExpanded) {
+                    addSpacerIfAbsent()
                     add(parentItem)
 
-                    if (isParentExpanded) {
-                        parent.children?.forEach { child ->
-                            val childItem = MenuItem(
-                                item = child,
-                                isExpanded = false,
-                                addBrackets = addBrackets,
-                                addStartPadding = true,
-                            )
-                            add(childItem)
-                        }
+                    parent.children?.forEach { child ->
+                        val childItem = MenuItem.Basic(
+                            item = child,
+                            isExpanded = false,
+                            addBrackets = addBrackets,
+                            addStartPadding = true,
+                            isHighlighted = true,
+                        )
+                        add(childItem)
                     }
+
+                    addSpacerIfAbsent()
+                } else {
+                    add(parentItem)
                 }
+            }
+        }
+
+        private fun MutableList<MenuItem>.addSpacerIfAbsent() {
+            val prevItem = this.lastOrNull()
+            if (prevItem != null && prevItem !is MenuItem.Spacer) {
+                val id = "Spacer after ${prevItem.id}"
+                add(MenuItem.Spacer(id))
             }
         }
     }

@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,10 +20,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.Menu
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.SearchButton
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.TopBar
 
@@ -87,7 +91,14 @@ private fun ScreenContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
 
-            // TODO: [Top] Implement
+            val bottomPadding = bottomNavBarHeightAsState().value +
+                    ZarinaScrollableDefaults.ScrollableBottomPadding
+
+            Menu(
+                state = catalogState.menuState,
+                onCatalogEvent = onCatalogEvent,
+                contentPadding = PaddingValues(bottom = bottomPadding),
+            )
         }
     }
 }

@@ -8,4 +8,6 @@ internal sealed interface CatalogEvent {
     data class GenderSelected(val tab: GenderTab) : CatalogEvent
 
     data object SearchClicked : CatalogEvent
+
+    data class MenuItemClicked(val item: MenuItem) : CatalogEvent
 }

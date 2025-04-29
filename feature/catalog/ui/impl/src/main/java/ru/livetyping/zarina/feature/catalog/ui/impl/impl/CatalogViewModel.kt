@@ -17,6 +17,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderPickerC
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 import javax.inject.Inject
 
@@ -63,6 +64,7 @@ internal class CatalogViewModel @Inject constructor(
             CatalogEvent.BackClicked -> onBackClicked()
             is CatalogEvent.GenderSelected -> genderPickerComponent.onGenderSelected(event.tab)
             CatalogEvent.SearchClicked -> onSearchClicked()
+            is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
         }
     }
 
@@ -77,6 +79,20 @@ internal class CatalogViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = CatalogScreenAction.SearchClicked
             emitSideEffect(CatalogSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
+        when (val item = event.item) {
+            is MenuItem.Basic -> {
+                if (item.item.isExpandable) {
+                    menuComponent.toggleExpandableItem(item.item)
+                } else {
+                    // TODO: [Top] Implement
+                }
+            }
+
+            is MenuItem.Spacer -> Unit
         }
     }
 
