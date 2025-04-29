@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -36,9 +37,9 @@ internal fun SearchButton(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .minimumInteractiveComponentSize()
             .clip(RoundedCornerShape(1.dp))
-            .clickable(onClick = onClick)
+            .clickable(role = Role.Button, onClick = onClick)
+            .minimumInteractiveComponentSize()
             .padding(contentPadding),
     ) {
         val text = stringResource(R.string.catalog_search)

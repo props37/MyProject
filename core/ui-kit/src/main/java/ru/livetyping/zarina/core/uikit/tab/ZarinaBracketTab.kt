@@ -60,12 +60,9 @@ public fun ZarinaBracketTab(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .minimumInteractiveComponentSize()
             .clip(RoundedCornerShape(1.dp))
-            .clickable(
-                role = Role.Tab,
-                onClick = onClick,
-            )
+            .clickable(role = Role.Tab, onClick = onClick)
+            .minimumInteractiveComponentSize()
             .padding(contentPadding),
     ) {
         Bracket(
