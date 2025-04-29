@@ -72,7 +72,7 @@ internal data class CatalogState(
             return buildList {
                 items.forEach { parent ->
                     val isParentExpanded = parent.isExpandable && parent.id in expandedItemIds
-                    val parentItem = MenuItem.Generic(
+                    val parentItem = MenuItem(
                         item = parent,
                         isExpanded = isParentExpanded,
                         addBrackets = addBrackets,
@@ -82,7 +82,7 @@ internal data class CatalogState(
 
                     if (isParentExpanded) {
                         parent.children?.forEach { child ->
-                            val childItem = MenuItem.Generic(
+                            val childItem = MenuItem(
                                 item = child,
                                 isExpanded = false,
                                 addBrackets = addBrackets,
