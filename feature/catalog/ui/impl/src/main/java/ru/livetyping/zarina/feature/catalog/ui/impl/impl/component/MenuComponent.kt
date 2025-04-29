@@ -1,10 +1,12 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl.component
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.usecase.catalog.GetCatalogMenuUseCase
@@ -26,9 +28,13 @@ internal class MenuComponent(
     suspend fun fetchMenu(cachePolicy: CachePolicy) {
         if (menuJob?.isActive == true) return
 
-        val params = GetCatalogMenuUseCase.Params(cachePolicy)
-        operationTracker.track(MenuRequest) {
-            _menuResult.value = getCatalogMenuUseCase(params)
+        coroutineScope {
+            val params = GetCatalogMenuUseCase.Params(cachePolicy)
+            menuJob = launch {
+                operationTracker.track(MenuRequest) {
+                    _menuResult.value = getCatalogMenuUseCase(params)
+                }
+            }
         }
     }
 
