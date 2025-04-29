@@ -7,7 +7,11 @@ import kotlinx.collections.immutable.ImmutableList
 @Stable
 internal sealed class MenuState {
     @Immutable
-    data class Success(val items: ImmutableList<MenuItem>) : MenuState()
+    data class Success(
+        val topItems: ImmutableList<MenuItem>?,
+        val middleItems: ImmutableList<MenuItem>?,
+        val bottomItems: ImmutableList<MenuItem>?,
+    ) : MenuState()
 
     data object Loading : MenuState()
 
