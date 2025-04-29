@@ -8,12 +8,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
+import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 
 // TODO: [Top] Add labels
 // TODO: [Top] Add colors
-// TODO: [Top] Add brackets
 @Composable
 internal fun MenuItemBasic(
     item: MenuItem.Basic,
@@ -40,8 +40,14 @@ internal fun MenuItemBasic(
         ),
         modifier = modifier,
     ) {
+        val text = if (item.addBrackets) {
+            item.item.title.uppercase().withZarinaBrackets()
+        } else {
+            item.item.title.uppercase()
+        }
+
         Text(
-            text = item.item.title.uppercase(),
+            text = text,
             style = UiKitTheme2.typography.body,
         )
     }
