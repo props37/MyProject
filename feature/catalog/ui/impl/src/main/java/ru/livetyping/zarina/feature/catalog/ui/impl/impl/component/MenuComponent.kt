@@ -46,7 +46,23 @@ internal class MenuComponent(
     fun toggleExpandableItem(item: CatalogMenuItem) {
         _expandedMenuItemIds.update { set ->
             val id = item.id
-            if (id in set) set - id else set + id
+            if (id in set) {
+                val mutableSet = set.toMutableSet()
+                mutableSet.remove(id)
+                item.forEachChild { child ->
+                    mutableSet.remove(child.id)
+                }
+                mutableSet
+            } else {
+                set + id
+            }
+        }
+    }
+
+    private fun CatalogMenuItem.forEachChild(action: (CatalogMenuItem) -> Unit) {
+        this.children?.forEach { child ->
+            action(child)
+            child.forEachChild(action)
         }
     }
 
