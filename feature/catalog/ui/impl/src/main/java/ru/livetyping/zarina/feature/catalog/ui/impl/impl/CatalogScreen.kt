@@ -30,6 +30,8 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.Menu
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.SearchButton
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.TopBar
 
+// TODO: [Top] Add banner
+
 @Composable
 internal fun CatalogScreen(
     navActions: CatalogFeature.NavActions,
