@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.toComposeColor
+import ru.livetyping.zarina.core.uikit.indicator.ZarinaExpandableIndicator
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -66,6 +68,12 @@ internal fun MenuItemBasic(
                     .align(Alignment.Top)
                     .padding(start = 8.dp),
             )
+        }
+
+        if (item.item.isExpandable) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            ZarinaExpandableIndicator(item.isExpanded)
         }
     }
 }
