@@ -12,11 +12,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.platform.dialPhoneNumber
 import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
+import ru.livetyping.zarina.core.uikit.item.ZarinaItemDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.R
@@ -24,7 +24,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.R
 @Composable
 internal fun MenuItemSupportContactDetails(
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+    contentPadding: PaddingValues = ZarinaItemDefaults.ContentPadding,
 ) {
     val supportPhone = PhoneNumber.ZARINA_SUPPORT
     val formattedPhone = rememberFormattedPhoneNumber(supportPhone.value)

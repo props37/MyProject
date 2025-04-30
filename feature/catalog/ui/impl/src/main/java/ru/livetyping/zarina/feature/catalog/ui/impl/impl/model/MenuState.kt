@@ -7,6 +7,7 @@ import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenu
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
+import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 
 @Stable
@@ -25,6 +26,7 @@ internal sealed class MenuState {
             menuResult: Result<CatalogMenuByGender>?,
             isMenuLoading: Boolean,
             expandedMenuItemIds: Set<CatalogMenuItem.Id>,
+            city: City,
         ): MenuState {
             return if (isMenuLoading || menuResult == null) {
                 Loading
@@ -36,8 +38,12 @@ internal sealed class MenuState {
                             GenderTab.MEN -> menuByGender.men
                         }
 
-                        val items = buildMenuItems(menu, expandedMenuItemIds).toImmutableList()
-                        Success(items)
+                        val items = buildMenuItems(
+                            menu = menu,
+                            expandedMenuItemIds = expandedMenuItemIds,
+                            city = city,
+                        )
+                        Success(items.toImmutableList())
                     },
                     onFailure = { Error },
                 )
@@ -47,6 +53,7 @@ internal sealed class MenuState {
         private fun buildMenuItems(
             menu: CatalogMenu,
             expandedMenuItemIds: Set<CatalogMenuItem.Id>,
+            city: City,
         ): List<MenuItem> {
             return buildList {
                 menu.top?.let {
@@ -62,6 +69,9 @@ internal sealed class MenuState {
                 menu.bottom?.let {
                     addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = true)
                 }
+
+                addSpacerIfAbsent()
+                add(MenuItem.City(city))
 
                 addSpacerIfAbsent()
                 add(MenuItem.SupportContactDetails)

@@ -73,6 +73,14 @@ private fun MenuSuccess(
                     )
                 }
 
+                is MenuItem.City -> {
+                    MenuItemCity(
+                        item = item,
+                        onChangeClicked = { onCatalogEvent(CatalogEvent.ChangeCityClicked) },
+                        modifier = Modifier.animateZarinaItem(this),
+                    )
+                }
+
                 MenuItem.SupportContactDetails -> {
                     MenuItemSupportContactDetails(
                         modifier = Modifier.animateZarinaItem(this),

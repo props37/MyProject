@@ -4,6 +4,7 @@ import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
+import ru.livetyping.zarina.core.domain.model.geo.City as DomainCity
 
 @Stable
 internal sealed class MenuItem {
@@ -19,6 +20,11 @@ internal sealed class MenuItem {
         val isHighlighted: Boolean,
     ) : MenuItem() {
         override val id: String get() = item.id.value
+    }
+
+    @Immutable
+    data class City(val city: DomainCity) : MenuItem() {
+        override val id: String get() = "Current City"
     }
 
     data object SupportContactDetails : MenuItem() {

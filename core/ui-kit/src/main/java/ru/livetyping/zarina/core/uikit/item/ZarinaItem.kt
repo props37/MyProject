@@ -100,5 +100,5 @@ public object ZarinaItemDefaults {
         @Composable
         get() = UiKitTheme2.colors.mainBlack
 
-    internal val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    public val ContentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
 }

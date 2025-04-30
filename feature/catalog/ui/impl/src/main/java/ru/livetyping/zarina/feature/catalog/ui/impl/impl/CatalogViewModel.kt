@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -36,18 +38,24 @@ internal class CatalogViewModel @Inject constructor(
         menuState = MenuState.Loading,
     )
 
+    private val userCityResultFlow = deps.getUserCityFlow(
+        params = GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+    )
+
     private val catalogStateBuilder = CatalogState.Builder()
     val catalogState: StateFlow<CatalogState> = combine(
         genderPickerComponent.genderPickerState,
         menuComponent.menuResult,
         menuComponent.isMenuLoading,
         menuComponent.expandedMenuItemIds,
-    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds ->
+        userCityResultFlow,
+    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds, userCityResult ->
         catalogStateBuilder.build(
             genderPickerState = genderPickerState,
             menuResult = menuResult,
             isMenuLoading = isMenuLoading,
             expandedMenuItemIds = expandedMenuItemIds,
+            city = userCityResult.getOrNull() ?: City.getDefault(),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -65,6 +73,7 @@ internal class CatalogViewModel @Inject constructor(
             is CatalogEvent.GenderSelected -> genderPickerComponent.onGenderSelected(event.tab)
             CatalogEvent.SearchClicked -> onSearchClicked()
             is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
+            CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
         }
     }
 
@@ -92,9 +101,15 @@ internal class CatalogViewModel @Inject constructor(
                 }
             }
 
+            is MenuItem.City -> Unit // TODO: [Top] Implement
+
             MenuItem.SupportContactDetails -> Unit
             is MenuItem.Spacer -> Unit
         }
+    }
+
+    private fun onChangeCityClicked() {
+        // TODO: [Top] Implement
     }
 
     private fun fetchMenu() {
