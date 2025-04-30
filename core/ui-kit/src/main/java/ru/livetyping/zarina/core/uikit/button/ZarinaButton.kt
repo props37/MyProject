@@ -86,7 +86,6 @@ public fun ZarinaButton(
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
-                .minimumInteractiveComponentSize()
                 .defaultMinSize(minSize, minSize)
                 .clip(shape)
                 .drawBehind { drawRect(backgroundColor.value) }
@@ -98,6 +97,7 @@ public fun ZarinaButton(
                     role = Role.Button,
                     onClick = onClick,
                 )
+                .minimumInteractiveComponentSize()
                 .padding(contentPadding),
         ) {
             AnimatedContent(
@@ -207,7 +207,7 @@ public object ZarinaButtonDefaults {
 
     public val SizeLarge: Dp get() = 56.dp
     public val SizeMedium: Dp get() = 48.dp
-    public val SizeSmall: Dp get() = 40.dp
+    public val SizeSmall: Dp get() = 48.dp
 
     public val ContentPaddingLarge: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
