@@ -62,7 +62,15 @@ private fun MenuSuccess(
     ) {
         items(
             items = state.items,
-            key = { item -> item.id },
+            key = { it.id },
+            contentType = {
+                when (it) {
+                    is MenuItem.Basic -> MenuItemContentType.BasicItem
+                    is MenuItem.City -> MenuItemContentType.City
+                    MenuItem.SupportContactDetails -> MenuItemContentType.SupportContactDetails
+                    is MenuItem.Spacer -> MenuItemContentType.Spacer
+                }
+            },
         ) { item ->
             when (item) {
                 is MenuItem.Basic -> {
@@ -105,6 +113,8 @@ private fun MenuSuccess(
 }
 
 private enum class MenuContentKey { Success }
+
+private enum class MenuItemContentType { BasicItem, City, SupportContactDetails, Spacer }
 
 private val SpacerHeightMedium: Dp get() = 20.dp
 private val SpacerHeightSmall: Dp get() = 8.dp
