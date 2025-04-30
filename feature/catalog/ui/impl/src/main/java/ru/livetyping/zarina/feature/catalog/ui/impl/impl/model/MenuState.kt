@@ -62,6 +62,9 @@ internal sealed class MenuState {
                 menu.bottom?.let {
                     addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = true)
                 }
+
+                addSpacerIfAbsent()
+                add(MenuItem.SupportContactDetails)
             }
         }
 

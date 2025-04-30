@@ -92,6 +92,7 @@ internal class CatalogViewModel @Inject constructor(
                 }
             }
 
+            MenuItem.SupportContactDetails -> Unit
             is MenuItem.Spacer -> Unit
         }
     }

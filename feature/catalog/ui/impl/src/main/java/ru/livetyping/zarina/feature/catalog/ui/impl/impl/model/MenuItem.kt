@@ -21,6 +21,10 @@ internal sealed class MenuItem {
         override val id: String get() = item.id.value
     }
 
+    data object SupportContactDetails : MenuItem() {
+        override val id: String get() = toString()
+    }
+
     @Immutable
     data class Spacer(
         override val id: String,

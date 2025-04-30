@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="catalog_search">Поиск по каталогу</string>
+    <string name="catalog_free_call_in_russia">Бесплатный звонок по России</string>
 </resources>

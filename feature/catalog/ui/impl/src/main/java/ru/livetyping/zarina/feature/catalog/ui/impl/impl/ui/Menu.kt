@@ -73,6 +73,12 @@ private fun MenuSuccess(
                     )
                 }
 
+                MenuItem.SupportContactDetails -> {
+                    MenuItemSupportContactDetails(
+                        modifier = Modifier.animateZarinaItem(this),
+                    )
+                }
+
                 is MenuItem.Spacer -> {
                     Spacer(
                         modifier = Modifier
