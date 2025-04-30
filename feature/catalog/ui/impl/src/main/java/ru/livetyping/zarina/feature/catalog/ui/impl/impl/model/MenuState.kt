@@ -71,34 +71,51 @@ internal sealed class MenuState {
             addBrackets: Boolean,
         ) {
             items.forEach { parent ->
-                val isParentExpanded = parent.isExpandable && parent.id in expandedItemIds
-                val parentItem = MenuItem.Basic(
+                addCatalogMenuItemWithChildren(
                     item = parent,
-                    isExpanded = isParentExpanded,
+                    expandedItemIds = expandedItemIds,
+                    currentNestingLevel = MenuItem.INITIAL_NESTING_LEVEL,
                     addBrackets = addBrackets,
-                    addStartPadding = false,
-                    isHighlighted = isParentExpanded,
                 )
+            }
+        }
 
-                if (isParentExpanded) {
+        private fun MutableList<MenuItem>.addCatalogMenuItemWithChildren(
+            item: CatalogMenuItem,
+            expandedItemIds: Set<CatalogMenuItem.Id>,
+            currentNestingLevel: Int,
+            addBrackets: Boolean,
+        ) {
+            val isExpanded = item.isExpandable && item.id in expandedItemIds
+            val menuItem = MenuItem.Basic(
+                item = item,
+                isExpanded = isExpanded,
+                addBrackets = addBrackets,
+                nestingLevel = currentNestingLevel,
+                isHighlighted = isExpanded || currentNestingLevel > MenuItem.INITIAL_NESTING_LEVEL,
+            )
+
+            if (isExpanded) {
+                if (currentNestingLevel == MenuItem.INITIAL_NESTING_LEVEL) {
                     addSpacerIfAbsent()
-                    add(parentItem)
-
-                    parent.children?.forEach { child ->
-                        val childItem = MenuItem.Basic(
-                            item = child,
-                            isExpanded = false,
-                            addBrackets = addBrackets,
-                            addStartPadding = true,
-                            isHighlighted = true,
-                        )
-                        add(childItem)
-                    }
-
-                    addSpacerIfAbsent()
-                } else {
-                    add(parentItem)
                 }
+
+                add(menuItem)
+
+                item.children?.forEach { child ->
+                    addCatalogMenuItemWithChildren(
+                        item = child,
+                        expandedItemIds = expandedItemIds,
+                        currentNestingLevel = currentNestingLevel + 1,
+                        addBrackets = addBrackets,
+                    )
+                }
+
+                if (currentNestingLevel == MenuItem.INITIAL_NESTING_LEVEL) {
+                    addSpacerIfAbsent()
+                }
+            } else {
+                add(menuItem)
             }
         }
 

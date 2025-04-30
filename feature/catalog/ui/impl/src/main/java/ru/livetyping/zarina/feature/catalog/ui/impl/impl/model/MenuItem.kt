@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl.model
 
+import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
@@ -13,7 +14,8 @@ internal sealed class MenuItem {
         val item: CatalogMenuItem,
         val isExpanded: Boolean,
         val addBrackets: Boolean,
-        val addStartPadding: Boolean,
+        @IntRange(from = 0L)
+        val nestingLevel: Int,
         val isHighlighted: Boolean,
     ) : MenuItem() {
         override val id: String get() = item.id.value
@@ -23,4 +25,8 @@ internal sealed class MenuItem {
     data class Spacer(
         override val id: String,
     ) : MenuItem()
+
+    companion object {
+        const val INITIAL_NESTING_LEVEL = 0
+    }
 }

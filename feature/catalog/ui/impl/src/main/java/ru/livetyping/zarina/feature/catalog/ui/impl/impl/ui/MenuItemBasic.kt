@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import ru.livetyping.zarina.core.uicompose.toComposeColor
 import ru.livetyping.zarina.core.uikit.indicator.ZarinaExpandableIndicator
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
@@ -31,7 +32,7 @@ internal fun MenuItemBasic(
             UiKitTheme2.colors.white
         },
     )
-    val startPadding = if (item.addStartPadding) 48.dp else 16.dp
+    val startPadding = 16.dp + (item.nestingLevel * 24.dp)
 
     ZarinaItem(
         onClick = { onClick(item) },
