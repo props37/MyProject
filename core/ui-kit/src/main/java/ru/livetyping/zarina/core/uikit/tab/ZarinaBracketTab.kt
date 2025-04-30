@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.uikit.text.ZARINA_BRACKET_END
+import ru.livetyping.zarina.core.uikit.text.ZARINA_BRACKET_START
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
@@ -99,8 +101,8 @@ private fun RowScope.Bracket(
     modifier: Modifier = Modifier,
 ) {
     val char = when (bracket) {
-        Bracket.Start -> ZarinaBracketTabDefaults.StartBracket
-        Bracket.End -> ZarinaBracketTabDefaults.EndBracket
+        Bracket.Start -> ZARINA_BRACKET_START
+        Bracket.End -> ZARINA_BRACKET_END
     }
     val expandFrom = when (bracket) {
         Bracket.Start -> Alignment.Start
@@ -175,9 +177,6 @@ public object ZarinaBracketTabDefaults {
 
     internal val ContentPadding: PaddingValues
         get() = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-
-    internal const val StartBracket = '['
-    internal const val EndBracket = ']'
 
     internal val BracketPadding: Dp get() = 7.dp
 
