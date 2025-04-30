@@ -88,9 +88,14 @@ private fun MenuSuccess(
                 }
 
                 is MenuItem.Spacer -> {
+                    val height = when (item.size) {
+                        MenuItem.Spacer.Size.SMALL -> SpacerHeightSmall
+                        MenuItem.Spacer.Size.MEDIUM -> SpacerHeightMedium
+                    }
+
                     Spacer(
                         modifier = Modifier
-                            .height(SpacerHeight)
+                            .height(height)
                             .animateZarinaItem(this),
                     )
                 }
@@ -101,4 +106,5 @@ private fun MenuSuccess(
 
 private enum class MenuContentKey { Success }
 
-private val SpacerHeight: Dp get() = 20.dp
+private val SpacerHeightMedium: Dp get() = 20.dp
+private val SpacerHeightSmall: Dp get() = 8.dp

@@ -34,7 +34,10 @@ internal sealed class MenuItem {
     @Immutable
     data class Spacer(
         override val id: String,
-    ) : MenuItem()
+        val size: Size,
+    ) : MenuItem() {
+        enum class Size { SMALL, MEDIUM }
+    }
 
     companion object {
         const val INITIAL_NESTING_LEVEL = 0

@@ -60,20 +60,20 @@ internal sealed class MenuState {
                     addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = false)
                 }
 
-                addSpacerIfAbsent()
+                addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 menu.middle?.let {
                     addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = false)
                 }
 
-                addSpacerIfAbsent()
+                addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 menu.bottom?.let {
                     addCatalogMenuItems(it, expandedMenuItemIds, addBrackets = true)
                 }
 
-                addSpacerIfAbsent()
+                addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 add(MenuItem.City(city))
 
-                addSpacerIfAbsent()
+                addSpacerIfAbsent(MenuItem.Spacer.Size.SMALL)
                 add(MenuItem.SupportContactDetails)
             }
         }
@@ -110,7 +110,7 @@ internal sealed class MenuState {
 
             if (isExpanded) {
                 if (currentNestingLevel == MenuItem.INITIAL_NESTING_LEVEL) {
-                    addSpacerIfAbsent()
+                    addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 }
 
                 add(menuItem)
@@ -125,18 +125,18 @@ internal sealed class MenuState {
                 }
 
                 if (currentNestingLevel == MenuItem.INITIAL_NESTING_LEVEL) {
-                    addSpacerIfAbsent()
+                    addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 }
             } else {
                 add(menuItem)
             }
         }
 
-        private fun MutableList<MenuItem>.addSpacerIfAbsent() {
+        private fun MutableList<MenuItem>.addSpacerIfAbsent(size: MenuItem.Spacer.Size) {
             val prevItem = this.lastOrNull()
             if (prevItem != null && prevItem !is MenuItem.Spacer) {
                 val id = "Spacer after ${prevItem.id}"
-                add(MenuItem.Spacer(id))
+                add(MenuItem.Spacer(id, size))
             }
         }
     }
