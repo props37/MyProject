@@ -74,6 +74,7 @@ internal class CatalogViewModel @Inject constructor(
             CatalogEvent.SearchClicked -> onSearchClicked()
             is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
             CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
+            CatalogEvent.RefreshClicked -> fetchMenu()
         }
     }
 

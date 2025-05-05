@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenu
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
 import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 
 @Stable
@@ -18,7 +19,8 @@ internal sealed class MenuState {
     data object Loading : MenuState()
 
     // TODO: [Top] Implement when design is ready
-    data object Error : MenuState()
+    @Immutable
+    data class Error(val state: ZarinaErrorScreenState2) : MenuState()
 
     class Builder {
         fun build(
@@ -45,7 +47,10 @@ internal sealed class MenuState {
                         )
                         Success(items.toImmutableList())
                     },
-                    onFailure = { Error },
+                    onFailure = {
+                        val errorState = ZarinaErrorScreenState2.from(it)
+                        Error(errorState)
+                    },
                 )
             }
         }

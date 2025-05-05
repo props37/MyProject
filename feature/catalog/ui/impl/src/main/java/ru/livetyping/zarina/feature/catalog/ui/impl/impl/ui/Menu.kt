@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import ru.livetyping.zarina.core.uicompose.Crossfade
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 
@@ -20,7 +21,7 @@ internal fun Menu(
         contentKey = {
             when (it) {
                 is MenuState.Success -> MenuContentKey.Success
-                MenuState.Error -> it
+                is MenuState.Error -> it
                 MenuState.Loading -> it
             }
         },
@@ -39,7 +40,12 @@ internal fun Menu(
                 MenuLoading(bottomPadding = bottomPadding)
             }
 
-            MenuState.Error -> Unit // TODO: [Top] Implement
+            is MenuState.Error -> {
+                ZarinaErrorScreen2(
+                    state = state.state,
+                    onButtonClick = { onCatalogEvent(CatalogEvent.RefreshClicked) },
+                )
+            }
         }
     }
 }
