@@ -42,7 +42,6 @@ internal class RefreshBearerTokensUseCaseImpl(
             forcedSignOutCoordinator.requestForcedSignOut()
 
             logger?.v(TAG, e, "Fetch new unauthorized user tokens")
-            // TODO: [Top] Test!
             try {
                 fetchNewUnauthorizedUserBearerTokens()
             } catch (e: Exception) {
