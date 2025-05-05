@@ -3,6 +3,8 @@ package ru.livetyping.zarina.core.uikit.theme
 import androidx.compose.ui.graphics.Color
 import ru.livetyping.zarina.core.uikit.impl.theme.Colors2
 
+// TODO: [Top] Rename after full migration
+
 public data class UiKitColors2(
     val mainBlack: Color = Colors2.MineShaft,
     val middleGray: Color = Colors2.Gray,

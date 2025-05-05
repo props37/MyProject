@@ -5,6 +5,8 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
 import java.io.IOException
 
+// TODO: [Top] Rename after full migration
+
 @Immutable
 public data class ZarinaErrorScreenState2(
     val title: Text,

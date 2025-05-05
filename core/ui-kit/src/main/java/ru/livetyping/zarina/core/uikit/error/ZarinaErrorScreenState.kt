@@ -8,6 +8,8 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
 import java.io.IOException
 
+// TODO: [Top] Remove after full migration
+
 @Immutable
 public data class ZarinaErrorScreenState(
     @DrawableRes

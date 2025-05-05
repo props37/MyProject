@@ -7,6 +7,8 @@ import androidx.compose.ui.res.stringResource
 import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
 
+// TODO: [Top] Remove after full migration
+
 @Immutable
 public data class ZarinaErrorScreenButtonState(
     val isButtonVisible: Boolean = true,

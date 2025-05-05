@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 // TODO: [Top] Add video
+// TODO: [Top] Rename after full migration
 
 @Composable
 public fun ZarinaErrorScreen2(

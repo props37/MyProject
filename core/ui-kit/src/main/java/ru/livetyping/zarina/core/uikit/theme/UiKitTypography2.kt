@@ -5,6 +5,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import ru.livetyping.zarina.core.uikit.impl.theme.W350
 
+// TODO: [Top] Rename after full migration
+
 public data class UiKitTypography2(
     val h1: TextStyle = TextStyle(
         fontSize = 25.sp,
