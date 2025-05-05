@@ -67,6 +67,7 @@ dependencies {
     implementation(projects.core.deepLink)
     implementation(projects.core.platform)
     implementation(projects.core.analytics.api)
+    implementation(projects.core.mediaCompose)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
