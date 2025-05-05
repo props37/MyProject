@@ -100,6 +100,7 @@ private fun ScreenContent(
                 state = catalogState.menuState,
                 onCatalogEvent = onCatalogEvent,
                 contentPadding = PaddingValues(bottom = bottomPadding),
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
