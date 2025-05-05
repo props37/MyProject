@@ -16,6 +16,11 @@ public data class UiKitTypography2(
         fontFamily = CirceFamily,
         fontWeight = FontWeight.W350,
     ),
+    val h2Regular: TextStyle = TextStyle(
+        fontSize = 18.sp,
+        fontFamily = CirceFamily,
+        fontWeight = FontWeight.W400,
+    ),
     val h3: TextStyle = TextStyle(
         fontSize = 16.sp,
         fontFamily = CirceFamily,
@@ -31,12 +36,17 @@ public data class UiKitTypography2(
         fontFamily = CirceFamily,
         fontWeight = FontWeight.W400,
     ),
+    val bodyBold: TextStyle = TextStyle(
+        fontSize = 12.sp,
+        fontFamily = CirceFamily,
+        fontWeight = FontWeight.W700,
+    ),
     val body2: TextStyle = TextStyle(
         fontSize = 10.sp,
         fontFamily = CirceFamily,
         fontWeight = FontWeight.W400,
     ),
-    val bodyBold: TextStyle = TextStyle(
+    val body2Bold: TextStyle = TextStyle(
         fontSize = 10.sp,
         fontFamily = CirceFamily,
         fontWeight = FontWeight.W700,
