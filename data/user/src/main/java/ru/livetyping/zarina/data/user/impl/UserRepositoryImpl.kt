@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
@@ -22,7 +21,6 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.data.user.impl.local.UserLocalDataSource
 import ru.livetyping.zarina.data.user.impl.remote.UserRemoteDataSource
-import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -221,8 +219,6 @@ internal class UserRepositoryImpl @Inject constructor(
     private fun getUserFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<User?> {
-        // TODO: [Low] Add support for CacheExpirationPolicy
-        Timber.tag(TAG).w("User CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getUserFlow().map { cached ->
             if (cached != null) {
                 cached
@@ -245,8 +241,6 @@ internal class UserRepositoryImpl @Inject constructor(
     private fun getLoyaltyCardFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<LoyaltyCard?> {
-        // TODO: [Low] Add support for CacheExpirationPolicy
-        Timber.tag(TAG).w("LoyaltyCard CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getLoyaltyCardFlow().map { cached ->
             if (cached != null) {
                 cached
@@ -269,8 +263,6 @@ internal class UserRepositoryImpl @Inject constructor(
     private fun getUserCityFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<City?> {
-        // TODO: [Low] Add support for CacheExpirationPolicy
-        Timber.tag(TAG).w("User city CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getUserCityFlow().map { cached ->
             if (cached != null) {
                 cached

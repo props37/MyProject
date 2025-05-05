@@ -1,14 +1,12 @@
 package ru.livetyping.zarina.data.content.impl
 
 import kotlinx.coroutines.flow.firstOrNull
-import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
 import ru.livetyping.zarina.data.content.impl.local.ContentLocalDataSource
 import ru.livetyping.zarina.data.content.impl.remote.ContentRemoteDataSource
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class ContentRepositoryImpl @Inject constructor(
@@ -35,7 +33,6 @@ internal class ContentRepositoryImpl @Inject constructor(
     private suspend fun getCatalogMenuLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): CatalogMenuByGender {
-        Timber.tag(TAG).w("CatalogMenu CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         val cached = localDataSource.getCatalogMenuFlow().firstOrNull()
         return if (cached != null) {
             cached

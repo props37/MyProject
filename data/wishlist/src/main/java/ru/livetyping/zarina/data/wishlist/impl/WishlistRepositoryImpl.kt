@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.pagination.Page
@@ -13,7 +12,6 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.data.wishlist.impl.local.WishlistLocalDataSource
 import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSource
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class WishlistRepositoryImpl @Inject constructor(
@@ -62,8 +60,6 @@ internal class WishlistRepositoryImpl @Inject constructor(
     private fun getWishlistProductIdsFlowLocalFirstThenRemote(
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<Set<Product.Id>> {
-        // TODO: [Low] Add support for CacheExpirationPolicy
-        Timber.tag(TAG).w("Wishlist product IDs CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getWishlistProductIdsFlow()
             .map { cached ->
                 if (!localDataSource.areWishlistProductIdsFetched()) {
