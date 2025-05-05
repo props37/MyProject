@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,20 +26,33 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 // TODO: [Top] Add video
-// TODO: [Top] Migrate to custom layout
 
 @Composable
 public fun ZarinaErrorScreen2(
     state: ZarinaErrorScreenState2,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     Column(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        Box(modifier = Modifier.weight(1f))
+        val topPadding = contentPadding.calculateTopPadding()
+        if (topPadding != 0.dp) {
+            Spacer(modifier = Modifier.height(topPadding))
+        }
+
+        // TODO: [Top] Add video player
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .background(Color.Red),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,6 +87,13 @@ public fun ZarinaErrorScreen2(
                     Text(text = textString(state.buttonText).uppercase())
                 }
             }
+
+            val bottomPadding = contentPadding.calculateBottomPadding()
+            Spacer(
+                modifier = Modifier
+                    .heightIn(min = 20.dp + bottomPadding)
+                    .fillMaxHeight(0.2f)
+            )
         }
     }
 }
