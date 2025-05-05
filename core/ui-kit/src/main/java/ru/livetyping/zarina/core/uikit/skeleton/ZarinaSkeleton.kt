@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaSkeleton(
@@ -32,7 +32,7 @@ public fun ZarinaSkeleton(
 public object ZarinaSkeletonDefaults {
     public val Color: Color
         @Composable
-        get() = UiKitTheme.colors.background.skeleton
+        get() = UiKitTheme2.colors.skeletonBackground
 
-    public val Shape: Shape = RoundedCornerShape(2.dp)
+    public val Shape: Shape = RoundedCornerShape(6.dp)
 }

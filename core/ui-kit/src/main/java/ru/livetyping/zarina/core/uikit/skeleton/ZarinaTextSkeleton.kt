@@ -17,7 +17,8 @@ import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 public fun ZarinaTextSkeleton(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
-    useUiKitFontFamily: Boolean = false,
+    // Whether or not to use UI kit font family. UI kit font family has huge bottom paddings
+    useUiKitFontFamily: Boolean = true,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     isShimmerEnabled: Boolean = true,
     color: Color = ZarinaSkeletonDefaults.Color,
@@ -32,7 +33,6 @@ public fun ZarinaTextSkeleton(
         val fontFamily = if (useUiKitFontFamily) {
             textStyle.fontFamily
         } else {
-            // Use default font family as theme font family has huge top and bottom paddings
             FontFamily.Default
         }
 
