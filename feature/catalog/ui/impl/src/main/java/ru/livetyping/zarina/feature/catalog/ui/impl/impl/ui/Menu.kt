@@ -1,18 +1,10 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.Crossfade
-import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 
 @Suppress("NAME_SHADOWING")
@@ -43,78 +35,13 @@ internal fun Menu(
                 )
             }
 
-            MenuState.Loading -> Unit // TODO: [Top] Implement
+            MenuState.Loading -> {
+                MenuLoading(contentPadding = contentPadding)
+            }
+
             MenuState.Error -> Unit // TODO: [Top] Implement
         }
     }
 }
 
-@Composable
-private fun MenuSuccess(
-    state: MenuState.Success,
-    onCatalogEvent: (CatalogEvent) -> Unit,
-    contentPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(
-        contentPadding = contentPadding,
-        modifier = modifier,
-    ) {
-        items(
-            items = state.items,
-            key = { it.id },
-            contentType = {
-                when (it) {
-                    is MenuItem.Basic -> MenuItemContentType.BasicItem
-                    is MenuItem.City -> MenuItemContentType.City
-                    MenuItem.SupportContactDetails -> MenuItemContentType.SupportContactDetails
-                    is MenuItem.Spacer -> MenuItemContentType.Spacer
-                }
-            },
-        ) { item ->
-            when (item) {
-                is MenuItem.Basic -> {
-                    MenuItemBasic(
-                        item = item,
-                        onClick = { onCatalogEvent(CatalogEvent.MenuItemClicked(it)) },
-                        modifier = Modifier.animateZarinaItem(this),
-                    )
-                }
-
-                is MenuItem.City -> {
-                    MenuItemCity(
-                        item = item,
-                        onChangeClicked = { onCatalogEvent(CatalogEvent.ChangeCityClicked) },
-                        modifier = Modifier.animateZarinaItem(this),
-                    )
-                }
-
-                MenuItem.SupportContactDetails -> {
-                    MenuItemSupportContactDetails(
-                        modifier = Modifier.animateZarinaItem(this),
-                    )
-                }
-
-                is MenuItem.Spacer -> {
-                    val height = when (item.size) {
-                        MenuItem.Spacer.Size.SMALL -> SpacerHeightSmall
-                        MenuItem.Spacer.Size.MEDIUM -> SpacerHeightMedium
-                    }
-
-                    Spacer(
-                        modifier = Modifier
-                            .height(height)
-                            .animateZarinaItem(this),
-                    )
-                }
-            }
-        }
-    }
-}
-
 private enum class MenuContentKey { Success }
-
-private enum class MenuItemContentType { BasicItem, City, SupportContactDetails, Spacer }
-
-private val SpacerHeightMedium: Dp get() = 20.dp
-private val SpacerHeightSmall: Dp get() = 8.dp
