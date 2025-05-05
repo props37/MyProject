@@ -199,6 +199,7 @@ public data class ZarinaButtonColors(
     val disabledBorderColor: Color,
 )
 
+// Small size is the same as Medium size since Small is too "small" for button
 public enum class ZarinaButtonSize { Large, Medium, Small }
 
 public object ZarinaButtonDefaults {
@@ -207,7 +208,7 @@ public object ZarinaButtonDefaults {
 
     public val SizeLarge: Dp get() = 56.dp
     public val SizeMedium: Dp get() = 48.dp
-    public val SizeSmall: Dp get() = 48.dp
+    public val SizeSmall: Dp get() = SizeMedium
 
     public val ContentPaddingLarge: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -216,7 +217,7 @@ public object ZarinaButtonDefaults {
         get() = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
 
     public val ContentPaddingSmall: PaddingValues
-        get() = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+        get() = ContentPaddingMedium
 
     public val ContentPaddingEven: PaddingValues
         get() = PaddingValues(8.dp)
@@ -266,7 +267,7 @@ public object ZarinaButtonDefaults {
     internal fun textStyleFromSize(size: ZarinaButtonSize): TextStyle = when (size) {
         ZarinaButtonSize.Large -> UiKitTheme2.typography.body
         ZarinaButtonSize.Medium -> UiKitTheme2.typography.body
-        ZarinaButtonSize.Small -> UiKitTheme2.typography.body2
+        ZarinaButtonSize.Small -> UiKitTheme2.typography.body
     }
 
     @Stable
