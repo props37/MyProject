@@ -1,13 +1,19 @@
 package ru.livetyping.zarina.core.mediacompose
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
@@ -20,7 +26,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.media3.ui.compose.SURFACE_TYPE_SURFACE_VIEW
+import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import timber.log.Timber
@@ -31,13 +37,72 @@ public fun SimpleVideoPlayer(
     url: String,
     modifier: Modifier = Modifier,
     isOnScreen: Boolean = true,
-    repeatMode: Int = Player.REPEAT_MODE_ONE,
+    repeatMode: Int = RepeatMode,
     isVolumeEnabled: Boolean = false,
-    contentScale: ContentScale = ContentScale.None,
-    videoScalingMode: Int = C.VIDEO_SCALING_MODE_DEFAULT,
+    contentScale: ContentScale = DefaultContentScale,
+    videoScalingMode: Int = VideoScalingMode,
     onReadyToPlay: (() -> Unit)? = null,
-    surfaceType: Int = SURFACE_TYPE_SURFACE_VIEW,
+    surfaceType: Int = SurfaceType,
     cacheDataSourceFactory: CacheDataSource.Factory? = LocalExoPlayerCacheDataSourceFactoryProvider.current?.provide(),
+) {
+    val data = remember(url) { Data.Url(url) }
+
+    SimpleVideoPlayerImpl(
+        data = data,
+        isOnScreen = isOnScreen,
+        repeatMode = repeatMode,
+        isVolumeEnabled = isVolumeEnabled,
+        contentScale = contentScale,
+        videoScalingMode = videoScalingMode,
+        onReadyToPlay = onReadyToPlay,
+        surfaceType = surfaceType,
+        cacheDataSourceFactory = cacheDataSourceFactory,
+        modifier = modifier,
+    )
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+public fun SimpleVideoPlayer(
+    resId: Int,
+    modifier: Modifier = Modifier,
+    isOnScreen: Boolean = true,
+    repeatMode: Int = RepeatMode,
+    isVolumeEnabled: Boolean = false,
+    contentScale: ContentScale = DefaultContentScale,
+    videoScalingMode: Int = VideoScalingMode,
+    onReadyToPlay: (() -> Unit)? = null,
+    surfaceType: Int = SurfaceType,
+) {
+    val data = remember(resId) { Data.Resource(resId) }
+
+    SimpleVideoPlayerImpl(
+        data = data,
+        isOnScreen = isOnScreen,
+        repeatMode = repeatMode,
+        isVolumeEnabled = isVolumeEnabled,
+        contentScale = contentScale,
+        videoScalingMode = videoScalingMode,
+        onReadyToPlay = onReadyToPlay,
+        surfaceType = surfaceType,
+        cacheDataSourceFactory = null,
+        modifier = modifier,
+    )
+}
+
+@OptIn(UnstableApi::class)
+@Composable
+private fun SimpleVideoPlayerImpl(
+    data: Data,
+    isOnScreen: Boolean,
+    repeatMode: Int,
+    isVolumeEnabled: Boolean,
+    contentScale: ContentScale,
+    videoScalingMode: Int,
+    onReadyToPlay: (() -> Unit)?,
+    surfaceType: Int,
+    cacheDataSourceFactory: CacheDataSource.Factory?,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val appMetrica = LocalAppMetrica.current
@@ -61,8 +126,8 @@ public fun SimpleVideoPlayer(
         }
     }
 
-    LifecycleStartEffect(player, isOnScreen, url, cacheDataSourceFactory) {
-        if (isOnScreen) player?.playFromUrl(url, cacheDataSourceFactory)
+    LifecycleStartEffect(player, isOnScreen, data, cacheDataSourceFactory) {
+        if (isOnScreen) player?.playFromData(data, cacheDataSourceFactory)
 
         onStopOrDispose {
             player?.pause()
@@ -74,7 +139,7 @@ public fun SimpleVideoPlayer(
             player = it,
             surfaceType = surfaceType,
             contentScale = contentScale,
-            modifier = modifier,
+            modifier = modifier.clipToBounds(),
         )
     }
 }
@@ -114,6 +179,14 @@ private fun initPlayer(
 }
 
 @OptIn(UnstableApi::class)
+private fun ExoPlayer.playFromData(data: Data, cacheDataSourceFactory: CacheDataSource.Factory?) {
+    when (data) {
+        is Data.Url -> playFromUrl(data.url, cacheDataSourceFactory)
+        is Data.Resource -> playFromResources(data.resId)
+    }
+}
+
+@OptIn(UnstableApi::class)
 private fun ExoPlayer.playFromUrl(url: String, cacheDataSourceFactory: CacheDataSource.Factory?) {
     val dataSourceFactory = cacheDataSourceFactory ?: run {
         Timber.tag(Tag).w("CacheDataSource factory is null. Use fallback DataSource factory instead")
@@ -126,5 +199,35 @@ private fun ExoPlayer.playFromUrl(url: String, cacheDataSourceFactory: CacheData
     prepare()
     play()
 }
+
+@OptIn(UnstableApi::class)
+private fun ExoPlayer.playFromResources(resId: Int) {
+    val uri: Uri? = Uri.Builder()
+        .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+        .path(resId.toString())
+        .build()
+    if (uri != null) {
+        val mediaItem = MediaItem.fromUri(uri)
+        setMediaItem(mediaItem)
+        prepare()
+        play()
+    }
+}
+
+@Stable
+private sealed class Data {
+    @Immutable
+    data class Url(val url: String) : Data()
+
+    @Immutable
+    data class Resource(val resId: Int) : Data()
+}
+
+private const val RepeatMode = Player.REPEAT_MODE_ONE
+private val DefaultContentScale = ContentScale.None
+@SuppressLint("UnsafeOptInUsageError")
+private const val VideoScalingMode = C.VIDEO_SCALING_MODE_DEFAULT
+@SuppressLint("UnsafeOptInUsageError")
+private const val SurfaceType = SURFACE_TYPE_TEXTURE_VIEW
 
 private const val Tag = "ExoPlayer"
