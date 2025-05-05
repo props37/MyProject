@@ -1,8 +1,8 @@
 package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
@@ -12,7 +12,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 internal fun Menu(
     state: MenuState,
     onCatalogEvent: (CatalogEvent) -> Unit,
-    contentPadding: PaddingValues,
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -31,12 +31,12 @@ internal fun Menu(
                 MenuSuccess(
                     state = state,
                     onCatalogEvent = onCatalogEvent,
-                    contentPadding = contentPadding,
+                    bottomPadding = bottomPadding,
                 )
             }
 
             MenuState.Loading -> {
-                MenuLoading(contentPadding = contentPadding)
+                MenuLoading(bottomPadding = bottomPadding)
             }
 
             MenuState.Error -> Unit // TODO: [Top] Implement

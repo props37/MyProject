@@ -3,7 +3,6 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -99,7 +98,7 @@ private fun ScreenContent(
             Menu(
                 state = catalogState.menuState,
                 onCatalogEvent = onCatalogEvent,
-                contentPadding = PaddingValues(bottom = bottomPadding),
+                bottomPadding = bottomPadding,
                 modifier = Modifier.fillMaxSize(),
             )
         }

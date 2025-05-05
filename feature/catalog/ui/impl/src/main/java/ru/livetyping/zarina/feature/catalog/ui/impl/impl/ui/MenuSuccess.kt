@@ -18,11 +18,11 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 internal fun MenuSuccess(
     state: MenuState.Success,
     onCatalogEvent: (CatalogEvent) -> Unit,
-    contentPadding: PaddingValues,
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        contentPadding = contentPadding,
+        contentPadding = PaddingValues(bottom = bottomPadding),
         modifier = modifier,
     ) {
         items(

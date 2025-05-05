@@ -6,19 +6,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 
-// TODO: [High] Add banner skeleton
+// TODO: [Medium] Add banner skeleton
 
 @Composable
 internal fun MenuLoading(
-    contentPadding: PaddingValues,
+    bottomPadding: Dp,
     modifier: Modifier = Modifier,
 ) {
     val shimmer = rememberZarinaSkeletonShimmer()
 
     LazyColumn(
-        contentPadding = contentPadding,
+        contentPadding = PaddingValues(bottom = bottomPadding),
         modifier = modifier,
     ) {
         items(4) {
