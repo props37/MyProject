@@ -97,7 +97,7 @@ internal fun MenuItemBasicSkeleton(
         modifier = modifier,
     ) {
         val widthFraction = remember {
-            lerp(MinWidthFraction, MaxWidthFraction, Random.nextFloat())
+            lerp(SkeletonMinWidthFraction, SkeletonMaxWidthFraction, Random.nextFloat())
         }
 
         ZarinaTextSkeleton(
@@ -125,5 +125,5 @@ private val ContentPadding: PaddingValues
         bottom = ContentPaddingBottom,
     )
 
-private const val MinWidthFraction = 0.2f
-private const val MaxWidthFraction = 0.5f
+private const val SkeletonMinWidthFraction = 0.2f
+private const val SkeletonMaxWidthFraction = 0.5f
