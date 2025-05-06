@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -109,7 +110,8 @@ private fun SimpleVideoPlayerImpl(
 
     var player by remember { mutableStateOf<ExoPlayer?>(null) }
 
-    LifecycleStartEffect(context) {
+    // Init and release player
+    DisposableEffect(context) {
         val newPlayer = initPlayer(
             context = context,
             repeatMode = repeatMode,
@@ -119,18 +121,29 @@ private fun SimpleVideoPlayerImpl(
             appMetrica = appMetrica,
         )
         player = newPlayer
+        Timber.tag(Tag).v("Player initialized")
 
-        onStopOrDispose {
+        onDispose {
             player?.release()
             player = null
+            Timber.tag(Tag).v("Player released")
         }
     }
 
-    LifecycleStartEffect(player, isOnScreen, data, cacheDataSourceFactory) {
-        if (isOnScreen) player?.playFromData(data, cacheDataSourceFactory)
+    // Set media
+    DisposableEffect(player, data, cacheDataSourceFactory) {
+        player?.playFromData(data, cacheDataSourceFactory)
+        Timber.tag(Tag).v("Media set")
+        onDispose {}
+    }
 
+    // Control playback state
+    LifecycleStartEffect(player, isOnScreen) {
+        player?.play()
+        Timber.tag(Tag).v("Playback started")
         onStopOrDispose {
             player?.pause()
+            Timber.tag(Tag).v("Playback paused")
         }
     }
 
