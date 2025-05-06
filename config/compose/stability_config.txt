@@ -134,6 +134,11 @@ ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption.DateTimePeriod
 ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption.DateTimePeriod.Id
 ru.livetyping.zarina.core.domain.model.checkout.PaymentMethod
 ru.livetyping.zarina.core.domain.model.checkout.PaymentMethod.Id
+
+ru.livetyping.zarina.core.domain.model.catalog.CatalogMenu
+ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
+ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem
+ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuItem.Id
 // :core:domain end
 
 

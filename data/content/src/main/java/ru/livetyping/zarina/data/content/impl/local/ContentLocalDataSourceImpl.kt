@@ -1,22 +1,22 @@
 package ru.livetyping.zarina.data.content.impl.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.gender.Gender
-import ru.livetyping.zarina.data.content.impl.local.gender.ContentGenderDataHolder
+import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
+import ru.livetyping.zarina.data.content.impl.local.catalog.CatalogDataHolder
 import javax.inject.Inject
 
 internal class ContentLocalDataSourceImpl @Inject constructor(
-    private val contentGenderDataHolder: ContentGenderDataHolder,
+    private val catalogDataHolder: CatalogDataHolder,
 ) : ContentLocalDataSource {
-    override fun getLastContentGenderFlow(): Flow<Gender?> {
-        return contentGenderDataHolder.getLastContentGenderFlow()
+    override fun getCatalogMenuFlow(): Flow<CatalogMenuByGender?> {
+        return catalogDataHolder.getCatalogMenuFlow()
     }
 
-    override suspend fun setLastContentGender(gender: Gender) {
-        contentGenderDataHolder.setLastContentGender(gender)
+    override fun setCatalogMenu(menu: CatalogMenuByGender?) {
+        catalogDataHolder.setCatalogMenu(menu)
     }
 
     override suspend fun clear() {
-        contentGenderDataHolder.clear()
+        catalogDataHolder.clear()
     }
 }

@@ -35,7 +35,7 @@ internal fun SignOutDialog(
             buttons = {
                 ZarinaButton(
                     onClick = { onEvent(SignOutDialogEvent.DismissRequested) },
-                    colors = ZarinaButtonDefaults.outlineColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(

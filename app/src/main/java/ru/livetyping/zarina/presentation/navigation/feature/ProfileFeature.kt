@@ -9,6 +9,7 @@ import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.navigationutil.ScreenResultRetriever
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
+import ru.livetyping.zarina.core.resource.R as RCommon
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorResult
 import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
 import ru.livetyping.zarina.feature.profile.ui.ProfileFeature
@@ -44,7 +45,7 @@ fun rememberProfileNavActions(
             onSignUpClicked = { navController.navigate(SignUpFeature.NavEntry) },
             onChangeCityClicked = { currentCity ->
                 val citySelectorNavEntry = CitySelectorFeature.NavEntry.create(
-                    title = Text.Resource(R.string.city_change),
+                    title = Text.Resource(RCommon.string.res_change_city),
                     currentCity = currentCity,
                 )
                 navController.navigate(citySelectorNavEntry)

@@ -18,14 +18,16 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.mediacompose.LocalExoPlayerCacheDataSourceFactoryProvider
 import ru.livetyping.zarina.core.mediacompose.rememberExoPlayerCacheDataSourceFactoryProvider
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.LocalBottomNavBarBehaviorController
-import ru.livetyping.zarina.core.uikit.bottomnavbar.behavior.rememberBottomNavBarBehaviorController
-import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.LocalBottomNavBarSizeTracker
-import ru.livetyping.zarina.core.uikit.bottomnavbar.sizetracker.rememberBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.LocalBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.rememberBottomNavBarBehaviorController
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.LocalBottomNavBarSizeTracker
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.rememberBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
@@ -86,11 +88,15 @@ fun App(
                 scrimColor = ZarinaBottomSheetDefaults.ScrimColor,
             ) {
                 Box(modifier = modifier) {
+                    val hazeState = rememberHazeState()
+
                     ZarinaNavigation(
                         features = features,
                         navController = navController,
                         startFeature = viewModel.startFeature,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .hazeSource(hazeState),
                     )
 
                     val wishlistProductCount by viewModel.wishlistProductCount.collectAsStateWithLifecycle()
@@ -99,6 +105,7 @@ fun App(
                         navController = navController,
                         wishlistProductCountProvider = { wishlistProductCount },
                         cartProductCountProvider = { cartProductCount },
+                        hazeState = hazeState,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth(),

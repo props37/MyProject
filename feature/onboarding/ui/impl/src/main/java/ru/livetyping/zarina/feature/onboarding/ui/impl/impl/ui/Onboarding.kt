@@ -146,7 +146,7 @@ private fun CityDetection(
                 onClick = onSkipCityDetectionClicked,
                 isLoading = isSkipCityDetectionButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.secondaryColors(),
+                colors = ZarinaButtonDefaults.filledColors(),
             ) {
                 Text(text = stringResource(RCommon.string.res_skip).uppercase())
             }
@@ -182,7 +182,7 @@ private fun CityConfirmation(
             ZarinaButton(
                 onClick = onSelectCityClicked,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.outlineColors(),
+                colors = ZarinaButtonDefaults.outlinedColors(),
             ) {
                 Text(text = stringResource(R.string.onboarding_no_change).uppercase())
             }
@@ -193,7 +193,7 @@ private fun CityConfirmation(
                 onClick = onSkipCityDetectionClicked,
                 isLoading = isSkipCityDetectionButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.secondaryColors(),
+                colors = ZarinaButtonDefaults.filledColors(),
             ) {
                 Text(text = stringResource(R.string.onboarding_set_up_later).uppercase())
             }

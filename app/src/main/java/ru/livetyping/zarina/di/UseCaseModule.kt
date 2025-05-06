@@ -37,6 +37,7 @@ import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
+import ru.livetyping.zarina.core.domain.usecase.catalog.GetCatalogMenuUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
@@ -53,8 +54,6 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseC
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.WithdrawGiftCertificateUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.GetLastContentGenderFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
@@ -182,28 +181,6 @@ internal class UseCaseModule {
             authRepository = authRepository,
             forcedSignOutCoordinator = forcedSignOutCoordinator,
             appMetrica = appMetrica,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideGetLastContentGenderFlowUseCase(
-        contentRepository: ContentRepository,
-        logger: UseCaseLogger,
-    ): GetLastContentGenderFlowUseCase {
-        return GetLastContentGenderFlowUseCase.getInstance(
-            contentRepository = contentRepository,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideSetLastContentGenderUseCase(
-        contentRepository: ContentRepository,
-        logger: UseCaseLogger,
-    ): SetLastContentGenderUseCase {
-        return SetLastContentGenderUseCase.getInstance(
-            contentRepository = contentRepository,
             logger = logger,
         )
     }
@@ -1252,6 +1229,17 @@ internal class UseCaseModule {
     ): GetInAppReviewRequestFlowUseCase {
         return GetInAppReviewRequestFlowUseCase.getInstance(
             userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCatalogMenuUseCase(
+        contentRepository: ContentRepository,
+        logger: UseCaseLogger,
+    ): GetCatalogMenuUseCase {
+        return GetCatalogMenuUseCase.getInstance(
+            contentRepository = contentRepository,
             logger = logger,
         )
     }

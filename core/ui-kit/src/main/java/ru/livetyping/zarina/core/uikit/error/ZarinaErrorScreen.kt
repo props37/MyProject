@@ -21,6 +21,8 @@ import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
+// TODO: [Top] Remove after full migration
+
 @Composable
 public fun ZarinaErrorScreen(
     state: ZarinaErrorScreenState,

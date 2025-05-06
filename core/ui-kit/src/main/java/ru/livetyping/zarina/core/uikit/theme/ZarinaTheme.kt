@@ -9,6 +9,8 @@ import androidx.compose.runtime.remember
 import ru.livetyping.zarina.core.uikit.impl.theme.Colors
 import ru.livetyping.zarina.core.uikit.impl.theme.LightUiKitColors
 
+// TODO: [Top] Remove after full migration
+
 @Composable
 public fun ZarinaTheme(
     isDarkTheme: Boolean = false,

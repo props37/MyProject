@@ -877,7 +877,7 @@ internal object OrderPlacingScreenComponents {
         ZarinaButton(
             onClick = onClick,
             size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.backlessColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = modifier,
         ) {
             Text(text = stringResource(RCommon.string.res_change).uppercase())

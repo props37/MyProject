@@ -9,6 +9,8 @@ import androidx.compose.ui.unit.sp
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.impl.theme.W350
 
+// TODO: [Top] Remove after full migration
+
 private val CirceBold: Font
     get() = Font(
         resId = R.font.circe_bold,
@@ -27,7 +29,7 @@ private val CirceLight: Font
         weight = FontWeight.W350,
     )
 
-private val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
+internal val CirceFamily = FontFamily(CirceBold, CirceRegular, CirceLight)
 
 public data class UiKitTypography(
     val heading1: Heading1 = Heading1(),

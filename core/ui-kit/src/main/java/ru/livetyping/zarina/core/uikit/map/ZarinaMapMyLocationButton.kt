@@ -25,7 +25,7 @@ public fun ZarinaMapMyLocationButton(
     ZarinaButton(
         onClick = onClick,
         size = ZarinaButtonSize.Medium,
-        colors = ZarinaButtonDefaults.secondaryColors(),
+        colors = ZarinaButtonDefaults.filledColors(),
         contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         modifier = modifier.shadow(elevation),
     ) {

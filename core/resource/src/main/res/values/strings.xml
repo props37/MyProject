@@ -5,6 +5,8 @@
     <string name="res_refresh">Обновить</string>
     <string name="res_internet_connection_error">Проблемы с интернетом</string>
     <string name="res_check_internet_connection_and_refresh_page">Проверьте соединение с интернетом или отключите VPN. Затем обновите страницу</string>
+    <string name="res_internet_connection_error_guide">Проверьте соединение с интернетом или отключите VPN, затем обновите страницу</string>
+    <string name="res_generic_error_guide">Обновите страницу или попробуйте зайти позже</string>
     <string name="res_something_went_wrong">Что-то пошло не так</string>
     <string name="res_refresh_page_or_come_back_later">Обновите страницу или зайдите позже</string>
     <string name="res_loading">Загрузка</string>
@@ -68,7 +70,6 @@
     <string name="res_product_adding_to_wishlist_error">Не удалось добавить товар в избранное</string>
     <string name="res_product_removing_from_wishlist_error">Не удалось удалить товар из избранного</string>
     <string name="res_product_added_to_wishlist">Товар добавлен в избранное</string>
-    <string name="res_size_table">Таблица размеров</string>
     <string name="res_subscribe">Подписаться</string>
     <string name="res_product_added_to_cart">Товар добавлен в корзину</string>
     <string name="res_product_adding_to_cart_error">Не удалось добавить товар в корзину</string>

@@ -111,7 +111,7 @@ private fun ProductList(
             ) {
                 ZarinaButton(
                     onClick = { onProductEvent(ProductEvent.CheckAvailabilityInStoresClicked) },
-                    colors = ZarinaButtonDefaults.outlineColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 24.dp, bottom = 16.dp)
@@ -199,9 +199,9 @@ private fun BottomBar(
         modifier = modifier.padding(contentPadding),
     ) {
         val buttonColors = when {
-            !isProductAvailable -> ZarinaButtonDefaults.outlineColors()
-            isProductInCart -> ZarinaButtonDefaults.outlineColors()
-            else -> ZarinaButtonDefaults.primaryColors()
+            !isProductAvailable -> ZarinaButtonDefaults.outlinedColors()
+            isProductInCart -> ZarinaButtonDefaults.outlinedColors()
+            else -> ZarinaButtonDefaults.filledColors()
         }
 
         ZarinaButton(

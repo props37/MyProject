@@ -175,7 +175,6 @@ composeCompiler {
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("config/compose/stability_config.txt"))
 }
 
-// TODO: [Top] Optimize dependencies
 dependencies {
     implementation(projects.feature.home.ui.api)
     implementation(projects.feature.home.ui.impl)
@@ -285,6 +284,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.haze)
 
     implementation(libs.timber)
 

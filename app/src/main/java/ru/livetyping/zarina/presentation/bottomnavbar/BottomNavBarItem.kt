@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
-import ru.livetyping.zarina.R
 import ru.livetyping.zarina.core.navigation.NavigationEntry
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
@@ -22,27 +21,27 @@ sealed class BottomNavBarItem(
 ) {
     data object Catalog : BottomNavBarItem(
         titleResId = RCommon.string.res_catalog,
-        iconResId = R.drawable.ic_menu_24,
+        iconResId = RCommon.drawable.ic_nav_bar_catalog_25,
     )
 
     data object Wishlist : BottomNavBarItem(
         titleResId = RCommon.string.res_wishlist,
-        iconResId = R.drawable.ic_heart_outline_24,
+        iconResId = RCommon.drawable.ic_nav_bar_wishlist_25,
     )
 
     data object Home : BottomNavBarItem(
         titleResId = RCommon.string.res_home_screen,
-        iconResId = R.drawable.ic_building_outline_24,
+        iconResId = RCommon.drawable.ic_nav_bar_home_25,
     )
 
     data object Profile : BottomNavBarItem(
         titleResId = RCommon.string.res_profile,
-        iconResId = R.drawable.ic_human_outline_24,
+        iconResId = RCommon.drawable.ic_nav_bar_profile_25,
     )
 
     data object Cart : BottomNavBarItem(
         titleResId = RCommon.string.res_cart,
-        iconResId = R.drawable.ic_shopper_outline_24,
+        iconResId = RCommon.drawable.ic_nav_bar_cart_25,
     )
 }
 

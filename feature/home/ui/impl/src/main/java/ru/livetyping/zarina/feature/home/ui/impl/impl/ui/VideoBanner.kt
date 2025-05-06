@@ -9,9 +9,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import coil.compose.AsyncImage
 import ru.livetyping.zarina.core.mediacompose.SimpleVideoPlayer
 import ru.livetyping.zarina.feature.home.domain.model.Banner
@@ -43,7 +45,10 @@ internal fun VideoBanner(
                 isVideoPlaceholderVisible = false
                 onBannerDisplayed()
             },
-            modifier = Modifier.matchParentSize(),
+            surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
+            modifier = Modifier
+                .matchParentSize()
+                .clipToBounds(),
         )
 
         val videoPlaceholderUrl = banner.videoPlaceholderUrl

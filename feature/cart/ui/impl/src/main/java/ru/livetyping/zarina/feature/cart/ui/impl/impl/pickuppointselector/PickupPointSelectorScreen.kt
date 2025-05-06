@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
-import ru.livetyping.zarina.core.uikit.bottomnavbar.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredModalBottomSheet

@@ -9,15 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.mapState
-import ru.livetyping.zarina.core.domain.model.gender.Gender
-import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
@@ -44,7 +40,7 @@ internal class HomeViewModel @Inject constructor(
     private var homeContentJob: Job? = null
 
     private val genders = GenderTab.getTabs().toImmutableList()
-    private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
+    private val currentGender = MutableStateFlow(GenderTab.WOMEN)
 
     val genderSelectorState: StateFlow<TabRowState<GenderTab>> = currentGender.mapState(
         scope = viewModelScope,
@@ -80,15 +76,7 @@ internal class HomeViewModel @Inject constructor(
 
     fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
         when (event) {
-            is TabRowEvent.TabChanged -> {
-                val genderTab = event.tab
-                currentGender.value = genderTab
-                viewModelScope.launch {
-                    val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
-                    deps.setLastContentGender(params)
-                }
-            }
-
+            is TabRowEvent.TabChanged -> currentGender.value = event.tab
             is TabRowEvent.TabReselected -> Unit
         }
     }
@@ -122,14 +110,6 @@ internal class HomeViewModel @Inject constructor(
             operationTracker.track(request) {
                 homeContentResult.value = deps.getHomeContent()
             }
-        }
-    }
-
-    private fun getCurrentGenderInitialValue(): GenderTab {
-        return runBlocking {
-            val genderResult = deps.getLastContentGenderFlow().firstOrNull()
-            val gender = genderResult?.getOrNull() ?: Gender.getDefault()
-            GenderTab.from(gender)
         }
     }
 

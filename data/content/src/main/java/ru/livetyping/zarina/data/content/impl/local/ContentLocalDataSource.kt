@@ -1,12 +1,12 @@
 package ru.livetyping.zarina.data.content.impl.local
 
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 
 internal interface ContentLocalDataSource {
-    fun getLastContentGenderFlow(): Flow<Gender?>
+    fun getCatalogMenuFlow(): Flow<CatalogMenuByGender?>
 
-    suspend fun setLastContentGender(gender: Gender)
+    fun setCatalogMenu(menu: CatalogMenuByGender?)
 
     suspend fun clear()
 }

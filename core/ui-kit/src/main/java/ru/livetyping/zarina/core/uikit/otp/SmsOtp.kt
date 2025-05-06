@@ -99,7 +99,7 @@ public fun SmsOtp(
                         onClick = onRequestNewOtpClicked,
                         isLoading = otpState.isLoading,
                         size = ZarinaButtonSize.Medium,
-                        colors = ZarinaButtonDefaults.backlessColors(),
+                        colors = ZarinaButtonDefaults.outlinedColors(),
                     ) {
                         Text(text = stringResource(R.string.uikit_resend_code).uppercase())
                     }

@@ -71,7 +71,7 @@ public fun ZarinaExpandableItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .defaultMinSize(minHeight = ZarinaItemDefaults.MinHeight)
+                    .defaultMinSize(minHeight = 56.dp)
                     .clickable {
                         val newValue = !isExpanded
                         if (confirmExpandedChange(newValue)) {

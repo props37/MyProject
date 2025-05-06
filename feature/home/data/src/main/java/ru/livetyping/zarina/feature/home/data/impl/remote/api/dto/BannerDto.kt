@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.media.Media
+import ru.livetyping.zarina.core.network.zarina.dto.ClickActionDto
 import ru.livetyping.zarina.core.network.zarina.dto.MediaTypeDto
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import timber.log.Timber

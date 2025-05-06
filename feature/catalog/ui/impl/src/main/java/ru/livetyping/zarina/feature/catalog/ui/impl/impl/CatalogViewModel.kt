@@ -3,272 +3,140 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableSet
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import ru.livetyping.zarina.core.analytics.model.Screen
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
-import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
-import ru.livetyping.zarina.core.coroutinesutil.mapState
+import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
-import ru.livetyping.zarina.core.domain.model.category.Categories
-import ru.livetyping.zarina.core.domain.model.category.Category
-import ru.livetyping.zarina.core.domain.model.category.withFlattenedChildren
-import ru.livetyping.zarina.core.domain.model.gender.Gender
-import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.gender.SetLastContentGenderUseCase
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.domain.model.common.ClickAction
+import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
-import ru.livetyping.zarina.core.uimodel.tab.GenderTab
-import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
-import ru.livetyping.zarina.core.uimodel.tab.TabRowState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItem
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListItemsState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CategoryListState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderPickerComponent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    private val deps: CatalogDependencies,
+    deps: CatalogDependencies,
 ) : ViewModel(), SideEffectSource<CatalogSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
-    private val genders = GenderTab.getTabs().toImmutableList()
-    private val currentGender = MutableStateFlow(getCurrentGenderInitialValue())
+    private val genderPickerComponent = GenderPickerComponent(viewModelScope)
+    private val menuComponent = MenuComponent(deps.getCatalogMenu)
 
-    val genderSelectorState: StateFlow<TabRowState<GenderTab>> = currentGender.mapState(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-    ) { currentGender ->
-        TabRowState(
-            tabs = genders,
-            currentTab = currentGender,
-        )
-    }
-
-    private val categoriesRequester = FlowRequester(CategoriesRequest) {
-        val params = GetCategoriesFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-        deps.getCategoriesFlow(params)
-    }
-
-    private val categoriesResultFlow = categoriesRequester.flow.shareIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1,
+    private val catalogInitialState = CatalogState(
+        genderPickerState = genderPickerComponent.genderPickerState.value,
+        menuState = MenuState.Loading,
     )
 
-    val categoryListState: StateFlow<CategoryListState> = combine(
-        categoriesRequester.loadingState,
-        categoriesResultFlow,
-    ) { loadingState, result ->
-        createCategoryListState(loadingState, result)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = CategoryListState.Loading,
-    )
+    private val userCityFlow = deps.getUserCityFlow(
+        params = GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+    ).map { it.getOrNull() ?: City.getDefault() }
 
-    private val expandedCategories = MutableStateFlow<Set<Category>>(emptySet())
-
-    val categoryListItemsState: StateFlow<CategoryListItemsState> = combine(
-        categoriesResultFlow,
-        expandedCategories,
-    ) { categoriesResult, expandedCategories ->
-        createCategoryListItemsState(
-            categoriesResult = categoriesResult,
-            expandedCategories = expandedCategories,
+    private val catalogStateBuilder = CatalogState.Builder()
+    val catalogState: StateFlow<CatalogState> = combine(
+        genderPickerComponent.genderPickerState,
+        menuComponent.menuResult,
+        menuComponent.isMenuLoading,
+        menuComponent.expandedMenuItemIds,
+        userCityFlow,
+    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds, userCity ->
+        catalogStateBuilder.build(
+            genderPickerState = genderPickerState,
+            menuResult = menuResult,
+            isMenuLoading = isMenuLoading,
+            expandedMenuItemIds = expandedMenuItemIds,
+            city = userCity,
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = CategoryListItemsState(
-            visibleCategoryIds = persistentSetOf(),
-            expandedCategoryIds = persistentSetOf(),
-        ),
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = catalogInitialState,
     )
 
-    fun onSearchBarClicked() {
-        navigationThrottler.throttle {
-            val action = CatalogScreenAction.SearchClicked
-            emitSideEffect(CatalogSideEffect.Navigate(action))
-        }
+    init {
+        fetchMenu()
     }
 
-    fun onGenderSelectorEvent(event: TabRowEvent<GenderTab>) {
+    fun onCatalogEvent(event: CatalogEvent) {
         when (event) {
-            is TabRowEvent.TabChanged -> {
-                val genderTab = event.tab
-                currentGender.value = genderTab
-                viewModelScope.launch {
-                    val params = SetLastContentGenderUseCase.Params(genderTab.toGender())
-                    deps.setLastContentGender(params)
-                }
-            }
-
-            // TODO: [Low] Implement
-            is TabRowEvent.TabReselected -> Unit
+            CatalogEvent.BackClicked -> onBackClicked()
+            is CatalogEvent.GenderSelected -> genderPickerComponent.onGenderSelected(event.tab)
+            CatalogEvent.SearchClicked -> onSearchClicked()
+            is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
+            CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
+            CatalogEvent.RefreshClicked -> fetchMenu()
         }
     }
 
-    fun onCategoryListEvent(event: CategoryListEvent) {
-        when (event) {
-            is CategoryListEvent.ItemClicked -> onCategoryListItemClicked(event.item)
-            CategoryListEvent.ErrorRefreshClicked -> {
-                categoriesRequester.request(CategoriesRequest)
-            }
-        }
-    }
-
-    fun onBackClicked() {
+    private fun onBackClicked() {
         navigationThrottler.throttle {
             val action = CatalogScreenAction.BackClicked
             emitSideEffect(CatalogSideEffect.Navigate(action))
         }
     }
 
-    fun onLifecycleEvent(event: LifecycleEvent) {
-        when (event) {
-            LifecycleEvent.ON_CREATE -> deps.appMetrica.reportScreenOpened(Screen.Catalog)
-            LifecycleEvent.ON_START -> Unit
-            LifecycleEvent.ON_RESUME -> Unit
-        }
-    }
-
-    private fun onCategoryListItemClicked(item: CategoryListItem) {
-        when (item) {
-            is CategoryListItem.CategoryItem -> onCategoryItemClicked(item)
-            is CategoryListItem.SeeWholeCategoryItem -> onSeeWholeCategoryItemClicked(item)
-        }
-    }
-
-    private fun onCategoryItemClicked(item: CategoryListItem.CategoryItem) {
-        val category = item.category
-        if (!category.isExpandable || category.children.isNullOrEmpty()) {
-            navigationThrottler.throttle {
-                val action = CatalogScreenAction.CategoryClicked(item.category.id)
-                emitSideEffect(CatalogSideEffect.Navigate(action))
-            }
-        } else {
-            expandedCategories.update { set ->
-                val ids = set.mapTo(mutableSetOf()) { it.id }
-                if (category.id !in ids) {
-                    set + category
-                } else {
-                    val impactedCategories = category.withFlattenedChildren()
-                    set - impactedCategories.toSet()
-                }
-            }
-        }
-    }
-
-    private fun onSeeWholeCategoryItemClicked(item: CategoryListItem.SeeWholeCategoryItem) {
+    private fun onSearchClicked() {
         navigationThrottler.throttle {
-            val action = CatalogScreenAction.CategoryClicked(item.category.id)
+            val action = CatalogScreenAction.SearchClicked
             emitSideEffect(CatalogSideEffect.Navigate(action))
         }
     }
 
-    private fun getCurrentGenderInitialValue(): GenderTab {
-        return runBlocking {
-            val genderResult = deps.getLastContentGenderFlow().firstOrNull()
-            val gender = genderResult?.getOrNull() ?: Gender.getDefault()
-            GenderTab.from(gender)
+    private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
+        when (val item = event.item) {
+            is MenuItem.Basic -> onMenuItemBasicClicked(item)
+            is MenuItem.City -> Unit // TODO: [Top] Implement
+            MenuItem.SupportContactDetails -> Unit
+            is MenuItem.Spacer -> Unit
         }
     }
 
-    private fun createCategoryListState(
-        categoryLoadingState: FlowRequester.LoadingState,
-        categoryResult: Result<Categories>,
-    ): CategoryListState {
-        return if (categoryLoadingState.isLoading()) {
-            CategoryListState.Loading
-        } else {
-            categoryResult.fold(
-                onSuccess = { categories ->
-                    val womenCategoryItems = categories.women
-                        .flatMapToCategoryItems(CategoryListItem.NESTING_LEVEL_MIN_VALUE)
-                        .toImmutableList()
-                    val menCategoryItems = categories.men
-                        .flatMapToCategoryItems(CategoryListItem.NESTING_LEVEL_MIN_VALUE)
-                        .toImmutableList()
-                    CategoryListState.Success(womenCategoryItems, menCategoryItems)
-                },
-                onFailure = { t ->
-                    val errorState = ZarinaErrorScreenState.from(t)
-                    CategoryListState.Error(errorState)
-                },
-            )
-        }
-    }
-
-    private fun createCategoryListItemsState(
-        categoriesResult: Result<Categories>,
-        expandedCategories: Set<Category>,
-    ): CategoryListItemsState {
-        val categories = categoriesResult.getOrNull()
-        val expandedCategoryChildrenIds = expandedCategories.flatMap { category ->
-            category.children?.map { it.id } ?: emptyList()
-        }
-        val visibleCategoryIds = if (categories != null) {
-            val topMostCategoryIds = (categories.women + categories.men).map { it.id }
-            topMostCategoryIds + expandedCategoryChildrenIds
-        } else {
-            expandedCategoryChildrenIds
-        }
-        val expandedCategoryIds = expandedCategories.map { it.id }
-
-        return CategoryListItemsState(
-            visibleCategoryIds = visibleCategoryIds.toImmutableSet(),
-            expandedCategoryIds = expandedCategoryIds.toImmutableSet(),
-        )
-    }
-
-
-    private fun List<Category>.flatMapToCategoryItems(
-        initialNestingLevel: Int,
-    ): List<CategoryListItem> {
-        return this.flatMap { category ->
-            category.flatMapToCategoryItems(initialNestingLevel)
-        }
-    }
-
-    private fun Category.flatMapToCategoryItems(initialNestingLevel: Int): List<CategoryListItem> {
-        val category = this
-        return buildList {
-            val item = CategoryListItem.fromCategory(category, initialNestingLevel)
-            add(item)
-
-            val children = category.children
-            if (category.isExpandable && !children.isNullOrEmpty()) {
-                val childItemsNestingLevel = initialNestingLevel + 1
-                val childItems = children.flatMap { category ->
-                    category.flatMapToCategoryItems(childItemsNestingLevel)
-                }
-                val seeWholeCategoryItem = CategoryListItem.SeeWholeCategoryItem(
-                    category = category,
-                    nestingLevel = childItemsNestingLevel,
-                )
-                add(seeWholeCategoryItem)
-                addAll(childItems)
+    private fun onChangeCityClicked() {
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val city = userCityFlow.firstOrNull() ?: City.getDefault()
+                val action = CatalogScreenAction.CityClicked(city)
+                emitSideEffect(CatalogSideEffect.Navigate(action))
             }
         }
     }
 
-    private data object CategoriesRequest : FlowRequest
+    private fun onMenuItemBasicClicked(item: MenuItem.Basic) {
+        if (item.item.isExpandable) {
+            menuComponent.toggleExpandableItem(item.item)
+        } else {
+            navigationThrottler.throttle {
+                when (val clickAction = item.item.clickAction) {
+                    is ClickAction.OpenProductList -> {
+                        val action = CatalogScreenAction.CategoryClicked(clickAction.categoryId)
+                        emitSideEffect(CatalogSideEffect.Navigate(action))
+                    }
+
+                    is ClickAction.OpenUrl -> {
+                        val action = CatalogScreenAction.UrlClicked(clickAction.url)
+                        emitSideEffect(CatalogSideEffect.Navigate(action))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchMenu() {
+        viewModelScope.launch {
+            menuComponent.fetchMenu(CachePolicy.LocalFirstThenRemote())
+        }
+    }
 }

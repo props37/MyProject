@@ -51,7 +51,7 @@ internal fun ProductFiltrationTopBar(
                 ZarinaButton(
                     onClick = { onEvent(ProductFiltrationTopBarEvent.ResetFiltersClicked) },
                     size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.backlessColors(),
+                    colors = ZarinaButtonDefaults.outlinedColors(),
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
                     Text(

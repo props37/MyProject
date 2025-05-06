@@ -44,7 +44,7 @@ internal fun AuthorizationBlock(
         Spacer(modifier = Modifier.height(8.dp))
         ZarinaButton(
             onClick = onSignUpClicked,
-            colors = ZarinaButtonDefaults.outlineColors(),
+            colors = ZarinaButtonDefaults.outlinedColors(),
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(text = stringResource(R.string.profile_sign_up).uppercase())

@@ -169,7 +169,7 @@ internal object CartScreenComponents {
                     ZarinaButton(
                         onClick = onClearClicked,
                         size = ZarinaButtonSize.Small,
-                        colors = ZarinaButtonDefaults.backlessColors(),
+                        colors = ZarinaButtonDefaults.outlinedColors(),
                         textStyle = UiKitTheme.typography.caption1.regular,
                         modifier = Modifier.padding(end = 8.dp),
                     ) {
@@ -968,7 +968,7 @@ internal object CartScreenComponents {
         Column(modifier = modifier) {
             ZarinaButton(
                 onClick = { onAddToFavoritesClicked(product) },
-                colors = ZarinaButtonDefaults.tertiaryColors(),
+                colors = ZarinaButtonDefaults.filledColors(),
                 shape = RectangleShape,
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier

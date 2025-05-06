@@ -22,18 +22,22 @@ public fun ZarinaLogo(
     color: Color = ZarinaLogoDefaults.Color,
     animate: Boolean = false,
 ) {
-    val shimmer = rememberZarinaSkeletonShimmer(
-        blendMode = BlendMode.DstIn,
-        shaderColors = remember {
-            listOf(
-                Color.Unspecified.copy(alpha = 1f),
-                Color.Unspecified.copy(alpha = 0.2f),
-                Color.Unspecified.copy(alpha = 1f),
-            )
-        },
-        width = 600.dp,
-    )
-    val shimmerModifier = if (animate) Modifier.shimmer(shimmer) else Modifier
+    val shimmerModifier = if (animate) {
+        val shimmer = rememberZarinaSkeletonShimmer(
+            blendMode = BlendMode.DstIn,
+            shaderColors = remember {
+                listOf(
+                    Color.Unspecified.copy(alpha = 1f),
+                    Color.Unspecified.copy(alpha = 0.2f),
+                    Color.Unspecified.copy(alpha = 1f),
+                )
+            },
+            width = 600.dp,
+        )
+        Modifier.shimmer(shimmer)
+    } else {
+        Modifier
+    }
 
     Icon(
         painter = painterResource(R.drawable.zarina_logo),

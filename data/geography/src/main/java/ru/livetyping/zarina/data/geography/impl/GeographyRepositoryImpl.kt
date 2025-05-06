@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import ru.livetyping.zarina.core.domain.cache.CacheExpirationPolicy
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.Location
@@ -16,7 +15,6 @@ import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.data.geography.impl.local.GeographyLocalDataSource
 import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSource
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class GeographyRepositoryImpl @Inject constructor(
@@ -53,8 +51,6 @@ internal class GeographyRepositoryImpl @Inject constructor(
         nameQuery: String?,
         cachePolicy: CachePolicy.LocalFirstThenRemote,
     ): Flow<List<City>> {
-        // TODO: [Low] Add support for CacheExpirationPolicy
-        Timber.tag(TAG).w("Cities CacheExpirationPolicy is not supported, fallback to ${CacheExpirationPolicy.UNLIMITED}")
         return localDataSource.getCitiesFlow(nameQuery).map { cached ->
             if (cached != null) {
                 cached

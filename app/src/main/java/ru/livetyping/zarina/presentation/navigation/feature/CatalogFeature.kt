@@ -7,8 +7,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
+import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
+import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
 import ru.livetyping.zarina.presentation.navigation.util.fadeInTransition
@@ -53,13 +55,22 @@ fun rememberCatalogNavActions(
     navController: NavHostController
 ): CatalogFeature.NavActions {
     return remember(navController) {
-        CatalogFeature.NavActions(
+        CatalogFeature.
+        NavActions(
             onBackClicked = { navController.navigateToBottomNavBarItem(BottomNavBarItem.Home) },
             onSearchClicked = { navController.navigate(SearchFeature.NavEntry) },
             onCategoryClicked = { categoryId ->
                 val productListNavEntry = ProductListFeature.NavEntry.create(categoryId)
                 navController.navigate(productListNavEntry)
-            }
+            },
+            onUrlClicked = { url ->
+                val webViewNavEntry = WebViewFeature.NavEntry(url.value)
+                navController.navigate(webViewNavEntry)
+            },
+            onCityClicked = { city ->
+                val citySelectorNavEntry = CitySelectorFeature.NavEntry.create(currentCity = city)
+                navController.navigate(citySelectorNavEntry)
+            },
         )
     }
 }
