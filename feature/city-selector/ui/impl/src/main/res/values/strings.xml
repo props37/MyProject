@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="city_selector_search_city">Поиск по городам</string>
-    <string name="city_not_found">Город не найден</string>
-    <string name="try_to_change_city_name">Попробуйте изменить название города</string>
+    <string name="city_selector_select_your_city">Выберите свой город</string>
+    <string name="city_selector_city_not_found_error_description">Не нашли Ваш город. Попробуйте ввести название заново</string>
 </resources>

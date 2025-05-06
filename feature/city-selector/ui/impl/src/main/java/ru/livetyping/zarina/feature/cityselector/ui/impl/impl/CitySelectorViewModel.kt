@@ -10,160 +10,189 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
-import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
-import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import kotlinx.coroutines.flow.transformLatest
+import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
-import ru.livetyping.zarina.core.text.Text
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
-import ru.livetyping.zarina.core.uicommon.createValueHolder
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicompose.textAsFlow
-import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListStateBuilder
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.NameQueryCities
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.TopBarState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
 import javax.inject.Inject
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
-import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel
 internal class CitySelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getCities: GetCitiesUseCase,
+    private val getCities: GetCitiesUseCase,
+    private val setUserCity: SetUserCityUseCase,
 ) : ViewModel(), SideEffectSource<CitySelectorSideEffect> by SideEffectSourceImpl() {
+
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var fetchCitiesJob: Job? = null
+    private var changeCityJob: Job? = null
 
     private val navEntry = savedStateHandle.toRoute<CitySelectorFeature.NavEntry>(
         typeMap = CitySelectorFeature.NavEntry.typeMap(),
     )
 
     @OptIn(SavedStateHandleSaveableApi::class)
-    private val citySearchTextFieldState by savedStateHandle.saveable(
+    private val nameQueryTextFieldState by savedStateHandle.saveable(
         saver = TextFieldState.Saver,
         init = { TextFieldState() },
     )
 
-    private val selectedCityValueHolder = savedStateHandle.createValueHolder(
-        key = Keys.SELECTED_CITY.key,
-        initialValue = navEntry.currentCity,
-    )
+    private val cityResult = MutableStateFlow<Result<List<City>>?>(null)
+
+    private val selectedCity = MutableStateFlow(navEntry.currentCity?.toCity())
 
     private val hasSelectedCityChanged = MutableStateFlow(false)
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private val cityRequester = FlowRequester(CityRequest) { request ->
-        citySearchTextFieldState.textAsFlow()
-            .debounce { nameQuery ->
-                if (nameQuery.isNotBlank()) CITY_SEARCH_DEBOUNCE_DELAY else Duration.ZERO
-            }
-            .flatMapLatest { nameQuery ->
-                markAsLoading(request)
-                val nameQueryString = nameQuery.toString()
-                val cachePolicy = CachePolicy.LocalFirstThenRemote()
-                val params = GetCitiesUseCase.Params(nameQueryString, cachePolicy)
-                val cities = getCities(params).map {
-                    NameQueryCities(nameQueryString, it)
-                }
-                flowOf(cities)
-            }
-    }
-
-    val topBarState: StateFlow<TopBarState> = ReadOnlyStateFlow(
-        TopBarState(citySearchTextFieldState = citySearchTextFieldState)
-    )
-
-    private val cityListStateBuilder = CityListStateBuilder()
-    private val mainCityKladrIds = MAIN_CITY_KLADR_IDS
-    val cityListState: StateFlow<CityListState> = combine(
-        cityRequester.flow,
-        cityRequester.loadingState,
-        selectedCityValueHolder.stateFlow,
+    private val cityListStateBuilder = CityListState.Builder()
+    val citySelectorState: StateFlow<CitySelectorState> = combine(
+        cityResult,
+        selectedCity,
         hasSelectedCityChanged,
-    ) { citiesForNameQueryResult, citiesLoadingState, selectedCity, hasSelectedCityChanged ->
-        cityListStateBuilder.build(
-            nameQueryCitiesResult = citiesForNameQueryResult,
-            citiesLoadingState = citiesLoadingState,
-            selectedCity = selectedCity?.toCity(),
-            mainCityKladrIds = mainCityKladrIds,
+        operationTracker.ongoingOperationKeys,
+    ) { cityResult, selectedCity, hasSelectedCityChanged, ongoingOperations ->
+        val cityListState = cityListStateBuilder.build(
+            cityResult = cityResult,
+            isLoadingCities = Operation.FetchCities in ongoingOperations,
+            selectedCity = selectedCity,
+            priorityCityKladrIds = PRIORITY_CITY_KLADR_ID_SET,
             isChangeCityButtonVisible = hasSelectedCityChanged,
+            isChangeCityButtonLoading = Operation.ChangeCity in ongoingOperations,
+        )
+
+        CitySelectorState(
+            citySearchTextFieldState = nameQueryTextFieldState,
+            cityListState = cityListState,
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = CityListState.Loading,
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = CitySelectorState(
+            citySearchTextFieldState = nameQueryTextFieldState,
+            cityListState = CityListState.Loading,
+        ),
     )
 
-    fun onTopBarEvent(event: TopBarEvent) {
+    private val cityCachePolicy = CachePolicy.LocalFirstThenRemote()
+
+    init {
+        fetchCitiesOnNameQueryChange()
+    }
+
+    fun onCitySelectorEvent(event: CitySelectorEvent) {
         when (event) {
-            TopBarEvent.BackClicked -> onBackClicked()
+            CitySelectorEvent.CloseClicked -> onCloseClicked()
+            is CitySelectorEvent.CitySelected -> onCitySelected(event)
+            CitySelectorEvent.RefreshClicked -> onRefreshClicked()
+            CitySelectorEvent.ChangeCityClicked -> onChangeCityClicked()
         }
     }
 
-    fun onCitySelectorEvent(event: CityListEvent) {
-        when (event) {
-            is CityListEvent.CityClicked -> onCityClicked(event)
-            CityListEvent.ChangeCityClicked -> onChangeCityClicked()
-            CityListEvent.ErrorRefreshClicked -> cityRequester.request(CityRequest)
-        }
-    }
-
-    private fun onBackClicked() {
+    private fun onCloseClicked() {
         navigationThrottler.throttle {
             val action = CitySelectorScreenAction.BackClicked
             emitSideEffect(CitySelectorSideEffect.Navigate(action))
         }
     }
 
-    private fun onChangeCityClicked() {
-        val city = selectedCityValueHolder.get()?.toCity() ?: return
-        navigationThrottler.throttle {
-            val action = CitySelectorScreenAction.CitySelected(city)
-            emitSideEffect(CitySelectorSideEffect.Navigate(action))
-        }
-    }
-
-    private fun onCityClicked(event: CityListEvent.CityClicked) {
-        val cityParcelable = CityParcelable.from(event.city)
-        selectedCityValueHolder.set(cityParcelable)
+    private fun onCitySelected(event: CitySelectorEvent.CitySelected) {
+        val city = event.city
+        selectedCity.value = city
 
         val initialCity = navEntry.currentCity?.toCity()
-        if (event.city.id != initialCity?.id) {
+        if (city != initialCity) {
             hasSelectedCityChanged.value = true
         }
     }
 
-    private data object CityRequest : FlowRequest
-
-    private enum class Keys {
-        SELECTED_CITY;
-
-        val key: String get() = name
+    private fun onRefreshClicked() {
+        viewModelScope.launch {
+            val nameQuery = nameQueryTextFieldState.text.toString()
+            fetchCities(nameQuery)
+        }
     }
 
+    private fun onChangeCityClicked() {
+        val city = selectedCity.value
+        if (city == null || changeCityJob?.isActive == true) return
+
+        changeCityJob = viewModelScope.launch {
+            operationTracker.track(Operation.ChangeCity) {
+                val params = SetUserCityUseCase.Params(city)
+                setUserCity(params)
+                    .onSuccess {
+                        onCityChanged(city)
+                    }
+                    .onFailure(::onCityChangeFailure)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    private fun fetchCitiesOnNameQueryChange() {
+        nameQueryTextFieldState.textAsFlow()
+            .debounce { query ->
+                if (query.isNotBlank()) CITY_SEARCH_DEBOUNCE_DELAY_MILLIS else 0
+            }
+            .transformLatest<CharSequence, Unit> { query ->
+                fetchCities(query.toString())
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private suspend fun fetchCities(nameQuery: String) {
+        fetchCitiesJob?.cancel()
+
+        coroutineScope {
+            fetchCitiesJob = launch {
+                operationTracker.track(Operation.FetchCities) {
+                    val params = GetCitiesUseCase.Params(nameQuery, cityCachePolicy)
+                    cityResult.value = getCities(params)
+                }
+            }
+        }
+    }
+
+    private fun onCityChanged(city: City) {
+        val action = CitySelectorScreenAction.CitySelected(city)
+        emitSideEffect(CitySelectorSideEffect.Navigate(action))
+    }
+
+    private fun onCityChangeFailure(t: Throwable) {
+        // TODO: [Top] Implement
+    }
+
+    private enum class Operation : OperationKey { FetchCities, ChangeCity }
+
     private companion object {
-        val TITLE_DEFAULT_VALUE: Text get() = Text.Resource(RCommon.string.res_city)
+        const val CITY_SEARCH_DEBOUNCE_DELAY_MILLIS = 300L
 
-        val CITY_SEARCH_DEBOUNCE_DELAY: Duration get() = 200.milliseconds
-
-        val MAIN_CITY_KLADR_IDS: List<KladrId>
-            get() = listOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
+        val PRIORITY_CITY_KLADR_ID_SET: Set<KladrId>
+            get() = setOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
     }
 }

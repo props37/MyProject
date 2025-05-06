@@ -1,38 +1,34 @@
 package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
+import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
-import ru.livetyping.zarina.core.resource.R as RCommon
+import ru.livetyping.zarina.feature.cityselector.ui.impl.R
 
 @Composable
 internal fun TopBar(
-    onBackClicked: () -> Unit,
+    onCloseClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
-        startContent = {
-            ZarinaBackIconButton(
-                onClick = onBackClicked,
-                iconSize = 20.dp,
-                modifier = Modifier.padding(start = 2.dp),
-            )
-        },
-        centerContent = {
-            Text(
-                text = stringResource(RCommon.string.res_change_city),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
-        contentPadding = PaddingValues(vertical = 4.dp),
+        contentPadding = PaddingValues(
+            start = HorizontalPadding,
+            top = 16.dp,
+            end = 8.dp,
+            bottom = 4.dp,
+        ),
         modifier = modifier,
-    )
+    ) {
+        Text(
+            text = stringResource(R.string.city_selector_select_your_city).uppercase(),
+            modifier = Modifier.weight(1f),
+        )
+
+        ZarinaCloseIconButton(onClick = onCloseClicked)
+    }
 }
