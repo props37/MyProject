@@ -36,7 +36,7 @@ public fun ZarinaCheckmarkIcon(
     },
     color: Color = ZarinaIconButtonDefaults.IconColor,
     maskColor: Color = UiKitTheme.colors.background.general.regular.default,
-    iconSize: Dp = 16.dp,
+    iconSize: Dp = 20.dp,
 ) {
     Box(modifier = modifier) {
         val contentDescription = stringResource(contentDescriptionResId(isVisible))
