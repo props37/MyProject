@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
@@ -33,18 +34,13 @@ public fun ZarinaErrorScreen2(
     state: ZarinaErrorScreenState2,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
+    bottomPadding: Dp = 0.dp,
 ) {
     Column(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        val topPadding = contentPadding.calculateTopPadding()
-        if (topPadding != 0.dp) {
-            Spacer(modifier = Modifier.height(topPadding))
-        }
-
         SimpleVideoPlayer(
             resId = RCommon.raw.zarina_error_screen_video,
             contentScale = ContentScale.Fit,
@@ -90,7 +86,6 @@ public fun ZarinaErrorScreen2(
                 }
             }
 
-            val bottomPadding = contentPadding.calculateBottomPadding()
             Spacer(
                 modifier = Modifier
                     .heightIn(min = 20.dp + bottomPadding)

@@ -44,6 +44,7 @@ internal fun Menu(
                 ZarinaErrorScreen2(
                     state = state.state,
                     onButtonClick = { onCatalogEvent(CatalogEvent.RefreshClicked) },
+                    bottomPadding = bottomPadding,
                 )
             }
         }
