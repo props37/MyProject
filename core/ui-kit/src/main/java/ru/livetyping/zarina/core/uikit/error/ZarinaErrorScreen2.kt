@@ -88,7 +88,7 @@ public fun ZarinaErrorScreen2(
 
             Spacer(
                 modifier = Modifier
-                    .heightIn(min = 20.dp + bottomPadding)
+                    .heightIn(min = 24.dp + bottomPadding)
                     .fillMaxHeight(0.2f)
             )
         }
