@@ -27,7 +27,6 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.CityList
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.SearchTextField
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.TopBar
 
-// TODO: [Top] Add Change City button
 // TODO: [Top] Request search text field focus automatically
 
 @Composable

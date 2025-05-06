@@ -13,8 +13,8 @@ internal sealed class CityListState {
     @Immutable
     data class Success(
         val cities: ImmutableList<CityListItem>,
-        val isChangeCityButtonVisible: Boolean,
-        val isChangeCityButtonLoading: Boolean,
+        val isSelectCityButtonVisible: Boolean,
+        val isSelectCityButtonLoading: Boolean,
     ) : CityListState()
 
     data object CityNotFound : CityListState()
@@ -56,8 +56,8 @@ internal sealed class CityListState {
 
                             Success(
                                 cities = items,
-                                isChangeCityButtonVisible = isChangeCityButtonVisible,
-                                isChangeCityButtonLoading = isChangeCityButtonLoading,
+                                isSelectCityButtonVisible = isChangeCityButtonVisible,
+                                isSelectCityButtonLoading = isChangeCityButtonLoading,
                             )
                         } else {
                             CityNotFound
