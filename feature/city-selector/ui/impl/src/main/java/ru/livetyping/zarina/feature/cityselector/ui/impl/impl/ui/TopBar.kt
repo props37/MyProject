@@ -5,16 +5,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.text.Text
-import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun TopBar(
-    title: Text,
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -28,7 +27,7 @@ internal fun TopBar(
         },
         centerContent = {
             Text(
-                text = textString(title),
+                text = stringResource(RCommon.string.res_change_city),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

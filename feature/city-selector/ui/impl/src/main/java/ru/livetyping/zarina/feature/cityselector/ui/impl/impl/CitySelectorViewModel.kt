@@ -88,10 +88,7 @@ internal class CitySelectorViewModel @Inject constructor(
     }
 
     val topBarState: StateFlow<TopBarState> = ReadOnlyStateFlow(
-        TopBarState(
-            title = navEntry.title ?: TITLE_DEFAULT_VALUE,
-            citySearchTextFieldState = citySearchTextFieldState,
-        )
+        TopBarState(citySearchTextFieldState = citySearchTextFieldState)
     )
 
     private val cityListStateBuilder = CityListStateBuilder()

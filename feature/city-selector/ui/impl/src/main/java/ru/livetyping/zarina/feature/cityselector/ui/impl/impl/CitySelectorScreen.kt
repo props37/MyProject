@@ -72,10 +72,7 @@ private fun ScreenContent(
             )
             .bottomNavBarPadding(),
     ) {
-        TopBar(
-            title = topBarState.title,
-            onBackClicked = { onTopBarEvent(TopBarEvent.BackClicked) },
-        )
+        TopBar(onBackClicked = { onTopBarEvent(TopBarEvent.BackClicked) })
 
         Column {
             CitySearchTextField(
