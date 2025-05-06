@@ -61,7 +61,7 @@ public fun ZarinaErrorScreen2(
                 style = UiKitTheme2.typography.h2Regular,
                 color = UiKitTheme2.colors.mainBlack,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 32.dp),
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -71,7 +71,7 @@ public fun ZarinaErrorScreen2(
                 style = UiKitTheme2.typography.body,
                 color = UiKitTheme2.colors.mainBlack,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 32.dp),
             )
 
             if (state.isButtonVisible) {
