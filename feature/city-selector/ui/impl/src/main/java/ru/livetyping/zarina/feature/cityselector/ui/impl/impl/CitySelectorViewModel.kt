@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
 import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
@@ -24,7 +24,7 @@ import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
-import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.createValueHolder
@@ -47,7 +47,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @HiltViewModel
 internal class CitySelectorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getCitiesFlow: GetCitiesFlowUseCase,
+    getCities: GetCitiesUseCase,
 ) : ViewModel(), SideEffectSource<CitySelectorSideEffect> by SideEffectSourceImpl() {
     private val navigationThrottler = Throttler.getNavigationThrottler()
 
@@ -78,12 +78,11 @@ internal class CitySelectorViewModel @Inject constructor(
                 markAsLoading(request)
                 val nameQueryString = nameQuery.toString()
                 val cachePolicy = CachePolicy.LocalFirstThenRemote()
-                val params = GetCitiesFlowUseCase.Params(nameQueryString, cachePolicy)
-                getCitiesFlow(params).map { result ->
-                    result.map { cities ->
-                        NameQueryCities(nameQueryString, cities)
-                    }
+                val params = GetCitiesUseCase.Params(nameQueryString, cachePolicy)
+                val cities = getCities(params).map {
+                    NameQueryCities(nameQueryString, it)
                 }
+                flowOf(cities)
             }
     }
 

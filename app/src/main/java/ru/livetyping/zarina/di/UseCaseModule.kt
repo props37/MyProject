@@ -54,7 +54,7 @@ import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseC
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.UpdateOrderPaymentStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.checkout.WithdrawGiftCertificateUseCase
-import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase
@@ -324,11 +324,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetCitiesFlowUseCase(
+    fun provideGetCitiesUseCase(
         geographyRepository: GeographyRepository,
         logger: UseCaseLogger,
-    ): GetCitiesFlowUseCase {
-        return GetCitiesFlowUseCase.getInstance(
+    ): GetCitiesUseCase {
+        return GetCitiesUseCase.getInstance(
             geographyRepository = geographyRepository,
             logger = logger,
         )

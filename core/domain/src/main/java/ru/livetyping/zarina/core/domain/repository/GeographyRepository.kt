@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.domain.model.geo.Street
 public interface GeographyRepository {
     public fun getCityByLocationFlow(location: Location): Flow<City>
 
-    public fun getCitiesFlow(nameQuery: String?, cachePolicy: CachePolicy): Flow<List<City>>
+    public suspend fun getCities(nameQuery: String?, cachePolicy: CachePolicy): List<City>
 
     public fun getCityStreetsFlow(cityKladrId: KladrId, nameQuery: String): Flow<List<Street>>
 

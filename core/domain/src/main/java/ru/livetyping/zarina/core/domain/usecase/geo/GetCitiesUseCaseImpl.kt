@@ -1,23 +1,22 @@
 package ru.livetyping.zarina.core.domain.usecase.geo
 
-import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
-import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesFlowUseCase.Params
-import ru.livetyping.zarina.core.usecase.FlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase.Params
+import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class GetCitiesFlowUseCaseImpl(
+internal class GetCitiesUseCaseImpl(
     private val geographyRepository: GeographyRepository,
     logger: UseCaseLogger?,
-) : FlowUseCase<Params, List<City>>(logger), GetCitiesFlowUseCase {
+) : UseCase<Params, List<City>>(logger), GetCitiesUseCase {
 
-    override fun execute(params: Params): Flow<List<City>> {
+    override suspend fun execute(params: Params): List<City> {
         val nameQuery = params.nameQuery?.trim()?.takeIf { it.isNotBlank() }
-        return geographyRepository.getCitiesFlow(nameQuery, params.cachePolicy)
+        return geographyRepository.getCities(nameQuery, params.cachePolicy)
     }
 
-    override fun invoke(params: Params): Flow<Result<List<City>>> {
+    override suspend fun invoke(params: Params): Result<List<City>> {
         return call(params)
     }
 
