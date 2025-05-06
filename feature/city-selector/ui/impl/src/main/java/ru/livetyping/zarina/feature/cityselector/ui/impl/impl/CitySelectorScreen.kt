@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -26,8 +30,6 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelector
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.CityList
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.SearchTextField
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.TopBar
-
-// TODO: [Top] Request search text field focus automatically
 
 @Composable
 internal fun CitySelectorScreen(
@@ -56,6 +58,12 @@ private fun ScreenContent(
         navActions = navActions,
     )
 
+    val searchTextFieldFocusRequester = remember { FocusRequester() }
+    LifecycleStartEffect(Unit) {
+        searchTextFieldFocusRequester.requestFocus()
+        onStopOrDispose {}
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +79,8 @@ private fun ScreenContent(
             state = citySelectorState.citySearchTextFieldState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 24.dp)
+                .focusRequester(searchTextFieldFocusRequester),
         )
 
         val safeDrawingBottomPadding =
