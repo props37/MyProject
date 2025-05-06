@@ -43,7 +43,7 @@ public fun ZarinaErrorScreen2(
     ) {
         SimpleVideoPlayer(
             resId = RCommon.raw.zarina_error_screen_video,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillWidth,
             surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
             modifier = Modifier
                 .weight(1f)
