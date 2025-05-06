@@ -9,5 +9,5 @@ internal sealed interface CitySelectorEvent {
 
     data object RefreshClicked : CitySelectorEvent
 
-    data object ChangeCityClicked : CitySelectorEvent
+    data object SelectCityClicked : CitySelectorEvent
 }

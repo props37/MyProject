@@ -109,7 +109,7 @@ internal class CitySelectorViewModel @Inject constructor(
             CitySelectorEvent.CloseClicked -> onCloseClicked()
             is CitySelectorEvent.CitySelected -> onCitySelected(event)
             CitySelectorEvent.RefreshClicked -> onRefreshClicked()
-            CitySelectorEvent.ChangeCityClicked -> onChangeCityClicked()
+            CitySelectorEvent.SelectCityClicked -> onSelectCityClicked()
         }
     }
 
@@ -137,7 +137,7 @@ internal class CitySelectorViewModel @Inject constructor(
         }
     }
 
-    private fun onChangeCityClicked() {
+    private fun onSelectCityClicked() {
         val city = selectedCity.value
         if (city == null || changeCityJob?.isActive == true) return
 
