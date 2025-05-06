@@ -52,6 +52,8 @@ internal sealed class MenuState {
                         Error(errorState)
                     },
                 )
+                val errorState = ZarinaErrorScreenState2.NETWORK
+                Error(errorState)
             }
         }
 
