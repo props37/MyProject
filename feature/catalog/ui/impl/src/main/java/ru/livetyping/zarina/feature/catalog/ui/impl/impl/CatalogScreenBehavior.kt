@@ -39,5 +39,7 @@ private fun navigate(navActions: CatalogFeature.NavActions, action: CatalogScree
         CatalogScreenAction.BackClicked -> navActions.onBackClicked()
         CatalogScreenAction.SearchClicked -> navActions.onSearchClicked()
         is CatalogScreenAction.CategoryClicked -> navActions.onCategoryClicked(action.categoryId)
+        is CatalogScreenAction.UrlClicked -> navActions.onUrlClicked(action.url)
+        is CatalogScreenAction.CityClicked -> navActions.onCityClicked(action.currentCity)
     }
 }

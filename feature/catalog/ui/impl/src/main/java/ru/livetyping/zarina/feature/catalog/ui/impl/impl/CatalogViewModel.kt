@@ -6,10 +6,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
@@ -38,9 +41,9 @@ internal class CatalogViewModel @Inject constructor(
         menuState = MenuState.Loading,
     )
 
-    private val userCityResultFlow = deps.getUserCityFlow(
+    private val userCityFlow = deps.getUserCityFlow(
         params = GetUserCityFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
-    )
+    ).map { it.getOrNull() ?: City.getDefault() }
 
     private val catalogStateBuilder = CatalogState.Builder()
     val catalogState: StateFlow<CatalogState> = combine(
@@ -48,14 +51,14 @@ internal class CatalogViewModel @Inject constructor(
         menuComponent.menuResult,
         menuComponent.isMenuLoading,
         menuComponent.expandedMenuItemIds,
-        userCityResultFlow,
-    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds, userCityResult ->
+        userCityFlow,
+    ) { genderPickerState, menuResult, isMenuLoading, expandedMenuItemIds, userCity ->
         catalogStateBuilder.build(
             genderPickerState = genderPickerState,
             menuResult = menuResult,
             isMenuLoading = isMenuLoading,
             expandedMenuItemIds = expandedMenuItemIds,
-            city = userCityResult.getOrNull() ?: City.getDefault(),
+            city = userCity,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -94,23 +97,41 @@ internal class CatalogViewModel @Inject constructor(
 
     private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
         when (val item = event.item) {
-            is MenuItem.Basic -> {
-                if (item.item.isExpandable) {
-                    menuComponent.toggleExpandableItem(item.item)
-                } else {
-                    // TODO: [Top] Implement
-                }
-            }
-
+            is MenuItem.Basic -> onMenuItemBasicClicked(item)
             is MenuItem.City -> Unit // TODO: [Top] Implement
-
             MenuItem.SupportContactDetails -> Unit
             is MenuItem.Spacer -> Unit
         }
     }
 
     private fun onChangeCityClicked() {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val city = userCityFlow.firstOrNull() ?: City.getDefault()
+                val action = CatalogScreenAction.CityClicked(city)
+                emitSideEffect(CatalogSideEffect.Navigate(action))
+            }
+        }
+    }
+
+    private fun onMenuItemBasicClicked(item: MenuItem.Basic) {
+        if (item.item.isExpandable) {
+            menuComponent.toggleExpandableItem(item.item)
+        } else {
+            navigationThrottler.throttle {
+                when (val clickAction = item.item.clickAction) {
+                    is ClickAction.OpenProductList -> {
+                        val action = CatalogScreenAction.CategoryClicked(clickAction.categoryId)
+                        emitSideEffect(CatalogSideEffect.Navigate(action))
+                    }
+
+                    is ClickAction.OpenUrl -> {
+                        val action = CatalogScreenAction.UrlClicked(clickAction.url)
+                        emitSideEffect(CatalogSideEffect.Navigate(action))
+                    }
+                }
+            }
+        }
     }
 
     private fun fetchMenu() {
