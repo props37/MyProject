@@ -12,7 +12,7 @@ kotlin-coroutines = "1.10.2"
 kotlin-serialization = "1.8.1"
 kotlin-immutableCollections = "0.3.8"
 
-jetpack-core = "1.15.0"
+jetpack-core = "1.16.0"
 jetpack-appcompat = "1.7.0"
 jetpack-lifecycle = "2.9.0"
 jetpack-activity = "1.10.1"
