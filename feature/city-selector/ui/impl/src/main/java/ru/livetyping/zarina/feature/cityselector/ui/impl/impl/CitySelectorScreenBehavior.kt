@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController2
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 
 @Composable
@@ -18,6 +19,7 @@ internal fun CitySelectorScreenBehavior(
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
     val currentKeyboardController by rememberUpdatedState(LocalSoftwareKeyboardController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController2.current)
 
     BottomNavBarBehavior(isVisible = false)
 
@@ -28,6 +30,10 @@ internal fun CitySelectorScreenBehavior(
                     is CitySelectorSideEffect.Navigate -> {
                         currentKeyboardController?.hide()
                         navigate(currentNavActions, sideEffect.action)
+                    }
+
+                    is CitySelectorSideEffect.ShowZarinaToast -> {
+                        currentZarinaToastController.show(sideEffect.message)
                     }
                 }
             }

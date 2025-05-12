@@ -30,8 +30,10 @@ import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.LocalBot
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.rememberBottomNavBarSizeTracker
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
-import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController2
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer2
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
+import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController2
 import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.presentation.bottomnavbar.ZarinaBottomNavBar
 import ru.livetyping.zarina.presentation.navigation.ZarinaNavigation
@@ -60,6 +62,7 @@ fun App(
     )
 
     val zarinaToastController = rememberZarinaToastController()
+    val zarinaToastController2 = rememberZarinaToastController2()
 
     CompositionLocalProvider(
         LocalBottomNavBarBehaviorController provides bottomNavBarBehaviorController,
@@ -67,11 +70,11 @@ fun App(
         LocalExoPlayerCacheDataSourceFactoryProvider provides exoPlayerCacheDataSourceFactoryProvider,
         LocalAppMetrica provides viewModel.appMetrica,
         LocalZarinaToastController provides zarinaToastController,
+        LocalZarinaToastController2 provides zarinaToastController2,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            ZarinaToastContainer(
-                controller = zarinaToastController,
-                shouldPaintStatusBar = true,
+            ZarinaToastContainer2(
+                controller = zarinaToastController2,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .zIndex(1f)

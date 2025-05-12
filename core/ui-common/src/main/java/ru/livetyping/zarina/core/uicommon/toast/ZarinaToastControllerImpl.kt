@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.livetyping.zarina.core.uicommon.message.MessageQueueImpl
 
+// TODO: [Top] Remove after full migration
 public class ZarinaToastControllerImpl(
     coroutineScope: CoroutineScope,
 ) : ZarinaToastController {

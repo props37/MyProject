@@ -7,8 +7,14 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
@@ -24,28 +30,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.filter
-import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastController
-import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessageStyle
-import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastController2
 import kotlin.math.roundToInt
 
-// TODO: [Top] Remove after full migration
+// TODO: [Top] Rename after full migration
 @Composable
-public fun ZarinaToastContainer(
-    controller: ZarinaToastController,
+public fun ZarinaToastContainer2(
+    controller: ZarinaToastController2,
     modifier: Modifier = Modifier,
-    shouldPaintStatusBar: Boolean = false,
+    windowInsetsProvider: @Composable () -> WindowInsets = { DefaultWindowInsets },
 ) {
     val currentMessage by controller.currentMessage.collectAsStateWithLifecycle()
-
-    if (shouldPaintStatusBar) {
-        currentMessage?.let { message ->
-            val isStatusBarContentLight = message.style == ZarinaToastMessageStyle.DEFAULT
-            ForcedSystemBarsBehavior(isStatusBarContentLight = isStatusBarContentLight)
-        }
-    }
 
     val overscrollEffect = rememberOverscrollEffect()
 
@@ -63,14 +61,14 @@ public fun ZarinaToastContainer(
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
         val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
-            AnchoredDraggableState(SwipeableState.Default)
+            AnchoredDraggableState(SwipeableState2.Default)
         }
 
         DisposableEffect(anchoredDraggableState, toastHeightPx, message) {
             val anchors = DraggableAnchors {
-                SwipeableState.Default at 0f
+                SwipeableState2.Default at 0f
                 if (message?.isRemovable == true) {
-                    SwipeableState.Swiped at (-toastHeightPx).toFloat()
+                    SwipeableState2.Swiped at (-toastHeightPx).toFloat()
                 }
             }
             anchoredDraggableState.updateAnchors(anchors)
@@ -79,18 +77,20 @@ public fun ZarinaToastContainer(
 
         LaunchedEffect(controller, anchoredDraggableState) {
             snapshotFlow { anchoredDraggableState.settledValue }
-                .filter { it == SwipeableState.Swiped }
+                .filter { it == SwipeableState2.Swiped }
                 .collect {
-                    controller.hideCurrentToast()
+                    controller.cancelCurrentToast()
                 }
         }
 
         if (message != null) {
-            ZarinaToast(
+            ZarinaToast2(
                 message = message,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .onSizeChanged { toastHeightPx = it.height }
+                    .windowInsetsPadding(windowInsetsProvider())
                     .offset {
                         val yOffset = anchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(
@@ -110,4 +110,9 @@ public fun ZarinaToastContainer(
     }
 }
 
-private enum class SwipeableState { Default, Swiped }
+// TODO: [Top] Rename after full migration
+private enum class SwipeableState2 { Default, Swiped }
+
+private val DefaultWindowInsets: WindowInsets
+    @Composable
+    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
