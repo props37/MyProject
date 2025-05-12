@@ -75,6 +75,7 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    api(libs.haze)
     api(libs.composeShimmer)
 
     implementation(libs.timber)

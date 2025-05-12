@@ -28,24 +28,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
 import kotlinx.coroutines.flow.filter
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastController2
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import kotlin.math.roundToInt
 
 // TODO: [Top] Rename after full migration
 @Composable
 public fun ZarinaToastContainer2(
     controller: ZarinaToastController2,
+    hazeState: HazeState,
     modifier: Modifier = Modifier,
     windowInsetsProvider: @Composable () -> WindowInsets = { DefaultWindowInsets },
 ) {
     val currentMessage by controller.currentMessage.collectAsStateWithLifecycle()
 
     val overscrollEffect = rememberOverscrollEffect()
+
+    val hazeBackgroundColor = UiKitTheme2.colors.mainBlack
+    val hazeTint = rememberHazeTint(hazeBackgroundColor, hazeState.blurEnabled)
 
     AnimatedContent(
         targetState = currentMessage,
@@ -92,6 +102,7 @@ public fun ZarinaToastContainer2(
         if (message != null) {
             ZarinaToast2(
                 message = message,
+                backgroundColor = Color.Transparent,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -99,13 +110,17 @@ public fun ZarinaToastContainer2(
                     .windowInsetsPadding(windowInsetsProvider())
                     .offset {
                         val yOffset = verticalAnchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
-                        IntOffset(
-                            x = 0,
-                            y = yOffset
-                                .coerceAtMost(0f)
-                                .roundToInt(),
-                        )
+                        IntOffset(x = 0, y = yOffset.roundToInt())
                     }
+                    .hazeEffect(
+                        state = hazeState,
+                        style = HazeStyle(
+                            backgroundColor = hazeBackgroundColor,
+                            blurRadius = 10.dp,
+                            tint = hazeTint,
+                            noiseFactor = 0f,
+                        ),
+                    )
                     .anchoredDraggable(
                         state = verticalAnchoredDraggableState,
                         orientation = Orientation.Vertical,
@@ -121,6 +136,18 @@ public fun ZarinaToastContainer2(
     }
 }
 
+@Composable
+private fun rememberHazeTint(backgroundColor: Color, isBlurEnabled: Boolean): HazeTint {
+    return remember(backgroundColor, isBlurEnabled) {
+        val color = if (isBlurEnabled) {
+            backgroundColor.copy(alpha = BackgroundAlphaWithBlur)
+        } else {
+            backgroundColor.copy(alpha = BackgroundAlphaWithoutBlur)
+        }
+        HazeTint(color)
+    }
+}
+
 private enum class VerticalSwipeableState { Default, Swiped }
 
 private enum class HorizontalSwipeableState { Default }
@@ -128,3 +155,6 @@ private enum class HorizontalSwipeableState { Default }
 private val DefaultWindowInsets: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+
+private const val BackgroundAlphaWithBlur = 0.9f
+private const val BackgroundAlphaWithoutBlur = 0.95f

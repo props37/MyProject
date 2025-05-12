@@ -72,9 +72,12 @@ fun App(
         LocalZarinaToastController provides zarinaToastController,
         LocalZarinaToastController2 provides zarinaToastController2,
     ) {
+        val hazeState = rememberHazeState()
+
         Box(modifier = Modifier.fillMaxSize()) {
             ZarinaToastContainer2(
                 controller = zarinaToastController2,
+                hazeState = hazeState,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .zIndex(1f)
@@ -91,8 +94,6 @@ fun App(
                 scrimColor = ZarinaBottomSheetDefaults.ScrimColor,
             ) {
                 Box(modifier = modifier) {
-                    val hazeState = rememberHazeState()
-
                     ZarinaNavigation(
                         features = features,
                         navController = navController,

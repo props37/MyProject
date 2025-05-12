@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -44,6 +45,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 public fun ZarinaToast2(
     message: ZarinaToastMessage2,
     modifier: Modifier = Modifier,
+    backgroundColor: Color = UiKitTheme2.colors.mainBlack,
 ) {
     val minHeight = when (message.size) {
         ZarinaToastMessage2.Size.Medium -> ZarinaToast2Defaults.MinHeightMedium
@@ -55,7 +57,7 @@ public fun ZarinaToast2(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .clip(ZarinaToast2Defaults.Shape)
-                .background(UiKitTheme2.colors.mainBlack)
+                .background(backgroundColor)
                 .defaultMinSize(minHeight = minHeight)
                 .padding(ZarinaToast2Defaults.paddingFromMessage(message)),
         ) {
