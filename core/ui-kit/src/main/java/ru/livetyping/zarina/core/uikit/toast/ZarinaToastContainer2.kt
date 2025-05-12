@@ -60,24 +60,30 @@ public fun ZarinaToastContainer2(
     ) { message ->
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
-        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
-            AnchoredDraggableState(SwipeableState2.Default)
+        val verticalAnchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+            AnchoredDraggableState(VerticalSwipeableState.Default)
+        }
+        val horizontalAnchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+            AnchoredDraggableState(HorizontalSwipeableState.Default).apply {
+                val anchors = DraggableAnchors { HorizontalSwipeableState.Default at 0f }
+                updateAnchors(anchors)
+            }
         }
 
-        DisposableEffect(anchoredDraggableState, toastHeightPx, message) {
+        DisposableEffect(verticalAnchoredDraggableState, toastHeightPx, message) {
             val anchors = DraggableAnchors {
-                SwipeableState2.Default at 0f
+                VerticalSwipeableState.Default at 0f
                 if (message?.isRemovable == true) {
-                    SwipeableState2.Swiped at (-toastHeightPx).toFloat()
+                    VerticalSwipeableState.Swiped at (-toastHeightPx).toFloat()
                 }
             }
-            anchoredDraggableState.updateAnchors(anchors)
+            verticalAnchoredDraggableState.updateAnchors(anchors)
             onDispose {}
         }
 
-        LaunchedEffect(controller, anchoredDraggableState) {
-            snapshotFlow { anchoredDraggableState.settledValue }
-                .filter { it == SwipeableState2.Swiped }
+        LaunchedEffect(controller, verticalAnchoredDraggableState) {
+            snapshotFlow { verticalAnchoredDraggableState.settledValue }
+                .filter { it == VerticalSwipeableState.Swiped }
                 .collect {
                     controller.cancelCurrentToast()
                 }
@@ -92,7 +98,7 @@ public fun ZarinaToastContainer2(
                     .onSizeChanged { toastHeightPx = it.height }
                     .windowInsetsPadding(windowInsetsProvider())
                     .offset {
-                        val yOffset = anchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
+                        val yOffset = verticalAnchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(
                             x = 0,
                             y = yOffset
@@ -101,8 +107,13 @@ public fun ZarinaToastContainer2(
                         )
                     }
                     .anchoredDraggable(
-                        state = anchoredDraggableState,
+                        state = verticalAnchoredDraggableState,
                         orientation = Orientation.Vertical,
+                        overscrollEffect = overscrollEffect,
+                    )
+                    .anchoredDraggable(
+                        state = horizontalAnchoredDraggableState,
+                        orientation = Orientation.Horizontal,
                         overscrollEffect = overscrollEffect,
                     ),
             )
@@ -110,8 +121,9 @@ public fun ZarinaToastContainer2(
     }
 }
 
-// TODO: [Top] Rename after full migration
-private enum class SwipeableState2 { Default, Swiped }
+private enum class VerticalSwipeableState { Default, Swiped }
+
+private enum class HorizontalSwipeableState { Default }
 
 private val DefaultWindowInsets: WindowInsets
     @Composable
