@@ -1,7 +1,12 @@
 package ru.livetyping.zarina.core.uikit.error
 
 import androidx.annotation.OptIn
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -41,14 +46,27 @@ public fun ZarinaErrorScreen2(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-        SimpleVideoPlayer(
-            resId = RCommon.raw.zarina_error_screen_video,
-            contentScale = ContentScale.FillWidth,
-            surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
+        BoxWithConstraints(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-        )
+                .fillMaxWidth()
+                .weight(1f),
+        ) {
+            val isVideoVisible = (maxHeight / maxWidth) >= 0.9f
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isVideoVisible,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
+                modifier = Modifier.matchParentSize(),
+            ) {
+                SimpleVideoPlayer(
+                    resId = RCommon.raw.zarina_error_screen_video,
+                    contentScale = ContentScale.FillWidth,
+                    surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
