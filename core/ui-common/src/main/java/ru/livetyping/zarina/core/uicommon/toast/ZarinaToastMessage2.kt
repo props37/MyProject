@@ -5,6 +5,7 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.message.MessageQueue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 // TODO: [Top] Rename after full migration
 public data class ZarinaToastMessage2(
@@ -33,5 +34,20 @@ public data class ZarinaToastMessage2(
     public companion object {
         public val DURATION_SHORT: Duration get() = 3.seconds
         public val DURATION_LONG: Duration get() = 5.seconds
+
+        public val ERROR_DEFAULT_START_ICON: StartContent.Icon
+            get() = StartContent.Icon(
+                resId = RCommon.drawable.ic_exclamation_mark_inscribed_in_triange_24,
+                contentDescription = null,
+            )
+
+        public val NETWORK_ERROR_MESSAGE: ZarinaToastMessage2
+            get() = ZarinaToastMessage2(
+                text = Text.Resource(RCommon.string.res_check_internet_connection),
+                startContent = StartContent.Icon(
+                    resId = RCommon.drawable.ic_wifi_error_24,
+                    contentDescription = null,
+                ),
+            )
     }
 }

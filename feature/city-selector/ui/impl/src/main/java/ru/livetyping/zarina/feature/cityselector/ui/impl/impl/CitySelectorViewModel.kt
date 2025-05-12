@@ -27,16 +27,20 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.geo.KladrId
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
+import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uicompose.textAsFlow
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
+import ru.livetyping.zarina.feature.cityselector.ui.impl.R
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -184,7 +188,16 @@ internal class CitySelectorViewModel @Inject constructor(
     }
 
     private fun onCityChangeFailure(t: Throwable) {
-        // TODO: [Top] Implement
+        val message = when (t) {
+            is IOException -> ZarinaToastMessage2.NETWORK_ERROR_MESSAGE
+            else -> {
+                ZarinaToastMessage2(
+                    text = Text.Resource(R.string.city_selector_city_changing_error),
+                    startContent = ZarinaToastMessage2.ERROR_DEFAULT_START_ICON,
+                )
+            }
+        }
+        emitSideEffect(CitySelectorSideEffect.ShowZarinaToast(message))
     }
 
     private enum class Operation : OperationKey { FetchCities, ChangeCity }
