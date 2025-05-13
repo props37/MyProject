@@ -38,7 +38,8 @@ internal fun TopBar(
         Spacer(modifier = Modifier.height(12.dp))
 
         GenderPicker(
-            state = genderPickerState,
+            genders = genderPickerState.tabs,
+            selectedGender = genderPickerState.currentTab,
             onGenderSelected = onGenderSelected,
         )
 

@@ -36,7 +36,8 @@ internal fun GenderSelector(
 
         CompositionLocalProvider(LocalRippleConfiguration provides rippleConfiguration) {
             GenderPicker(
-                state = genderSelectorState,
+                genders = genderSelectorState.tabs,
+                selectedGender = genderSelectorState.currentTab,
                 onGenderSelected = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
                 selectedColor = UiKitTheme2.colors.white,
                 unselectedColor = UiKitTheme2.colors.white.copy(alpha = 0.5f),

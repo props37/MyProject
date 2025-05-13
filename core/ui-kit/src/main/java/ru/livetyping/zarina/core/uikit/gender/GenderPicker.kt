@@ -14,11 +14,11 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uikit.tab.ZarinaBracketTab
 import ru.livetyping.zarina.core.uikit.tab.ZarinaBracketTabDefaults
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
-import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 
 @Composable
 public fun GenderPicker(
-    state: TabRowState<GenderTab>,
+    genders: List<GenderTab>,
+    selectedGender: GenderTab,
     onGenderSelected: (GenderTab) -> Unit,
     modifier: Modifier = Modifier,
     selectedColor: Color = ZarinaBracketTabDefaults.SelectedColor,
@@ -29,7 +29,7 @@ public fun GenderPicker(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
-        state.tabs.fastForEach { gender ->
+        genders.fastForEach { gender ->
             key(gender) {
                 val textResId = when (gender) {
                     GenderTab.WOMEN -> R.string.res_for_women
@@ -38,7 +38,7 @@ public fun GenderPicker(
 
                 ZarinaBracketTab(
                     text = stringResource(textResId).uppercase(),
-                    isSelected = gender == state.currentTab,
+                    isSelected = gender == selectedGender,
                     onClick = { onGenderSelected(gender) },
                     addBrackets = true,
                     selectedColor = selectedColor,
