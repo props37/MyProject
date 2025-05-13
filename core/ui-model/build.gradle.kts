@@ -44,7 +44,7 @@ kotlin {
 dependencies {
     api(projects.core.domain)
 
-    implementation(libs.kotlin.immutableCollections)
+    api(libs.kotlin.immutableCollections)
     implementation(libs.ktor.serialization.json)
 
     testImplementation(libs.junit)
