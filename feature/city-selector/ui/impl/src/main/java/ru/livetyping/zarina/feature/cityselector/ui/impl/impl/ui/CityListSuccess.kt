@@ -31,7 +31,7 @@ internal fun CityListSuccess(
     state: CityListState.Success,
     onCitySelectorEvent: (CitySelectorEvent) -> Unit,
     topPadding: Dp,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -42,8 +42,8 @@ internal fun CityListSuccess(
         } else {
             0.dp
         }
-        val listBottomPadding =
-            bottomPadding + ZarinaScrollableDefaults.ScrollableBottomPadding + selectCityButtonHeight
+        val listBottomPadding = bottomPaddingProvider() +
+                ZarinaScrollableDefaults.ScrollableBottomPadding + selectCityButtonHeight
 
         DisposableEffect(state.cities) {
             lazyListState.requestScrollToItem(0)
@@ -74,7 +74,7 @@ internal fun CityListSuccess(
             exit = AnimatedContentDefaultExitTransition,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = bottomPadding + SelectCityBottomPadding),
+                .padding(bottom = bottomPaddingProvider() + SelectCityBottomPadding),
         ) {
             ZarinaButton(
                 onClick = { onCitySelectorEvent(CitySelectorEvent.SelectCityClicked) },

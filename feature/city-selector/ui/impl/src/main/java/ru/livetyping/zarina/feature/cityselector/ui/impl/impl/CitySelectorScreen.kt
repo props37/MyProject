@@ -84,14 +84,15 @@ private fun ScreenContent(
                 .focusRequester(searchTextFieldFocusRequester),
         )
 
-        val safeDrawingBottomPadding =
+        val bottomPaddingProvider = @Composable {
             WindowInsets.safeDrawing.asPaddingValues().calculateBottomPadding()
+        }
 
         CityList(
             state = citySelectorState.cityListState,
             onCitySelectorEvent = onCitySelectorEvent,
             topPadding = 16.dp,
-            bottomPadding = safeDrawingBottomPadding,
+            bottomPaddingProvider = bottomPaddingProvider,
         )
     }
 }

@@ -13,12 +13,12 @@ import ru.livetyping.zarina.feature.cityselector.ui.impl.R
 @Composable
 internal fun CityListStateCityNotFound(
     topPadding: Dp,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     ZarinaItem(
         contentPadding = PaddingValues(horizontal = HorizontalPadding),
-        modifier = modifier.padding(top = topPadding, bottom = bottomPadding),
+        modifier = modifier.padding(top = topPadding, bottom = bottomPaddingProvider()),
     ) {
         Text(text = stringResource(R.string.city_selector_city_not_found_error_description).uppercase())
     }

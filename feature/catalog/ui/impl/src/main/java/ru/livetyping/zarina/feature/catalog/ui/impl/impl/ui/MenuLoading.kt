@@ -13,13 +13,13 @@ import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 
 @Composable
 internal fun MenuLoading(
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     val shimmer = rememberZarinaSkeletonShimmer()
 
     LazyColumn(
-        contentPadding = PaddingValues(bottom = bottomPadding),
+        contentPadding = PaddingValues(bottom = bottomPaddingProvider()),
         modifier = modifier,
     ) {
         items(4) {

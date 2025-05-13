@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 @Composable
 internal fun CityListLoading(
     topPadding: Dp,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     val shimmer = rememberZarinaSkeletonShimmer()
@@ -19,7 +19,7 @@ internal fun CityListLoading(
     LazyColumn(
         contentPadding = PaddingValues(
             top = topPadding,
-            bottom = bottomPadding + ZarinaScrollableDefaults.ScrollableBottomPadding,
+            bottom = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding,
         ),
         modifier = modifier,
     ) {

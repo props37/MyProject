@@ -13,7 +13,7 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 internal fun Menu(
     state: MenuState,
     onCatalogEvent: (CatalogEvent) -> Unit,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -32,19 +32,19 @@ internal fun Menu(
                 MenuSuccess(
                     state = state,
                     onCatalogEvent = onCatalogEvent,
-                    bottomPadding = bottomPadding,
+                    bottomPaddingProvider = bottomPaddingProvider,
                 )
             }
 
             MenuState.Loading -> {
-                MenuLoading(bottomPadding = bottomPadding)
+                MenuLoading(bottomPaddingProvider = bottomPaddingProvider)
             }
 
             is MenuState.Error -> {
                 ZarinaErrorScreen2(
                     state = state.state,
                     onButtonClick = { onCatalogEvent(CatalogEvent.RefreshClicked) },
-                    bottomPadding = bottomPadding,
+                    bottomPaddingProvider = bottomPaddingProvider,
                 )
             }
         }

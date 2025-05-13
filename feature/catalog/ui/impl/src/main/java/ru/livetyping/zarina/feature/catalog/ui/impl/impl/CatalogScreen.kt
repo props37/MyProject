@@ -92,13 +92,14 @@ private fun ScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            val bottomPadding = bottomNavBarHeightAsState().value +
-                    ZarinaScrollableDefaults.ScrollableBottomPadding
+            val bottomPaddingProvider = @Composable {
+                bottomNavBarHeightAsState().value + ZarinaScrollableDefaults.ScrollableBottomPadding
+            }
 
             Menu(
                 state = catalogState.menuState,
                 onCatalogEvent = onCatalogEvent,
-                bottomPadding = bottomPadding,
+                bottomPaddingProvider = bottomPaddingProvider,
                 modifier = Modifier.fillMaxSize(),
             )
         }
