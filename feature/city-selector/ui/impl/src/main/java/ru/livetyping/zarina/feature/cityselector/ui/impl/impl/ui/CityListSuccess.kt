@@ -52,10 +52,7 @@ internal fun CityListSuccess(
 
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(
-                top = topPadding,
-                bottom = listBottomPadding,
-            ),
+            contentPadding = PaddingValues(top = topPadding, bottom = listBottomPadding),
         ) {
             items(
                 items = state.cities,
