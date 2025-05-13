@@ -61,6 +61,7 @@ dependencies {
     implementation(projects.core.resource)
     implementation(projects.core.mediaCompose)
     implementation(projects.core.platform)
+    api(projects.core.uiModel)
     api(projects.core.analytics.apiCompose)
 
     implementation(libs.jetpack.activity.compose)
