@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,10 +44,7 @@ internal fun CityListSuccess(
         val listBottomPadding = bottomPaddingProvider() +
                 ZarinaScrollableDefaults.ScrollableBottomPadding + selectCityButtonHeight
 
-        DisposableEffect(state.cities) {
-            lazyListState.requestScrollToItem(0)
-            onDispose {}
-        }
+        // TODO: [Top] Scroll list to the top when the list changes. Trigger it from VM
 
         LazyColumn(
             state = lazyListState,
