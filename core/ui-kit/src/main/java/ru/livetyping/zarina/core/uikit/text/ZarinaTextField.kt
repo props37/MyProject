@@ -60,11 +60,12 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
+import ru.livetyping.zarina.core.uicompose.UppercaseOutputTransformation
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 // TODO: [Medium] Add label animation
 
@@ -75,7 +76,7 @@ public fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
@@ -90,7 +91,7 @@ public fun ZarinaTextField(
     lineLimits: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
     onTextLayout: (Density.(getResult: () -> TextLayoutResult?) -> Unit)? = null,
     interactionSource: MutableInteractionSource? = null,
-    outputTransformation: OutputTransformation? = null,
+    outputTransformation: OutputTransformation? = UppercaseOutputTransformation,
     scrollState: ScrollState = rememberScrollState(),
 ) {
     var focusState by remember { mutableStateOf<FocusState?>(null) }
@@ -141,7 +142,7 @@ public fun ZarinaTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -311,7 +312,7 @@ internal fun ZarinaTextFieldDecoration(
                     label = "Outer trailing content color",
                 )
                 CompositionLocalProvider(
-                    LocalTextStyle provides UiKitTheme.typography.caption1.regular,
+                    LocalTextStyle provides UiKitTheme2.typography.body2,
                     LocalContentColor provides outerTrailingContentColor,
                 ) {
                     content()
@@ -399,10 +400,10 @@ public data class ZarinaTextFieldColors(
     }
 }
 
-public enum class ZarinaTextFieldSize { Small }
+public enum class ZarinaTextFieldSize { Medium }
 
 public object ZarinaTextFieldDefaults {
-    public val IconSizeSmall: Dp get() = 16.dp
+    private val IconSize: Dp get() = 16.dp
 
     @Composable
     public fun AppearingLabel(
@@ -423,7 +424,7 @@ public object ZarinaTextFieldDefaults {
         isVisible: Boolean,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        iconSize: Dp = IconSizeSmall,
+        iconSize: Dp = IconSize,
         indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         AnimatedVisibility(
@@ -463,28 +464,28 @@ public object ZarinaTextFieldDefaults {
 
     @Composable
     public fun colors(
-        backgroundColor: Color = UiKitTheme.colors.background.general.regular.default,
-        textColor: Color = UiKitTheme.colors.text.general.regular.default,
-        placeholderColor: Color = UiKitTheme.colors.text.general.regular.muted,
-        labelColor: Color = UiKitTheme.colors.text.general.regular.muted,
-        leadingContentColor: Color = UiKitTheme.colors.icon.regular.muted,
-        innerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.default,
-        outerTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.default, // TODO: [Low] Change to button-cell-default
-        descriptionColor: Color = UiKitTheme.colors.text.general.regular.muted,
-        indicationLineColor: Color = UiKitTheme.colors.border.general.default,
-        activeIndicationLineColor: Color = UiKitTheme.colors.border.general.active,
-        errorIndicationLineColor: Color = UiKitTheme.colors.border.general.error,
-        errorDescriptionColor: Color = UiKitTheme.colors.text.general.accent.red,
-        disabledTextColor: Color = UiKitTheme.colors.text.general.regular.disabled,
-        disabledPlaceholderColor: Color = UiKitTheme.colors.text.general.regular.disabled,
-        disabledLabelColor: Color = UiKitTheme.colors.text.general.regular.disabled,
-        disabledLeadingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
-        disabledInnerTrailingContentColor: Color = UiKitTheme.colors.icon.regular.disabled,
-        disabledOuterTrailingContentColor: Color = UiKitTheme.colors.text.button.outline.disabled, // TODO: [Low] Change to button-cell-disabled
-        disabledDescriptionColor: Color = UiKitTheme.colors.text.general.regular.disabled,
-        disabledIndicationLineColor: Color = UiKitTheme.colors.border.general.disabled,
-        disabledErrorIndicationLineColor: Color = UiKitTheme.colors.border.general.errorDisabled,
-        cursorColor: Color = UiKitTheme.colors.text.general.regular.default,
+        backgroundColor: Color = UiKitTheme2.colors.white,
+        textColor: Color = UiKitTheme2.colors.mainBlack,
+        placeholderColor: Color = UiKitTheme2.colors.middleGray,
+        labelColor: Color = UiKitTheme2.colors.middleGray,
+        leadingContentColor: Color = UiKitTheme2.colors.middleGray,
+        innerTrailingContentColor: Color = UiKitTheme2.colors.middleGray,
+        outerTrailingContentColor: Color = UiKitTheme2.colors.middleGray,
+        descriptionColor: Color = UiKitTheme2.colors.middleGray,
+        indicationLineColor: Color = UiKitTheme2.colors.lightGray,
+        activeIndicationLineColor: Color = UiKitTheme2.colors.mainBlack,
+        errorIndicationLineColor: Color = UiKitTheme2.colors.error,
+        errorDescriptionColor: Color = UiKitTheme2.colors.error,
+        disabledTextColor: Color = textColor,
+        disabledPlaceholderColor: Color = placeholderColor,
+        disabledLabelColor: Color = labelColor,
+        disabledLeadingContentColor: Color = leadingContentColor,
+        disabledInnerTrailingContentColor: Color = innerTrailingContentColor,
+        disabledOuterTrailingContentColor: Color = outerTrailingContentColor,
+        disabledDescriptionColor: Color = descriptionColor,
+        disabledIndicationLineColor: Color = indicationLineColor,
+        disabledErrorIndicationLineColor: Color = errorIndicationLineColor,
+        cursorColor: Color = UiKitTheme2.colors.mainBlack,
     ): ZarinaTextFieldColors = ZarinaTextFieldColors(
         backgroundColor = backgroundColor,
         textColor = textColor,
@@ -529,32 +530,32 @@ public object ZarinaTextFieldDefaults {
 
     @Composable
     public fun textStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Small -> UiKitTheme.typography.secondary.light
+        ZarinaTextFieldSize.Medium -> UiKitTheme2.typography.body
     }
 
     @Composable
     public fun labelTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
+        ZarinaTextFieldSize.Medium -> UiKitTheme2.typography.body2
     }
 
     @Composable
     public fun descriptionTextStyleFromSize(size: ZarinaTextFieldSize): TextStyle = when (size) {
-        ZarinaTextFieldSize.Small -> UiKitTheme.typography.footnote.light
+        ZarinaTextFieldSize.Medium -> UiKitTheme2.typography.body2
     }
 
     @Stable
     public fun textVerticalPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Small -> 6.dp
+        ZarinaTextFieldSize.Medium -> 6.dp
     }
 
     @Stable
     public fun labelPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Small -> 2.dp
+        ZarinaTextFieldSize.Medium -> 2.dp
     }
 
     @Stable
     public fun descriptionPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Small -> 8.dp
+        ZarinaTextFieldSize.Medium -> 8.dp
     }
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -562,7 +563,7 @@ public object ZarinaTextFieldDefaults {
     private fun ClearButtonImpl(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        iconSize: Dp = IconSizeSmall,
+        iconSize: Dp = IconSize,
         indication: Indication? = ripple(bounded = false, radius = 8.dp),
     ) {
         CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
@@ -594,7 +595,7 @@ public object ZarinaTextFieldDefaults {
         ) {
             Text(
                 text = stringResource(R.string.res_cancel).uppercase(),
-                style = UiKitTheme.typography.caption1.regular,
+                style = UiKitTheme2.typography.body2,
             )
         }
     }

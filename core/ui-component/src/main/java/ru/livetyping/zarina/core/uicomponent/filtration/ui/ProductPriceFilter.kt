@@ -183,7 +183,7 @@ private fun TextField(
         onValueChanged = { string ->
             onValueChanged(string.toIntOrNull())
         },
-        size = ZarinaTextFieldSize.Small,
+        size = ZarinaTextFieldSize.Medium,
         placeholder = {
             Text(text = placeholderValue.toString())
         },

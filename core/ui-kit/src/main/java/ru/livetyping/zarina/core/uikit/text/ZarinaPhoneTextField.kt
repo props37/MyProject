@@ -31,15 +31,14 @@ public fun ZarinaPhoneTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     inputTransformation: InputTransformation? = ZarinaPhoneTextFieldDefaults.InputTransformationDefault,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = {
-        val text = if (state.text.isNotEmpty()) {
-            stringResource(RCommon.string.res_phone)
-        } else ""
-
-        Text(text = text)
+        ZarinaTextFieldDefaults.AppearingLabel(
+            textFieldValue = state.text.toString(),
+            label = stringResource(RCommon.string.res_phone),
+        )
     },
     placeholder: (@Composable () -> Unit)? = {
         Text(text = stringResource(RCommon.string.res_phone))

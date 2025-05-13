@@ -93,7 +93,6 @@ internal fun SearchBar(
         val textFieldState = state.textFieldState
         ZarinaTextField(
             state = textFieldState,
-            size = ZarinaTextFieldSize.Small,
             placeholder = {
                 Text(text = stringResource(RCommon.string.res_find_products))
             },

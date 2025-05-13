@@ -46,15 +46,14 @@ public fun ZarinaPasswordTextField(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     isError: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: (@Composable () -> Unit)? = {
-        val labelResId = if (state.text.isNotEmpty()) {
-            stringResource(RCommon.string.res_password)
-        } else ""
-
-        Text(text = labelResId)
+        ZarinaTextFieldDefaults.AppearingLabel(
+            textFieldValue = state.text.toString(),
+            label = stringResource(RCommon.string.res_password),
+        )
     },
     placeholder: (@Composable () -> Unit)? = {
         Text(text = stringResource(RCommon.string.res_password))
