@@ -11,6 +11,8 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastController
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastControllerImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 
+// TODO: [Top] Remove after full migration
+
 public val LocalZarinaToastController: ProvidableCompositionLocal<ZarinaToastController> =
     staticCompositionLocalOf { NoOpZarinaToastController() }
 

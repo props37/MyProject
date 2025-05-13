@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaIconButton(
@@ -38,7 +38,7 @@ public fun ZarinaIconButton(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalContentColor provides UiKitTheme.colors.icon.regular.default,
+        LocalContentColor provides UiKitTheme2.colors.mainBlack,
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -81,13 +81,13 @@ public object ZarinaIconButtonDefaults {
 
     public val IconColor: Color
         @Composable
-        get() = UiKitTheme.colors.icon.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
     public val LoaderSize: Dp get() = IconSize
 
     public val LoaderColor: Color
         @Composable
-        get() = UiKitTheme.colors.icon.regular.default
+        get() = IconColor
 
     public val IndicationRadius: Dp get() = IconSize
 }

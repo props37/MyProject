@@ -442,7 +442,7 @@ private fun FrontSideLevelInfo(
                 modifier = Modifier.size(iconSize),
             ) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(RCommon.drawable.ic_exclamation_mark_shaped_24),
+                    imageVector = ImageVector.vectorResource(RCommon.drawable.ic_exclamation_mark_inscribed_in_circle_24),
                     tint = iconColor,
                     contentDescription = stringResource(R.string.profile_show_loyalty_card_info),
                     modifier = Modifier.size(iconSize),

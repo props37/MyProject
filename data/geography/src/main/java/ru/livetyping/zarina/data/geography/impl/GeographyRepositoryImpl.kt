@@ -1,10 +1,7 @@
 package ru.livetyping.zarina.data.geography.impl
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.Location
@@ -25,14 +22,19 @@ internal class GeographyRepositoryImpl @Inject constructor(
         return remoteDataSource.getCityByLocationFlow(location)
     }
 
-    override fun getCitiesFlow(nameQuery: String?, cachePolicy: CachePolicy): Flow<List<City>> {
+    override suspend fun getCities(nameQuery: String?, cachePolicy: CachePolicy): List<City> {
         return when (cachePolicy) {
-            CachePolicy.LocalOnly -> localDataSource.getCitiesFlow(nameQuery).filterNotNull()
-            is CachePolicy.LocalFirstThenRemote -> {
-                getCitiesFlowLocalFirstThenRemote(nameQuery, cachePolicy)
+            CachePolicy.LocalOnly -> {
+                val cached = localDataSource.getCitiesFlow(nameQuery).firstOrNull()
+                checkNotNull(cached) { getCityFetchingErrorMessage(nameQuery) }
+                cached
             }
 
-            is CachePolicy.Remote -> getCitiesFlowRemote(nameQuery, cachePolicy)
+            is CachePolicy.LocalFirstThenRemote -> {
+                getCitiesLocalFirstThenRemote(nameQuery, cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getCitiesRemote(nameQuery, cachePolicy)
         }
     }
 
@@ -47,30 +49,29 @@ internal class GeographyRepositoryImpl @Inject constructor(
         return remoteDataSource.getStreetBuildings(streetKladrId, nameQuery)
     }
 
-    private fun getCitiesFlowLocalFirstThenRemote(
+    private suspend fun getCitiesLocalFirstThenRemote(
         nameQuery: String?,
         cachePolicy: CachePolicy.LocalFirstThenRemote,
-    ): Flow<List<City>> {
-        return localDataSource.getCitiesFlow(nameQuery).map { cached ->
-            if (cached != null) {
-                cached
-            } else {
-                val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
-                checkNotNull(cities) { "Failed to fetch cities for name query \"$nameQuery\"" }
-                citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
-                cities
-            }
+    ): List<City> {
+        val cached = localDataSource.getCitiesFlow(nameQuery).firstOrNull()
+        return if (cached != null) {
+            cached
+        } else {
+            val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
+            checkNotNull(cities) { getCityFetchingErrorMessage(nameQuery) }
+            citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
+            cities
         }
     }
 
-    private fun getCitiesFlowRemote(
+    private suspend fun getCitiesRemote(
         nameQuery: String?,
         cachePolicy: CachePolicy.Remote,
-    ): Flow<List<City>> {
-        return remoteDataSource.getCitiesFlow(nameQuery)
-            .onEach { cities ->
-                citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
-            }
+    ): List<City> {
+        val cities = remoteDataSource.getCitiesFlow(nameQuery).firstOrNull()
+        checkNotNull(cities) { getCityFetchingErrorMessage(nameQuery) }
+        citiesCacheUpdatePolicyImpl(nameQuery, cities, cachePolicy.updatePolicy)
+        return cities
     }
 
     private fun citiesCacheUpdatePolicyImpl(
@@ -82,6 +83,14 @@ internal class GeographyRepositoryImpl @Inject constructor(
             CacheUpdatePolicy.NONE -> Unit
             CacheUpdatePolicy.CLEAR -> localDataSource.setCities(nameQuery, emptyList())
             CacheUpdatePolicy.UPDATE -> localDataSource.setCities(nameQuery, cities)
+        }
+    }
+
+    private fun getCityFetchingErrorMessage(nameQuery: String?): String {
+        return if (nameQuery != null) {
+            "Failed to fetch cities for name query $nameQuery"
+        } else {
+            "Failed to fetch cities"
         }
     }
 

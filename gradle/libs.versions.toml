@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradlePlugin = "8.9.2"
+androidGradlePlugin = "8.10.0"
 googlePlayServices-plugin = "4.4.2"
 firebase-crashlyticsPlugin = "3.0.3"
 androidGitVersion = "0.4.14"
@@ -12,13 +12,13 @@ kotlin-coroutines = "1.10.2"
 kotlin-serialization = "1.8.1"
 kotlin-immutableCollections = "0.3.8"
 
-jetpack-core = "1.15.0"
+jetpack-core = "1.16.0"
 jetpack-appcompat = "1.7.0"
-jetpack-lifecycle = "2.8.7"
+jetpack-lifecycle = "2.9.0"
 jetpack-activity = "1.10.1"
-jetpack-navigation = "2.8.9"
-jetpack-datastore = "1.1.4"
-jetpack-room = "2.7.0"
+jetpack-navigation = "2.9.0"
+jetpack-datastore = "1.1.6"
+jetpack-room = "2.7.1"
 jetpack-splashScreen = "1.0.1"
 jetpack-media3 = "1.6.1"
 jetpack-paging = "3.3.6"
@@ -33,8 +33,8 @@ jetpack-webkit = "1.13.0"
 jetpack-annotation = "1.9.1"
 jetpack-startup = "1.2.0"
 
-jetpack-compose-bom = "2025.04.01"
-jetpack-compose-material-navigation = "1.8.0"
+jetpack-compose-bom = "2025.05.00"
+jetpack-compose-material-navigation = "1.8.1"
 
 ktor = "3.1.2"
 
@@ -46,7 +46,7 @@ accompanist = "0.37.2"
 coil = "2.7.0"
 composeShimmer = "1.3.2"
 qrcode = "4.3.0"
-haze = "1.6.0-beta01"
+haze = "1.6.0-rc02"
 
 libphonenumber = "8.13.52"
 
@@ -54,14 +54,14 @@ timber = "5.0.1"
 leakCanary = "2.14"
 
 googlePlayServices-location = "21.3.0"
-googlePlayServices-maps = "19.1.0"
-googlePlayServices-maps-compose = "6.5.2"
+googlePlayServices-maps = "19.2.0"
+googlePlayServices-maps-compose = "6.5.3"
 googlePlayServices-auth-api-phone = "18.2.0"
 googlePlayServices-review = "2.0.2"
 
 recaptcha = "18.6.1"
 
-firebase-bom = "33.12.0"
+firebase-bom = "33.13.0"
 
 firebase-performance = "1.4.2"
 mindbox = "2.13.0"

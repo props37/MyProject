@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButtonDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -35,7 +36,7 @@ public fun ZarinaCheckmarkIcon(
     },
     color: Color = ZarinaIconButtonDefaults.IconColor,
     maskColor: Color = UiKitTheme.colors.background.general.regular.default,
-    iconSize: Dp = ZarinaIconButtonDefaults.IconSize,
+    iconSize: Dp = 20.dp,
 ) {
     Box(modifier = modifier) {
         val contentDescription = stringResource(contentDescriptionResId(isVisible))

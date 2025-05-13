@@ -5,6 +5,7 @@ import ru.livetyping.zarina.core.uicommon.message.MessageQueue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+// TODO: [Top] Remove after full migration
 public data class ZarinaToastMessage(
     val text: Text,
     val style: ZarinaToastMessageStyle = ZarinaToastMessageStyle.DEFAULT,

@@ -88,7 +88,7 @@ internal fun DeliveryOption(
                     indication = ripple(bounded = false, radius = iconSize),
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(RCommon.drawable.ic_exclamation_mark_shaped_24),
+                        imageVector = ImageVector.vectorResource(RCommon.drawable.ic_exclamation_mark_inscribed_in_circle_24),
                         contentDescription = stringResource(RCommon.string.res_show_details),
                         modifier = Modifier.size(iconSize),
                     )

@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessageStyle
 import ru.livetyping.zarina.core.uicompose.textString
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
+// TODO: [Top] Remove after full migration
 @Composable
 public fun ZarinaToast(
     message: ZarinaToastMessage,

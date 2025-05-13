@@ -46,7 +46,6 @@ fun rememberCartNavActions(
             onReturnToHomeClicked = navigateToHome,
             onChangeCityClicked = { currentCity ->
                 val citySelectorNavEntry = CitySelectorFeature.NavEntry.create(
-                    title = Text.Resource(RCommon.string.res_change_city),
                     currentCity = currentCity,
                 )
                 navController.navigate(citySelectorNavEntry)

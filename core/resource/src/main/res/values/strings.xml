@@ -4,6 +4,7 @@
 
     <string name="res_refresh">Обновить</string>
     <string name="res_internet_connection_error">Проблемы с интернетом</string>
+    <string name="res_check_internet_connection">Проверьте подключение к интернету</string>
     <string name="res_check_internet_connection_and_refresh_page">Проверьте соединение с интернетом или отключите VPN. Затем обновите страницу</string>
     <string name="res_internet_connection_error_guide">Проверьте соединение с интернетом или отключите VPN, затем обновите страницу</string>
     <string name="res_generic_error_guide">Обновите страницу или попробуйте зайти позже</string>

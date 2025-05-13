@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.ContentHorizontalPadding
 
 @Composable
@@ -43,9 +43,7 @@ public fun ZarinaTopBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.layoutId(LayoutId.CenterContent),
         ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides UiKitTheme.typography.primary.regular,
-            ) {
+            CompositionLocalProvider(LocalTextStyle provides UiKitTheme2.typography.body) {
                 centerContent?.invoke(this)
             }
         }
@@ -131,7 +129,10 @@ public fun ZarinaTopBar(
     contentPadding: PaddingValues = ZarinaTopBarDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit,
 ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor,
+        LocalTextStyle provides UiKitTheme2.typography.body,
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
@@ -145,20 +146,18 @@ public fun ZarinaTopBar(
 }
 
 public object ZarinaTopBarDefaults {
-    public val BackgroundColor: Color
+    internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
-    public val ContentColor: Color
+    internal val ContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.general.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
-    public val MinHeight: Dp = 56.dp
+    internal val MinHeight: Dp = 56.dp
 
-    public val HorizontalPadding: Dp get() = 16.dp
-    public val VerticalPadding: Dp get() = 8.dp
     public val ContentPadding: PaddingValues
-        get() = PaddingValues(horizontal = HorizontalPadding, vertical = VerticalPadding)
+        get() = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
 
     public val ContentPaddingWithButtons: PaddingValues
         get() = PaddingValues(vertical = 4.dp)

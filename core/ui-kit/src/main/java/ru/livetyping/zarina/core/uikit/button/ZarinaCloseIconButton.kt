@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R
 
 @Composable
@@ -21,7 +22,7 @@ public fun ZarinaCloseIconButton(
     contentDescription: String = stringResource(R.string.res_close),
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
-    iconSize: Dp = ZarinaIconButtonDefaults.IconSize,
+    iconSize: Dp = 16.dp,
     tint: Color = ZarinaIconButtonDefaults.IconColor,
     interactionSource: MutableInteractionSource? = null,
     indication: Indication = ripple(bounded = false, radius = iconSize),

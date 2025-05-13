@@ -49,7 +49,7 @@ public fun ZarinaPromoCodeTextField(
     isEnabled: Boolean = true,
     isError: Boolean = false,
     isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
+    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
     label: String = stringResource(RCommon.string.res_promo_code),

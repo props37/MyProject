@@ -68,7 +68,7 @@ private fun ScreenContent(
                 genderPickerState = catalogState.genderPickerState,
                 onGenderSelected = { onCatalogEvent(CatalogEvent.GenderSelected(it)) },
                 modifier = Modifier
-                    .padding(bottom = 8.dp)
+                    .padding(top = 16.dp, bottom = 8.dp)
                     .graphicsLayer {
                         alpha = 1f - topBarScrollBehavior.state.collapsedFraction
                     },
