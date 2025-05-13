@@ -3,4 +3,5 @@
     <string name="city_selector_select_your_city">Выберите свой город</string>
     <string name="city_selector_city_not_found_error_description">Не нашли Ваш город. Попробуйте ввести название заново</string>
     <string name="city_selector_city_changing_error">Не удалось сменить город</string>
+    <string name="city_selector_city_name">Название города</string>
 </resources>
