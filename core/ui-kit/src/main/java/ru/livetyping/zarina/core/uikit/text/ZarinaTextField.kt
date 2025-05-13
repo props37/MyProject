@@ -52,7 +52,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -128,73 +127,6 @@ public fun ZarinaTextField(
             )
         },
         scrollState = scrollState,
-        modifier = modifier
-            .drawBehind { drawRect(colors.backgroundColor) }
-            .onFocusChanged { focusState = it },
-    )
-}
-
-@Composable
-public fun ZarinaTextField(
-    textFieldValue: TextFieldValue,
-    onValueChanged: (TextFieldValue) -> Unit,
-    modifier: Modifier = Modifier,
-    isEnabled: Boolean = true,
-    isError: Boolean = false,
-    isReadOnly: Boolean = false,
-    size: ZarinaTextFieldSize = ZarinaTextFieldSize.Small,
-    textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
-    label: (@Composable () -> Unit)? = null,
-    placeholder: (@Composable () -> Unit)? = null,
-    leadingContent: (@Composable () -> Unit)? = null,
-    innerTrailingContent: (@Composable () -> Unit)? = null,
-    outerTrailingContent: (@Composable () -> Unit)? = null,
-    description: (@Composable () -> Unit)? = null,
-    colors: ZarinaTextFieldColors = ZarinaTextFieldDefaults.colors(),
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = true,
-    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
-    minLines: Int = 1,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
-    interactionSource: MutableInteractionSource? = null,
-) {
-    var focusState by remember { mutableStateOf<FocusState?>(null) }
-
-    BasicTextField(
-        value = textFieldValue,
-        onValueChange = onValueChanged,
-        enabled = isEnabled,
-        readOnly = isReadOnly,
-        textStyle = textStyle,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        minLines = minLines,
-        visualTransformation = visualTransformation,
-        onTextLayout = onTextLayout,
-        interactionSource = interactionSource,
-        cursorBrush = remember(colors.cursorColor) { SolidColor(colors.cursorColor) },
-        decorationBox = { innerTextField ->
-            ZarinaTextFieldDecoration(
-                value = textFieldValue.text,
-                isEnabled = isEnabled,
-                isError = isError,
-                focusState = focusState,
-                textStyle = textStyle,
-                size = size,
-                innerTextField = innerTextField,
-                label = label,
-                placeholder = placeholder,
-                leadingContent = leadingContent,
-                innerTrailingContent = innerTrailingContent,
-                outerTrailingContent = outerTrailingContent,
-                description = description,
-                colors = colors,
-            )
-        },
         modifier = modifier
             .drawBehind { drawRect(colors.backgroundColor) }
             .onFocusChanged { focusState = it },
