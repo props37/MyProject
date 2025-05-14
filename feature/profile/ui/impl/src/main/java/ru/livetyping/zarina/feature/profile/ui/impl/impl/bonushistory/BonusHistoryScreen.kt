@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
@@ -79,7 +79,7 @@ private fun ScreenContent(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
-        val pagerState = rememberPagerStateWithTabRow(
+        val pagerState = rememberPagerStateIntegratedWithTabRow(
             tabs = tabRowState.tabs,
             currentTab = tabRowState.currentTab,
             onTabChanged = { onTabRowEvent(TabRowEvent.TabChanged(it)) },

@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
@@ -97,7 +97,7 @@ private fun ScreenContent(
                 onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
             )
 
-            val signInTypePagerState = rememberPagerStateWithTabRow(
+            val signInTypePagerState = rememberPagerStateIntegratedWithTabRow(
                 tabs = signInTypeSelectorState.tabs,
                 currentTab = signInTypeSelectorState.currentTab,
                 onTabChanged = { onSignInTypeSelectorEvent(TabRowEvent.TabChanged(it)) },

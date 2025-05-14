@@ -11,7 +11,7 @@ import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-public fun <T> rememberPagerStateWithTabRow(
+public fun <T> rememberPagerStateIntegratedWithTabRow(
     tabs: List<T>,
     currentTab: T,
     onTabChanged: (T) -> Unit,
