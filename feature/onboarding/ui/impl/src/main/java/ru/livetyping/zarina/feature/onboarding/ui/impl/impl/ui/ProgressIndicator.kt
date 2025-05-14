@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R
-import ru.livetyping.zarina.core.uicompose.FontFeatureSettings
+import ru.livetyping.zarina.core.uicompose.text.FontFeatureSettings
 import ru.livetyping.zarina.core.uikit.progress.ZarinaLinearProgressIndicator
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.core.kotlinutil.findSubstringBounds
 import ru.livetyping.zarina.core.text.Text
-import ru.livetyping.zarina.core.uicompose.textString
+import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize

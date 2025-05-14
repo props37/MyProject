@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import ru.livetyping.zarina.core.platform.CountDownTimer
 import ru.livetyping.zarina.core.uicommon.otp.NewOtpRequestState
 import ru.livetyping.zarina.core.uicompose.otp.TextFieldOtpState
-import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 

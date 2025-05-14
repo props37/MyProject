@@ -43,7 +43,7 @@ import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.paging.retryAppendPrependErrors
-import ru.livetyping.zarina.core.uicompose.animateFastScrollToItem
+import ru.livetyping.zarina.core.uicompose.list.animateFastScrollToItem
 import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState

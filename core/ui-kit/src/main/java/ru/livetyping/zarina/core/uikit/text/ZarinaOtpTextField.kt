@@ -41,8 +41,8 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.livetyping.zarina.core.uicompose.FontFeatureSettings
-import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uicompose.text.FontFeatureSettings
+import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
