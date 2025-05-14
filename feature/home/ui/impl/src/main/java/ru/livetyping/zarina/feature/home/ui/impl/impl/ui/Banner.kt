@@ -66,10 +66,7 @@ internal fun Banner(
             ZarinaLogoLoadingScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(UiKitTheme.colors.background.general.regular.default)
-                    // Add bottomNavBar padding at the top to align the loader at the center
-                    // of the entire screen
-                    .padding(top = bottomNavBarHeightAsState().value),
+                    .background(UiKitTheme.colors.background.general.regular.default),
             )
         }
     }
