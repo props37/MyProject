@@ -1,8 +1,7 @@
 package ru.livetyping.zarina.feature.home.ui.impl.impl.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.LocalRippleConfiguration
 import androidx.compose.material.RippleConfiguration
 import androidx.compose.runtime.Composable
@@ -17,28 +16,25 @@ import ru.livetyping.zarina.core.uikit.gender.GenderPicker
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
-import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 
 @Composable
-internal fun GenderSelector(
-    genderSelectorState: TabRowState<GenderTab>,
-    onGenderSelectorEvent: (TabRowEvent<GenderTab>) -> Unit,
+internal fun TopBar(
+    genderPickerState: TabRowState<GenderTab>,
+    onGenderSelected: (GenderTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.heightIn(min = 56.dp),
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-
         val rippleConfiguration = remember { RippleConfiguration(Color.White) }
 
         CompositionLocalProvider(LocalRippleConfiguration provides rippleConfiguration) {
             GenderPicker(
-                genders = genderSelectorState.tabs,
-                selectedGender = genderSelectorState.currentTab,
-                onGenderSelected = { onGenderSelectorEvent(TabRowEvent.TabChanged(it)) },
+                genders = genderPickerState.tabs,
+                selectedGender = genderPickerState.currentTab,
+                onGenderSelected = onGenderSelected,
                 selectedColor = UiKitTheme2.colors.white,
                 unselectedColor = UiKitTheme2.colors.white.copy(alpha = 0.5f),
             )

@@ -2,30 +2,28 @@ package ru.livetyping.zarina.feature.home.ui.impl.impl.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
+import ru.livetyping.zarina.core.uimodel.tab.GenderTab
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.home.domain.model.HomeContent
 
 @Stable
 internal sealed class HomeContentState {
-    abstract val isRefreshing: Boolean
-
     @Immutable
     data class Success(
+        val genderPickerState: TabRowState<GenderTab>,
         val content: HomeContent,
-        override val isRefreshing: Boolean,
+        val isRefreshing: Boolean,
     ) : HomeContentState()
 
-    data object Loading : HomeContentState() {
-        override val isRefreshing = false
-    }
+    data object Loading : HomeContentState()
 
     @Immutable
-    data class Error(val state: ZarinaErrorScreenState) : HomeContentState() {
-        override val isRefreshing = false
-    }
+    data class Error(val state: ZarinaErrorScreenState2) : HomeContentState()
 
     class Builder {
         fun build(
+            genderPickerState: TabRowState<GenderTab>,
             result: Result<HomeContent>?,
             isLoading: Boolean,
             isRefreshing: Boolean,
@@ -34,11 +32,11 @@ internal sealed class HomeContentState {
                 Loading
             } else {
                 result.fold(
-                    onSuccess = { homeContent ->
-                        Success(homeContent, isRefreshing)
+                    onSuccess = { content ->
+                        Success(genderPickerState, content, isRefreshing)
                     },
                     onFailure = { t ->
-                        val errorState = ZarinaErrorScreenState.from(t)
+                        val errorState = ZarinaErrorScreenState2.from(t)
                         Error(errorState)
                     },
                 )
