@@ -9,6 +9,6 @@ import androidx.compose.runtime.Composable
 public val WindowInsets.Companion.none: WindowInsets
     get() = WindowInsets(0, 0, 0, 0)
 
-public val WindowInsets.Companion.navigationBarsWithIme: WindowInsets
+public inline val WindowInsets.Companion.navigationBarsWithIme: WindowInsets
     @Composable
     get() = navigationBars.union(ime)
