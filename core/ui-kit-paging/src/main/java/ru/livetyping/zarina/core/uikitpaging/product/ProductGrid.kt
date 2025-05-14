@@ -56,7 +56,8 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.CellInR
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.FastScrollToTopDistanceThreshold
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.FullscreenItemIndex
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PlaceholderCount
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardArrangement
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardHorizontalArrangement
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardVerticalArrangement
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ScrollToTopButtonVisibilityItemThreshold
 import timber.log.Timber
 
@@ -238,8 +239,8 @@ private fun ProductGridImpl(
             LazyVerticalGrid(
                 columns = remember { GridCells.Fixed(CellInRowCount) },
                 state = gridState,
-                verticalArrangement = ProductCardArrangement,
-                horizontalArrangement = ProductCardArrangement,
+                verticalArrangement = ProductCardVerticalArrangement,
+                horizontalArrangement = ProductCardHorizontalArrangement,
                 contentPadding = PaddingValues(bottom = 24.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -286,8 +287,8 @@ private fun ProductGridSkeleton(
 
     LazyVerticalGrid(
         columns = remember { GridCells.Fixed(CellInRowCount) },
-        verticalArrangement = ProductCardArrangement,
-        horizontalArrangement = ProductCardArrangement,
+        verticalArrangement = ProductCardVerticalArrangement,
+        horizontalArrangement = ProductCardHorizontalArrangement,
         contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
         modifier = modifier,
     ) {
@@ -361,7 +362,8 @@ internal object ProductGridDefaults {
 
     const val PlaceholderCount = 20
 
-    val ProductCardArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(1.dp)
+    val ProductCardHorizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(1.dp)
+    val ProductCardVerticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(4.dp)
 
     const val ScrollToTopButtonVisibilityItemThreshold = 20
     const val FastScrollToTopDistanceThreshold = 5
