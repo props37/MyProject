@@ -5,30 +5,29 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.startup.Initializer
-import coil.Coil
-import coil.ComponentRegistry
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
+import coil3.ComponentRegistry
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.gif.AnimatedImageDecoder
+import coil3.gif.GifDecoder
+import coil3.memory.MemoryCache
+import coil3.request.crossfade
 
 @SuppressLint("LogNotTimber")
 class CoilInitializer : Initializer<Unit> {
     override fun create(context: Context) {
-        val factory = ImageLoaderFactory {
-            ImageLoader.Builder(context)
+        SingletonImageLoader.setSafe { platformContext ->
+            ImageLoader.Builder(platformContext)
                 .crossfade(true)
                 .components {
                     addGifComponent()
                 }
-                .memoryCache(createMemoryCache(context))
-                .diskCache(createDiskCache(context))
+                .memoryCache(createMemoryCache(platformContext))
+                .diskCache(createDiskCache(platformContext))
                 .build()
         }
-
-        Coil.setImageLoader(factory)
         Log.v(TAG, "Coil initialized")
     }
 
@@ -38,15 +37,15 @@ class CoilInitializer : Initializer<Unit> {
 
     private fun ComponentRegistry.Builder.addGifComponent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            add(ImageDecoderDecoder.Factory())
+            add(AnimatedImageDecoder.Factory())
         } else {
             add(GifDecoder.Factory())
         }
     }
 
     private fun createMemoryCache(context: Context): MemoryCache {
-        return MemoryCache.Builder(context)
-            .maxSizePercent(MEMORY_CACHE_MAX_SIZE_PERCENT)
+        return MemoryCache.Builder()
+            .maxSizePercent(context, MEMORY_CACHE_MAX_SIZE_PERCENT)
             .build()
     }
 

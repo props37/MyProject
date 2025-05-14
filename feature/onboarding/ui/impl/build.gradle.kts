@@ -79,6 +79,7 @@ dependencies {
     debugImplementation(libs.jetpack.compose.testManifest)
 
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)

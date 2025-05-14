@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable

@@ -17,11 +17,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.size.Size
+import coil3.ImageLoader
+import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.ImageRequest
+import coil3.request.error
+import coil3.request.fallback
+import coil3.size.Size
 import okhttp3.OkHttpClient
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
@@ -90,11 +93,16 @@ internal fun Banner(
 
 private fun getBannerImageLoader(context: Context): ImageLoader {
     return context.imageLoader.newBuilder()
-        .okHttpClient {
-            OkHttpClient.Builder()
-                .connectTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .build()
+        .components {
+            val okHttpFactory = OkHttpNetworkFetcherFactory(
+                callFactory = {
+                    OkHttpClient.Builder()
+                        .connectTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                        .readTimeout(BANNER_IMAGE_LOADER_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                        .build()
+                }
+            )
+            add(okHttpFactory)
         }
         .build()
 }
