@@ -167,11 +167,11 @@ public object ZarinaBracketTabDefaults {
         @Composable
         get() = SelectedTextStyle
 
-    internal val SelectedColor: Color
+    public val SelectedColor: Color
         @Composable
         get() = UiKitTheme2.colors.mainBlack
 
-    internal val UnselectedColor: Color
+    public val UnselectedColor: Color
         @Composable
         get() = SelectedColor.copy(alpha = 0.5f)
 

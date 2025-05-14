@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
@@ -18,9 +19,11 @@ import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
 internal fun MenuSuccess(
     state: MenuState.Success,
     onCatalogEvent: (CatalogEvent) -> Unit,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
+    val bottomPadding = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
+
     LazyColumn(
         contentPadding = PaddingValues(bottom = bottomPadding),
         modifier = modifier,

@@ -39,7 +39,7 @@ public fun ZarinaErrorScreen2(
     state: ZarinaErrorScreenState2,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    bottomPadding: Dp = 0.dp,
+    bottomPaddingProvider: @Composable () -> Dp = { 0.dp },
 ) {
     Column(
         verticalArrangement = Arrangement.Bottom,
@@ -106,7 +106,7 @@ public fun ZarinaErrorScreen2(
 
             Spacer(
                 modifier = Modifier
-                    .heightIn(min = 24.dp + bottomPadding)
+                    .heightIn(min = 24.dp + bottomPaddingProvider())
                     .fillMaxHeight(0.2f)
             )
         }

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.component
+package ru.livetyping.zarina.core.uicomponent.gender
 
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
@@ -9,17 +9,17 @@ import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 
-internal class GenderPickerComponent(viewModelScope: CoroutineScope) {
+public class GenderPickerComponent(coroutineScope: CoroutineScope) {
     private val tabs = GenderTab.getTabs().toImmutableList()
     private val currentTab = MutableStateFlow(GenderTab.WOMEN)
 
-    val genderPickerState: StateFlow<TabRowState<GenderTab>> = currentTab.mapState(
-        scope = viewModelScope,
+    public val genderPickerState: StateFlow<TabRowState<GenderTab>> = currentTab.mapState(
+        scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(),
         transform = { currentTab -> TabRowState(tabs, currentTab) },
     )
 
-    fun onGenderSelected(tab: GenderTab) {
+    public fun onGenderSelected(tab: GenderTab) {
         currentTab.value = tab
     }
 }

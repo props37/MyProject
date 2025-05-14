@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.GenderPickerComponent
+import ru.livetyping.zarina.core.uicomponent.gender.GenderPickerComponent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState

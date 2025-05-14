@@ -14,7 +14,7 @@ internal fun CityList(
     state: CityListState,
     onCitySelectorEvent: (CitySelectorEvent) -> Unit,
     topPadding: Dp,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -35,26 +35,26 @@ internal fun CityList(
                     state = state,
                     onCitySelectorEvent = onCitySelectorEvent,
                     topPadding = topPadding,
-                    bottomPadding = bottomPadding,
+                    bottomPaddingProvider = bottomPaddingProvider,
                 )
             }
 
             CityListState.CityNotFound -> {
                 CityListStateCityNotFound(
                     topPadding = topPadding,
-                    bottomPadding = bottomPadding,
+                    bottomPaddingProvider = bottomPaddingProvider,
                 )
             }
 
             CityListState.Loading -> {
-                CityListLoading(topPadding, bottomPadding)
+                CityListLoading(topPadding, bottomPaddingProvider)
             }
 
             is CityListState.Error -> {
                 ZarinaErrorScreen2(
                     state = state.state,
                     onButtonClick = { onCitySelectorEvent(CitySelectorEvent.RefreshClicked) },
-                    bottomPadding = bottomPadding,
+                    bottomPaddingProvider = bottomPaddingProvider,
                 )
             }
         }

@@ -7,14 +7,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
 import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.home.domain.model.Banner
@@ -66,10 +64,7 @@ internal fun Banner(
             ZarinaLogoLoadingScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(UiKitTheme.colors.background.general.regular.default)
-                    // Add bottomNavBar padding at the top to align the loader at the center
-                    // of the entire screen
-                    .padding(top = bottomNavBarHeightAsState().value),
+                    .background(UiKitTheme.colors.background.general.regular.default),
             )
         }
     }

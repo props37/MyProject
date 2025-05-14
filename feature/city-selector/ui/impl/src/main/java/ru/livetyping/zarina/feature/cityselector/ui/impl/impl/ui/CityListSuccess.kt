@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,7 +30,7 @@ internal fun CityListSuccess(
     state: CityListState.Success,
     onCitySelectorEvent: (CitySelectorEvent) -> Unit,
     topPadding: Dp,
-    bottomPadding: Dp,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -42,20 +41,14 @@ internal fun CityListSuccess(
         } else {
             0.dp
         }
-        val listBottomPadding =
-            bottomPadding + ZarinaScrollableDefaults.ScrollableBottomPadding + selectCityButtonHeight
+        val listBottomPadding = bottomPaddingProvider() +
+                ZarinaScrollableDefaults.ScrollableBottomPadding + selectCityButtonHeight
 
-        DisposableEffect(state.cities) {
-            lazyListState.requestScrollToItem(0)
-            onDispose {}
-        }
+        // TODO: [Top] Scroll list to the top when the list changes. Trigger it from VM
 
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(
-                top = topPadding,
-                bottom = listBottomPadding,
-            ),
+            contentPadding = PaddingValues(top = topPadding, bottom = listBottomPadding),
         ) {
             items(
                 items = state.cities,
@@ -74,7 +67,7 @@ internal fun CityListSuccess(
             exit = AnimatedContentDefaultExitTransition,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = bottomPadding + SelectCityBottomPadding),
+                .padding(bottom = bottomPaddingProvider() + SelectCityBottomPadding),
         ) {
             ZarinaButton(
                 onClick = { onCitySelectorEvent(CitySelectorEvent.SelectCityClicked) },
