@@ -259,9 +259,7 @@ private fun ProductGridImpl(
                             product = product,
                             onClick = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
-                            onAddToCartClicked = onAddToCartClicked,
-                            onSubscribeClicked = onSubscribeClicked,
-                            shimmer = placeholderShimmer,
+                            mediaShimmer = placeholderShimmer,
                             modifier = itemModifier,
                             appMetricaScreen = appMetricaScreen,
                         )
@@ -363,7 +361,7 @@ internal object ProductGridDefaults {
 
     const val PlaceholderCount = 20
 
-    val ProductCardArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(4.dp)
+    val ProductCardArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(1.dp)
 
     const val ScrollToTopButtonVisibilityItemThreshold = 20
     const val FastScrollToTopDistanceThreshold = 5

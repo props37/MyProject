@@ -31,17 +31,15 @@ import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
-import ru.livetyping.zarina.core.uikit.button.ZarinaAddToCartIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
-import ru.livetyping.zarina.core.uikit.button.ZarinaSubscribeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
-import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.IconSize
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.MediaAspectRatio
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -49,11 +47,8 @@ public fun ProductCard(
     product: Product,
     onClick: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
-    onAddToCartClicked: (Product) -> Unit,
-    onSubscribeClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
-    backgroundColor: Color = ProductCardDefaults.BackgroundColor,
+    mediaShimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     appMetricaScreen: Screen? = null,
 ) {
     val appMetrica = LocalAppMetrica.current
@@ -66,7 +61,7 @@ public fun ProductCard(
 
     Column(
         modifier = modifier
-            .background(backgroundColor)
+            .background(ProductCardDefaults.BackgroundColor)
             .clickable { onClick(product) },
     ) {
         Box(
@@ -79,16 +74,10 @@ public fun ProductCard(
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
-                shimmer = shimmer,
+                shimmer = mediaShimmer,
                 modifier = Modifier.matchParentSize(),
             )
-            ZarinaLikeIconButton(
-                isLiked = product.isInWishlist,
-                onClick = { onAddToWishlistClicked(product) },
-                iconSize = IconSize,
-                indication = ripple(bounded = false, radius = IconSize),
-                modifier = Modifier.align(Alignment.TopEnd),
-            )
+            // TODO: [Top] Redesign pager indicator
             ZarinaHorizontalPagerIndicator(
                 pagerState = pagerState,
                 itemCount = product.media.size,
@@ -100,52 +89,38 @@ public fun ProductCard(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        val horizontalPaddingModifier = Modifier.padding(horizontal = 10.dp)
+
+        Text(
+            text = product.name.uppercase(),
+            style = UiKitTheme.typography.caption1.regular,
+            color = UiKitTheme.colors.text.general.regular.default,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = horizontalPaddingModifier,
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = horizontalPaddingModifier,
         ) {
-            Text(
-                text = product.name.uppercase(),
-                style = UiKitTheme.typography.caption1.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 2.dp), // Circe font padding
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                val buttonModifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(28.dp)
+            ProductPrice(price = product.price)
 
-                if (product.isAvailable) {
-                    ZarinaAddToCartIconButton(
-                        isAdded = product.isInCart,
-                        onClick = { onAddToCartClicked(product) },
-                        iconSize = IconSize,
-                        modifier = buttonModifier,
-                    )
-                } else {
-                    ZarinaSubscribeIconButton(
-                        onClick = { onSubscribeClicked(product) },
-                        iconSize = IconSize,
-                        modifier = buttonModifier,
-                    )
-                }
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
+
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                val iconSize = 16.dp
+                ZarinaLikeIconButton(
+                    isLiked = product.isInWishlist,
+                    onClick = { onAddToWishlistClicked(product) },
+                    iconSize = iconSize,
+                    indication = ripple(bounded = false, radius = iconSize),
+                )
             }
         }
-
-        ProductPrice(
-            price = product.price,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
-
-        ProductCardColors(
-            colors = product.colors,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
 
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -225,11 +200,9 @@ public fun ProductCardSkeleton(
 }
 
 public object ProductCardDefaults {
-    public val BackgroundColor: Color
+    internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
-    internal const val MediaAspectRatio = 0.68f
-
-    internal val IconSize = 16.dp
+    internal const val MediaAspectRatio = 0.75f
 }
