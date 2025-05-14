@@ -48,7 +48,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 public fun ProductCard(
     product: Product,
     onClick: (Product) -> Unit,
-    onAddToFavoritesClicked: (Product) -> Unit,
+    onAddToWishlistClicked: (Product) -> Unit,
     onAddToCartClicked: (Product) -> Unit,
     onSubscribeClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
@@ -84,7 +84,7 @@ public fun ProductCard(
             )
             ZarinaLikeIconButton(
                 isLiked = product.isInWishlist,
-                onClick = { onAddToFavoritesClicked(product) },
+                onClick = { onAddToWishlistClicked(product) },
                 iconSize = IconSize,
                 indication = ripple(bounded = false, radius = IconSize),
                 modifier = Modifier.align(Alignment.TopEnd),
