@@ -65,6 +65,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDividerDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 // TODO: [Medium] Add label animation
@@ -226,6 +227,7 @@ internal fun ZarinaTextFieldDecoration(
                 targetValue = colors.getLabelColor(isEnabled),
                 label = "Label color",
             )
+
             CompositionLocalProvider(
                 LocalTextStyle provides labelTextStyle,
                 LocalContentColor provides labelColor,
@@ -244,13 +246,14 @@ internal fun ZarinaTextFieldDecoration(
                 ),
                 label = "Indication line color",
             )
-            val verticalPadding = ZarinaTextFieldDefaults.textVerticalPaddingFromSize(size)
+            val indicationLinePadding = ZarinaTextFieldDefaults.indicationLinePaddingFromSize(size)
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .weight(1f)
                     .drawBehind {
-                        val width = 0.5.dp.toPx()
+                        val width = ZarinaDividerDefaults.Thickness.toPx()
                         drawLine(
                             color = indicationLineColor.value,
                             start = Offset(0f, this.size.height - width),
@@ -258,13 +261,14 @@ internal fun ZarinaTextFieldDecoration(
                             strokeWidth = width,
                         )
                     }
-                    .padding(vertical = verticalPadding),
+                    .padding(bottom = indicationLinePadding),
             ) {
                 leadingContent?.let { content ->
                     val leadingContentColor by animateColorAsState(
                         targetValue = colors.getLeadingContentColor(isEnabled),
                         label = "Leading content color",
                     )
+
                     CompositionLocalProvider(LocalContentColor provides leadingContentColor) {
                         content()
                     }
@@ -276,14 +280,17 @@ internal fun ZarinaTextFieldDecoration(
                         targetValue = colors.getTextColor(isEnabled),
                         label = "Text color",
                     )
+
                     CompositionLocalProvider(LocalContentColor provides textColor) {
                         innerTextField()
                     }
+
                     if (value.isEmpty() && placeholder != null) {
                         val placeholderColor by animateColorAsState(
                             targetValue = colors.getPlaceholderColor(isEnabled),
                             label = "Placeholder color",
                         )
+
                         CompositionLocalProvider(
                             LocalTextStyle provides textStyle,
                             LocalContentColor provides placeholderColor,
@@ -298,6 +305,7 @@ internal fun ZarinaTextFieldDecoration(
                         targetValue = colors.getInnerTrailingContentColor(isEnabled),
                         label = "Inner trailing content color",
                     )
+
                     Spacer(modifier = Modifier.width(8.dp))
                     CompositionLocalProvider(LocalContentColor provides innerTrailingContentColor) {
                         content()
@@ -307,10 +315,12 @@ internal fun ZarinaTextFieldDecoration(
 
             outerTrailingContent?.let { content ->
                 Spacer(modifier = Modifier.width(8.dp))
+
                 val outerTrailingContentColor by animateColorAsState(
                     targetValue = colors.getOuterTrailingContentColor(isEnabled),
                     label = "Outer trailing content color",
                 )
+
                 CompositionLocalProvider(
                     LocalTextStyle provides UiKitTheme2.typography.body2,
                     LocalContentColor provides outerTrailingContentColor,
@@ -322,13 +332,16 @@ internal fun ZarinaTextFieldDecoration(
 
         description?.let { description ->
             val padding = ZarinaTextFieldDefaults.descriptionPaddingFromSize(size)
+
             Spacer(modifier = Modifier.height(padding))
+
             val descriptionTextStyle =
                 ZarinaTextFieldDefaults.descriptionTextStyleFromSize(size)
             val descriptionColor by animateColorAsState(
                 targetValue = colors.getDescriptionColor(isEnabled, isError),
                 label = "Description color",
             )
+
             CompositionLocalProvider(
                 LocalTextStyle provides descriptionTextStyle,
                 LocalContentColor provides descriptionColor,
@@ -544,13 +557,13 @@ public object ZarinaTextFieldDefaults {
     }
 
     @Stable
-    public fun textVerticalPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Medium -> 6.dp
+    public fun labelPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
+        ZarinaTextFieldSize.Medium -> 10.dp
     }
 
     @Stable
-    public fun labelPaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
-        ZarinaTextFieldSize.Medium -> 2.dp
+    public fun indicationLinePaddingFromSize(size: ZarinaTextFieldSize): Dp = when (size) {
+        ZarinaTextFieldSize.Medium -> 8.dp
     }
 
     @Stable
