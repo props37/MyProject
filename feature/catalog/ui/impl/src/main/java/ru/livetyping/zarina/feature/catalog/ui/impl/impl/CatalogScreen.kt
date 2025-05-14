@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
-import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
@@ -92,14 +91,10 @@ private fun ScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            val bottomPaddingProvider = @Composable {
-                bottomNavBarHeightAsState().value + ZarinaScrollableDefaults.ScrollableBottomPadding
-            }
-
             Menu(
                 state = catalogState.menuState,
                 onCatalogEvent = onCatalogEvent,
-                bottomPaddingProvider = bottomPaddingProvider,
+                bottomPaddingProvider = { bottomNavBarHeightAsState().value },
                 modifier = Modifier.fillMaxSize(),
             )
         }

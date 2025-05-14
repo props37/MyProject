@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 
 // TODO: [Medium] Add banner skeleton
@@ -18,8 +19,10 @@ internal fun MenuLoading(
 ) {
     val shimmer = rememberZarinaSkeletonShimmer()
 
+    val bottomPadding = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
+
     LazyColumn(
-        contentPadding = PaddingValues(bottom = bottomPaddingProvider()),
+        contentPadding = PaddingValues(bottom = bottomPadding),
         modifier = modifier,
     ) {
         items(4) {
