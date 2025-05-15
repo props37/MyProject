@@ -96,24 +96,24 @@ private fun PoliciesText(
 
     val privacy = stringResource(R.string.sign_up_policies_privacy)
     val onlineStore = stringResource(R.string.sign_up_policies_online_store)
-    val loyalty = stringResource(R.string.sign_up_policies_loyalty)
+    val loyaltyProgram = stringResource(R.string.sign_up_policies_loyalty)
 
     val privacyUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_privacy_policy_url)
     val onlineStoreUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_online_store_policy_url)
-    val loyaltyUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_loyalty_policy_url)
+    val loyaltyProgramUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_loyalty_program_policy_url)
 
     val substringToUrl = remember(
         privacy,
         onlineStore,
-        loyalty,
+        loyaltyProgram,
         privacyUrl,
         onlineStoreUrl,
-        loyaltyUrl,
+        loyaltyProgramUrl,
     ) {
         mapOf(
             privacy to privacyUrl,
             onlineStore to onlineStoreUrl,
-            loyalty to loyaltyUrl,
+            loyaltyProgram to loyaltyProgramUrl,
         )
     }
     val stringWithLinks = rememberAnnotatedStringWithLinks(
@@ -139,7 +139,7 @@ private fun SubscriptionPolicyText(
     val currentContext by rememberUpdatedState(LocalContext.current)
 
     val personalData = stringResource(R.string.sign_up_subscription_policy_agreement)
-    val personalDataUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_personal_data_policy_url)
+    val personalDataUrl = stringResource(ru.livetyping.zarina.core.resource.R.string.res_zarina_personal_data_consent_policy_url)
 
     val substringToUrl = remember(personalData, personalDataUrl) {
         mapOf(personalData to personalDataUrl)

@@ -167,10 +167,10 @@ private fun LoyaltyProgramPolicies(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val policiesUrl = stringResource(RCommon.string.res_zarina_loyalty_policy_url)
+    val policyUrl = stringResource(RCommon.string.res_zarina_loyalty_program_policy_url)
 
     ZarinaItem(
-        onClick = { context.openUrlInCustomTabs(policiesUrl) },
+        onClick = { context.openUrlInCustomTabs(policyUrl) },
         startContent = {
             Text(
                 text = stringResource(R.string.profile_loyalty_program_policies),
