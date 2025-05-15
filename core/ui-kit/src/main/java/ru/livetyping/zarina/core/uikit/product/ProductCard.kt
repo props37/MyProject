@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
@@ -34,11 +35,12 @@ import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
+import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.BackgroundColor
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.MediaAspectRatio
+import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.ProductNameTextStyle
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -61,7 +63,7 @@ public fun ProductCard(
 
     Column(
         modifier = modifier
-            .background(ProductCardDefaults.BackgroundColor)
+            .background(BackgroundColor)
             .clickable { onClick(product) },
     ) {
         Box(
@@ -93,8 +95,8 @@ public fun ProductCard(
 
         Text(
             text = product.name.uppercase(),
-            style = UiKitTheme.typography.caption1.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            style = ProductNameTextStyle,
+            color = UiKitTheme2.colors.mainBlack,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = horizontalPaddingModifier,
@@ -140,59 +142,35 @@ public fun ProductCardSkeleton(
                 .aspectRatio(MediaAspectRatio),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
+        val horizontalPaddingModifier = Modifier.padding(horizontal = 10.dp)
+
+        ZarinaTextSkeleton(
+            textStyle = ProductNameTextStyle,
+            shimmer = shimmer,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
-                shimmer = shimmer,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(modifier = Modifier.width(24.dp))
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(16.dp),
-            )
-        }
+                .then(horizontalPaddingModifier),
+        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .then(horizontalPaddingModifier),
         ) {
             ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
+                text = ProductCardDefaults.PriceSkeletonText,
+                textStyle = ProductNameTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier.width(44.dp),
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
-                shimmer = shimmer,
-                modifier = Modifier.width(48.dp),
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption2.regular,
-                shimmer = shimmer,
-                modifier = Modifier.width(28.dp),
-            )
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-        Box(modifier = Modifier.padding(start = 16.dp)) {
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(width = 42.dp, height = 8.dp),
-            )
+            ZarinaSkeleton(modifier = Modifier.size(16.dp))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -205,4 +183,10 @@ public object ProductCardDefaults {
         get() = UiKitTheme2.colors.white
 
     internal const val MediaAspectRatio = 0.75f
+
+    internal val ProductNameTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme2.typography.body2
+
+    internal const val PriceSkeletonText = "1 999 Р"
 }
