@@ -25,13 +25,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
+import ru.livetyping.zarina.core.uicompose.preview.ProductShortPreviewParameterProvider
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
@@ -42,6 +46,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -133,7 +138,7 @@ public fun ProductCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.background(BackgroundColor)) {
         ZarinaSkeleton(
             shimmer = shimmer,
             shape = RectangleShape,
@@ -174,6 +179,29 @@ public fun ProductCardSkeleton(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+@Preview
+private fun Preview(
+    @PreviewParameter(ProductShortPreviewParameterProvider::class)
+    product: ProductShort,
+) {
+    ZarinaTheme2 {
+        ProductCard(
+            product = product,
+            onClick = {},
+            onAddToWishlistClicked = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewSkeleton() {
+    ZarinaTheme2 {
+        ProductCardSkeleton()
     }
 }
 
