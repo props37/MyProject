@@ -46,11 +46,11 @@
     <string name="res_email">Электронная почта</string>
     <string name="res_password">Пароль</string>
     <string name="res_phone">Телефон</string>
-    <string name="res_zarina_privacy_policy_url" translatable="false">https://zarina.ru/help/privacy-policy/</string>
-    <string name="res_zarina_online_store_policy_url" translatable="false">https://zarina.ru/help/conditions/</string>
-    <string name="res_zarina_loyalty_policy_url" translatable="false">https://zarina.ru/help/loyalty/</string>
+    <string name="res_zarina_privacy_policy_url" translatable="false">https://zarina.ru/help/docs/privacy-policy/</string>
+    <string name="res_zarina_online_store_policy_url" translatable="false">https://zarina.ru/help/docs/</string>
+    <string name="res_zarina_loyalty_program_policy_url" translatable="false">https://zarina.ru/help/loyalty/</string>
     <string name="res_zarina_about_company_url" translatable="false">https://zarina.ru/about/</string>
-    <string name="res_zarina_personal_data_policy_url" translatable="false">https://zarina.ru/help/data-consent/</string>
+    <string name="res_zarina_personal_data_consent_policy_url" translatable="false">https://zarina.ru/help/docs/data-consent/</string>
     <string name="res_zarina_help_url" translatable="false">https://zarina.ru/help/</string>
     <string name="res_yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
