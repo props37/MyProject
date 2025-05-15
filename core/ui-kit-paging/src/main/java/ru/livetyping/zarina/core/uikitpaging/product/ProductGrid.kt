@@ -52,13 +52,12 @@ import ru.livetyping.zarina.core.uikit.product.ProductCardSkeleton
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.CellInRowCount
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.FastScrollToTopDistanceThreshold
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.FullscreenItemIndex
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PlaceholderCount
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ItemInRowCount
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackFullSizeItemIndices
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackSize
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardHorizontalArrangement
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardVerticalArrangement
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ScrollToTopButtonVisibilityItemThreshold
 import timber.log.Timber
 
 // TODO: [Low] Migrate to ZarinaPagingPullRefreshContainer
@@ -175,8 +174,6 @@ public fun ProductGrid(
                             gridState = gridState,
                             onProductClicked = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
-                            onAddToCartClicked = onAddToCartClicked,
-                            onSubscribeClicked = onSubscribeClicked,
                             emptyProductsPlaceholder = emptyProductsPlaceholder,
                             appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
@@ -225,8 +222,6 @@ private fun ProductGridImpl(
     gridState: LazyGridState,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
-    onAddToCartClicked: (Product) -> Unit,
-    onSubscribeClicked: (Product) -> Unit,
     emptyProductsPlaceholder: @Composable () -> Unit,
     appMetricaScreen: Screen?,
     modifier: Modifier = Modifier,
@@ -237,7 +232,7 @@ private fun ProductGridImpl(
     Box(modifier = modifier) {
         if (productPagingItems.itemCount > 0) {
             LazyVerticalGrid(
-                columns = remember { GridCells.Fixed(CellInRowCount) },
+                columns = remember { GridCells.Fixed(ItemInRowCount) },
                 state = gridState,
                 verticalArrangement = ProductCardVerticalArrangement,
                 horizontalArrangement = ProductCardHorizontalArrangement,
@@ -286,14 +281,14 @@ private fun ProductGridSkeleton(
     val itemModifier = Modifier.fillMaxWidth()
 
     LazyVerticalGrid(
-        columns = remember { GridCells.Fixed(CellInRowCount) },
+        columns = remember { GridCells.Fixed(ItemInRowCount) },
         verticalArrangement = ProductCardVerticalArrangement,
         horizontalArrangement = ProductCardHorizontalArrangement,
         contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
         modifier = modifier,
     ) {
         items(
-            count = PlaceholderCount,
+            count = PackSize,
             span = { index -> getProductGridItemSpan(index) },
             contentType = { ProductGridContentType.ProductCardPlaceholder },
         ) {
@@ -315,7 +310,7 @@ private fun ScrollToTopButton(
     val isVisible by remember(gridState) {
         derivedStateOf {
             val isFarEnough =
-                gridState.firstVisibleItemIndex >= ScrollToTopButtonVisibilityItemThreshold
+                gridState.firstVisibleItemIndex >= PackSize
             gridState.lastScrolledBackward && isFarEnough
         }
     }
@@ -335,7 +330,8 @@ private fun ScrollToTopButton(
 }
 
 private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSpan {
-    return if ((index + 1) % FullscreenItemIndex == 0) {
+    val indexInPack = index % PackSize
+    return if (indexInPack in PackFullSizeItemIndices) {
         GridItemSpan(maxCurrentLineSpan)
     } else {
         GridItemSpan(1)
@@ -357,16 +353,15 @@ private fun getProductGridItemContentType(
 private enum class ProductGridContentType { ProductCard, ProductCardPlaceholder }
 
 internal object ProductGridDefaults {
-    const val CellInRowCount = 2
-    const val FullscreenItemIndex = 5
-
-    const val PlaceholderCount = 20
+    const val ItemInRowCount = 2
 
     val ProductCardHorizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(1.dp)
     val ProductCardVerticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(4.dp)
 
-    const val ScrollToTopButtonVisibilityItemThreshold = 20
     const val FastScrollToTopDistanceThreshold = 5
+
+    const val PackSize = 18
+    val PackFullSizeItemIndices = 8..9
 }
 
 private const val Tag = "ProductGrid"
