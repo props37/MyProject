@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.gender.GenderPicker
 import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 
@@ -29,23 +31,32 @@ internal fun TopBar(
     onGenderSelected: (GenderTab) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    val contentPadding = PaddingValues(
+        start = 0.dp,
+        top = 16.dp,
+        end = 0.dp,
+        bottom = 4.dp,
+    )
+
+    ZarinaTopBar(
+        contentPadding = contentPadding,
         modifier = modifier,
     ) {
-        ZarinaLogo(modifier = Modifier.height(18.dp))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            ZarinaLogo(modifier = Modifier.height(18.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        GenderPicker(
-            genders = genderPickerState.tabs,
-            selectedGender = genderPickerState.currentTab,
-            onGenderSelected = onGenderSelected,
-        )
+            GenderPicker(
+                genders = genderPickerState.tabs,
+                selectedGender = genderPickerState.currentTab,
+                onGenderSelected = onGenderSelected,
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        ZarinaDivider(modifier = Modifier.fillMaxWidth())
+            ZarinaDivider(modifier = Modifier.fillMaxWidth())
+        }
     }
 }
 

@@ -13,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
@@ -66,11 +65,9 @@ private fun ScreenContent(
             TopBar(
                 genderPickerState = catalogState.genderPickerState,
                 onGenderSelected = { onCatalogEvent(CatalogEvent.GenderSelected(it)) },
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 8.dp)
-                    .graphicsLayer {
-                        alpha = 1f - topBarScrollBehavior.state.collapsedFraction
-                    },
+                modifier = Modifier.graphicsLayer {
+                    alpha = 1f - topBarScrollBehavior.state.collapsedFraction
+                },
             )
         },
         scrollBehavior = topBarScrollBehavior,
