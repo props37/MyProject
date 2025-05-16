@@ -19,7 +19,12 @@ import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.BackgroundColor
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.ContentColor
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.ContentHorizontalPadding
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.ContentPadding
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.HeightMedium
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults.HeightSmall
 
 @Composable
 public fun ZarinaTopBar(
@@ -27,9 +32,10 @@ public fun ZarinaTopBar(
     startContent: (@Composable RowScope.() -> Unit)? = null,
     centerContent: (@Composable RowScope.() -> Unit)? = null,
     endContent: (@Composable RowScope.() -> Unit)? = null,
-    backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
-    contentColor: Color = ZarinaTopBarDefaults.ContentColor,
-    contentPadding: PaddingValues = ZarinaTopBarDefaults.ContentPadding,
+    size: ZarinaTopBarSize = ZarinaTopBarSize.Small,
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
+    contentPadding: PaddingValues = ContentPadding,
 ) {
     val content = @Composable {
         Row(
@@ -57,11 +63,16 @@ public fun ZarinaTopBar(
     }
 
     CompositionLocalProvider(LocalContentColor provides contentColor) {
+        val minHeight = when (size) {
+            ZarinaTopBarSize.Small -> HeightSmall
+            ZarinaTopBarSize.Medium -> HeightMedium
+        }
+
         Layout(
             content = content,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = ZarinaTopBarDefaults.MinHeight)
+                .heightIn(min = minHeight)
                 .drawBehind { drawRect(backgroundColor) }
                 .padding(contentPadding),
         ) { measurables, constraints ->
@@ -124,26 +135,34 @@ public fun ZarinaTopBar(
 @Composable
 public fun ZarinaTopBar(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
-    contentColor: Color = ZarinaTopBarDefaults.ContentColor,
-    contentPadding: PaddingValues = ZarinaTopBarDefaults.ContentPadding,
+    size: ZarinaTopBarSize = ZarinaTopBarSize.Small,
+    backgroundColor: Color = BackgroundColor,
+    contentColor: Color = ContentColor,
+    contentPadding: PaddingValues = ContentPadding,
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
         LocalTextStyle provides UiKitTheme2.typography.body,
     ) {
+        val minHeight = when (size) {
+            ZarinaTopBarSize.Small -> HeightSmall
+            ZarinaTopBarSize.Medium -> HeightMedium
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(ZarinaTopBarDefaults.MinHeight)
+                .heightIn(min = minHeight)
                 .drawBehind { drawRect(backgroundColor) }
                 .padding(contentPadding),
             content = content,
         )
     }
 }
+
+public enum class ZarinaTopBarSize { Small, Medium }
 
 public object ZarinaTopBarDefaults {
     internal val BackgroundColor: Color
@@ -154,7 +173,8 @@ public object ZarinaTopBarDefaults {
         @Composable
         get() = UiKitTheme2.colors.mainBlack
 
-    internal val MinHeight: Dp = 56.dp
+    internal val HeightSmall: Dp = 56.dp
+    internal val HeightMedium: Dp = 112.dp
 
     public val ContentPadding: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
