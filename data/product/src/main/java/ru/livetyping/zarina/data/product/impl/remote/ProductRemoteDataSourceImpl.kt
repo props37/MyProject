@@ -27,13 +27,15 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
-        page: Int
+        page: Int,
+        pageSize: Int,
     ): Flow<Page<ProductsWithFilters>> = flow {
         val productsWithFiltersPage = api.getProducts(
             categoryId = categoryId,
             filters = filters,
             sorting = sorting,
             page = page,
+            pageSize = pageSize,
         ).toProductsWithFiltersPage()
         emit(productsWithFiltersPage)
     }

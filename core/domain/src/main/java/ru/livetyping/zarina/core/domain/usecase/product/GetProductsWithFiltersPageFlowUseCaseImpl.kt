@@ -19,6 +19,7 @@ internal class GetProductsWithFiltersPageFlowUseCaseImpl(
             filters = params.filters,
             sorting = params.sorting,
             page = params.page,
+            pageSize = params.pageSize,
         )
     }
 

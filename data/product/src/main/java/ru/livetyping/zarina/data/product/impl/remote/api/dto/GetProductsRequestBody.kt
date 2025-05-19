@@ -18,6 +18,9 @@ internal data class GetProductsRequestBody(
     @SerialName("page")
     val page: Int,
 
+    @SerialName("page_size")
+    val pageSize: Int,
+
     @Transient
     val returnProducts: Boolean = true,
 ) {

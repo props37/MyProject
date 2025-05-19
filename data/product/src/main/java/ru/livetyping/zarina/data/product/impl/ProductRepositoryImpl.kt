@@ -26,13 +26,15 @@ internal class ProductRepositoryImpl @Inject constructor(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
-        page: Int
+        page: Int,
+        pageSize: Int,
     ): Flow<Page<ProductsWithFilters>> {
         return remoteDataSource.getProductsWithFiltersPageFlow(
             categoryId = categoryId,
             filters = filters,
             sorting = sorting,
             page = page,
+            pageSize = pageSize,
         )
     }
 

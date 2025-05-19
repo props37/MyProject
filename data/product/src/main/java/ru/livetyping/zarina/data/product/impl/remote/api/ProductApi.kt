@@ -19,6 +19,7 @@ internal interface ProductApi {
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
+        pageSize: Int,
     ): ProductsDto
 
     suspend fun getProduct(productId: Product.Id): ProductDetailedDto
