@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -44,8 +43,8 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
@@ -421,7 +420,7 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     private suspend fun getCategory(categoryId: Category.Id): Category? {
         val params = GetCategoryUseCase.Params(categoryId, CachePolicy.LocalOnly)
-        return deps.getCategory(params).firstOrNull()?.getOrNull()
+        return deps.getCategory(params).getOrNull()
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {
