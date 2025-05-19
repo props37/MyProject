@@ -91,6 +91,7 @@ private fun ScreenContent(
             sideEffects.mapNotNull { it.toProductGridSideEffect() }
         }
 
+        // TODO: [Top] Add bottom padding
         ProductGrid(
             productPagingDataFlow = productListState.productPagingDataFlow,
             onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
