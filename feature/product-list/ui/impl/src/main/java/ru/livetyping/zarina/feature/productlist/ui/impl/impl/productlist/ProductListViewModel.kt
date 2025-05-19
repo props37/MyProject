@@ -96,6 +96,7 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     init {
         categoryComponent.setInitialCategoryId(navEntry.getCategoryId())
+        fetchCategory()
         filterComponent.initialFilters = navEntry.filters?.toProductFilters()
     }
 
@@ -225,13 +226,13 @@ internal class ProductListViewModel @AssistedInject constructor(
             is ProductEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
             ProductEvent.ProductsRefreshed -> {
                 if (!categoryComponent.isCategoryFetched()) {
-                    requestCategory()
+                    fetchCategory()
                 }
             }
 
             ProductEvent.ProductsErrorRefreshClicked -> {
                 if (!categoryComponent.isCategoryFetched()) {
-                    requestCategory()
+                    fetchCategory()
                 }
             }
         }
@@ -367,7 +368,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun requestCategory() {
+    private fun fetchCategory() {
         viewModelScope.launch {
             categoryComponent.fetchCategory()
         }
