@@ -6,14 +6,14 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.category.Category
 
 @Stable
-internal sealed class TagListState {
+internal sealed class SubcategoryListState {
     @Immutable
     data class Success(
         val tags: ImmutableList<Category>,
         val selectedTagId: Category.Id?,
-    ) : TagListState()
+    ) : SubcategoryListState()
 
-    data object Empty : TagListState()
+    data object Empty : SubcategoryListState()
 
-    data object Loading : TagListState()
+    data object Loading : SubcategoryListState()
 }

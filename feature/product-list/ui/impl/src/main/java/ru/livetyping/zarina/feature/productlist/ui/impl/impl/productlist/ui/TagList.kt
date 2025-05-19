@@ -20,11 +20,11 @@ import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTagSkeleton
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
 
 @Composable
 internal fun TagList(
-    state: TagListState,
+    state: SubcategoryListState,
     onEvent: (TagListEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -32,7 +32,7 @@ internal fun TagList(
     AnimatedContent(
         targetState = state,
         transitionSpec = {
-            if (initialState != TagListState.Empty && targetState != TagListState.Empty) {
+            if (initialState != SubcategoryListState.Empty && targetState != SubcategoryListState.Empty) {
                 AnimatedContentCrossfadeTransitionSpec
             } else {
                 AnimatedContentDefaultTransitionSpec
@@ -41,9 +41,9 @@ internal fun TagList(
         contentAlignment = Alignment.CenterStart,
         contentKey = {
             when (it) {
-                is TagListState.Success -> ContentKey.Success
-                TagListState.Empty -> it
-                TagListState.Loading-> it
+                is SubcategoryListState.Success -> ContentKey.Success
+                SubcategoryListState.Empty -> it
+                SubcategoryListState.Loading-> it
             }
         },
         label = "TagList",
@@ -57,7 +57,7 @@ internal fun TagList(
         )
 
         when (state) {
-            is TagListState.Success -> {
+            is SubcategoryListState.Success -> {
                 val lazyListState = rememberLazyListState()
                 DisposableEffect(state.tags) {
                     lazyListState.requestScrollToItem(0)
@@ -84,7 +84,7 @@ internal fun TagList(
                 }
             }
 
-            TagListState.Loading -> {
+            SubcategoryListState.Loading -> {
                 val skeletonShimmer = rememberZarinaSkeletonShimmer()
 
                 LazyRow(
@@ -100,7 +100,7 @@ internal fun TagList(
                 }
             }
 
-            TagListState.Empty -> Unit
+            SubcategoryListState.Empty -> Unit
         }
     }
 }

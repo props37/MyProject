@@ -32,8 +32,8 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.EmptyProductsPlaceholder
@@ -46,7 +46,7 @@ internal fun ProductListScreen(
     viewModel: ProductListViewModel,
 ) {
     val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
-    val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
+    val subcategoryListState by viewModel.subcategoryListState.collectAsStateWithLifecycle()
     val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
     val shouldSystemBackBeIntercepted by viewModel.shouldSystemBackBeIntercepted.collectAsStateWithLifecycle()
 
@@ -58,7 +58,7 @@ internal fun ProductListScreen(
     ScreenContent(
         topBarState = topBarState,
         onTopBarEvent = viewModel::onTopBarEvent,
-        tagListState = tagListState,
+        subcategoryListState = subcategoryListState,
         onTagListEvent = viewModel::onTagListEvent,
         productPagingDataFlow = viewModel.productPagingDataFlow,
         onProductEvent = viewModel::onProductEvent,
@@ -75,7 +75,7 @@ internal fun ProductListScreen(
 private fun ScreenContent(
     topBarState: TopBarState,
     onTopBarEvent: (TopBarEvent) -> Unit,
-    tagListState: TagListState,
+    subcategoryListState: SubcategoryListState,
     onTagListEvent: (TagListEvent) -> Unit,
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onProductEvent: (ProductEvent) -> Unit,
@@ -117,7 +117,7 @@ private fun ScreenContent(
         CollapsingTopBarLayout(
             topBar = {
                 TagList(
-                    state = tagListState,
+                    state = subcategoryListState,
                     onEvent = onTagListEvent,
                 )
             },

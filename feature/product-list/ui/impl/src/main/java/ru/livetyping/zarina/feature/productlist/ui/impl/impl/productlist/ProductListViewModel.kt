@@ -72,7 +72,7 @@ import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -154,7 +154,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         ),
     )
 
-    val tagListState: StateFlow<TagListState> = combine(
+    val subcategoryListState: StateFlow<SubcategoryListState> = combine(
         category,
         selectedTagId,
     ) { category, selectedTagId ->
@@ -162,17 +162,17 @@ internal class ProductListViewModel @AssistedInject constructor(
             val children = category.children
             if (!children.isNullOrEmpty()) {
                 val tags = children.toImmutableList()
-                TagListState.Success(tags, selectedTagId)
+                SubcategoryListState.Success(tags, selectedTagId)
             } else {
-                TagListState.Empty
+                SubcategoryListState.Empty
             }
         } else {
-            TagListState.Loading
+            SubcategoryListState.Loading
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = TagListState.Loading,
+        initialValue = SubcategoryListState.Loading,
     )
 
     private val wishlistProductIdsParams =
