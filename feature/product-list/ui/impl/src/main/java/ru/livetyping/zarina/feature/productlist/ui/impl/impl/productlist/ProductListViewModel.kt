@@ -17,22 +17,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequest
-import ru.livetyping.zarina.core.coroutinesutil.FlowRequester
 import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
 import ru.livetyping.zarina.core.coroutinesutil.mapState
@@ -58,7 +52,6 @@ import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
-import ru.livetyping.zarina.core.uicommon.createValueHolder
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
@@ -66,13 +59,14 @@ import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelector
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
-import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.CategoryComponent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.FilterComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -91,58 +85,27 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
+    private val categoryComponent = CategoryComponent(
+        getCategoryFlowUseCase = deps.getCategoryFlow,
+    )
+    private val filterComponent = FilterComponent(savedStateHandle, viewModelScope)
     private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
         typeMap = ProductListNavEntry.typeMap(),
     )
-    private val categoryId = navEntry.getCategoryId()
-    private val initialFilters = navEntry.filters?.toProductFilters()
 
-    private val categoryRequester = FlowRequester(CategoryRequest) {
-        val params = GetCategoryFlowUseCase.Params(
-            id = categoryId,
-            cachePolicy = CachePolicy.LocalFirstThenRemote(),
-        )
-        deps.getCategoryFlow(params)
+    init {
+        categoryComponent.setInitialCategoryId(navEntry.getCategoryId())
+        filterComponent.initialFilters = navEntry.filters?.toProductFilters()
     }
 
-    private val category = categoryRequester.flow
-        .map { it.getOrNull() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
-
-    private val selectedTagId = MutableStateFlow<Category.Id?>(null)
-
-    private val filtersValueHolder = savedStateHandle.createValueHolder<ProductFiltersParcelable?>(
-        key = Keys.FILTERS.key,
-        initialValue = null,
-    )
-    private val filters: SharedFlow<ProductFilters> = filtersValueHolder.stateFlow
-        .map {
-            it?.toProductFilters() ?: run {
-                val fallbackFilters = initialFilters
-                    ?: ProductFilters.create(sorting = ProductFilters.getDefaultSorting())
-                fallbackFilters
-            }
-        }
-        .shareIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1,
-        )
-
-    private var availableFilters: ProductFilters? = null
-
     val topBarState: StateFlow<TopBarState> = combine(
-        category,
-        filters,
-    ) { category, filters ->
+        categoryComponent.categoryResult,
+        filterComponent.currentFilters,
+    ) { categoryResult, filters ->
         TopBarState(
-            categoryName = category?.name,
+            categoryName = categoryResult?.getOrNull()?.name,
             appliedFilterCount = filters.appliedFilterCount,
         )
     }.stateIn(
@@ -155,14 +118,15 @@ internal class ProductListViewModel @AssistedInject constructor(
     )
 
     val subcategoryListState: StateFlow<SubcategoryListState> = combine(
-        category,
-        selectedTagId,
-    ) { category, selectedTagId ->
+        categoryComponent.categoryResult,
+        categoryComponent.selectedSubcategoryId,
+    ) { categoryResult, selectedSubcategoryId ->
+        val category = categoryResult?.getOrNull()
         if (category != null) {
             val children = category.children
             if (!children.isNullOrEmpty()) {
                 val tags = children.toImmutableList()
-                SubcategoryListState.Success(tags, selectedTagId)
+                SubcategoryListState.Success(tags, selectedSubcategoryId)
             } else {
                 SubcategoryListState.Empty
             }
@@ -186,15 +150,17 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
-        selectedTagId,
-        filters,
-    ) { selectedTagId, filters ->
+        categoryComponent.currentCategoryId,
+        filterComponent.currentFilters,
+    ) { currentCategoryId, filters ->
         val sorting = filters.sorting?.selected ?: ProductSorting.getDefault()
         deps.productPager.getProductPagingDataFlow(
-            categoryId = selectedTagId ?: categoryId,
+            categoryId = currentCategoryId,
             filters = filters,
             sorting = sorting,
-            onAvailableFiltersReceived = { availableFilters = it },
+            onAvailableFiltersReceived = {
+                filterComponent.availableFilters = it
+            },
         )
     }
         .flatMapLatest { it }
@@ -205,7 +171,7 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
 
-    val shouldSystemBackBeIntercepted: StateFlow<Boolean> = selectedTagId.mapState(
+    val shouldSystemBackBeIntercepted: StateFlow<Boolean> = categoryComponent.selectedSubcategoryId.mapState(
         scope = viewModelScope,
         started = SharingStarted.WhileAndroidUiSubscribed,
     ) { selectedTagId ->
@@ -229,19 +195,23 @@ internal class ProductListViewModel @AssistedInject constructor(
             is TagListEvent.TagClicked -> {
                 val tag = event.tag
                 if (tag.children.isNullOrEmpty()) {
-                    selectedTagId.value = if (selectedTagId.value != tag.id) tag.id else null
+                    val selectedSubcategoryId =
+                        if (categoryComponent.selectedSubcategoryId.value != tag.id) {
+                            tag.id
+                        } else {
+                            null
+                        }
+                    categoryComponent.setSelectedSubcategoryId(selectedSubcategoryId)
                     reportScreenCreated()
                 } else {
                     navigationThrottler.throttle {
-                        viewModelScope.launch {
-                            val filters = filters.firstOrNull() ?: return@launch
-                            val action = ProductListScreenAction.TagClicked(
-                                tag = tag,
-                                filters = filters,
-                            )
-                            emitSideEffect(ProductListSideEffect.Navigate(action))
-                            selectedTagId.value = null
-                        }
+                        val filters = filterComponent.getCurrentFilters()
+                        val action = ProductListScreenAction.TagClicked(
+                            tag = tag,
+                            filters = filters,
+                        )
+                        emitSideEffect(ProductListSideEffect.Navigate(action))
+                        categoryComponent.setSelectedSubcategoryId(null)
                     }
                 }
             }
@@ -255,11 +225,15 @@ internal class ProductListViewModel @AssistedInject constructor(
             is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
             is ProductEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
             ProductEvent.ProductsRefreshed -> {
-                if (category.value == null) requestCategory()
+                if (!categoryComponent.isCategoryFetched()) {
+                    requestCategory()
+                }
             }
 
             ProductEvent.ProductsErrorRefreshClicked -> {
-                if (category.value == null) requestCategory()
+                if (!categoryComponent.isCategoryFetched()) {
+                    requestCategory()
+                }
             }
         }
     }
@@ -269,8 +243,8 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     fun onSystemBackClicked() {
-        if (selectedTagId.value != null) {
-            selectedTagId.value = null
+        if (categoryComponent.selectedSubcategoryId.value != null) {
+            categoryComponent.setSelectedSubcategoryId(null)
         } else {
             onBackClicked()
         }
@@ -300,18 +274,16 @@ internal class ProductListViewModel @AssistedInject constructor(
 
     private fun onFiltersClicked() {
         navigationThrottler.throttle {
-            viewModelScope.launch {
-                val filters = filters.firstOrNull() ?: return@launch
-                val availableFilters = availableFilters
-                val combinedFilters = availableFilters
-                    ?.let { filters.coerceInAvailable(availableFilters) }
-                    ?: filters
-                val action = ProductListScreenAction.FiltersClicked(
-                    categoryId = categoryId,
-                    filters = combinedFilters,
-                )
-                emitSideEffect(ProductListSideEffect.Navigate(action))
-            }
+            val filters = filterComponent.getCurrentFilters()
+            val availableFilters = filterComponent.availableFilters
+            val combinedFilters = availableFilters
+                ?.let { filters?.coerceInAvailable(availableFilters) }
+                ?: filters
+            val action = ProductListScreenAction.FiltersClicked(
+                categoryId = categoryComponent.requireInitialCategoryId(),
+                filters = combinedFilters,
+            )
+            emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }
 
@@ -397,7 +369,9 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     private fun requestCategory() {
-        categoryRequester.request(CategoryRequest)
+        viewModelScope.launch {
+            categoryComponent.fetchCategory()
+        }
     }
 
     private fun showZarinaErrorToast(text: Text) {
@@ -416,7 +390,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     private suspend fun getCurrentCategoryPath(): CategoryPath? {
-        val currentCategoryId = selectedTagId.value ?: categoryId
+        val currentCategoryId = categoryComponent.getCurrentCategoryId()
         val params = GetCategoryPathUseCase.Params(currentCategoryId, CachePolicy.LocalOnly)
         return deps.getCategoryPath(params).getOrNull()
     }
@@ -427,14 +401,15 @@ internal class ProductListViewModel @AssistedInject constructor(
                 resultFlow = resultFlow,
                 key = Keys.FILTRATION_RESULT.key,
             ) { result ->
-                filtersValueHolder.set(result.filters)
-                reportFiltersApplied(result.filters.toProductFilters())
+                val filters = result.filters.toProductFilters()
+                filterComponent.setCurrentFilters(filters)
+                reportFiltersApplied(filters)
             }
         }
     }
 
     private suspend fun reportFiltersApplied(filters: ProductFilters) {
-        val currentCategoryId = selectedTagId.value ?: categoryId
+        val currentCategoryId = categoryComponent.getCurrentCategoryId()
         val category = getCategory(currentCategoryId)
         if (category != null) {
             deps.appMetrica.reportProductFiltersApplied(
@@ -490,12 +465,8 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     private enum class Keys {
-        FILTERS,
-
         FILTRATION_RESULT;
 
         val key: String get() = name
     }
-
-    private data object CategoryRequest : FlowRequest
 }
