@@ -128,8 +128,6 @@ private fun ScreenContent(
                 productPagingDataFlow = productPagingDataFlow,
                 onProductClicked = { onProductEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onProductEvent(ProductEvent.AddToWishlistClicked(it)) },
-                onAddToCartClicked = { onProductEvent(ProductEvent.AddToCartClicked(it)) },
-                onSubscribeClicked = { onProductEvent(ProductEvent.SubscribeClicked(it)) },
                 onProductsRefreshed = { onProductEvent(ProductEvent.ProductsRefreshed) },
                 onProductsErrorRefreshClicked = {
                     onProductEvent(ProductEvent.ProductsErrorRefreshClicked)

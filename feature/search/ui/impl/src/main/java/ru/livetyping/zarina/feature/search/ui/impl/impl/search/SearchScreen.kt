@@ -148,12 +148,6 @@ private fun ScreenContent(
                         onAddToWishlistClicked = {
                             onSearchResultEvent(SearchResultEvent.AddToWishlistClicked(it))
                         },
-                        onAddToCartClicked = {
-                            onSearchResultEvent(SearchResultEvent.AddToCartClicked(it))
-                        },
-                        onSubscribeClicked = {
-                            onSearchResultEvent(SearchResultEvent.SubscribeToProductClicked(it))
-                        },
                         emptyProductsPlaceholder = {
                             NothingFoundPlaceholder(
                                 modifier = Modifier

@@ -67,8 +67,6 @@ public fun ProductGrid(
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
-    onAddToCartClicked: (Product) -> Unit,
-    onSubscribeClicked: (Product) -> Unit,
     emptyProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 
