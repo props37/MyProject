@@ -44,7 +44,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
 import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
@@ -86,7 +86,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val screenResultHandler = ScreenResultHandler(savedStateHandle)
 
     private val categoryComponent = CategoryComponent(
-        getCategoryFlowUseCase = deps.getCategoryFlow,
+        getCategoryUseCase = deps.getCategory,
     )
     private val filterComponent = FilterComponent(savedStateHandle, viewModelScope)
     private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
@@ -420,8 +420,8 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
 
     private suspend fun getCategory(categoryId: Category.Id): Category? {
-        val params = GetCategoryFlowUseCase.Params(categoryId, CachePolicy.LocalOnly)
-        return deps.getCategoryFlow(params).firstOrNull()?.getOrNull()
+        val params = GetCategoryUseCase.Params(categoryId, CachePolicy.LocalOnly)
+        return deps.getCategory(params).firstOrNull()?.getOrNull()
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {

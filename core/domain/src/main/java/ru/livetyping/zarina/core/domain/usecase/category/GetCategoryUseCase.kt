@@ -1,13 +1,12 @@
 package ru.livetyping.zarina.core.domain.usecase.category
 
-import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public interface GetCategoryFlowUseCase {
-    public operator fun invoke(params: Params): Flow<Result<Category?>>
+public interface GetCategoryUseCase {
+    public suspend operator fun invoke(params: Params): Result<Category>
 
     public data class Params(
         val id: Category.Id,
@@ -18,8 +17,8 @@ public interface GetCategoryFlowUseCase {
         public fun getInstance(
             categoryRepository: CategoryRepository,
             logger: UseCaseLogger?,
-        ): GetCategoryFlowUseCase {
-            return GetCategoryFlowUseCaseImpl(
+        ): GetCategoryUseCase {
+            return GetCategoryUseCaseImpl(
                 categoryRepository = categoryRepository,
                 logger = logger,
             )

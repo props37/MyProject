@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
-import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
 
 internal class CategoryComponent(
-    private val getCategoryFlowUseCase: GetCategoryFlowUseCase,
+    private val getCategoryUseCase: GetCategoryUseCase,
 ) {
     private var fetchCategoryJob: Job? = null
 
@@ -46,11 +46,11 @@ internal class CategoryComponent(
 
         coroutineScope {
             fetchCategoryJob = launch {
-                val params = GetCategoryFlowUseCase.Params(
+                val params = GetCategoryUseCase.Params(
                     id = requireInitialCategoryId(),
                     cachePolicy = CachePolicy.LocalFirstThenRemote(),
                 )
-                // TODO: [Top] Implement
+                _categoryResult.value = getCategoryUseCase(params)
             }
         }
     }
