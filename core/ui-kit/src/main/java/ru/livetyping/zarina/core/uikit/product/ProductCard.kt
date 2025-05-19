@@ -29,6 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
@@ -39,6 +41,7 @@ import ru.livetyping.zarina.core.uicompose.preview.ProductShortPreviewParameterP
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
+import ru.livetyping.zarina.core.uikit.price.DiscountLabel
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.BackgroundColor
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.MediaAspectRatio
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.ProductNameTextStyle
@@ -47,6 +50,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -77,13 +81,26 @@ public fun ProductCard(
                 .aspectRatio(MediaAspectRatio),
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
+            val hazeState = rememberHazeState()
 
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
                 shimmer = mediaShimmer,
-                modifier = Modifier.matchParentSize(),
+                modifier = Modifier
+                    .matchParentSize()
+                    .hazeSource(hazeState),
             )
+
+            if (product.price.discountPercent != BigDecimal.ZERO) {
+                DiscountLabel(
+                    discountPercent = product.price.discountPercent,
+                    hazeState = hazeState,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 6.dp, bottom = 6.dp),
+                )
+            }
 
             ZarinaHorizontalPagerIndicator(
                 pagerState = pagerState,
