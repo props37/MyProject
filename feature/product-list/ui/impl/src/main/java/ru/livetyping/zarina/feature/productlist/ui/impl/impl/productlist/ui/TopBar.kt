@@ -4,7 +4,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +15,6 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
-import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarSize
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 
@@ -27,7 +25,6 @@ internal fun TopBar(
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
-        size = ZarinaTopBarSize.Medium,
         contentPadding = PaddingValues(vertical = 4.dp),
         startContent = {
             ZarinaBackIconButton(
@@ -64,6 +61,6 @@ internal fun TopBar(
                 }
             }
         },
-        modifier = modifier.heightIn(min = 120.dp),
+        modifier = modifier,
     )
 }
