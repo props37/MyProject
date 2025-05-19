@@ -12,23 +12,20 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
-import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combine
-import ru.livetyping.zarina.core.coroutinesutil.mapState
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCategory
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaCategoryPath
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaFilters
@@ -36,12 +33,10 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import ru.livetyping.zarina.core.domain.model.product.Product
-import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.list.selected
-import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
 import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
@@ -53,21 +48,16 @@ import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
-import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
-import ru.livetyping.zarina.core.uicomponent.sizeselector.viewmodel.SizeSelectorComponent
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
-import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.CategoryComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.FilterComponent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
+import java.io.IOException
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @HiltViewModel(assistedFactory = ProductListViewModel.Factory::class)
@@ -88,7 +78,6 @@ internal class ProductListViewModel @AssistedInject constructor(
         getCategoryUseCase = deps.getCategory,
     )
     private val filterComponent = FilterComponent(savedStateHandle, viewModelScope)
-    private val sizeSelectorComponent = SizeSelectorComponent(getSizeSelectorComponentListener())
 
     private val navEntry = savedStateHandle.toRoute<ProductListFeature.NavEntry>(
         typeMap = ProductListNavEntry.typeMap(),
@@ -100,42 +89,15 @@ internal class ProductListViewModel @AssistedInject constructor(
         filterComponent.initialFilters = navEntry.filters?.toProductFilters()
     }
 
-    val topBarState: StateFlow<TopBarState> = combine(
-        categoryComponent.categoryResult,
-        filterComponent.currentFilters,
-    ) { categoryResult, filters ->
-        TopBarState(
-            categoryName = categoryResult?.getOrNull()?.name,
-            appliedFilterCount = filters.appliedFilterCount,
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-        initialValue = TopBarState(
-            categoryName = null,
-            appliedFilterCount = 0,
-        ),
-    )
-
-    val subcategoryListState: StateFlow<SubcategoryListState> = combine(
+    private val subcategoryListStateBuilder = SubcategoryListState.Builder()
+    private val subcategoryListState = combine(
         categoryComponent.categoryResult,
         categoryComponent.selectedSubcategoryId,
     ) { categoryResult, selectedSubcategoryId ->
-        val category = categoryResult?.getOrNull()
-        if (category != null) {
-            val children = category.children
-            if (!children.isNullOrEmpty()) {
-                val tags = children.toImmutableList()
-                SubcategoryListState.Success(tags, selectedSubcategoryId)
-            } else {
-                SubcategoryListState.Empty
-            }
-        } else {
-            SubcategoryListState.Loading
-        }
+        subcategoryListStateBuilder.build(categoryResult, selectedSubcategoryId)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
+        started = SharingStarted.WhileSubscribed(),
         initialValue = SubcategoryListState.Loading,
     )
 
@@ -145,11 +107,8 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val cartProductIdsParams =
         GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
 
-    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
-    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    val productPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
+    private val productPagingDataFlow: Flow<PagingData<ProductShort>> = combine(
         categoryComponent.currentCategoryId,
         filterComponent.currentFilters,
     ) { currentCategoryId, filters ->
@@ -158,95 +117,61 @@ internal class ProductListViewModel @AssistedInject constructor(
             categoryId = currentCategoryId,
             filters = filters,
             sorting = sorting,
-            onAvailableFiltersReceived = {
-                filterComponent.availableFilters = it
-            },
+            onAvailableFiltersReceived = { filterComponent.availableFilters = it },
         )
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScope)
-        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
+        .onEach {
+            // TODO: [Top] Scroll product list to top
+        }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 
-    val sizeSelectorState: StateFlow<SizeSelectorState> = sizeSelectorComponent.sizeSelectorState
+    private val interceptSystemBack = categoryComponent.selectedSubcategoryId
+        .map { selectedSubcategoryId ->
+            selectedSubcategoryId != null
+        }
 
-    val shouldSystemBackBeIntercepted: StateFlow<Boolean> = categoryComponent.selectedSubcategoryId.mapState(
+    private val initialProductListState = ProductListState(
+        categoryName = null,
+        subcategoryListState = SubcategoryListState.Loading,
+        productPagingDataFlow = productPagingDataFlow,
+        interceptSystemBack = false,
+    )
+
+    val productListState: StateFlow<ProductListState> = combine(
+        categoryComponent.categoryResult,
+        subcategoryListState,
+        interceptSystemBack,
+    ) { categoryResult, subcategoryListState, interceptSystemBack ->
+        ProductListState(
+            categoryName = categoryResult?.getOrNull()?.name,
+            subcategoryListState = subcategoryListState,
+            productPagingDataFlow = productPagingDataFlow,
+            interceptSystemBack = interceptSystemBack,
+        )
+    }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileAndroidUiSubscribed,
-    ) { selectedTagId ->
-        selectedTagId != null
-    }
+        started = SharingStarted.WhileUiSubscribed,
+        initialValue = initialProductListState,
+    )
 
     init {
         handleFiltrationResult(filtrationResultFlow)
     }
 
-    fun onTopBarEvent(event: TopBarEvent) {
+    fun onProductListEvent(event: ProductListEvent) {
         when (event) {
-            TopBarEvent.BackClicked -> onBackClicked()
-            TopBarEvent.SearchClicked -> onSearchClicked()
-            TopBarEvent.FiltersClicked -> onFiltersClicked()
-        }
-    }
-
-    fun onTagListEvent(event: TagListEvent) {
-        when (event) {
-            is TagListEvent.TagClicked -> {
-                val tag = event.tag
-                if (tag.children.isNullOrEmpty()) {
-                    val selectedSubcategoryId =
-                        if (categoryComponent.selectedSubcategoryId.value != tag.id) {
-                            tag.id
-                        } else {
-                            null
-                        }
-                    categoryComponent.setSelectedSubcategoryId(selectedSubcategoryId)
-                    reportScreenCreated()
-                } else {
-                    navigationThrottler.throttle {
-                        val filters = filterComponent.getCurrentFilters()
-                        val action = ProductListScreenAction.TagClicked(
-                            tag = tag,
-                            filters = filters,
-                        )
-                        emitSideEffect(ProductListSideEffect.Navigate(action))
-                        categoryComponent.setSelectedSubcategoryId(null)
-                    }
-                }
-            }
-        }
-    }
-
-    fun onProductEvent(event: ProductEvent) {
-        when (event) {
-            is ProductEvent.ProductClicked -> onProductClicked(event)
-            is ProductEvent.AddToWishlistClicked -> onAddProductToWishlistClicked(event)
-            is ProductEvent.AddToCartClicked -> onAddProductToCartClicked(event)
-            is ProductEvent.SubscribeClicked -> onSubscribeToProductClicked(event)
-            ProductEvent.ProductsRefreshed -> {
-                if (!categoryComponent.isCategoryFetched()) {
-                    fetchCategory()
-                }
-            }
-
-            ProductEvent.ProductsErrorRefreshClicked -> {
-                if (!categoryComponent.isCategoryFetched()) {
-                    fetchCategory()
-                }
-            }
-        }
-    }
-
-    fun onSizeSelectorEvent(event: SizeSelectorEvent) {
-        sizeSelectorComponent.onEvent(event)
-    }
-
-    fun onSystemBackClicked() {
-        if (categoryComponent.selectedSubcategoryId.value != null) {
-            categoryComponent.setSelectedSubcategoryId(null)
-        } else {
-            onBackClicked()
+            ProductListEvent.BackClicked -> onBackClicked()
+            ProductListEvent.SearchClicked -> onSearchClicked()
+            ProductListEvent.FiltersClicked -> onFiltersClicked()
+            is ProductListEvent.SubcategoryClicked -> onSubcategoryClicked(event)
+            is ProductListEvent.ProductClicked -> onProductClicked(event)
+            is ProductListEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
+            ProductListEvent.PullRefreshTriggered -> onRefresh()
+            ProductListEvent.RefreshClicked -> onRefresh()
+            ProductListEvent.SystemBackClicked -> onSystemBackClicked()
         }
     }
 
@@ -287,84 +212,53 @@ internal class ProductListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onProductClicked(event: ProductEvent.ProductClicked) {
+    private fun onSubcategoryClicked(event: ProductListEvent.SubcategoryClicked) {
+        val category = event.category
+        if (category.children.isNullOrEmpty()) {
+            val newSelectedSubcategoryId =
+                if (categoryComponent.selectedSubcategoryId.value != category.id) {
+                    category.id
+                } else {
+                    null
+                }
+            categoryComponent.setSelectedSubcategoryId(newSelectedSubcategoryId)
+            reportScreenCreated()
+        } else {
+            navigationThrottler.throttle {
+                val filters = filterComponent.getCurrentFilters()
+                val action = ProductListScreenAction.SubcategoryClicked(category, filters)
+                emitSideEffect(ProductListSideEffect.Navigate(action))
+                categoryComponent.setSelectedSubcategoryId(null)
+            }
+        }
+    }
+
+    private fun onProductClicked(event: ProductListEvent.ProductClicked) {
         navigationThrottler.throttle {
             val action = ProductListScreenAction.ProductClicked(event.product)
             emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }
 
-    private fun onAddProductToWishlistClicked(event: ProductEvent.AddToWishlistClicked) {
+    private fun onAddToWishlistClicked(event: ProductListEvent.AddToWishlistClicked) {
         viewModelScope.launch {
-            val product = event.product
-            val params = ToggleProductInWishlistUseCase.Params.Product(product)
+            val params = ToggleProductInWishlistUseCase.Params.Product(event.product)
             deps.toggleProductInWishlist(params)
-                .onSuccess { isInWishlist ->
-                    if (isInWishlist) {
-                        val text = Text.Resource(RCommon.string.res_product_added_to_wishlist)
-                        val message = ZarinaToastMessage(text)
-                        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
-                    }
-                }
-                .onFailure {
-                    val textResId = if (product.isInWishlist) {
-                        RCommon.string.res_product_removing_from_wishlist_error
-                    } else {
-                        RCommon.string.res_product_adding_to_wishlist_error
-                    }
-                    val text = Text.Resource(textResId)
-                    showZarinaErrorToast(text)
-                }
+                .onFailure(::onToggleProductInWishlistFailure)
         }
     }
 
-    private fun onAddProductToCartClicked(event: ProductEvent.AddToCartClicked) {
-        val product = event.product
-        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
-            sizeSelectorComponent.showSizeSelector(product)
+    private fun onRefresh() {
+        if (!categoryComponent.isCategoryFetched()) {
+            fetchCategory()
+        }
+    }
+
+    private fun onSystemBackClicked() {
+        if (categoryComponent.selectedSubcategoryId.value != null) {
+            categoryComponent.setSelectedSubcategoryId(null)
         } else {
-            val offer = product.offers.firstOrNull() ?: return
-            if (offer.isAvailable) {
-                addProductToCart(product, offer)
-            } else {
-                navigationThrottler.throttle {
-                    val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-                    emitSideEffect(ProductListSideEffect.Navigate(action))
-                }
-            }
-        }
-    }
-
-    private fun onSubscribeToProductClicked(event: ProductEvent.SubscribeClicked) {
-        val product = event.product
-        if (sizeSelectorComponent.shouldShowSizeSelector(product)) {
-            sizeSelectorComponent.showSizeSelector(product)
-        } else {
-            navigationThrottler.throttle {
-                val offer = product.offers.firstOrNull() ?: return@throttle
-                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(ProductListSideEffect.Navigate(action))
-            }
-        }
-    }
-
-    private fun addProductToCart(product: Product, offer: ProductOffer) {
-        viewModelScope.launch {
-            val params = AddProductToCartUseCase.Params(
-                product = product,
-                barcode = offer.barcode,
-                count = 1,
-            )
-            deps.addProductToCart(params)
-                .onSuccess {
-                    val text = Text.Resource(RCommon.string.res_product_added_to_cart)
-                    val message = ZarinaToastMessage(text)
-                    emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
-                }
-                .onFailure {
-                    val text = Text.Resource(RCommon.string.res_product_adding_to_cart_error)
-                    showZarinaErrorToast(text)
-                }
+            onBackClicked()
         }
     }
 
@@ -372,11 +266,6 @@ internal class ProductListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             categoryComponent.fetchCategory()
         }
-    }
-
-    private fun showZarinaErrorToast(text: Text) {
-        val message = ZarinaToastMessage.error(text)
-        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
     }
 
     private fun reportScreenCreated() {
@@ -395,19 +284,6 @@ internal class ProductListViewModel @AssistedInject constructor(
         return deps.getCategoryPath(params).getOrNull()
     }
 
-    private fun handleFiltrationResult(resultFlow: Flow<FiltrationResult?>) {
-        viewModelScope.launch {
-            screenResultHandler.handle(
-                resultFlow = resultFlow,
-                key = Keys.FILTRATION_RESULT.key,
-            ) { result ->
-                val filters = result.filters.toProductFilters()
-                filterComponent.setCurrentFilters(filters)
-                reportFiltersApplied(filters)
-            }
-        }
-    }
-
     private suspend fun reportFiltersApplied(filters: ProductFilters) {
         val currentCategoryId = categoryComponent.getCurrentCategoryId()
         val category = getCategory(currentCategoryId)
@@ -422,6 +298,32 @@ internal class ProductListViewModel @AssistedInject constructor(
     private suspend fun getCategory(categoryId: Category.Id): Category? {
         val params = GetCategoryUseCase.Params(categoryId, CachePolicy.LocalOnly)
         return deps.getCategory(params).getOrNull()
+    }
+
+    private fun onToggleProductInWishlistFailure(t: Throwable) {
+        val message = when (t) {
+            is IOException -> ZarinaToastMessage2.NETWORK_ERROR_MESSAGE
+            else -> {
+                ZarinaToastMessage2(
+                    text = Text.Resource(RCommon.string.res_product_adding_to_wishlist_error),
+                    startContent = ZarinaToastMessage2.ERROR_DEFAULT_START_ICON,
+                )
+            }
+        }
+        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
+    }
+
+    private fun handleFiltrationResult(resultFlow: Flow<FiltrationResult?>) {
+        viewModelScope.launch {
+            screenResultHandler.handle(
+                resultFlow = resultFlow,
+                key = Keys.FILTRATION_RESULT.key,
+            ) { result ->
+                val filters = result.filters.toProductFilters()
+                filterComponent.setCurrentFilters(filters)
+                reportFiltersApplied(filters)
+            }
+        }
     }
 
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {
@@ -443,19 +345,6 @@ internal class ProductListViewModel @AssistedInject constructor(
                         isInCart = product.id in cartProductIds,
                     )
                 }
-        }
-    }
-
-    private fun getSizeSelectorComponentListener(): SizeSelectorComponent.Listener {
-        return object : SizeSelectorComponent.Listener {
-            override fun onProductSizeAvailable(product: Product, offer: ProductOffer) {
-                addProductToCart(product, offer)
-            }
-
-            override fun onProductSizeNotAvailable(product: Product, offer: ProductOffer) {
-                val action = ProductListScreenAction.SubscribeToProductClicked(product, offer)
-                emitSideEffect(ProductListSideEffect.Navigate(action))
-            }
         }
     }
 

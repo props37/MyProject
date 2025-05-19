@@ -74,7 +74,7 @@ public fun ProductGrid(
      * Callback that will be called when products are refreshed. Since the refresh is done
      * under the hood, the additional logic can be invoked using this callback.
      */
-    onProductsRefreshed: (() -> Unit)? = null,
+    onProductsPullRefreshTriggered: (() -> Unit)? = null,
 
     /**
      * Callback that will be called when error retry button is clicked. Since the retry
@@ -148,7 +148,7 @@ public fun ProductGrid(
             onRefresh = {
                 isPullRefreshTriggered.value = true
                 productPagingItems.refresh()
-                onProductsRefreshed?.invoke()
+                onProductsPullRefreshTriggered?.invoke()
             },
         )
 

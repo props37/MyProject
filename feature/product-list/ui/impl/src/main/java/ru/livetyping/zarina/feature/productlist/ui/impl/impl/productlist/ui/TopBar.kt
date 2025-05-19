@@ -16,26 +16,28 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
+
+// TODO: [Top] Add subcategory list
 
 @Composable
 internal fun TopBar(
-    state: TopBarState,
-    onEvent: (TopBarEvent) -> Unit,
+    categoryName: String?,
+    subcategoryListState: SubcategoryListState,
+    onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
         contentPadding = PaddingValues(top = ZarinaTopBarDefaults.LargeTopPadding, bottom = 4.dp),
         startContent = {
             ZarinaBackIconButton(
-                onClick = { onEvent(TopBarEvent.BackClicked) },
+                onClick = onBackClicked,
                 modifier = Modifier.padding(start = 2.dp),
             )
         },
         centerContent = {
             Crossfade(
-                targetState = state.categoryName,
+                targetState = categoryName,
                 label = "TopBar category name",
                 modifier = Modifier.fillMaxWidth(),
             ) { categoryName ->
