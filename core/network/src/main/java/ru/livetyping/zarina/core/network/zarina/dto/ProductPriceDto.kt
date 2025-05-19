@@ -25,11 +25,15 @@ public data class ProductPriceDto(
         checkPropertyNotNull(hasDiscount) { ::hasDiscount }
         checkPropertyNotNull(discountPrice) { ::discountPrice }
         checkPropertyNotNull(discount) { ::discount }
+        val discount = if (hasDiscount) {
+            ProductPrice.Discount(
+                discountPrice = BigDecimal(discountPrice.toDouble()),
+                discountPercent = BigDecimal(discount.toDouble()),
+            )
+        } else null
         return ProductPrice(
             originalPrice = BigDecimal(commonPrice.toDouble()),
-            hasDiscount = hasDiscount,
-            discountPrice = BigDecimal(discountPrice.toDouble()),
-            discountPercent = BigDecimal(discount.toDouble()),
+            discount = discount,
         )
     }
 }

@@ -40,7 +40,8 @@ public fun ProductPrice(
             overflow = TextOverflow.Ellipsis,
         )
 
-        if (price.hasDiscount) {
+        val discount = price.discount
+        if (discount != null) {
             Spacer(modifier = Modifier.width(8.dp))
 
             val originalPrice = stringResource(

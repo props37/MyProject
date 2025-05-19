@@ -50,7 +50,6 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
-import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -92,9 +91,10 @@ public fun ProductCard(
                     .hazeSource(hazeState),
             )
 
-            if (product.price.discountPercent != BigDecimal.ZERO) {
+            val discount = product.price.discount
+            if (discount != null) {
                 DiscountLabel(
-                    discountPercent = product.price.discountPercent,
+                    discountPercent = discount.discountPercent,
                     hazeState = hazeState,
                     modifier = Modifier
                         .align(Alignment.BottomStart)

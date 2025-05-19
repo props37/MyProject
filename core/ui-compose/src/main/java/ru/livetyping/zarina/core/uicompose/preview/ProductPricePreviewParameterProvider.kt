@@ -9,7 +9,10 @@ public class ProductPricePreviewParameterProvider : PreviewParameterProvider<Pro
         get() = sequenceOf(
             provide(
                 originalPrice = BigDecimal("2999"),
-                discountPrice = BigDecimal("2999"),
+                discount = ProductPrice.Discount(
+                    discountPrice = BigDecimal("2249"),
+                    discountPercent = BigDecimal("25"),
+                ),
             ),
             provide()
         )
@@ -17,15 +20,9 @@ public class ProductPricePreviewParameterProvider : PreviewParameterProvider<Pro
     public companion object {
         public fun provide(
             originalPrice: BigDecimal = BigDecimal("1999"),
-            discountPrice: BigDecimal = BigDecimal("1499"),
-            discountPercent: BigDecimal = BigDecimal(25),
+            discount: ProductPrice.Discount? = null,
         ): ProductPrice {
-            return ProductPrice(
-                originalPrice = originalPrice,
-                hasDiscount = discountPrice != originalPrice,
-                discountPrice = discountPrice,
-                discountPercent = discountPercent,
-            )
+            return ProductPrice(originalPrice, discount)
         }
     }
 }
