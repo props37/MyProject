@@ -22,13 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import kotlinx.coroutines.flow.collectLatest
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorDefaults.IndicatorSegmentInactiveAlpha
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorDefaults.ScrollTargetPageThreshold
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -37,21 +36,21 @@ public fun ZarinaHorizontalPagerIndicator(
     pagerState: PagerState,
     itemCount: Int,
     modifier: Modifier = Modifier,
-    segmentSize: DpSize = ZarinaHorizontalPagerIndicatorDefaults.SegmentSize,
+    segmentSize: Dp = ZarinaHorizontalPagerIndicatorDefaults.SegmentSize,
     segmentSpacedBy: Dp = ZarinaHorizontalPagerIndicatorDefaults.SegmentSpacedBy,
     maxVisibleSegmentCount: Int = ZarinaHorizontalPagerIndicatorDefaults.MaxVisibleSegmentCount,
 ) {
     val updatedDensity = rememberUpdatedState(LocalDensity.current)
 
     val maxWidth = remember(segmentSize, segmentSpacedBy, maxVisibleSegmentCount) {
-        maxVisibleSegmentCount * (segmentSize.width + segmentSpacedBy)
+        maxVisibleSegmentCount * (segmentSize + segmentSpacedBy)
     }
 
     val scrollState = rememberScrollState()
     val scrollAnimationSpec = remember { spring<Float>(stiffness = Spring.StiffnessMediumLow) }
 
     LaunchedEffect(pagerState, segmentSize, segmentSpacedBy, maxVisibleSegmentCount, itemCount) {
-        val segmentWidthPx = with(updatedDensity.value) { segmentSize.width.toPx() }
+        val segmentWidthPx = with(updatedDensity.value) { segmentSize.toPx() }
         val segmentSpacedByPx = with(updatedDensity.value) { segmentSpacedBy.toPx() }
         snapshotFlow { pagerState.currentPage % itemCount }
             .collectLatest { page ->
@@ -107,7 +106,7 @@ private fun Segment(
                 alpha = (IndicatorSegmentInactiveAlpha..1f).valueAt(progress())
             }
             .clip(CircleShape)
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.mainBlack)
     )
 }
 
@@ -116,11 +115,11 @@ private fun ClosedFloatingPointRange<Float>.valueAt(progress: Float): Float {
 }
 
 public object ZarinaHorizontalPagerIndicatorDefaults {
-    public val SegmentSize: DpSize = DpSize(12.dp, 2.dp)
+    public val SegmentSize: Dp = 4.dp
 
-    public val SegmentSpacedBy: Dp = 4.dp
+    public val SegmentSpacedBy: Dp = 3.dp
 
-    public const val MaxVisibleSegmentCount: Int = 6
+    internal const val MaxVisibleSegmentCount = 6
 
     internal const val IndicatorSegmentInactiveAlpha = 0.5f
     internal const val ScrollTargetPageThreshold = 2

@@ -84,13 +84,13 @@ public fun ProductCard(
                 shimmer = mediaShimmer,
                 modifier = Modifier.matchParentSize(),
             )
-            // TODO: [Top] Redesign pager indicator
+
             ZarinaHorizontalPagerIndicator(
                 pagerState = pagerState,
                 itemCount = product.media.size,
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 8.dp),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 6.dp),
             )
         }
 
