@@ -162,6 +162,8 @@ public object ZarinaTopBarDefaults {
     public val ContentPaddingWithButtons: PaddingValues
         get() = PaddingValues(vertical = 4.dp)
 
+    public val LargeTopPadding: Dp get() = 32.dp
+
     internal val ContentHorizontalPadding: Dp get() = 16.dp
 }
 

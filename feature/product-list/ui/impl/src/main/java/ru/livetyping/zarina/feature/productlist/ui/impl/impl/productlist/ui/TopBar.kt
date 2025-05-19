@@ -15,6 +15,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
+import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
 
@@ -25,7 +26,7 @@ internal fun TopBar(
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
-        contentPadding = PaddingValues(vertical = 4.dp),
+        contentPadding = PaddingValues(top = ZarinaTopBarDefaults.LargeTopPadding, bottom = 4.dp),
         startContent = {
             ZarinaBackIconButton(
                 onClick = { onEvent(TopBarEvent.BackClicked) },
