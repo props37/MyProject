@@ -46,8 +46,8 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.paging.retryAppendPrependErrors
 import ru.livetyping.zarina.core.uicompose.list.animateFastScrollToItem
 import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
-import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
-import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
+import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 import ru.livetyping.zarina.core.uikit.product.ProductCard
 import ru.livetyping.zarina.core.uikit.product.ProductCardSkeleton
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
@@ -203,19 +203,17 @@ public fun ProductGrid(
                 }
 
                 is LoadState.Error -> {
-                    val state = remember(loadState.error) {
-                        ZarinaErrorScreenState.from(loadState.error)
+                    val errorState = remember(loadState.error) {
+                        ZarinaErrorScreenState2.from(loadState.error)
                     }
 
-                    ZarinaErrorScreen(
-                        state = state,
-                        onButtonClicked = {
+                    ZarinaErrorScreen2(
+                        state = errorState,
+                        onButtonClick = {
                             productPagingItems.retry()
                             onProductsErrorRefreshClicked?.invoke()
                         },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                        bottomPaddingProvider = bottomPaddingProvider,
                     )
                 }
             }
