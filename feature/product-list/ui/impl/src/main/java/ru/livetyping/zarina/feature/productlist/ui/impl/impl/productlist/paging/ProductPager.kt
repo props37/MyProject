@@ -42,7 +42,7 @@ internal class ProductPager @Inject constructor(
         return PagingConfig(
             pageSize = PAGE_SIZE,
             prefetchDistance = PREFETCH_DISTANCE,
-            enablePlaceholders = true,
+            enablePlaceholders = false,
             initialLoadSize = INITIAL_LOAD_SIZE,
             maxSize = MAX_SIZE,
         )
