@@ -374,7 +374,8 @@ internal object ProductGridDefaults {
 
     const val FastScrollToTopDistanceThreshold = 5
 
-    const val PackSize = 18
+    // 8 small + 2 big + 8 small
+    const val PackSize = 8 + 2 + 8
     val PackFullSizeItemIndices = 8..9
 }
 
