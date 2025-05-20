@@ -43,7 +43,6 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.paging.retryAppendPrependErrors
 import ru.livetyping.zarina.core.uicompose.list.animateFastScrollToItem
 import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
@@ -62,7 +61,9 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.Product
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ScrollToTopButtonPadding
 import timber.log.Timber
 
+// TODO: [Top] Show append and prepend errors to user
 // TODO: [Low] Migrate to ZarinaPagingPullRefreshContainer
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 public fun ProductGrid(
@@ -90,43 +91,11 @@ public fun ProductGrid(
     val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
 
-    // TODO: [Medium] Retry on user actions instead of auto retry
-    LaunchedEffect(gridState, productPagingItems) {
-        productPagingItems.retryAppendPrependErrors(gridState)
-    }
-
-    // Scroll to top when the list changes
-    LaunchedEffect(gridState, productPagingItems, sideEffects) {
-        if (sideEffects != null) {
-            val scrollToTopEffects =
-                sideEffects.filterIsInstance<ProductGridSideEffect.ScrollToTop>()
-            val refreshStateFlow = snapshotFlow { productPagingItems.loadState.refresh }
-            scrollToTopEffects.collectLatest {
-                // Wait for a loading to start
-                refreshStateFlow.firstOrNull { it is LoadState.Loading }
-                // Wait for products to load
-                refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
-                gridState.requestScrollToItem(0)
-            }
-        }
-    }
-
-    // Logging
     if (Timber.treeCount > 0) {
-        LaunchedEffect(productPagingItems) {
-            snapshotFlow { productPagingItems.loadState }
-                .collect { loadStates ->
-                    val refresh = loadStates.refresh
-                    if (refresh is LoadState.Error) Timber.tag(Tag).e(refresh.error)
-
-                    val append = loadStates.append
-                    if (append is LoadState.Error) Timber.tag(Tag).e(append.error)
-
-                    val prepend = loadStates.prepend
-                    if (prepend is LoadState.Error) Timber.tag(Tag).e(prepend.error)
-                }
-        }
+        Logging(productPagingItems)
     }
+
+    SideEffectObserver(gridState, productPagingItems, sideEffects)
 
     Box(modifier = modifier) {
         val isPullRefreshTriggered = remember { mutableStateOf(false) }
@@ -255,8 +224,6 @@ private fun ProductGridImpl(
                 contentPadding = PaddingValues(bottom = bottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                // No need to add append and prepend loaders since item placeholders are used
-                // in case of loading
                 items(
                     count = productPagingItems.itemCount,
                     span = { index -> getProductGridItemSpan(index) },
@@ -346,6 +313,45 @@ private fun ScrollToTopButton(
         },
         modifier = modifier,
     )
+}
+
+@Composable
+private fun SideEffectObserver(
+    lazyGridState: LazyGridState,
+    productPagingItems: LazyPagingItems<ProductShort>,
+    sideEffects: Flow<ProductGridSideEffect>?,
+) {
+    LaunchedEffect(lazyGridState, productPagingItems, sideEffects) {
+        if (sideEffects != null) {
+            val scrollToTopEffects =
+                sideEffects.filterIsInstance<ProductGridSideEffect.ScrollToTop>()
+            val refreshStateFlow = snapshotFlow { productPagingItems.loadState.refresh }
+            scrollToTopEffects.collectLatest {
+                // Wait for a loading to start
+                refreshStateFlow.firstOrNull { it is LoadState.Loading }
+                // Wait for products to load
+                refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
+                lazyGridState.requestScrollToItem(0)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Logging(productPagingItems: LazyPagingItems<ProductShort>) {
+    LaunchedEffect(productPagingItems) {
+        snapshotFlow { productPagingItems.loadState }
+            .collect { loadStates ->
+                val refresh = loadStates.refresh
+                if (refresh is LoadState.Error) Timber.tag(Tag).e(refresh.error)
+
+                val append = loadStates.append
+                if (append is LoadState.Error) Timber.tag(Tag).e(append.error)
+
+                val prepend = loadStates.prepend
+                if (prepend is LoadState.Error) Timber.tag(Tag).e(prepend.error)
+            }
+    }
 }
 
 private fun LazyGridItemSpanScope.getProductGridItemSpan(index: Int): GridItemSpan {
