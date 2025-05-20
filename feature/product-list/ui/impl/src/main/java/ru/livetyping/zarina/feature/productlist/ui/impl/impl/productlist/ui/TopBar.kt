@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -158,7 +160,15 @@ private fun SubcategoryListSuccess(
     onSubcategoryClicked: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val lazyListState = rememberLazyListState()
+
+    DisposableEffect(state.selectedCategoryId) {
+        lazyListState.requestScrollToItem(0)
+        onDispose {}
+    }
+
     LazyRow(
+        state = lazyListState,
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
         horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
         modifier = modifier,
