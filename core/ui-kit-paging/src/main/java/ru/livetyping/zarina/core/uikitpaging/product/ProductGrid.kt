@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -54,6 +55,7 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.FastScrollToTopDistanceThreshold
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ItemInRowCount
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.LoadingSkeletonCount
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackFullSizeItemIndices
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackSize
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardHorizontalArrangement
@@ -224,6 +226,8 @@ private fun ProductGridImpl(
                 contentPadding = PaddingValues(bottom = bottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
+                prependAppendItems(productPagingItems.loadState.prepend, placeholderShimmer)
+
                 items(
                     count = productPagingItems.itemCount,
                     span = { index -> getProductGridItemSpan(index) },
@@ -249,6 +253,8 @@ private fun ProductGridImpl(
                         )
                     }
                 }
+
+                prependAppendItems(productPagingItems.loadState.append, placeholderShimmer)
             }
         } else {
             emptyProductsPlaceholder()
@@ -283,6 +289,29 @@ private fun ProductGridSkeleton(
                 modifier = itemModifier,
             )
         }
+    }
+}
+
+private fun LazyGridScope.prependAppendItems(
+    loadState: LoadState,
+    shimmer: Shimmer,
+) {
+    when (loadState) {
+        LoadState.Loading -> {
+            items(
+                count = LoadingSkeletonCount,
+                span = { index -> getProductGridItemSpan(index) },
+                contentType = { ProductGridContentType.ProductCardPlaceholder },
+            ) {
+                ProductCardSkeleton(shimmer = shimmer)
+            }
+        }
+
+        is LoadState.Error -> {
+            // TODO: [Top] Implement
+        }
+
+        is LoadState.NotLoading -> Unit
     }
 }
 
@@ -388,6 +417,8 @@ internal object ProductGridDefaults {
     // 8 small + 2 big + 8 small
     const val PackSize = 8 + 2 + 8
     val PackFullSizeItemIndices = 8..9
+
+    const val LoadingSkeletonCount = 8
 
     val ScrollToTopButtonPadding: Dp get() = 10.dp
 }
