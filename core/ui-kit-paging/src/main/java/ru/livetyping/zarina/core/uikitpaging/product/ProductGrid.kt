@@ -106,7 +106,7 @@ public fun ProductGrid(
                 refreshStateFlow.firstOrNull { it is LoadState.Loading }
                 // Wait for products to load
                 refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
-                gridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
+                gridState.requestScrollToItem(0)
             }
         }
     }
