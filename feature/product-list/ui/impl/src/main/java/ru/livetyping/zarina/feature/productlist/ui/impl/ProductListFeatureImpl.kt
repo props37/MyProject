@@ -67,8 +67,8 @@ public class ProductListFeatureImpl : ProductListFeature {
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onCategoryShortcutClicked = { categoryId ->
                     val productListNavEntry = ProductListScreenNavEntry.create(categoryId)
+                    navController.popBackStack()
                     navController.navigate(productListNavEntry)
-                    // TODO: [Top] Pop up to one level
                 },
             )
             productListScreen(productListNavActions)
