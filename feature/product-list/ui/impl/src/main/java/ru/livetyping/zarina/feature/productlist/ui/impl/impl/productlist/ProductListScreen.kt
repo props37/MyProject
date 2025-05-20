@@ -124,7 +124,7 @@ private fun ScreenContent(
                 },
                 sideEffects = productGridSideEffect,
                 bottomPaddingProvider = { bottomNavBarHeightAsState().value },
-                appMetricaScreen = Screen.ProductList(categoryPath = null),
+                appMetricaScreen = remember { Screen.ProductList(categoryPath = null) },
                 modifier = Modifier.weight(1f),
             )
         }
