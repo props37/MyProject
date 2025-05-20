@@ -2,8 +2,11 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +21,6 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
 
-// TODO: [Top] Add subcategory list
-
 @Composable
 internal fun TopBar(
     categoryName: String?,
@@ -27,8 +28,25 @@ internal fun TopBar(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Column(modifier = modifier.padding(vertical = ZarinaTopBarDefaults.LargeVerticalPadding)) {
+        Header(
+            categoryName = categoryName,
+            onBackClicked = onBackClicked,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // TODO: [Top] Add subcategory list
+    }
+}
+
+@Composable
+private fun Header(
+    categoryName: String?,
+    onBackClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     ZarinaTopBar(
-        contentPadding = PaddingValues(top = ZarinaTopBarDefaults.LargeTopPadding, bottom = 4.dp),
         startContent = {
             ZarinaBackIconButton(
                 onClick = onBackClicked,
@@ -64,6 +82,7 @@ internal fun TopBar(
                 }
             }
         },
+        contentPadding = PaddingValues(),
         modifier = modifier,
     )
 }

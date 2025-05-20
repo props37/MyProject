@@ -96,9 +96,7 @@ private fun ScreenContent(
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
                 onFiltersClicked = { onProductListEvent(ProductListEvent.FiltersClicked) },
                 onSearchClicked = { onProductListEvent(ProductListEvent.SearchClicked) },
-                backButtonVisibilityProgressProvider = {
-                    topBarScrollBehavior.state.collapsedFraction
-                },
+                collapsingProgressProvider = { topBarScrollBehavior.state.collapsedFraction },
             )
 
             val productGridSideEffect = remember(sideEffects) {

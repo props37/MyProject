@@ -11,6 +11,11 @@ import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -21,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -30,9 +36,11 @@ internal fun UtilityTopBar(
     onBackClicked: () -> Unit,
     onFiltersClicked: () -> Unit,
     onSearchClicked: () -> Unit,
-    backButtonVisibilityProgressProvider: () -> Float,
+    collapsingProgressProvider: () -> Float,
     modifier: Modifier = Modifier,
 ) {
+    val borderColor = UiKitTheme2.colors.lightGray
+
     ZarinaTopBar(
         startContent = {
             CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
@@ -41,7 +49,7 @@ internal fun UtilityTopBar(
                         val xOffset = lerp(
                             start = -(IconButtonSize.roundToPx()),
                             stop = 0,
-                            fraction = backButtonVisibilityProgressProvider(),
+                            fraction = collapsingProgressProvider(),
                         )
                         IntOffset(x = xOffset, y = 0)
                     },
@@ -52,7 +60,7 @@ internal fun UtilityTopBar(
                         modifier = Modifier
                             .size(IconButtonSize)
                             .graphicsLayer {
-                                alpha = backButtonVisibilityProgressProvider()
+                                alpha = collapsingProgressProvider()
                             },
                     )
 
@@ -72,7 +80,15 @@ internal fun UtilityTopBar(
             // TODO: [Top] Add sorting button
         },
         contentPadding = PaddingValues(start = 4.dp, top = 4.dp, bottom = 4.dp),
-        modifier = modifier,
+        backgroundColor = Color.Transparent,
+        modifier = modifier.drawWithContent {
+            drawContent()
+            drawTopBorder(
+                color = borderColor,
+                alpha = 1f - collapsingProgressProvider(),
+            )
+            drawBottomBorder(borderColor)
+        },
     )
 }
 
@@ -112,5 +128,32 @@ private fun SearchButton(
     }
 }
 
+private fun DrawScope.drawTopBorder(
+    color: Color,
+    alpha: Float,
+) {
+    drawRect(
+        color = color,
+        size = Size(
+            width = size.width,
+            height = BorderWidth.toPx(),
+        ),
+        alpha = alpha,
+    )
+}
+
+private fun DrawScope.drawBottomBorder(color: Color) {
+    drawRect(
+        color = color,
+        topLeft = Offset(x = 0f, y = size.height - 1.dp.toPx()),
+        size = Size(
+            width = size.width,
+            height = 1.dp.toPx(),
+        ),
+    )
+}
+
 private val IconButtonSize: Dp get() = 40.dp
 private val IconSize: Dp get() = 16.dp
+
+private val BorderWidth: Dp get() = 1.dp
