@@ -15,7 +15,7 @@ public data class Category(
     @JvmInline
     public value class Id(public val value: String) {
         public companion object {
-            public val WOMENS_NEW: Id get() = Id("241")
+            public val WOMEN_NEW: Id get() = Id("241")
         }
     }
 }
