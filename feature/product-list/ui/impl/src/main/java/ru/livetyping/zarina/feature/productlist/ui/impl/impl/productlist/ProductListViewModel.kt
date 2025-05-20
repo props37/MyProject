@@ -122,9 +122,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScope)
-        .onEach {
-            // TODO: [Top] Scroll product list to top
-        }
+        .onEach { emitSideEffect(ProductListSideEffect.ScrollProductsToTop) }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 
