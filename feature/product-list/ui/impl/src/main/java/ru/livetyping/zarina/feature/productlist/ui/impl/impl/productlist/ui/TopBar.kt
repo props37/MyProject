@@ -32,6 +32,7 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.uicompose.AnimatedContentCrossfadeTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
+import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.tab.ZarinaBracketTab
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
@@ -190,6 +191,8 @@ private fun SubcategoryListSuccess(
 private fun SubcategoryListLoading(
     modifier: Modifier = Modifier,
 ) {
+    val shimmer = rememberZarinaSkeletonShimmer()
+
     LazyRow(
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
         horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
@@ -205,6 +208,7 @@ private fun SubcategoryListLoading(
 
                 ZarinaTextSkeleton(
                     textStyle = UiKitTheme2.typography.body,
+                    shimmer = shimmer,
                     modifier = Modifier.width(width),
                 )
             }
