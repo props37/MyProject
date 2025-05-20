@@ -17,9 +17,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +44,65 @@ import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @Composable
 public fun ZarinaBracketTab(
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    addBrackets: Boolean = isSelected,
+    selectedTextStyle: TextStyle = ZarinaBracketTabDefaults.SelectedTextStyle,
+    unselectedTextStyle: TextStyle = ZarinaBracketTabDefaults.UnselectedTextStyle,
+    selectedColor: Color = ZarinaBracketTabDefaults.SelectedColor,
+    unselectedColor: Color = ZarinaBracketTabDefaults.UnselectedColor,
+    bracketPadding: Dp = ZarinaBracketTabDefaults.BracketPadding,
+    contentPadding: PaddingValues = ZarinaBracketTabDefaults.ContentPadding,
+    content: @Composable () -> Unit,
+) {
+    val textStyle = if (isSelected) selectedTextStyle else unselectedTextStyle
+    val color by animateColorAsState(
+        targetValue = if (isSelected) selectedColor else unselectedColor,
+        label = "ZarinaBracketTab color",
+    )
+
+    CompositionLocalProvider(
+        LocalTextStyle provides textStyle,
+        LocalContentColor provides color,
+    ) {
+        val clickableModifier = if (onClick != null) {
+            Modifier.clickable(role = Role.Tab, onClick = onClick)
+        } else {
+            Modifier
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .clip(RoundedCornerShape(1.dp))
+                .then(clickableModifier)
+                .minimumInteractiveComponentSize()
+                .padding(contentPadding),
+        ) {
+            Bracket(
+                bracket = Bracket.Start,
+                isVisible = addBrackets,
+                style = textStyle,
+                color = color,
+                padding = bracketPadding,
+            )
+
+            content()
+
+            Bracket(
+                bracket = Bracket.End,
+                isVisible = addBrackets,
+                style = textStyle,
+                color = color,
+                padding = bracketPadding,
+            )
+        }
+    }
+}
+
+@Composable
+public fun ZarinaBracketTab(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -53,40 +115,22 @@ public fun ZarinaBracketTab(
     bracketPadding: Dp = ZarinaBracketTabDefaults.BracketPadding,
     contentPadding: PaddingValues = ZarinaBracketTabDefaults.ContentPadding,
 ) {
-    val textStyle = if (isSelected) selectedTextStyle else unselectedTextStyle
-    val color by animateColorAsState(
-        targetValue = if (isSelected) selectedColor else unselectedColor,
-        label = "ZarinaBracketTab color",
-    )
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .clip(RoundedCornerShape(1.dp))
-            .clickable(role = Role.Tab, onClick = onClick)
-            .minimumInteractiveComponentSize()
-            .padding(contentPadding),
+    ZarinaBracketTab(
+        isSelected = isSelected,
+        onClick = onClick,
+        addBrackets = addBrackets,
+        selectedTextStyle = selectedTextStyle,
+        unselectedTextStyle = unselectedTextStyle,
+        selectedColor = selectedColor,
+        unselectedColor = unselectedColor,
+        bracketPadding = bracketPadding,
+        contentPadding = contentPadding,
+        modifier = modifier,
     ) {
-        Bracket(
-            bracket = Bracket.Start,
-            isVisible = addBrackets,
-            style = textStyle,
-            color = color,
-            padding = bracketPadding,
-        )
-
         Text(
             text = text,
-            style = textStyle,
-            color = color,
-        )
-
-        Bracket(
-            bracket = Bracket.End,
-            isVisible = addBrackets,
-            style = textStyle,
-            color = color,
-            padding = bracketPadding,
+            style = LocalTextStyle.current,
+            color = LocalContentColor.current,
         )
     }
 }

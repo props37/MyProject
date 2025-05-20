@@ -73,6 +73,9 @@ private fun ScreenContent(
                 categoryName = productListState.categoryName,
                 subcategoryListState = productListState.subcategoryListState,
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onSubcategoryClicked = {
+                    onProductListEvent(ProductListEvent.SubcategoryClicked(it))
+                },
                 modifier = Modifier.graphicsLayer {
                     alpha = 1f - topBarScrollBehavior.state.collapsedFraction
                 },

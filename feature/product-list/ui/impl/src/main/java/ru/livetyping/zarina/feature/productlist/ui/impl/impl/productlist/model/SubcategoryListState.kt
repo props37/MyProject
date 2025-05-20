@@ -10,8 +10,8 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 internal sealed class SubcategoryListState {
     @Immutable
     data class Success(
-        val tags: ImmutableList<Category>,
-        val selectedTagId: Category.Id?,
+        val categories: ImmutableList<Category>,
+        val selectedCategoryId: Category.Id?,
     ) : SubcategoryListState()
 
     data object Empty : SubcategoryListState()
