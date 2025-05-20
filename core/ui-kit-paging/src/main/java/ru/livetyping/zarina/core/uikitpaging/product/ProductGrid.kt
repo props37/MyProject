@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.paging.LoadState
@@ -82,6 +83,7 @@ public fun ProductGrid(
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
     sideEffects: Flow<ProductGridSideEffect>? = null,
+    bottomPaddingProvider: @Composable () -> Dp = { 0.dp },
     appMetricaScreen: Screen? = null,
 ) {
     val gridState = rememberLazyGridState()
@@ -173,6 +175,7 @@ public fun ProductGrid(
                             onProductClicked = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
                             emptyProductsPlaceholder = emptyProductsPlaceholder,
+                            bottomPaddingProvider = bottomPaddingProvider,
                             appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -190,7 +193,10 @@ public fun ProductGrid(
                 }
 
                 LoadState.Loading -> {
-                    ProductGridSkeleton(modifier = Modifier.fillMaxSize())
+                    ProductGridSkeleton(
+                        bottomPaddingProvider = bottomPaddingProvider,
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
 
                 is LoadState.Error -> {
@@ -221,6 +227,7 @@ private fun ProductGridImpl(
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
     emptyProductsPlaceholder: @Composable () -> Unit,
+    bottomPaddingProvider: @Composable () -> Dp,
     appMetricaScreen: Screen?,
     modifier: Modifier = Modifier,
 ) {
@@ -229,12 +236,15 @@ private fun ProductGridImpl(
 
     Box(modifier = modifier) {
         if (productPagingItems.itemCount > 0) {
+            val bottomPadding =
+                bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
+
             LazyVerticalGrid(
                 columns = remember { GridCells.Fixed(ItemInRowCount) },
                 state = gridState,
                 verticalArrangement = ProductCardVerticalArrangement,
                 horizontalArrangement = ProductCardHorizontalArrangement,
-                contentPadding = PaddingValues(bottom = 24.dp),
+                contentPadding = PaddingValues(bottom = bottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 // No need to add append and prepend loaders since item placeholders are used
@@ -273,16 +283,19 @@ private fun ProductGridImpl(
 
 @Composable
 private fun ProductGridSkeleton(
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
+    val bottomPadding = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
+
     val itemModifier = Modifier.fillMaxWidth()
 
     LazyVerticalGrid(
         columns = remember { GridCells.Fixed(ItemInRowCount) },
         verticalArrangement = ProductCardVerticalArrangement,
         horizontalArrangement = ProductCardHorizontalArrangement,
-        contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
+        contentPadding = PaddingValues(bottom = bottomPadding),
         modifier = modifier,
     ) {
         items(

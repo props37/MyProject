@@ -23,6 +23,7 @@ import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
@@ -123,6 +124,7 @@ private fun ScreenContent(
                     // TODO: [Top] Implement
                 },
                 sideEffects = productGridSideEffect,
+                bottomPaddingProvider = { bottomNavBarHeightAsState().value },
                 appMetricaScreen = Screen.ProductList(categoryPath = null),
                 modifier = Modifier.weight(1f),
             )
