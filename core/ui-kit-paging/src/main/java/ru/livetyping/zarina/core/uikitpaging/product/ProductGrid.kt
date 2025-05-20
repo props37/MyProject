@@ -59,6 +59,7 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackFul
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.PackSize
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardHorizontalArrangement
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ProductCardVerticalArrangement
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ScrollToTopButtonPadding
 import timber.log.Timber
 
 // TODO: [Low] Migrate to ZarinaPagingPullRefreshContainer
@@ -182,12 +183,18 @@ public fun ProductGrid(
                                 .pullRefresh(pullRefreshState),
                         )
 
+                        val scrollToTopButtonBottomPadding =
+                            bottomPaddingProvider() + ScrollToTopButtonPadding
+
                         ScrollToTopButton(
                             gridState = gridState,
                             modifier = Modifier
                                 .zIndex(1f)
                                 .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 32.dp),
+                                .padding(
+                                    end = ScrollToTopButtonPadding,
+                                    bottom = scrollToTopButtonBottomPadding,
+                                ),
                         )
                     }
                 }
@@ -375,6 +382,8 @@ internal object ProductGridDefaults {
     // 8 small + 2 big + 8 small
     const val PackSize = 8 + 2 + 8
     val PackFullSizeItemIndices = 8..9
+
+    val ScrollToTopButtonPadding: Dp get() = 10.dp
 }
 
 private const val Tag = "ProductGrid"
