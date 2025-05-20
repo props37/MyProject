@@ -32,7 +32,7 @@ public fun YandexCaptchaPolicies(
     val textWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(RCommon.string.res_yandex_captcha_policies),
         substringToUrl = substringToUrl,
-        urlStyle = linkStyle.toSpanStyle().copy(textDecoration = TextDecoration.Underline),
+        linkStyle = linkStyle.toSpanStyle().copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
 

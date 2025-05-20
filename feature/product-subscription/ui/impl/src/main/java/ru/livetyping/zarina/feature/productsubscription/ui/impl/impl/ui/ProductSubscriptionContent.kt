@@ -249,7 +249,7 @@ private fun PoliciesText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.product_subscription_policies),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = context::openUrlInCustomTabs,
     )

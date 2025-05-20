@@ -909,7 +909,7 @@ internal object OrderPlacingScreenComponents {
         val text = rememberAnnotatedStringWithLinks(
             baseString = policiesRawText,
             substringToUrl = substringToUrl,
-            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
                 .copy(textDecoration = TextDecoration.Underline),
             onUrlClicked = onUrlClicked,
         )

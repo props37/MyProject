@@ -52,12 +52,16 @@ private fun navigate(navActions: ProductListNavActions, action: ProductListScree
         }
 
         is ProductListScreenAction.SubcategoryClicked -> {
-            navActions.onTagClicked(action.category, action.filters)
+            navActions.onSubcategoryClicked(action.category, action.filters)
         }
 
         is ProductListScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
         is ProductListScreenAction.SubscribeToProductClicked -> {
             navActions.onSubscribeToProductClicked(action.product, action.offer)
+        }
+
+        is ProductListScreenAction.CategoryShortcutClicked -> {
+            navActions.onCategoryShortcutClicked(action.categoryId)
         }
     }
 }

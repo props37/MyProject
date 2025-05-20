@@ -453,7 +453,7 @@ private fun Policies(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = baseString,
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )

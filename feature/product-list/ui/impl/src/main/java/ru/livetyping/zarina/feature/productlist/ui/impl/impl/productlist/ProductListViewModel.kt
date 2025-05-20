@@ -178,6 +178,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             ProductListEvent.LoadMoreProductsClicked -> isProductEndlessLoadingEnabled.value = true
             ProductListEvent.PullRefreshTriggered -> onRefresh()
             ProductListEvent.RefreshClicked -> onRefresh()
+            is ProductListEvent.CategoryShortcutClicked -> onCategoryShortcutClicked(event)
             ProductListEvent.SystemBackClicked -> onSystemBackClicked()
         }
     }
@@ -258,6 +259,13 @@ internal class ProductListViewModel @AssistedInject constructor(
     private fun onRefresh() {
         if (!categoryComponent.isCategoryFetched()) {
             fetchCategory()
+        }
+    }
+
+    private fun onCategoryShortcutClicked(event: ProductListEvent.CategoryShortcutClicked) {
+        navigationThrottler.throttle {
+            val action = ProductListScreenAction.CategoryShortcutClicked(event.categoryId)
+            emitSideEffect(ProductListSideEffect.Navigate(action))
         }
     }
 

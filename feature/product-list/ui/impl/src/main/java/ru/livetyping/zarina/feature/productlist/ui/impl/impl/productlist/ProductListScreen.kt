@@ -30,6 +30,7 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.NoProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TopBar
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.UtilityTopBar
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.loadMoreProductsButtonGridItem
@@ -133,7 +134,14 @@ private fun ScreenContent(
                     onProductListEvent(ProductListEvent.RefreshClicked)
                 },
                 noProductsPlaceholder = {
-                    // TODO: [Top] Implement
+                    NoProductsPlaceholder(
+                        onCategoryShortcutClicked = { categoryId ->
+                            onProductListEvent(ProductListEvent.CategoryShortcutClicked(categoryId))
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = bottomNavBarHeightAsState().value),
+                    )
                 },
                 footer = footer,
                 sideEffects = productGridSideEffect,

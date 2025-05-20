@@ -12,11 +12,39 @@ import ru.livetyping.zarina.core.kotlinutil.findSubstringBounds
 @Composable
 public fun rememberAnnotatedStringWithLinks(
     baseString: String,
+    substringToLink: Map<String, LinkAnnotation>,
+): AnnotatedString {
+    return remember(baseString, substringToLink) {
+        buildAnnotatedString {
+            append(baseString)
+            val string = this.toAnnotatedString()
+
+            substringToLink.forEach { (substring, link) ->
+                val substringBounds = string.findSubstringBounds(substring)
+                if (substringBounds != null) {
+                    when (link) {
+                        is LinkAnnotation.Url -> {
+                            addLink(link, substringBounds.first, substringBounds.last)
+                        }
+
+                        is LinkAnnotation.Clickable -> {
+                            addLink(link, substringBounds.first, substringBounds.last)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+public fun rememberAnnotatedStringWithLinks(
+    baseString: String,
     substringToUrl: Map<String, String>,
-    urlStyle: SpanStyle,
+    linkStyle: SpanStyle,
     onUrlClicked: (String) -> Unit,
 ): AnnotatedString {
-    return remember(baseString, substringToUrl, urlStyle, onUrlClicked) {
+    return remember(baseString, substringToUrl, linkStyle, onUrlClicked) {
         buildAnnotatedString {
             append(baseString)
             val string = this.toAnnotatedString()
@@ -26,7 +54,7 @@ public fun rememberAnnotatedStringWithLinks(
                 if (substringBounds != null) {
                     val urlAnnotation = LinkAnnotation.Url(
                         url = url,
-                        styles = TextLinkStyles(urlStyle),
+                        styles = TextLinkStyles(linkStyle),
                         linkInteractionListener = { link ->
                             if (link is LinkAnnotation.Url) {
                                 onUrlClicked(link.url)

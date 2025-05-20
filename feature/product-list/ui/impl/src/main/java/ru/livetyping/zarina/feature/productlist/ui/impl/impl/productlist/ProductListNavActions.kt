@@ -10,7 +10,8 @@ internal class ProductListNavActions(
     val onBackClicked: () -> Unit,
     val onSearchClicked: () -> Unit,
     val onFiltersClicked: (Category.Id, ProductFilters?) -> Unit,
-    val onTagClicked: (Category, ProductFilters?) -> Unit,
+    val onSubcategoryClicked: (Category, ProductFilters?) -> Unit,
     val onProductClicked: (Product) -> Unit,
     val onSubscribeToProductClicked: (Product, ProductOffer) -> Unit,
+    val onCategoryShortcutClicked: (Category.Id) -> Unit,
 ) : NavigationActions

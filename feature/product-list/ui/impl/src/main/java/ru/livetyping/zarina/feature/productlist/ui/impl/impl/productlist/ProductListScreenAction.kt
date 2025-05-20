@@ -26,4 +26,6 @@ internal sealed interface ProductListScreenAction {
         val product: Product,
         val offer: ProductOffer,
     ) : ProductListScreenAction
+
+    data class CategoryShortcutClicked(val categoryId: Category.Id) : ProductListScreenAction
 }

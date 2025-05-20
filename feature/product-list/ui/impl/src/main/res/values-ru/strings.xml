@@ -2,4 +2,7 @@
 <resources>
     <string name="product_list_could_not_find_products">Не нашли товаров</string>
     <string name="product_list_try_select_another_category">Попробуйте выбрать другую категорию</string>
+    <string name="product_list_nothing_found">Ничего не найдено…</string>
+    <string name="product_list_products_are_over">Кажется товары в этом разделе закончились, зато у нас много классных новинок</string>
+    <string name="product_list_products_are_over_new">новинок</string>
 </resources>

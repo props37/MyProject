@@ -22,5 +22,7 @@ internal sealed interface ProductListEvent {
 
     data object RefreshClicked : ProductListEvent
 
+    data class CategoryShortcutClicked(val categoryId: Category.Id) : ProductListEvent
+
     data object SystemBackClicked : ProductListEvent
 }
