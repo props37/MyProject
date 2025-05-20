@@ -193,7 +193,10 @@ public fun ProductGrid(
                 }
 
                 LoadState.Loading -> {
+                    val shimmer = rememberZarinaSkeletonShimmer()
+
                     ProductGridSkeleton(
+                        shimmer = shimmer,
                         bottomPaddingProvider = bottomPaddingProvider,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -283,9 +286,9 @@ private fun ProductGridImpl(
 
 @Composable
 private fun ProductGridSkeleton(
+    shimmer: Shimmer,
     bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
     val bottomPadding = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
 
