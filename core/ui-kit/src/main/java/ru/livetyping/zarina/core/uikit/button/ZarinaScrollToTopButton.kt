@@ -2,7 +2,6 @@ package ru.livetyping.zarina.core.uikit.button
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +29,6 @@ public fun ZarinaScrollToTopButton(
         ZarinaButton(
             onClick = onClick,
             size = ZarinaButtonSize.Medium,
-            shape = CircleShape,
             contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         ) {
             Icon(
