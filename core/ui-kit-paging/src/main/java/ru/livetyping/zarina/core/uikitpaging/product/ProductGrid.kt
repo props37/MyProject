@@ -72,7 +72,7 @@ public fun ProductGrid(
     productPagingDataFlow: Flow<PagingData<ProductShort>>,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
-    emptyProductsPlaceholder: @Composable () -> Unit,
+    noProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 
     /**
@@ -146,7 +146,7 @@ public fun ProductGrid(
                             gridState = gridState,
                             onProductClicked = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
-                            emptyProductsPlaceholder = emptyProductsPlaceholder,
+                            noProductsPlaceholder = noProductsPlaceholder,
                             bottomPaddingProvider = bottomPaddingProvider,
                             appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
@@ -205,7 +205,7 @@ private fun ProductGridImpl(
     gridState: LazyGridState,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
-    emptyProductsPlaceholder: @Composable () -> Unit,
+    noProductsPlaceholder: @Composable () -> Unit,
     bottomPaddingProvider: @Composable () -> Dp,
     appMetricaScreen: Screen?,
     modifier: Modifier = Modifier,
@@ -257,7 +257,7 @@ private fun ProductGridImpl(
                 prependAppendItems(productPagingItems.loadState.append, placeholderShimmer)
             }
         } else {
-            emptyProductsPlaceholder()
+            noProductsPlaceholder()
         }
     }
 }

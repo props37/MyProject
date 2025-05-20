@@ -119,7 +119,7 @@ private fun ScreenContent(
                 onProductsErrorRefreshClicked = {
                     onProductListEvent(ProductListEvent.RefreshClicked)
                 },
-                emptyProductsPlaceholder = {
+                noProductsPlaceholder = {
                     // TODO: [Top] Implement
                 },
                 sideEffects = productGridSideEffect,

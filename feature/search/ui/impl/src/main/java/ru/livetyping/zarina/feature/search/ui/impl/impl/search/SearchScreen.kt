@@ -148,7 +148,7 @@ private fun ScreenContent(
                         onAddToWishlistClicked = {
                             onSearchResultEvent(SearchResultEvent.AddToWishlistClicked(it))
                         },
-                        emptyProductsPlaceholder = {
+                        noProductsPlaceholder = {
                             NothingFoundPlaceholder(
                                 modifier = Modifier
                                     .fillMaxSize()
