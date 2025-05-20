@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListEvent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.UtilityTopBar
 
 @Composable
 internal fun ProductListScreen(
@@ -85,35 +87,45 @@ private fun ScreenContent(
                     .union(WindowInsets.displayCutout),
             ),
     ) { padding ->
-        // TODO: [Top] Add top bar
-
-        val productGridSideEffect = remember(sideEffects) {
-            sideEffects.mapNotNull { it.toProductGridSideEffect() }
-        }
-
-        // TODO: [Top] Add bottom padding
-        ProductGrid(
-            productPagingDataFlow = productListState.productPagingDataFlow,
-            onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
-            onAddToWishlistClicked = {
-                onProductListEvent(ProductListEvent.AddToWishlistClicked(it))
-            },
-            onProductsPullRefreshTriggered = {
-                onProductListEvent(ProductListEvent.PullRefreshTriggered)
-            },
-            onProductsErrorRefreshClicked = {
-                onProductListEvent(ProductListEvent.RefreshClicked)
-            },
-            emptyProductsPlaceholder = {
-                // TODO: [Top] Implement
-            },
-            sideEffects = productGridSideEffect,
-            appMetricaScreen = Screen.ProductList(categoryPath = null),
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(padding)
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
-        )
+        ) {
+            UtilityTopBar(
+                onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onFiltersClicked = { onProductListEvent(ProductListEvent.FiltersClicked) },
+                onSearchClicked = { onProductListEvent(ProductListEvent.SearchClicked) },
+                backButtonVisibilityProgressProvider = {
+                    topBarScrollBehavior.state.collapsedFraction
+                },
+            )
+
+            val productGridSideEffect = remember(sideEffects) {
+                sideEffects.mapNotNull { it.toProductGridSideEffect() }
+            }
+
+            // TODO: [Top] Add bottom padding
+            ProductGrid(
+                productPagingDataFlow = productListState.productPagingDataFlow,
+                onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = {
+                    onProductListEvent(ProductListEvent.AddToWishlistClicked(it))
+                },
+                onProductsPullRefreshTriggered = {
+                    onProductListEvent(ProductListEvent.PullRefreshTriggered)
+                },
+                onProductsErrorRefreshClicked = {
+                    onProductListEvent(ProductListEvent.RefreshClicked)
+                },
+                emptyProductsPlaceholder = {
+                    // TODO: [Top] Implement
+                },
+                sideEffects = productGridSideEffect,
+                appMetricaScreen = Screen.ProductList(categoryPath = null),
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
 
