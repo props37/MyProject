@@ -48,6 +48,7 @@ import ru.livetyping.zarina.core.uicompose.list.animateFastScrollToItem
 import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
+import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.product.ProductCard
 import ru.livetyping.zarina.core.uikit.product.ProductCardSkeleton
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
@@ -74,6 +75,7 @@ public fun ProductGrid(
     onAddToWishlistClicked: (Product) -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    footer: (LazyGridScope.() -> Unit)? = null,
 
     /**
      * Callback that will be called when products are refreshed. Since the refresh is done
@@ -87,6 +89,7 @@ public fun ProductGrid(
      */
     onProductsErrorRefreshClicked: (() -> Unit)? = null,
     sideEffects: Flow<ProductGridSideEffect>? = null,
+    isEndlessLoadingEnabled: Boolean = true,
     bottomPaddingProvider: @Composable () -> Dp = { 0.dp },
     appMetricaScreen: Screen? = null,
 ) {
@@ -147,6 +150,8 @@ public fun ProductGrid(
                             onProductClicked = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
                             noProductsPlaceholder = noProductsPlaceholder,
+                            footer = footer,
+                            isEndlessLoadingEnabled = isEndlessLoadingEnabled,
                             bottomPaddingProvider = bottomPaddingProvider,
                             appMetricaScreen = appMetricaScreen,
                             modifier = Modifier
@@ -206,6 +211,8 @@ private fun ProductGridImpl(
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
+    footer: (LazyGridScope.() -> Unit)?,
+    isEndlessLoadingEnabled: Boolean,
     bottomPaddingProvider: @Composable () -> Dp,
     appMetricaScreen: Screen?,
     modifier: Modifier = Modifier,
@@ -236,25 +243,32 @@ private fun ProductGridImpl(
                         getProductGridItemContentType(index, productPagingItems)
                     },
                 ) { index ->
-                    val product = productPagingItems[index]
+                    val product = if (isEndlessLoadingEnabled) {
+                        productPagingItems[index]
+                    } else {
+                        productPagingItems.peek(index)
+                    }
+
                     if (product != null) {
                         ProductCard(
                             product = product,
                             onClick = onProductClicked,
                             onAddToWishlistClicked = onAddToWishlistClicked,
                             mediaShimmer = placeholderShimmer,
-                            modifier = itemModifier,
                             appMetricaScreen = appMetricaScreen,
+                            modifier = itemModifier.animateZarinaItem(this),
                         )
                     } else {
                         ProductCardSkeleton(
                             shimmer = placeholderShimmer,
-                            modifier = itemModifier,
+                            modifier = itemModifier.animateZarinaItem(this),
                         )
                     }
                 }
 
                 prependAppendItems(productPagingItems.loadState.append, placeholderShimmer)
+
+                footer?.invoke(this)
             }
         } else {
             noProductsPlaceholder()
@@ -303,7 +317,10 @@ private fun LazyGridScope.prependAppendItems(
                 span = { index -> getProductGridItemSpan(index) },
                 contentType = { ProductGridContentType.ProductCardPlaceholder },
             ) {
-                ProductCardSkeleton(shimmer = shimmer)
+                ProductCardSkeleton(
+                    shimmer = shimmer,
+                    modifier = Modifier.animateZarinaItem(this),
+                )
             }
         }
 

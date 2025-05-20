@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.uikit.list
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 
@@ -14,6 +15,17 @@ public object ZarinaListDefaults {
     public fun Modifier.animateZarinaItem(lazyItemScope: LazyItemScope): Modifier {
         val thisModifier = this
         return with(lazyItemScope) {
+            thisModifier.animateItem(
+                fadeInSpec = LazyListFadeInSpec,
+                placementSpec = LazyListPlacementSpec,
+                fadeOutSpec = LazyListFadeOutSpec,
+            )
+        }
+    }
+
+    public fun Modifier.animateZarinaItem(lazyGridItemScope: LazyGridItemScope): Modifier {
+        val thisModifier = this
+        return with(lazyGridItemScope) {
             thisModifier.animateItem(
                 fadeInSpec = LazyListFadeInSpec,
                 placementSpec = LazyListPlacementSpec,

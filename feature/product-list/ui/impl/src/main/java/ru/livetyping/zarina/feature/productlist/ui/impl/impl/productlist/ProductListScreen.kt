@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.P
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListState
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TopBar
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.UtilityTopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.loadMoreProductsButtonGridItem
 
 @Composable
 internal fun ProductListScreen(
@@ -103,6 +105,17 @@ private fun ScreenContent(
                 collapsingProgressProvider = { topBarScrollBehavior.state.collapsedFraction },
             )
 
+            val footer: (LazyGridScope.() -> Unit)? =
+                if (productListState.isLoadMoreProductsButtonVisible) {
+                    {
+                        loadMoreProductsButtonGridItem(
+                            onClick = {
+                                onProductListEvent(ProductListEvent.LoadMoreProductsClicked)
+                            },
+                        )
+                    }
+                } else null
+
             val productGridSideEffect = remember(sideEffects) {
                 sideEffects.mapNotNull { it.toProductGridSideEffect() }
             }
@@ -122,7 +135,9 @@ private fun ScreenContent(
                 noProductsPlaceholder = {
                     // TODO: [Top] Implement
                 },
+                footer = footer,
                 sideEffects = productGridSideEffect,
+                isEndlessLoadingEnabled = productListState.isProductEndlessLoadingEnabled,
                 bottomPaddingProvider = { bottomNavBarHeightAsState().value },
                 appMetricaScreen = remember { Screen.ProductList(categoryPath = null) },
                 modifier = Modifier.weight(1f),

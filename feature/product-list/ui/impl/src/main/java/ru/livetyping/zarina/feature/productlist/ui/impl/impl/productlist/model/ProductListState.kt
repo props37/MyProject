@@ -10,5 +10,7 @@ internal data class ProductListState(
     val categoryName: String?,
     val subcategoryListState: SubcategoryListState,
     val productPagingDataFlow: Flow<PagingData<ProductShort>>,
+    val isProductEndlessLoadingEnabled: Boolean,
+    val isLoadMoreProductsButtonVisible: Boolean,
     val interceptSystemBack: Boolean,
 )

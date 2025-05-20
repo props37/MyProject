@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -126,6 +127,8 @@ internal class ProductListViewModel @AssistedInject constructor(
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 
+    private val isProductEndlessLoadingEnabled = MutableStateFlow(false)
+
     private val interceptSystemBack = categoryComponent.selectedSubcategoryId
         .map { selectedSubcategoryId ->
             selectedSubcategoryId != null
@@ -135,18 +138,23 @@ internal class ProductListViewModel @AssistedInject constructor(
         categoryName = null,
         subcategoryListState = SubcategoryListState.Loading,
         productPagingDataFlow = productPagingDataFlow,
+        isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled.value,
+        isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled.value,
         interceptSystemBack = false,
     )
 
     val productListState: StateFlow<ProductListState> = combine(
         categoryComponent.categoryResult,
         subcategoryListState,
+        isProductEndlessLoadingEnabled,
         interceptSystemBack,
-    ) { categoryResult, subcategoryListState, interceptSystemBack ->
+    ) { categoryResult, subcategoryListState, isProductEndlessLoadingEnabled, interceptSystemBack ->
         ProductListState(
             categoryName = categoryResult?.getOrNull()?.name,
             subcategoryListState = subcategoryListState,
             productPagingDataFlow = productPagingDataFlow,
+            isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled,
+            isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled,
             interceptSystemBack = interceptSystemBack,
         )
     }.stateIn(
@@ -167,6 +175,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             is ProductListEvent.SubcategoryClicked -> onSubcategoryClicked(event)
             is ProductListEvent.ProductClicked -> onProductClicked(event)
             is ProductListEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
+            ProductListEvent.LoadMoreProductsClicked -> isProductEndlessLoadingEnabled.value = true
             ProductListEvent.PullRefreshTriggered -> onRefresh()
             ProductListEvent.RefreshClicked -> onRefresh()
             ProductListEvent.SystemBackClicked -> onSystemBackClicked()

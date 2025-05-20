@@ -16,6 +16,8 @@ internal sealed interface ProductListEvent {
 
     data class AddToWishlistClicked(val product: Product) : ProductListEvent
 
+    data object LoadMoreProductsClicked : ProductListEvent
+
     data object PullRefreshTriggered : ProductListEvent
 
     data object RefreshClicked : ProductListEvent
