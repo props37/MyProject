@@ -60,7 +60,7 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.uicompose.UppercaseOutputTransformation
+import ru.livetyping.zarina.core.uicompose.text.UppercaseOutputTransformation
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize

@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.model.ListFil
 import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.model.ListFilterTopBarState
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
-import ru.livetyping.zarina.core.uicompose.textString
+import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults

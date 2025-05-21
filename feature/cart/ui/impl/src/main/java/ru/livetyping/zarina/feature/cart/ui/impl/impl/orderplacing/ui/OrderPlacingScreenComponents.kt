@@ -47,9 +47,9 @@ import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethod
 import ru.livetyping.zarina.core.domain.model.checkout.Recipient
 import ru.livetyping.zarina.core.uicommon.nameResId
-import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
-import ru.livetyping.zarina.core.uicompose.textString
+import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
+import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
@@ -909,7 +909,7 @@ internal object OrderPlacingScreenComponents {
         val text = rememberAnnotatedStringWithLinks(
             baseString = policiesRawText,
             substringToUrl = substringToUrl,
-            urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
                 .copy(textDecoration = TextDecoration.Underline),
             onUrlClicked = onUrlClicked,
         )

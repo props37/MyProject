@@ -153,7 +153,10 @@ public data class OrderDto(
                 size = size,
                 color = getProductColor(),
                 imageUrl = Url.create(coverPicture),
-                price = ProductPrice(BigDecimal(price.toDouble())),
+                price = ProductPrice(
+                    originalPrice = BigDecimal(price.toDouble()),
+                    discount = null,
+                ),
                 count = quantity,
             )
         }

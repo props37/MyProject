@@ -104,9 +104,7 @@ private fun ScreenContent(
             productPagingDataFlow = productPagingDataFlow,
             onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
             onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddToWishlistClicked(it)) },
-            onAddToCartClicked = { onWishlistEvent(WishlistEvent.AddToCartClicked(it)) },
-            onSubscribeClicked = { onWishlistEvent(WishlistEvent.SubscribeClicked(it)) },
-            emptyProductsPlaceholder = {
+            noProductsPlaceholder = {
                 EmptyWishlistPlaceholder(
                     onGoToCatalogClicked = { onWishlistEvent(WishlistEvent.GoToCatalogClicked) },
                     modifier = Modifier

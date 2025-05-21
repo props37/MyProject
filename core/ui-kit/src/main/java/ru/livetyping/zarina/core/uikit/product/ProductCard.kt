@@ -23,37 +23,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import ru.livetyping.zarina.core.analytics.compose.LocalAppMetrica
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
-import ru.livetyping.zarina.core.uikit.button.ZarinaAddToCartIconButton
+import ru.livetyping.zarina.core.uicompose.preview.ProductShortPreviewParameterProvider
 import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
-import ru.livetyping.zarina.core.uikit.button.ZarinaSubscribeIconButton
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
-import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.IconSize
+import ru.livetyping.zarina.core.uikit.price.DiscountLabel
+import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.BackgroundColor
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.MediaAspectRatio
+import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.ProductNameTextStyle
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 public fun ProductCard(
     product: Product,
     onClick: (Product) -> Unit,
-    onAddToFavoritesClicked: (Product) -> Unit,
-    onAddToCartClicked: (Product) -> Unit,
-    onSubscribeClicked: (Product) -> Unit,
+    onAddToWishlistClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
-    backgroundColor: Color = ProductCardDefaults.BackgroundColor,
+    mediaShimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     appMetricaScreen: Screen? = null,
 ) {
     val appMetrica = LocalAppMetrica.current
@@ -66,7 +71,7 @@ public fun ProductCard(
 
     Column(
         modifier = modifier
-            .background(backgroundColor)
+            .background(BackgroundColor)
             .clickable { onClick(product) },
     ) {
         Box(
@@ -75,77 +80,71 @@ public fun ProductCard(
                 .aspectRatio(MediaAspectRatio),
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
+            val hazeState = rememberHazeState()
 
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
-                shimmer = shimmer,
-                modifier = Modifier.matchParentSize(),
+                shimmer = mediaShimmer,
+                modifier = Modifier
+                    .matchParentSize()
+                    .hazeSource(hazeState),
             )
-            ZarinaLikeIconButton(
-                isLiked = product.isInWishlist,
-                onClick = { onAddToFavoritesClicked(product) },
-                iconSize = IconSize,
-                indication = ripple(bounded = false, radius = IconSize),
-                modifier = Modifier.align(Alignment.TopEnd),
-            )
+
+            val discount = product.price.discount
+            if (discount != null) {
+                DiscountLabel(
+                    discountPercent = discount.discountPercent,
+                    hazeState = hazeState,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 6.dp, bottom = 6.dp),
+                )
+            }
+
             ZarinaHorizontalPagerIndicator(
                 pagerState = pagerState,
                 itemCount = product.media.size,
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 8.dp),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 6.dp),
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        val horizontalPaddingModifier = Modifier.padding(horizontal = 10.dp)
+
+        Text(
+            text = product.name.uppercase(),
+            style = ProductNameTextStyle,
+            color = UiKitTheme2.colors.mainBlack,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = horizontalPaddingModifier,
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = horizontalPaddingModifier,
         ) {
-            Text(
-                text = product.name.uppercase(),
-                style = UiKitTheme.typography.caption1.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 2.dp), // Circe font padding
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                val buttonModifier = Modifier
-                    .padding(end = 10.dp)
-                    .size(28.dp)
+            ProductPrice(price = product.price)
 
-                if (product.isAvailable) {
-                    ZarinaAddToCartIconButton(
-                        isAdded = product.isInCart,
-                        onClick = { onAddToCartClicked(product) },
-                        iconSize = IconSize,
-                        modifier = buttonModifier,
-                    )
-                } else {
-                    ZarinaSubscribeIconButton(
-                        onClick = { onSubscribeClicked(product) },
-                        iconSize = IconSize,
-                        modifier = buttonModifier,
-                    )
-                }
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
+
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                val iconSize = 16.dp
+                ZarinaLikeIconButton(
+                    isLiked = product.isInWishlist,
+                    onClick = { onAddToWishlistClicked(product) },
+                    iconSize = iconSize,
+                    indication = ripple(bounded = false, radius = iconSize),
+                )
             }
         }
-
-        ProductPrice(
-            price = product.price,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
-
-        ProductCardColors(
-            colors = product.colors,
-            modifier = Modifier.padding(horizontal = 16.dp),
-        )
 
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -156,7 +155,7 @@ public fun ProductCardSkeleton(
     modifier: Modifier = Modifier,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.background(BackgroundColor)) {
         ZarinaSkeleton(
             shimmer = shimmer,
             shape = RectangleShape,
@@ -165,71 +164,74 @@ public fun ProductCardSkeleton(
                 .aspectRatio(MediaAspectRatio),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
+        val horizontalPaddingModifier = Modifier.padding(horizontal = 10.dp)
+
+        ZarinaTextSkeleton(
+            textStyle = ProductNameTextStyle,
+            shimmer = shimmer,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
-                shimmer = shimmer,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(modifier = Modifier.width(24.dp))
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(16.dp),
-            )
-        }
+                .then(horizontalPaddingModifier),
+        )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .then(horizontalPaddingModifier),
         ) {
             ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
+                text = ProductCardDefaults.PriceSkeletonText,
+                textStyle = ProductNameTextStyle,
                 shimmer = shimmer,
-                modifier = Modifier.width(44.dp),
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption1.regular,
-                shimmer = shimmer,
-                modifier = Modifier.width(48.dp),
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            ZarinaTextSkeleton(
-                textStyle = UiKitTheme.typography.caption2.regular,
-                shimmer = shimmer,
-                modifier = Modifier.width(28.dp),
-            )
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-        Box(modifier = Modifier.padding(start = 16.dp)) {
-            ZarinaSkeleton(
-                shimmer = shimmer,
-                modifier = Modifier.size(width = 42.dp, height = 8.dp),
-            )
+            ZarinaSkeleton(modifier = Modifier.size(16.dp))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+@Composable
+@Preview
+private fun Preview(
+    @PreviewParameter(ProductShortPreviewParameterProvider::class)
+    product: ProductShort,
+) {
+    ZarinaTheme2 {
+        ProductCard(
+            product = product,
+            onClick = {},
+            onAddToWishlistClicked = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewSkeleton() {
+    ZarinaTheme2 {
+        ProductCardSkeleton()
+    }
+}
+
 public object ProductCardDefaults {
-    public val BackgroundColor: Color
+    internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
-    internal const val MediaAspectRatio = 0.68f
+    internal const val MediaAspectRatio = 0.75f
 
-    internal val IconSize = 16.dp
+    internal val ProductNameTextStyle: TextStyle
+        @Composable
+        get() = UiKitTheme2.typography.body2
+
+    internal const val PriceSkeletonText = "1 999 Р"
 }

@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.text.Text
-import ru.livetyping.zarina.core.uicompose.clear
-import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uicompose.text.clear
+import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 
 internal class CartPromoCodeStateHolder(savedStateHandle: SavedStateHandle) {
     private val _isPromoCodeInvalid = MutableStateFlow(false)

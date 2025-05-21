@@ -42,17 +42,17 @@ internal class ProductPager @Inject constructor(
         return PagingConfig(
             pageSize = PAGE_SIZE,
             prefetchDistance = PREFETCH_DISTANCE,
-            enablePlaceholders = true,
+            enablePlaceholders = false,
             initialLoadSize = INITIAL_LOAD_SIZE,
             maxSize = MAX_SIZE,
         )
     }
 
     companion object {
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE = 18
         private const val PREFETCH_DISTANCE = PAGE_SIZE
-        private const val INITIAL_LOAD_SIZE = PAGE_SIZE * 2
-        private const val MAX_SIZE = 300
+        private const val INITIAL_LOAD_SIZE = PAGE_SIZE
+        private const val MAX_SIZE = PAGE_SIZE * 15
 
         private const val TAG = "ProductPager"
     }

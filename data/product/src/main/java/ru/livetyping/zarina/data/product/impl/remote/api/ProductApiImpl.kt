@@ -40,13 +40,15 @@ internal class ProductApiImpl @Inject constructor(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
-        page: Int
+        page: Int,
+        pageSize: Int,
     ): ProductsDto {
         val body = GetProductsRequestBody(
             categoryId = categoryId.value,
             filters = filters?.let { FiltersRequestDto.from(it) },
             sorting = SortingDto.from(sorting),
             page = page,
+            pageSize = pageSize,
         )
         return httpClient.post("/api/v1/products") {
             setJsonBody(body)
@@ -102,6 +104,7 @@ internal class ProductApiImpl @Inject constructor(
             filters = filters?.let { FiltersRequestDto.from(it) },
             sorting = SortingDto.from(ProductSorting.getDefault()),
             page = 1,
+            pageSize = 10,
             returnProducts = false,
         )
         return httpClient.post("/api/v1/products") {

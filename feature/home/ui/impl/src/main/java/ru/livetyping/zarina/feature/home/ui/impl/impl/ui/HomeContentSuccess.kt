@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.collections.immutable.ImmutableList
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
 import ru.livetyping.zarina.core.uicompose.systembars.ForcedSystemBarsBehavior
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
@@ -68,7 +68,7 @@ internal fun HomeContentSuccess(
             refreshingOffset = pullRefreshOffset,
         )
 
-        val genderContentPagerState = rememberPagerStateWithTabRow(
+        val genderContentPagerState = rememberPagerStateIntegratedWithTabRow(
             tabs = state.genderPickerState.tabs,
             currentTab = state.genderPickerState.currentTab,
             onTabChanged = { onHomeEvent(HomeEvent.GenderSelected(it)) },

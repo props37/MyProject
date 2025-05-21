@@ -22,6 +22,7 @@ public interface ProductRepository {
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
+        pageSize: Int,
     ): Flow<Page<ProductsWithFilters>>
 
     public fun getProductFlow(productId: Product.Id): Flow<ProductDetailed>

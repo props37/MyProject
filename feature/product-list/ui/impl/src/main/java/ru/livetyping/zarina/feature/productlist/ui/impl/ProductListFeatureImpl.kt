@@ -56,15 +56,20 @@ public class ProductListFeatureImpl : ProductListFeature {
                     val filtrationNavEntry = FiltrationNavEntry.create(categoryId, filters)
                     navController.navigate(filtrationNavEntry)
                 },
-                onTagClicked = { tag, filters ->
+                onSubcategoryClicked = { category, filters ->
                     val productListNavEntry = ProductListScreenNavEntry.create(
-                        categoryId = tag.id,
+                        categoryId = category.id,
                         filters = filters,
                     )
                     navController.navigate(productListNavEntry)
                 },
                 onProductClicked = actions.onProductClicked,
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
+                onCategoryShortcutClicked = { categoryId ->
+                    val productListNavEntry = ProductListScreenNavEntry.create(categoryId)
+                    navController.popBackStack()
+                    navController.navigate(productListNavEntry)
+                },
             )
             productListScreen(productListNavActions)
 

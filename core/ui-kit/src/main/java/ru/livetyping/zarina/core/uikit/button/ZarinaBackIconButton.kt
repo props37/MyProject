@@ -7,12 +7,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R
 
 @Composable
@@ -22,7 +22,7 @@ public fun ZarinaBackIconButton(
     contentDescription: String = stringResource(R.string.res_back),
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
-    iconSize: Dp = ZarinaIconButtonDefaults.IconSize,
+    iconSize: Dp = 16.dp,
     tint: Color = ZarinaIconButtonDefaults.IconColor,
     interactionSource: MutableInteractionSource? = null,
     indication: Indication? = ripple(bounded = false, radius = iconSize),
@@ -38,12 +38,10 @@ public fun ZarinaBackIconButton(
         modifier = modifier,
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left_24),
             contentDescription = contentDescription,
             tint = tint,
-            modifier = Modifier
-                .size(iconSize)
-                .rotate(degrees = 270f),
+            modifier = Modifier.size(iconSize),
         )
     }
 }

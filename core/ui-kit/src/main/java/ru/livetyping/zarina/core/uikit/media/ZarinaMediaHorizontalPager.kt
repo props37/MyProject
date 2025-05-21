@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType

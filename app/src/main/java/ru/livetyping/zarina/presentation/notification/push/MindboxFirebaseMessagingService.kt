@@ -11,13 +11,14 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
-import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.net.toUri
 import cloud.mindbox.mindbox_firebase.MindboxFirebase
 import cloud.mindbox.mobile_sdk.Mindbox
 import cloud.mindbox.mobile_sdk.pushes.MindboxRemoteMessage
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.allowHardware
+import coil3.toBitmap
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
@@ -214,7 +215,7 @@ class MindboxFirebaseMessagingService : FirebaseMessagingService() {
             .build()
         return withContext(Dispatchers.IO) {
             val result = imageLoader.execute(request)
-            result.drawable?.toBitmapOrNull()
+            result.image?.toBitmap()
         }
     }
 

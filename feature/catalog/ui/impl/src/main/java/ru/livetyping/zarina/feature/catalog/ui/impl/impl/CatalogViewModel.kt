@@ -10,11 +10,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
@@ -28,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CatalogViewModel @Inject constructor(
-    deps: CatalogDependencies,
+    private val deps: CatalogDependencies,
 ) : ViewModel(), SideEffectSource<CatalogSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
@@ -78,6 +80,14 @@ internal class CatalogViewModel @Inject constructor(
             is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
             CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
             CatalogEvent.RefreshClicked -> fetchMenu()
+        }
+    }
+
+    fun onLifecycleEvent(event: LifecycleEvent) {
+        when (event) {
+            LifecycleEvent.ON_CREATE -> deps.appMetrica.reportScreenOpened(Screen.Catalog)
+            LifecycleEvent.ON_START -> Unit
+            LifecycleEvent.ON_RESUME -> Unit
         }
     }
 

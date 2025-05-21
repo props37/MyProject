@@ -10,62 +10,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
 import ru.livetyping.zarina.core.analytics.model.Screen
-import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
-import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TagListState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarEvent
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.TopBarState
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.EmptyProductsPlaceholder
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TagList
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListEvent
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.ProductListState
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.NoProductsPlaceholder
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.TopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.UtilityTopBar
+import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui.loadMoreProductsButtonGridItem
 
 @Composable
 internal fun ProductListScreen(
     navActions: ProductListNavActions,
     viewModel: ProductListViewModel,
 ) {
-    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
-    val tagListState by viewModel.tagListState.collectAsStateWithLifecycle()
-    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
-    val shouldSystemBackBeIntercepted by viewModel.shouldSystemBackBeIntercepted.collectAsStateWithLifecycle()
+    val productListState by viewModel.productListState.collectAsStateWithLifecycle()
+
+    LifecycleEventEffect(onLifecycleEvent = viewModel::onLifecycleEvent)
 
     BackHandler(
-        enabled = shouldSystemBackBeIntercepted,
-        onBack = viewModel::onSystemBackClicked,
+        enabled = productListState.interceptSystemBack,
+        onBack = { viewModel.onProductListEvent(ProductListEvent.SystemBackClicked) },
     )
 
     ScreenContent(
-        topBarState = topBarState,
-        onTopBarEvent = viewModel::onTopBarEvent,
-        tagListState = tagListState,
-        onTagListEvent = viewModel::onTagListEvent,
-        productPagingDataFlow = viewModel.productPagingDataFlow,
-        onProductEvent = viewModel::onProductEvent,
-        sizeSelectorState = sizeSelectorState,
-        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
-        productGridSideEffects = viewModel.productGridSideEffects,
-        onLifecycleEvent = viewModel::onLifecycleEvent,
+        productListState = productListState,
+        onProductListEvent = viewModel::onProductListEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -73,81 +59,104 @@ internal fun ProductListScreen(
 
 @Composable
 private fun ScreenContent(
-    topBarState: TopBarState,
-    onTopBarEvent: (TopBarEvent) -> Unit,
-    tagListState: TagListState,
-    onTagListEvent: (TagListEvent) -> Unit,
-    productPagingDataFlow: Flow<PagingData<ProductShort>>,
-    onProductEvent: (ProductEvent) -> Unit,
-    sizeSelectorState: SizeSelectorState,
-    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
-    productGridSideEffects: Flow<ProductGridSideEffect>,
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
+    productListState: ProductListState,
+    onProductListEvent: (ProductListEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListNavActions,
 ) {
     ProductListScreenBehavior(
-        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
 
-    SizeSelectorModalBottomSheet(
-        state = sizeSelectorState,
-        onEvent = onSizeSelectorEvent,
-    )
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
 
-    Column(
+    CollapsingTopBarLayout(
+        topBar = {
+            TopBar(
+                categoryName = productListState.categoryName,
+                subcategoryListState = productListState.subcategoryListState,
+                onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onSubcategoryClicked = {
+                    onProductListEvent(ProductListEvent.SubcategoryClicked(it))
+                },
+                modifier = Modifier.graphicsLayer {
+                    alpha = 1f - topBarScrollBehavior.state.collapsedFraction
+                },
+            )
+        },
+        scrollBehavior = topBarScrollBehavior,
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
+            ),
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+        ) {
+            UtilityTopBar(
+                onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onFiltersClicked = { onProductListEvent(ProductListEvent.FiltersClicked) },
+                onSearchClicked = { onProductListEvent(ProductListEvent.SearchClicked) },
+                collapsingProgressProvider = { topBarScrollBehavior.state.collapsedFraction },
             )
-            .bottomNavBarPadding(),
-    ) {
-        TopBar(
-            state = topBarState,
-            onEvent = onTopBarEvent,
-        )
 
-        val tagListScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
+            val footer: (LazyGridScope.() -> Unit)? =
+                if (productListState.isLoadMoreProductsButtonVisible) {
+                    {
+                        loadMoreProductsButtonGridItem(
+                            onClick = {
+                                onProductListEvent(ProductListEvent.LoadMoreProductsClicked)
+                            },
+                        )
+                    }
+                } else null
 
-        CollapsingTopBarLayout(
-            topBar = {
-                TagList(
-                    state = tagListState,
-                    onEvent = onTagListEvent,
-                )
-            },
-            scrollBehavior = tagListScrollBehavior,
-            modifier = Modifier.clipToBounds(),
-        ) { padding ->
+            val productGridSideEffect = remember(sideEffects) {
+                sideEffects.mapNotNull { it.toProductGridSideEffect() }
+            }
+
             ProductGrid(
-                productPagingDataFlow = productPagingDataFlow,
-                onProductClicked = { onProductEvent(ProductEvent.ProductClicked(it)) },
-                onAddToWishlistClicked = { onProductEvent(ProductEvent.AddToWishlistClicked(it)) },
-                onAddToCartClicked = { onProductEvent(ProductEvent.AddToCartClicked(it)) },
-                onSubscribeClicked = { onProductEvent(ProductEvent.SubscribeClicked(it)) },
-                onProductsRefreshed = { onProductEvent(ProductEvent.ProductsRefreshed) },
-                onProductsErrorRefreshClicked = {
-                    onProductEvent(ProductEvent.ProductsErrorRefreshClicked)
+                productPagingDataFlow = productListState.productPagingDataFlow,
+                onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = {
+                    onProductListEvent(ProductListEvent.AddToWishlistClicked(it))
                 },
-                emptyProductsPlaceholder = {
-                    EmptyProductsPlaceholder(
+                onProductsPullRefreshTriggered = {
+                    onProductListEvent(ProductListEvent.PullRefreshTriggered)
+                },
+                onProductsErrorRefreshClicked = {
+                    onProductListEvent(ProductListEvent.RefreshClicked)
+                },
+                noProductsPlaceholder = {
+                    NoProductsPlaceholder(
+                        onCategoryShortcutClicked = { categoryId ->
+                            onProductListEvent(ProductListEvent.CategoryShortcutClicked(categoryId))
+                        },
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(bottom = bottomNavBarHeightAsState().value),
                     )
                 },
-                sideEffects = productGridSideEffects,
-                appMetricaScreen = Screen.ProductList(categoryPath = null),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .nestedScroll(tagListScrollBehavior.nestedScrollConnection),
+                footer = footer,
+                sideEffects = productGridSideEffect,
+                isEndlessLoadingEnabled = productListState.isProductEndlessLoadingEnabled,
+                bottomPaddingProvider = { bottomNavBarHeightAsState().value },
+                appMetricaScreen = remember { Screen.ProductList(categoryPath = null) },
+                modifier = Modifier.weight(1f),
             )
         }
+    }
+}
+
+private fun ProductListSideEffect.toProductGridSideEffect(): ProductGridSideEffect? {
+    return when (this) {
+        ProductListSideEffect.ScrollProductsToTop -> ProductGridSideEffect.ScrollToTop
+        else -> null
     }
 }

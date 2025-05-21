@@ -10,23 +10,41 @@ import java.math.BigDecimal
 @Parcelize
 public data class ProductPriceParcelable(
     val originalPrice: String,
-    val hasDiscount: Boolean,
-    val discountPrice: String,
-    val discountPercent: String,
+    val discount: Discount?,
 ) : Parcelable {
-    public fun toProductPrice(): ProductPrice = ProductPrice(
-        originalPrice = BigDecimal(originalPrice),
-        hasDiscount = hasDiscount,
-        discountPrice = BigDecimal(discountPrice),
-        discountPercent = BigDecimal(discountPercent),
-    )
+    public fun toProductPrice(): ProductPrice {
+        val discount = discount?.let {
+            ProductPrice.Discount(
+                discountPrice = BigDecimal(it.discountPrice),
+                discountPercent = BigDecimal(it.discountPercent),
+            )
+        }
+        return ProductPrice(
+            originalPrice = BigDecimal(originalPrice),
+            discount = discount,
+        )
+    }
+
+    @Serializable
+    @Parcelize
+    public data class Discount(
+        val discountPrice: String,
+        val discountPercent: String,
+    ) : Parcelable
 
     public companion object {
-        public fun from(price: ProductPrice): ProductPriceParcelable = ProductPriceParcelable(
-            originalPrice = price.originalPrice.toString(),
-            hasDiscount = price.hasDiscount,
-            discountPrice = price.discountPrice.toString(),
-            discountPercent = price.discountPercent.toString(),
-        )
+        public fun from(price: ProductPrice): ProductPriceParcelable {
+            val discount = price.discount?.let {
+                Discount(
+                    discountPrice = it.discountPrice.toString(),
+                    discountPercent = it.discountPercent.toString(),
+                )
+            }
+
+            return ProductPriceParcelable(
+                originalPrice = price.originalPrice.toString(),
+                discount = discount,
+            )
+        }
     }
 }

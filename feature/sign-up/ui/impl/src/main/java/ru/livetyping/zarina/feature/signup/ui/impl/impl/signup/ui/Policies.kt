@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
+import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uikit.checkbox.ZarinaCheckbox
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.feature.signup.ui.impl.R
@@ -119,7 +119,7 @@ private fun PoliciesText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.sign_up_policies),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
@@ -147,7 +147,7 @@ private fun SubscriptionPolicyText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.sign_up_subscription_policy),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )

@@ -22,6 +22,7 @@ internal interface ProductRemoteDataSource {
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
+        pageSize: Int,
     ): Flow<Page<ProductsWithFilters>>
 
     fun getProductFlow(productId: Product.Id): Flow<ProductDetailed>

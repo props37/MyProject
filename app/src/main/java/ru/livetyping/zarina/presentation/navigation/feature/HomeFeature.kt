@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.navigationutil.hasRoute
 import ru.livetyping.zarina.core.navigationutil.withParent
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
+import ru.livetyping.zarina.core.uicompose.transition.MaterialTransitions
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
@@ -29,7 +29,7 @@ fun NavGraphBuilder.homeFeature(
                 val initialDestinationWithParent = initialDestination.withParent()
                 when {
                     initialDestinationWithParent.hasRoute(OnboardingFeature.NavEntry::class) -> {
-                        zarinaEnterFadeInTransition()
+                        MaterialTransitions.fadeThroughEnter()
                     }
 
                     else -> null

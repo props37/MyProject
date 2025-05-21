@@ -26,6 +26,7 @@ internal class ProductPagingSource(
                 filters = filters,
                 sorting = sorting,
                 page = page,
+                pageSize = params.loadSize,
             )
             val productsWithFiltersPageResult =
                 getProductsWithFiltersPageFlowUseCase(productsWithFiltersPageParams).firstOrNull()

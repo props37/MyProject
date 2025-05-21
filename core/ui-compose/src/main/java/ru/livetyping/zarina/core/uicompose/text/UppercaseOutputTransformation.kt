@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicompose
+package ru.livetyping.zarina.core.uicompose.text
 
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldBuffer

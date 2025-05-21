@@ -107,7 +107,7 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefa
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
-import ru.livetyping.zarina.core.uicompose.textString
+import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize

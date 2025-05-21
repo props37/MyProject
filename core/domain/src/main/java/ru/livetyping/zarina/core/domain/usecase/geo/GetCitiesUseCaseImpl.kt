@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.geo
 
+import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase.Params
@@ -13,7 +14,9 @@ internal class GetCitiesUseCaseImpl(
 
     override suspend fun execute(params: Params): List<City> {
         val nameQuery = params.nameQuery?.trim()?.takeIf { it.isNotBlank() }
-        return geographyRepository.getCities(nameQuery, params.cachePolicy)
+        val cities = geographyRepository.getCitiesFlow(nameQuery, params.cachePolicy).firstOrNull()
+        checkNotNull(cities) { "Cities is null" }
+        return cities
     }
 
     override suspend fun invoke(params: Params): Result<List<City>> {

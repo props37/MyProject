@@ -25,7 +25,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
-import ru.livetyping.zarina.core.uicompose.unscalable
+import ru.livetyping.zarina.core.uicompose.text.unscalable
 import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2

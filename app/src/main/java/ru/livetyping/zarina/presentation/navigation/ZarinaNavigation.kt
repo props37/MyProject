@@ -11,17 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterFadeInTransition
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaEnterSlideTransition
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitFadeOutTransition
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaExitSlideTransition
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopEnterSlideTransition
-import ru.livetyping.zarina.core.uikit.navigation.transition.zarinaPopExitSlideTransition
+import ru.livetyping.zarina.core.uicompose.transition.MaterialSharedAxis
+import ru.livetyping.zarina.core.uicompose.transition.MaterialTransitions
 import ru.livetyping.zarina.feature.Features
 import ru.livetyping.zarina.feature.cart.ui.api.CartFeature
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
@@ -87,6 +84,8 @@ fun ZarinaNavigation(
     startFeature: AppStartFeature,
     modifier: Modifier = Modifier,
 ) {
+    val currentDensity by rememberUpdatedState(LocalDensity.current)
+
     @Suppress("NAME_SHADOWING")
     val navController by rememberUpdatedState(navController)
 
@@ -170,32 +169,56 @@ fun ZarinaNavigation(
             enterTransition(
                 backStack = currentBackStack.value,
                 lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
-                defaultTransition = ::zarinaEnterSlideTransition,
-                transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
+                defaultTransition = {
+                    MaterialTransitions.sharedAxisEnter(
+                        axis = MaterialSharedAxis.X,
+                        forward = true,
+                        density = currentDensity,
+                    )
+                },
+                transitionBetweenBottomNavBarItems = MaterialTransitions::fadeThroughEnter,
             )
         },
         exitTransition = {
             exitTransition(
                 backStack = currentBackStack.value,
                 lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
-                defaultTransition = ::zarinaExitSlideTransition,
-                transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
+                defaultTransition = {
+                    MaterialTransitions.sharedAxisExit(
+                        axis = MaterialSharedAxis.X,
+                        forward = true,
+                        density = currentDensity,
+                    )
+                },
+                transitionBetweenBottomNavBarItems = MaterialTransitions::fadeThroughExit,
             )
         },
         popEnterTransition = {
             enterTransition(
                 backStack = currentBackStack.value,
                 lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
-                defaultTransition = ::zarinaPopEnterSlideTransition,
-                transitionBetweenBottomNavBarItems = ::zarinaEnterFadeInTransition,
+                defaultTransition = {
+                    MaterialTransitions.sharedAxisEnter(
+                        axis = MaterialSharedAxis.X,
+                        forward = false,
+                        density = currentDensity,
+                    )
+                },
+                transitionBetweenBottomNavBarItems = MaterialTransitions::fadeThroughEnter,
             )
         },
         popExitTransition = {
             exitTransition(
                 backStack = currentBackStack.value,
                 lastSelectedBottomNavBarItem = prevSelectedBottomNavBarItem,
-                defaultTransition = ::zarinaPopExitSlideTransition,
-                transitionBetweenBottomNavBarItems = ::zarinaExitFadeOutTransition,
+                defaultTransition = {
+                    MaterialTransitions.sharedAxisExit(
+                        axis = MaterialSharedAxis.X,
+                        forward = false,
+                        density = currentDensity,
+                    )
+                },
+                transitionBetweenBottomNavBarItems = MaterialTransitions::fadeThroughExit,
             )
         },
         modifier = modifier,

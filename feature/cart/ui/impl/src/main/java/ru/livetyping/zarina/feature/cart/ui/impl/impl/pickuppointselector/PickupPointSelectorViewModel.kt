@@ -33,7 +33,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicomponent.location.CurrentLocationComponent
-import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
 import ru.livetyping.zarina.core.uikit.permission.RequiredPermission

@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
-import ru.livetyping.zarina.core.uicompose.rememberAnnotatedStringWithLinks
+import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uicompose.tryRequestFocus
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.checkbox.ZarinaCheckbox
@@ -249,7 +249,7 @@ private fun PoliciesText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.product_subscription_policies),
         substringToUrl = substringToUrl,
-        urlStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = context::openUrlInCustomTabs,
     )

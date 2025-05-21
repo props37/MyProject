@@ -17,6 +17,7 @@ public interface GetProductsWithFiltersPageFlowUseCase {
         val filters: ProductFilters?,
         val sorting: ProductSorting,
         val page: Int,
+        val pageSize: Int,
     )
 
     public companion object {

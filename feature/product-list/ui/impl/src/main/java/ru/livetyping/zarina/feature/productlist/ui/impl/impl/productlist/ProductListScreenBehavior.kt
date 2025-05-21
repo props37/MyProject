@@ -7,23 +7,18 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController2
 
 @Composable
 internal fun ProductListScreenBehavior(
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListNavActions,
 ) {
     val currentNavActions by rememberUpdatedState(navActions)
-    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController2.current)
 
     BottomNavBarBehavior(isVisible = true)
-
-    LifecycleEventEffect(onLifecycleEvent = onLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
@@ -36,6 +31,8 @@ internal fun ProductListScreenBehavior(
                     is ProductListSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
+
+                    ProductListSideEffect.ScrollProductsToTop -> Unit
                 }
             }
         }
@@ -54,13 +51,17 @@ private fun navigate(navActions: ProductListNavActions, action: ProductListScree
             navActions.onFiltersClicked(action.categoryId, action.filters)
         }
 
-        is ProductListScreenAction.TagClicked -> {
-            navActions.onTagClicked(action.tag, action.filters)
+        is ProductListScreenAction.SubcategoryClicked -> {
+            navActions.onSubcategoryClicked(action.category, action.filters)
         }
 
         is ProductListScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
         is ProductListScreenAction.SubscribeToProductClicked -> {
             navActions.onSubscribeToProductClicked(action.product, action.offer)
+        }
+
+        is ProductListScreenAction.CategoryShortcutClicked -> {
+            navActions.onCategoryShortcutClicked(action.categoryId)
         }
     }
 }

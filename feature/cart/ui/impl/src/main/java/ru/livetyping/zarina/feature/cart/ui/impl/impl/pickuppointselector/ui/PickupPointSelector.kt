@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.common.Location
-import ru.livetyping.zarina.core.uicompose.animateFastScrollToItem
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uicompose.list.animateFastScrollToItem
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.PickupPointSelectorState
@@ -39,7 +39,7 @@ internal fun PickupPointSelector(
         )
         Spacer(modifier = Modifier.height(4.dp))
 
-        val viewModePagerState = rememberPagerStateWithTabRow(
+        val viewModePagerState = rememberPagerStateIntegratedWithTabRow(
             tabs = state.viewModeSelectorState.tabs,
             currentTab = state.viewModeSelectorState.currentTab,
             onTabChanged = { mode ->

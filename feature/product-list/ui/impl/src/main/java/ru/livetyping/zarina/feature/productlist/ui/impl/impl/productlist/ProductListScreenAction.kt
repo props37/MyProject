@@ -15,8 +15,8 @@ internal sealed interface ProductListScreenAction {
         val filters: ProductFilters?,
     ) : ProductListScreenAction
 
-    data class TagClicked(
-        val tag: Category,
+    data class SubcategoryClicked(
+        val category: Category,
         val filters: ProductFilters?,
     ) : ProductListScreenAction
 
@@ -26,4 +26,6 @@ internal sealed interface ProductListScreenAction {
         val product: Product,
         val offer: ProductOffer,
     ) : ProductListScreenAction
+
+    data class CategoryShortcutClicked(val categoryId: Category.Id) : ProductListScreenAction
 }

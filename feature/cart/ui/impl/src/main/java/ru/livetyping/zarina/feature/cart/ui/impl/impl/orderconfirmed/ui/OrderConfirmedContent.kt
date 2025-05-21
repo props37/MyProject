@@ -21,8 +21,8 @@ import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.kotlinutil.findSubstringBounds
 import ru.livetyping.zarina.core.platform.dialPhoneNumber
 import ru.livetyping.zarina.core.uicommon.nameResId
-import ru.livetyping.zarina.core.uicompose.addStyle
 import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.core.uicompose.text.addStyle
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.order.OrderCard

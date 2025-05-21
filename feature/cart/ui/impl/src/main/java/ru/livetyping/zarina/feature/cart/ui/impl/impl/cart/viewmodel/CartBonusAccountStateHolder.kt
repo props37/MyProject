@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.livetyping.zarina.core.domain.model.cart.Cart
-import ru.livetyping.zarina.core.uicompose.clear
+import ru.livetyping.zarina.core.uicompose.text.clear
 
 internal class CartBonusAccountStateHolder(savedStateHandle: SavedStateHandle) {
     private val _isBonusRedemptionApplied = MutableStateFlow(false)

@@ -13,7 +13,11 @@ public data class Category(
 ) {
     // Marked as stable on config/compose/stability_config.txt
     @JvmInline
-    public value class Id(public val value: String)
+    public value class Id(public val value: String) {
+        public companion object {
+            public val WOMEN_NEW: Id get() = Id("241")
+        }
+    }
 }
 
 public fun Category.withFlattenedChildren(): List<Category> {

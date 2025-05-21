@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.uicompose
+package ru.livetyping.zarina.core.uicompose.text
 
 @Suppress("ConstPropertyName")
 public object FontFeatureSettings {

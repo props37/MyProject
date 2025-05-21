@@ -1,10 +1,12 @@
 package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist
 
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
-import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
+import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 
 internal sealed interface ProductListSideEffect : SideEffect {
+    data object ScrollProductsToTop : ProductListSideEffect
+
     data class Navigate(val action: ProductListScreenAction) : ProductListSideEffect
 
-    data class ShowZarinaToast(val message: ZarinaToastMessage) : ProductListSideEffect
+    data class ShowZarinaToast(val message: ZarinaToastMessage2) : ProductListSideEffect
 }

@@ -27,7 +27,7 @@ import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.uicommon.createValueHolder
-import ru.livetyping.zarina.core.uicompose.textAsFlow
+import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import ru.livetyping.zarina.core.uimodel.geo.BuildingParcelable
 import ru.livetyping.zarina.core.uimodel.geo.StreetParcelable
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.search.AddressSearchItem

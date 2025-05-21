@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.store.Store
-import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateWithTabRow
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogEvent
 import ru.livetyping.zarina.core.uikit.permission.PermissionRequiredDialogState
@@ -109,7 +109,7 @@ private fun ScreenContent(
             onBackClicked = { onStoreListEvent(StoreListEvent.BackClicked) },
         )
 
-        val pagerState = rememberPagerStateWithTabRow(
+        val pagerState = rememberPagerStateIntegratedWithTabRow(
             tabs = viewModeSelectorState.tabs,
             currentTab = viewModeSelectorState.currentTab,
             onTabChanged = { onViewModeSelectorEvent(TabRowEvent.TabChanged(it)) },

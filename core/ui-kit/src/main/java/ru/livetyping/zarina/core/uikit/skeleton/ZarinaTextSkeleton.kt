@@ -17,6 +17,7 @@ import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 public fun ZarinaTextSkeleton(
     textStyle: TextStyle,
     modifier: Modifier = Modifier,
+    text: String? = null,
     // Whether or not to use UI kit font family. UI kit font family has huge bottom paddings
     useUiKitFontFamily: Boolean = true,
     shimmer: Shimmer = rememberZarinaSkeletonShimmer(),
@@ -37,8 +38,9 @@ public fun ZarinaTextSkeleton(
         }
 
         Text(
-            text = "",
+            text = text.orEmpty(),
             style = textStyle.copy(fontFamily = fontFamily),
+            color = Color.Transparent,
         )
     }
 }
