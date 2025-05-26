@@ -37,9 +37,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.Product
@@ -100,7 +97,7 @@ public fun ProductGrid(
         Logging(productPagingItems)
     }
 
-    SideEffectObserver(gridState, productPagingItems, sideEffects)
+    SideEffectObserver(gridState, sideEffects)
 
     Box(modifier = modifier) {
         val isPullRefreshTriggered = remember { mutableStateOf(false) }
@@ -364,20 +361,12 @@ private fun ScrollToTopButton(
 @Composable
 private fun SideEffectObserver(
     lazyGridState: LazyGridState,
-    productPagingItems: LazyPagingItems<ProductShort>,
     sideEffects: Flow<ProductGridSideEffect>?,
 ) {
-    LaunchedEffect(lazyGridState, productPagingItems, sideEffects) {
-        if (sideEffects != null) {
-            val scrollToTopEffects =
-                sideEffects.filterIsInstance<ProductGridSideEffect.ScrollToTop>()
-            val refreshStateFlow = snapshotFlow { productPagingItems.loadState.refresh }
-            scrollToTopEffects.collectLatest {
-                // Wait for a loading to start
-                refreshStateFlow.firstOrNull { it is LoadState.Loading }
-                // Wait for products to load
-                refreshStateFlow.firstOrNull { it is LoadState.NotLoading }
-                lazyGridState.requestScrollToItem(0)
+    LaunchedEffect(lazyGridState, sideEffects) {
+        sideEffects?.collect {
+            when (it) {
+                ProductGridSideEffect.ScrollToTop -> lazyGridState.requestScrollToItem(0)
             }
         }
     }
