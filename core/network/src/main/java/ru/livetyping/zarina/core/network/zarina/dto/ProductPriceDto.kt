@@ -21,10 +21,10 @@ public data class ProductPriceDto(
     val discountPrice: Float? = null,
 ) {
     public fun toProductPrice(): ProductPrice {
-        checkPropertyNotNull(commonPrice) { ::commonPrice }
-        checkPropertyNotNull(hasDiscount) { ::hasDiscount }
-        checkPropertyNotNull(discountPrice) { ::discountPrice }
-        checkPropertyNotNull(discount) { ::discount }
+        checkPropertyNotNull(commonPrice) { "common_price" }
+        checkPropertyNotNull(hasDiscount) { "has_discount" }
+        checkPropertyNotNull(discountPrice) { "discount_price" }
+        checkPropertyNotNull(discount) { "discount" }
         val discount = if (hasDiscount) {
             ProductPrice.Discount(
                 discountPrice = BigDecimal(discountPrice.toDouble()),

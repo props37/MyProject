@@ -14,7 +14,7 @@ internal data class GetLoyaltyCardDto(
     val card: LoyaltyCardDto? = null,
 ) {
     fun toLoyaltyCard(): LoyaltyCard {
-        checkPropertyNotNull(card) { ::card }
+        checkPropertyNotNull(card) { "card" }
         return card.toLoyaltyCard()
     }
 }

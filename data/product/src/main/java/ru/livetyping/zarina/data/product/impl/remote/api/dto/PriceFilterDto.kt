@@ -15,8 +15,8 @@ internal data class PriceFilterDto(
     val max: Int? = null,
 ) {
     fun toPriceRange(): PriceRange = PriceRange(
-        min = checkPropertyNotNull(min) { ::min },
-        max = checkPropertyNotNull(max) { ::max },
+        min = checkPropertyNotNull(min) { "min" },
+        max = checkPropertyNotNull(max) { "max" },
     )
 
     companion object {

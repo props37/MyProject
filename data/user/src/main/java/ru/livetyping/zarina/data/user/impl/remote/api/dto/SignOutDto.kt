@@ -12,7 +12,7 @@ internal data class SignOutDto(
     val jwt: BearerTokensDto? = null,
 ) {
     fun toBearerTokens(): BearerTokens {
-        checkPropertyNotNull(jwt) { ::jwt }
+        checkPropertyNotNull(jwt) { "jwt" }
         return jwt.toBearerTokens()
     }
 }

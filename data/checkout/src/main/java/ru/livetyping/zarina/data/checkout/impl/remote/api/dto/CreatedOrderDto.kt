@@ -12,7 +12,7 @@ internal data class CreatedOrderDto(
     val order: OrderDto? = null,
 ) {
     fun toOrder(): OrderDetailed {
-        checkPropertyNotNull(order) { ::order }
+        checkPropertyNotNull(order) { "order" }
         return order.toOrder()
     }
 }

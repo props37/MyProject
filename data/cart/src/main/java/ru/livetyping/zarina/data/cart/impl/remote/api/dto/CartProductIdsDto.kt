@@ -15,10 +15,10 @@ internal data class CartProductIdsDto(
     val items: List<String>? = null,
 ) {
     fun toCartProductIds(): CartProductIds {
-        checkPropertyNotNull(items) { ::items }
+        checkPropertyNotNull(items) { "items" }
         return CartProductIds(
             cartProductIds = items.mapTo(mutableSetOf()) { Product.Id(it) },
-            cartProductCount = checkPropertyNotNull(itemCount) { ::itemCount },
+            cartProductCount = checkPropertyNotNull(itemCount) { "items_count" },
         )
     }
 }

@@ -14,7 +14,7 @@ internal data class WishlistProductIdsDto(
     val items: List<String>? = null,
 ) {
     fun toProductIds(): Set<Product.Id> {
-        checkPropertyNotNull(items) { ::items }
+        checkPropertyNotNull(items) { "items" }
         return items.mapTo(mutableSetOf()) { Product.Id(it) }
     }
 }

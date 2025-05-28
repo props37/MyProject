@@ -13,7 +13,7 @@ internal data class CheckoutCartDto(
     val basket: CartDto? = null,
 ) {
     fun toCart(cartType: CartType): Cart {
-        checkPropertyNotNull(basket) { ::basket }
+        checkPropertyNotNull(basket) { "basket" }
         return basket.toCart(cartType)
     }
 }

@@ -22,8 +22,8 @@ internal data class GetOrdersDto(
     val pagination: PaginationInfoDto? = null,
 ) {
     fun toOrderPage(): Page<List<OrderShort>> {
-        checkPropertyNotNull(items) { ::items }
-        checkPropertyNotNull(pagination) { ::pagination }
+        checkPropertyNotNull(items) { "items" }
+        checkPropertyNotNull(pagination) { "pagination" }
         return Page(
             data = items.mapNotNull { it.toOrderItem() },
             paginationInfo = pagination.toPaginationInfo(Int.MAX_VALUE),

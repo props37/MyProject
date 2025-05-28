@@ -20,7 +20,7 @@ internal data class ProductAvailabilityInStoreDto(
     fun toProductAvailabilityInStore(): ProductAvailabilityInStore {
         val store = shop?.toStore()
         checkNotNull(store) { "store is null" }
-        checkPropertyNotNull(amount) { ::amount }
+        checkPropertyNotNull(amount) { "amount" }
         return ProductAvailabilityInStore(
             store = store,
             amount = amount.toAmount(),

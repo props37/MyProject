@@ -14,8 +14,8 @@ internal data class CatalogMenuByGenderDto(
     val man: CatalogMenuDto? = null,
 ) {
     fun toCatalogMenu(): CatalogMenuByGender {
-        checkPropertyNotNull(woman) { ::woman }
-        checkPropertyNotNull(man) { ::man }
+        checkPropertyNotNull(woman) { "woman" }
+        checkPropertyNotNull(man) { "man" }
         return CatalogMenuByGender(
             women = woman.toCatalogMenu(),
             men = man.toCatalogMenu(),

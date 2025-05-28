@@ -14,8 +14,8 @@ internal data class LocationDto(
     val lon: Double? = null,
 ) {
     fun toLocation(): Location {
-        checkPropertyNotNull(lat) { ::lat }
-        checkPropertyNotNull(lon) { ::lon }
+        checkPropertyNotNull(lat) { "lat" }
+        checkPropertyNotNull(lon) { "lon" }
         return Location(lat, lon)
     }
 }

@@ -15,8 +15,8 @@ public data class BearerTokensDto(
     val refreshToken: String? = null,
 ) {
     public fun toBearerTokens(): BearerTokens {
-        val accessToken = checkPropertyNotNull(token) { ::token }
-        val refreshToken = checkPropertyNotNull(refreshToken) { ::refreshToken }
+        val accessToken = checkPropertyNotNull(token) { "token" }
+        val refreshToken = checkPropertyNotNull(refreshToken) { "refresh_token" }
         return BearerTokens(
             accessToken = Token(accessToken),
             refreshToken = Token(refreshToken),
