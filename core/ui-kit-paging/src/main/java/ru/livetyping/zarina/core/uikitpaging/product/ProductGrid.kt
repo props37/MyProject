@@ -366,7 +366,13 @@ private fun SideEffectObserver(
     LaunchedEffect(lazyGridState, sideEffects) {
         sideEffects?.collect {
             when (it) {
-                ProductGridSideEffect.ScrollToTop -> lazyGridState.requestScrollToItem(0)
+                is ProductGridSideEffect.ScrollToTop -> {
+                    if (it.animate) {
+                        lazyGridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
+                    } else {
+                        lazyGridState.requestScrollToItem(0)
+                    }
+                }
             }
         }
     }

@@ -219,7 +219,10 @@ internal class SearchViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScope)
-        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
+        .onEach {
+            val se = ProductGridSideEffect.ScrollToTop(animate = false)
+            _productGridSideEffects.trySend(se)
+        }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 
