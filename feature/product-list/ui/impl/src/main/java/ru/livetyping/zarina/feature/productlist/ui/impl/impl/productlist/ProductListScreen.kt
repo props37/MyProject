@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
@@ -52,6 +51,7 @@ internal fun ProductListScreen(
     ScreenContent(
         productListState = productListState,
         onProductListEvent = viewModel::onProductListEvent,
+        productGridSideEffects = viewModel.productGridSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -61,6 +61,7 @@ internal fun ProductListScreen(
 private fun ScreenContent(
     productListState: ProductListState,
     onProductListEvent: (ProductListEvent) -> Unit,
+    productGridSideEffects: Flow<ProductGridSideEffect>,
     sideEffects: Flow<ProductListSideEffect>,
     navActions: ProductListNavActions,
 ) {
@@ -77,6 +78,9 @@ private fun ScreenContent(
                 categoryName = productListState.categoryName,
                 subcategoryListState = productListState.subcategoryListState,
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onSeeAllProductsInCategoryClicked = {
+                    onProductListEvent(ProductListEvent.SeeAllProductsInCategoryClicked)
+                },
                 onSubcategoryClicked = {
                     onProductListEvent(ProductListEvent.SubcategoryClicked(it))
                 },
@@ -100,6 +104,7 @@ private fun ScreenContent(
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         ) {
             UtilityTopBar(
+                appliedFilterCount = productListState.appliedFilterCount,
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
                 onFiltersClicked = { onProductListEvent(ProductListEvent.FiltersClicked) },
                 onSearchClicked = { onProductListEvent(ProductListEvent.SearchClicked) },
@@ -117,10 +122,6 @@ private fun ScreenContent(
                     }
                 } else null
 
-            val productGridSideEffect = remember(sideEffects) {
-                sideEffects.mapNotNull { it.toProductGridSideEffect() }
-            }
-
             ProductGrid(
                 productPagingDataFlow = productListState.productPagingDataFlow,
                 onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
@@ -129,6 +130,12 @@ private fun ScreenContent(
                 },
                 onProductsPullRefreshTriggered = {
                     onProductListEvent(ProductListEvent.PullRefreshTriggered)
+                },
+                onProductsAppendError = {
+                    onProductListEvent(ProductListEvent.ProductAppendError(it))
+                },
+                onProductsPrependError = {
+                    onProductListEvent(ProductListEvent.ProductPrependError(it))
                 },
                 onProductsErrorRefreshClicked = {
                     onProductListEvent(ProductListEvent.RefreshClicked)
@@ -144,19 +151,12 @@ private fun ScreenContent(
                     )
                 },
                 footer = footer,
-                sideEffects = productGridSideEffect,
+                sideEffects = productGridSideEffects,
                 isEndlessLoadingEnabled = productListState.isProductEndlessLoadingEnabled,
                 bottomPaddingProvider = { bottomNavBarHeightAsState().value },
                 appMetricaScreen = remember { Screen.ProductList(categoryPath = null) },
                 modifier = Modifier.weight(1f),
             )
         }
-    }
-}
-
-private fun ProductListSideEffect.toProductGridSideEffect(): ProductGridSideEffect? {
-    return when (this) {
-        ProductListSideEffect.ScrollProductsToTop -> ProductGridSideEffect.ScrollToTop
-        else -> null
     }
 }

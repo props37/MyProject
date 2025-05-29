@@ -29,7 +29,7 @@ public class ProductFiltrationComponent(
 
     public val filters: SharedFlow<ProductFilters?> = filtersValueHolder.stateFlow
         .map { filtersParcelable ->
-            filtersParcelable?.toProductFilters() ?: initialFilters
+            filtersParcelable?.toProductFilters() ?: initialFilters ?: ProductFilters.getEmpty()
         }
         .shareIn(
             scope = coroutineScope,

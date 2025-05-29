@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.Product
@@ -46,6 +49,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.list.ZarinaListLoadMoreButton
 import ru.livetyping.zarina.core.uikit.product.ProductCard
 import ru.livetyping.zarina.core.uikit.product.ProductCardSkeleton
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
@@ -61,9 +65,6 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.Product
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridDefaults.ScrollToTopButtonPadding
 import timber.log.Timber
 
-// TODO: [Top] Show append and prepend errors to user
-// TODO: [Low] Migrate to ZarinaPagingPullRefreshContainer
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 public fun ProductGrid(
@@ -72,14 +73,15 @@ public fun ProductGrid(
     onAddToWishlistClicked: (Product) -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    gridState: LazyGridState = rememberLazyGridState(),
     footer: (LazyGridScope.() -> Unit)? = null,
-
     /**
      * Callback that will be called when products are refreshed. Since the refresh is done
      * under the hood, the additional logic can be invoked using this callback.
      */
     onProductsPullRefreshTriggered: (() -> Unit)? = null,
-
+    onProductsAppendError: ((Throwable) -> Unit)? = null,
+    onProductsPrependError: ((Throwable) -> Unit)? = null,
     /**
      * Callback that will be called when error retry button is clicked. Since the retry
      * is done under the hood, the additional logic can be invoked using this callback.
@@ -90,7 +92,6 @@ public fun ProductGrid(
     bottomPaddingProvider: @Composable () -> Dp = { 0.dp },
     appMetricaScreen: Screen? = null,
 ) {
-    val gridState = rememberLazyGridState()
     val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
 
     if (Timber.treeCount > 0) {
@@ -99,8 +100,15 @@ public fun ProductGrid(
 
     SideEffectObserver(gridState, sideEffects)
 
+    PaginationErrorRedirector(
+        productPagingItems = productPagingItems,
+        onAppendError = onProductsAppendError,
+        onPrependError = onProductsPrependError,
+    )
+
     Box(modifier = modifier) {
         val isPullRefreshTriggered = remember { mutableStateOf(false) }
+
         LaunchedEffect(productPagingItems) {
             snapshotFlow { productPagingItems.loadState.refresh }.collect {
                 if (it !is LoadState.Loading) {
@@ -173,10 +181,8 @@ public fun ProductGrid(
                 }
 
                 LoadState.Loading -> {
-                    val shimmer = rememberZarinaSkeletonShimmer()
-
                     ProductGridSkeleton(
-                        shimmer = shimmer,
+                        shimmer = rememberZarinaSkeletonShimmer(),
                         bottomPaddingProvider = bottomPaddingProvider,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -222,6 +228,8 @@ private fun ProductGridImpl(
             val bottomPadding =
                 bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
 
+            val onRetryClicked = { productPagingItems.retry() }
+
             LazyVerticalGrid(
                 columns = remember { GridCells.Fixed(ItemInRowCount) },
                 state = gridState,
@@ -230,7 +238,11 @@ private fun ProductGridImpl(
                 contentPadding = PaddingValues(bottom = bottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                prependAppendItems(productPagingItems.loadState.prepend, placeholderShimmer)
+                prependAppendItems(
+                    loadState = productPagingItems.loadState.append,
+                    onRetryClicked = onRetryClicked,
+                    shimmer = placeholderShimmer,
+                )
 
                 items(
                     count = productPagingItems.itemCount,
@@ -263,7 +275,11 @@ private fun ProductGridImpl(
                     }
                 }
 
-                prependAppendItems(productPagingItems.loadState.append, placeholderShimmer)
+                prependAppendItems(
+                    loadState = productPagingItems.loadState.append,
+                    onRetryClicked = onRetryClicked,
+                    shimmer = placeholderShimmer,
+                )
 
                 footer?.invoke(this)
             }
@@ -305,6 +321,7 @@ private fun ProductGridSkeleton(
 
 private fun LazyGridScope.prependAppendItems(
     loadState: LoadState,
+    onRetryClicked: () -> Unit,
     shimmer: Shimmer,
 ) {
     when (loadState) {
@@ -322,7 +339,14 @@ private fun LazyGridScope.prependAppendItems(
         }
 
         is LoadState.Error -> {
-            // TODO: [Top] Implement
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                ZarinaListLoadMoreButton(
+                    onClick = onRetryClicked,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .animateZarinaItem(this),
+                )
+            }
         }
 
         is LoadState.NotLoading -> Unit
@@ -366,7 +390,13 @@ private fun SideEffectObserver(
     LaunchedEffect(lazyGridState, sideEffects) {
         sideEffects?.collect {
             when (it) {
-                ProductGridSideEffect.ScrollToTop -> lazyGridState.requestScrollToItem(0)
+                is ProductGridSideEffect.ScrollToTop -> {
+                    if (it.animate) {
+                        lazyGridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
+                    } else {
+                        lazyGridState.requestScrollToItem(0)
+                    }
+                }
             }
         }
     }
@@ -386,6 +416,32 @@ private fun Logging(productPagingItems: LazyPagingItems<ProductShort>) {
                 val prepend = loadStates.prepend
                 if (prepend is LoadState.Error) Timber.tag(Tag).e(prepend.error)
             }
+    }
+}
+
+@Composable
+private fun PaginationErrorRedirector(
+    productPagingItems: LazyPagingItems<ProductShort>,
+    onAppendError: ((Throwable) -> Unit)? = null,
+    onPrependError: ((Throwable) -> Unit)? = null,
+) {
+    val currentOnAppendError by rememberUpdatedState(onAppendError)
+    val currentOnPrependError by rememberUpdatedState(onPrependError)
+
+    LaunchedEffect(productPagingItems) {
+        snapshotFlow { productPagingItems.loadState }
+            .onEach { loadStates ->
+                val append = loadStates.append
+                if (append is LoadState.Error) {
+                    currentOnAppendError?.invoke(append.error)
+                }
+
+                val prepend = loadStates.prepend
+                if (prepend is LoadState.Error) {
+                    currentOnPrependError?.invoke(prepend.error)
+                }
+            }
+            .launchIn(this)
     }
 }
 

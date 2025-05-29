@@ -193,7 +193,7 @@ internal class CitySelectorViewModel @Inject constructor(
             else -> {
                 ZarinaToastMessage2(
                     text = Text.Resource(R.string.city_selector_city_changing_error),
-                    startContent = ZarinaToastMessage2.ERROR_DEFAULT_START_ICON,
+                    startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
                 )
             }
         }

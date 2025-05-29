@@ -96,7 +96,10 @@ internal class WishlistViewModel @Inject constructor(
 
     val productPagingDataFlow: Flow<PagingData<ProductShort>> = wishlistProductsRequester.flow
         .cachedIn(viewModelScope)
-        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
+        .onEach {
+            val se = ProductGridSideEffect.ScrollToTop(animate = false)
+            _productGridSideEffects.trySend(se)
+        }
         .combine(
             localWishlistProductIdsResultFlow,
             cartProductIdsResultFlow,

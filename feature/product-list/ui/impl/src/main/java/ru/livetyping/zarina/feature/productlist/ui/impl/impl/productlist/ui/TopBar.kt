@@ -24,6 +24,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,12 +40,14 @@ import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBarDefaults
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.model.SubcategoryListState
 import kotlin.random.Random
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun TopBar(
     categoryName: String?,
     subcategoryListState: SubcategoryListState,
     onBackClicked: () -> Unit,
+    onSeeAllProductsInCategoryClicked: () -> Unit,
     onSubcategoryClicked: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -56,6 +59,7 @@ internal fun TopBar(
 
         SubcategoryList(
             state = subcategoryListState,
+            onSeeAllClicked = onSeeAllProductsInCategoryClicked,
             onSubcategoryClicked = onSubcategoryClicked,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -113,6 +117,7 @@ private fun Header(
 @Composable
 private fun SubcategoryList(
     state: SubcategoryListState,
+    onSeeAllClicked: () -> Unit,
     onSubcategoryClicked: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -142,6 +147,7 @@ private fun SubcategoryList(
             is SubcategoryListState.Success -> {
                 SubcategoryListSuccess(
                     state = state,
+                    onSeeAllClicked = onSeeAllClicked,
                     onSubcategoryClicked = onSubcategoryClicked,
                 )
             }
@@ -158,6 +164,7 @@ private fun SubcategoryList(
 @Composable
 private fun SubcategoryListSuccess(
     state: SubcategoryListState.Success,
+    onSeeAllClicked: () -> Unit,
     onSubcategoryClicked: (Category) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -171,9 +178,20 @@ private fun SubcategoryListSuccess(
     LazyRow(
         state = lazyListState,
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
-        horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = SubcategoryListSpacedBy,
+            alignment = Alignment.CenterHorizontally,
+        ),
         modifier = modifier,
     ) {
+        item(key = SeeAllProductsKey) {
+            ZarinaBracketTab(
+                text = stringResource(RCommon.string.res_all).uppercase(),
+                isSelected = state.selectedCategoryId == null,
+                onClick = onSeeAllClicked,
+            )
+        }
+
         items(
             items = state.categories,
             key = { it.id.value },
@@ -195,7 +213,10 @@ private fun SubcategoryListLoading(
 
     LazyRow(
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
-        horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = SubcategoryListSpacedBy,
+            alignment = Alignment.CenterHorizontally,
+        ),
         modifier = modifier,
     ) {
         items(count = 8) {
@@ -220,3 +241,5 @@ private enum class SubcategoryListContentKey { Success }
 
 private val SubcategoryListHorizontalPadding: Dp get() = 8.dp
 private val SubcategoryListSpacedBy: Dp get() = 12.dp
+
+private const val SeeAllProductsKey = "AllSubcategoryKey"

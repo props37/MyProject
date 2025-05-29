@@ -7,6 +7,7 @@
     <string name="res_internet_connection_error_guide">Проверьте соединение с интернетом или отключите VPN, затем обновите страницу</string>
     <string name="res_generic_error_guide">Обновите страницу или попробуйте зайти позже</string>
     <string name="res_something_went_wrong">Что-то пошло не так</string>
+    <string name="res_something_went_wrong_try_again">Что-то пошло не так, попробуйте снова</string>
     <string name="res_refresh_page_or_come_back_later">Обновите страницу или зайдите позже</string>
     <string name="res_loading">Загрузка</string>
     <string name="res_find_products">Найти товары</string>
@@ -119,6 +120,7 @@
     <string name="res_gift_certificate">Подарочный сертификат</string>
     <string name="res_application_not_found">Приложение не найдено</string>
     <string name="res_load_more">Загрузить еще</string>
+    <string name="res_all">Все</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

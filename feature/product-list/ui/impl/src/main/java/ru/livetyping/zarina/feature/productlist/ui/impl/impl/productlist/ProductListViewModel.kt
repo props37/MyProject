@@ -14,6 +14,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
@@ -50,8 +52,10 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.R
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.CategoryComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.FilterComponent
@@ -90,6 +94,9 @@ internal class ProductListViewModel @AssistedInject constructor(
         filterComponent.initialFilters = navEntry.filters?.toProductFilters()
     }
 
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
     private val subcategoryListStateBuilder = SubcategoryListState.Builder()
     private val subcategoryListState = combine(
         categoryComponent.categoryResult,
@@ -123,7 +130,10 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScope)
-        .onEach { emitSideEffect(ProductListSideEffect.ScrollProductsToTop) }
+        .onEach {
+            val se = ProductGridSideEffect.ScrollToTop(animate = false)
+            _productGridSideEffects.trySend(se)
+        }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 
@@ -137,6 +147,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val initialProductListState = ProductListState(
         categoryName = null,
         subcategoryListState = SubcategoryListState.Loading,
+        appliedFilterCount = 0,
         productPagingDataFlow = productPagingDataFlow,
         isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled.value,
         isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled.value,
@@ -146,12 +157,14 @@ internal class ProductListViewModel @AssistedInject constructor(
     val productListState: StateFlow<ProductListState> = combine(
         categoryComponent.categoryResult,
         subcategoryListState,
+        filterComponent.currentFilters,
         isProductEndlessLoadingEnabled,
         interceptSystemBack,
-    ) { categoryResult, subcategoryListState, isProductEndlessLoadingEnabled, interceptSystemBack ->
+    ) { categoryResult, subcategoryListState, appliedFilters, isProductEndlessLoadingEnabled, interceptSystemBack ->
         ProductListState(
             categoryName = categoryResult?.getOrNull()?.name,
             subcategoryListState = subcategoryListState,
+            appliedFilterCount = appliedFilters.appliedFilterCount,
             productPagingDataFlow = productPagingDataFlow,
             isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled,
             isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled,
@@ -172,11 +185,14 @@ internal class ProductListViewModel @AssistedInject constructor(
             ProductListEvent.BackClicked -> onBackClicked()
             ProductListEvent.SearchClicked -> onSearchClicked()
             ProductListEvent.FiltersClicked -> onFiltersClicked()
+            ProductListEvent.SeeAllProductsInCategoryClicked -> onSeeAllProductsInCategoryClicked()
             is ProductListEvent.SubcategoryClicked -> onSubcategoryClicked(event)
             is ProductListEvent.ProductClicked -> onProductClicked(event)
             is ProductListEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
             ProductListEvent.LoadMoreProductsClicked -> isProductEndlessLoadingEnabled.value = true
             ProductListEvent.PullRefreshTriggered -> onRefresh()
+            is ProductListEvent.ProductAppendError -> onProductsPaginationError()
+            is ProductListEvent.ProductPrependError -> onProductsPaginationError()
             ProductListEvent.RefreshClicked -> onRefresh()
             is ProductListEvent.CategoryShortcutClicked -> onCategoryShortcutClicked(event)
             ProductListEvent.SystemBackClicked -> onSystemBackClicked()
@@ -220,6 +236,13 @@ internal class ProductListViewModel @AssistedInject constructor(
         }
     }
 
+    private fun onSeeAllProductsInCategoryClicked() {
+        if (categoryComponent.selectedSubcategoryId.value != null) {
+            categoryComponent.setSelectedSubcategoryId(null)
+            reportScreenCreated()
+        }
+    }
+
     private fun onSubcategoryClicked(event: ProductListEvent.SubcategoryClicked) {
         val category = event.category
         if (category.children.isNullOrEmpty()) {
@@ -260,6 +283,14 @@ internal class ProductListViewModel @AssistedInject constructor(
         if (!categoryComponent.isCategoryFetched()) {
             fetchCategory()
         }
+    }
+
+    private fun onProductsPaginationError() {
+        val message = ZarinaToastMessage2(
+            text = Text.Resource(R.string.product_list_product_pagination_error),
+            startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
+        )
+        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
     }
 
     private fun onCategoryShortcutClicked(event: ProductListEvent.CategoryShortcutClicked) {
@@ -321,7 +352,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             else -> {
                 ZarinaToastMessage2(
                     text = Text.Resource(RCommon.string.res_product_adding_to_wishlist_error),
-                    startContent = ZarinaToastMessage2.ERROR_DEFAULT_START_ICON,
+                    startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
                 )
             }
         }
