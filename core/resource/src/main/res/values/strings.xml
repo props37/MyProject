@@ -9,6 +9,7 @@
     <string name="res_internet_connection_error_guide">Проверьте соединение с интернетом или отключите VPN, затем обновите страницу</string>
     <string name="res_generic_error_guide">Обновите страницу или попробуйте зайти позже</string>
     <string name="res_something_went_wrong">Что-то пошло не так</string>
+    <string name="res_something_went_wrong_try_again">Что-то пошло не так, попробуйте снова</string>
     <string name="res_refresh_page_or_come_back_later">Обновите страницу или зайдите позже</string>
     <string name="res_loading">Загрузка</string>
     <string name="res_find_products">Найти товары</string>

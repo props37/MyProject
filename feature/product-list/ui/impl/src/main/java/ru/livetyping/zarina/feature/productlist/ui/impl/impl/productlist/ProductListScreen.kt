@@ -131,6 +131,12 @@ private fun ScreenContent(
                 onProductsPullRefreshTriggered = {
                     onProductListEvent(ProductListEvent.PullRefreshTriggered)
                 },
+                onProductsAppendError = {
+                    onProductListEvent(ProductListEvent.ProductAppendError(it))
+                },
+                onProductsPrependError = {
+                    onProductListEvent(ProductListEvent.ProductPrependError(it))
+                },
                 onProductsErrorRefreshClicked = {
                     onProductListEvent(ProductListEvent.RefreshClicked)
                 },

@@ -22,6 +22,10 @@ internal sealed interface ProductListEvent {
 
     data object PullRefreshTriggered : ProductListEvent
 
+    data class ProductAppendError(val throwable: Throwable) : ProductListEvent
+
+    data class ProductPrependError(val throwable: Throwable) : ProductListEvent
+
     data object RefreshClicked : ProductListEvent
 
     data class CategoryShortcutClicked(val categoryId: Category.Id) : ProductListEvent

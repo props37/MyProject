@@ -55,6 +55,7 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.R
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.CategoryComponent
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.component.FilterComponent
@@ -190,6 +191,8 @@ internal class ProductListViewModel @AssistedInject constructor(
             is ProductListEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
             ProductListEvent.LoadMoreProductsClicked -> isProductEndlessLoadingEnabled.value = true
             ProductListEvent.PullRefreshTriggered -> onRefresh()
+            is ProductListEvent.ProductAppendError -> onProductsPaginationError()
+            is ProductListEvent.ProductPrependError -> onProductsPaginationError()
             ProductListEvent.RefreshClicked -> onRefresh()
             is ProductListEvent.CategoryShortcutClicked -> onCategoryShortcutClicked(event)
             ProductListEvent.SystemBackClicked -> onSystemBackClicked()
@@ -282,6 +285,14 @@ internal class ProductListViewModel @AssistedInject constructor(
         }
     }
 
+    private fun onProductsPaginationError() {
+        val message = ZarinaToastMessage2(
+            text = Text.Resource(R.string.product_list_product_pagination_error),
+            startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
+        )
+        emitSideEffect(ProductListSideEffect.ShowZarinaToast(message))
+    }
+
     private fun onCategoryShortcutClicked(event: ProductListEvent.CategoryShortcutClicked) {
         navigationThrottler.throttle {
             val action = ProductListScreenAction.CategoryShortcutClicked(event.categoryId)
@@ -341,7 +352,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             else -> {
                 ZarinaToastMessage2(
                     text = Text.Resource(RCommon.string.res_product_adding_to_wishlist_error),
-                    startContent = ZarinaToastMessage2.ERROR_DEFAULT_START_ICON,
+                    startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
                 )
             }
         }

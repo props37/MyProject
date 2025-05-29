@@ -5,4 +5,5 @@
     <string name="product_list_nothing_found">Ничего не найдено…</string>
     <string name="product_list_products_are_over">Кажется товары в этом разделе закончились, зато у нас много классных новинок</string>
     <string name="product_list_products_are_over_new">новинок</string>
+    <string name="product_list_product_pagination_error">Не удалось загрузить товары, попробуйте снова</string>
 </resources>
