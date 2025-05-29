@@ -171,7 +171,10 @@ private fun SubcategoryListSuccess(
     LazyRow(
         state = lazyListState,
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
-        horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = SubcategoryListSpacedBy,
+            alignment = Alignment.CenterHorizontally,
+        ),
         modifier = modifier,
     ) {
         items(
@@ -195,7 +198,10 @@ private fun SubcategoryListLoading(
 
     LazyRow(
         contentPadding = PaddingValues(horizontal = SubcategoryListHorizontalPadding),
-        horizontalArrangement = Arrangement.spacedBy(SubcategoryListSpacedBy),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = SubcategoryListSpacedBy,
+            alignment = Alignment.CenterHorizontally,
+        ),
         modifier = modifier,
     ) {
         items(count = 8) {
