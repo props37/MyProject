@@ -46,6 +46,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaScrollToTopButton
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.list.ZarinaListLoadMoreButton
 import ru.livetyping.zarina.core.uikit.product.ProductCard
 import ru.livetyping.zarina.core.uikit.product.ProductCardSkeleton
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
@@ -222,6 +223,8 @@ private fun ProductGridImpl(
             val bottomPadding =
                 bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding
 
+            val onRetryClicked = { productPagingItems.retry() }
+
             LazyVerticalGrid(
                 columns = remember { GridCells.Fixed(ItemInRowCount) },
                 state = gridState,
@@ -230,7 +233,11 @@ private fun ProductGridImpl(
                 contentPadding = PaddingValues(bottom = bottomPadding),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                prependAppendItems(productPagingItems.loadState.prepend, placeholderShimmer)
+                prependAppendItems(
+                    loadState = productPagingItems.loadState.append,
+                    onRetryClicked = onRetryClicked,
+                    shimmer = placeholderShimmer,
+                )
 
                 items(
                     count = productPagingItems.itemCount,
@@ -263,7 +270,11 @@ private fun ProductGridImpl(
                     }
                 }
 
-                prependAppendItems(productPagingItems.loadState.append, placeholderShimmer)
+                prependAppendItems(
+                    loadState = productPagingItems.loadState.append,
+                    onRetryClicked = onRetryClicked,
+                    shimmer = placeholderShimmer,
+                )
 
                 footer?.invoke(this)
             }
@@ -305,6 +316,7 @@ private fun ProductGridSkeleton(
 
 private fun LazyGridScope.prependAppendItems(
     loadState: LoadState,
+    onRetryClicked: () -> Unit,
     shimmer: Shimmer,
 ) {
     when (loadState) {
@@ -322,7 +334,14 @@ private fun LazyGridScope.prependAppendItems(
         }
 
         is LoadState.Error -> {
-            // TODO: [Top] Implement
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                ZarinaListLoadMoreButton(
+                    onClick = onRetryClicked,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .animateZarinaItem(this),
+                )
+            }
         }
 
         is LoadState.NotLoading -> Unit
