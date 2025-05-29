@@ -1,16 +1,22 @@
 package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -18,12 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import ru.livetyping.zarina.core.uicompose.text.unscalable
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -33,6 +41,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun UtilityTopBar(
+    appliedFilterCount: Int,
     onBackClicked: () -> Unit,
     onFiltersClicked: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -66,7 +75,7 @@ internal fun UtilityTopBar(
 
                     FilterButton(
                         onClick = onFiltersClicked,
-                        modifier = Modifier.size(IconButtonSize),
+                        appliedFilterCount = appliedFilterCount,
                     )
                 }
             }
@@ -95,18 +104,49 @@ internal fun UtilityTopBar(
 @Composable
 private fun FilterButton(
     onClick: () -> Unit,
+    appliedFilterCount: Int,
     modifier: Modifier = Modifier,
 ) {
-    ZarinaIconButton(
-        onClick = onClick,
-        indication = ripple(bounded = false, radius = IconSize),
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(RCommon.drawable.ic_settings_menu_24),
-            contentDescription = stringResource(RCommon.string.res_filters),
-            modifier = Modifier.size(IconSize),
-        )
+        AnimatedVisibility(visible = appliedFilterCount > 0) {
+            val backgroundColor = UiKitTheme2.colors.mainBlack
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(start = 2.dp)
+                    .drawBehind {
+                        drawRect(
+                            color = backgroundColor,
+                            size = Size(size.maxDimension, size.maxDimension),
+                        )
+                    }
+                    .padding(2.dp)
+                    .size(IconSize),
+            ) {
+                Text(
+                    text = appliedFilterCount.toString(),
+                    style = UiKitTheme2.typography.body.unscalable(LocalDensity.current),
+                    color = UiKitTheme2.colors.white,
+                    modifier = Modifier.padding(bottom = 1.dp),
+                )
+            }
+        }
+
+        ZarinaIconButton(
+            onClick = onClick,
+            indication = ripple(bounded = false, radius = IconSize),
+            modifier = Modifier.size(IconButtonSize),
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(RCommon.drawable.ic_settings_menu_24),
+                contentDescription = stringResource(RCommon.string.res_filters),
+                modifier = Modifier.size(IconSize),
+            )
+        }
     }
 }
 

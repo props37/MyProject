@@ -137,6 +137,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     private val initialProductListState = ProductListState(
         categoryName = null,
         subcategoryListState = SubcategoryListState.Loading,
+        appliedFilterCount = 0,
         productPagingDataFlow = productPagingDataFlow,
         isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled.value,
         isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled.value,
@@ -146,12 +147,14 @@ internal class ProductListViewModel @AssistedInject constructor(
     val productListState: StateFlow<ProductListState> = combine(
         categoryComponent.categoryResult,
         subcategoryListState,
+        filterComponent.currentFilters,
         isProductEndlessLoadingEnabled,
         interceptSystemBack,
-    ) { categoryResult, subcategoryListState, isProductEndlessLoadingEnabled, interceptSystemBack ->
+    ) { categoryResult, subcategoryListState, appliedFilters, isProductEndlessLoadingEnabled, interceptSystemBack ->
         ProductListState(
             categoryName = categoryResult?.getOrNull()?.name,
             subcategoryListState = subcategoryListState,
+            appliedFilterCount = appliedFilters.appliedFilterCount,
             productPagingDataFlow = productPagingDataFlow,
             isLoadMoreProductsButtonVisible = !isProductEndlessLoadingEnabled,
             isProductEndlessLoadingEnabled = isProductEndlessLoadingEnabled,

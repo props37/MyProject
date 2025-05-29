@@ -103,6 +103,7 @@ private fun ScreenContent(
                 .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         ) {
             UtilityTopBar(
+                appliedFilterCount = productListState.appliedFilterCount,
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
                 onFiltersClicked = { onProductListEvent(ProductListEvent.FiltersClicked) },
                 onSearchClicked = { onProductListEvent(ProductListEvent.SearchClicked) },

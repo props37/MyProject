@@ -9,6 +9,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 internal data class ProductListState(
     val categoryName: String?,
     val subcategoryListState: SubcategoryListState,
+    val appliedFilterCount: Int,
     val productPagingDataFlow: Flow<PagingData<ProductShort>>,
     val isProductEndlessLoadingEnabled: Boolean,
     val isLoadMoreProductsButtonVisible: Boolean,
