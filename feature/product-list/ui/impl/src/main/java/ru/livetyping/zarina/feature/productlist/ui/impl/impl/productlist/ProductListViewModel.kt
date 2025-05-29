@@ -14,6 +14,7 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
@@ -50,6 +52,7 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
+import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
 import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
@@ -90,6 +93,9 @@ internal class ProductListViewModel @AssistedInject constructor(
         filterComponent.initialFilters = navEntry.filters?.toProductFilters()
     }
 
+    private val _productGridSideEffects = Channel<ProductGridSideEffect>(Channel.UNLIMITED)
+    val productGridSideEffects: Flow<ProductGridSideEffect> = _productGridSideEffects.receiveAsFlow()
+
     private val subcategoryListStateBuilder = SubcategoryListState.Builder()
     private val subcategoryListState = combine(
         categoryComponent.categoryResult,
@@ -123,7 +129,7 @@ internal class ProductListViewModel @AssistedInject constructor(
     }
         .flatMapLatest { it }
         .cachedIn(viewModelScope)
-        .onEach { emitSideEffect(ProductListSideEffect.ScrollProductsToTop) }
+        .onEach { _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop) }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
 

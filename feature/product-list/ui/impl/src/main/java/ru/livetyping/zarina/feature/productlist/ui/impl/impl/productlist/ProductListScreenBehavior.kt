@@ -31,8 +31,6 @@ internal fun ProductListScreenBehavior(
                     is ProductListSideEffect.ShowZarinaToast -> {
                         currentZarinaToastController.show(sideEffect.message)
                     }
-
-                    ProductListSideEffect.ScrollProductsToTop -> Unit
                 }
             }
         }
