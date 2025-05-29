@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -170,9 +170,10 @@ private fun SubcategoryListSuccess(
 ) {
     val lazyListState = rememberLazyListState()
 
-    DisposableEffect(state.selectedCategoryId) {
-        lazyListState.requestScrollToItem(0)
-        onDispose {}
+    LaunchedEffect(state.selectedCategoryId) {
+        if (state.selectedCategoryId == null) {
+            lazyListState.animateScrollToItem(0)
+        }
     }
 
     LazyRow(
