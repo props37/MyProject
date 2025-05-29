@@ -68,18 +68,18 @@ internal fun UtilityTopBar(
                         onClick = onFiltersClicked,
                         modifier = Modifier.size(IconButtonSize),
                     )
-
-                    SearchButton(
-                        onClick = onSearchClicked,
-                        modifier = Modifier.size(IconButtonSize),
-                    )
                 }
             }
         },
         endContent = {
-            // TODO: [Top] Add sorting button
+            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                SearchButton(
+                    onClick = onSearchClicked,
+                    modifier = Modifier.size(IconButtonSize),
+                )
+            }
         },
-        contentPadding = PaddingValues(start = 4.dp, top = 4.dp, bottom = 4.dp),
+        contentPadding = PaddingValues(4.dp),
         backgroundColor = Color.Transparent,
         modifier = modifier.drawWithContent {
             drawContent()
