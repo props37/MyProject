@@ -77,6 +77,9 @@ private fun ScreenContent(
                 categoryName = productListState.categoryName,
                 subcategoryListState = productListState.subcategoryListState,
                 onBackClicked = { onProductListEvent(ProductListEvent.BackClicked) },
+                onSeeAllProductsInCategoryClicked = {
+                    onProductListEvent(ProductListEvent.SeeAllProductsInCategoryClicked)
+                },
                 onSubcategoryClicked = {
                     onProductListEvent(ProductListEvent.SubcategoryClicked(it))
                 },

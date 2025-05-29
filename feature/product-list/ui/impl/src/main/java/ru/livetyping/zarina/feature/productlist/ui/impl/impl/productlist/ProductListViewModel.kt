@@ -172,6 +172,7 @@ internal class ProductListViewModel @AssistedInject constructor(
             ProductListEvent.BackClicked -> onBackClicked()
             ProductListEvent.SearchClicked -> onSearchClicked()
             ProductListEvent.FiltersClicked -> onFiltersClicked()
+            ProductListEvent.SeeAllProductsInCategoryClicked -> onSeeAllProductsInCategoryClicked()
             is ProductListEvent.SubcategoryClicked -> onSubcategoryClicked(event)
             is ProductListEvent.ProductClicked -> onProductClicked(event)
             is ProductListEvent.AddToWishlistClicked -> onAddToWishlistClicked(event)
@@ -217,6 +218,13 @@ internal class ProductListViewModel @AssistedInject constructor(
                 filters = combinedFilters,
             )
             emitSideEffect(ProductListSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onSeeAllProductsInCategoryClicked() {
+        if (categoryComponent.selectedSubcategoryId.value != null) {
+            categoryComponent.setSelectedSubcategoryId(null)
+            reportScreenCreated()
         }
     }
 

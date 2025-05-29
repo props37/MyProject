@@ -10,6 +10,8 @@ internal sealed interface ProductListEvent {
 
     data object FiltersClicked : ProductListEvent
 
+    data object SeeAllProductsInCategoryClicked : ProductListEvent
+
     data class SubcategoryClicked(val category: Category) : ProductListEvent
 
     data class ProductClicked(val product: Product) : ProductListEvent
