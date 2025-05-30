@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.domain.model.geo
 
 // Marked as stable on config/compose/stability_config.txt
 public data class City(
-    override val id: KladrId,
+    override val id: FiasId,
     override val name: String,
     val fullName: String?,
     val region: String?,
@@ -11,7 +11,7 @@ public data class City(
         public val MOSCOW: City
             get() = City(
                 name = "Москва",
-                id = KladrId.MOSCOW,
+                id = FiasId.MOSCOW,
                 fullName = "Москва",
                 region = "Москва",
             )
@@ -19,7 +19,7 @@ public data class City(
         public val SAINT_PETERSBURG: City
             get() = City(
                 name = "Санкт-Петербург",
-                id = KladrId.SAINT_PETERSBURG,
+                id = FiasId.SAINT_PETERSBURG,
                 fullName = "Санкт-Петербург",
                 region = "Санкт-Петербург",
             )

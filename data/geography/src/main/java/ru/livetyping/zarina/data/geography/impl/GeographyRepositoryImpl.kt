@@ -10,7 +10,7 @@ import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.geo.Building
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.data.geography.impl.local.GeographyLocalDataSource
@@ -36,15 +36,15 @@ internal class GeographyRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCityStreetsFlow(cityKladrId: KladrId, nameQuery: String): Flow<List<Street>> {
-        return remoteDataSource.getCityStreetsFlow(cityKladrId, nameQuery)
+    override fun getCityStreetsFlow(cityFiasId: FiasId, nameQuery: String): Flow<List<Street>> {
+        return remoteDataSource.getCityStreetsFlow(cityFiasId, nameQuery)
     }
 
     override fun getStreetBuildings(
-        streetKladrId: KladrId,
+        streetFiasId: FiasId,
         nameQuery: String,
     ): Flow<List<Building>> {
-        return remoteDataSource.getStreetBuildings(streetKladrId, nameQuery)
+        return remoteDataSource.getStreetBuildings(streetFiasId, nameQuery)
     }
 
     private fun getCitiesFlowLocalFirstThenRemote(

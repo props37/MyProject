@@ -15,7 +15,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
@@ -45,35 +45,35 @@ internal class CheckoutRepositoryImpl @Inject constructor(
 
     override fun getDeliveryMethodsFlow(
         cartType: CartType,
-        cityKladrId: KladrId
+        cityFiasId: FiasId
     ): Flow<List<DeliveryMethod>> {
-        return remoteDataSource.getDeliveryMethodsFlow(cartType, cityKladrId)
+        return remoteDataSource.getDeliveryMethodsFlow(cartType, cityFiasId)
     }
 
-    override fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>> {
-        return remoteDataSource.getPickupPointsFlow(cityKladrId)
+    override fun getPickupPointsFlow(cityFiasId: FiasId): Flow<List<PickupPointShort>> {
+        return remoteDataSource.getPickupPointsFlow(cityFiasId)
     }
 
     override fun getPickupPointFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         pickupPointId: PickupPoint.Id
     ): Flow<PickupPointDetailed> {
-        return remoteDataSource.getPickupPointFlow(cityKladrId, pickupPointId)
+        return remoteDataSource.getPickupPointFlow(cityFiasId, pickupPointId)
     }
 
     override fun getPickupStoresFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         deliveryMethodType: DeliveryMethodType
     ): Flow<List<PickupStore>> {
-        return remoteDataSource.getPickupStoresFlow(cityKladrId, deliveryMethodType)
+        return remoteDataSource.getPickupStoresFlow(cityFiasId, deliveryMethodType)
     }
 
-    override fun getCourierDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>> {
-        return remoteDataSource.getCourierDeliveryOptionsFlow(buildingKladrId)
+    override fun getCourierDeliveryOptionsFlow(buildingFiasId: FiasId): Flow<List<DeliveryOption>> {
+        return remoteDataSource.getCourierDeliveryOptionsFlow(buildingFiasId)
     }
 
-    override fun getPostDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>> {
-        return remoteDataSource.getPostDeliveryOptionsFlow(buildingKladrId)
+    override fun getPostDeliveryOptionsFlow(buildingFiasId: FiasId): Flow<List<DeliveryOption>> {
+        return remoteDataSource.getPostDeliveryOptionsFlow(buildingFiasId)
     }
 
     override fun getCartFlow(

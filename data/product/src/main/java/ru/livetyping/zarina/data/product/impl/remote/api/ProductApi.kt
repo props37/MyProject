@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.product.impl.remote.api
 
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -30,7 +30,7 @@ internal interface ProductApi {
 
     suspend fun getProductAvailabilityInStores(
         offer: ProductOffer,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): List<ProductAvailabilityInStoreDto>
 
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)

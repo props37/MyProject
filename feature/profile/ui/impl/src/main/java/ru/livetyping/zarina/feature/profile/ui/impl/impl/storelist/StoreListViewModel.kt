@@ -202,7 +202,7 @@ internal class StoreListViewModel @Inject constructor(
                 onSuccess = { stores ->
                     val userCity = userCityResult.getOrNull()
                     val cityStores = if (userCity != null) {
-                        stores.filter { it.city?.kladrId == userCity.id }
+                        stores.filter { it.city?.fiasId == userCity.id }
                     } else {
                         stores
                     }

@@ -19,7 +19,7 @@ internal class GetStreetBuildingsFlowUseCaseImpl(
             return flow { throw EmptySearchQueryException() }
         }
 
-        return geographyRepository.getStreetBuildings(params.streetKladrId, params.nameQuery)
+        return geographyRepository.getStreetBuildings(params.streetFiasId, params.nameQuery)
     }
 
     override fun invoke(params: Params): Flow<Result<List<Building>>> {

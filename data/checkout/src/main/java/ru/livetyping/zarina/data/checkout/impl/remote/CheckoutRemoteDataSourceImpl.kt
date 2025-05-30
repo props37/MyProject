@@ -20,7 +20,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
@@ -50,48 +50,48 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
 
     override fun getDeliveryMethodsFlow(
         cartType: CartType,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): Flow<List<DeliveryMethod>> = flow {
-        val dto = api.getDeliveryMethods(cartType, cityKladrId)
+        val dto = api.getDeliveryMethods(cartType, cityFiasId)
         val methods = dto.mapNotNull { it.toDeliveryMethod() }
         emit(methods)
     }
 
-    override fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>> = flow {
-        val dto = api.getPickupPoints(cityKladrId)
+    override fun getPickupPointsFlow(cityFiasId: FiasId): Flow<List<PickupPointShort>> = flow {
+        val dto = api.getPickupPoints(cityFiasId)
         val pickupPoints = dto.mapNotNull { it.toPickupPointShort() }
         emit(pickupPoints)
     }
 
     override fun getPickupPointFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetailed> = flow {
-        val dto = api.getPickupPoint(cityKladrId, pickupPointId)
+        val dto = api.getPickupPoint(cityFiasId, pickupPointId)
         emit(dto.toPickupPointDetails())
     }
 
     override fun getPickupStoresFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         deliveryMethodType: DeliveryMethodType
     ): Flow<List<PickupStore>> = flow {
-        val dto = api.getPickupStores(cityKladrId, deliveryMethodType)
+        val dto = api.getPickupStores(cityFiasId, deliveryMethodType)
         val stores = dto.mapNotNull { it.toPickupStore() }
         emit(stores)
     }
 
     override fun getCourierDeliveryOptionsFlow(
-        buildingKladrId: KladrId,
+        buildingFiasId: FiasId,
     ): Flow<List<DeliveryOption>> = flow {
-        val dto = api.getCourierDeliveryOptions(buildingKladrId)
+        val dto = api.getCourierDeliveryOptions(buildingFiasId)
         val options = dto.toDeliveryOptions(DeliveryOptionsDtoType.COURIER)
         emit(options)
     }
 
     override fun getPostDeliveryOptionsFlow(
-        buildingKladrId: KladrId,
+        buildingFiasId: FiasId,
     ): Flow<List<DeliveryOption>> = flow {
-        val dto = api.getPostDeliveryOptions(buildingKladrId)
+        val dto = api.getPostDeliveryOptions(buildingFiasId)
         val options = dto.toDeliveryOptions(DeliveryOptionsDtoType.POST)
         emit(options)
     }

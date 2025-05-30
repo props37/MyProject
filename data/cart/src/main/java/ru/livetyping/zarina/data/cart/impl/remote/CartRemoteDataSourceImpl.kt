@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.cart.CartType
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.data.cart.impl.model.CartProductCount
 import ru.livetyping.zarina.data.cart.impl.model.CartProductIds
@@ -14,8 +14,8 @@ import javax.inject.Inject
 internal class CartRemoteDataSourceImpl @Inject constructor(
     private val api: CartApi,
 ) : CartRemoteDataSource {
-    override fun getCartFlow(cartType: CartType, cityKladrId: KladrId?): Flow<Cart> = flow {
-        val cart = api.getCart(cartType, cityKladrId).toCart(cartType)
+    override fun getCartFlow(cartType: CartType, cityFiasId: FiasId?): Flow<Cart> = flow {
+        val cart = api.getCart(cartType, cityFiasId).toCart(cartType)
         emit(cart)
     }
 

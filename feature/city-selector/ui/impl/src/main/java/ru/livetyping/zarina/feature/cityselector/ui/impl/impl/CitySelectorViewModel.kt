@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.text.Text
@@ -84,7 +84,7 @@ internal class CitySelectorViewModel @Inject constructor(
             cityResult = cityResult,
             isLoadingCities = Operation.FetchCities in ongoingOperations,
             selectedCity = selectedCity,
-            priorityCityKladrIds = PRIORITY_CITY_KLADR_ID_SET,
+            priorityCityFiasIds = PRIORITY_CITY_KLADR_ID_SET,
             isChangeCityButtonVisible = hasSelectedCityChanged,
             isChangeCityButtonLoading = Operation.ChangeCity in ongoingOperations,
         )
@@ -205,7 +205,7 @@ internal class CitySelectorViewModel @Inject constructor(
     private companion object {
         const val CITY_SEARCH_DEBOUNCE_DELAY_MILLIS = 300L
 
-        val PRIORITY_CITY_KLADR_ID_SET: Set<KladrId>
-            get() = setOf(KladrId.MOSCOW, KladrId.SAINT_PETERSBURG)
+        val PRIORITY_CITY_KLADR_ID_SET: Set<FiasId>
+            get() = setOf(FiasId.MOSCOW, FiasId.SAINT_PETERSBURG)
     }
 }

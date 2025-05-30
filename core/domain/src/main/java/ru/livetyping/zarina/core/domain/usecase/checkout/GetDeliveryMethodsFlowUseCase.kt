@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.domain.usecase.checkout
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
@@ -13,7 +13,7 @@ public interface GetDeliveryMethodsFlowUseCase {
 
     public data class Params(
         val cartType: CartType,
-        val cityKladrId: KladrId? = null,
+        val cityFiasId: FiasId? = null,
     )
 
     public companion object {

@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.product
 
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
@@ -13,7 +13,7 @@ public interface GetProductAvailabilityInStoresFlowUseCase {
 
     public data class Params(
         val offer: ProductOffer,
-        val cityKladrId: KladrId? = null,
+        val cityFiasId: FiasId? = null,
     )
 
     public companion object {

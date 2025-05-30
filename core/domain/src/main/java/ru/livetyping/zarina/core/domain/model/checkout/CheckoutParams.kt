@@ -3,13 +3,13 @@ package ru.livetyping.zarina.core.domain.model.checkout
 import ru.livetyping.zarina.core.domain.model.cart.CartType
 import ru.livetyping.zarina.core.domain.model.geo.Address
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.store.Store
 
 public sealed class CheckoutParams {
     public abstract val cartType: CartType
     public abstract val deliveryMethod: DeliveryMethod
-    public abstract val cityKladrId: KladrId
+    public abstract val cityFiasId: FiasId
     public abstract val recipient: Recipient
 }
 
@@ -21,7 +21,7 @@ public data class CourierDeliveryCheckoutParams(
     val deliveryOption: DeliveryOption,
     val dateTimePeriod: DeliveryOption.DateTimePeriod,
 ) : CheckoutParams() {
-    override val cityKladrId: KladrId get() = address.city.id
+    override val cityFiasId: FiasId get() = address.city.id
 }
 
 public data class PostDeliveryCheckoutParams(
@@ -32,7 +32,7 @@ public data class PostDeliveryCheckoutParams(
     val deliveryOption: DeliveryOption,
     val dateTimePeriod: DeliveryOption.DateTimePeriod,
 ) : CheckoutParams() {
-    override val cityKladrId: KladrId get() = address.city.id
+    override val cityFiasId: FiasId get() = address.city.id
 }
 
 public data class PickupFromPickupPointCheckoutParams(
@@ -44,7 +44,7 @@ public data class PickupFromPickupPointCheckoutParams(
     val deliveryType: PickupPointDetailed.DeliveryType,
     val dateTimePeriod: PickupPointDetailed.DeliveryType.DateTimePeriod,
 ) : CheckoutParams() {
-    override val cityKladrId: KladrId get() = city.id
+    override val cityFiasId: FiasId get() = city.id
 }
 
 public data class PickupFromStoreCheckoutParams(
@@ -54,5 +54,5 @@ public data class PickupFromStoreCheckoutParams(
     val city: City,
     val store: Store,
 ) : CheckoutParams() {
-    override val cityKladrId: KladrId get() = city.id
+    override val cityFiasId: FiasId get() = city.id
 }

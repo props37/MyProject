@@ -26,20 +26,20 @@ internal data class CheckoutCartRequestBody(
         val cityName: String? = null,
 
         @SerialName("city_kladr_id")
-        val cityKladrId: String? = null,
+        val cityFiasId: String? = null,
 
         @SerialName("street_name")
         val streetName: String? = null,
 
         @SerialName("street_kladr_id")
-        val streetKladrId: String? = null,
+        val streetFiasId: String? = null,
 
         @SerialName("building_number")
         val buildingNumber: String? = null,
-        
+
         @SerialName("building_kladr_id") 
-        val buildingKladrId: String? = null,
-        
+        val buildingFiasId: String? = null,
+
         @SerialName("flat")
         val apartment: String? = null,
     )
@@ -76,13 +76,13 @@ internal data class CheckoutCartRequestBody(
                     is PickupFromPickupPointCheckoutParams -> checkoutParams.city.name
                     is PickupFromStoreCheckoutParams -> checkoutParams.city.name
                 },
-                cityKladrId = checkoutParams.cityKladrId.value,
+                cityFiasId = checkoutParams.cityFiasId.value,
                 streetName = when (checkoutParams) {
                     is CourierDeliveryCheckoutParams -> checkoutParams.address.street.name
                     is PostDeliveryCheckoutParams -> checkoutParams.address.street.name
                     else -> null
                 },
-                streetKladrId = when (checkoutParams) {
+                streetFiasId = when (checkoutParams) {
                     is CourierDeliveryCheckoutParams -> checkoutParams.address.street.id.value
                     is PostDeliveryCheckoutParams -> checkoutParams.address.street.id.value
                     else -> null
@@ -92,7 +92,7 @@ internal data class CheckoutCartRequestBody(
                     is PostDeliveryCheckoutParams -> checkoutParams.address.building.name
                     else -> null
                 },
-                buildingKladrId = when (checkoutParams) {
+                buildingFiasId = when (checkoutParams) {
                     is CourierDeliveryCheckoutParams -> checkoutParams.address.building.id.value
                     is PostDeliveryCheckoutParams -> checkoutParams.address.building.id.value
                     else -> null

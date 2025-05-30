@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupFromStoreCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.store.Store
@@ -87,50 +87,50 @@ internal class CheckoutApiImpl @Inject constructor(
 
     override suspend fun getDeliveryMethods(
         cartType: CartType,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): List<DeliveryMethodDto> {
         return httpClient.get("/api/shipping-methods") {
             parameter("cart_type", CartTypeDto.from(cartType).value)
-            parameter("address_kladr", cityKladrId.value)
+            parameter("address_kladr", cityFiasId.value)
         }.body()
     }
 
-    override suspend fun getPickupPoints(cityKladrId: KladrId): List<PickupPointDto> {
+    override suspend fun getPickupPoints(cityFiasId: FiasId): List<PickupPointDto> {
         return httpClient.get("/api/shipping-methods/pickup_points") {
-            parameter("city_kladr_id", cityKladrId.value)
+            parameter("city_kladr_id", cityFiasId.value)
         }.body()
     }
 
     override suspend fun getPickupPoint(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         pickupPointId: PickupPoint.Id,
     ): PickupPointDetailedDto {
         // Why do we always use payment_method=paytureinpay?
         return httpClient.get(
-            "/api/shipping-methods/cities/${cityKladrId.value}/pickup_points/" +
+            "/api/shipping-methods/cities/${cityFiasId.value}/pickup_points/" +
                     "${pickupPointId.value}/?payment_method=paytureinpay"
         ).body()
     }
 
     override suspend fun getPickupStores(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         deliveryMethodType: DeliveryMethodType
     ): List<PickupStoreDto> {
         return httpClient.get("/api/v1/shipping-methods/shops") {
-            parameter("city_kladr_id", cityKladrId.value)
+            parameter("city_kladr_id", cityFiasId.value)
             parameter("shipping", DeliveryMethodTypeDto.from(deliveryMethodType).value)
         }.body()
     }
 
-    override suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
+    override suspend fun getCourierDeliveryOptions(buildingFiasId: FiasId): DeliveryOptionsDto {
         return httpClient.get("/api/shipping-methods/express") {
-            parameter("address_kladr", buildingKladrId.value)
+            parameter("address_kladr", buildingFiasId.value)
         }.body()
     }
 
-    override suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto {
+    override suspend fun getPostDeliveryOptions(buildingFiasId: FiasId): DeliveryOptionsDto {
         return httpClient.get("/api/shipping-methods/post") {
-            parameter("address_kladr", buildingKladrId.value)
+            parameter("address_kladr", buildingFiasId.value)
         }.body()
     }
 
@@ -141,7 +141,7 @@ internal class CheckoutApiImpl @Inject constructor(
         val body = CheckoutCartRequestBody.from(checkoutParams)
         return httpClient.get("/api/cart") {
             parameter("cart_type", CartTypeDto.from(checkoutParams.cartType).value)
-            parameter("city_kladr_id", checkoutParams.cityKladrId.value)
+            parameter("city_kladr_id", checkoutParams.cityFiasId.value)
             if (checkoutParams is PickupFromStoreCheckoutParams) {
                 parameter("store_id", checkoutParams.store.id.value)
             }

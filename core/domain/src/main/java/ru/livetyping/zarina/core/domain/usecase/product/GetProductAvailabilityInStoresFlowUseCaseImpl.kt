@@ -20,8 +20,8 @@ internal class GetProductAvailabilityInStoresFlowUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<List<ProductAvailabilityInStore>> {
-        return if (params.cityKladrId != null) {
-            productRepository.getProductAvailabilityInStoresFlow(params.offer, params.cityKladrId)
+        return if (params.cityFiasId != null) {
+            productRepository.getProductAvailabilityInStoresFlow(params.offer, params.cityFiasId)
         } else {
             userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
                 checkNotNull(city) { "city is null" }

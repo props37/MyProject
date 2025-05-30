@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.domain.usecase.geo
 
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
@@ -12,7 +12,7 @@ public interface GetCityStreetsFlowUseCase {
 
     public data class Params(
         val nameQuery: String,
-        val cityKladrId: KladrId? = null,
+        val cityFiasId: FiasId? = null,
     )
 
     public companion object {

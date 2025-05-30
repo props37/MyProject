@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import timber.log.Timber
@@ -39,7 +39,7 @@ internal data class StoresDto(
             return shops.mapNotNull { store ->
                 checkPropertyNotNull(name) { ::name }
                 store.toStore(
-                    cityKladrId = kladrId?.let { KladrId(it) },
+                    cityFiasId = kladrId?.let { FiasId(it) },
                     cityName = name,
                     country = country,
                 )
@@ -69,9 +69,9 @@ internal data class StoresDto(
             @SerialName("lon")
             val lon: Double? = null,
         ) {
-            fun toStore(cityKladrId: KladrId?, cityName: String, country: String): Store? {
+            fun toStore(cityFiasId: FiasId?, cityName: String, country: String): Store? {
                 return if (id != null && name != null && lat != null && lon != null) {
-                    val city = cityKladrId?.let { Store.City(cityKladrId, cityName) }
+                    val city = cityFiasId?.let { Store.City(cityFiasId, cityName) }
                     Store(
                         id = Store.Id(id),
                         name = name,

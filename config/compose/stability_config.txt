@@ -29,7 +29,7 @@ ru.livetyping.zarina.core.domain.model.checkout.Recipient
 
 ru.livetyping.zarina.core.domain.model.gender.Gender
 
-ru.livetyping.zarina.core.domain.model.geo.KladrId
+ru.livetyping.zarina.core.domain.model.geo.FiasId
 ru.livetyping.zarina.core.domain.model.geo.City
 ru.livetyping.zarina.core.domain.model.geo.Street
 ru.livetyping.zarina.core.domain.model.geo.Building

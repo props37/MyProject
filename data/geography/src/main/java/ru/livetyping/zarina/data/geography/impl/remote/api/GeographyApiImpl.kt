@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.common.Location
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.CityDto
@@ -33,22 +33,22 @@ internal class GeographyApiImpl @Inject constructor(
         }.body()
     }
 
-    override suspend fun getCityStreets(cityKladrId: KladrId, nameQuery: String): List<StreetDto> {
+    override suspend fun getCityStreets(cityFiasId: FiasId, nameQuery: String): List<StreetDto> {
         return addressApiExceptionConverter {
             httpClient.get("/api/adresses/suggest/street") {
-                parameter("city_id", cityKladrId.value)
+                parameter("city_id", cityFiasId.value)
                 parameter("name", nameQuery)
             }.body()
         }
     }
 
     override suspend fun getStreetBuildings(
-        streetKladrId: KladrId,
+        streetFiasId: FiasId,
         nameQuery: String,
     ): List<BuildingDto> {
         return addressApiExceptionConverter {
             httpClient.get("/api/adresses/suggest/buildings") {
-                parameter("city_id", streetKladrId.value)
+                parameter("city_id", streetFiasId.value)
                 parameter("name", nameQuery)
             }.body()
         }

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 
 @Serializable
 @Parcelize
@@ -16,7 +16,7 @@ public data class CityParcelable(
 ) : Parcelable {
     public fun toCity(): City {
         return City(
-            id = KladrId(id),
+            id = FiasId(id),
             name = name,
             fullName = fullName,
             region = region,
