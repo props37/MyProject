@@ -38,8 +38,8 @@ internal class ProductRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getProductFlow(productId: Product.Id): Flow<ProductDetailed> {
-        return remoteDataSource.getProductFlow(productId)
+    override suspend fun getProduct(productId: Product.Id): ProductDetailed {
+        return remoteDataSource.getProduct(productId)
     }
 
     override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> {

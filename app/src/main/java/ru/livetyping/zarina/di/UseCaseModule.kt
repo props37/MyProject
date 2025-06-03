@@ -68,7 +68,7 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
@@ -607,13 +607,13 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductFlowUseCase(
+    fun provideGetProductUseCase(
         productRepository: ProductRepository,
         cartRepository: CartRepository,
         wishlistRepository: WishlistRepository,
         logger: UseCaseLogger,
-    ): GetProductFlowUseCase {
-        return GetProductFlowUseCase.getInstance(
+    ): GetProductUseCase {
+        return GetProductUseCase.getInstance(
             productRepository = productRepository,
             cartRepository = cartRepository,
             wishlistRepository = wishlistRepository,

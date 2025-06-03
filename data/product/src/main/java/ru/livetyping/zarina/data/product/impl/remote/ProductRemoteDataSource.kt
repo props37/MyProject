@@ -25,7 +25,7 @@ internal interface ProductRemoteDataSource {
         pageSize: Int,
     ): Flow<Page<ProductsWithFilters>>
 
-    fun getProductFlow(productId: Product.Id): Flow<ProductDetailed>
+    suspend fun getProduct(productId: Product.Id): ProductDetailed
 
     fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>>
 

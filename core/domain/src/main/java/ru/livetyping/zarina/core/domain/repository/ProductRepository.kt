@@ -25,7 +25,7 @@ public interface ProductRepository {
         pageSize: Int,
     ): Flow<Page<ProductsWithFilters>>
 
-    public fun getProductFlow(productId: Product.Id): Flow<ProductDetailed>
+    public suspend fun getProduct(productId: Product.Id): ProductDetailed
 
     public fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>>
 
