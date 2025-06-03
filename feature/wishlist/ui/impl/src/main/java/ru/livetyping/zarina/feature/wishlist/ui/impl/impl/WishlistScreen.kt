@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
@@ -87,7 +88,7 @@ private fun ScreenContent(
             ),
     ) { padding ->
         ProductGrid(
-            productPagingDataFlow = wishlistState.productPagingDataFlow,
+            productPagingItems = wishlistState.productPagingDataFlow.collectAsLazyPagingItems(),
             noProductsPlaceholder = {
                 // TODO: [Top] Implement
             },
