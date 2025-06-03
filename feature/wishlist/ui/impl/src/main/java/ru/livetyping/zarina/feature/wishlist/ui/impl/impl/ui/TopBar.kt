@@ -22,7 +22,7 @@ internal fun TopBar(
             AnimatedContent(
                 targetState = productCount,
                 contentAlignment = Alignment.Center,
-                contentKey = { it != null },
+                contentKey = { it != null && it != 0 },
             ) { count ->
                 val text = pluralStringResource(
                     id = RCommon.plurals.res_product_count,
@@ -30,7 +30,7 @@ internal fun TopBar(
                     count?.toString() ?: SkeletonCount.toString(),
                 ).uppercase()
 
-                if (count != null) {
+                if (count != null && count != 0) {
                     Text(
                         text = text,
                         style = DefaultTextStyle,
