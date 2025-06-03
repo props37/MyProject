@@ -30,7 +30,7 @@ internal fun NoProductsPlaceholder(
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier.padding(horizontal = 32.dp),
     ) {
         Text(
             text = stringResource(R.string.product_list_nothing_found).uppercase(),
