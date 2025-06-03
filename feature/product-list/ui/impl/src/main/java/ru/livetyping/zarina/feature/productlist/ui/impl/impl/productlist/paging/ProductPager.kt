@@ -8,12 +8,12 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class ProductPager @Inject constructor(
-    private val getProductsWithFiltersPageFlowUseCase: GetProductsWithFiltersPageFlowUseCase,
+    private val getProductsWithFiltersPageUseCase: GetProductsWithFiltersPageUseCase,
 ) {
     fun getProductPagingDataFlow(
         categoryId: Category.Id,
@@ -28,7 +28,7 @@ internal class ProductPager @Inject constructor(
                     categoryId = categoryId,
                     filters = filters,
                     sorting = sorting,
-                    getProductsWithFiltersPageFlowUseCase = getProductsWithFiltersPageFlowUseCase,
+                    getProductsWithFiltersPageUseCase = getProductsWithFiltersPageUseCase,
                     onAvailableFiltersReceived = {
                         Timber.tag(TAG).v("Available filters received: $it")
                         onAvailableFiltersReceived(it)

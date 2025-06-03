@@ -22,14 +22,14 @@ import javax.inject.Inject
 internal class ProductRepositoryImpl @Inject constructor(
     private val remoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override fun getProductsWithFiltersPageFlow(
+    override suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>> {
-        return remoteDataSource.getProductsWithFiltersPageFlow(
+    ): Page<ProductsWithFilters> {
+        return remoteDataSource.getProductsWithFiltersPage(
             categoryId = categoryId,
             filters = filters,
             sorting = sorting,

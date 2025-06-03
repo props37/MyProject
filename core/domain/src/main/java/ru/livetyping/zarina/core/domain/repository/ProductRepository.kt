@@ -17,13 +17,13 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 
 public interface ProductRepository {
-    public fun getProductsWithFiltersPageFlow(
+    public suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>>
+    ): Page<ProductsWithFilters>
 
     public suspend fun getProduct(productId: Product.Id): ProductDetailed
 

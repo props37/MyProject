@@ -17,13 +17,13 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 
 internal interface ProductRemoteDataSource {
-    fun getProductsWithFiltersPageFlow(
+    suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>>
+    ): Page<ProductsWithFilters>
 
     suspend fun getProduct(productId: Product.Id): ProductDetailed
 

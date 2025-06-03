@@ -70,7 +70,7 @@ import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCa
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
@@ -548,11 +548,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductsWithFiltersPageFlowUseCase(
+    fun provideGetProductsWithFiltersPageUseCase(
         productRepository: ProductRepository,
         logger: UseCaseLogger,
-    ): GetProductsWithFiltersPageFlowUseCase {
-        return GetProductsWithFiltersPageFlowUseCase.getInstance(
+    ): GetProductsWithFiltersPageUseCase {
+        return GetProductsWithFiltersPageUseCase.getInstance(
             productRepository = productRepository,
             logger = logger,
         )

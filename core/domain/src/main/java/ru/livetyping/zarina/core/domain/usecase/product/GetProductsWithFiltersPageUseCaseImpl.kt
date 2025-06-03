@@ -1,20 +1,19 @@
 package ru.livetyping.zarina.core.domain.usecase.product
 
-import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase.Params
-import ru.livetyping.zarina.core.usecase.FlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase.Params
+import ru.livetyping.zarina.core.usecase.UseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-internal class GetProductsWithFiltersPageFlowUseCaseImpl(
+internal class GetProductsWithFiltersPageUseCaseImpl(
     private val productRepository: ProductRepository,
     logger: UseCaseLogger?,
-) : FlowUseCase<Params, Page<ProductsWithFilters>>(logger), GetProductsWithFiltersPageFlowUseCase {
+) : UseCase<Params, Page<ProductsWithFilters>>(logger), GetProductsWithFiltersPageUseCase {
 
-    override fun execute(params: Params): Flow<Page<ProductsWithFilters>> {
-        return productRepository.getProductsWithFiltersPageFlow(
+    override suspend fun execute(params: Params): Page<ProductsWithFilters> {
+        return productRepository.getProductsWithFiltersPage(
             categoryId = params.categoryId,
             filters = params.filters,
             sorting = params.sorting,
@@ -23,7 +22,7 @@ internal class GetProductsWithFiltersPageFlowUseCaseImpl(
         )
     }
 
-    override fun invoke(params: Params): Flow<Result<Page<ProductsWithFilters>>> {
+    override suspend fun invoke(params: Params): Result<Page<ProductsWithFilters>> {
         return call(params)
     }
 

@@ -2,26 +2,25 @@ package ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
 import timber.log.Timber
 
 internal class ProductPagingSource(
     private val categoryId: Category.Id,
     private val filters: ProductFilters?,
     private val sorting: ProductSorting,
-    private val getProductsWithFiltersPageFlowUseCase: GetProductsWithFiltersPageFlowUseCase,
+    private val getProductsWithFiltersPageUseCase: GetProductsWithFiltersPageUseCase,
     private val onAvailableFiltersReceived: (ProductFilters) -> Unit,
 ) : PagingSource<Int, ProductShort>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductShort> {
         try {
             val page = params.key ?: 1
-            val productsWithFiltersPageParams = GetProductsWithFiltersPageFlowUseCase.Params(
+            val productsWithFiltersPageParams = GetProductsWithFiltersPageUseCase.Params(
                 categoryId = categoryId,
                 filters = filters,
                 sorting = sorting,
@@ -29,8 +28,7 @@ internal class ProductPagingSource(
                 pageSize = params.loadSize,
             )
             val productsWithFiltersPageResult =
-                getProductsWithFiltersPageFlowUseCase(productsWithFiltersPageParams).firstOrNull()
-            checkNotNull(productsWithFiltersPageResult) { "Failed to get products" }
+                getProductsWithFiltersPageUseCase(productsWithFiltersPageParams)
 
             val productsWithFiltersPage = productsWithFiltersPageResult.getOrThrow()
             val products = productsWithFiltersPage.data.products

@@ -1,6 +1,5 @@
 package ru.livetyping.zarina.core.domain.usecase.product
 
-import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
@@ -9,8 +8,8 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
-public interface GetProductsWithFiltersPageFlowUseCase {
-    public operator fun invoke(params: Params): Flow<Result<Page<ProductsWithFilters>>>
+public interface GetProductsWithFiltersPageUseCase {
+    public suspend operator fun invoke(params: Params): Result<Page<ProductsWithFilters>>
 
     public data class Params(
         val categoryId: Category.Id,
@@ -24,8 +23,8 @@ public interface GetProductsWithFiltersPageFlowUseCase {
         public fun getInstance(
             productRepository: ProductRepository,
             logger: UseCaseLogger?,
-        ): GetProductsWithFiltersPageFlowUseCase {
-            return GetProductsWithFiltersPageFlowUseCaseImpl(
+        ): GetProductsWithFiltersPageUseCase {
+            return GetProductsWithFiltersPageUseCaseImpl(
                 productRepository = productRepository,
                 logger = logger,
             )
