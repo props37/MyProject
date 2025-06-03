@@ -102,6 +102,7 @@ internal class WishlistViewModel @Inject constructor(
             WishlistEvent.BackClicked -> onBackClicked()
             is WishlistEvent.ProductClicked -> onProductClicked(event)
             is WishlistEvent.AddProductToWishlistClicked -> onAddProductToWishlistClicked(event)
+            WishlistEvent.RefreshTriggered -> onRefreshTriggered()
             is WishlistEvent.ProductAppendError -> onProductsPaginationError()
         }
     }
@@ -135,6 +136,10 @@ internal class WishlistViewModel @Inject constructor(
             deps.toggleProductInWishlist(params)
                 .onFailure(::onToggleProductInWishlistFailure)
         }
+    }
+
+    private fun onRefreshTriggered() {
+        fetchProductIds()
     }
 
     private fun onProductsPaginationError() {

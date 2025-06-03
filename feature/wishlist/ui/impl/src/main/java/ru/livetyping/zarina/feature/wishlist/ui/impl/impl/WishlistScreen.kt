@@ -88,13 +88,15 @@ private fun ScreenContent(
     ) { padding ->
         ProductGrid(
             productPagingDataFlow = wishlistState.productPagingDataFlow,
-            onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
-            onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddProductToWishlistClicked(it)) },
-            onProductsAppendError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
-            onProductsPrependError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
             noProductsPlaceholder = {
                 // TODO: [Top] Implement
             },
+            onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
+            onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddProductToWishlistClicked(it)) },
+            onProductsPullRefreshTriggered = { onWishlistEvent(WishlistEvent.RefreshTriggered) },
+            onProductsAppendError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
+            onProductsPrependError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
+            onProductsErrorRefreshClicked = { onWishlistEvent(WishlistEvent.RefreshTriggered) },
             sideEffects = productGridSideEffects,
             bottomPaddingProvider = { bottomNavBarHeightAsState().value },
             appMetricaScreen = Screen.Wishlist,

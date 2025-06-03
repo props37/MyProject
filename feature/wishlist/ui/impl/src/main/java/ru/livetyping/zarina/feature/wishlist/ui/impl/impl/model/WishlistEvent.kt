@@ -9,5 +9,7 @@ internal sealed interface WishlistEvent {
 
     data class AddProductToWishlistClicked(val product: Product) : WishlistEvent
 
+    data object RefreshTriggered : WishlistEvent
+
     data class ProductAppendError(val throwable: Throwable) : WishlistEvent
 }
