@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.NoProductsPlaceholder
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.TopBar
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.topWindowInsetsScrimGradient
 
@@ -96,7 +99,16 @@ private fun ScreenContent(
         ProductGrid(
             productPagingItems = productPagingItems,
             noProductsPlaceholder = {
-                // TODO: [Top] Implement
+                NoProductsPlaceholder(
+                    onCategoryShortcutClicked = {
+                        onWishlistEvent(WishlistEvent.CategoryShortcutClicked(it))
+                    },
+                    onSearchClicked = { onWishlistEvent(WishlistEvent.SearchClicked) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = bottomNavBarHeightAsState().value)
+                        .verticalScroll(rememberScrollState()),
+                )
             },
             onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
             onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddProductToWishlistClicked(it)) },
