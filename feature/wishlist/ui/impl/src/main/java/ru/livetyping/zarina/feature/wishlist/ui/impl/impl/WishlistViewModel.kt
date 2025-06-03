@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -62,8 +63,7 @@ internal class WishlistViewModel @Inject constructor(
     private val productPagingDataFlow = deps.wishlistProductPager.getWishlistProductPagingDataFlow()
         .cachedIn(viewModelScope)
         .onEach {
-            val se = ProductGridSideEffect.ScrollToTop(animate = false)
-            _productGridSideEffects.trySend(se)
+            _productGridSideEffects.trySend(ProductGridSideEffect.ScrollToTop(animate = false))
         }
         .transformProductPagingData()
         .cachedIn(viewModelScope)
@@ -77,6 +77,10 @@ internal class WishlistViewModel @Inject constructor(
         }
 
     val wishlistState: StateFlow<WishlistState> = productCountFlow
+        .onStart {
+            _productGridSideEffects.trySend(ProductGridSideEffect.Refresh)
+            fetchProductIds()
+        }
         .map { productCount ->
             WishlistState(
                 productCount = productCount,
@@ -92,8 +96,7 @@ internal class WishlistViewModel @Inject constructor(
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
             LifecycleEvent.ON_CREATE -> onScreenCreated()
-            LifecycleEvent.ON_START -> onScreenStarted()
-            LifecycleEvent.ON_RESUME -> Unit
+            else -> Unit
         }
     }
 
@@ -111,10 +114,6 @@ internal class WishlistViewModel @Inject constructor(
 
     private fun onScreenCreated() {
         deps.appMetrica.reportScreenOpened(Screen.Wishlist)
-    }
-
-    private fun onScreenStarted() {
-        fetchProductIds()
     }
 
     private fun onBackClicked() {
