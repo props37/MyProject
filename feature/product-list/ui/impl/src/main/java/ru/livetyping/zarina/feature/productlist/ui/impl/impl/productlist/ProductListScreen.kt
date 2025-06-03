@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
@@ -123,7 +124,7 @@ private fun ScreenContent(
                 } else null
 
             ProductGrid(
-                productPagingDataFlow = productListState.productPagingDataFlow,
+                productPagingItems = productListState.productPagingDataFlow.collectAsLazyPagingItems(),
                 onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = {
                     onProductListEvent(ProductListEvent.AddToWishlistClicked(it))

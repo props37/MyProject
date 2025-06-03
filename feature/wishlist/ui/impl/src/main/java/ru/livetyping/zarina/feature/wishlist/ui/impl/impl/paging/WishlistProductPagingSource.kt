@@ -2,23 +2,20 @@ package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class WishlistProductPagingSource @Inject constructor(
-    private val getWishlistProductPageFlow: GetWishlistProductPageFlowUseCase,
+    private val getWishlistProductPage: GetWishlistProductPageUseCase,
 ) : PagingSource<Int, ProductShort>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ProductShort> {
         return try {
             val page = params.key ?: 1
-            val wishlistProductPageParams = GetWishlistProductPageFlowUseCase.Params(page)
-            val wishlistProductPageResult =
-                getWishlistProductPageFlow(wishlistProductPageParams).firstOrNull()
-            checkNotNull(wishlistProductPageResult) { "Failed to get wishlist product IDs" }
+            val wishlistProductPageParams = GetWishlistProductPageUseCase.Params(page)
+            val wishlistProductPageResult = getWishlistProductPage(wishlistProductPageParams)
 
             val wishlistProductPage = wishlistProductPageResult.getOrThrow()
             val products = wishlistProductPage.data
