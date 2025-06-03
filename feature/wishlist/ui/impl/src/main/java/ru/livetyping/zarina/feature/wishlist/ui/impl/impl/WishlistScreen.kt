@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -72,9 +73,10 @@ private fun ScreenContent(
     val backgroundColor = UiKitTheme2.colors.white
 
     val productPagingItems = wishlistState.productPagingDataFlow.collectAsLazyPagingItems()
+    val lazyGridState = rememberLazyGridState()
 
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
-        canScroll = { productPagingItems.itemCount > 0 }
+        canScroll = { lazyGridState.canScrollForward || lazyGridState.canScrollBackward }
     )
 
     CollapsingTopBarLayout(
@@ -100,6 +102,7 @@ private fun ScreenContent(
     ) { padding ->
         ProductGrid(
             productPagingItems = productPagingItems,
+            gridState = lazyGridState,
             noProductsPlaceholder = {
                 NoProductsPlaceholder(
                     onCategoryShortcutClicked = {
