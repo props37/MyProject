@@ -94,7 +94,7 @@ public fun ProductGrid(
         Logging(productPagingItems)
     }
 
-    SideEffectObserver(gridState, sideEffects)
+    SideEffectObserver(productPagingItems, gridState, sideEffects)
 
     PaginationErrorRedirector(
         productPagingItems = productPagingItems,
@@ -380,12 +380,14 @@ private fun ScrollToTopButton(
 
 @Composable
 private fun SideEffectObserver(
+    productPagingItems: LazyPagingItems<ProductShort>,
     lazyGridState: LazyGridState,
     sideEffects: Flow<ProductGridSideEffect>?,
 ) {
     LaunchedEffect(lazyGridState, sideEffects) {
         sideEffects?.collect {
             when (it) {
+                ProductGridSideEffect.Refresh -> productPagingItems.refresh()
                 is ProductGridSideEffect.ScrollToTop -> {
                     if (it.animate) {
                         lazyGridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)
