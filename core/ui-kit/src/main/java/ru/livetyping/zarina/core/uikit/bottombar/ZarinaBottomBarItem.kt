@@ -100,7 +100,7 @@ private fun ItemCounter(
         transitionSpec = {
             AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
         },
-        contentAlignment = Alignment.TopEnd,
+        contentAlignment = Alignment.Center,
         label = "ItemCounter",
         modifier = modifier,
     ) { count ->
