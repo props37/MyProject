@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 
 internal interface WishlistRemoteDataSource {
-    fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>>
+    suspend fun getWishlistProductIds(): Set<Product.Id>
 
     fun getFavoriteProductPageFlow(page: Int): Flow<Page<List<ProductShort>>>
 

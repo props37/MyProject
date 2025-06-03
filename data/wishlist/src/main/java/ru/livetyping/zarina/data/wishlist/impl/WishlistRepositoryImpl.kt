@@ -1,9 +1,8 @@
 package ru.livetyping.zarina.data.wishlist.impl
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.pagination.Page
@@ -25,7 +24,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
                 getWishlistProductIdsFlowLocalFirstThenRemote(cachePolicy)
             }
 
-            is CachePolicy.Remote -> getWishlistProductIdsFlowRemote(cachePolicy)
+            is CachePolicy.Remote -> flow { emit(getWishlistProductIdsRemote(cachePolicy)) }
         }
     }
 
@@ -63,8 +62,7 @@ internal class WishlistRepositoryImpl @Inject constructor(
         return localDataSource.getWishlistProductIdsFlow()
             .map { cached ->
                 if (!localDataSource.areWishlistProductIdsFetched()) {
-                    val productIds = remoteDataSource.getWishlistProductIdsFlow().firstOrNull()
-                    checkNotNull(productIds) { "Failed to fetch wishlist product IDs" }
+                    val productIds = remoteDataSource.getWishlistProductIds()
                     wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
                     productIds
                 } else {
@@ -73,13 +71,12 @@ internal class WishlistRepositoryImpl @Inject constructor(
             }
     }
 
-    private fun getWishlistProductIdsFlowRemote(
+    private suspend fun getWishlistProductIdsRemote(
         cachePolicy: CachePolicy.Remote,
-    ): Flow<Set<Product.Id>> {
-        return remoteDataSource.getWishlistProductIdsFlow()
-            .onEach { productIds ->
-                wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
-            }
+    ): Set<Product.Id> {
+        val productIds = remoteDataSource.getWishlistProductIds()
+        wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
+        return productIds
     }
 
     private fun wishlistProductIdsCacheUpdatePolicyImpl(
