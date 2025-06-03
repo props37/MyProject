@@ -141,11 +141,17 @@ internal class WishlistViewModel @Inject constructor(
     }
 
     private fun onSearchClicked() {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val action = WishlistScreenAction.SearchClicked
+            emitSideEffect(WishlistSideEffect.Navigate(action))
+        }
     }
 
     private fun onCategoryShortcutClicked(event: WishlistEvent.CategoryShortcutClicked) {
-        // TODO: [Top] Implement
+        navigationThrottler.throttle {
+            val action = WishlistScreenAction.CategoryShortcutClicked(event.categoryId)
+            emitSideEffect(WishlistSideEffect.Navigate(action))
+        }
     }
 
     private fun onRefreshTriggered() {

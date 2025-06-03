@@ -44,5 +44,10 @@ private fun navigate(navActions: WishlistFeature.NavActions, action: WishlistScr
         WishlistScreenAction.BackClicked -> navActions.onBackClicked()
         WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
         is WishlistScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
+        is WishlistScreenAction.CategoryShortcutClicked -> {
+            navActions.onCategoryShortcutClicked(action.categoryId)
+        }
+
+        WishlistScreenAction.SearchClicked -> navActions.onSearchClicked()
     }
 }

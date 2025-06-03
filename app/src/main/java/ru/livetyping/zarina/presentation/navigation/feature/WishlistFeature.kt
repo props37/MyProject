@@ -6,6 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
+import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
+import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 import ru.livetyping.zarina.presentation.bottomnavbar.BottomNavBarItem
 import ru.livetyping.zarina.presentation.bottomnavbar.navigateToBottomNavBarItem
@@ -41,6 +43,11 @@ fun rememberWishlistNavActions(
                 val productNavEntry = ProductFeature.NavEntry.create(product.id)
                 navController.navigate(productNavEntry)
             },
+            onCategoryShortcutClicked = { categoryId ->
+                val productListNavEntry = ProductListFeature.NavEntry.create(categoryId)
+                navController.navigate(productListNavEntry)
+            },
+            onSearchClicked = { navController.navigate(SearchFeature.NavEntry)  },
         )
     }
 }

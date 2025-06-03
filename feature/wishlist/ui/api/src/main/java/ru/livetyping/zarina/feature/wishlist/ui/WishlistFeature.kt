@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.wishlist.ui
 
 import kotlinx.serialization.Serializable
+import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.feature.ComplexFeatureEntry
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
@@ -23,5 +24,7 @@ public interface WishlistFeature :
         public val onBackClicked: () -> Unit,
         public val onGoToCatalogClicked: () -> Unit,
         public val onProductClicked: (Product) -> Unit,
+        public val onCategoryShortcutClicked: (Category.Id) -> Unit,
+        public val onSearchClicked: () -> Unit,
     ) : NavigationActions
 }
