@@ -2,59 +2,49 @@ package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.analytics.model.Screen
-import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.TopBarState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.EmptyWishlistPlaceholder
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistState
 import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.TopBar
+import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.topWindowInsetsScrimGradient
 
 @Composable
 internal fun WishlistScreen(
     navActions: WishlistFeature.NavActions,
     viewModel: WishlistViewModel = hiltViewModel(),
 ) {
-    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
-    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
+    BackHandler { viewModel.onWishlistEvent(WishlistEvent.BackClicked) }
 
-    BackHandler(onBack = viewModel::onBackClicked)
+    LifecycleEventEffect(onLifecycleEvent = viewModel::onLifecycleEvent)
+
+    val wishlistState by viewModel.wishlistState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        topBarState = topBarState,
-        onTopBarEvent = viewModel::onTopBarEvent,
-        productPagingDataFlow = viewModel.productPagingDataFlow,
+        wishlistState = wishlistState,
         onWishlistEvent = viewModel::onWishlistEvent,
-        sizeSelectorState = sizeSelectorState,
-        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
-        onLifecycleEvent = viewModel::onLifecycleEvent,
         productGridSideEffects = viewModel.productGridSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
@@ -63,59 +53,55 @@ internal fun WishlistScreen(
 
 @Composable
 private fun ScreenContent(
-    topBarState: TopBarState,
-    onTopBarEvent: (TopBarEvent) -> Unit,
-    productPagingDataFlow: Flow<PagingData<ProductShort>>,
+    wishlistState: WishlistState,
     onWishlistEvent: (WishlistEvent) -> Unit,
-    sizeSelectorState: SizeSelectorState,
-    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
     productGridSideEffects: Flow<ProductGridSideEffect>,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistFeature.NavActions,
 ) {
     WishlistScreenBehavior(
-        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
 
-    SizeSelectorModalBottomSheet(
-        state = sizeSelectorState,
-        onEvent = onSizeSelectorEvent,
-    )
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
 
-    Column(
+    val backgroundColor = UiKitTheme2.colors.white
+
+    CollapsingTopBarLayout(
+        topBar = {
+            TopBar(
+                productCount = wishlistState.productCount,
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top)),
+            )
+        },
+        scrollBehavior = topBarScrollBehavior,
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .windowInsetsPadding(
-                WindowInsets.statusBars
-                    .union(WindowInsets.displayCutout),
-            )
-            .bottomNavBarPadding(),
-    ) {
-        TopBar(
-            state = topBarState,
-            onEvent = onTopBarEvent,
-        )
-
+            .background(backgroundColor)
+            .topWindowInsetsScrimGradient(
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Top),
+                startColor = backgroundColor.copy(alpha = 0.8f),
+                endColor = Color.Transparent,
+            ),
+    ) { padding ->
         ProductGrid(
-            productPagingDataFlow = productPagingDataFlow,
+            productPagingDataFlow = wishlistState.productPagingDataFlow,
             onProductClicked = { onWishlistEvent(WishlistEvent.ProductClicked(it)) },
-            onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddToWishlistClicked(it)) },
+            onAddToWishlistClicked = { onWishlistEvent(WishlistEvent.AddProductToWishlistClicked(it)) },
+            onProductsAppendError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
+            onProductsPrependError = { onWishlistEvent(WishlistEvent.ProductAppendError(it)) },
             noProductsPlaceholder = {
-                EmptyWishlistPlaceholder(
-                    onGoToCatalogClicked = { onWishlistEvent(WishlistEvent.GoToCatalogClicked) },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState()),
-                )
+                // TODO: [Top] Implement
             },
             sideEffects = productGridSideEffects,
+            bottomPaddingProvider = { bottomNavBarHeightAsState().value },
             appMetricaScreen = Screen.Wishlist,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
         )
     }
 }
