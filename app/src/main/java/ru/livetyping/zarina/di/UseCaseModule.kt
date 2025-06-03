@@ -110,7 +110,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
@@ -230,11 +230,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetWishlistProductPageFlowUseCase(
+    fun provideGetWishlistProductPageUseCase(
         wishlistRepository: WishlistRepository,
         logger: UseCaseLogger,
-    ): GetWishlistProductPageFlowUseCase {
-        return GetWishlistProductPageFlowUseCase.getInstance(
+    ): GetWishlistProductPageUseCase {
+        return GetWishlistProductPageUseCase.getInstance(
             wishlistRepository = wishlistRepository,
             logger = logger,
         )

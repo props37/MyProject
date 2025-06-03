@@ -32,8 +32,8 @@ internal class WishlistRepositoryImpl @Inject constructor(
         return localDataSource.areWishlistProductIdsFetched()
     }
 
-    override fun getWishlistProductPageFlow(page: Int): Flow<Page<List<ProductShort>>> {
-        return remoteDataSource.getFavoriteProductPageFlow(page)
+    override suspend fun getWishlistProductPage(page: Int): Page<List<ProductShort>> {
+        return remoteDataSource.getFavoriteProductPage(page)
     }
 
     override suspend fun addProductToWishlist(productId: Product.Id) {

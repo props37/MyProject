@@ -11,7 +11,7 @@ public interface WishlistRepository {
 
     public fun areWishlistProductIdsFetched(): Boolean
 
-    public fun getWishlistProductPageFlow(page: Int): Flow<Page<List<ProductShort>>>
+    public suspend fun getWishlistProductPage(page: Int): Page<List<ProductShort>>
 
     public suspend fun addProductToWishlist(productId: Product.Id)
 
