@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -69,10 +70,15 @@ private fun ScreenContent(
 
     val backgroundColor = UiKitTheme2.colors.white
 
+    val productPagingItems = wishlistState.productPagingDataFlow.collectAsLazyPagingItems()
+
     CollapsingTopBarLayout(
         topBar = {
+            val alpha by animateFloatAsState(if (productPagingItems.itemCount > 0) 1f else 0f)
+
             TopBar(
                 productCount = wishlistState.productCount,
+                alphaProvider = { alpha },
                 modifier = Modifier
                     .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Top)),
             )
@@ -88,7 +94,7 @@ private fun ScreenContent(
             ),
     ) { padding ->
         ProductGrid(
-            productPagingItems = wishlistState.productPagingDataFlow.collectAsLazyPagingItems(),
+            productPagingItems = productPagingItems,
             noProductsPlaceholder = {
                 // TODO: [Top] Implement
             },

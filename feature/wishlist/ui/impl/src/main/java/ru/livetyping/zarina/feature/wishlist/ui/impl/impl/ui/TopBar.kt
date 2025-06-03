@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.TextStyle
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
@@ -15,6 +16,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun TopBar(
     productCount: Int?,
+    alphaProvider: () -> Float,
     modifier: Modifier = Modifier,
 ) {
     ZarinaTopBar(
@@ -23,6 +25,7 @@ internal fun TopBar(
                 targetState = productCount,
                 contentAlignment = Alignment.Center,
                 contentKey = { it != null && it != 0 },
+                modifier = Modifier.graphicsLayer { alpha = alphaProvider() },
             ) { count ->
                 val text = pluralStringResource(
                     id = RCommon.plurals.res_product_count,
