@@ -26,6 +26,7 @@ import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
@@ -76,7 +77,7 @@ private fun ScreenContent(
     val lazyGridState = rememberLazyGridState()
 
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
-        canScroll = { lazyGridState.canScrollForward || lazyGridState.canScrollBackward }
+        canScroll = { lazyGridState.canScroll },
     )
 
     CollapsingTopBarLayout(
