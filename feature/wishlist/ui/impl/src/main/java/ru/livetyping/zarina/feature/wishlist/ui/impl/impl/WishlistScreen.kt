@@ -69,11 +69,13 @@ private fun ScreenContent(
         navActions = navActions,
     )
 
-    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
-
     val backgroundColor = UiKitTheme2.colors.white
 
     val productPagingItems = wishlistState.productPagingDataFlow.collectAsLazyPagingItems()
+
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
+        canScroll = { productPagingItems.itemCount > 0 }
+    )
 
     CollapsingTopBarLayout(
         topBar = {
