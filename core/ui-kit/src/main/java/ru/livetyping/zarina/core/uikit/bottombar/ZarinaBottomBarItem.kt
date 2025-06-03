@@ -17,6 +17,7 @@ import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
@@ -27,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.text.unscalable
 import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
@@ -73,7 +73,7 @@ public fun ZarinaBottomBarItem(
 
             ItemCounter(
                 count = counterValueProvider?.invoke(),
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier.align(ItemCounterAlignment),
             )
         }
 
@@ -100,15 +100,17 @@ private fun ItemCounter(
         transitionSpec = {
             AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
         },
-        contentAlignment = Alignment.TopEnd,
+        contentAlignment = Alignment.Center,
         label = "ItemCounter",
         modifier = modifier,
     ) { count ->
         if (count != null && count != 0) {
             ZarinaCounter(
                 value = count.toString(),
-                textStyle = UiKitTheme.typography.caption2.bold.unscalable(LocalDensity.current),
+                textStyle = UiKitTheme2.typography.caption2.unscalable(LocalDensity.current),
             )
         }
     }
 }
+
+private val ItemCounterAlignment = BiasAlignment(0.6f, 0.5f)

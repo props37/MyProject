@@ -32,9 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.valentinilk.shimmer.Shimmer
 import kotlinx.coroutines.flow.Flow
@@ -68,7 +66,7 @@ import timber.log.Timber
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 public fun ProductGrid(
-    productPagingDataFlow: Flow<PagingData<ProductShort>>,
+    productPagingItems: LazyPagingItems<ProductShort>,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
     noProductsPlaceholder: @Composable () -> Unit,
@@ -92,13 +90,11 @@ public fun ProductGrid(
     bottomPaddingProvider: @Composable () -> Dp = { 0.dp },
     appMetricaScreen: Screen? = null,
 ) {
-    val productPagingItems = productPagingDataFlow.collectAsLazyPagingItems()
-
     if (Timber.treeCount > 0) {
         Logging(productPagingItems)
     }
 
-    SideEffectObserver(gridState, sideEffects)
+    SideEffectObserver(productPagingItems, gridState, sideEffects)
 
     PaginationErrorRedirector(
         productPagingItems = productPagingItems,
@@ -384,12 +380,14 @@ private fun ScrollToTopButton(
 
 @Composable
 private fun SideEffectObserver(
+    productPagingItems: LazyPagingItems<ProductShort>,
     lazyGridState: LazyGridState,
     sideEffects: Flow<ProductGridSideEffect>?,
 ) {
     LaunchedEffect(lazyGridState, sideEffects) {
         sideEffects?.collect {
             when (it) {
+                ProductGridSideEffect.Refresh -> productPagingItems.refresh()
                 is ProductGridSideEffect.ScrollToTop -> {
                     if (it.animate) {
                         lazyGridState.animateFastScrollToItem(0, FastScrollToTopDistanceThreshold)

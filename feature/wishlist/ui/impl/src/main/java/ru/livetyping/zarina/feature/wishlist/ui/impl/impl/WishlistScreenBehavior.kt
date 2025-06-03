@@ -7,25 +7,19 @@ import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.behavior.BottomNavBarBehavior
-import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
+import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController2
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
 
 @Composable
 internal fun WishlistScreenBehavior(
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<WishlistSideEffect>,
     navActions: WishlistFeature.NavActions,
 ) {
-    val currentOnLifecycleEvent by rememberUpdatedState(onLifecycleEvent)
     val currentNavActions by rememberUpdatedState(navActions)
-    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController.current)
+    val currentZarinaToastController by rememberUpdatedState(LocalZarinaToastController2.current)
 
     BottomNavBarBehavior(isVisible = true)
-
-    LifecycleEventEffect(onLifecycleEvent = currentOnLifecycleEvent)
 
     LifecycleStartEffect(sideEffects) {
         val job = lifecycleScope.launch {
@@ -50,8 +44,10 @@ private fun navigate(navActions: WishlistFeature.NavActions, action: WishlistScr
         WishlistScreenAction.BackClicked -> navActions.onBackClicked()
         WishlistScreenAction.GoToCatalogClicked -> navActions.onGoToCatalogClicked()
         is WishlistScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
-        is WishlistScreenAction.SubscribeToProductClicked -> {
-            navActions.onSubscribeToProductClicked(action.product, action.offer)
+        is WishlistScreenAction.CategoryShortcutClicked -> {
+            navActions.onCategoryShortcutClicked(action.categoryId)
         }
+
+        WishlistScreenAction.SearchClicked -> navActions.onSearchClicked()
     }
 }

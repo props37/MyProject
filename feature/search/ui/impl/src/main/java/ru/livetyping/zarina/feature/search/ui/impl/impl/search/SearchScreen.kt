@@ -21,6 +21,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
@@ -141,7 +142,7 @@ private fun ScreenContent(
 
                 SearchMode.RESULTS -> {
                     ProductGrid(
-                        productPagingDataFlow = searchResultPagingDataFlow,
+                        productPagingItems = searchResultPagingDataFlow.collectAsLazyPagingItems(),
                         onProductClicked = {
                             onSearchResultEvent(SearchResultEvent.ProductClicked(it))
                         },

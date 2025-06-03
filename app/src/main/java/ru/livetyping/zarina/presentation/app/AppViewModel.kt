@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.livetyping.zarina.core.analytics.AppMetrica
-import ru.livetyping.zarina.core.coroutinesutil.WhileAndroidUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
@@ -36,7 +36,6 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     private val deps: AppDependencies,
 ) : ViewModel() {
-
     val startFeature: AppStartFeature = runBlocking {
         val isOnboardingCompleted = deps.getIsOnboardingCompletedFlow()
             .firstOrNull()?.getOrNull() ?: false
@@ -56,7 +55,7 @@ class AppViewModel @Inject constructor(
                 result.getOrNull()?.size ?: 0
             }.stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileAndroidUiSubscribed,
+                started = SharingStarted.WhileUiSubscribed,
                 initialValue = 0,
             )
 
@@ -66,7 +65,7 @@ class AppViewModel @Inject constructor(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileAndroidUiSubscribed,
+            started = SharingStarted.WhileUiSubscribed,
             initialValue = 0,
         )
 

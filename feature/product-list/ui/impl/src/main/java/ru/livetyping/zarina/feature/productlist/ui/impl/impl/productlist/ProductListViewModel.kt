@@ -372,6 +372,7 @@ internal class ProductListViewModel @AssistedInject constructor(
         }
     }
 
+    // TODO: [High] Extract?
     private fun Flow<PagingData<ProductShort>>.transformProductPagingData(): Flow<PagingData<ProductShort>> {
         return this.combine(
             deps.getWishlistProductIdsFlow(wishlistProductIdsParams),
