@@ -33,6 +33,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -92,6 +94,7 @@ fun ZarinaBottomNavBar(
     }
 }
 
+@OptIn(ExperimentalHazeApi::class)
 @Composable
 private fun AnimatedZarinaBottomBar(
     hazeState: HazeState,
@@ -155,7 +158,9 @@ private fun AnimatedZarinaBottomBar(
                         tint = hazeTint,
                         noiseFactor = BlurNoiseFactor,
                     ),
-                )
+                ) {
+                    inputScale = HazeInputScale.Fixed(BlurInputScale)
+                }
                 .animateEnterExit(
                     enter = if (isBottomNavBarAnimated) {
                         contentEnterTransition
@@ -201,6 +206,7 @@ private fun isItemSelected(
 
 private val BlurRadius = 20.dp
 private const val BlurNoiseFactor = 0f
+private const val BlurInputScale = 0.66f
 private const val BackgroundAlphaWithBlur = 0.7f
 private const val BackgroundAlphaWithoutBlur = BackgroundAlphaWithBlur
 
