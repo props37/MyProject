@@ -22,7 +22,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
-import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.flow.Flow
@@ -63,7 +62,6 @@ internal fun WishlistScreen(
     )
 }
 
-@OptIn(ExperimentalHazeApi::class)
 @Composable
 private fun ScreenContent(
     wishlistState: WishlistState,
