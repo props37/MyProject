@@ -67,9 +67,9 @@ public fun ZarinaTopBar(
             content = content,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = ZarinaTopBarDefaults.MinHeight)
                 .drawBehind { drawRect(backgroundColor) }
                 .windowInsetsPadding(windowInsets)
+                .heightIn(min = ZarinaTopBarDefaults.MinHeight)
                 .padding(contentPadding),
         ) { measurables, constraints ->
             val startContentMeasurable = measurables.find { it.layoutId == LayoutId.StartContent }
@@ -145,9 +145,9 @@ public fun ZarinaTopBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(ZarinaTopBarDefaults.MinHeight)
                 .drawBehind { drawRect(backgroundColor) }
                 .windowInsetsPadding(windowInsets)
+                .heightIn(ZarinaTopBarDefaults.MinHeight)
                 .padding(contentPadding),
             content = content,
         )
