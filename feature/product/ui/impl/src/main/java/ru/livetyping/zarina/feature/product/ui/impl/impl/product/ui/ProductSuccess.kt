@@ -7,18 +7,22 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
 
@@ -87,13 +91,24 @@ private fun ContentList(
         item(key = ContentListKey.MediaPager, contentType = ContentListContentType.MediaPager) {
             MediaPager(mediaList = state.product.media)
         }
+
+        item(key = ContentListKey.ProductName, contentType = ContentListContentType.ProductName) {
+            ProductName(
+                state.product.name.uppercase(),
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .padding(horizontal = 16.dp),
+            )
+        }
     }
 }
 
 private enum class ContentListKey {
     MediaPager,
+    ProductName,
 }
 
 private enum class ContentListContentType {
     MediaPager,
+    ProductName,
 }
