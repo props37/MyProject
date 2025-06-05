@@ -23,6 +23,7 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
@@ -36,10 +37,11 @@ internal fun ProductSuccess(
     bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
+        canScroll = { listState.canScroll },
         scrollBeforeContent = { false },
     )
-    val listState = rememberLazyListState()
 
     Box(modifier = modifier) {
         val hazeState = rememberHazeState(StatusBarBlurDefaults.isStatusBarBlurEnabled())
