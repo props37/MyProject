@@ -87,6 +87,8 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
+    implementation(libs.coil.compose)
+
     implementation(libs.timber)
 
     lintChecks(libs.lint.composeChecks)

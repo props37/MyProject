@@ -27,7 +27,7 @@ import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.mediacompose.SimpleVideoPlayer
-import ru.livetyping.zarina.core.uikit.impl.util.loopingGet
+import ru.livetyping.zarina.core.uicompose.pager.EndlessPagerStateUtils
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -53,7 +53,7 @@ public fun ZarinaMediaHorizontalPager(
         modifier = modifier,
     ) { page ->
         @Suppress("NAME_SHADOWING")
-        val media = media.loopingGet(page)
+        val media = EndlessPagerStateUtils.getLooping(media, page)
         var isMediaDisplayed by remember(media) { mutableStateOf(false) }
 
         Box(modifier = Modifier.fillMaxSize()) {

@@ -4,6 +4,9 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 
+/**
+@see [EndlessPagerStateUtils] for `getLooping` function.
+ */
 @Composable
 public fun rememberEndlessPagerState(itemCount: Int): PagerState {
     val pageCount = (itemCount * PAGE_COUNT_MULTIPLIER).coerceAtMost(PAGE_COUNT_MAX_VALUE)
