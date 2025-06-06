@@ -122,6 +122,7 @@ private fun ContentList(
                 title = stringResource(R.string.product_suggestions_title_total_look).uppercase(),
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
                 modifier = Modifier.padding(top = 32.dp),
             )
         }
@@ -132,6 +133,7 @@ private fun ContentList(
                 title = stringResource(R.string.product_suggestions_title_similar_products).uppercase(),
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
                 modifier = Modifier.padding(top = 32.dp),
             )
         }

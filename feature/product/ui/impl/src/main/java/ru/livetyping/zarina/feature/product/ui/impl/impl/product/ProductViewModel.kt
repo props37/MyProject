@@ -85,6 +85,8 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.ProductClicked -> TODO()
             is ProductEvent.AddProductToWishlistClicked -> TODO()
             ProductEvent.ProductRefreshTriggered -> TODO()
+            ProductEvent.SimilarProductRefreshTriggered -> TODO()
+            ProductEvent.TotalLookProductRefreshTriggered -> TODO()
         }
     }
 

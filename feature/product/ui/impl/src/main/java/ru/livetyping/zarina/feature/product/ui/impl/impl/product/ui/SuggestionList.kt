@@ -1,7 +1,10 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SuggestionListState
@@ -13,6 +16,7 @@ internal fun SuggestionList(
     title: String,
     onProductClicked: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
+    onErrorRetryClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
@@ -42,7 +46,13 @@ internal fun SuggestionList(
             }
 
             SuggestionListState.Error -> {
-                // TODO: [Top] Implement
+                SuggestionListError(
+                    title = title,
+                    onRetryClicked = onErrorRetryClicked,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
             }
 
             SuggestionListState.Empty -> Unit

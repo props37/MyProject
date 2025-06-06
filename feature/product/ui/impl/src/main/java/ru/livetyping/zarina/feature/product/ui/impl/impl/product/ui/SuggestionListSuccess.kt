@@ -39,15 +39,7 @@ internal fun SuggestionListSuccess(
     }
 
     Column(modifier = modifier) {
-        ZarinaTopBar(
-            centerContent = {
-                Text(
-                    text = title,
-                    style = UiKitTheme2.typography.h2,
-                )
-            },
-            windowInsets = WindowInsets.none,
-        )
+        SuggestionListTitle(title)
 
         Spacer(modifier = Modifier.height(8.dp))
 
