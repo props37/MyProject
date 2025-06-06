@@ -9,7 +9,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
@@ -84,8 +83,7 @@ internal class ProductViewModel @Inject constructor(
 
         reportScreenCreatedJob?.cancel()
         reportScreenCreatedJob = viewModelScope.launch {
-            val productResult = productComponent.productResult.firstOrNull { it?.isSuccess == true }
-            val product = productResult?.getOrNull()
+            val product = productComponent.awaitProduct()
             if (product != null) {
                 deps.appMetrica.reportProductScreenOpened(product.toAppMetricaProduct())
             }

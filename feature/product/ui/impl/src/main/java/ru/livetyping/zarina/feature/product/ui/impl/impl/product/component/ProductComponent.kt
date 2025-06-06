@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -43,6 +44,11 @@ internal class ProductComponent(
 
     fun setProductId(id: Product.Id) {
         productId.value = id
+    }
+
+    suspend fun awaitProduct(): Product? {
+        val successResult = productResult.firstOrNull { it?.isSuccess == true }
+        return successResult?.getOrNull()
     }
 
     suspend fun fetchProduct() {
