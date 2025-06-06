@@ -70,6 +70,7 @@ internal class ProductViewModel @Inject constructor(
     fun onProductEvent(event: ProductEvent) {
         when (event) {
             ProductEvent.BackClicked -> TODO()
+            ProductEvent.ShareClicked -> TODO()
             ProductEvent.ProductRefreshTriggered -> TODO()
         }
     }

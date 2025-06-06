@@ -62,6 +62,7 @@ internal fun ProductSuccess(
 
                 TopBar(
                     onBackClicked = { onEvent(ProductEvent.BackClicked) },
+                    onShareClicked = { onEvent(ProductEvent.ShareClicked) },
                     backgroundAlphaProvider = { backgroundAlpha },
                 )
             },
