@@ -121,6 +121,17 @@ private fun ContentList(
             )
         }
 
+        if (state.mediaBanner != null) {
+            item(key = ContentListKey.MediaBanner, contentType = ContentListContentType.MediaBanner) {
+                Media(
+                    media = state.mediaBanner,
+                    modifier = Modifier
+                        .padding(top = 40.dp)
+                        .animateZarinaItem(this),
+                )
+            }
+        }
+
         item(key = ContentListKey.TotalLookProducts, contentType = ContentListContentType.SuggestionList) {
             SuggestionList(
                 state = state.totalLookProductState,
@@ -152,12 +163,14 @@ private fun ContentList(
 private enum class ContentListKey {
     MediaPager,
     ProductName,
+    MediaBanner,
     TotalLookProducts,
     SimilarProducts,
 }
 
 private enum class ContentListContentType {
     MediaPager,
+    MediaBanner,
     ProductName,
     SuggestionList,
 }

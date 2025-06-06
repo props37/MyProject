@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product.model
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
@@ -11,6 +12,7 @@ internal sealed class ProductState {
     @Immutable
     data class Success(
         val product: ProductDetailed,
+        val mediaBanner: Media?,
         val totalLookProductState: SuggestionListState,
         val similarProductState: SuggestionListState,
     ) : ProductState()
@@ -36,6 +38,7 @@ internal sealed class ProductState {
             } else {
                 productResult.fold(
                     onSuccess = { product ->
+                        val mediaBanner = product.media.getOrNull(MEDIA_BANNER_INDEX)
                         val totalLookProductState = suggestionListStateBuilder.build(
                             result = totalLookProductsResult,
                             isLoading = areTotalLookProductsLoading,
@@ -47,6 +50,7 @@ internal sealed class ProductState {
 
                         Success(
                             product = product,
+                            mediaBanner = mediaBanner,
                             totalLookProductState = totalLookProductState,
                             similarProductState = similarProductState,
                         )
@@ -57,6 +61,10 @@ internal sealed class ProductState {
                     },
                 )
             }
+        }
+
+        private companion object {
+            private const val MEDIA_BANNER_INDEX = 1
         }
     }
 }
