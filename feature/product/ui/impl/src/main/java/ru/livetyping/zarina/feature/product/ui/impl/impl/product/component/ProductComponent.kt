@@ -18,18 +18,29 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 
 internal class ProductComponent(
     private val getProductUseCase: GetProductUseCase,
+    private val getProductTotalLookUseCase: GetProductTotalLookUseCase,
+    private val getSimilarProductsUseCase: GetSimilarProductsUseCase,
     private val coroutineScope: CoroutineScope,
 ) {
     private val operationTracker = OperationTracker()
 
     private var productFetchingJob: Job? = null
     private var fetchProductJob: Job? = null
+
+    private var totalLookProductsFetchingJob: Job? = null
+    private var fetchTotalLookProductsJob: Job? = null
+
+    private var similarProductsFetchingJob: Job? = null
+    private var fetchSimilarProductsJob: Job? = null
 
     private val productId = MutableStateFlow<Product.Id?>(null)
 
@@ -38,8 +49,24 @@ internal class ProductComponent(
 
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
+    private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
+    val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> =
+        _totalLookProductsResult.asStateFlow()
+
+    val areTotalLookProductsLoading: Flow<Boolean> =
+        operationTracker.isOperationOngoing(TotalLookProductsRequest)
+
+    private val _similarProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
+    val similarProductsResult: StateFlow<Result<List<ProductShort>>?> =
+        _similarProductsResult.asStateFlow()
+
+    val areSimilarProductsLoading: Flow<Boolean> =
+        operationTracker.isOperationOngoing(SimilarProductsRequest)
+
     init {
         initProductFetching()
+        initTotalLookProductsFetching()
+        initSimilarProductsFetching()
     }
 
     fun setProductId(id: Product.Id) {
@@ -55,6 +82,18 @@ internal class ProductComponent(
         if (fetchProductJob?.isActive == true) return
         val productId = requireProductId()
         fetchProductImpl(productId)
+    }
+
+    suspend fun fetchTotalLookProducts() {
+        if (fetchTotalLookProductsJob?.isActive == true) return
+        val productId = requireProductId()
+        fetchTotalLookProductsImpl(productId)
+    }
+
+    suspend fun fetchSimilarProducts() {
+        if (fetchSimilarProductsJob?.isActive == true) return
+        val productId = requireProductId()
+        fetchSimilarProductsImpl(productId)
     }
 
     private fun initProductFetching() {
@@ -83,6 +122,60 @@ internal class ProductComponent(
         productFetchingJob?.cancel()
     }
 
+    private fun initTotalLookProductsFetching() {
+        _totalLookProductsResult.subscriptionCount
+            .map { it > 0 }
+            .distinctUntilChanged()
+            .onEach { isActive ->
+                if (isActive) startTotalLookProductsFetching() else stopTotalLookProductsFetching()
+            }
+            .launchIn(coroutineScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun startTotalLookProductsFetching() {
+        totalLookProductsFetchingJob?.cancel()
+        totalLookProductsFetchingJob = productId
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEachLatest { id ->
+                // TODO: [Top] Don't fetch if the result is already there
+                fetchTotalLookProductsImpl(id)
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun stopTotalLookProductsFetching() {
+        totalLookProductsFetchingJob?.cancel()
+    }
+
+    private fun initSimilarProductsFetching() {
+        _similarProductsResult.subscriptionCount
+            .map { it > 0 }
+            .distinctUntilChanged()
+            .onEach { isActive ->
+                if (isActive) startSimilarProductsFetching() else stopSimilarProductsFetching()
+            }
+            .launchIn(coroutineScope)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun startSimilarProductsFetching() {
+        similarProductsFetchingJob?.cancel()
+        similarProductsFetchingJob = productId
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEachLatest { id ->
+                // TODO: [Top] Don't fetch if the result is already there
+                fetchSimilarProductsImpl(id)
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun stopSimilarProductsFetching() {
+        similarProductsFetchingJob?.cancel()
+    }
+
     private suspend fun fetchProductImpl(id: Product.Id) {
         if (fetchProductJob?.isActive == true) return
         coroutineScope {
@@ -90,6 +183,30 @@ internal class ProductComponent(
                 operationTracker.track(ProductRequest) {
                     val params = GetProductUseCase.Params(id)
                     _productResult.value = getProductUseCase(params)
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchTotalLookProductsImpl(id: Product.Id) {
+        if (fetchTotalLookProductsJob?.isActive == true) return
+        coroutineScope {
+            fetchTotalLookProductsJob = launch {
+                operationTracker.track(TotalLookProductsRequest) {
+                    val params = GetProductTotalLookUseCase.Params(id)
+                    _totalLookProductsResult.value = getProductTotalLookUseCase(params)
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchSimilarProductsImpl(id: Product.Id) {
+        if (fetchSimilarProductsJob?.isActive == true) return
+        coroutineScope {
+            fetchSimilarProductsJob = launch {
+                operationTracker.track(SimilarProductsRequest) {
+                    val params = GetSimilarProductsUseCase.Params(id)
+                    _similarProductsResult.value = getSimilarProductsUseCase(params)
                 }
             }
         }
@@ -108,4 +225,8 @@ internal class ProductComponent(
     }
 
     private data object ProductRequest : OperationKey
+
+    private data object TotalLookProductsRequest : OperationKey
+
+    private data object SimilarProductsRequest : OperationKey
 }

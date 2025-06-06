@@ -26,7 +26,7 @@ internal fun ProductContent(
         targetState = state,
         contentKey = {
             when (it) {
-                is ProductState.Success -> ContentKey.Success
+                is ProductState.Success -> ProductContentKey.Success
                 is ProductState.Error -> it
                 ProductState.Loading -> it
             }
@@ -64,4 +64,4 @@ internal fun ProductContent(
     }
 }
 
-private enum class ContentKey { Success }
+private enum class ProductContentKey { Success }

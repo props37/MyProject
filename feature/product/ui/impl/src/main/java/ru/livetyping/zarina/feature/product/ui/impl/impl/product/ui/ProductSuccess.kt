@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -26,6 +27,8 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
 
@@ -71,7 +74,7 @@ internal fun ProductSuccess(
         ) {
             val contentPadding = PaddingValues(
                 top = windowInsetsProvider().asPaddingValues().calculateTopPadding(),
-                bottom = bottomPaddingProvider(),
+                bottom = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding,
             )
 
             ContentList(
@@ -112,15 +115,38 @@ private fun ContentList(
                     .padding(horizontal = 16.dp),
             )
         }
+
+        item(key = ContentListKey.TotalLookProducts, contentType = ContentListContentType.SuggestionList) {
+            SuggestionList(
+                state = state.totalLookProductState,
+                title = stringResource(R.string.product_suggestions_title_total_look).uppercase(),
+                onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                modifier = Modifier.padding(top = 32.dp),
+            )
+        }
+
+        item(key = ContentListKey.SimilarProducts, contentType = ContentListContentType.SuggestionList) {
+            SuggestionList(
+                state = state.similarProductState,
+                title = stringResource(R.string.product_suggestions_title_similar_products).uppercase(),
+                onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                modifier = Modifier.padding(top = 32.dp),
+            )
+        }
     }
 }
 
 private enum class ContentListKey {
     MediaPager,
     ProductName,
+    TotalLookProducts,
+    SimilarProducts,
 }
 
 private enum class ContentListContentType {
     MediaPager,
     ProductName,
+    SuggestionList,
 }

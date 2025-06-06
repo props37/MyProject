@@ -57,6 +57,7 @@ public fun ProductCard(
     onClick: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    isMediaScrollable: Boolean = true,
     mediaShimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     appMetricaScreen: Screen? = null,
 ) {
@@ -84,6 +85,7 @@ public fun ProductCard(
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
+                isUserScrollEnabled = isMediaScrollable,
                 shimmer = mediaShimmer,
                 modifier = Modifier
                     .matchParentSize()
@@ -101,13 +103,15 @@ public fun ProductCard(
                 )
             }
 
-            ZarinaHorizontalPagerIndicator(
-                pagerState = pagerState,
-                itemCount = product.media.size,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 6.dp),
-            )
+            if (isMediaScrollable) {
+                ZarinaHorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    itemCount = product.media.size,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 6.dp),
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

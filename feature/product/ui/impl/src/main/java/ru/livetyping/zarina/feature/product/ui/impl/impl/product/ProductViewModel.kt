@@ -8,11 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -31,6 +31,8 @@ internal class ProductViewModel @Inject constructor(
 
     private val productComponent = ProductComponent(
         getProductUseCase = deps.getProduct,
+        getProductTotalLookUseCase = deps.getProductTotalLook,
+        getSimilarProductsUseCase = deps.getSimilarProducts,
         coroutineScope = viewModelScope,
     )
 
@@ -44,13 +46,23 @@ internal class ProductViewModel @Inject constructor(
 
     private val productStateBuilder = ProductState.Builder()
 
-    val productState: StateFlow<ProductState> = combine(
+    val productState: StateFlow<ProductState> = combineMore(
         productComponent.productResult,
         productComponent.isProductLoading,
-    ) { productResult, isProductLoading ->
+        productComponent.totalLookProductsResult,
+        productComponent.areTotalLookProductsLoading,
+        productComponent.similarProductsResult,
+        productComponent.areSimilarProductsLoading,
+    ) { productResult, isProductLoading, totalLookProductsResult, areTotalLookProductsLoading,
+        similarProductsResult, areSimilarProductsLoading ->
+
         productStateBuilder.build(
             productResult = productResult,
             isProductLoading = isProductLoading,
+            totalLookProductsResult = totalLookProductsResult,
+            areTotalLookProductsLoading = areTotalLookProductsLoading,
+            similarProductsResult = similarProductsResult,
+            areSimilarProductsLoading = areSimilarProductsLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -70,6 +82,8 @@ internal class ProductViewModel @Inject constructor(
         when (event) {
             ProductEvent.BackClicked -> TODO()
             ProductEvent.ShareClicked -> TODO()
+            is ProductEvent.ProductClicked -> TODO()
+            is ProductEvent.AddProductToWishlistClicked -> TODO()
             ProductEvent.ProductRefreshTriggered -> TODO()
         }
     }
