@@ -27,9 +27,9 @@ public interface ProductRepository {
 
     public suspend fun getProduct(productId: Product.Id): ProductDetailed
 
-    public fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>>
+    public suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort>
 
-    public fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>>
+    public suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort>
 
     public fun getProductAvailabilityInStoresFlow(
         offer: ProductOffer,

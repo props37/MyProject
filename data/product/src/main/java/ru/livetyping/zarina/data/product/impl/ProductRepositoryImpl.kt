@@ -42,12 +42,12 @@ internal class ProductRepositoryImpl @Inject constructor(
         return remoteDataSource.getProduct(productId)
     }
 
-    override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> {
-        return remoteDataSource.getProductTotalLookFlow(productId)
+    override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort> {
+        return remoteDataSource.getProductTotalLook(productId)
     }
 
-    override fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>> {
-        return remoteDataSource.getSimilarProductsFlow(productId)
+    override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort> {
+        return remoteDataSource.getSimilarProducts(productId)
     }
 
     override fun getProductAvailabilityInStoresFlow(

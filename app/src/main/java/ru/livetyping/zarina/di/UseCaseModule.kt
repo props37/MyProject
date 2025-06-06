@@ -69,9 +69,9 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
@@ -886,22 +886,22 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductTotalLookFlowUseCase(
+    fun provideGetProductTotalLookUseCase(
         productRepository: ProductRepository,
         logger: UseCaseLogger,
-    ): GetProductTotalLookFlowUseCase {
-        return GetProductTotalLookFlowUseCase.getInstance(
+    ): GetProductTotalLookUseCase {
+        return GetProductTotalLookUseCase.getInstance(
             productRepository = productRepository,
             logger = logger,
         )
     }
 
     @Provides
-    fun provideGetSimilarProductsFlowUseCase(
+    fun provideGetSimilarProductsUseCase(
         productRepository: ProductRepository,
         logger: UseCaseLogger,
-    ): GetSimilarProductsFlowUseCase {
-        return GetSimilarProductsFlowUseCase.getInstance(
+    ): GetSimilarProductsUseCase {
+        return GetSimilarProductsUseCase.getInstance(
             productRepository = productRepository,
             logger = logger,
         )

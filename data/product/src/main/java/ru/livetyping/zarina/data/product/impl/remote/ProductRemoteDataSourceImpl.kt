@@ -43,14 +43,12 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
         return api.getProduct(productId).toProductDetailed()
     }
 
-    override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> = flow {
-        val products = api.getProductTotalLook(productId).mapNotNull { it.toProductShort() }
-        emit(products)
+    override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort> {
+        return api.getProductTotalLook(productId).mapNotNull { it.toProductShort() }
     }
 
-    override fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>> = flow {
-        val products = api.getSimilarProducts(productId).mapNotNull { it.toProductShort() }
-        emit(products)
+    override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort> {
+        return api.getSimilarProducts(productId).mapNotNull { it.toProductShort() }
     }
 
     override fun getProductAvailabilityInStoresFlow(
