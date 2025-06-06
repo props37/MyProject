@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.model.product.exception.ProductNotFoundException
 
 @Stable
 internal sealed class SuggestionListState {
@@ -33,7 +34,13 @@ internal sealed class SuggestionListState {
                             Empty
                         }
                     },
-                    onFailure = { Error },
+                    onFailure = { t ->
+                        if (t is ProductNotFoundException) {
+                            Empty
+                        } else {
+                            Error
+                        }
+                    }
                 )
             }
         }

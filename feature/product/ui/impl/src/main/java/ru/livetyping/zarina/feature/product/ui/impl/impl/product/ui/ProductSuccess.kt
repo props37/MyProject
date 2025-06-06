@@ -27,6 +27,7 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
+import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
@@ -104,7 +105,10 @@ private fun ContentList(
         modifier = modifier,
     ) {
         item(key = ContentListKey.MediaPager, contentType = ContentListContentType.MediaPager) {
-            MediaPager(mediaList = state.product.media)
+            MediaPager(
+                mediaList = state.product.media,
+                modifier = Modifier.animateZarinaItem(this),
+            )
         }
 
         item(key = ContentListKey.ProductName, contentType = ContentListContentType.ProductName) {
@@ -112,7 +116,8 @@ private fun ContentList(
                 state.product.name.uppercase(),
                 modifier = Modifier
                     .padding(top = 20.dp)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .animateZarinaItem(this),
             )
         }
 
@@ -123,7 +128,9 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
-                modifier = Modifier.padding(top = 32.dp),
+                modifier = Modifier
+                    .padding(top = 32.dp)
+                    .animateZarinaItem(this),
             )
         }
 
@@ -134,7 +141,9 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
-                modifier = Modifier.padding(top = 32.dp),
+                modifier = Modifier
+                    .padding(top = 32.dp)
+                    .animateZarinaItem(this),
             )
         }
     }

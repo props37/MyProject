@@ -15,6 +15,7 @@ import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
@@ -28,6 +29,8 @@ internal class ProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val deps: ProductDependencies,
 ) : ViewModel(), SideEffectSource<ProductSideEffect> by SideEffectSourceImpl() {
+
+    private val navigationThrottler = Throttler.getNavigationThrottler()
 
     private val productComponent = ProductComponent(
         getProductUseCase = deps.getProduct,
@@ -80,18 +83,62 @@ internal class ProductViewModel @Inject constructor(
     // TODO: [Top] Implement
     fun onProductEvent(event: ProductEvent) {
         when (event) {
-            ProductEvent.BackClicked -> TODO()
-            ProductEvent.ShareClicked -> TODO()
-            is ProductEvent.ProductClicked -> TODO()
+            ProductEvent.BackClicked -> onBackClicked()
+            ProductEvent.ShareClicked -> onShareClicked()
+            is ProductEvent.ProductClicked -> onProductClicked(event)
             is ProductEvent.AddProductToWishlistClicked -> TODO()
-            ProductEvent.ProductRefreshTriggered -> TODO()
-            ProductEvent.SimilarProductRefreshTriggered -> TODO()
-            ProductEvent.TotalLookProductRefreshTriggered -> TODO()
+            ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
+            ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
+            ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
         }
     }
 
     private fun onScreenCreated() {
         reportScreenCreated()
+    }
+
+    private fun onBackClicked() {
+        navigationThrottler.throttle {
+            val action = ProductScreenAction.BackClicked
+            emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onShareClicked() {
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val product = productComponent.awaitProduct()
+                val shareUrl = product?.shareUrl?.value
+                if (!shareUrl.isNullOrBlank()) {
+                    emitSideEffect(ProductSideEffect.Share(shareUrl))
+                }
+            }
+        }
+    }
+
+    private fun onProductClicked(event: ProductEvent.ProductClicked) {
+        navigationThrottler.throttle {
+            val action = ProductScreenAction.ProductClicked(event.product)
+            emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onProductRefreshTriggered() {
+        viewModelScope.launch {
+            productComponent.fetchProduct()
+        }
+    }
+
+    private fun onTotalLookProductRefreshTriggered() {
+        viewModelScope.launch {
+            productComponent.fetchTotalLookProducts()
+        }
+    }
+
+    private fun onSimilarProductRefreshTriggered() {
+        viewModelScope.launch {
+            productComponent.fetchSimilarProducts()
+        }
     }
 
     private fun reportScreenCreated() {

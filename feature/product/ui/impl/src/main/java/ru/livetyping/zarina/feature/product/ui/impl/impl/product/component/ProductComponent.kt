@@ -73,7 +73,7 @@ internal class ProductComponent(
         productId.value = id
     }
 
-    suspend fun awaitProduct(): Product? {
+    suspend fun awaitProduct(): ProductDetailed? {
         val successResult = productResult.firstOrNull { it?.isSuccess == true }
         return successResult?.getOrNull()
     }
