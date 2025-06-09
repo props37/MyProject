@@ -111,13 +111,6 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
 
     return remember(product, keyStyle, context, configuration) {
         buildAnnotatedString {
-            appendKeyValue(
-                key = context.getString(RCommon.string.res_product_article),
-                value = product.id.value,
-                keyStyle = keyStyle,
-            )
-            appendTwoLines()
-
             product.description.forEach { entry ->
                 appendKeyValue(
                     key = entry.title,

@@ -70,7 +70,9 @@ internal data class ProductDetailedDto(
             isInWishlist = false,
             isInCart = false,
             label = label?.toLabel(),
-            description = description.mapNotNull { it.toDescriptionEntry() },
+            description = description
+                .mapNotNull { it.toDescriptionEntry() }
+                .sortedBy { it.title },
             bonusAccrualForPurchase = bonus ?: 0,
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
@@ -137,6 +139,8 @@ internal data class ProductDetailedDto(
     }
 
     private companion object {
+        private const val DESCRIPTION_ARTICLE_TITLE = "Арт."
+
         private const val TAG = "ProductDetailedDto"
     }
 }
