@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.network.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Color
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import timber.log.Timber
@@ -21,13 +22,14 @@ public data class ProductColorDto(
     @SerialName("product_id")
     val productId: String? = null,
 ) {
-    public fun toProductColor(): ProductColor? {
+    public fun toProductColor(imageUrl: Url?): ProductColor? {
         return if (id != null && name != null && code != null && productId != null) {
             ProductColor(
                 id = ProductColor.Id(id),
                 name = name,
                 color = Color(code),
                 productId = Product.Id(productId),
+                imageUrl = imageUrl,
             )
         } else {
             Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductColor")

@@ -171,6 +171,7 @@ public data class OrderDto(
                 name = color.title,
                 color = Color(color.code),
                 productId = Product.Id(vendorCode),
+                imageUrl = null,
             )
         }
 

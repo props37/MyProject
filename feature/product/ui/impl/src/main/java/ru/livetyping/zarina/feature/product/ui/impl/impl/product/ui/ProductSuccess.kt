@@ -64,8 +64,10 @@ internal fun ProductSuccess(
                 val firstVisibleItemKey by remember(listState) {
                     derivedStateOf { listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key }
                 }
+                val isBackgroundTransparent = firstVisibleItemKey == ContentListKey.MediaPager
+                        || firstVisibleItemKey == null
                 val backgroundAlpha by animateFloatAsState(
-                    targetValue = if (firstVisibleItemKey == ContentListKey.MediaPager) 0f else 1f,
+                    targetValue = if (isBackgroundTransparent) 0f else 1f,
                 )
 
                 TopBar(
@@ -118,6 +120,15 @@ private fun ContentList(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .padding(horizontal = 16.dp),
+            )
+        }
+
+        item(key = ContentListKey.ColorSelector, contentType = ContentListContentType.ColorSelector) {
+            ColorSelector(
+                colors = state.product.colors,
+                selectedColorProductId = state.product.id,
+                onColorClicked = { onEvent(ProductEvent.ProductColorClicked(it)) },
+                modifier = Modifier.padding(top = 16.dp),
             )
         }
 
@@ -180,6 +191,7 @@ private fun ContentList(
 private enum class ContentListKey {
     MediaPager,
     ProductName,
+    ColorSelector,
     MediaBanner,
     ProductDetails,
     DeliveryAndPaymentBlock,
@@ -189,6 +201,7 @@ private enum class ContentListKey {
 
 private enum class ContentListContentType {
     MediaPager,
+    ColorSelector,
     MediaBanner,
     ProductDetails,
     DeliveryAndPaymentBlock,

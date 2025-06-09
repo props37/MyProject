@@ -12,4 +12,5 @@
     <string name="product_size_on_model">Размер на модели</string>
     <string name="product_model_parameters">Параметры модели</string>
     <string name="product_failed_to_load_block">Не удалось загрузить блок</string>
+    <string name="product_color_selector_header">В других цветах</string>
 </resources>

@@ -29,7 +29,7 @@ public data class ProductShortDto(
 ) {
     public fun toProductShort(): ProductShort? {
         val offers = offers?.mapNotNull { it.toProductOffer() }
-        val colors = colors?.mapNotNull { it.toProductColor() }
+        val colors = colors?.mapNotNull { it.toProductColor(imageUrl = null) }
         val media = media
             ?.mapNotNull { it.toMedia() }
             // Filter out videos until a good decision is found on how to display multiple videos

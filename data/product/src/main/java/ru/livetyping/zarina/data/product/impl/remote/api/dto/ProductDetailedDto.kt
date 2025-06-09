@@ -64,7 +64,7 @@ internal data class ProductDetailedDto(
             name = name,
             price = price.toProductPrice(),
             offers = offers.mapNotNull { it.toProductOffer() },
-            colors = colors.mapNotNull { it.toProductColor() },
+            colors = colors.mapNotNull { it.toProductColor(imageUrl = null) },
             media = media.mapNotNull { it.toMedia() },
             // States that are not present in the DTO
             isInWishlist = false,

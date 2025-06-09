@@ -85,6 +85,7 @@ internal class ProductViewModel @Inject constructor(
         when (event) {
             ProductEvent.BackClicked -> onBackClicked()
             ProductEvent.ShareClicked -> onShareClicked()
+            is ProductEvent.ProductColorClicked -> onProductColorClicked(event)
             is ProductEvent.ProductClicked -> onProductClicked(event)
             is ProductEvent.AddProductToWishlistClicked -> TODO()
             ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
@@ -114,6 +115,10 @@ internal class ProductViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onProductColorClicked(event: ProductEvent.ProductColorClicked) {
+        productComponent.setProductId(event.color.productId)
     }
 
     private fun onProductClicked(event: ProductEvent.ProductClicked) {

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Color
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 
@@ -14,6 +15,7 @@ public data class ProductColorParcelable(
     val name: String,
     val color: String,
     val productId: String,
+    val imageUrl: String?,
 ) : Parcelable {
     public fun toProductColor(): ProductColor {
         return ProductColor(
@@ -21,6 +23,7 @@ public data class ProductColorParcelable(
             name = name,
             color = Color(color),
             productId = Product.Id(productId),
+            imageUrl = imageUrl?.let { Url.create(it) },
         )
     }
 
@@ -31,6 +34,7 @@ public data class ProductColorParcelable(
                 name = productColor.name,
                 color = productColor.color.value,
                 productId = productColor.productId.value,
+                imageUrl = productColor.imageUrl?.value,
             )
         }
     }
