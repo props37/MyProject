@@ -36,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaExpandableItem(
@@ -47,7 +47,7 @@ public fun ZarinaExpandableItem(
     confirmExpandedChange: (Boolean) -> Boolean = { true },
     backgroundColor: Color = ZarinaItemDefaults.BackgroundColor,
     contentColor: Color = ZarinaItemDefaults.ContentColor,
-    titleContentPadding: PaddingValues = ZarinaExpandableItemDefaults.TitleContentPadding,
+    headerContentPadding: PaddingValues = ZarinaExpandableItemDefaults.TitleContentPadding,
     contentPadding: PaddingValues = ZarinaExpandableItemDefaults.ContentPadding,
     content: @Composable AnimatedVisibilityScope.() -> Unit,
 ) {
@@ -63,7 +63,7 @@ public fun ZarinaExpandableItem(
 
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
-        LocalTextStyle provides UiKitTheme.typography.secondary.light,
+        LocalTextStyle provides UiKitTheme2.typography.body,
     ) {
         Column(
             modifier = modifier.drawBehind { drawRect(backgroundColor) },
@@ -78,7 +78,7 @@ public fun ZarinaExpandableItem(
                             isExpanded = newValue
                         }
                     }
-                    .padding(titleContentPadding),
+                    .padding(headerContentPadding),
             ) {
                 Row(
                     modifier = Modifier.weight(1f),
@@ -88,7 +88,7 @@ public fun ZarinaExpandableItem(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 val rotation = animateFloatAsState(
-                    targetValue = if (isExpanded) 0f else 180f,
+                    targetValue = if (isExpanded) 180f else 90f,
                     label = "rotation",
                 )
                 val contentDescResId = if (isExpanded) R.string.res_collapse else R.string.res_expand
@@ -96,10 +96,8 @@ public fun ZarinaExpandableItem(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_small_arrow_up_24),
                     contentDescription = stringResource(contentDescResId),
                     modifier = Modifier
-                        .size(16.dp)
-                        .graphicsLayer {
-                            rotationZ = rotation.value
-                        },
+                        .size(20.dp)
+                        .graphicsLayer { rotationZ = rotation.value },
                 )
             }
 
