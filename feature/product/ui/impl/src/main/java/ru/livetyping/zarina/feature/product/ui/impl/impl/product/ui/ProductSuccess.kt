@@ -132,6 +132,16 @@ private fun ContentList(
             }
         }
 
+        item(
+            key = ContentListKey.DeliveryAndPaymentBlock,
+            contentType = ContentListContentType.DeliveryAndPaymentBlock,
+        ) {
+            DeliveryAndPaymentBlock(
+                freeDeliveryThreshold = state.product.freeDeliveryTotalPriceThreshold,
+                modifier = Modifier.animateZarinaItem(this),
+            )
+        }
+
         item(key = ContentListKey.TotalLookProducts, contentType = ContentListContentType.SuggestionList) {
             SuggestionList(
                 state = state.totalLookProductState,
@@ -140,7 +150,7 @@ private fun ContentList(
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
                 modifier = Modifier
-                    .padding(top = 32.dp)
+                    .padding(top = 28.dp)
                     .animateZarinaItem(this),
             )
         }
@@ -153,7 +163,7 @@ private fun ContentList(
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
                 modifier = Modifier
-                    .padding(top = 32.dp)
+                    .padding(top = 28.dp)
                     .animateZarinaItem(this),
             )
         }
@@ -164,6 +174,7 @@ private enum class ContentListKey {
     MediaPager,
     ProductName,
     MediaBanner,
+    DeliveryAndPaymentBlock,
     TotalLookProducts,
     SimilarProducts,
 }
@@ -171,6 +182,7 @@ private enum class ContentListKey {
 private enum class ContentListContentType {
     MediaPager,
     MediaBanner,
+    DeliveryAndPaymentBlock,
     ProductName,
     SuggestionList,
 }

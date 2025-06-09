@@ -54,6 +54,7 @@
     <string name="res_zarina_about_company_url" translatable="false">https://zarina.ru/about/</string>
     <string name="res_zarina_personal_data_consent_policy_url" translatable="false">https://zarina.ru/help/docs/data-consent/</string>
     <string name="res_zarina_help_url" translatable="false">https://zarina.ru/help/</string>
+    <string name="res_zarina_delivery_and_payment_url" translatable="false">https://zarina.ru/help/delivery-and-payment/</string>
     <string name="res_yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
     <string name="res_loading_error">Ошибка загрузки</string>
