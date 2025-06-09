@@ -115,7 +115,7 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                 value = product.id.value,
                 keyStyle = keyStyle,
             )
-            appendLine()
+            appendTwoLines()
 
             product.description.forEach { entry ->
                 appendKeyValue(
@@ -123,7 +123,7 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                     value = entry.body,
                     keyStyle = keyStyle,
                 )
-                appendLine()
+                appendTwoLines()
             }
 
             product.modelInfo?.productSize?.let {
@@ -132,7 +132,7 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                     value = it,
                     keyStyle = keyStyle,
                 )
-                appendLine()
+                appendTwoLines()
             }
 
             product.modelInfo?.modelParams?.let {
@@ -156,6 +156,11 @@ private fun AnnotatedString.Builder.appendKeyValue(
         append(TextKeyValueSeparator)
     }
     append(value)
+}
+
+@Suppress("NOTHING_TO_INLINE")
+private inline fun AnnotatedString.Builder.appendTwoLines() {
+    appendLine()
     appendLine()
 }
 
