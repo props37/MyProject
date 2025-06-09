@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
+// TODO: [Top] Deal with articles
 @Composable
 internal fun ProductDetailsBlock(
     product: ProductDetailed,
