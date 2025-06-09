@@ -9,18 +9,47 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uikit.item.ZarinaExpandableItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
+
+@Composable
+internal fun ProductDetailsBlock(
+    product: ProductDetailed,
+    modifier: Modifier = Modifier,
+) {
+    ZarinaExpandableItem(
+        header = {
+            Header(text = stringResource(R.string.product_details).uppercase())
+        },
+        backgroundColor = BackgroundColor,
+        contentPadding = BodyContentPadding,
+        modifier = modifier,
+    ) {
+        val text = rememberProductDetailsText(product)
+
+        Text(
+            text = text.toUpperCase(),
+            style = BodyTextStyle,
+            color = UiKitTheme2.colors.mainBlack,
+        )
+    }
+}
 
 @Composable
 internal fun DeliveryAndPaymentBlock(
@@ -53,6 +82,7 @@ internal fun DeliveryAndPaymentBlock(
         Text(
             text = text.toUpperCase(),
             style = BodyTextStyle,
+            color = UiKitTheme2.colors.mainBlack,
         )
     }
 }
@@ -70,6 +100,65 @@ private fun Header(
     }
 }
 
+@Composable
+private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedString {
+    val context = LocalContext.current
+    // Subscribe to Configuration changes
+    val configuration = LocalConfiguration.current
+
+    val keyStyle = BodyTextStyle.copy(color = UiKitTheme2.colors.middleGray).toSpanStyle()
+
+    return remember(product, keyStyle, context, configuration) {
+        buildAnnotatedString {
+            appendKeyValue(
+                key = context.getString(RCommon.string.res_product_article),
+                value = product.id.value,
+                keyStyle = keyStyle,
+            )
+            appendLine()
+
+            product.description.forEach { entry ->
+                appendKeyValue(
+                    key = entry.title,
+                    value = entry.body,
+                    keyStyle = keyStyle,
+                )
+                appendLine()
+            }
+
+            product.modelInfo?.productSize?.let {
+                appendKeyValue(
+                    key = context.getString(R.string.product_size_on_model),
+                    value = it,
+                    keyStyle = keyStyle,
+                )
+                appendLine()
+            }
+
+            product.modelInfo?.modelParams?.let {
+                appendKeyValue(
+                    key = context.getString(R.string.product_model_parameters),
+                    value = it,
+                    keyStyle = keyStyle,
+                )
+            }
+        }
+    }
+}
+
+private fun AnnotatedString.Builder.appendKeyValue(
+    key: String,
+    value: String,
+    keyStyle: SpanStyle,
+) {
+    withStyle(keyStyle) {
+        append(key)
+        append(TextKeyValueSeparator)
+    }
+    append(value)
+    appendLine()
+}
+
 private val BackgroundColor: Color
     @Composable
     get() = UiKitTheme2.colors.lightGray
@@ -84,3 +173,5 @@ private val BodyTextStyle: TextStyle
 
 private val BodyContentPadding: PaddingValues
     get() = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 24.dp)
+
+private const val TextKeyValueSeparator = ": "

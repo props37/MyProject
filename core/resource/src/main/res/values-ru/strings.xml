@@ -122,6 +122,11 @@
     <string name="res_application_not_found">Приложение не найдено</string>
     <string name="res_load_more">Загрузить еще</string>
     <string name="res_all">Все</string>
+    <string name="res_product_article">Артикул</string>
+    <string name="res_product_composition">Состав</string>
+    <string name="res_country_of_origin">Страна-производитель</string>
+    <string name="res_care">Уход</string>
+    <string name="res_parameters">Параметры</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

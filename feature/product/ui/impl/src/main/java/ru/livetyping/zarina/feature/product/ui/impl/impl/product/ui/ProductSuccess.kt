@@ -1,11 +1,14 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -27,8 +30,9 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
-import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
@@ -105,10 +109,7 @@ private fun ContentList(
         modifier = modifier,
     ) {
         item(key = ContentListKey.MediaPager, contentType = ContentListContentType.MediaPager) {
-            MediaPager(
-                mediaList = state.product.media,
-                modifier = Modifier.animateZarinaItem(this),
-            )
+            MediaPager(mediaList = state.product.media)
         }
 
         item(key = ContentListKey.ProductName, contentType = ContentListContentType.ProductName) {
@@ -116,8 +117,7 @@ private fun ContentList(
                 state.product.name.uppercase(),
                 modifier = Modifier
                     .padding(top = 20.dp)
-                    .padding(horizontal = 16.dp)
-                    .animateZarinaItem(this),
+                    .padding(horizontal = 16.dp),
             )
         }
 
@@ -125,9 +125,21 @@ private fun ContentList(
             item(key = ContentListKey.MediaBanner, contentType = ContentListContentType.MediaBanner) {
                 Media(
                     media = state.mediaBanner,
+                    modifier = Modifier.padding(top = 40.dp),
+                )
+            }
+        }
+
+        item(key = ContentListKey.ProductDetails, contentType = ContentListContentType.ProductDetails) {
+            Column {
+                ProductDetailsBlock(product = state.product)
+
+                ZarinaDivider(
+                    color = UiKitTheme2.colors.gray,
                     modifier = Modifier
-                        .padding(top = 40.dp)
-                        .animateZarinaItem(this),
+                        .fillMaxWidth()
+                        .background(UiKitTheme2.colors.lightGray)
+                        .padding(horizontal = 16.dp),
                 )
             }
         }
@@ -138,7 +150,6 @@ private fun ContentList(
         ) {
             DeliveryAndPaymentBlock(
                 freeDeliveryThreshold = state.product.freeDeliveryTotalPriceThreshold,
-                modifier = Modifier.animateZarinaItem(this),
             )
         }
 
@@ -149,9 +160,7 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
-                modifier = Modifier
-                    .padding(top = 28.dp)
-                    .animateZarinaItem(this),
+                modifier = Modifier.padding(top = 28.dp),
             )
         }
 
@@ -162,9 +171,7 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
-                modifier = Modifier
-                    .padding(top = 28.dp)
-                    .animateZarinaItem(this),
+                modifier = Modifier.padding(top = 28.dp),
             )
         }
     }
@@ -174,6 +181,7 @@ private enum class ContentListKey {
     MediaPager,
     ProductName,
     MediaBanner,
+    ProductDetails,
     DeliveryAndPaymentBlock,
     TotalLookProducts,
     SimilarProducts,
@@ -182,6 +190,7 @@ private enum class ContentListKey {
 private enum class ContentListContentType {
     MediaPager,
     MediaBanner,
+    ProductDetails,
     DeliveryAndPaymentBlock,
     ProductName,
     SuggestionList,
