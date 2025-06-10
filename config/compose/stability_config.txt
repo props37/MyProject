@@ -54,6 +54,7 @@ ru.livetyping.zarina.core.domain.model.pagination.Page
 ru.livetyping.zarina.core.domain.model.product.Barcode
 ru.livetyping.zarina.core.domain.model.product.ProductSorting
 ru.livetyping.zarina.core.domain.model.product.ProductPrice
+ru.livetyping.zarina.core.domain.model.product.PodeliPrice
 ru.livetyping.zarina.core.domain.model.product.ProductOffer
 ru.livetyping.zarina.core.domain.model.product.ProductColor
 ru.livetyping.zarina.core.domain.model.product.ProductColor.Id

@@ -21,6 +21,10 @@ public data class ProductDetailed(
     val shareUrl: Url?,
     val modelInfo: ModelInfo?,
 ) : Product() {
+    public val podeliPrice: PodeliPrice by lazy {
+        PodeliPrice.create(price.currentPrice)
+    }
+
     // Marked as stable on config/compose/stability_config.txt
     public data class Label(
         val name: String,

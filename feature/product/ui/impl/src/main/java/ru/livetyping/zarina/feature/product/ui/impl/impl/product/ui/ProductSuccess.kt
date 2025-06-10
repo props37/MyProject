@@ -136,6 +136,17 @@ private fun ContentList(
             )
         }
 
+        item(key = ContentListKey.PriceBlock, contentType = ContentListContentType.PriceBlock) {
+            PriceBlock(
+                price = state.product.price,
+                podeliPrice = state.product.podeliPrice,
+                bonusAccrualForPurchase = state.product.bonusAccrualForPurchase,
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .padding(horizontal = 16.dp),
+            )
+        }
+
         item(key = ContentListKey.ColorSelector, contentType = ContentListContentType.ColorSelector) {
             ColorSelector(
                 colors = state.product.colors,
@@ -205,6 +216,7 @@ private enum class ContentListKey {
     MediaPager,
     LabelList,
     ProductName,
+    PriceBlock,
     ColorSelector,
     MediaBanner,
     ProductDetails,
@@ -216,10 +228,11 @@ private enum class ContentListKey {
 private enum class ContentListContentType {
     MediaPager,
     LabelList,
+    ProductName,
+    PriceBlock,
     ColorSelector,
     MediaBanner,
     ProductDetails,
     DeliveryAndPaymentBlock,
-    ProductName,
     SuggestionList,
 }
