@@ -24,7 +24,7 @@ public data class ProductDetailed(
     // Marked as stable on config/compose/stability_config.txt
     public data class Label(
         val name: String,
-        val color: Color,
+        val color: Color?,
     )
 
     // Marked as stable on config/compose/stability_config.txt

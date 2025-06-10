@@ -114,11 +114,24 @@ private fun ContentList(
             MediaPager(mediaList = state.product.media)
         }
 
+        if (state.labels != null) {
+            item(key = ContentListKey.LabelList, contentType = ContentListContentType.LabelList) {
+                LabelList(
+                    labels = state.labels,
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+
         item(key = ContentListKey.ProductName, contentType = ContentListContentType.ProductName) {
+            val topPadding = if (state.labels != null) 12.dp else 20.dp
+
             ProductName(
                 state.product.name.uppercase(),
                 modifier = Modifier
-                    .padding(top = 20.dp)
+                    .padding(top = topPadding)
                     .padding(horizontal = 16.dp),
             )
         }
@@ -190,6 +203,7 @@ private fun ContentList(
 
 private enum class ContentListKey {
     MediaPager,
+    LabelList,
     ProductName,
     ColorSelector,
     MediaBanner,
@@ -201,6 +215,7 @@ private enum class ContentListKey {
 
 private enum class ContentListContentType {
     MediaPager,
+    LabelList,
     ColorSelector,
     MediaBanner,
     ProductDetails,

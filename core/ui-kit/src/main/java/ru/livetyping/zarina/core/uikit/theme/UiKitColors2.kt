@@ -16,4 +16,5 @@ public data class UiKitColors2(
     val hoverBack: Color = Colors2.Emperor,
     val skeletonBackground: Color = Colors2.Mercury,
     val shimmer: Color = Colors2.Alabaster,
+    val backgroundBeige: Color = Colors2.Pampas,
 )

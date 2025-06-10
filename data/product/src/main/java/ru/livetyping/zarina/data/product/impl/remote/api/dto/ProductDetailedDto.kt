@@ -89,10 +89,10 @@ internal data class ProductDetailedDto(
         val color: String? = null,
     ) {
         fun toLabel(): ProductDetailed.Label? {
-            return if (name != null && color != null) {
+            return if (name != null) {
                 ProductDetailed.Label(
                     name = name,
-                    color = Color(color.trim()),
+                    color = color?.let { Color(it.trim()) },
                 )
             } else {
                 Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.Label")
