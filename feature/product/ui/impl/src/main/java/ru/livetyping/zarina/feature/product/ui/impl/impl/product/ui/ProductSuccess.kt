@@ -1,6 +1,9 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,6 +72,7 @@ internal fun ProductSuccess(
                         || firstVisibleItemKey == null
                 val backgroundAlpha by animateFloatAsState(
                     targetValue = if (isBackgroundTransparent) 0f else 1f,
+                    animationSpec = tween(durationMillis = 100),
                 )
 
                 TopBar(
