@@ -116,6 +116,7 @@ private fun PodeliPrice(
     }
 }
 
+// TODO: [Top] Add info popup
 @Composable
 private fun BonusAccrualForPurchase(
     bonusAccrualForPurchase: Int,
