@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -79,20 +80,38 @@ internal fun ProductSuccess(
             scrollBehavior = topBarScrollBehavior,
             modifier = Modifier.hazeSource(hazeState),
         ) {
-            val contentPadding = PaddingValues(
-                top = windowInsetsProvider().asPaddingValues().calculateTopPadding(),
-                bottom = bottomPaddingProvider() + ZarinaScrollableDefaults.ScrollableBottomPadding,
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                val bottomContentPadding = bottomPaddingProvider() +
+                        FloatingButtonBlockPadding +
+                        FloatingButtonBlockHeight +
+                        ZarinaScrollableDefaults.ScrollableBottomPadding
 
-            ContentList(
-                state = state,
-                onEvent = onEvent,
-                listState = listState,
-                contentPadding = contentPadding,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
-            )
+                val contentPadding = PaddingValues(
+                    top = windowInsetsProvider().asPaddingValues().calculateTopPadding(),
+                    bottom = bottomContentPadding,
+                )
+
+                ContentList(
+                    state = state,
+                    onEvent = onEvent,
+                    listState = listState,
+                    contentPadding = contentPadding,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+                )
+
+                FloatingButtonBlock(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            start = FloatingButtonBlockPadding,
+                            bottom = FloatingButtonBlockPadding,
+                            end = FloatingButtonBlockPadding,
+                        )
+                        .padding(bottom = bottomPaddingProvider()),
+                )
+            }
         }
     }
 }
@@ -248,3 +267,5 @@ private enum class ContentListContentType {
     DeliveryAndPaymentBlock,
     SuggestionList,
 }
+
+private val FloatingButtonBlockPadding: Dp = 4.dp
