@@ -14,6 +14,7 @@ public data class ZarinaToastMessage2(
     val startContent: StartContent? = null,
     val endContent: EndContent? = null,
     val size: Size = Size.Medium,
+    val addBracketsToText: Boolean = false,
     override val duration: Duration = DURATION_SHORT,
     override val isRemovable: Boolean = true,
 ) : MessageQueue.Message {
@@ -64,6 +65,7 @@ public data class ZarinaToastMessage2(
                 startContent = StartContent.Image(imageUrl),
                 endContent = EndContent.CloseButton,
                 size = Size.Large,
+                addBracketsToText = true,
             )
         }
     }

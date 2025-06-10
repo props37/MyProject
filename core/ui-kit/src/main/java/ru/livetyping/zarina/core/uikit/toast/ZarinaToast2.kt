@@ -90,8 +90,12 @@ public fun ZarinaToast2(
                 ZarinaToastMessage2.Size.Large -> TextAlign.Center
             }
 
+            val text = textString(message.text).let {
+                if (message.addBracketsToText) it.withZarinaBrackets() else it
+            }.uppercase()
+
             Text(
-                text = textString(message.text).uppercase(),
+                text = text,
                 style = UiKitTheme2.typography.body2,
                 textAlign = textAlign,
                 modifier = Modifier.weight(1f),
