@@ -35,9 +35,12 @@ import coil3.compose.AsyncImage
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
+import ru.livetyping.zarina.core.uikit.product.ProductDefaults
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToast2Defaults.HorizontalPaddingWithStartImage
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToast2Defaults.VerticalPaddingWithStartImage
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 // TODO: [Top] Rename after full migration
@@ -62,7 +65,22 @@ public fun ZarinaToast2(
                 .padding(ZarinaToast2Defaults.paddingFromMessage(message)),
         ) {
             message.startContent?.let {
-                StartContent(it)
+                val paddingModifier = when (it) {
+                    is ZarinaToastMessage2.StartContent.Image -> {
+                        Modifier.padding(
+                            start = HorizontalPaddingWithStartImage,
+                            top = VerticalPaddingWithStartImage,
+                            bottom = VerticalPaddingWithStartImage,
+                        )
+                    }
+
+                    is ZarinaToastMessage2.StartContent.Icon -> Modifier
+                }
+
+                StartContent(
+                    startContent = it,
+                    modifier = paddingModifier,
+                )
 
                 Spacer(modifier = Modifier.width(16.dp))
             }
@@ -108,7 +126,7 @@ private fun StartContent(
 
             is ZarinaToastMessage2.StartContent.Image -> {
                 val height = ZarinaToast2Defaults.MinHeightLarge -
-                        ZarinaToast2Defaults.VerticalPaddingWithStartImage * 2
+                        VerticalPaddingWithStartImage * 2
 
                 AsyncImage(
                     model = startContent.url,
@@ -116,7 +134,7 @@ private fun StartContent(
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier
                         .height(height)
-                        .aspectRatio(ZarinaToast2Defaults.StartImageAspectRation),
+                        .aspectRatio(ProductDefaults.MediaAspectRatio),
                 )
             }
         }
@@ -131,9 +149,15 @@ private fun EndContent(
     Box(modifier = modifier) {
         when (endContent) {
             ZarinaToastMessage2.EndContent.CloseButton -> {
+                val controller = LocalZarinaToastController2.current
+
                 ZarinaIconButton(
-                    onClick = {}, // TODO: [Top] Implement
-                    indication = ripple(bounded = false, radius = 16.dp, color = UiKitTheme2.colors.white),
+                    onClick = controller::cancelCurrentToast,
+                    indication = ripple(
+                        color = UiKitTheme2.colors.white,
+                        radius = 16.dp,
+                        bounded = false,
+                    ),
                 ) {
                     Icon(
                         imageVector = ImageVector.vectorResource(RCommon.drawable.ic_cross_24),
@@ -191,23 +215,21 @@ public object ZarinaToast2Defaults {
     internal val MinHeightLarge: Dp get() = 80.dp
 
     private val HorizontalPaddingDefault: Dp get() = 16.dp
-    private val HorizontalPaddingWithStartImage: Dp get() = 4.dp
+    internal val HorizontalPaddingWithStartImage: Dp get() = 6.dp
 
     private val VerticalPaddingDefault: Dp get() = 12.dp
     internal val VerticalPaddingWithStartImage: Dp get() = HorizontalPaddingWithStartImage
-
-    internal const val StartImageAspectRation = 0.75f
 
     @Composable
     internal fun paddingFromMessage(message: ZarinaToastMessage2): PaddingValues {
         val startPadding = when (message.startContent) {
             is ZarinaToastMessage2.StartContent.Icon -> HorizontalPaddingDefault
-            is ZarinaToastMessage2.StartContent.Image -> HorizontalPaddingWithStartImage
+            is ZarinaToastMessage2.StartContent.Image -> 0.dp
             null -> 16.dp
         }
         val topPadding = when (message.startContent) {
             is ZarinaToastMessage2.StartContent.Icon -> VerticalPaddingDefault
-            is ZarinaToastMessage2.StartContent.Image -> VerticalPaddingWithStartImage
+            is ZarinaToastMessage2.StartContent.Image -> 0.dp
             null -> VerticalPaddingDefault
         }
         val endPadding = when (message.endContent) {
@@ -216,7 +238,7 @@ public object ZarinaToast2Defaults {
         }
         val bottomPadding = when (message.startContent) {
             is ZarinaToastMessage2.StartContent.Icon -> VerticalPaddingDefault
-            is ZarinaToastMessage2.StartContent.Image -> VerticalPaddingWithStartImage
+            is ZarinaToastMessage2.StartContent.Image -> 0.dp
             null -> VerticalPaddingDefault
         }
         return PaddingValues(
