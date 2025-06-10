@@ -40,8 +40,8 @@ public data class ProductDetailed(
     // Marked as stable on config/compose/stability_config.txt
     public data class ModelInfo(
         val modelParams: String?,
-        val productSize: String?,
+        val sizeOnModel: String?,
     ) {
-        public fun isEmpty(): Boolean = modelParams == null && productSize == null
+        public fun isEmpty(): Boolean = modelParams == null && sizeOnModel == null
     }
 }

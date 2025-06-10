@@ -133,7 +133,7 @@ internal data class ProductDetailedDto(
         fun toModelInfo(): ProductDetailed.ModelInfo {
             return ProductDetailed.ModelInfo(
                 modelParams = paramsModel,
-                productSize = sizeOnModel,
+                sizeOnModel = sizeOnModel,
             )
         }
     }

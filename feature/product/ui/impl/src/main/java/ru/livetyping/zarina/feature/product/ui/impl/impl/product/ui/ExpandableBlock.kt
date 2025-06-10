@@ -120,7 +120,7 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                 appendTwoLines()
             }
 
-            product.modelInfo?.productSize?.let {
+            product.modelInfo?.sizeOnModel?.let {
                 appendKeyValue(
                     key = context.getString(R.string.product_size_on_model),
                     value = it,
