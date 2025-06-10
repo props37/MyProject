@@ -2,7 +2,9 @@ package ru.livetyping.zarina.core.domain.usecase.product
 
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
+import ru.livetyping.zarina.core.domain.repository.WishlistRepository
 import ru.livetyping.zarina.core.usecase.UseCaseLogger
 
 public interface GetSimilarProductsUseCase {
@@ -13,10 +15,14 @@ public interface GetSimilarProductsUseCase {
     public companion object {
         public fun getInstance(
             productRepository: ProductRepository,
+            wishlistRepository: WishlistRepository,
+            cartRepository: CartRepository,
             logger: UseCaseLogger?,
         ): GetSimilarProductsUseCase {
             return GetSimilarProductsUseCaseImpl(
                 productRepository = productRepository,
+                wishlistRepository = wishlistRepository,
+                cartRepository = cartRepository,
                 logger = logger,
             )
         }

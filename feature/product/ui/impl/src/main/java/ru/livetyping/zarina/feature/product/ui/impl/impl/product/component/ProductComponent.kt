@@ -6,22 +6,28 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.uicommon.operation.OperationKey
 import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 
@@ -29,6 +35,8 @@ internal class ProductComponent(
     private val getProductUseCase: GetProductUseCase,
     private val getProductTotalLookUseCase: GetProductTotalLookUseCase,
     private val getSimilarProductsUseCase: GetSimilarProductsUseCase,
+    getWishlistProductIdsFlowUseCase: GetWishlistProductIdsFlowUseCase,
+    getCartProductIdsFlowUseCase: GetCartProductIdsFlowUseCase,
     private val coroutineScope: CoroutineScope,
 ) {
     private val operationTracker = OperationTracker()
@@ -44,21 +52,65 @@ internal class ProductComponent(
 
     private val productId = MutableStateFlow<Product.Id?>(null)
 
+    private val getWishlistProductIdsUseCaseParams =
+        GetWishlistProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+
+    private val getCartProductIdsUseCaseParams =
+        GetCartProductIdsFlowUseCase.Params(CachePolicy.LocalFirstThenRemote())
+
+    private val wishlistProductIds =
+        getWishlistProductIdsFlowUseCase(getWishlistProductIdsUseCaseParams)
+            .map { result ->
+                result.getOrDefault(emptySet())
+            }
+            .shareIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1,
+            )
+
+    private val cartProductIds =
+        getCartProductIdsFlowUseCase(getCartProductIdsUseCaseParams)
+            .map { result ->
+                result.getOrDefault(emptySet())
+            }
+            .shareIn(
+                scope = coroutineScope,
+                started = SharingStarted.WhileSubscribed(),
+                replay = 1,
+            )
+
     private val _productResult = MutableStateFlow<Result<ProductDetailed>?>(null)
-    val productResult: StateFlow<Result<ProductDetailed>?> = _productResult.asStateFlow()
+    val productResult: StateFlow<Result<ProductDetailed>?> = _productResult
+        .updateProductInternalState()
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
     private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
-    val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> =
-        _totalLookProductsResult.asStateFlow()
+    val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> = _totalLookProductsResult
+        .updateProductListInternalState()
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val areTotalLookProductsLoading: Flow<Boolean> =
         operationTracker.isOperationOngoing(TotalLookProductsRequest)
 
     private val _similarProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
-    val similarProductsResult: StateFlow<Result<List<ProductShort>>?> =
-        _similarProductsResult.asStateFlow()
+    val similarProductsResult: StateFlow<Result<List<ProductShort>>?> = _similarProductsResult
+        .updateProductListInternalState()
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
 
     val areSimilarProductsLoading: Flow<Boolean> =
         operationTracker.isOperationOngoing(SimilarProductsRequest)
@@ -221,6 +273,40 @@ internal class ProductComponent(
     private fun requireProductId(): Product.Id {
         return checkNotNull(productId.value) {
             "productId.value is null. Did you forgot to call setProductId?"
+        }
+    }
+
+    // TODO: [High] Extract?
+    private fun Flow<Result<ProductDetailed>?>.updateProductInternalState(): Flow<Result<ProductDetailed>?> {
+        return combine(
+            this,
+            wishlistProductIds,
+            cartProductIds,
+        ) { productResult, wishlistProductIds, cartProductIds ->
+            productResult?.map { product ->
+                product.copy(
+                    isInWishlist = product.id in wishlistProductIds,
+                    isInCart = product.id in cartProductIds,
+                )
+            }
+        }
+    }
+
+    // TODO: [High] Extract?
+    private fun Flow<Result<List<ProductShort>>?>.updateProductListInternalState(): Flow<Result<List<ProductShort>>?> {
+        return combine(
+            this,
+            wishlistProductIds,
+            cartProductIds,
+        ) { productResult, wishlistProductIds, cartProductIds ->
+            productResult?.map { products ->
+                products.map { product ->
+                    product.copy(
+                        isInWishlist = product.id in wishlistProductIds,
+                        isInCart = product.id in cartProductIds,
+                    )
+                }
+            }
         }
     }
 

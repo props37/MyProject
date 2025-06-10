@@ -888,10 +888,14 @@ internal class UseCaseModule {
     @Provides
     fun provideGetProductTotalLookUseCase(
         productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): GetProductTotalLookUseCase {
         return GetProductTotalLookUseCase.getInstance(
             productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
@@ -899,10 +903,14 @@ internal class UseCaseModule {
     @Provides
     fun provideGetSimilarProductsUseCase(
         productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
     ): GetSimilarProductsUseCase {
         return GetSimilarProductsUseCase.getInstance(
             productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
