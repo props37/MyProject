@@ -147,6 +147,16 @@ private fun ContentList(
             )
         }
 
+        item(key = ContentListKey.SizeSelector, contentType = ContentListContentType.SizeSelector) {
+            SizeSelector(
+                sizeOnModel = state.product.modelInfo?.sizeOnModel,
+                onSizeTableClicked = { onEvent(ProductEvent.SizeTableClicked) },
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp),
+            )
+        }
+
         item(key = ContentListKey.ColorSelector, contentType = ContentListContentType.ColorSelector) {
             ColorSelector(
                 colors = state.product.colors,
@@ -217,6 +227,7 @@ private enum class ContentListKey {
     LabelList,
     ProductName,
     PriceBlock,
+    SizeSelector,
     ColorSelector,
     MediaBanner,
     ProductDetails,
@@ -230,6 +241,7 @@ private enum class ContentListContentType {
     LabelList,
     ProductName,
     PriceBlock,
+    SizeSelector,
     ColorSelector,
     MediaBanner,
     ProductDetails,

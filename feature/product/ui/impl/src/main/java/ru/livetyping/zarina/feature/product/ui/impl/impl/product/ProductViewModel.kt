@@ -88,6 +88,7 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.ProductColorClicked -> onProductColorClicked(event)
             is ProductEvent.ProductClicked -> onProductClicked(event)
             is ProductEvent.AddProductToWishlistClicked -> TODO()
+            ProductEvent.SizeTableClicked -> onSizeTableClicked()
             ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
             ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
             ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
@@ -126,6 +127,10 @@ internal class ProductViewModel @Inject constructor(
             val action = ProductScreenAction.ProductClicked(event.product)
             emitSideEffect(ProductSideEffect.Navigate(action))
         }
+    }
+
+    private fun onSizeTableClicked() {
+        // TODO: [Top] Implement
     }
 
     private fun onProductRefreshTriggered() {

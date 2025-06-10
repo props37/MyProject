@@ -14,4 +14,5 @@
     <string name="product_failed_to_load_block">Не удалось загрузить блок</string>
     <string name="product_color_selector_header">В других цветах</string>
     <string name="product_podeli_price">Или %1$s X %2$s платежа</string>
+    <string name="product_model_wearing_size">На модели размер</string>
 </resources>
