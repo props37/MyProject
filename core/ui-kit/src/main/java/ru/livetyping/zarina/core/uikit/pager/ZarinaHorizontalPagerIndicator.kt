@@ -41,23 +41,22 @@ public fun ZarinaHorizontalPagerIndicator(
     itemCount: Int,
     modifier: Modifier = Modifier,
     style: ZarinaHorizontalPagerIndicatorStyle = ZarinaHorizontalPagerIndicatorStyle.Dots(),
-    maxVisibleSegmentCount: Int = ZarinaHorizontalPagerIndicatorDefaults.MaxVisibleSegmentCount,
 ) {
     val updatedDensity = rememberUpdatedState(LocalDensity.current)
 
-    val maxWidth = remember(style, maxVisibleSegmentCount) {
-        maxVisibleSegmentCount * (style.segmentSize.width + style.spacedBy)
+    val maxWidth = remember(style) {
+        style.maxVisibleSegmentCount * (style.segmentSize.width + style.spacedBy)
     }
 
     val scrollState = rememberScrollState()
     val scrollAnimationSpec = remember { spring<Float>(stiffness = Spring.StiffnessMediumLow) }
 
-    LaunchedEffect(pagerState, style, maxVisibleSegmentCount, itemCount) {
+    LaunchedEffect(pagerState, style, itemCount) {
         val segmentWidthPx = with(updatedDensity.value) { style.segmentSize.width.toPx() }
         val segmentSpacedByPx = with(updatedDensity.value) { style.spacedBy.toPx() }
         snapshotFlow { pagerState.currentPage % itemCount }
             .collectLatest { page ->
-                val scrollTargetPage = (page - (maxVisibleSegmentCount - ScrollTargetPageThreshold))
+                val scrollTargetPage = (page - (style.maxVisibleSegmentCount - ScrollTargetPageThreshold))
                 val scrollValue =
                     scrollTargetPage * (segmentWidthPx + segmentSpacedByPx).roundToInt()
                 scrollState.animateScrollTo(scrollValue, scrollAnimationSpec)
@@ -132,25 +131,26 @@ private fun ClosedFloatingPointRange<Float>.valueAt(progress: Float): Float {
 public sealed class ZarinaHorizontalPagerIndicatorStyle {
     public abstract val segmentSize: DpSize
     public abstract val spacedBy: Dp
+    public abstract val maxVisibleSegmentCount: Int
 
     @Immutable
     public data class Dots(
         val dotSize: Dp = 4.dp,
         override val spacedBy: Dp = 3.dp,
+        override val maxVisibleSegmentCount: Int = 6,
     ) : ZarinaHorizontalPagerIndicatorStyle() {
         override val segmentSize: DpSize get() = DpSize(dotSize, dotSize)
     }
 
     @Immutable
     public data class Rectangles(
-        override val segmentSize: DpSize = DpSize(12.dp, 2.dp),
+        override val segmentSize: DpSize = DpSize(16.dp, 2.dp),
         override val spacedBy: Dp = 2.dp,
+        override val maxVisibleSegmentCount: Int = 4,
     ) : ZarinaHorizontalPagerIndicatorStyle()
 }
 
 public object ZarinaHorizontalPagerIndicatorDefaults {
-    internal const val MaxVisibleSegmentCount = 6
-
     internal const val IndicatorSegmentInactiveAlpha = 0.5f
     internal const val ScrollTargetPageThreshold = 2
 }
