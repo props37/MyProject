@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.uicommon.toast
 
 import androidx.annotation.DrawableRes
+import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.message.MessageQueue
 import kotlin.time.Duration
@@ -55,5 +56,15 @@ public data class ZarinaToastMessage2(
                 resId = RCommon.drawable.ic_exclamation_mark_inscribed_in_triange_24,
                 contentDescription = null,
             )
+
+        public fun productAddedToWishlist(product: Product): ZarinaToastMessage2 {
+            val imageUrl = product.media.firstOrNull()?.thumbnailUrl?.value.orEmpty()
+            return ZarinaToastMessage2(
+                text = Text.Resource(RCommon.string.res_product_added_to_wishlist),
+                startContent = StartContent.Image(imageUrl),
+                endContent = EndContent.CloseButton,
+                size = Size.Large,
+            )
+        }
     }
 }

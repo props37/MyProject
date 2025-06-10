@@ -140,6 +140,12 @@ internal class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             val params = ToggleProductInWishlistUseCase.Params.Product(event.product)
             deps.toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val message = ZarinaToastMessage2.productAddedToWishlist(event.product)
+                        emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+                    }
+                }
                 .onFailure(::onToggleProductInWishlistFailure)
         }
     }
