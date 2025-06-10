@@ -22,7 +22,16 @@ public data class ZarinaToastMessage2(
         public data class Icon(
             @DrawableRes val resId: Int,
             val contentDescription: String?,
-        ) : StartContent()
+        ) : StartContent() {
+            public companion object {
+                public fun genericError(): Icon {
+                    return Icon(
+                        resId = RCommon.drawable.ic_exclamation_mark_inscribed_in_triange_24,
+                        contentDescription = null,
+                    )
+                }
+            }
+        }
 
         public data class Image(val url: String) : StartContent()
     }
@@ -37,26 +46,22 @@ public data class ZarinaToastMessage2(
         public val DURATION_SHORT: Duration get() = 3.seconds
         public val DURATION_LONG: Duration get() = 5.seconds
 
-        public val NETWORK_ERROR_MESSAGE: ZarinaToastMessage2
-            get() = ZarinaToastMessage2(
+        public fun genericError(): ZarinaToastMessage2 {
+            return ZarinaToastMessage2(
+                text = Text.Resource(RCommon.string.res_something_went_wrong_try_again),
+                startContent = StartContent.Icon.genericError(),
+            )
+        }
+
+        public fun networkError(): ZarinaToastMessage2 {
+            return ZarinaToastMessage2(
                 text = Text.Resource(RCommon.string.res_check_internet_connection),
                 startContent = StartContent.Icon(
                     resId = RCommon.drawable.ic_wifi_error_24,
                     contentDescription = null,
                 ),
             )
-
-        public val GENERIC_ERROR_MESSAGE: ZarinaToastMessage2
-            get() = ZarinaToastMessage2(
-                text = Text.Resource(RCommon.string.res_something_went_wrong_try_again),
-                startContent = GENERIC_ERROR_DEFAULT_START_ICON,
-            )
-
-        public val GENERIC_ERROR_DEFAULT_START_ICON: StartContent.Icon
-            get() = StartContent.Icon(
-                resId = RCommon.drawable.ic_exclamation_mark_inscribed_in_triange_24,
-                contentDescription = null,
-            )
+        }
 
         public fun productAddedToWishlist(product: Product): ZarinaToastMessage2 {
             val imageUrl = product.media.firstOrNull()?.thumbnailUrl?.value.orEmpty()
