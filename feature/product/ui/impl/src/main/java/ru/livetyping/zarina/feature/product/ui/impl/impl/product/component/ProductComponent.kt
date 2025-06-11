@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -22,6 +23,7 @@ import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
@@ -83,6 +85,7 @@ internal class ProductComponent(
     private val _productResult = MutableStateFlow<Result<ProductDetailed>?>(null)
     val productResult: StateFlow<Result<ProductDetailed>?> = _productResult
         .updateProductInternalState()
+        .onEach { clearSelectedProductSizeAndHeight() }
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(),
@@ -90,6 +93,68 @@ internal class ProductComponent(
         )
 
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
+
+    private val _selectedProductSize = MutableStateFlow<String?>(null)
+    val selectedProductSize: StateFlow<String?> = _selectedProductSize.asStateFlow()
+
+    private val productSizeToHeights = productResult
+        .map { productResult ->
+            val product = productResult?.getOrNull()
+            product?.offers?.toSizeToHeightsMap() ?: emptyMap()
+        }
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyMap(),
+        )
+
+    val productSizes: StateFlow<List<String>> = productSizeToHeights
+        .map { sizeToHeights -> sizeToHeights.keys.toList() }
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList(),
+        )
+
+    val shouldProductHeightBeSelected: StateFlow<Boolean> = combine(
+        productSizeToHeights,
+        selectedProductSize,
+    ) { sizeToHeights, selectedSize ->
+        if (selectedSize != null) {
+            val selectedSizeHeights = sizeToHeights[selectedSize]
+            selectedSizeHeights != null && selectedSizeHeights.size > 1
+        } else {
+            // Does any size have multiple heights
+            sizeToHeights.any { (_, heights) -> heights.size > 1 }
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false,
+    )
+
+    val productHeights: StateFlow<List<String>> = combine(
+        productSizeToHeights,
+        selectedProductSize,
+    ) { sizeToHeights, selectedSize ->
+        if (selectedSize != null) {
+            val heights = sizeToHeights[selectedSize]
+            if (heights != null && heights.size > 1) {
+                heights
+            } else {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList(),
+    )
+
+    private val _selectedProductHeight = MutableStateFlow<String?>(null)
+    val selectedProductHeight: StateFlow<String?> = _selectedProductHeight.asStateFlow()
 
     private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
     val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> = _totalLookProductsResult
@@ -122,7 +187,11 @@ internal class ProductComponent(
     }
 
     fun setProductId(id: Product.Id) {
+        val oldProductId = productId.value
         productId.value = id
+        if (id != oldProductId) {
+            clearSelectedProductSizeAndHeight()
+        }
     }
 
     suspend fun awaitProduct(): ProductDetailed? {
@@ -274,6 +343,21 @@ internal class ProductComponent(
         return checkNotNull(productId.value) {
             "productId.value is null. Did you forgot to call setProductId?"
         }
+    }
+
+    private fun clearSelectedProductSizeAndHeight() {
+        _selectedProductSize.value = null
+        _selectedProductHeight.value = null
+    }
+
+    private fun List<ProductOffer>.toSizeToHeightsMap(): Map<String, List<String>> {
+        val sizeToHeights = mutableMapOf<String, List<String>>()
+        this.forEach { offer ->
+            sizeToHeights.compute(offer.size) { _, currentHeights ->
+                currentHeights?.plus(offer.size) ?: listOf(offer.size)
+            }
+        }
+        return sizeToHeights.toMap()
     }
 
     // TODO: [High] Extract?
