@@ -84,8 +84,8 @@ internal class ProductComponent(
 
     private val _productResult = MutableStateFlow<Result<ProductDetailed>?>(null)
     val productResult: StateFlow<Result<ProductDetailed>?> = _productResult
-        .updateProductInternalState()
         .onEach { clearSelectedProductSizeAndHeight() }
+        .updateProductInternalState()
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(),
