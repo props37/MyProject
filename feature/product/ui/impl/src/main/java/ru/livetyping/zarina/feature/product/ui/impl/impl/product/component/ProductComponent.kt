@@ -199,6 +199,19 @@ internal class ProductComponent(
         return successResult?.getOrNull()
     }
 
+    suspend fun getSelectedProductOffer(): ProductOffer? {
+        val selectedProductSize = selectedProductSize.value ?: return null
+        val product = awaitProduct() ?: return null
+
+        return if (shouldProductHeightBeSelected.value) {
+            product.offers.find {
+                it.size == selectedProductSize && it.height == selectedProductHeight.value
+            }
+        } else {
+            product.offers.find { it.size == selectedProductSize }
+        }
+    }
+
     suspend fun fetchProduct() {
         if (fetchProductJob?.isActive == true) return
         val productId = requireProductId()
