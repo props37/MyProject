@@ -7,7 +7,6 @@ import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
-import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 
 @Stable
@@ -27,15 +26,11 @@ internal sealed class ProductState {
     data class Error(val state: ZarinaErrorScreenState2) : ProductState()
 
     class Builder {
-        private val suggestionListStateBuilder = SuggestionListState.Builder()
-
         fun build(
             productResult: Result<ProductDetailed>?,
             isProductLoading: Boolean,
-            totalLookProductsResult: Result<List<ProductShort>>?,
-            areTotalLookProductsLoading: Boolean,
-            similarProductsResult: Result<List<ProductShort>>?,
-            areSimilarProductsLoading: Boolean,
+            totalLookProductState: SuggestionListState,
+            similarProductState: SuggestionListState,
         ): ProductState {
             return if (productResult == null || isProductLoading) {
                 Loading
@@ -45,14 +40,6 @@ internal sealed class ProductState {
                         val mediaBanner = product.media
                             .drop(1)
                             .firstOrNull { it.type == MediaType.IMAGE }
-                        val totalLookProductState = suggestionListStateBuilder.build(
-                            result = totalLookProductsResult,
-                            isLoading = areTotalLookProductsLoading,
-                        )
-                        val similarProductState = suggestionListStateBuilder.build(
-                            result = similarProductsResult,
-                            isLoading = areSimilarProductsLoading,
-                        )
 
                         Success(
                             product = product,

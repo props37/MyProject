@@ -8,11 +8,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
-import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.resource.R
@@ -26,6 +26,7 @@ import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.ProductComponent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SuggestionListState
 import java.io.IOException
 import javax.inject.Inject
 
@@ -54,25 +55,43 @@ internal class ProductViewModel @Inject constructor(
 
     private var reportScreenCreatedJob: Job? = null
 
-    private val productStateBuilder = ProductState.Builder()
+    private val suggestionListStateBuilder = SuggestionListState.Builder()
 
-    val productState: StateFlow<ProductState> = combineMore(
-        productComponent.productResult,
-        productComponent.isProductLoading,
+    private val totalLookProductState = combine(
         productComponent.totalLookProductsResult,
         productComponent.areTotalLookProductsLoading,
+    ) { totalLookProductsResult, areTotalLookProductsLoading ->
+        suggestionListStateBuilder.build(totalLookProductsResult, areTotalLookProductsLoading)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = SuggestionListState.Loading,
+    )
+
+    private val similarProductState = combine(
         productComponent.similarProductsResult,
         productComponent.areSimilarProductsLoading,
-    ) { productResult, isProductLoading, totalLookProductsResult, areTotalLookProductsLoading,
-        similarProductsResult, areSimilarProductsLoading ->
+    ) { similarProductsResult, areSimilarProductsLoading ->
+        suggestionListStateBuilder.build(similarProductsResult, areSimilarProductsLoading)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = SuggestionListState.Loading,
+    )
 
+    private val productStateBuilder = ProductState.Builder()
+
+    val productState: StateFlow<ProductState> = combine(
+        productComponent.productResult,
+        productComponent.isProductLoading,
+        totalLookProductState,
+        similarProductState,
+    ) { productResult, isProductLoading, totalLookProductState, similarProductState ->
         productStateBuilder.build(
             productResult = productResult,
             isProductLoading = isProductLoading,
-            totalLookProductsResult = totalLookProductsResult,
-            areTotalLookProductsLoading = areTotalLookProductsLoading,
-            similarProductsResult = similarProductsResult,
-            areSimilarProductsLoading = areSimilarProductsLoading,
+            totalLookProductState = totalLookProductState,
+            similarProductState = similarProductState,
         )
     }.stateIn(
         scope = viewModelScope,
