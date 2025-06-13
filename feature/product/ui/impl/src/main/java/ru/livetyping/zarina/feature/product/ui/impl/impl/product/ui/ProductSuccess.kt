@@ -1,8 +1,6 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -170,10 +168,16 @@ private fun ContentList(
             )
         }
 
-        item(key = ContentListKey.SizeSelector, contentType = ContentListContentType.SizeSelector) {
-            SizeSelector(
+        item(key = ContentListKey.SizeInfo, contentType = ContentListContentType.SizeInfo) {
+            SizeInfo(
                 sizeOnModel = state.product.modelInfo?.sizeOnModel,
                 onSizeTableClicked = { onEvent(ProductEvent.SizeTableClicked) },
+                // TODO: [Top] Implement
+                selectedSize = "",
+                selectedHeight = "",
+                isHeightSelectorVisible = true,
+                onSelectedSizeClicked = {},
+                onSelectedHeightClicked = {},
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .padding(horizontal = 16.dp),
@@ -185,7 +189,7 @@ private fun ContentList(
                 colors = state.product.colors,
                 selectedColorProductId = state.product.id,
                 onColorClicked = { onEvent(ProductEvent.ProductColorClicked(it)) },
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 24.dp),
             )
         }
 
@@ -250,7 +254,7 @@ private enum class ContentListKey {
     LabelList,
     ProductName,
     PriceBlock,
-    SizeSelector,
+    SizeInfo,
     ColorSelector,
     MediaBanner,
     ProductDetails,
@@ -264,7 +268,7 @@ private enum class ContentListContentType {
     LabelList,
     ProductName,
     PriceBlock,
-    SizeSelector,
+    SizeInfo,
     ColorSelector,
     MediaBanner,
     ProductDetails,

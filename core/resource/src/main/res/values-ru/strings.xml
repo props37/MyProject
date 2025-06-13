@@ -69,6 +69,7 @@
     <string name="res_product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
     <string name="res_product_removing_from_cart_error">Не удалось удалить товар из корзины</string>
     <string name="res_size">Размер</string>
+    <string name="res_height">Рост</string>
     <string name="res_height_cm">%1$s см</string>
     <string name="res_color">Цвет</string>
     <string name="res_quantity">Количество</string>

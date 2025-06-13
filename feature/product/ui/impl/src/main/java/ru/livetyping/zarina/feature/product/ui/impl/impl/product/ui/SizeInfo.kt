@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,9 +30,14 @@ import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
-internal fun SizeSelector(
+internal fun SizeInfo(
     sizeOnModel: String?,
     onSizeTableClicked: () -> Unit,
+    selectedSize: String,
+    selectedHeight: String?,
+    isHeightSelectorVisible: Boolean,
+    onSelectedSizeClicked: () -> Unit,
+    onSelectedHeightClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -41,9 +47,31 @@ internal fun SizeSelector(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             SizeTableButton(onClick = onSizeTableClicked)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            SelectedSize(
+                title = stringResource(RCommon.string.res_size).uppercase(),
+                selectedSize = selectedSize,
+                onClick = onSelectedSizeClicked,
+                modifier = Modifier.weight(1f),
+            )
+
+            if (selectedHeight != null && isHeightSelectorVisible) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                SelectedSize(
+                    title = stringResource(RCommon.string.res_height).uppercase(),
+                    selectedSize = selectedHeight,
+                    onClick = onSelectedHeightClicked,
+                    modifier = Modifier.weight(1f),
+                )
+            }
         }
     }
 }
