@@ -34,6 +34,8 @@ import androidx.compose.ui.util.lerp
 import ru.livetyping.zarina.core.uicompose.text.unscalable
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDividerDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -48,7 +50,7 @@ internal fun UtilityTopBar(
     collapsingProgressProvider: () -> Float,
     modifier: Modifier = Modifier,
 ) {
-    val borderColor = UiKitTheme2.colors.lightGray
+    val borderColor = ZarinaDividerDefaults.Color
 
     ZarinaTopBar(
         startContent = {
