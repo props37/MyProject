@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,6 +30,9 @@ import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.ProductComponent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SizeSelectorItem
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SizeSelectorState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SizeSelectorType
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SuggestionListState
 import java.io.IOException
 import javax.inject.Inject
@@ -79,6 +85,9 @@ internal class ProductViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(),
         initialValue = SuggestionListState.Loading,
     )
+
+    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
+    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
 
     private val productStateBuilder = ProductState.Builder()
 
@@ -184,11 +193,47 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun onSelectSizeClicked() {
-        // TODO: [Top] Implement
+        _sizeSelectorState.value = SizeSelectorState.Hidden
+        viewModelScope.launch {
+            val sizes = productComponent.getProductSizes()
+            if (sizes != null) {
+                val items = sizes.map {
+                    SizeSelectorItem(
+                        offer = it,
+                        isSelected = it.size == productComponent.selectedProductSize.value,
+                    )
+                }
+                _sizeSelectorState.value = SizeSelectorState.Visible(
+                    type = SizeSelectorType.SIZE,
+                    items = items.toImmutableList(),
+                )
+            } else {
+                val message = ZarinaToastMessage2.genericError()
+                emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+            }
+        }
     }
 
     private fun onSelectHeightClicked() {
-        // TODO: [Top] Implement
+        _sizeSelectorState.value = SizeSelectorState.Hidden
+        viewModelScope.launch {
+            val heights = productComponent.getProductHeights()
+            if (heights != null) {
+                val items = heights.map {
+                    SizeSelectorItem(
+                        offer = it,
+                        isSelected = it.height == productComponent.selectedProductHeight.value,
+                    )
+                }
+                _sizeSelectorState.value = SizeSelectorState.Visible(
+                    type = SizeSelectorType.HEIGHT,
+                    items = items.toImmutableList(),
+                )
+            } else {
+                val message = ZarinaToastMessage2.genericError()
+                emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+            }
+        }
     }
 
     private fun onProductRefreshTriggered() {

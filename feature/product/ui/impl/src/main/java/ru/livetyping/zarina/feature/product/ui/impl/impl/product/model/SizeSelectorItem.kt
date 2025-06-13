@@ -6,5 +6,5 @@ import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 @Immutable
 internal data class SizeSelectorItem(
     val offer: ProductOffer,
-    val isAvailable: Boolean,
+    val isSelected: Boolean,
 )

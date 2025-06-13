@@ -201,6 +201,17 @@ internal class ProductComponent(
         fetchSimilarProductsImpl(productId)
     }
 
+    suspend fun getProductSizes(): List<ProductOffer>? {
+        val product = awaitProduct()
+        return product?.offers?.distinctBy { it.size }
+    }
+
+    suspend fun getProductHeights(): List<ProductOffer>? {
+        val selectedSize = selectedProductSize.value ?: return null
+        val product = awaitProduct()
+        return product?.offers?.filter { it.size == selectedSize }
+    }
+
     private fun initProductFetching() {
         _productResult.subscriptionCount
             .map { it > 0 }
