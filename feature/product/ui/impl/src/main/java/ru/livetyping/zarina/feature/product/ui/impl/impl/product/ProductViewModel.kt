@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
+import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.resource.R
@@ -81,17 +82,25 @@ internal class ProductViewModel @Inject constructor(
 
     private val productStateBuilder = ProductState.Builder()
 
-    val productState: StateFlow<ProductState> = combine(
+    val productState: StateFlow<ProductState> = combineMore(
         productComponent.productResult,
         productComponent.isProductLoading,
         totalLookProductState,
         similarProductState,
-    ) { productResult, isProductLoading, totalLookProductState, similarProductState ->
+        productComponent.selectedProductSize,
+        productComponent.selectedProductHeight,
+        productComponent.shouldSelectProductHeight,
+    ) { productResult, isProductLoading, totalLookProductState, similarProductState,
+        selectedProductSize, selectedProductHeight, shouldSelectProductHeight ->
+
         productStateBuilder.build(
             productResult = productResult,
             isProductLoading = isProductLoading,
             totalLookProductState = totalLookProductState,
             similarProductState = similarProductState,
+            selectedSize = selectedProductSize,
+            selectedHeight = selectedProductHeight,
+            shouldSelectHeight = shouldSelectProductHeight,
         )
     }.stateIn(
         scope = viewModelScope,

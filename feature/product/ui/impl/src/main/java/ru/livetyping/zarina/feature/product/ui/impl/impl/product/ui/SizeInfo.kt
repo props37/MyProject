@@ -33,7 +33,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun SizeInfo(
     sizeOnModel: String?,
     onSizeTableClicked: () -> Unit,
-    selectedSize: String,
+    selectedSize: String?,
     selectedHeight: String?,
     isHeightSelectorVisible: Boolean,
     onSelectedSizeClicked: () -> Unit,

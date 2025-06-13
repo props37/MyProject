@@ -172,12 +172,11 @@ private fun ContentList(
             SizeInfo(
                 sizeOnModel = state.product.modelInfo?.sizeOnModel,
                 onSizeTableClicked = { onEvent(ProductEvent.SizeTableClicked) },
-                // TODO: [Top] Implement
-                selectedSize = "",
-                selectedHeight = "",
-                isHeightSelectorVisible = true,
-                onSelectedSizeClicked = {},
-                onSelectedHeightClicked = {},
+                selectedSize = state.selectedSize,
+                selectedHeight = state.selectedHeight,
+                isHeightSelectorVisible = state.shouldSelectHeight,
+                onSelectedSizeClicked = {}, // TODO: [Top] Implement
+                onSelectedHeightClicked = {}, // TODO: [Top] Implement
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .padding(horizontal = 16.dp),

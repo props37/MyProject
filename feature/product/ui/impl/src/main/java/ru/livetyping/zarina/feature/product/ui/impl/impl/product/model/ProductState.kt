@@ -18,6 +18,9 @@ internal sealed class ProductState {
         val mediaBanner: Media?,
         val totalLookProductState: SuggestionListState,
         val similarProductState: SuggestionListState,
+        val selectedSize: String?,
+        val selectedHeight: String?,
+        val shouldSelectHeight: Boolean,
     ) : ProductState()
 
     data object Loading : ProductState()
@@ -31,6 +34,9 @@ internal sealed class ProductState {
             isProductLoading: Boolean,
             totalLookProductState: SuggestionListState,
             similarProductState: SuggestionListState,
+            selectedSize: String?,
+            selectedHeight: String?,
+            shouldSelectHeight: Boolean,
         ): ProductState {
             return if (productResult == null || isProductLoading) {
                 Loading
@@ -47,6 +53,9 @@ internal sealed class ProductState {
                             mediaBanner = mediaBanner,
                             totalLookProductState = totalLookProductState,
                             similarProductState = similarProductState,
+                            selectedSize = selectedSize,
+                            selectedHeight = selectedHeight,
+                            shouldSelectHeight = shouldSelectHeight,
                         )
                     },
                     onFailure = { t ->

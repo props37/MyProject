@@ -84,7 +84,12 @@ internal class ProductComponent(
 
     private val _productResult = MutableStateFlow<Result<ProductDetailed>?>(null)
     val productResult: StateFlow<Result<ProductDetailed>?> = _productResult
-        .onEach { clearSelectedProductSizeAndHeight() }
+        .onEach { result ->
+            val product = result?.getOrNull()
+            if (product != null) {
+                updateSelectedProductSizeAndHeight(product)
+            }
+        }
         .updateProductInternalState()
         .stateIn(
             scope = coroutineScope,
@@ -97,64 +102,34 @@ internal class ProductComponent(
     private val _selectedProductSize = MutableStateFlow<String?>(null)
     val selectedProductSize: StateFlow<String?> = _selectedProductSize.asStateFlow()
 
-    private val productSizeToHeights = productResult
-        .map { productResult ->
-            val product = productResult?.getOrNull()
-            product?.offers?.toSizeToHeightsMap() ?: emptyMap()
-        }
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyMap(),
-        )
+    private val _selectedProductHeight = MutableStateFlow<String?>(null)
+    val selectedProductHeight: StateFlow<String?> = _selectedProductHeight.asStateFlow()
 
-    val productSizes: StateFlow<List<String>> = productSizeToHeights
-        .map { sizeToHeights -> sizeToHeights.keys.toList() }
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = emptyList(),
-        )
-
-    val shouldProductHeightBeSelected: StateFlow<Boolean> = combine(
-        productSizeToHeights,
+    val shouldSelectProductHeight: StateFlow<Boolean> = combine(
+        productResult,
         selectedProductSize,
-    ) { sizeToHeights, selectedSize ->
-        if (selectedSize != null) {
-            val selectedSizeHeights = sizeToHeights[selectedSize]
-            selectedSizeHeights != null && selectedSizeHeights.size > 1
-        } else {
-            // Does any size have multiple heights
-            sizeToHeights.any { (_, heights) -> heights.size > 1 }
+    ) { productResult, selectedSize ->
+        val product = productResult?.getOrNull()
+        when {
+            product == null -> false
+            selectedSize != null -> {
+                val sizeOffers = product.offers.filter { it.size == selectedSize }
+                sizeOffers.size > 1
+            }
+
+            else -> {
+                val sizeSet = mutableSetOf<String>()
+                product.offers.forEach { offer ->
+                    if (!sizeSet.add(offer.size)) return@combine true
+                }
+                false
+            }
         }
     }.stateIn(
         scope = coroutineScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = false,
     )
-
-    val productHeights: StateFlow<List<String>> = combine(
-        productSizeToHeights,
-        selectedProductSize,
-    ) { sizeToHeights, selectedSize ->
-        if (selectedSize != null) {
-            val heights = sizeToHeights[selectedSize]
-            if (heights != null && heights.size > 1) {
-                heights
-            } else {
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList(),
-    )
-
-    private val _selectedProductHeight = MutableStateFlow<String?>(null)
-    val selectedProductHeight: StateFlow<String?> = _selectedProductHeight.asStateFlow()
 
     private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
     val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> = _totalLookProductsResult
@@ -187,11 +162,7 @@ internal class ProductComponent(
     }
 
     fun setProductId(id: Product.Id) {
-        val oldProductId = productId.value
         productId.value = id
-        if (id != oldProductId) {
-            clearSelectedProductSizeAndHeight()
-        }
     }
 
     suspend fun awaitProduct(): ProductDetailed? {
@@ -203,7 +174,7 @@ internal class ProductComponent(
         val selectedProductSize = selectedProductSize.value ?: return null
         val product = awaitProduct() ?: return null
 
-        return if (shouldProductHeightBeSelected.value) {
+        return if (shouldSelectProductHeight.value) {
             product.offers.find {
                 it.size == selectedProductSize && it.height == selectedProductHeight.value
             }
@@ -358,19 +329,38 @@ internal class ProductComponent(
         }
     }
 
-    private fun clearSelectedProductSizeAndHeight() {
-        _selectedProductSize.value = null
-        _selectedProductHeight.value = null
-    }
+    private fun updateSelectedProductSizeAndHeight(product: ProductDetailed) {
+        val currentSelectedSize = selectedProductSize.value
+        if (currentSelectedSize != null) {
+            val isSelectedSizeValid = product.offers.any { it.size == currentSelectedSize }
+            if (!isSelectedSizeValid) {
+                _selectedProductSize.value = getDefaultProductSize(product)
+            }
+        } else {
+            _selectedProductSize.value = getDefaultProductSize(product)
+        }
 
-    private fun List<ProductOffer>.toSizeToHeightsMap(): Map<String, List<String>> {
-        val sizeToHeights = mutableMapOf<String, List<String>>()
-        this.forEach { offer ->
-            sizeToHeights.compute(offer.size) { _, currentHeights ->
-                currentHeights?.plus(offer.size) ?: listOf(offer.size)
+        val currentSelectedHeight = selectedProductHeight.value
+        if (currentSelectedHeight != null) {
+            val isSelectedHeightValid = product.offers.any { it.height == currentSelectedHeight }
+            if (!isSelectedHeightValid) {
+                _selectedProductHeight.value = selectedProductSize.value?.let { size ->
+                    getDefaultProductHeight(product, size)
+                }
+            }
+        } else {
+            _selectedProductHeight.value = selectedProductSize.value?.let { size ->
+                getDefaultProductHeight(product, size)
             }
         }
-        return sizeToHeights.toMap()
+    }
+
+    private fun getDefaultProductSize(product: ProductDetailed): String? {
+        return product.offers.firstOrNull()?.size
+    }
+
+    private fun getDefaultProductHeight(product: ProductDetailed, size: String): String? {
+        return product.offers.find { it.size == size }?.height
     }
 
     // TODO: [High] Extract?

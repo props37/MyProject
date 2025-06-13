@@ -31,7 +31,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun SelectedSize(
     title: String,
-    selectedSize: String,
+    selectedSize: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +60,7 @@ internal fun SelectedSize(
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
-            text = selectedSize,
+            text = selectedSize.orEmpty(),
             style = textStyle,
             color = UiKitTheme2.colors.mainBlack,
             maxLines = 1,
