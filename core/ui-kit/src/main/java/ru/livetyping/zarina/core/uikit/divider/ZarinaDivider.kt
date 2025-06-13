@@ -26,5 +26,5 @@ public object ZarinaDividerDefaults {
 
     public val Color: Color
         @Composable
-        get() = UiKitTheme2.colors.lightGray
+        get() = UiKitTheme2.colors.gray
 }

@@ -41,7 +41,7 @@ internal fun SelectedSize(
             .heightIn(min = 48.dp)
             .border(
                 width = 1.dp,
-                color = UiKitTheme2.colors.lightGray,
+                color = UiKitTheme2.colors.gray,
                 shape = RoundedCornerShape(1.dp),
             )
             .clickable(onClick = onClick)

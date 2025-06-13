@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.uikit.bottomsheet
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -11,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.impl.theme.Colors
@@ -46,12 +47,7 @@ public fun ZarinaBottomSheet(
 
 public object ZarinaBottomSheetDefaults {
     public val Shape: Shape
-        get() = RoundedCornerShape(
-            topStart = 4.dp,
-            topEnd = 4.dp,
-            bottomEnd = 0.dp,
-            bottomStart = 0.dp,
-        )
+        get() = RectangleShape
 
     public val BackgroundColor: Color
         @Composable
@@ -60,6 +56,8 @@ public object ZarinaBottomSheetDefaults {
     public val ContentColor: Color
         @Composable
         get() = UiKitTheme.colors.text.general.regular.default
+
+    public val HorizontalPadding: Dp get() = 24.dp
 
     public val ScrimColor: Color = Colors.MineShaftDark.copy(alpha = 0.4f)
 }

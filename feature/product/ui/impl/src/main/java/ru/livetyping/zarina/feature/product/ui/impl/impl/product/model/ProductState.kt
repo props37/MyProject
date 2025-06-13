@@ -21,6 +21,7 @@ internal sealed class ProductState {
         val selectedSize: String?,
         val selectedHeight: String?,
         val shouldSelectHeight: Boolean,
+        val sizeSelectorState: SizeSelectorState,
     ) : ProductState()
 
     data object Loading : ProductState()
@@ -37,6 +38,7 @@ internal sealed class ProductState {
             selectedSize: String?,
             selectedHeight: String?,
             shouldSelectHeight: Boolean,
+            sizeSelectorState: SizeSelectorState,
         ): ProductState {
             return if (productResult == null || isProductLoading) {
                 Loading
@@ -56,6 +58,7 @@ internal sealed class ProductState {
                             selectedSize = selectedSize,
                             selectedHeight = selectedHeight,
                             shouldSelectHeight = shouldSelectHeight,
+                            sizeSelectorState = sizeSelectorState,
                         )
                     },
                     onFailure = { t ->

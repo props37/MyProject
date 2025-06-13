@@ -47,6 +47,12 @@ internal fun ProductSuccess(
     bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
+    SizeSelector(
+        state = state.sizeSelectorState,
+        onSizeSelected = { _, _ -> }, // TODO: [Top] Implement
+        onDismissRequest = { onEvent(ProductEvent.SizeSelectorDismissed) },
+    )
+
     val listState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
         canScroll = { listState.canScroll },

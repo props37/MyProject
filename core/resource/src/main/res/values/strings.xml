@@ -65,6 +65,8 @@
     <string name="res_yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="res_yandex_captcha_terms_policy">условия использования</string>
     <string name="res_select">Выбрать</string>
+    <string name="res_select_size">Выберите размер</string>
+    <string name="res_select_height">Выберите рост</string>
     <string name="res_send">Отправить</string>
     <string name="res_save">Сохранить</string>
     <string name="res_settings">Настройки</string>

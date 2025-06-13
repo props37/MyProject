@@ -10,7 +10,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -86,8 +85,7 @@ internal class ProductViewModel @Inject constructor(
         initialValue = SuggestionListState.Loading,
     )
 
-    private val _sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
-    val sizeSelectorState: StateFlow<SizeSelectorState> = _sizeSelectorState.asStateFlow()
+    private val sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
 
     private val productStateBuilder = ProductState.Builder()
 
@@ -99,8 +97,9 @@ internal class ProductViewModel @Inject constructor(
         productComponent.selectedProductSize,
         productComponent.selectedProductHeight,
         productComponent.shouldSelectProductHeight,
+        sizeSelectorState,
     ) { productResult, isProductLoading, totalLookProductState, similarProductState,
-        selectedProductSize, selectedProductHeight, shouldSelectProductHeight ->
+        selectedProductSize, selectedProductHeight, shouldSelectProductHeight, sizeSelectorState ->
 
         productStateBuilder.build(
             productResult = productResult,
@@ -110,6 +109,7 @@ internal class ProductViewModel @Inject constructor(
             selectedSize = selectedProductSize,
             selectedHeight = selectedProductHeight,
             shouldSelectHeight = shouldSelectProductHeight,
+            sizeSelectorState = sizeSelectorState,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -137,6 +137,7 @@ internal class ProductViewModel @Inject constructor(
             ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
             ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
             ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
+            ProductEvent.SizeSelectorDismissed -> onSizeSelectorDismissed()
         }
     }
 
@@ -193,7 +194,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun onSelectSizeClicked() {
-        _sizeSelectorState.value = SizeSelectorState.Hidden
+        sizeSelectorState.value = SizeSelectorState.Hidden
         viewModelScope.launch {
             val sizes = productComponent.getProductSizes()
             if (sizes != null) {
@@ -203,7 +204,7 @@ internal class ProductViewModel @Inject constructor(
                         isSelected = it.size == productComponent.selectedProductSize.value,
                     )
                 }
-                _sizeSelectorState.value = SizeSelectorState.Visible(
+                sizeSelectorState.value = SizeSelectorState.Visible(
                     type = SizeSelectorType.SIZE,
                     items = items.toImmutableList(),
                 )
@@ -215,7 +216,7 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun onSelectHeightClicked() {
-        _sizeSelectorState.value = SizeSelectorState.Hidden
+        sizeSelectorState.value = SizeSelectorState.Hidden
         viewModelScope.launch {
             val heights = productComponent.getProductHeights()
             if (heights != null) {
@@ -225,7 +226,7 @@ internal class ProductViewModel @Inject constructor(
                         isSelected = it.height == productComponent.selectedProductHeight.value,
                     )
                 }
-                _sizeSelectorState.value = SizeSelectorState.Visible(
+                sizeSelectorState.value = SizeSelectorState.Visible(
                     type = SizeSelectorType.HEIGHT,
                     items = items.toImmutableList(),
                 )
@@ -252,6 +253,10 @@ internal class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             productComponent.fetchSimilarProducts()
         }
+    }
+
+    private fun onSizeSelectorDismissed() {
+        sizeSelectorState.value = SizeSelectorState.Hidden
     }
 
     private fun onToggleProductInWishlistFailure(t: Throwable) {

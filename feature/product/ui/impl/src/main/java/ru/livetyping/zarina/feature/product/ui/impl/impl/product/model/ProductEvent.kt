@@ -25,4 +25,6 @@ internal sealed interface ProductEvent {
     data object TotalLookProductRefreshTriggered : ProductEvent
 
     data object SimilarProductRefreshTriggered : ProductEvent
+
+    data object SizeSelectorDismissed : ProductEvent
 }
