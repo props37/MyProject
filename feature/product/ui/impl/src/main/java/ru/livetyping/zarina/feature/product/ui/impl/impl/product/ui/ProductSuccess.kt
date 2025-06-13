@@ -175,8 +175,8 @@ private fun ContentList(
                 selectedSize = state.selectedSize,
                 selectedHeight = state.selectedHeight,
                 isHeightSelectorVisible = state.shouldSelectHeight,
-                onSelectedSizeClicked = {}, // TODO: [Top] Implement
-                onSelectedHeightClicked = {}, // TODO: [Top] Implement
+                onSelectedSizeClicked = { onEvent(ProductEvent.SelectSizeClicked) },
+                onSelectedHeightClicked = { onEvent(ProductEvent.SelectHeightClicked) },
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .padding(horizontal = 16.dp),

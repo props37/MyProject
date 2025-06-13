@@ -115,7 +115,6 @@ internal class ProductViewModel @Inject constructor(
         }
     }
 
-    // TODO: [Top] Implement
     fun onProductEvent(event: ProductEvent) {
         when (event) {
             ProductEvent.BackClicked -> onBackClicked()
@@ -124,6 +123,8 @@ internal class ProductViewModel @Inject constructor(
             is ProductEvent.ProductClicked -> onProductClicked(event)
             is ProductEvent.AddProductToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.SizeTableClicked -> onSizeTableClicked()
+            ProductEvent.SelectSizeClicked -> onSelectSizeClicked()
+            ProductEvent.SelectHeightClicked -> onSelectHeightClicked()
             ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
             ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
             ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
@@ -179,6 +180,14 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun onSizeTableClicked() {
+        // TODO: [Top] Implement
+    }
+
+    private fun onSelectSizeClicked() {
+        // TODO: [Top] Implement
+    }
+
+    private fun onSelectHeightClicked() {
         // TODO: [Top] Implement
     }
 

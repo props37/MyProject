@@ -16,6 +16,10 @@ internal sealed interface ProductEvent {
 
     data object SizeTableClicked : ProductEvent
 
+    data object SelectSizeClicked : ProductEvent
+
+    data object SelectHeightClicked : ProductEvent
+
     data object ProductRefreshTriggered : ProductEvent
 
     data object TotalLookProductRefreshTriggered : ProductEvent
