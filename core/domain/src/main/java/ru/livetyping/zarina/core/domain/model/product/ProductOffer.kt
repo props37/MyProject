@@ -5,20 +5,23 @@ import kotlin.text.Typography.nbsp
 // Marked as stable on config/compose/stability_config.txt
 public data class ProductOffer(
     val id: Id,
-    val sizeEn: String,
-    val sizeRu: String?,
+    val sizeEn: ProductSizeEn,
+    val sizeRu: ProductSizeRu?,
     val isAvailable: Boolean,
-    val height: String?,
+    val height: ProductHeight?,
     val barcode: Barcode,
     val onlineCount: Int,
     val retailCount: Int,
 ) {
-    val size: String = buildString {
-        append(sizeEn)
-        if (sizeRu != null) {
-            append(nbsp)
-            append("($sizeRu)")
+    val size: ProductSize = run {
+        val value = buildString {
+            append(sizeEn.value)
+            if (sizeRu != null) {
+                append(nbsp)
+                append("(${sizeRu.value})")
+            }
         }
+        ProductSize(value)
     }
 
     val isAvailableInStores: Boolean get() = retailCount > 0

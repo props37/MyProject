@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.domain.model.product.ProductHeight
+import ru.livetyping.zarina.core.domain.model.product.ProductSize
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -33,8 +35,8 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun SizeInfo(
     sizeOnModel: String?,
     onSizeTableClicked: () -> Unit,
-    selectedSize: String?,
-    selectedHeight: String?,
+    selectedSize: ProductSize?,
+    selectedHeight: ProductHeight?,
     isHeightSelectorVisible: Boolean,
     onSelectedSizeClicked: () -> Unit,
     onSelectedHeightClicked: () -> Unit,
@@ -57,7 +59,7 @@ internal fun SizeInfo(
         Row(verticalAlignment = Alignment.CenterVertically) {
             SelectedSize(
                 title = stringResource(RCommon.string.res_size).uppercase(),
-                selectedSize = selectedSize,
+                selectedSize = selectedSize?.value,
                 onClick = onSelectedSizeClicked,
                 modifier = Modifier.weight(1f),
             )
@@ -67,7 +69,7 @@ internal fun SizeInfo(
 
                 SelectedSize(
                     title = stringResource(RCommon.string.res_height).uppercase(),
-                    selectedSize = selectedHeight,
+                    selectedSize = selectedHeight.value,
                     onClick = onSelectedHeightClicked,
                     modifier = Modifier.weight(1f),
                 )

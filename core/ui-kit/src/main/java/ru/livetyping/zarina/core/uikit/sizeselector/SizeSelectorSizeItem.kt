@@ -17,7 +17,7 @@ internal data class SizeSelectorSizeItem(
     fun getAvailableHeights(): List<String> {
         return offers
             .filter { it.isAvailable }
-            .mapNotNull { it.height }
+            .mapNotNull { it.height?.value }
             .sorted()
     }
 }

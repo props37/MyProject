@@ -23,8 +23,10 @@ import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.model.product.ProductSize
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
@@ -99,11 +101,11 @@ internal class ProductComponent(
 
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
-    private val _selectedProductSize = MutableStateFlow<String?>(null)
-    val selectedProductSize: StateFlow<String?> = _selectedProductSize.asStateFlow()
+    private val _selectedProductSize = MutableStateFlow<ProductSize?>(null)
+    val selectedProductSize: StateFlow<ProductSize?> = _selectedProductSize.asStateFlow()
 
-    private val _selectedProductHeight = MutableStateFlow<String?>(null)
-    val selectedProductHeight: StateFlow<String?> = _selectedProductHeight.asStateFlow()
+    private val _selectedProductHeight = MutableStateFlow<ProductHeight?>(null)
+    val selectedProductHeight: StateFlow<ProductHeight?> = _selectedProductHeight.asStateFlow()
 
     val shouldSelectProductHeight: StateFlow<Boolean> = combine(
         productResult,
@@ -118,7 +120,7 @@ internal class ProductComponent(
             }
 
             else -> {
-                val sizeSet = mutableSetOf<String>()
+                val sizeSet = mutableSetOf<ProductSize>()
                 product.offers.forEach { offer ->
                     if (!sizeSet.add(offer.size)) return@combine true
                 }
@@ -366,11 +368,14 @@ internal class ProductComponent(
         }
     }
 
-    private fun getDefaultProductSize(product: ProductDetailed): String? {
+    private fun getDefaultProductSize(product: ProductDetailed): ProductSize? {
         return product.offers.firstOrNull()?.size
     }
 
-    private fun getDefaultProductHeight(product: ProductDetailed, size: String): String? {
+    private fun getDefaultProductHeight(
+        product: ProductDetailed,
+        size: ProductSize,
+    ): ProductHeight? {
         return product.offers.find { it.size == size }?.height
     }
 

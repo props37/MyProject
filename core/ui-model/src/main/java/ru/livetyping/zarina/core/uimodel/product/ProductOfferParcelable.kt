@@ -4,7 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.Barcode
+import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeRu
 
 @Serializable
 @Parcelize
@@ -21,10 +24,10 @@ public data class ProductOfferParcelable(
     public fun toProductOffer(): ProductOffer {
         return ProductOffer(
             id = ProductOffer.Id(id),
-            sizeEn = sizeEn,
-            sizeRu = sizeRu,
+            sizeEn = ProductSizeEn(sizeEn),
+            sizeRu = sizeRu?.let { ProductSizeRu(it) },
             isAvailable = isAvailable,
-            height = height,
+            height = height?.let { ProductHeight(it) },
             barcode = Barcode(barcode),
             onlineCount = onlineCount,
             retailCount = retailCount,
@@ -35,10 +38,10 @@ public data class ProductOfferParcelable(
         public fun from(productOffer: ProductOffer): ProductOfferParcelable {
             return ProductOfferParcelable(
                 id = productOffer.id.value,
-                sizeEn = productOffer.sizeEn,
-                sizeRu = productOffer.sizeRu,
+                sizeEn = productOffer.sizeEn.value,
+                sizeRu = productOffer.sizeRu?.value,
                 isAvailable = productOffer.isAvailable,
-                height = productOffer.height,
+                height = productOffer.height?.value,
                 barcode = productOffer.barcode.value,
                 onlineCount = productOffer.onlineCount,
                 retailCount = productOffer.retailCount,

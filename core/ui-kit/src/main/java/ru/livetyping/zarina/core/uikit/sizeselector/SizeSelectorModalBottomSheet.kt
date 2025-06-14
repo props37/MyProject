@@ -44,7 +44,7 @@ public fun SizeSelectorModalBottomSheet(
             buildList {
                 product.offers
                     .groupBy {
-                        if (it.sizeRu != null) "${it.sizeEn} ${it.sizeRu}" else it.sizeEn
+                        if (it.sizeRu != null) "${it.sizeEn} ${it.sizeRu}" else it.sizeEn.value
                     }
                     .forEach { (size, offers) ->
                         val item = SizeSelectorSizeItem(size, offers)
