@@ -26,7 +26,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
-import ru.livetyping.zarina.core.domain.model.product.ProductSize
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -35,7 +35,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun SizeInfo(
     sizeOnModel: String?,
     onSizeTableClicked: () -> Unit,
-    selectedSize: ProductSize?,
+    selectedSize: ProductSizeFull?,
     selectedHeight: ProductHeight?,
     isHeightSelectorVisible: Boolean,
     onSelectedSizeClicked: () -> Unit,

@@ -13,7 +13,7 @@ public data class ProductOffer(
     val onlineCount: Int,
     val retailCount: Int,
 ) {
-    val size: ProductSize = run {
+    val size: ProductSizeFull = run {
         val value = buildString {
             append(sizeEn.value)
             if (sizeRu != null) {
@@ -21,7 +21,7 @@ public data class ProductOffer(
                 append("(${sizeRu.value})")
             }
         }
-        ProductSize(value)
+        ProductSizeFull(value)
     }
 
     val isAvailableInStores: Boolean get() = retailCount > 0

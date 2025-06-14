@@ -26,7 +26,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
-import ru.livetyping.zarina.core.domain.model.product.ProductSize
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
@@ -101,8 +101,8 @@ internal class ProductComponent(
 
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
-    private val _selectedProductSize = MutableStateFlow<ProductSize?>(null)
-    val selectedProductSize: StateFlow<ProductSize?> = _selectedProductSize.asStateFlow()
+    private val _selectedProductSize = MutableStateFlow<ProductSizeFull?>(null)
+    val selectedProductSize: StateFlow<ProductSizeFull?> = _selectedProductSize.asStateFlow()
 
     private val _selectedProductHeight = MutableStateFlow<ProductHeight?>(null)
     val selectedProductHeight: StateFlow<ProductHeight?> = _selectedProductHeight.asStateFlow()
@@ -120,7 +120,7 @@ internal class ProductComponent(
             }
 
             else -> {
-                val sizeSet = mutableSetOf<ProductSize>()
+                val sizeSet = mutableSetOf<ProductSizeFull>()
                 product.offers.forEach { offer ->
                     if (!sizeSet.add(offer.size)) return@combine true
                 }
@@ -368,13 +368,13 @@ internal class ProductComponent(
         }
     }
 
-    private fun getDefaultProductSize(product: ProductDetailed): ProductSize? {
+    private fun getDefaultProductSize(product: ProductDetailed): ProductSizeFull? {
         return product.offers.firstOrNull()?.size
     }
 
     private fun getDefaultProductHeight(
         product: ProductDetailed,
-        size: ProductSize,
+        size: ProductSizeFull,
     ): ProductHeight? {
         return product.offers.find { it.size == size }?.height
     }

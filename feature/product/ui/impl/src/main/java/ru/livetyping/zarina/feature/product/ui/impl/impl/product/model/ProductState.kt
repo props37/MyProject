@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
-import ru.livetyping.zarina.core.domain.model.product.ProductSize
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 
 @Stable
@@ -20,7 +20,7 @@ internal sealed class ProductState {
         val mediaBanner: Media?,
         val totalLookProductState: SuggestionListState,
         val similarProductState: SuggestionListState,
-        val selectedSize: ProductSize?,
+        val selectedSize: ProductSizeFull?,
         val selectedHeight: ProductHeight?,
         val shouldSelectHeight: Boolean,
         val sizeSelectorState: SizeSelectorState,
@@ -37,7 +37,7 @@ internal sealed class ProductState {
             isProductLoading: Boolean,
             totalLookProductState: SuggestionListState,
             similarProductState: SuggestionListState,
-            selectedSize: ProductSize?,
+            selectedSize: ProductSizeFull?,
             selectedHeight: ProductHeight?,
             shouldSelectHeight: Boolean,
             sizeSelectorState: SizeSelectorState,
