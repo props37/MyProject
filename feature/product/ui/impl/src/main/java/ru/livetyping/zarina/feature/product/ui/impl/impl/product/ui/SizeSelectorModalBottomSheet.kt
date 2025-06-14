@@ -34,7 +34,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun SizeSelector(
+internal fun SizeSelectorModalBottomSheet(
     state: SizeSelectorState,
     onSizeSelected: (ProductOffer, SizeSelectorType) -> Unit,
     onDismissRequest: () -> Unit,

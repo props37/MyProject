@@ -47,7 +47,7 @@ internal fun ProductSuccess(
     bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
-    SizeSelector(
+    SizeSelectorModalBottomSheet(
         state = state.sizeSelectorState,
         onSizeSelected = { _, _ -> }, // TODO: [Top] Implement
         onDismissRequest = { onEvent(ProductEvent.SizeSelectorDismissed) },
