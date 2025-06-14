@@ -201,7 +201,7 @@ internal class ProductViewModel @Inject constructor(
                 val items = sizes.map {
                     SizeSelectorItem(
                         offer = it,
-                        isSelected = it.size == productComponent.selectedProductSize.value,
+                        isSelected = it.sizeFull == productComponent.selectedProductSize.value,
                     )
                 }
                 sizeSelectorState.value = SizeSelectorState.Visible(

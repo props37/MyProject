@@ -113,14 +113,14 @@ internal class ProductComponent(
         when {
             product == null -> false
             selectedSize != null -> {
-                val sizeOffers = product.offers.filter { it.size == selectedSize }
+                val sizeOffers = product.offers.filter { it.sizeFull == selectedSize }
                 sizeOffers.size > 1
             }
 
             else -> {
                 val sizeSet = mutableSetOf<String>()
                 product.offers.forEach { offer ->
-                    if (!sizeSet.add(offer.size)) return@combine true
+                    if (!sizeSet.add(offer.sizeFull)) return@combine true
                 }
                 false
             }
@@ -176,10 +176,10 @@ internal class ProductComponent(
 
         return if (shouldSelectProductHeight.value) {
             product.offers.find {
-                it.size == selectedProductSize && it.height == selectedProductHeight.value
+                it.sizeFull == selectedProductSize && it.height == selectedProductHeight.value
             }
         } else {
-            product.offers.find { it.size == selectedProductSize }
+            product.offers.find { it.sizeFull == selectedProductSize }
         }
     }
 
@@ -203,13 +203,13 @@ internal class ProductComponent(
 
     suspend fun getProductSizes(): List<ProductOffer>? {
         val product = awaitProduct()
-        return product?.offers?.distinctBy { it.size }
+        return product?.offers?.distinctBy { it.sizeFull }
     }
 
     suspend fun getProductHeights(): List<ProductOffer>? {
         val selectedSize = selectedProductSize.value ?: return null
         val product = awaitProduct()
-        return product?.offers?.filter { it.size == selectedSize }
+        return product?.offers?.filter { it.sizeFull == selectedSize }
     }
 
     private fun initProductFetching() {
@@ -343,7 +343,7 @@ internal class ProductComponent(
     private fun updateSelectedProductSizeAndHeight(product: ProductDetailed) {
         val currentSelectedSize = selectedProductSize.value
         if (currentSelectedSize != null) {
-            val isSelectedSizeValid = product.offers.any { it.size == currentSelectedSize }
+            val isSelectedSizeValid = product.offers.any { it.sizeFull == currentSelectedSize }
             if (!isSelectedSizeValid) {
                 _selectedProductSize.value = getDefaultProductSize(product)
             }
@@ -367,11 +367,11 @@ internal class ProductComponent(
     }
 
     private fun getDefaultProductSize(product: ProductDetailed): String? {
-        return product.offers.firstOrNull()?.size
+        return product.offers.firstOrNull()?.sizeFull
     }
 
     private fun getDefaultProductHeight(product: ProductDetailed, size: String): String? {
-        return product.offers.find { it.size == size }?.height
+        return product.offers.find { it.sizeFull == size }?.height
     }
 
     // TODO: [High] Extract?
