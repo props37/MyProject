@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product.model
 
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 
 internal sealed interface ProductEvent {
     data object BackClicked : ProductEvent
@@ -19,6 +20,8 @@ internal sealed interface ProductEvent {
     data object SelectSizeClicked : ProductEvent
 
     data object SelectHeightClicked : ProductEvent
+
+    data class SizeSelected(val offer: ProductOffer, val type: SizeSelectorType) : ProductEvent
 
     data object ProductRefreshTriggered : ProductEvent
 

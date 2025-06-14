@@ -134,6 +134,7 @@ internal class ProductViewModel @Inject constructor(
             ProductEvent.SizeTableClicked -> onSizeTableClicked()
             ProductEvent.SelectSizeClicked -> onSelectSizeClicked()
             ProductEvent.SelectHeightClicked -> onSelectHeightClicked()
+            is ProductEvent.SizeSelected -> onSizeSelected(event)
             ProductEvent.ProductRefreshTriggered -> onProductRefreshTriggered()
             ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
             ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
@@ -233,6 +234,21 @@ internal class ProductViewModel @Inject constructor(
             } else {
                 val message = ZarinaToastMessage2.genericError()
                 emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+            }
+        }
+    }
+
+    private fun onSizeSelected(event: ProductEvent.SizeSelected) {
+        sizeSelectorState.value = SizeSelectorState.Hidden
+        when (event.type) {
+            SizeSelectorType.SIZE -> {
+                productComponent.setSelectedProductSize(event.offer.size)
+            }
+
+            SizeSelectorType.HEIGHT -> {
+                event.offer.height?.let {
+                    productComponent.setSelectedProductHeight(it)
+                }
             }
         }
     }

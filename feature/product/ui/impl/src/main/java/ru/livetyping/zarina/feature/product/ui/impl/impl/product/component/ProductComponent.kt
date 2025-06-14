@@ -133,6 +133,25 @@ internal class ProductComponent(
         initialValue = false,
     )
 
+    val selectedProductOffer = combine(
+        productResult,
+        selectedProductSize,
+        selectedProductHeight,
+        shouldSelectProductHeight,
+    ) { productResult, selectedSize, selectedHeight, shouldSelectHeight ->
+        val product = productResult?.getOrNull()
+        when {
+            product == null -> null
+            shouldSelectHeight -> {
+                product.offers.find { it.size == selectedSize && it.height == selectedHeight }
+            }
+
+            else -> {
+                product.offers.find { it.size == selectedSize }
+            }
+        }
+    }
+
     private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
     val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> = _totalLookProductsResult
         .updateProductListInternalState()
@@ -172,17 +191,16 @@ internal class ProductComponent(
         return successResult?.getOrNull()
     }
 
-    suspend fun getSelectedProductOffer(): ProductOffer? {
-        val selectedProductSize = selectedProductSize.value ?: return null
-        val product = awaitProduct() ?: return null
-
-        return if (shouldSelectProductHeight.value) {
-            product.offers.find {
-                it.size == selectedProductSize && it.height == selectedProductHeight.value
-            }
-        } else {
-            product.offers.find { it.size == selectedProductSize }
+    fun setSelectedProductSize(size: ProductSizeFull) {
+        _selectedProductSize.value = size
+        val product = productResult.value?.getOrNull()
+        if (product != null) {
+            updateSelectedProductHeight(product)
         }
+    }
+
+    fun setSelectedProductHeight(height: ProductHeight) {
+        _selectedProductHeight.value = height
     }
 
     suspend fun fetchProduct() {
@@ -343,20 +361,31 @@ internal class ProductComponent(
     }
 
     private fun updateSelectedProductSizeAndHeight(product: ProductDetailed) {
+        updateSelectedProductSize(product)
+        updateSelectedProductHeight(product)
+    }
+
+    private fun updateSelectedProductSize(product: ProductDetailed) {
         val currentSelectedSize = selectedProductSize.value
         if (currentSelectedSize != null) {
-            val isSelectedSizeValid = product.offers.any { it.size == currentSelectedSize }
-            if (!isSelectedSizeValid) {
+            val sizeMatch = product.offers.find { it.size == currentSelectedSize }
+            if (sizeMatch != null) {
+                _selectedProductSize.value = sizeMatch.size
+            } else {
                 _selectedProductSize.value = getDefaultProductSize(product)
             }
         } else {
             _selectedProductSize.value = getDefaultProductSize(product)
         }
+    }
 
+    private fun updateSelectedProductHeight(product: ProductDetailed) {
         val currentSelectedHeight = selectedProductHeight.value
         if (currentSelectedHeight != null) {
-            val isSelectedHeightValid = product.offers.any { it.height == currentSelectedHeight }
-            if (!isSelectedHeightValid) {
+            val heightMatch = product.offers.find { it.height == currentSelectedHeight }
+            if (heightMatch != null) {
+                _selectedProductHeight.value = heightMatch.height
+            } else {
                 _selectedProductHeight.value = selectedProductSize.value?.let { size ->
                     getDefaultProductHeight(product, size)
                 }

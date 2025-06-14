@@ -49,7 +49,9 @@ internal fun ProductSuccess(
 ) {
     SizeSelectorModalBottomSheet(
         state = state.sizeSelectorState,
-        onSizeSelected = { _, _ -> }, // TODO: [Top] Implement
+        onSizeSelected = { offer, type ->
+            onEvent(ProductEvent.SizeSelected(offer, type))
+        },
         onDismissRequest = { onEvent(ProductEvent.SizeSelectorDismissed) },
     )
 
