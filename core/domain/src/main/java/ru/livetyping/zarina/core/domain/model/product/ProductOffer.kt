@@ -11,6 +11,13 @@ public data class ProductOffer(
     val onlineCount: Int,
     val retailCount: Int,
 ) {
+    val sizeFull: String = buildString {
+        append(size)
+        if (sizeRu != null) {
+            append("($sizeRu)")
+        }
+    }
+
     val isAvailableInStores: Boolean get() = retailCount > 0
 
     @JvmInline
