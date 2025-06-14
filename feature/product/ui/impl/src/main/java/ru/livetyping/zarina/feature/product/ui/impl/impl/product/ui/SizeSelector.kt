@@ -121,7 +121,7 @@ private fun Item(
         val textStyle = UiKitTheme2.typography.body
 
         val text = when (type) {
-            SizeSelectorType.SIZE -> item.offer.sizeFull.uppercase()
+            SizeSelectorType.SIZE -> item.offer.size.uppercase()
             SizeSelectorType.HEIGHT -> item.offer.height.orEmpty()
         }
         val color =

@@ -13,7 +13,7 @@ public data class ProductOffer(
     val onlineCount: Int,
     val retailCount: Int,
 ) {
-    val sizeFull: String = buildString {
+    val size: String = buildString {
         append(sizeEn)
         if (sizeRu != null) {
             append(nbsp)
