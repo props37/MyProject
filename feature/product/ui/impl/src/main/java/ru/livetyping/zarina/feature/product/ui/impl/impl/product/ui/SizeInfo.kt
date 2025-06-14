@@ -59,7 +59,7 @@ internal fun SizeInfo(
         Row(verticalAlignment = Alignment.CenterVertically) {
             SelectedSize(
                 title = stringResource(RCommon.string.res_size).uppercase(),
-                selectedSize = selectedSize?.value,
+                selectedSize = selectedSize?.size,
                 onClick = onSelectedSizeClicked,
                 modifier = Modifier.weight(1f),
             )

@@ -15,10 +15,10 @@ public data class ProductOffer(
 ) {
     val size: ProductSizeFull = run {
         val value = buildString {
-            append(sizeEn.value)
+            append(sizeEn.size)
             if (sizeRu != null) {
                 append(nbsp)
-                append("(${sizeRu.value})")
+                append("(${sizeRu.size})")
             }
         }
         ProductSizeFull(value)

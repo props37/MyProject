@@ -38,8 +38,8 @@ public data class ProductOfferParcelable(
         public fun from(productOffer: ProductOffer): ProductOfferParcelable {
             return ProductOfferParcelable(
                 id = productOffer.id.value,
-                sizeEn = productOffer.sizeEn.value,
-                sizeRu = productOffer.sizeRu?.value,
+                sizeEn = productOffer.sizeEn.size,
+                sizeRu = productOffer.sizeRu?.size,
                 isAvailable = productOffer.isAvailable,
                 height = productOffer.height?.value,
                 barcode = productOffer.barcode.value,
