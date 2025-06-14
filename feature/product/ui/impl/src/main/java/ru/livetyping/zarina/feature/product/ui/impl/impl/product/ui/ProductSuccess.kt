@@ -112,6 +112,8 @@ internal fun ProductSuccess(
                 )
 
                 FloatingButtonBlock(
+                    product = state.product,
+                    onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(
