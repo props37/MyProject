@@ -69,7 +69,7 @@ internal fun SizeInfo(
 
                 SelectedSize(
                     title = stringResource(RCommon.string.res_height).uppercase(),
-                    selectedSize = selectedHeight.value,
+                    selectedSize = selectedHeight.height,
                     onClick = onSelectedHeightClicked,
                     modifier = Modifier.weight(1f),
                 )

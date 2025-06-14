@@ -41,7 +41,7 @@ public data class ProductOfferParcelable(
                 sizeEn = productOffer.sizeEn.size,
                 sizeRu = productOffer.sizeRu?.size,
                 isAvailable = productOffer.isAvailable,
-                height = productOffer.height?.value,
+                height = productOffer.height?.height,
                 barcode = productOffer.barcode.value,
                 onlineCount = productOffer.onlineCount,
                 retailCount = productOffer.retailCount,

@@ -70,7 +70,7 @@ internal fun ProductSubscriptionContent(
             },
             size = productOffer.sizeEn.size,
             sizeRu = productOffer.sizeRu?.size,
-            height = productOffer.height?.value,
+            height = productOffer.height?.height,
             color = remember(product) {
                 product.colors.find { it.productId == product.id }
             },

@@ -122,7 +122,7 @@ private fun Item(
 
         val text = when (type) {
             SizeSelectorType.SIZE -> item.offer.size.size.uppercase()
-            SizeSelectorType.HEIGHT -> item.offer.height?.value.orEmpty()
+            SizeSelectorType.HEIGHT -> item.offer.height?.height.orEmpty()
         }
         val color =
             if (item.isSelected) UiKitTheme2.colors.mainBlack else UiKitTheme2.colors.middleGray
