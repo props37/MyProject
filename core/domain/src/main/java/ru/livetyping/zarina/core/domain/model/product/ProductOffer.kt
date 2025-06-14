@@ -1,5 +1,7 @@
 package ru.livetyping.zarina.core.domain.model.product
 
+import kotlin.text.Typography.nbsp
+
 // Marked as stable on config/compose/stability_config.txt
 public data class ProductOffer(
     val id: Id,
@@ -14,6 +16,7 @@ public data class ProductOffer(
     val sizeFull: String = buildString {
         append(size)
         if (sizeRu != null) {
+            append(nbsp)
             append("($sizeRu)")
         }
     }
