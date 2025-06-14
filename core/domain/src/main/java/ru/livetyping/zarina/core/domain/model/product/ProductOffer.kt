@@ -5,7 +5,7 @@ import kotlin.text.Typography.nbsp
 // Marked as stable on config/compose/stability_config.txt
 public data class ProductOffer(
     val id: Id,
-    val size: String,
+    val sizeEn: String,
     val sizeRu: String?,
     val isAvailable: Boolean,
     val height: String?,
@@ -14,7 +14,7 @@ public data class ProductOffer(
     val retailCount: Int,
 ) {
     val sizeFull: String = buildString {
-        append(size)
+        append(sizeEn)
         if (sizeRu != null) {
             append(nbsp)
             append("($sizeRu)")

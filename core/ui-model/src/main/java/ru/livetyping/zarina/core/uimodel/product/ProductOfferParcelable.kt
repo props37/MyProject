@@ -10,7 +10,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 @Parcelize
 public data class ProductOfferParcelable(
     val id: String,
-    val size: String,
+    val sizeEn: String,
     val sizeRu: String?,
     val isAvailable: Boolean,
     val height: String?,
@@ -21,7 +21,7 @@ public data class ProductOfferParcelable(
     public fun toProductOffer(): ProductOffer {
         return ProductOffer(
             id = ProductOffer.Id(id),
-            size = size,
+            sizeEn = sizeEn,
             sizeRu = sizeRu,
             isAvailable = isAvailable,
             height = height,
@@ -35,7 +35,7 @@ public data class ProductOfferParcelable(
         public fun from(productOffer: ProductOffer): ProductOfferParcelable {
             return ProductOfferParcelable(
                 id = productOffer.id.value,
-                size = productOffer.size,
+                sizeEn = productOffer.sizeEn,
                 sizeRu = productOffer.sizeRu,
                 isAvailable = productOffer.isAvailable,
                 height = productOffer.height,

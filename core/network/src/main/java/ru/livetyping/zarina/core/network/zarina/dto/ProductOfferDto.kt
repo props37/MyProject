@@ -43,7 +43,7 @@ public data class ProductOfferDto(
         ) {
             ProductOffer(
                 id = ProductOffer.Id(id),
-                size = size,
+                sizeEn = size,
                 sizeRu = sizeRu,
                 isAvailable = isAvailable,
                 height = growth,

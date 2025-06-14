@@ -68,7 +68,7 @@ internal fun ProductSubscriptionContent(
             imageUrl = remember(product.media) {
                 product.media.firstOrNull { it.type == MediaType.IMAGE }?.originalUrl?.value.orEmpty()
             },
-            size = productOffer.size,
+            size = productOffer.sizeEn,
             sizeRu = productOffer.sizeRu,
             height = productOffer.height,
             color = remember(product) {
