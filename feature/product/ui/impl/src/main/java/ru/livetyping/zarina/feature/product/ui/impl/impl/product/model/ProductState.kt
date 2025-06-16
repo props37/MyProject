@@ -23,6 +23,7 @@ internal sealed class ProductState {
         val selectedSize: ProductSizeFull?,
         val selectedHeight: ProductHeight?,
         val shouldSelectHeight: Boolean,
+        val productActionButtonState: ProductActionButtonState,
         val sizeSelectorState: SizeSelectorState,
     ) : ProductState()
 
@@ -40,6 +41,7 @@ internal sealed class ProductState {
             selectedSize: ProductSizeFull?,
             selectedHeight: ProductHeight?,
             shouldSelectHeight: Boolean,
+            productActionButtonState: ProductActionButtonState,
             sizeSelectorState: SizeSelectorState,
         ): ProductState {
             return if (productResult == null || isProductLoading) {
@@ -60,6 +62,7 @@ internal sealed class ProductState {
                             selectedSize = selectedSize,
                             selectedHeight = selectedHeight,
                             shouldSelectHeight = shouldSelectHeight,
+                            productActionButtonState = productActionButtonState,
                             sizeSelectorState = sizeSelectorState,
                         )
                     },

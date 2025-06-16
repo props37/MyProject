@@ -11,22 +11,27 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.coroutinesutil.WhileUiSubscribed
 import ru.livetyping.zarina.core.coroutinesutil.combineMore
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaProduct
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
 import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
+import ru.livetyping.zarina.core.uicommon.operation.OperationKey
+import ru.livetyping.zarina.core.uicommon.operation.OperationTracker
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.ProductComponent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductActionButtonState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.SizeSelectorItem
@@ -43,6 +48,10 @@ internal class ProductViewModel @Inject constructor(
 ) : ViewModel(), SideEffectSource<ProductSideEffect> by SideEffectSourceImpl() {
 
     private val navigationThrottler = Throttler.getNavigationThrottler()
+
+    private val operationTracker = OperationTracker()
+
+    private var addProductToCartJob: Job? = null
 
     private val productComponent = ProductComponent(
         getProductUseCase = deps.getProduct,
@@ -85,6 +94,21 @@ internal class ProductViewModel @Inject constructor(
         initialValue = SuggestionListState.Loading,
     )
 
+    private val productActionButtonState = combine(
+        productComponent.productResult,
+        productComponent.selectedProductOffer,
+        operationTracker.ongoingOperationKeys,
+    ) { productResult, selectedProductOffer, ongoingOperations ->
+        val product = productResult?.getOrNull()
+        val isAddingToCartInProgress = AddProductToCartOperation in ongoingOperations
+        when {
+            product == null -> ProductActionButtonState.AddToCart(isAddingToCartInProgress)
+            product.isInCart -> ProductActionButtonState.InCart(isAddingToCartInProgress)
+            selectedProductOffer?.isAvailable != true -> ProductActionButtonState.NotifyWhenAvailable
+            else -> ProductActionButtonState.AddToCart(isAddingToCartInProgress)
+        }
+    }
+
     private val sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
 
     private val productStateBuilder = ProductState.Builder()
@@ -97,9 +121,11 @@ internal class ProductViewModel @Inject constructor(
         productComponent.selectedProductSize,
         productComponent.selectedProductHeight,
         productComponent.shouldSelectProductHeight,
+        productActionButtonState,
         sizeSelectorState,
     ) { productResult, isProductLoading, totalLookProductState, similarProductState,
-        selectedProductSize, selectedProductHeight, shouldSelectProductHeight, sizeSelectorState ->
+        selectedProductSize, selectedProductHeight, shouldSelectProductHeight, productActionButtonState,
+        sizeSelectorState ->
 
         productStateBuilder.build(
             productResult = productResult,
@@ -109,6 +135,7 @@ internal class ProductViewModel @Inject constructor(
             selectedSize = selectedProductSize,
             selectedHeight = selectedProductHeight,
             shouldSelectHeight = shouldSelectProductHeight,
+            productActionButtonState = productActionButtonState,
             sizeSelectorState = sizeSelectorState,
         )
     }.stateIn(
@@ -134,6 +161,8 @@ internal class ProductViewModel @Inject constructor(
                 onCheckAvailabilityInStoresClicked(event)
             }
 
+            is ProductEvent.AddProductToCartClicked -> onAddProductToCartClicked(event)
+            is ProductEvent.SubscribeToProductClicked -> onSubscribeToProductClicked(event)
             is ProductEvent.AddProductToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.SizeTableClicked -> onSizeTableClicked()
             ProductEvent.SelectSizeClicked -> onSelectSizeClicked()
@@ -184,6 +213,37 @@ internal class ProductViewModel @Inject constructor(
         navigationThrottler.throttle {
             val action = ProductScreenAction.CheckAvailabilityInStoresClicked(event.product)
             emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onAddProductToCartClicked(event: ProductEvent.AddProductToCartClicked) {
+        if (addProductToCartJob?.isActive == true) return
+        addProductToCartJob = viewModelScope.launch {
+            operationTracker.track(AddProductToCartOperation) {
+                val offer = productComponent.selectedProductOffer.firstOrNull()
+                if (offer != null) {
+                    val params =
+                        AddProductToCartUseCase.Params(event.product, offer.barcode, count = 1)
+                    deps.addProductToCart(params)
+                        .onSuccess {
+                            val message = ZarinaToastMessage2.productAddedToCart(event.product)
+                            emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+                        }
+                        .onFailure(::onAddProductToCartFailure)
+                }
+            }
+        }
+    }
+
+    private fun onSubscribeToProductClicked(event: ProductEvent.SubscribeToProductClicked) {
+        navigationThrottler.throttle {
+            viewModelScope.launch {
+                val offer = productComponent.selectedProductOffer.firstOrNull()
+                if (offer != null) {
+                    val action = ProductScreenAction.SubscribeToProductClicked(event.product, offer)
+                    emitSideEffect(ProductSideEffect.Navigate(action))
+                }
+            }
         }
     }
 
@@ -286,6 +346,19 @@ internal class ProductViewModel @Inject constructor(
         sizeSelectorState.value = SizeSelectorState.Hidden
     }
 
+    private fun onAddProductToCartFailure(t: Throwable) {
+        val message = when (t) {
+            is IOException -> ZarinaToastMessage2.networkError()
+            else -> {
+                ZarinaToastMessage2(
+                    text = Text.Resource(R.string.res_product_adding_to_cart_error),
+                    startContent = ZarinaToastMessage2.StartContent.Icon.genericError(),
+                )
+            }
+        }
+        emitSideEffect(ProductSideEffect.ShowZarinaToast(message))
+    }
+
     private fun onToggleProductInWishlistFailure(t: Throwable) {
         val message = when (t) {
             is IOException -> ZarinaToastMessage2.networkError()
@@ -310,4 +383,6 @@ internal class ProductViewModel @Inject constructor(
             }
         }
     }
+
+    private data object AddProductToCartOperation : OperationKey
 }

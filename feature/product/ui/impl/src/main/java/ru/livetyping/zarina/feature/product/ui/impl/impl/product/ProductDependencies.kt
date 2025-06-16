@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import ru.livetyping.zarina.core.analytics.AppMetrica
-import ru.livetyping.zarina.core.domain.repository.WishlistRepository
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
@@ -14,6 +14,7 @@ internal class ProductDependencies @Inject constructor(
     val getProduct: GetProductUseCase,
     val getProductTotalLook: GetProductTotalLookUseCase,
     val getSimilarProducts: GetSimilarProductsUseCase,
+    val addProductToCart: AddProductToCartUseCase,
     val toggleProductInWishlist: ToggleProductInWishlistUseCase,
     val getWishlistProductIdsFlow: GetWishlistProductIdsFlowUseCase,
     val getCartProductIdsFlow: GetCartProductIdsFlowUseCase,

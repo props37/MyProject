@@ -63,6 +63,17 @@ public data class ZarinaToastMessage2(
             )
         }
 
+        public fun productAddedToCart(product: Product): ZarinaToastMessage2 {
+            val imageUrl = product.media.firstOrNull()?.thumbnailUrl?.value.orEmpty()
+            return ZarinaToastMessage2(
+                text = Text.Resource(RCommon.string.res_product_added_to_cart),
+                startContent = StartContent.Image(imageUrl),
+                endContent = EndContent.CloseButton,
+                size = Size.Large,
+                addBracketsToText = true,
+            )
+        }
+
         public fun productAddedToWishlist(product: Product): ZarinaToastMessage2 {
             val imageUrl = product.media.firstOrNull()?.thumbnailUrl?.value.orEmpty()
             return ZarinaToastMessage2(

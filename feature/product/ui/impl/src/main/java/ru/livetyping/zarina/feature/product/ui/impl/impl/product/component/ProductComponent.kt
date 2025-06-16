@@ -133,7 +133,7 @@ internal class ProductComponent(
         initialValue = false,
     )
 
-    val selectedProductOffer = combine(
+    val selectedProductOffer: Flow<ProductOffer?> = combine(
         productResult,
         selectedProductSize,
         selectedProductHeight,
@@ -150,7 +150,11 @@ internal class ProductComponent(
                 product.offers.find { it.size == selectedSize }
             }
         }
-    }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null,
+    )
 
     private val _totalLookProductsResult = MutableStateFlow<Result<List<ProductShort>>?>(null)
     val totalLookProductsResult: StateFlow<Result<List<ProductShort>>?> = _totalLookProductsResult
