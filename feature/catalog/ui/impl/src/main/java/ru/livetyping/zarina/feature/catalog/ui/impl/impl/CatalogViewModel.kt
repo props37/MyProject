@@ -108,7 +108,7 @@ internal class CatalogViewModel @Inject constructor(
     private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
         when (val item = event.item) {
             is MenuItem.Basic -> onMenuItemBasicClicked(item)
-            is MenuItem.City -> Unit // TODO: [Top] Implement
+            is MenuItem.City -> Unit
             MenuItem.SupportContactDetails -> Unit
             is MenuItem.Spacer -> Unit
         }
