@@ -18,7 +18,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +39,10 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
 import ru.livetyping.zarina.core.uikit.product.ProductDefaults
+import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
+import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToast2Defaults.HorizontalPaddingWithStartImage
@@ -132,13 +138,21 @@ private fun StartContent(
                 val height = ZarinaToast2Defaults.MinHeightLarge -
                         VerticalPaddingWithStartImage * 2
 
+                var isImageDisplayed by remember(startContent.url) { mutableStateOf(false) }
+
                 AsyncImage(
                     model = startContent.url,
                     contentDescription = null,
                     contentScale = ContentScale.FillHeight,
+                    onSuccess = { isImageDisplayed = true },
                     modifier = Modifier
                         .height(height)
-                        .aspectRatio(ProductDefaults.MediaAspectRatio),
+                        .aspectRatio(ProductDefaults.MediaAspectRatio)
+                        .shimmerToggleable(
+                            shimmer = rememberZarinaSkeletonShimmer(),
+                            isEnabled = !isImageDisplayed,
+                        )
+                        .background(UiKitTheme.colors.background.skeleton),
                 )
             }
         }
