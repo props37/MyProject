@@ -42,7 +42,7 @@ internal fun SuggestionList(
             }
 
             SuggestionListState.Loading -> {
-                // TODO: [Top] Implement
+                SuggestionListSkeleton()
             }
 
             SuggestionListState.Error -> {

@@ -42,11 +42,11 @@ internal fun SuggestionListSuccess(
                     isMediaScrollable = false,
                     mediaShimmer = shimmer,
                     appMetricaScreen = Screen.Product,
-                    modifier = Modifier.fillParentMaxWidth(ProductCardWidthFraction),
+                    modifier = Modifier.fillParentMaxWidth(SuggestionListProductCardWidthFraction),
                 )
             }
         }
     }
 }
 
-private const val ProductCardWidthFraction = 0.465f
+internal const val SuggestionListProductCardWidthFraction = 0.465f
