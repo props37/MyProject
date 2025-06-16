@@ -50,7 +50,7 @@ internal fun SelectedSize(
         val textStyle = UiKitTheme2.typography.body
 
         Text(
-            text = title,
+            text = title.uppercase(),
             style = textStyle,
             color = UiKitTheme2.colors.middleGray,
             maxLines = 1,
@@ -60,7 +60,7 @@ internal fun SelectedSize(
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
-            text = selectedSize.orEmpty(),
+            text = selectedSize.orEmpty().uppercase(),
             style = textStyle,
             color = UiKitTheme2.colors.mainBlack,
             maxLines = 1,
