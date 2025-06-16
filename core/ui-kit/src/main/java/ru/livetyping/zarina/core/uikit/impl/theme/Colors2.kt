@@ -15,4 +15,5 @@ internal object Colors2 {
     val Mongoose = Color(0xFFBC9E84)
     val Emperor = Color(0xFF525252)
     val Mercury = Color(0xFFE7E5E5)
+    val Pampas = Color(0xFFEEE9E5)
 }

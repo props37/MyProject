@@ -22,14 +22,14 @@ import javax.inject.Inject
 internal class ProductRepositoryImpl @Inject constructor(
     private val remoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override fun getProductsWithFiltersPageFlow(
+    override suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>> {
-        return remoteDataSource.getProductsWithFiltersPageFlow(
+    ): Page<ProductsWithFilters> {
+        return remoteDataSource.getProductsWithFiltersPage(
             categoryId = categoryId,
             filters = filters,
             sorting = sorting,
@@ -38,16 +38,16 @@ internal class ProductRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getProductFlow(productId: Product.Id): Flow<ProductDetailed> {
-        return remoteDataSource.getProductFlow(productId)
+    override suspend fun getProduct(productId: Product.Id): ProductDetailed {
+        return remoteDataSource.getProduct(productId)
     }
 
-    override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> {
-        return remoteDataSource.getProductTotalLookFlow(productId)
+    override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort> {
+        return remoteDataSource.getProductTotalLook(productId)
     }
 
-    override fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>> {
-        return remoteDataSource.getSimilarProductsFlow(productId)
+    override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort> {
+        return remoteDataSource.getSimilarProducts(productId)
     }
 
     override fun getProductAvailabilityInStoresFlow(

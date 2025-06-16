@@ -3,7 +3,10 @@ package ru.livetyping.zarina.core.network.zarina.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.Barcode
+import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeRu
 import timber.log.Timber
 
 @Serializable
@@ -43,10 +46,10 @@ public data class ProductOfferDto(
         ) {
             ProductOffer(
                 id = ProductOffer.Id(id),
-                size = size,
-                sizeRu = sizeRu,
+                sizeEn = ProductSizeEn(size),
+                sizeRu = sizeRu?.let { ProductSizeRu(it) },
                 isAvailable = isAvailable,
-                height = growth,
+                height = growth?.let { ProductHeight(it) },
                 barcode = Barcode(barcode),
                 onlineCount = onlineQuantity,
                 retailCount = retailQuantity,

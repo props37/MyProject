@@ -22,14 +22,13 @@ import javax.inject.Inject
 internal class ProductRemoteDataSourceImpl @Inject constructor(
     private val api: ProductApi,
 ) : ProductRemoteDataSource {
-
-    override fun getProductsWithFiltersPageFlow(
+    override suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>> = flow {
+    ): Page<ProductsWithFilters> {
         val productsWithFiltersPage = api.getProducts(
             categoryId = categoryId,
             filters = filters,
@@ -37,22 +36,19 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
             page = page,
             pageSize = pageSize,
         ).toProductsWithFiltersPage()
-        emit(productsWithFiltersPage)
+        return productsWithFiltersPage
     }
 
-    override fun getProductFlow(productId: Product.Id): Flow<ProductDetailed> = flow {
-        val product = api.getProduct(productId).toProductDetailed()
-        emit(product)
+    override suspend fun getProduct(productId: Product.Id): ProductDetailed {
+        return api.getProduct(productId).toProductDetailed()
     }
 
-    override fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>> = flow {
-        val products = api.getProductTotalLook(productId).mapNotNull { it.toProductShort() }
-        emit(products)
+    override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort> {
+        return api.getProductTotalLook(productId).mapNotNull { it.toProductShort() }
     }
 
-    override fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>> = flow {
-        val products = api.getSimilarProducts(productId).mapNotNull { it.toProductShort() }
-        emit(products)
+    override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort> {
+        return api.getSimilarProducts(productId).mapNotNull { it.toProductShort() }
     }
 
     override fun getProductAvailabilityInStoresFlow(

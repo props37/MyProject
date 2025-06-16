@@ -35,12 +35,12 @@ public fun ZarinaBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp)
             .drawBehind {
                 drawRect(backgroundColor)
             }
-            .selectableGroup()
             .windowInsetsPadding(windowInsets)
+            .heightIn(min = 56.dp)
+            .selectableGroup()
             .clipToBounds()
             .padding(top = 6.dp, bottom = 5.dp),
         content = content,

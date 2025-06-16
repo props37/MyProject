@@ -116,6 +116,7 @@ public data class CartProductDto(
                         name = title,
                         color = Color(code),
                         productId = Product.Id(productId),
+                        imageUrl = null,
                     )
                 } else {
                     Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductColor")

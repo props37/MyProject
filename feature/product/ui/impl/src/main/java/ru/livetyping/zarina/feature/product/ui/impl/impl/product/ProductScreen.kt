@@ -2,142 +2,57 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.union
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import ru.livetyping.zarina.core.uicommon.LifecycleEvent
-import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
-import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
-import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
-import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaClubModalBottomSheet
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
-import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uicompose.LifecycleEventEffect
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarMode
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.TopBarState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.Product
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.TopBar
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.topBarModeAsState
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui.ProductContent
 
 @Composable
 internal fun ProductScreen(
     navActions: ProductNavActions,
     viewModel: ProductViewModel = hiltViewModel(),
 ) {
-    val topBarState by viewModel.topBarState.collectAsStateWithLifecycle()
+    LifecycleEventEffect(onLifecycleEvent = viewModel::onLifecycleEvent)
+
     val productState by viewModel.productState.collectAsStateWithLifecycle()
-    val sizeSelectorState by viewModel.sizeSelectorState.collectAsStateWithLifecycle()
 
     ScreenContent(
-        topBarState = topBarState,
-        onTopBarEvent = viewModel::onTopBarEvent,
         productState = productState,
         onProductEvent = viewModel::onProductEvent,
-        onProductSuggestionsEvent = viewModel::onProductSuggestionsEvent,
-        sizeSelectorState = sizeSelectorState,
-        onSizeSelectorEvent = viewModel::onSizeSelectorEvent,
-        onLifecycleEvent = viewModel::onLifecycleEvent,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenContent(
-    topBarState: TopBarState,
-    onTopBarEvent: (TopBarEvent) -> Unit,
     productState: ProductState,
     onProductEvent: (ProductEvent) -> Unit,
-    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
-    sizeSelectorState: SizeSelectorState,
-    onSizeSelectorEvent: (SizeSelectorEvent) -> Unit,
-    onLifecycleEvent: (LifecycleEvent) -> Unit,
     sideEffects: Flow<ProductSideEffect>,
     navActions: ProductNavActions,
 ) {
     ProductScreenBehavior(
-        onLifecycleEvent = onLifecycleEvent,
         sideEffects = sideEffects,
         navActions = navActions,
     )
 
-    SizeSelectorModalBottomSheet(
-        state = sizeSelectorState,
-        onEvent = onSizeSelectorEvent,
-    )
-
-    var isZarinaClubDescriptionVisible by remember { mutableStateOf(false) }
-    if (isZarinaClubDescriptionVisible) {
-        ZarinaClubModalBottomSheet(
-            onDismissRequest = { isZarinaClubDescriptionVisible = false },
-        )
-    }
-
-    val lazyListState = rememberLazyListState()
-    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
-        canScroll = { lazyListState.canScrollForward },
-        scrollBeforeContent = { false },
-    )
-
-    CollapsingTopBarLayout(
-        topBar = {
-            val mode = if (productState is ProductState.Success) {
-                topBarModeAsState(lazyListState).value
-            } else {
-                TopBarMode.Transparent
-            }
-
-            TopBar(
-                state = topBarState,
-                onEvent = onTopBarEvent,
-                mode = mode,
-                windowInsets = WindowInsets.statusBars.union(WindowInsets.displayCutout),
-            )
-        },
-        scrollBehavior = topBarScrollBehavior,
+    ProductContent(
+        state = productState,
+        onEvent = onProductEvent,
+        windowInsetsProvider = { WindowInsets.safeDrawing },
+        bottomPaddingProvider = { bottomNavBarHeightAsState().value },
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
-            .bottomNavBarPadding()
-            .clipToBounds(),
-    ) { padding ->
-        val paddingModifier = if (productState is ProductState.Error) {
-            Modifier.padding(padding)
-        } else {
-            Modifier
-        }
-
-        Product(
-            productState = productState,
-            onProductEvent = onProductEvent,
-            onProductSuggestionsEvent = onProductSuggestionsEvent,
-            onShowZarinaClubDescription = { isZarinaClubDescriptionVisible = true },
-            lazyListState = lazyListState,
-            modifier = Modifier
-                .fillMaxSize()
-                .then(paddingModifier)
-                .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
-        )
-    }
+            .background(UiKitTheme2.colors.white),
+    )
 }

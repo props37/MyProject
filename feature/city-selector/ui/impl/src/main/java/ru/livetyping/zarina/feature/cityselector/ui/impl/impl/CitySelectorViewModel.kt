@@ -189,11 +189,11 @@ internal class CitySelectorViewModel @Inject constructor(
 
     private fun onCityChangeFailure(t: Throwable) {
         val message = when (t) {
-            is IOException -> ZarinaToastMessage2.NETWORK_ERROR_MESSAGE
+            is IOException -> ZarinaToastMessage2.networkError()
             else -> {
                 ZarinaToastMessage2(
                     text = Text.Resource(R.string.city_selector_city_changing_error),
-                    startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
+                    startContent = ZarinaToastMessage2.StartContent.Icon.genericError(),
                 )
             }
         }

@@ -43,7 +43,6 @@ import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
 import ru.livetyping.zarina.core.uikit.price.DiscountLabel
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.BackgroundColor
-import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.MediaAspectRatio
 import ru.livetyping.zarina.core.uikit.product.ProductCardDefaults.ProductNameTextStyle
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
@@ -58,6 +57,7 @@ public fun ProductCard(
     onClick: (Product) -> Unit,
     onAddToWishlistClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
+    isMediaScrollable: Boolean = true,
     mediaShimmer: Shimmer = rememberZarinaSkeletonShimmer(),
     appMetricaScreen: Screen? = null,
 ) {
@@ -77,7 +77,7 @@ public fun ProductCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(MediaAspectRatio),
+                .aspectRatio(ProductDefaults.MediaAspectRatio),
         ) {
             val pagerState = rememberEndlessPagerState(itemCount = product.media.size)
             val hazeState = rememberHazeState()
@@ -85,6 +85,7 @@ public fun ProductCard(
             ZarinaMediaHorizontalPager(
                 pagerState = pagerState,
                 media = product.media,
+                isUserScrollEnabled = isMediaScrollable,
                 shimmer = mediaShimmer,
                 modifier = Modifier
                     .matchParentSize()
@@ -102,13 +103,15 @@ public fun ProductCard(
                 )
             }
 
-            ZarinaHorizontalPagerIndicator(
-                pagerState = pagerState,
-                itemCount = product.media.size,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 6.dp),
-            )
+            if (isMediaScrollable) {
+                ZarinaHorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    itemCount = product.media.size,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 6.dp),
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -161,7 +164,7 @@ public fun ProductCardSkeleton(
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(MediaAspectRatio),
+                .aspectRatio(ProductDefaults.MediaAspectRatio),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -226,8 +229,6 @@ public object ProductCardDefaults {
     internal val BackgroundColor: Color
         @Composable
         get() = UiKitTheme2.colors.white
-
-    internal const val MediaAspectRatio = 0.75f
 
     internal val ProductNameTextStyle: TextStyle
         @Composable

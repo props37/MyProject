@@ -11,6 +11,7 @@
     <string name="res_something_went_wrong">Что-то пошло не так</string>
     <string name="res_something_went_wrong_try_again">Что-то пошло не так, попробуйте снова</string>
     <string name="res_refresh_page_or_come_back_later">Обновите страницу или зайдите позже</string>
+    <string name="res_reload">Загрузить снова</string>
     <string name="res_loading">Загрузка</string>
     <string name="res_find_products">Найти товары</string>
     <string name="res_for_women">Женщинам</string>
@@ -53,6 +54,7 @@
     <string name="res_zarina_about_company_url" translatable="false">https://zarina.ru/about/</string>
     <string name="res_zarina_personal_data_consent_policy_url" translatable="false">https://zarina.ru/help/docs/data-consent/</string>
     <string name="res_zarina_help_url" translatable="false">https://zarina.ru/help/</string>
+    <string name="res_zarina_delivery_and_payment_url" translatable="false">https://zarina.ru/help/delivery-and-payment/</string>
     <string name="res_yandex_captcha_terms_policy_url" translatable="false">https://yandex.ru/legal/cloud_terms_smartcaptcha/</string>
     <string name="res_incorrect_data_entered">Введены некорректные данные</string>
     <string name="res_loading_error">Ошибка загрузки</string>
@@ -63,6 +65,8 @@
     <string name="res_yandex_captcha_policies">Защита от спама Yandex SmartCaptcha: условия использования</string>
     <string name="res_yandex_captcha_terms_policy">условия использования</string>
     <string name="res_select">Выбрать</string>
+    <string name="res_select_size">Выберите размер</string>
+    <string name="res_select_height">Выберите рост</string>
     <string name="res_send">Отправить</string>
     <string name="res_save">Сохранить</string>
     <string name="res_settings">Настройки</string>
@@ -77,6 +81,7 @@
     <string name="res_product_adding_to_cart_error">Не удалось добавить товар в корзину</string>
     <string name="res_product_removing_from_cart_error">Не удалось удалить товар из корзины</string>
     <string name="res_size">Размер</string>
+    <string name="res_height">Рост</string>
     <string name="res_height_cm">%1$s см</string>
     <string name="res_color">Цвет</string>
     <string name="res_quantity">Количество</string>
@@ -129,6 +134,13 @@
     <string name="res_application_not_found">Приложение не найдено</string>
     <string name="res_load_more">Загрузить еще</string>
     <string name="res_all">Все</string>
+    <string name="res_product_article">Артикул</string>
+    <string name="res_product_composition">Состав</string>
+    <string name="res_country_of_origin">Страна-производитель</string>
+    <string name="res_care">Уход</string>
+    <string name="res_parameters">Параметры</string>
+    <string name="res_size_table">Таблица размеров</string>
+    <string name="res_not_available">Нет в наличии</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>

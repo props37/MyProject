@@ -135,6 +135,12 @@ internal class WishlistViewModel @Inject constructor(
             val product = event.product
             val params = ToggleProductInWishlistUseCase.Params.Product(product)
             deps.toggleProductInWishlist(params)
+                .onSuccess { isInWishlist ->
+                    if (isInWishlist) {
+                        val message = ZarinaToastMessage2.productAddedToWishlist(event.product)
+                        emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
+                    }
+                }
                 .onFailure(::onToggleProductInWishlistFailure)
         }
     }
@@ -160,18 +166,18 @@ internal class WishlistViewModel @Inject constructor(
     private fun onProductsPaginationError() {
         val message = ZarinaToastMessage2(
             text = Text.Resource(R.string.wishlist_product_pagination_error),
-            startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
+            startContent = ZarinaToastMessage2.StartContent.Icon.genericError(),
         )
         emitSideEffect(WishlistSideEffect.ShowZarinaToast(message))
     }
 
     private fun onToggleProductInWishlistFailure(t: Throwable) {
         val message = when (t) {
-            is IOException -> ZarinaToastMessage2.NETWORK_ERROR_MESSAGE
+            is IOException -> ZarinaToastMessage2.networkError()
             else -> {
                 ZarinaToastMessage2(
                     text = Text.Resource(RCommon.string.res_product_adding_to_wishlist_error),
-                    startContent = ZarinaToastMessage2.GENERIC_ERROR_DEFAULT_START_ICON,
+                    startContent = ZarinaToastMessage2.StartContent.Icon.genericError(),
                 )
             }
         }

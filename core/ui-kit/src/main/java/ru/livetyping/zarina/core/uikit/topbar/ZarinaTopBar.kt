@@ -3,9 +3,14 @@ package ru.livetyping.zarina.core.uikit.topbar
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.runtime.Composable
@@ -30,6 +35,7 @@ public fun ZarinaTopBar(
     backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
     contentColor: Color = ZarinaTopBarDefaults.ContentColor,
     contentPadding: PaddingValues = ZarinaTopBarDefaults.ContentPadding,
+    windowInsets: WindowInsets = ZarinaTopBarDefaults.WindowInsets,
 ) {
     val content = @Composable {
         Row(
@@ -61,8 +67,9 @@ public fun ZarinaTopBar(
             content = content,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(min = ZarinaTopBarDefaults.MinHeight)
                 .drawBehind { drawRect(backgroundColor) }
+                .windowInsetsPadding(windowInsets)
+                .heightIn(min = ZarinaTopBarDefaults.MinHeight)
                 .padding(contentPadding),
         ) { measurables, constraints ->
             val startContentMeasurable = measurables.find { it.layoutId == LayoutId.StartContent }
@@ -127,6 +134,7 @@ public fun ZarinaTopBar(
     backgroundColor: Color = ZarinaTopBarDefaults.BackgroundColor,
     contentColor: Color = ZarinaTopBarDefaults.ContentColor,
     contentPadding: PaddingValues = ZarinaTopBarDefaults.ContentPadding,
+    windowInsets: WindowInsets = ZarinaTopBarDefaults.WindowInsets,
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
@@ -137,8 +145,9 @@ public fun ZarinaTopBar(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
-                .heightIn(ZarinaTopBarDefaults.MinHeight)
                 .drawBehind { drawRect(backgroundColor) }
+                .windowInsetsPadding(windowInsets)
+                .heightIn(ZarinaTopBarDefaults.MinHeight)
                 .padding(contentPadding),
             content = content,
         )
@@ -165,6 +174,11 @@ public object ZarinaTopBarDefaults {
     public val LargeVerticalPadding: Dp get() = 32.dp
 
     internal val ContentHorizontalPadding: Dp get() = 16.dp
+
+    internal val WindowInsets: WindowInsets
+        @Composable
+        get() = androidx.compose.foundation.layout.WindowInsets.safeDrawing
+            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
 }
 
 private enum class LayoutId { StartContent, CenterContent, EndContent }

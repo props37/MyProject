@@ -30,9 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -43,6 +46,7 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import kotlin.math.roundToInt
 
 // TODO: [Top] Rename after full migration
+@OptIn(ExperimentalHazeApi::class)
 @Composable
 public fun ZarinaToastContainer2(
     controller: ZarinaToastController2,
@@ -116,11 +120,12 @@ public fun ZarinaToastContainer2(
                         state = hazeState,
                         style = HazeStyle(
                             backgroundColor = hazeBackgroundColor,
-                            blurRadius = 10.dp,
+                            blurRadius = BlurRadius,
                             tint = hazeTint,
-                            noiseFactor = 0f,
                         ),
-                    )
+                    ) {
+                        inputScale = HazeInputScale.Fixed(BlurInputScale)
+                    }
                     .anchoredDraggable(
                         state = verticalAnchoredDraggableState,
                         orientation = Orientation.Vertical,
@@ -156,5 +161,7 @@ private val DefaultWindowInsets: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
 
+private val BlurRadius: Dp get() = 10.dp
+private const val BlurInputScale = 0.66f
 private const val BackgroundAlphaWithBlur = 0.9f
 private const val BackgroundAlphaWithoutBlur = 0.95f

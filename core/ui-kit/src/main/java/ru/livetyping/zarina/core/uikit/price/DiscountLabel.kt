@@ -8,15 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeInputScale
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
+import ru.livetyping.zarina.core.uikit.price.DiscountLabelDefault.BlueRadius
+import ru.livetyping.zarina.core.uikit.price.DiscountLabelDefault.BlurInputScale
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import java.math.BigDecimal
 
+@OptIn(ExperimentalHazeApi::class)
 @Composable
 public fun DiscountLabel(
     discountPercent: BigDecimal,
@@ -32,11 +38,12 @@ public fun DiscountLabel(
                 state = hazeState,
                 style = HazeStyle(
                     backgroundColor = hazeBackgroundColor,
-                    blurRadius = 4.dp,
+                    blurRadius = BlueRadius,
                     tint = hazeTint,
-                    noiseFactor = 0f,
-                )
-            )
+                ),
+            ) {
+                inputScale = HazeInputScale.Fixed(BlurInputScale)
+            }
             .background(Color.Transparent)
             .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
@@ -57,5 +64,6 @@ private fun rememberHazeTint(backgroundColor: Color): HazeTint {
 }
 
 public object DiscountLabelDefault {
-
+    internal val BlueRadius: Dp get() = 4.dp
+    internal const val BlurInputScale = 0.66f
 }

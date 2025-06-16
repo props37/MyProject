@@ -53,7 +53,7 @@ public fun ProductCardSmall(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(ProductCardDefaults.MediaAspectRatio)
+                .aspectRatio(ProductDefaults.MediaAspectRatio)
                 .shimmerToggleable(shimmer, isEnabled = !isImageDisplayed)
                 .background(UiKitTheme.colors.background.skeleton),
         )
@@ -87,7 +87,7 @@ public fun ProductCardSmallSkeleton(
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(ProductCardDefaults.MediaAspectRatio),
+                .aspectRatio(ProductDefaults.MediaAspectRatio),
         )
 
         Spacer(modifier = Modifier.height(16.dp))

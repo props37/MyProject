@@ -12,24 +12,34 @@ public object ZarinaListDefaults {
     public val LazyListPlacementSpec: SpringSpec<IntOffset> = spring()
     public val LazyListFadeOutSpec: SpringSpec<Float> = LazyListFadeInSpec
 
-    public fun Modifier.animateZarinaItem(lazyItemScope: LazyItemScope): Modifier {
+    public fun Modifier.animateZarinaItem(
+        lazyItemScope: LazyItemScope,
+        fadeInSpec: SpringSpec<Float>? = LazyListFadeInSpec,
+        placementSpec: SpringSpec<IntOffset>? = LazyListPlacementSpec,
+        fadeOutSpec: SpringSpec<Float>? = LazyListFadeOutSpec,
+    ): Modifier {
         val thisModifier = this
         return with(lazyItemScope) {
             thisModifier.animateItem(
-                fadeInSpec = LazyListFadeInSpec,
-                placementSpec = LazyListPlacementSpec,
-                fadeOutSpec = LazyListFadeOutSpec,
+                fadeInSpec = fadeInSpec,
+                placementSpec = placementSpec,
+                fadeOutSpec = fadeOutSpec,
             )
         }
     }
 
-    public fun Modifier.animateZarinaItem(lazyGridItemScope: LazyGridItemScope): Modifier {
+    public fun Modifier.animateZarinaItem(
+        lazyGridItemScope: LazyGridItemScope,
+        fadeInSpec: SpringSpec<Float>? = LazyListFadeInSpec,
+        placementSpec: SpringSpec<IntOffset>? = LazyListPlacementSpec,
+        fadeOutSpec: SpringSpec<Float>? = LazyListFadeOutSpec,
+    ): Modifier {
         val thisModifier = this
         return with(lazyGridItemScope) {
             thisModifier.animateItem(
-                fadeInSpec = LazyListFadeInSpec,
-                placementSpec = LazyListPlacementSpec,
-                fadeOutSpec = LazyListFadeOutSpec,
+                fadeInSpec = fadeInSpec,
+                placementSpec = placementSpec,
+                fadeOutSpec = fadeOutSpec,
             )
         }
     }

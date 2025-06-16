@@ -17,19 +17,19 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
 
 public interface ProductRepository {
-    public fun getProductsWithFiltersPageFlow(
+    public suspend fun getProductsWithFiltersPage(
         categoryId: Category.Id,
         filters: ProductFilters?,
         sorting: ProductSorting,
         page: Int,
         pageSize: Int,
-    ): Flow<Page<ProductsWithFilters>>
+    ): Page<ProductsWithFilters>
 
-    public fun getProductFlow(productId: Product.Id): Flow<ProductDetailed>
+    public suspend fun getProduct(productId: Product.Id): ProductDetailed
 
-    public fun getProductTotalLookFlow(productId: Product.Id): Flow<List<ProductShort>>
+    public suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort>
 
-    public fun getSimilarProductsFlow(productId: Product.Id): Flow<List<ProductShort>>
+    public suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort>
 
     public fun getProductAvailabilityInStoresFlow(
         offer: ProductOffer,

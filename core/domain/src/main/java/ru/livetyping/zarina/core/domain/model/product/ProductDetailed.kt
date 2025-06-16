@@ -21,10 +21,14 @@ public data class ProductDetailed(
     val shareUrl: Url?,
     val modelInfo: ModelInfo?,
 ) : Product() {
+    public val podeliPrice: PodeliPrice by lazy {
+        PodeliPrice.create(price.currentPrice)
+    }
+
     // Marked as stable on config/compose/stability_config.txt
     public data class Label(
         val name: String,
-        val color: Color,
+        val color: Color?,
     )
 
     // Marked as stable on config/compose/stability_config.txt
@@ -36,8 +40,8 @@ public data class ProductDetailed(
     // Marked as stable on config/compose/stability_config.txt
     public data class ModelInfo(
         val modelParams: String?,
-        val productSize: String?,
+        val sizeOnModel: String?,
     ) {
-        public fun isEmpty(): Boolean = modelParams == null && productSize == null
+        public fun isEmpty(): Boolean = modelParams == null && sizeOnModel == null
     }
 }

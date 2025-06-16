@@ -1,249 +1,317 @@
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
-import android.os.Parcelable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.parcelize.Parcelize
-import ru.livetyping.zarina.core.uikit.button.ZarinaButton
-import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.core.uikit.button.ZarinaLikeIconButton
+import androidx.compose.ui.zIndex
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
+import ru.livetyping.zarina.core.uicompose.list.canScroll
+import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
+import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
+import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsEvent
-import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductSuggestionsState
-import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun ProductSuccess(
-    productState: ProductState.Success,
-    onProductEvent: (ProductEvent) -> Unit,
-    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
-    onShowZarinaClubDescription: () -> Unit,
-    lazyListState: LazyListState,
+    state: ProductState.Success,
+    onEvent: (ProductEvent) -> Unit,
+    windowInsetsProvider: @Composable () -> WindowInsets,
+    bottomPaddingProvider: @Composable () -> Dp,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        ProductList(
-            productState = productState,
-            onProductEvent = onProductEvent,
-            onProductSuggestionsEvent = onProductSuggestionsEvent,
-            onShowZarinaClubDescription = onShowZarinaClubDescription,
-            lazyListState = lazyListState,
-            modifier = Modifier.weight(1f),
+    SizeSelectorModalBottomSheet(
+        state = state.sizeSelectorState,
+        onSizeSelected = { offer, type ->
+            onEvent(ProductEvent.SizeSelected(offer, type))
+        },
+        onDismissRequest = { onEvent(ProductEvent.SizeSelectorDismissed) },
+    )
+
+    val listState = rememberLazyListState()
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
+        canScroll = { listState.canScroll },
+        scrollBeforeContent = { false },
+    )
+
+    Box(modifier = modifier) {
+        val hazeState = rememberHazeState(StatusBarBlurDefaults.isStatusBarBlurEnabled())
+
+        StatusBarBlur(
+            hazeState = hazeState,
+            modifier = Modifier.zIndex(1f),
         )
 
-        val product = productState.product
-        BottomBar(
-            isProductAvailable = product.isAvailable,
-            isProductInCart = product.isInCart,
-            isProductInWishlist = product.isInWishlist,
-            onAddProductToCartClicked = {
-                onProductEvent(ProductEvent.AddToCartClicked(product))
+        CollapsingTopBarLayout(
+            topBar = {
+                val firstVisibleItemKey by remember(listState) {
+                    derivedStateOf { listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key }
+                }
+                val isBackgroundTransparent = firstVisibleItemKey == ContentListKey.MediaPager
+                        || firstVisibleItemKey == null
+                val backgroundAlpha by animateFloatAsState(
+                    targetValue = if (isBackgroundTransparent) 0f else 1f,
+                    animationSpec = tween(durationMillis = 100),
+                )
+
+                TopBar(
+                    onBackClicked = { onEvent(ProductEvent.BackClicked) },
+                    onShareClicked = { onEvent(ProductEvent.ShareClicked) },
+                    backgroundAlphaProvider = { backgroundAlpha },
+                )
             },
-            onAddProductToWishlistClicked = {
-                onProductEvent(ProductEvent.AddToWishlistClicked(product))
-            },
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-            modifier = Modifier.fillMaxWidth(),
-        )
+            scrollBehavior = topBarScrollBehavior,
+            modifier = Modifier.hazeSource(hazeState),
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                val bottomContentPadding = bottomPaddingProvider() +
+                        FloatingButtonBlockPadding +
+                        FloatingButtonBlockHeight +
+                        ZarinaScrollableDefaults.ScrollableBottomPadding
+
+                val contentPadding = PaddingValues(
+                    top = windowInsetsProvider().asPaddingValues().calculateTopPadding(),
+                    bottom = bottomContentPadding,
+                )
+
+                ContentList(
+                    state = state,
+                    onEvent = onEvent,
+                    listState = listState,
+                    contentPadding = contentPadding,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
+                )
+
+                FloatingButtonBlock(
+                    product = state.product,
+                    actionButtonState = state.productActionButtonState,
+                    onAddToCartClicked = { onEvent(ProductEvent.AddProductToCartClicked(it)) },
+                    onSubscribeClicked = { onEvent(ProductEvent.SubscribeToProductClicked(it)) },
+                    onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            start = FloatingButtonBlockPadding,
+                            bottom = FloatingButtonBlockPadding,
+                            end = FloatingButtonBlockPadding,
+                        )
+                        .padding(bottom = bottomPaddingProvider()),
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun ProductList(
-    productState: ProductState.Success,
-    onProductEvent: (ProductEvent) -> Unit,
-    onProductSuggestionsEvent: (ProductSuggestionsEvent) -> Unit,
-    onShowZarinaClubDescription: () -> Unit,
-    lazyListState: LazyListState,
+private fun ContentList(
+    state: ProductState.Success,
+    onEvent: (ProductEvent) -> Unit,
+    listState: LazyListState,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    val product = productState.product
-
     LazyColumn(
-        state = lazyListState,
+        state = listState,
+        contentPadding = contentPadding,
         modifier = modifier,
     ) {
-        item(
-            key = ProductListKey.MediaPager,
-            contentType = ProductListContentType.MediaPager,
-        ) {
-            ProductMediaPager(
-                media = product.media,
-                modifier = Modifier.animateZarinaItem(this),
-            )
+        item(key = ContentListKey.MediaPager, contentType = ContentListContentType.MediaPager) {
+            MediaPager(mediaList = state.product.media)
         }
 
-        item(
-            key = ProductListKey.GeneralInfo,
-            contentType = ProductListContentType.GeneralInfo,
-        ) {
-            ProductGeneralInfo(
-                product = product,
-                onProductColorClicked = { onProductEvent(ProductEvent.ProductColorClicked(it)) },
-                onBonusAccrualForPurchaseClicked = onShowZarinaClubDescription,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp)
-                    .animateZarinaItem(this),
-            )
-        }
-
-        if (productState.isCheckAvailabilityInStoresButtonVisible) {
-            item(
-                key = ProductListKey.CheckAvailabilityInStoresButton,
-                contentType = ProductListContentType.CheckAvailabilityInStoresButton,
-            ) {
-                ZarinaButton(
-                    onClick = { onProductEvent(ProductEvent.CheckAvailabilityInStoresClicked) },
-                    colors = ZarinaButtonDefaults.outlinedColors(),
+        if (state.labels != null) {
+            item(key = ContentListKey.LabelList, contentType = ContentListContentType.LabelList) {
+                LabelList(
+                    labels = state.labels,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp, bottom = 16.dp)
-                        .padding(horizontal = 16.dp)
-                        .animateZarinaItem(this),
-                ) {
-                    Text(
-                        text = stringResource(RCommon.string.res_availability_in_stores).uppercase(),
-                    )
-                }
-            }
-        }
-
-        item(
-            key = ProductListKey.Description,
-            contentType = ProductListContentType.Description,
-        ) {
-            ProductDescription(
-                description = product.description,
-                modelInfo = product.modelInfo,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateZarinaItem(this),
-            )
-        }
-
-        item(
-            key = ProductListKey.DeliveryAndPayment,
-            contentType = ProductListContentType.DeliveryAndPayment,
-        ) {
-            ProductDeliveryAndPayment(
-                freeDeliveryTotalPriceThreshold = product.freeDeliveryTotalPriceThreshold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateZarinaItem(this),
-            )
-        }
-
-        if (productState.totalLookState !is ProductSuggestionsState.None) {
-            item(
-                key = ProductListKey.TotalLook,
-                contentType = ProductListContentType.Suggestions,
-            ) {
-                ProductSuggestions(
-                    title = stringResource(R.string.product_suggestions_title_total_look),
-                    state = productState.totalLookState,
-                    onEvent = onProductSuggestionsEvent,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateZarinaItem(this),
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 16.dp),
                 )
             }
         }
 
-        if (productState.similarProductsState !is ProductSuggestionsState.None) {
-            item(
-                key = ProductListKey.SimilarProducts,
-                contentType = ProductListContentType.Suggestions,
-            ) {
-                ProductSuggestions(
-                    title = stringResource(R.string.product_suggestions_title_similar_products),
-                    state = productState.similarProductsState,
-                    onEvent = onProductSuggestionsEvent,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateZarinaItem(this),
+        item(key = ContentListKey.ProductName, contentType = ContentListContentType.ProductName) {
+            val topPadding = if (state.labels != null) 12.dp else 20.dp
+
+            ProductName(
+                state.product.name.uppercase(),
+                modifier = Modifier
+                    .padding(top = topPadding)
+                    .padding(horizontal = 16.dp),
+            )
+        }
+
+        item(key = ContentListKey.PriceBlock, contentType = ContentListContentType.PriceBlock) {
+            PriceBlock(
+                price = state.product.price,
+                podeliPrice = state.product.podeliPrice,
+                bonusAccrualForPurchase = state.product.bonusAccrualForPurchase,
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .padding(horizontal = 16.dp),
+            )
+        }
+
+        item(key = ContentListKey.SizeInfo, contentType = ContentListContentType.SizeInfo) {
+            SizeInfo(
+                sizeOnModel = state.product.modelInfo?.sizeOnModel,
+                onSizeTableClicked = { onEvent(ProductEvent.SizeTableClicked) },
+                selectedSize = state.selectedSize,
+                selectedHeight = state.selectedHeight,
+                isHeightSelectorVisible = state.shouldSelectHeight,
+                onSelectedSizeClicked = { onEvent(ProductEvent.SelectSizeClicked) },
+                onSelectedHeightClicked = { onEvent(ProductEvent.SelectHeightClicked) },
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .padding(horizontal = 16.dp),
+            )
+        }
+
+        item(key = ContentListKey.ColorSelector, contentType = ContentListContentType.ColorSelector) {
+            ColorSelector(
+                colors = state.product.colors,
+                selectedColorProductId = state.product.id,
+                onColorClicked = { onEvent(ProductEvent.ProductColorClicked(it)) },
+                modifier = Modifier.padding(top = 24.dp),
+            )
+        }
+
+        if (state.mediaBanner != null) {
+            item(key = ContentListKey.MediaBanner, contentType = ContentListContentType.MediaBanner) {
+                Media(
+                    media = state.mediaBanner,
+                    modifier = Modifier.padding(top = 40.dp),
                 )
             }
         }
-    }
-}
 
-@Composable
-private fun BottomBar(
-    isProductAvailable: Boolean,
-    isProductInCart: Boolean,
-    isProductInWishlist: Boolean,
-    onAddProductToCartClicked: () -> Unit,
-    onAddProductToWishlistClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(contentPadding),
-    ) {
-        val buttonColors = when {
-            !isProductAvailable -> ZarinaButtonDefaults.outlinedColors()
-            isProductInCart -> ZarinaButtonDefaults.outlinedColors()
-            else -> ZarinaButtonDefaults.filledColors()
-        }
+        item(key = ContentListKey.ProductDetails, contentType = ContentListContentType.ProductDetails) {
+            Column {
+                ProductDetailsBlock(product = state.product)
 
-        ZarinaButton(
-            onClick = onAddProductToCartClicked,
-            colors = buttonColors,
-            modifier = Modifier.weight(1f),
-        ) {
-            val textResId = when {
-                !isProductAvailable -> RCommon.string.res_notify_about_product_appearance
-                isProductInCart -> RCommon.string.res_in_cart
-                else -> RCommon.string.res_to_cart
+                ZarinaDivider(
+                    color = UiKitTheme2.colors.gray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(UiKitTheme2.colors.lightGray)
+                        .padding(horizontal = 16.dp),
+                )
             }
-
-            Text(text = stringResource(textResId).uppercase())
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        item(
+            key = ContentListKey.DeliveryAndPaymentBlock,
+            contentType = ContentListContentType.DeliveryAndPaymentBlock,
+        ) {
+            Column {
+                DeliveryAndPaymentBlock(
+                    freeDeliveryThreshold = state.product.freeDeliveryTotalPriceThreshold,
+                )
 
-        ZarinaLikeIconButton(
-            isLiked = isProductInWishlist,
-            onClick = onAddProductToWishlistClicked,
-            iconSize = 20.dp,
-        )
+                ZarinaDivider(
+                    color = UiKitTheme2.colors.gray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(UiKitTheme2.colors.lightGray)
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+
+        item(
+            key = ContentListKey.CheckAvailabilityInStoresButton,
+            contentType = ContentListContentType.CheckAvailabilityInStoresButton,
+        ) {
+            CheckAvailabilityInStoresButton(
+                onClick = { onEvent(ProductEvent.CheckAvailabilityInStoresClicked(state.product)) },
+            )
+        }
+
+        item(key = ContentListKey.TotalLookProducts, contentType = ContentListContentType.SuggestionList) {
+            SuggestionList(
+                state = state.totalLookProductState,
+                title = stringResource(R.string.product_suggestions_title_total_look).uppercase(),
+                onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
+                modifier = Modifier
+                    .padding(top = 28.dp)
+                    .animateZarinaItem(lazyItemScope = this, placementSpec = null),
+            )
+        }
+
+        item(key = ContentListKey.SimilarProducts, contentType = ContentListContentType.SuggestionList) {
+            SuggestionList(
+                state = state.similarProductState,
+                title = stringResource(R.string.product_suggestions_title_similar_products).uppercase(),
+                onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
+                onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
+                onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
+                modifier = Modifier
+                    .padding(top = 28.dp)
+                    .animateZarinaItem(lazyItemScope = this, placementSpec = null),
+            )
+        }
     }
 }
 
-@Parcelize
-internal enum class ProductListKey : Parcelable {
+private enum class ContentListKey {
     MediaPager,
-    GeneralInfo,
+    LabelList,
+    ProductName,
+    PriceBlock,
+    SizeInfo,
+    ColorSelector,
+    MediaBanner,
+    ProductDetails,
+    DeliveryAndPaymentBlock,
     CheckAvailabilityInStoresButton,
-    Description,
-    DeliveryAndPayment,
-    TotalLook,
+    TotalLookProducts,
     SimilarProducts,
 }
 
-private enum class ProductListContentType {
+private enum class ContentListContentType {
     MediaPager,
-    GeneralInfo,
+    LabelList,
+    ProductName,
+    PriceBlock,
+    SizeInfo,
+    ColorSelector,
+    MediaBanner,
+    ProductDetails,
+    DeliveryAndPaymentBlock,
     CheckAvailabilityInStoresButton,
-    Description,
-    DeliveryAndPayment,
-    Suggestions,
+    SuggestionList,
 }
+
+private val FloatingButtonBlockPadding: Dp = 4.dp

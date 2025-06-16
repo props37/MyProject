@@ -4,7 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.MediaDto
@@ -47,13 +49,18 @@ internal data class ProductDetailedDto(
 
     @SerialName("share_url")
     val shareUrl: String? = null,
+
+    @SerialName("model")
+    val model: ModelDto? = null,
+    
+    @SerialName("products")
+    val products: List<ProductOfAnotherColorDto>? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { ::id }
         checkPropertyNotNull(name) { ::name }
         checkPropertyNotNull(price) { ::price }
         checkPropertyNotNull(offers) { ::offers }
-        checkPropertyNotNull(colors) { ::colors }
         checkPropertyNotNull(media) { ::media }
         checkPropertyNotNull(description) { ::description }
         return ProductDetailed(
@@ -61,18 +68,41 @@ internal data class ProductDetailedDto(
             name = name,
             price = price.toProductPrice(),
             offers = offers.mapNotNull { it.toProductOffer() },
-            colors = colors.mapNotNull { it.toProductColor() },
+            colors = getProductColors(),
             media = media.mapNotNull { it.toMedia() },
             // States that are not present in the DTO
             isInWishlist = false,
             isInCart = false,
             label = label?.toLabel(),
-            description = description.mapNotNull { it.toDescriptionEntry() },
+            description = description
+                .mapNotNull { it.toDescriptionEntry() }
+                .sortedBy { it.title },
             bonusAccrualForPurchase = bonus ?: 0,
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
-            modelInfo = null,
+            modelInfo = model?.toModelInfo(),
         )
+    }
+
+    private fun getProductColors(): List<ProductColor> {
+        checkPropertyNotNull(colors) { ::colors }
+        checkPropertyNotNull(media) { ::media }
+        return colors.mapNotNull { color ->
+            val imageUrl = if (id == color.productId) {
+                val media = media
+                    .firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                    ?.toMedia()
+                media?.thumbnailUrl
+            } else {
+                val product = products?.firstOrNull { it.id == color.productId }
+                val media = product?.media
+                    ?.firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                    ?.toMedia()
+                media?.thumbnailUrl
+            }
+
+            color.toProductColor(imageUrl = imageUrl)
+        }
     }
 
     @Serializable
@@ -84,10 +114,10 @@ internal data class ProductDetailedDto(
         val color: String? = null,
     ) {
         fun toLabel(): ProductDetailed.Label? {
-            return if (name != null && color != null) {
+            return if (name != null) {
                 ProductDetailed.Label(
                     name = name,
-                    color = Color(color.trim()),
+                    color = color?.let { Color(it.trim()) },
                 )
             } else {
                 Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.Label")
@@ -128,10 +158,19 @@ internal data class ProductDetailedDto(
         fun toModelInfo(): ProductDetailed.ModelInfo {
             return ProductDetailed.ModelInfo(
                 modelParams = paramsModel,
-                productSize = sizeOnModel,
+                sizeOnModel = sizeOnModel,
             )
         }
     }
+
+    @Serializable
+    data class ProductOfAnotherColorDto(
+        @SerialName("id")
+        val id: String? = null,
+
+        @SerialName("media")
+        val media: List<MediaDto>? = null,
+    )
 
     private companion object {
         private const val TAG = "ProductDetailedDto"

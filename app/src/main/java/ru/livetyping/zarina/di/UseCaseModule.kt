@@ -68,10 +68,10 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
 import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
@@ -548,11 +548,11 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductsWithFiltersPageFlowUseCase(
+    fun provideGetProductsWithFiltersPageUseCase(
         productRepository: ProductRepository,
         logger: UseCaseLogger,
-    ): GetProductsWithFiltersPageFlowUseCase {
-        return GetProductsWithFiltersPageFlowUseCase.getInstance(
+    ): GetProductsWithFiltersPageUseCase {
+        return GetProductsWithFiltersPageUseCase.getInstance(
             productRepository = productRepository,
             logger = logger,
         )
@@ -607,13 +607,13 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductFlowUseCase(
+    fun provideGetProductUseCase(
         productRepository: ProductRepository,
         cartRepository: CartRepository,
         wishlistRepository: WishlistRepository,
         logger: UseCaseLogger,
-    ): GetProductFlowUseCase {
-        return GetProductFlowUseCase.getInstance(
+    ): GetProductUseCase {
+        return GetProductUseCase.getInstance(
             productRepository = productRepository,
             cartRepository = cartRepository,
             wishlistRepository = wishlistRepository,
@@ -886,23 +886,31 @@ internal class UseCaseModule {
     }
 
     @Provides
-    fun provideGetProductTotalLookFlowUseCase(
+    fun provideGetProductTotalLookUseCase(
         productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
-    ): GetProductTotalLookFlowUseCase {
-        return GetProductTotalLookFlowUseCase.getInstance(
+    ): GetProductTotalLookUseCase {
+        return GetProductTotalLookUseCase.getInstance(
             productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }
 
     @Provides
-    fun provideGetSimilarProductsFlowUseCase(
+    fun provideGetSimilarProductsUseCase(
         productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
         logger: UseCaseLogger,
-    ): GetSimilarProductsFlowUseCase {
-        return GetSimilarProductsFlowUseCase.getInstance(
+    ): GetSimilarProductsUseCase {
+        return GetSimilarProductsUseCase.getInstance(
             productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
             logger = logger,
         )
     }

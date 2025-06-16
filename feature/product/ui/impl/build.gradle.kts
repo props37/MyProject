@@ -69,6 +69,7 @@ dependencies {
     implementation(projects.core.navigationUtil)
     implementation(projects.core.analytics.api)
     implementation(projects.core.deepLink)
+    implementation(projects.core.mediaCompose)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
@@ -86,6 +87,8 @@ dependencies {
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
+
+    implementation(libs.coil.compose)
 
     implementation(libs.timber)
 

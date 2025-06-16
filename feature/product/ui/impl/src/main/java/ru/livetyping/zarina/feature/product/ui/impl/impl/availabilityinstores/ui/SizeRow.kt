@@ -51,7 +51,7 @@ private fun rememberSizeText(size: Size, heightText: String?): String {
     val isHeightVisible = size.isHeightVisible
     return remember(offer, isHeightVisible, heightText) {
         buildString {
-            append(offer.size)
+            append(offer.sizeEn)
             if (offer.sizeRu != null) {
                 append(" ${offer.sizeRu}")
             }
