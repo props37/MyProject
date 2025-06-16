@@ -44,7 +44,11 @@ internal fun ProductContent(
             }
 
             ProductState.Loading -> {
-                // TODO: [Top] Implement
+                ProductLoading(
+                    windowInsetsProvider = windowInsetsProvider,
+                    bottomPaddingProvider = bottomPaddingProvider,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             is ProductState.Error -> {
