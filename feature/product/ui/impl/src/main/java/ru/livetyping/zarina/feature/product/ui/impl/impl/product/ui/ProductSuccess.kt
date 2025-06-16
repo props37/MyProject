@@ -33,6 +33,7 @@ import ru.livetyping.zarina.core.uicompose.list.canScroll
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
+import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -263,7 +264,9 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.TotalLookProductRefreshTriggered) },
-                modifier = Modifier.padding(top = 28.dp),
+                modifier = Modifier
+                    .padding(top = 28.dp)
+                    .animateZarinaItem(lazyItemScope = this, placementSpec = null),
             )
         }
 
@@ -274,7 +277,9 @@ private fun ContentList(
                 onProductClicked = { onEvent(ProductEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = { onEvent(ProductEvent.AddProductToWishlistClicked(it)) },
                 onErrorRetryClicked = { onEvent(ProductEvent.SimilarProductRefreshTriggered) },
-                modifier = Modifier.padding(top = 28.dp),
+                modifier = Modifier
+                    .padding(top = 28.dp)
+                    .animateZarinaItem(lazyItemScope = this, placementSpec = null),
             )
         }
     }
