@@ -130,6 +130,10 @@ internal class ProductViewModel @Inject constructor(
             ProductEvent.ShareClicked -> onShareClicked()
             is ProductEvent.ProductColorClicked -> onProductColorClicked(event)
             is ProductEvent.ProductClicked -> onProductClicked(event)
+            is ProductEvent.CheckAvailabilityInStoresClicked -> {
+                onCheckAvailabilityInStoresClicked(event)
+            }
+
             is ProductEvent.AddProductToWishlistClicked -> onAddProductToWishlistClicked(event)
             ProductEvent.SizeTableClicked -> onSizeTableClicked()
             ProductEvent.SelectSizeClicked -> onSelectSizeClicked()
@@ -172,6 +176,13 @@ internal class ProductViewModel @Inject constructor(
     private fun onProductClicked(event: ProductEvent.ProductClicked) {
         navigationThrottler.throttle {
             val action = ProductScreenAction.ProductClicked(event.product)
+            emitSideEffect(ProductSideEffect.Navigate(action))
+        }
+    }
+
+    private fun onCheckAvailabilityInStoresClicked(event: ProductEvent.CheckAvailabilityInStoresClicked) {
+        navigationThrottler.throttle {
+            val action = ProductScreenAction.CheckAvailabilityInStoresClicked(event.product)
             emitSideEffect(ProductSideEffect.Navigate(action))
         }
     }

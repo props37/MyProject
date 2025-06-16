@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,11 +20,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uikit.item.ZarinaExpandableItem
+import ru.livetyping.zarina.core.uikit.item.ZarinaItem
+import ru.livetyping.zarina.core.uikit.item.ZarinaItemDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -38,7 +42,8 @@ internal fun ProductDetailsBlock(
         header = {
             Header(text = stringResource(R.string.product_details).uppercase())
         },
-        backgroundColor = BackgroundColor,
+        backgroundColor = ExpandableBlockBackgroundColor,
+        headerContentPadding = PaddingValues(horizontal = 16.dp),
         contentPadding = BodyContentPadding,
         modifier = modifier,
     ) {
@@ -63,7 +68,8 @@ internal fun DeliveryAndPaymentBlock(
         header = {
             Header(text = stringResource(R.string.product_delivery_and_payment).uppercase())
         },
-        backgroundColor = BackgroundColor,
+        backgroundColor = ExpandableBlockBackgroundColor,
+        headerContentPadding = PaddingValues(horizontal = 16.dp),
         contentPadding = BodyContentPadding,
         modifier = modifier,
     ) {
@@ -95,9 +101,11 @@ private fun Header(
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,
-        modifier = modifier.heightIn(min = 64.dp),
+        modifier = modifier
+            .heightIn(min = ExpandableBlockHeaderHeight)
+            .padding(vertical = 8.dp),
     ) {
-        Text(text = text, style = HeaderTextStyle)
+        Text(text = text, style = ExpandableBlockHeaderTextStyle)
     }
 }
 
@@ -158,13 +166,15 @@ private inline fun AnnotatedString.Builder.appendTwoLines() {
     appendLine()
 }
 
-private val BackgroundColor: Color
+internal val ExpandableBlockBackgroundColor: Color
     @Composable
     get() = UiKitTheme2.colors.lightGray
 
-private val HeaderTextStyle: TextStyle
+internal val ExpandableBlockHeaderTextStyle: TextStyle
     @Composable
     get() = UiKitTheme2.typography.h4
+
+internal val ExpandableBlockHeaderHeight: Dp get() = 64.dp
 
 private val BodyTextStyle: TextStyle
     @Composable

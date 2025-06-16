@@ -229,8 +229,27 @@ private fun ContentList(
             key = ContentListKey.DeliveryAndPaymentBlock,
             contentType = ContentListContentType.DeliveryAndPaymentBlock,
         ) {
-            DeliveryAndPaymentBlock(
-                freeDeliveryThreshold = state.product.freeDeliveryTotalPriceThreshold,
+            Column {
+                DeliveryAndPaymentBlock(
+                    freeDeliveryThreshold = state.product.freeDeliveryTotalPriceThreshold,
+                )
+
+                ZarinaDivider(
+                    color = UiKitTheme2.colors.gray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(UiKitTheme2.colors.lightGray)
+                        .padding(horizontal = 16.dp),
+                )
+            }
+        }
+
+        item(
+            key = ContentListKey.CheckAvailabilityInStoresButton,
+            contentType = ContentListContentType.CheckAvailabilityInStoresButton,
+        ) {
+            CheckAvailabilityInStoresButton(
+                onClick = { onEvent(ProductEvent.CheckAvailabilityInStoresClicked(state.product)) },
             )
         }
 
@@ -268,6 +287,7 @@ private enum class ContentListKey {
     MediaBanner,
     ProductDetails,
     DeliveryAndPaymentBlock,
+    CheckAvailabilityInStoresButton,
     TotalLookProducts,
     SimilarProducts,
 }
@@ -282,6 +302,7 @@ private enum class ContentListContentType {
     MediaBanner,
     ProductDetails,
     DeliveryAndPaymentBlock,
+    CheckAvailabilityInStoresButton,
     SuggestionList,
 }
 

@@ -13,6 +13,8 @@ internal sealed interface ProductEvent {
 
     data class ProductClicked(val product: Product) : ProductEvent
 
+    data class CheckAvailabilityInStoresClicked(val product: Product) : ProductEvent
+
     data class AddProductToWishlistClicked(val product: Product) : ProductEvent
 
     data object SizeTableClicked : ProductEvent
