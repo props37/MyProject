@@ -4,7 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.MediaDto
@@ -50,13 +52,15 @@ internal data class ProductDetailedDto(
 
     @SerialName("model")
     val model: ModelDto? = null,
+    
+    @SerialName("products")
+    val products: List<ProductOfAnotherColorDto>? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { ::id }
         checkPropertyNotNull(name) { ::name }
         checkPropertyNotNull(price) { ::price }
         checkPropertyNotNull(offers) { ::offers }
-        checkPropertyNotNull(colors) { ::colors }
         checkPropertyNotNull(media) { ::media }
         checkPropertyNotNull(description) { ::description }
         return ProductDetailed(
@@ -64,7 +68,7 @@ internal data class ProductDetailedDto(
             name = name,
             price = price.toProductPrice(),
             offers = offers.mapNotNull { it.toProductOffer() },
-            colors = colors.mapNotNull { it.toProductColor(imageUrl = null) },
+            colors = getProductColors(),
             media = media.mapNotNull { it.toMedia() },
             // States that are not present in the DTO
             isInWishlist = false,
@@ -78,6 +82,27 @@ internal data class ProductDetailedDto(
             shareUrl = shareUrl?.let { Url.create(it) },
             modelInfo = model?.toModelInfo(),
         )
+    }
+
+    private fun getProductColors(): List<ProductColor> {
+        checkPropertyNotNull(colors) { ::colors }
+        checkPropertyNotNull(media) { ::media }
+        return colors.mapNotNull { color ->
+            val imageUrl = if (id == color.productId) {
+                val media = media
+                    .firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                    ?.toMedia()
+                media?.thumbnailUrl
+            } else {
+                val product = products?.firstOrNull { it.id == color.productId }
+                val media = product?.media
+                    ?.firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                    ?.toMedia()
+                media?.thumbnailUrl
+            }
+
+            color.toProductColor(imageUrl = imageUrl)
+        }
     }
 
     @Serializable
@@ -138,9 +163,16 @@ internal data class ProductDetailedDto(
         }
     }
 
-    private companion object {
-        private const val DESCRIPTION_ARTICLE_TITLE = "Арт."
+    @Serializable
+    data class ProductOfAnotherColorDto(
+        @SerialName("id")
+        val id: String? = null,
 
+        @SerialName("media")
+        val media: List<MediaDto>? = null,
+    )
+
+    private companion object {
         private const val TAG = "ProductDetailedDto"
     }
 }
