@@ -140,6 +140,7 @@
     <string name="res_care">Уход</string>
     <string name="res_parameters">Параметры</string>
     <string name="res_size_table">Таблица размеров</string>
+    <string name="res_not_available">Нет в наличии</string>
 
     <string name="res_order_status_accepted">Принят</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
