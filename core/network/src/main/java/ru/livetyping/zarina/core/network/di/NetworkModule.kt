@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.buildutil.AppVersionName
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.MindboxKey
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
@@ -40,11 +41,13 @@ internal abstract class NetworkModule {
             buildType: BuildType,
             @NetworkJson
             json: Json,
+            @AppVersionName
+            appVersionName: String,
         ): HttpClient {
             return getZarinaAuthorizedHttpClient(
                 json = json,
                 baseUrl = baseUrl,
-                headerProvider = ZarinaApiHeaderProvider(),
+                headerProvider = ZarinaApiHeaderProvider(appVersionName),
                 bearerTokenService = bearerTokenService,
                 buildType = buildType,
             )
@@ -59,11 +62,13 @@ internal abstract class NetworkModule {
             buildType: BuildType,
             @NetworkJson
             json: Json,
+            @AppVersionName
+            appVersionName: String,
         ): HttpClient {
             return getZarinaUnauthorizedHttpClient(
                 json = json,
                 baseUrl = baseUrl,
-                headerProvider = ZarinaApiHeaderProvider(),
+                headerProvider = ZarinaApiHeaderProvider(appVersionName),
                 buildType = buildType,
             )
         }
