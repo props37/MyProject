@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.onboarding.ui.impl.R
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
@@ -146,7 +146,7 @@ private fun CityDetection(
                 onClick = onSkipCityDetectionClicked,
                 isLoading = isSkipCityDetectionButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.filledColors(),
+                colors = ZarinaButtonDefaults.secondaryColors(),
             ) {
                 Text(text = stringResource(RCommon.string.res_skip).uppercase())
             }
@@ -193,7 +193,7 @@ private fun CityConfirmation(
                 onClick = onSkipCityDetectionClicked,
                 isLoading = isSkipCityDetectionButtonLoading,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ZarinaButtonDefaults.filledColors(),
+                colors = ZarinaButtonDefaults.secondaryColors(),
             ) {
                 Text(text = stringResource(R.string.onboarding_set_up_later).uppercase())
             }
@@ -211,17 +211,17 @@ private fun OnboardingPageLayout(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = title,
-            style = UiKitTheme.typography.primary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = title.uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = body,
-            style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = body.uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
