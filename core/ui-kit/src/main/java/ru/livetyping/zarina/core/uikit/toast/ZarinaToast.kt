@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessageStyle
 import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 // TODO: [Top] Remove after full migration
 @Composable
@@ -49,8 +50,8 @@ public fun ZarinaToast(
                 .padding(contentPadding),
         ) {
             Text(
-                text = textString(message.text),
-                style = UiKitTheme.typography.tertiary.light,
+                text = textString(message.text).uppercase(),
+                style = UiKitTheme2.typography.body2,
             )
         }
     }
