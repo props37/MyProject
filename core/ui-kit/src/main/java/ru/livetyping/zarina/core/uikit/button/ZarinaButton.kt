@@ -52,7 +52,7 @@ public fun ZarinaButton(
     isEnabled: Boolean = true,
     isLoading: Boolean = false,
     interactionSource: MutableInteractionSource? = null,
-    size: ZarinaButtonSize = ZarinaButtonSize.Small,
+    size: ZarinaButtonSize = ZarinaButtonSize.Medium,
     colors: ZarinaButtonColors = ZarinaButtonDefaults.filledColors(),
     shape: Shape = ZarinaButtonDefaults.Shape,
     contentPadding: PaddingValues = ZarinaButtonDefaults.contentPaddingFromSize(size),
