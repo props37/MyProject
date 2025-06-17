@@ -172,7 +172,7 @@ internal val ExpandableBlockBackgroundColor: Color
 
 internal val ExpandableBlockHeaderTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme2.typography.h4
+    get() = UiKitTheme2.typography.body
 
 internal val ExpandableBlockHeaderHeight: Dp get() = 64.dp
 
