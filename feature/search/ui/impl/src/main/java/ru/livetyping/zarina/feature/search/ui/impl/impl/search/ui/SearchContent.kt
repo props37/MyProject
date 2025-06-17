@@ -21,8 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
@@ -130,7 +128,7 @@ private fun AutocompleteSuggestions(
                         onClick = { onSuggestionClicked(suggestion) },
                         modifier = Modifier.animateZarinaItem(this),
                     ) {
-                        Text(text = suggestion.text.capitalize(Locale.current))
+                        Text(text = suggestion.text.uppercase())
                     }
                 }
             }

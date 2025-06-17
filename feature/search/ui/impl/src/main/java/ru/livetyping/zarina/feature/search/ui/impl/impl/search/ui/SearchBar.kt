@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -34,7 +35,6 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaFilterIconButton
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldSize
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarState
@@ -82,7 +82,7 @@ internal fun SearchBar(
         ) {
             ZarinaBackIconButton(
                 onClick = { onEvent(SearchBarEvent.BackClicked) },
-                iconSize = 20.dp,
+                modifier = Modifier.padding(end = 4.dp),
             )
         }
 
@@ -94,7 +94,7 @@ internal fun SearchBar(
         ZarinaTextField(
             state = textFieldState,
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_find_products))
+                Text(text = stringResource(RCommon.string.res_find_products).uppercase())
             },
             leadingContent = {
                 Icon(
@@ -145,7 +145,7 @@ internal fun SearchBar(
             ZarinaFilterIconButton(
                 onClick = { onEvent(SearchBarEvent.FiltersClicked) },
                 appliedFilterCount = state.appliedFilterCount,
-                iconSize = 20.dp,
+                iconSize = 16.dp,
             )
         }
     }

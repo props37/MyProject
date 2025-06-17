@@ -30,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.core.kotlinutil.findSubstringBounds
@@ -43,7 +44,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchState
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchSuggestionItem
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -79,7 +80,7 @@ internal fun SearchSuggestionsSuccess(
             when (item) {
                 is SearchSuggestionItem.GenericTitle -> {
                     SuggestionTitle(
-                        text = textString(item.text),
+                        text = textString(item.text).uppercase(),
                         modifier = Modifier
                             .padding(top = 8.dp)
                             .animateZarinaItem(this),
@@ -88,15 +89,20 @@ internal fun SearchSuggestionsSuccess(
 
                 SearchSuggestionItem.SearchHistoryTitle -> {
                     SuggestionTitle(
-                        text = stringResource(RCommon.string.res_search_history),
+                        text = stringResource(RCommon.string.res_search_history).uppercase(),
                         trailingContent = {
-                            ZarinaButton(
-                                onClick = onClearSearchHistoryClicked,
-                                size = ZarinaButtonSize.Medium,
-                                colors = ZarinaButtonDefaults.outlinedColors(),
-                                modifier = Modifier.heightIn(min = 32.dp),
-                            ) {
-                                Text(text = stringResource(RCommon.string.res_clear).uppercase())
+                            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                                ZarinaButton(
+                                    onClick = onClearSearchHistoryClicked,
+                                    size = ZarinaButtonSize.Medium,
+                                    colors = ZarinaButtonDefaults.backlessColors(),
+                                    modifier = Modifier.heightIn(min = 32.dp),
+                                ) {
+                                    Text(
+                                        text = stringResource(RCommon.string.res_clear).uppercase(),
+                                        style = UiKitTheme2.typography.body2,
+                                    )
+                                }
                             }
                         },
                         contentPadding = PaddingValues(
@@ -228,12 +234,12 @@ private fun SuggestionItem(
                 Icon(
                     imageVector = ImageVector.vectorResource(leadingIconResId),
                     contentDescription = null,
-                    tint = UiKitTheme.colors.icon.regular.default,
+                    tint = UiKitTheme2.colors.mainBlack,
                     modifier = Modifier.size(16.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = textWithQueryMatch,
+                    text = textWithQueryMatch.toUpperCase(),
                     style = SuggestionItemTextStyle,
                     color = SuggestionItemTextColor,
                 )
@@ -272,16 +278,16 @@ private fun SuggestionCategoryItem(
                 )
 
                 Text(
-                    text = nameWithQueryMatch,
+                    text = nameWithQueryMatch.toUpperCase(),
                     style = SuggestionItemTextStyle,
                     color = SuggestionItemTextColor,
                 )
 
                 if (item.parentCategoryChain != null) {
                     Text(
-                        text = item.parentCategoryChain,
-                        style = UiKitTheme.typography.footnote.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        text = item.parentCategoryChain.uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.middleGray,
                     )
                 }
             }
@@ -320,19 +326,19 @@ private fun rememberSearchSuggestionItemTextWithQueryMatch(
 
 private val SuggestionTitleTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.bold
+    get() = UiKitTheme2.typography.bodyBold
 
 private val SuggestionItemTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private val SuggestionItemTextColor: Color
     @Composable
-    get() = UiKitTheme.colors.text.general.regular.default
+    get() = UiKitTheme2.colors.mainBlack
 
 private val SuggestionItemQueryMatchTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.regular
+    get() = UiKitTheme2.typography.body
 
 private val ItemContentPadding: PaddingValues
     get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)

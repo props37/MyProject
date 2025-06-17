@@ -31,7 +31,7 @@ import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorEvent
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorModalBottomSheet
 import ru.livetyping.zarina.core.uikit.sizeselector.SizeSelectorState
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.search.ui.impl.impl.search.model.SearchBarEvent
@@ -98,7 +98,7 @@ private fun ScreenContent(
         onEvent = onSizeSelectorEvent,
     )
 
-    val backgroundColor = UiKitTheme.colors.background.general.regular.default
+    val backgroundColor = UiKitTheme2.colors.white
 
     Column(
         modifier = Modifier
