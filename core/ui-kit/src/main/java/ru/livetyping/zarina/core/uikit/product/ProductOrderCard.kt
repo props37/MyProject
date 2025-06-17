@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
@@ -42,7 +43,6 @@ import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSelector
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSelectorSize
-import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.ImageAspectRatio
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.ImageHeight
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.InfoTextStyle
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.SizeHeightSeparator
@@ -90,8 +90,8 @@ public fun ProductOrderCard(
             contentScale = ContentScale.Crop,
             onSuccess = { isImageShimmerEnabled = false },
             modifier = Modifier
-                .height(ImageHeight)
-                .aspectRatio(ImageAspectRatio)
+                .requiredHeight(ImageHeight)
+                .aspectRatio(ProductDefaults.MediaAspectRatio)
                 .shimmerToggleable(rememberZarinaSkeletonShimmer(), isImageShimmerEnabled)
                 .background(UiKitTheme2.colors.skeletonBackground),
         )
@@ -160,7 +160,7 @@ public fun ProductOrderCardSkeleton(
             shape = RectangleShape,
             modifier = Modifier
                 .height(ImageHeight)
-                .aspectRatio(ImageAspectRatio),
+                .aspectRatio(ProductDefaults.MediaAspectRatio),
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -371,7 +371,6 @@ public object ProductOrderCardDefaults {
         get() = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 
     internal val ImageHeight: Dp get() = 128.dp
-    internal const val ImageAspectRatio = 0.72f
 
     internal val InfoTextStyle: TextStyle
         @Composable
