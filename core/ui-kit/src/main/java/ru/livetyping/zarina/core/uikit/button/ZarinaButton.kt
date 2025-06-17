@@ -42,6 +42,7 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.uikit.ripple.DarkRipple
 import ru.livetyping.zarina.core.uikit.ripple.LightRipple
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
@@ -247,6 +248,92 @@ public object ZarinaButtonDefaults {
         disabledContentColor: Color = contentColor,
         borderColor: Color = UiKitTheme2.colors.mainBlack,
         disabledBorderColor: Color = borderColor,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    // Old styles
+    @Composable
+    public fun secondaryColors(
+        backgroundColor: Color = UiKitTheme.colors.background.button.secondary.default,
+        contentColor: Color = UiKitTheme.colors.text.button.secondary.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.secondary.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.secondary.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    public fun tertiaryColors(
+        backgroundColor: Color = UiKitTheme.colors.background.button.tertiary.default,
+        contentColor: Color = UiKitTheme.colors.text.button.tertiary.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.tertiary.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.tertiary.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    public fun backlessColors(
+        backgroundColor: Color = Color.Unspecified,
+        contentColor: Color = UiKitTheme.colors.text.button.backless.default,
+        disabledBackgroundColor: Color = Color.Unspecified,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.backless.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    public fun outlineErrorColors(
+        backgroundColor: Color = UiKitTheme.colors.background.button.outline.default,
+        contentColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBackgroundColor: Color = UiKitTheme.colors.background.button.outline.disabled,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.error.disabled,
+        borderColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBorderColor: Color = UiKitTheme.colors.text.button.error.disabled,
+    ): ZarinaButtonColors = ZarinaButtonColors(
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledContentColor = disabledContentColor,
+        borderColor = borderColor,
+        disabledBorderColor = disabledBorderColor,
+    )
+
+    @Composable
+    public fun backlessErrorColors(
+        backgroundColor: Color = Color.Unspecified,
+        contentColor: Color = UiKitTheme.colors.text.button.error.default,
+        disabledBackgroundColor: Color = Color.Unspecified,
+        disabledContentColor: Color = UiKitTheme.colors.text.button.error.disabled,
+        borderColor: Color = Color.Unspecified,
+        disabledBorderColor: Color = Color.Unspecified,
     ): ZarinaButtonColors = ZarinaButtonColors(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
