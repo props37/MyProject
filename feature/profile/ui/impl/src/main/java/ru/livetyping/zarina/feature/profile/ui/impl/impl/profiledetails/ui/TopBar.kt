@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsTopBarEvent
@@ -30,15 +31,12 @@ internal fun TopBar(
 ) {
     ZarinaTopBar(
         startContent = {
-            ZarinaBackIconButton(
-                onClick = { onEvent(ProfileDetailsTopBarEvent.BackClicked) },
-                iconSize = 20.dp,
-                modifier = Modifier.padding(start = 2.dp),
-            )
+            ZarinaBackIconButton(onClick = { onEvent(ProfileDetailsTopBarEvent.BackClicked) })
         },
         centerContent = {
             Text(
-                text = stringResource(R.string.profile_account_details),
+                text = stringResource(R.string.profile_account_details).uppercase(),
+                style = UiKitTheme2.typography.h3,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

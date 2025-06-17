@@ -28,10 +28,10 @@ internal fun AccountDeletionDialog(
     ) {
         ZarinaDialogContainer(
             title = {
-                Text(text = stringResource(R.string.profile_delete_account_question))
+                Text(text = stringResource(R.string.profile_delete_account_question).uppercase())
             },
             body = {
-                Text(text = stringResource(R.string.profile_account_deletion_confirmation_body))
+                Text(text = stringResource(R.string.profile_account_deletion_confirmation_body).uppercase())
             },
             buttons = {
                 ZarinaButton(
@@ -50,6 +50,7 @@ internal fun AccountDeletionDialog(
                 ZarinaButton(
                     onClick = { onEvent(AccountDeletionDialogEvent.DeleteAccountClicked) },
                     isLoading = state.isDeleteButtonLoading,
+                    colors = ZarinaButtonDefaults.outlineErrorColors(),
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(
