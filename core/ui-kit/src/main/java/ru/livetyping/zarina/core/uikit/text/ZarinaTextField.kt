@@ -595,21 +595,24 @@ public object ZarinaTextFieldDefaults {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     private fun CancelButtonImpl(
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        ZarinaButton(
-            onClick = onClick,
-            size = ZarinaButtonSize.Small,
-            colors = ZarinaButtonDefaults.outlinedColors(),
-            modifier = modifier.heightIn(min = 36.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.res_cancel).uppercase(),
-                style = UiKitTheme2.typography.body2,
-            )
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+            ZarinaButton(
+                onClick = onClick,
+                size = ZarinaButtonSize.Small,
+                colors = ZarinaButtonDefaults.backlessColors(),
+                modifier = modifier.heightIn(min = 36.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.res_cancel).uppercase(),
+                    style = UiKitTheme2.typography.body2,
+                )
+            }
         }
     }
 }

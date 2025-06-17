@@ -28,6 +28,7 @@ import ru.livetyping.zarina.core.uikit.ripple.LightRipple
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaTag(
@@ -59,9 +60,9 @@ public fun ZarinaTag(
     )
 
     val textStyle = if (isSelected) {
-        UiKitTheme.typography.secondary.regular
+        UiKitTheme2.typography.body
     } else {
-        UiKitTheme.typography.secondary.light
+        UiKitTheme2.typography.body
     }
 
     val ripple = if (isSelected) LightRipple else DarkRipple
