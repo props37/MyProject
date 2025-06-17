@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaLinearProgressIndicator(
@@ -37,9 +37,9 @@ public fun ZarinaLinearProgressIndicator(
 public object ZarinaLinearProgressIndicatorDefaults {
     public val Color: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.inversed.default
+        get() = UiKitTheme2.colors.mainBlack
 
     public val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.muted
+        get() = UiKitTheme2.colors.gray
 }

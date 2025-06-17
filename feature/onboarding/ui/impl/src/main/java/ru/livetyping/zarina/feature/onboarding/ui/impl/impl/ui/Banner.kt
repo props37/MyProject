@@ -28,7 +28,7 @@ import coil3.size.Size
 import okhttp3.OkHttpClient
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.uikit.logo.ZarinaLogo
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.onboarding.ui.impl.R
 import java.util.concurrent.TimeUnit
 
@@ -74,9 +74,9 @@ internal fun Banner(
 
         val logoColor by animateColorAsState(
             targetValue = if (isBannerDisplayed) {
-                UiKitTheme.colors.text.general.inversed.default
+                UiKitTheme2.colors.white
             } else {
-                UiKitTheme.colors.text.general.regular.default
+                UiKitTheme2.colors.mainBlack
             },
             label = "Banner logo color",
         )

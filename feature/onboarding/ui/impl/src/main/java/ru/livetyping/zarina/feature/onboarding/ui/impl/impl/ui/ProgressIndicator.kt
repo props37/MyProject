@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.text.FontFeatureSettings
 import ru.livetyping.zarina.core.uikit.progress.ZarinaLinearProgressIndicator
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
 
 @Composable
@@ -41,12 +41,12 @@ internal fun ProgressIndicator(
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
-            val textStyle = UiKitTheme.typography.tertiary.regular
+            val textStyle = UiKitTheme2.typography.body
 
             Text(
-                text = stringResource(R.string.res_step),
+                text = stringResource(R.string.res_step).uppercase(),
                 style = textStyle,
-                color = UiKitTheme.colors.text.general.regular.default,
+                color = UiKitTheme2.colors.mainBlack,
             )
             AnimatedContent(
                 targetState = currentOnboardingStepNumber,
@@ -60,13 +60,13 @@ internal fun ProgressIndicator(
                 Text(
                     text = " $stepNumber",
                     style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
             }
             Text(
                 text = "/${onboardingState.onboardingSteps.size}",
                 style = textStyle.copy(fontFeatureSettings = FontFeatureSettings.Mono),
-                color = UiKitTheme.colors.text.general.regular.disabled,
+                color = UiKitTheme2.colors.middleGray,
             )
         }
     }
