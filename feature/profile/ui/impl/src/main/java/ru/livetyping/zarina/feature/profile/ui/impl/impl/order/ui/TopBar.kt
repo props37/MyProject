@@ -2,7 +2,6 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.order.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
@@ -16,6 +15,7 @@ import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.uicompose.AnimatedContentCrossfadeTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 
@@ -27,11 +27,7 @@ internal fun TopBar(
 ) {
     ZarinaTopBar(
         startContent = {
-            ZarinaBackIconButton(
-                onClick = onBackClicked,
-                iconSize = 20.dp,
-                modifier = Modifier.padding(start = 2.dp),
-            )
+            ZarinaBackIconButton(onClick = onBackClicked)
         },
         centerContent = {
             AnimatedContent(
@@ -44,7 +40,8 @@ internal fun TopBar(
             ) { number ->
                 if (number != null) {
                     Text(
-                        text = stringResource(R.string.profile_order_number, number.value),
+                        text = stringResource(R.string.profile_order_number, number.value).uppercase(),
+                        style = UiKitTheme2.typography.h3,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )

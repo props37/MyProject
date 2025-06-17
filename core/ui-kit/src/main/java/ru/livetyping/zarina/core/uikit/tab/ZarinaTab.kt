@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaTab(
@@ -29,7 +29,7 @@ public fun ZarinaTab(
     ZarinaButton(
         onClick = onClick,
         size = ZarinaButtonSize.Medium,
-        colors = ZarinaButtonDefaults.outlinedColors(contentColor = contentColor),
+        colors = ZarinaButtonDefaults.backlessColors(contentColor = contentColor),
         contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         textStyle = textStyle,
         modifier = modifier,
@@ -68,17 +68,17 @@ public fun ZarinaTab(
 public object ZarinaTabDefaults {
     public val SelectedTextStyle: TextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.regular
+        get() = UiKitTheme2.typography.body
 
     public val UnselectedTextStyle: TextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.light
+        get() = SelectedTextStyle
 
     public val SelectedContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.button.backless.default
+        get() = UiKitTheme2.colors.mainBlack
 
     public val UnselectedContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.button.backless.default
+        get() = SelectedContentColor
 }

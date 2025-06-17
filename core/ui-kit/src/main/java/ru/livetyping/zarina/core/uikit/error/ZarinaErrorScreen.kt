@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.text.textString
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 // TODO: [Top] Remove after full migration
 
@@ -42,22 +43,22 @@ public fun ZarinaErrorScreen(
         Icon(
             painter = painterResource(state.iconResId),
             contentDescription = null,
-            tint = UiKitTheme.colors.icon.regular.disabled,
+            tint = UiKitTheme2.colors.middleGray,
             modifier = Modifier.size(64.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = textString(state.title),
-            style = UiKitTheme.typography.primary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = textString(state.title).uppercase(),
+            style = UiKitTheme2.typography.h4,
+            color = UiKitTheme2.colors.mainBlack,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = textString(state.body),
-            style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = textString(state.body).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 8.dp),
         )

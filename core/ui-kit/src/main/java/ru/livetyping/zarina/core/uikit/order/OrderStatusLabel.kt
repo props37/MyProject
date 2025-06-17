@@ -11,6 +11,7 @@ import ru.livetyping.zarina.core.uicommon.nameResId
 import ru.livetyping.zarina.core.uikit.label.ZarinaLabel
 import ru.livetyping.zarina.core.uikit.label.ZarinaLabelDefaults
 import ru.livetyping.zarina.core.uikit.label.ZarinaLabelSize
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun OrderStatusLabel(
@@ -19,7 +20,7 @@ public fun OrderStatusLabel(
     size: ZarinaLabelSize = ZarinaLabelSize.Large,
 ) {
     OrderStatusLabel(
-        statusName = stringResource(status.nameResId),
+        statusName = stringResource(status.nameResId).uppercase(),
         statusColor = status.color,
         size = size,
         modifier = modifier,
@@ -40,6 +41,7 @@ public fun OrderStatusLabel(
     ) {
         Text(
             text = statusName.uppercase(),
+            style = UiKitTheme2.typography.body2,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
