@@ -9,9 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toUpperCase
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -25,9 +26,7 @@ public fun YandexCaptchaPolicies(
     val substringToUrl = remember(terms, termsUrl) {
         mapOf(terms to termsUrl)
     }
-    val linkStyle = UiKitTheme.typography.footnote.regular.copy(
-        color = UiKitTheme.colors.text.general.regular.default,
-    )
+    val linkStyle = UiKitTheme2.typography.body2
 
     val textWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(RCommon.string.res_yandex_captcha_policies),
@@ -37,9 +36,9 @@ public fun YandexCaptchaPolicies(
     )
 
     Text(
-        text = textWithLinks,
-        style = UiKitTheme.typography.footnote.light,
-        color = UiKitTheme.colors.text.general.regular.muted,
+        text = textWithLinks.toUpperCase(),
+        style = UiKitTheme2.typography.body2,
+        color = UiKitTheme2.colors.mainBlack,
         modifier = modifier,
     )
 }

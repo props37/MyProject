@@ -31,6 +31,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
 import ru.livetyping.zarina.core.uikit.otp.SmsOtpDefaults.RemainingTimeFormat
 import ru.livetyping.zarina.core.uikit.text.ZarinaOtpTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun SmsOtp(
@@ -50,17 +51,17 @@ public fun SmsOtp(
             .padding(contentPadding),
     ) {
         Text(
-            text = stringResource(R.string.uikit_enter_code_from_sms),
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.uikit_enter_code_from_sms).uppercase(),
+            style = UiKitTheme2.typography.h4,
+            color = UiKitTheme2.colors.mainBlack,
         )
         Spacer(modifier = Modifier.height(8.dp))
         val formattedPhone = rememberFormattedPhoneNumber(phone.value)
         val phoneString = formattedPhone ?: phone.value
         Text(
-            text = stringResource(R.string.uikit_we_sent_sms_code_to_phone_number, phoneString),
-            style = UiKitTheme.typography.tertiary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.uikit_we_sent_sms_code_to_phone_number, phoneString).uppercase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -118,9 +119,9 @@ public fun SmsOtp(
                             text = stringResource(
                                 id = R.string.uikit_code_can_be_sent_again_after,
                                 remainingTime,
-                            ),
-                            style = UiKitTheme.typography.tertiary.regular,
-                            color = UiKitTheme.colors.text.general.regular.default,
+                            ).uppercase(),
+                            style = UiKitTheme2.typography.body,
+                            color = UiKitTheme2.colors.mainBlack,
                             textAlign = TextAlign.Center,
                         )
                     }
