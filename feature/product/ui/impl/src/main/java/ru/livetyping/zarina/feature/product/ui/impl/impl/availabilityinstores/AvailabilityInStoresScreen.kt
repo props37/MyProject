@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.AvailabilityInStoresState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.SizeState
@@ -60,7 +60,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
@@ -88,8 +88,8 @@ private fun ScreenContent(
         if (availabilityInStoresState.city != null) {
             ZarinaItem {
                 Text(
-                    text = availabilityInStoresState.city.name,
-                    style = UiKitTheme.typography.secondary.bold,
+                    text = availabilityInStoresState.city.name.uppercase(),
+                    style = UiKitTheme2.typography.bodyBold,
                 )
             }
         }

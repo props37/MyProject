@@ -35,7 +35,7 @@ internal fun SizeRow(
                 isEnabled = size.offer.isAvailableInStores,
                 isSelected = size.isSelected,
             ) {
-                val heightText = size.offer.height?.let {
+                val heightText = size.offer.height?.height?.let {
                     stringResource(RCommon.string.res_height_cm, it)
                 }
                 val text = rememberSizeText(size, heightText)
@@ -51,9 +51,9 @@ private fun rememberSizeText(size: Size, heightText: String?): String {
     val isHeightVisible = size.isHeightVisible
     return remember(offer, isHeightVisible, heightText) {
         buildString {
-            append(offer.sizeEn)
-            if (offer.sizeRu != null) {
-                append(" ${offer.sizeRu}")
+            append(offer.sizeEn.size)
+            offer.sizeRu?.size?.let {
+                append(" $it")
             }
             if (isHeightVisible && heightText != null) {
                 append(" — $heightText")

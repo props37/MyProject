@@ -28,7 +28,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.model.StoreListState
 
@@ -125,9 +125,9 @@ private fun StoreListEmpty(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Text(
-            text = stringResource(R.string.product_is_not_available),
-            style = UiKitTheme.typography.primary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.product_is_not_available).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             textAlign = TextAlign.Center,
             modifier = Modifier.align(Alignment.Center),
         )
