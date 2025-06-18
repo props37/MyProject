@@ -52,11 +52,11 @@ public fun ZarinaPasswordTextField(
     label: (@Composable () -> Unit)? = {
         ZarinaTextFieldDefaults.AppearingLabel(
             textFieldValue = state.text.toString(),
-            label = stringResource(RCommon.string.res_password),
+            label = stringResource(RCommon.string.res_password).uppercase(),
         )
     },
     placeholder: (@Composable () -> Unit)? = {
-        Text(text = stringResource(RCommon.string.res_password))
+        Text(text = stringResource(RCommon.string.res_password).uppercase())
     },
     leadingContent: (@Composable () -> Unit)? = null,
     outerTrailingContent: (@Composable () -> Unit)? = null,

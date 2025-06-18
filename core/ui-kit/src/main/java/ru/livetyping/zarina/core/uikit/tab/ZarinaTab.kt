@@ -58,7 +58,7 @@ public fun ZarinaTab(
         modifier = modifier,
     ) {
         Text(
-            text = text,
+            text = text.uppercase(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

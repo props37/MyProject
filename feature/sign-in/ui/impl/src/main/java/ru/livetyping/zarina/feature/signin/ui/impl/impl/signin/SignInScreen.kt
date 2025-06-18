@@ -27,6 +27,7 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
@@ -86,7 +87,7 @@ private fun ScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.background.general.regular.default)
+                .background(UiKitTheme2.colors.white)
                 .windowInsetsPadding(
                     WindowInsets.statusBars
                         .union(WindowInsets.displayCutout),

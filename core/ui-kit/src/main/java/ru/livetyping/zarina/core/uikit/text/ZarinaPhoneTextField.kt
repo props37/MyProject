@@ -37,11 +37,11 @@ public fun ZarinaPhoneTextField(
     label: (@Composable () -> Unit)? = {
         ZarinaTextFieldDefaults.AppearingLabel(
             textFieldValue = state.text.toString(),
-            label = stringResource(RCommon.string.res_phone),
+            label = stringResource(RCommon.string.res_phone).uppercase(),
         )
     },
     placeholder: (@Composable () -> Unit)? = {
-        Text(text = stringResource(RCommon.string.res_phone))
+        Text(text = stringResource(RCommon.string.res_phone).uppercase())
     },
     leadingContent: (@Composable () -> Unit)? = null,
     innerTrailingContent: (@Composable () -> Unit)? = null,
