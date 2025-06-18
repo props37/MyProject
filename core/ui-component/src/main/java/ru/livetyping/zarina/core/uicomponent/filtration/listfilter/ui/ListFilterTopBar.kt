@@ -55,7 +55,7 @@ internal fun ListFilterTopBar(
                 ) {
                     Text(
                         text = stringResource(RCommon.string.res_reset).uppercase(),
-                        style = UiKitTheme.typography.caption1.regular,
+                        style = UiKitTheme2.typography.body,
                     )
                 }
             }

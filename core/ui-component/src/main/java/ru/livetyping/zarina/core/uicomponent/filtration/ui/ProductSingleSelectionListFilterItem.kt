@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductListFil
 import ru.livetyping.zarina.core.domain.model.product.filter.list.ProductSortFilterItem
 import ru.livetyping.zarina.core.domain.model.product.filter.list.sorting
 import ru.livetyping.zarina.core.uicommon.nameResId
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun ProductSingleSelectionFilterItem(
@@ -49,8 +49,8 @@ internal fun ProductSingleSelectionFilterItem(
         }
         Text(
             text = selectedText.uppercase(),
-            style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colors.text.general.regular.muted,
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.middleGray,
         )
 
         Spacer(modifier = Modifier.weight(1f))
