@@ -38,7 +38,7 @@ import ru.livetyping.zarina.core.uikit.slider.ZarinaRangeSlider
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldSize
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import kotlin.math.max
 import kotlin.math.min
 
@@ -82,9 +82,9 @@ internal fun ProductPriceFilter(
 
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.uikit_price_filter_price_rubbles),
-            style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.uikit_price_filter_price_rubbles).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +97,7 @@ internal fun ProductPriceFilter(
                 value = minPrice,
                 onValueChanged = { minPrice = it },
                 placeholderValue = limits.min,
-                leadingText = stringResource(R.string.uikit_price_filter_from).lowercase(),
+                leadingText = stringResource(R.string.uikit_price_filter_from).uppercase(),
                 onClearClicked = {
                     val newMinPrice = null
                     val newMaxPrice = maxPrice?.coerceMaxPrice(newMinPrice, limits)
@@ -121,7 +121,7 @@ internal fun ProductPriceFilter(
                 value = maxPrice,
                 onValueChanged = { maxPrice = it },
                 placeholderValue = limits.max,
-                leadingText = stringResource(R.string.uikit_price_filter_to).lowercase(),
+                leadingText = stringResource(R.string.uikit_price_filter_to).uppercase(),
                 onClearClicked = {
                     val newMaxPrice = null
                     val newMinPrice = minPrice?.coerceMinPrice(newMaxPrice, limits)
@@ -185,13 +185,13 @@ private fun TextField(
         },
         size = ZarinaTextFieldSize.Medium,
         placeholder = {
-            Text(text = placeholderValue.toString())
+            Text(text = placeholderValue.toString().uppercase())
         },
         leadingContent = {
             Text(
                 text = leadingText,
-                style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colors.text.general.regular.muted,
+                style = UiKitTheme2.typography.body2,
+                color = UiKitTheme2.colors.middleGray,
                 modifier = Modifier.padding(start = 8.dp),
             )
         },

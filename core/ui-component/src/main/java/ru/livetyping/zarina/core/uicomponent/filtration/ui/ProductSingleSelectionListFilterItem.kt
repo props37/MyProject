@@ -36,7 +36,7 @@ internal fun ProductSingleSelectionFilterItem(
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
-            text = stringResource(type.nameResId),
+            text = stringResource(type.nameResId).uppercase(),
             style = FilterTitleTextStyle,
             color = FilterTitleColor,
         )
@@ -48,7 +48,7 @@ internal fun ProductSingleSelectionFilterItem(
             else -> ""
         }
         Text(
-            text = selectedText,
+            text = selectedText.uppercase(),
             style = UiKitTheme.typography.secondary.light,
             color = UiKitTheme.colors.text.general.regular.muted,
         )

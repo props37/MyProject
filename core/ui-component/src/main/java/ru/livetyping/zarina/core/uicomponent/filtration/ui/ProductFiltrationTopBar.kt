@@ -17,7 +17,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaBackIconButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSize
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -31,13 +31,12 @@ internal fun ProductFiltrationTopBar(
         startContent = {
             ZarinaBackIconButton(
                 onClick = { onEvent(ProductFiltrationTopBarEvent.BackClicked) },
-                iconSize = 20.dp,
-                modifier = Modifier.padding(start = 2.dp),
             )
         },
         centerContent = {
             Text(
-                text = stringResource(RCommon.string.res_filters),
+                text = stringResource(RCommon.string.res_filters).uppercase(),
+                style = UiKitTheme2.typography.h3,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -51,12 +50,12 @@ internal fun ProductFiltrationTopBar(
                 ZarinaButton(
                     onClick = { onEvent(ProductFiltrationTopBarEvent.ResetFiltersClicked) },
                     size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.outlinedColors(),
+                    colors = ZarinaButtonDefaults.backlessColors(),
                     modifier = Modifier.padding(end = 8.dp),
                 ) {
                     Text(
                         text = stringResource(RCommon.string.res_reset).uppercase(),
-                        style = UiKitTheme.typography.caption1.regular,
+                        style = UiKitTheme2.typography.body,
                     )
                 }
             }
