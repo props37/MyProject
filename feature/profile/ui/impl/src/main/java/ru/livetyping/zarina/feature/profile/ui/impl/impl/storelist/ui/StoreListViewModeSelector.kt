@@ -28,7 +28,7 @@ internal fun StoreListViewModeSelector(
             val isSelected = mode == state.currentTab
 
             ZarinaTab(
-                text = stringResource(textResId),
+                text = stringResource(textResId).uppercase(),
                 onClick = {
                     val event = if (!isSelected) {
                         TabRowEvent.TabChanged(mode)

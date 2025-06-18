@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +43,8 @@ internal fun StoreListStoreModalBottomSheet(
             ZarinaTopBar(
                 startContent = {
                     Text(
-                        text = store.name,
-                        style = UiKitTheme.typography.primary.bold,
+                        text = store.name.uppercase(),
+                        style = UiKitTheme2.typography.body2Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -64,9 +64,9 @@ internal fun StoreListStoreModalBottomSheet(
             )
 
             Text(
-                text = remember(store) { getStoreDescription(store) },
-                style = UiKitTheme.typography.secondary.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = remember(store) { getStoreDescription(store).uppercase() },
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
 

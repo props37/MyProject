@@ -25,7 +25,7 @@ import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.model.StoreListState
 
@@ -132,15 +132,16 @@ private fun StoreListItem(
     ) {
         Column {
             Text(
-                text = store.name,
+                text = store.name.uppercase(),
                 style = StoreListItemNameTextStyle,
             )
 
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = store.address,
+                text = store.address.uppercase(),
                 style = StoreListItemInfoTextStyle,
+                color = UiKitTheme2.colors.middleGray,
             )
 
             val schedule = store.schedule
@@ -148,8 +149,9 @@ private fun StoreListItem(
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = schedule,
+                    text = schedule.uppercase(),
                     style = StoreListItemInfoTextStyle,
+                    color = UiKitTheme2.colors.middleGray,
                 )
             }
         }
@@ -190,10 +192,10 @@ private val StoreListItemContentPadding: PaddingValues
 
 private val StoreListItemNameTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private val StoreListItemInfoTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.tertiary.light
+    get() = UiKitTheme2.typography.body2
 
 private const val StoreListSkeletonItemCount = 12
