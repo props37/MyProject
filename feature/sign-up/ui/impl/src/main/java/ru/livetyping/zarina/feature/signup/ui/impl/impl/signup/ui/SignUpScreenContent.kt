@@ -48,6 +48,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.signup.ui.impl.R
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpEvent
 import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.model.SignUpState
@@ -168,10 +169,10 @@ private fun ColumnScope.PersonalDataFields(
                 stringResource(RCommon.string.res_first_name)
             } else ""
 
-            Text(text = label)
+            Text(text = label.uppercase())
         },
         placeholder = {
-            Text(text = stringResource(RCommon.string.res_first_name))
+            Text(text = stringResource(RCommon.string.res_first_name).uppercase())
         },
         innerTrailingContent = {
             ZarinaTextFieldDefaults.ClearButton(
@@ -208,7 +209,7 @@ private fun ColumnScope.PersonalDataFields(
     } else ""
 
     ZarinaTextField(
-        value = formattedBirthDate,
+        value = formattedBirthDate.uppercase(),
         onValueChanged = {},
         isEnabled = false,
         isError = isBirthDateInvalid,
@@ -217,10 +218,10 @@ private fun ColumnScope.PersonalDataFields(
                 stringResource(RCommon.string.res_birth_date)
             } else ""
 
-            Text(text = label)
+            Text(text = label.uppercase())
         },
         placeholder = {
-            Text(text = stringResource(RCommon.string.res_birth_date))
+            Text(text = stringResource(RCommon.string.res_birth_date).uppercase())
         },
         colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
         modifier = Modifier
@@ -238,10 +239,10 @@ private fun ColumnScope.PersonalDataFields(
                 stringResource(RCommon.string.res_email)
             } else ""
 
-            Text(text = label)
+            Text(text = label.uppercase())
         },
         placeholder = {
-            Text(text = stringResource(RCommon.string.res_email))
+            Text(text = stringResource(RCommon.string.res_email).uppercase())
         },
         innerTrailingContent = {
             ZarinaTextFieldDefaults.ClearButton(
@@ -312,8 +313,8 @@ private fun ColumnScope.SubscriptionSetup(
         onClick = { onReceiveEmailsChanged(!receiveEmails) },
         startContent = {
             Text(
-                text = stringResource(R.string.sign_up_receive_news_by_email),
-                style = UiKitTheme.typography.secondary.light,
+                text = stringResource(R.string.sign_up_receive_news_by_email).uppercase(),
+                style = UiKitTheme2.typography.body,
             )
         },
         endContent = {
@@ -335,8 +336,8 @@ private fun ColumnScope.SubscriptionSetup(
         onClick = { onReceiveSmsChanged(!receiveSms) },
         startContent = {
             Text(
-                text = stringResource(R.string.sign_up_receive_sms_notifications),
-                style = UiKitTheme.typography.secondary.light,
+                text = stringResource(R.string.sign_up_receive_sms_notifications).uppercase(),
+                style = UiKitTheme2.typography.body,
                 modifier = Modifier.weight(1f),
             )
         },

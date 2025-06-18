@@ -98,7 +98,7 @@ public object ZarinaDatePickerDefaults {
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
         text: String = stringResource(RCommon.string.res_select).uppercase(),
-        colors: ZarinaButtonColors = ZarinaButtonDefaults.outlinedColors(),
+        colors: ZarinaButtonColors = ZarinaButtonDefaults.backlessColors(),
     ) {
         ZarinaButton(
             onClick = onClick,
