@@ -1,10 +1,10 @@
 package ru.livetyping.zarina.core.network.impl
 
-internal class ZarinaApiHeaderProvider(private val appVersionName: String) {
+internal class ZarinaApiHeaderProvider(private val appVersionCode: Int) {
     fun provide(): Map<String, String> {
         return mapOf(
             KEY_CLIENT_SOURCE to VALUE_CLIENT_SOURCE,
-            KEY_CLIENT_VERSION to appVersionName,
+            KEY_CLIENT_VERSION to appVersionCode.toString(),
         )
     }
 
