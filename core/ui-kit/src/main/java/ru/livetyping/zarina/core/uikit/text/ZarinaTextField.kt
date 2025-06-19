@@ -427,7 +427,7 @@ public object ZarinaTextFieldDefaults {
         val labelValue = if (textFieldValue.isNotBlank()) label else ""
 
         Text(
-            text = labelValue,
+            text = labelValue.uppercase(),
             modifier = modifier,
         )
     }

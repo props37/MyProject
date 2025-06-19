@@ -223,7 +223,7 @@ internal object OrderPlacingScreenComponents {
 
                 Text(
                     text = textString(state.text).uppercase(),
-                    style = UiKitTheme2.typography.h4,
+                    style = UiKitTheme2.typography.body,
                     color = UiKitTheme2.colors.mainBlack,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
