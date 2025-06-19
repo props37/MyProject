@@ -1253,7 +1253,7 @@ internal object CartScreenComponents {
             modifier = modifier,
         ) { text ->
             if (text != null) {
-                Text(text = text)
+                Text(text = text.uppercase())
             }
         }
     }

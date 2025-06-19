@@ -24,6 +24,7 @@ import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -41,8 +42,8 @@ internal fun Store(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = store.store.name,
-                style = UiKitTheme.typography.secondary.light,
+                text = store.store.name.uppercase(),
+                style = UiKitTheme2.typography.body,
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -58,22 +59,24 @@ internal fun Store(
                 )
             }
             Text(
-                text = productAvailabilityText,
-                style = UiKitTheme.typography.tertiary.regular,
+                text = productAvailabilityText.uppercase(),
+                style = UiKitTheme2.typography.body2,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = store.store.address,
-                style = UiKitTheme.typography.tertiary.light,
+                text = store.store.address.uppercase(),
+                style = UiKitTheme2.typography.body2,
+                color = UiKitTheme2.colors.middleGray,
             )
 
             store.store.schedule?.let { schedule ->
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = schedule,
-                    style = UiKitTheme.typography.tertiary.light,
+                    style = UiKitTheme2.typography.body2,
+                    color = UiKitTheme2.colors.middleGray,
                 )
             }
         }
@@ -81,7 +84,7 @@ internal fun Store(
         Icon(
             imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
             contentDescription = stringResource(R.string.cart_select_store),
-            tint = UiKitTheme.colors.icon.regular.default,
+            tint = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .size(16.dp)

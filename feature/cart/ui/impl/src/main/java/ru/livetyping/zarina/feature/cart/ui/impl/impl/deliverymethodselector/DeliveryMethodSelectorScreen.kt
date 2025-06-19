@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethod
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.model.DeliveryMethodSelectorState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliverymethodselector.ui.DeliveryMethodSelector
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
@@ -59,7 +59,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),

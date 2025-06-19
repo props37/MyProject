@@ -21,6 +21,7 @@ import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -36,15 +37,16 @@ internal fun DeliveryMethod(
         startContent = {
             Column {
                 Text(
-                    text = method.name,
-                    style = UiKitTheme.typography.secondary.light,
+                    text = method.name.uppercase(),
+                    style = UiKitTheme2.typography.body,
                 )
 
                 method.description?.let {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = it,
-                        style = UiKitTheme.typography.footnote.light,
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.middleGray
                     )
                 }
             }
@@ -53,7 +55,7 @@ internal fun DeliveryMethod(
             Icon(
                 imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
                 contentDescription = stringResource(R.string.cart_select_delivery_method),
-                tint = UiKitTheme.colors.icon.regular.default,
+                tint = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier
                     .size(16.dp)
                     .rotate(degrees = 90f),

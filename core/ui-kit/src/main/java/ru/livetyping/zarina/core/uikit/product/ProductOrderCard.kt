@@ -126,6 +126,7 @@ public fun ProductOrderCard(
                         size = ZarinaButtonSelectorSize.Medium,
                         isEnabled = countStyle.isEnabled,
                         isEditable = countStyle.isEditable,
+                        applyContentPaddingToDivider = true,
                     ) {
                         Text(text = count.toString())
                     }

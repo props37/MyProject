@@ -34,7 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -73,8 +73,8 @@ public fun ZarinaButtonSelector(
         ) {
             label?.let { content ->
                 CompositionLocalProvider(
-                    LocalTextStyle provides UiKitTheme.typography.footnote.light,
-                    LocalContentColor provides UiKitTheme.colors.text.general.regular.muted,
+                    LocalTextStyle provides UiKitTheme2.typography.body2,
+                    LocalContentColor provides UiKitTheme2.colors.middleGray,
                 ) {
                     content()
                 }
@@ -82,9 +82,9 @@ public fun ZarinaButtonSelector(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val contentColor = if (content != null) {
-                    UiKitTheme.colors.text.general.regular.default
+                    UiKitTheme2.colors.mainBlack
                 } else {
-                    UiKitTheme.colors.text.general.regular.muted
+                    UiKitTheme2.colors.middleGray
                 }
 
                 CompositionLocalProvider(
@@ -138,9 +138,9 @@ public object ZarinaButtonSelectorDefaults {
     ) {
         val tint by animateColorAsState(
             targetValue = if (isEditable) {
-                UiKitTheme.colors.icon.regular.default
+                UiKitTheme2.colors.mainBlack
             } else {
-                UiKitTheme.colors.icon.regular.disabled
+                UiKitTheme2.colors.middleGray
             },
             label = "TrailingArrow tint",
         )
@@ -157,7 +157,7 @@ public object ZarinaButtonSelectorDefaults {
 
     @Composable
     public fun textStyleFromSize(size: ZarinaButtonSelectorSize): TextStyle = when (size) {
-        ZarinaButtonSelectorSize.Large -> UiKitTheme.typography.secondary.light
-        ZarinaButtonSelectorSize.Medium -> UiKitTheme.typography.tertiary.light
+        ZarinaButtonSelectorSize.Large -> UiKitTheme2.typography.body
+        ZarinaButtonSelectorSize.Medium -> UiKitTheme2.typography.body
     }
 }
