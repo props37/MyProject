@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
 import ru.livetyping.zarina.feature.payment.ui.impl.payment.ui.PaymentWebView
 import ru.livetyping.zarina.feature.payment.ui.impl.payment.ui.TopBar
@@ -51,7 +51,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .safeDrawingPadding()
             .bottomNavBarPadding(WindowInsets.ime),
     ) {
