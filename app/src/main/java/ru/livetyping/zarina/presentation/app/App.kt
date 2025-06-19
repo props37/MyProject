@@ -31,6 +31,7 @@ import ru.livetyping.zarina.core.uikit.bottombar.navigation.sizetracker.remember
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheetDefaults
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.LocalZarinaToastController2
+import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer
 import ru.livetyping.zarina.core.uikit.toast.ZarinaToastContainer2
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController
 import ru.livetyping.zarina.core.uikit.toast.rememberZarinaToastController2
@@ -75,12 +76,21 @@ fun App(
         val hazeState = rememberHazeState()
 
         Box(modifier = Modifier.fillMaxSize()) {
+            ZarinaToastContainer(
+                controller = zarinaToastController,
+                shouldPaintStatusBar = true,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f)
+                    .fillMaxWidth(),
+            )
+
             ZarinaToastContainer2(
                 controller = zarinaToastController2,
                 hazeState = hazeState,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .zIndex(1f)
+                    .zIndex(2f)
                     .fillMaxWidth(),
             )
 
