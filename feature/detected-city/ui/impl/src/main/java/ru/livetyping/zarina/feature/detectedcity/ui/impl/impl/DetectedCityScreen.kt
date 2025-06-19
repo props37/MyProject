@@ -6,11 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.dialog.ZarinaDialogContainer
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.R
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.ui.rememberBodyText
@@ -45,10 +49,10 @@ private fun ScreenContent(
 
     ZarinaDialogContainer(
         title = {
-            Text(text = stringResource(R.string.detected_city_title))
+            Text(text = stringResource(R.string.detected_city_title).uppercase())
         },
         body = {
-            Text(text = rememberBodyText(cityName))
+            Text(text = rememberBodyText(cityName).toUpperCase())
         },
         buttons = {
             ZarinaButton(
@@ -59,4 +63,19 @@ private fun ScreenContent(
             }
         },
     )
+}
+
+@Composable
+@Preview
+private fun Preview() {
+    ZarinaTheme2 {
+        ScreenContent(
+            cityName = "Москва",
+            onCloseClicked = {},
+            sideEffects = emptyFlow(),
+            navActions = DetectedCityFeature.NavActions(
+                onCloseClicked = {},
+            ),
+        )
+    }
 }
