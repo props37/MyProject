@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
+import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
@@ -71,6 +73,7 @@ private fun ZarinaClubModalBottomSheetContent(
                 end = 2.dp,
                 bottom = 4.dp,
             ),
+            windowInsets = WindowInsets.none,
         ) {
             Text(
                 text = stringResource(R.string.uikit_for_zarina_club_members).uppercase(),

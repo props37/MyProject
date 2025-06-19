@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaMapCluster(
@@ -23,12 +23,12 @@ public fun ZarinaMapCluster(
         modifier = modifier
             .defaultMinSize(Size, Size)
             .background(
-                color = UiKitTheme.colors.background.general.regular.default,
+                color = UiKitTheme2.colors.mainBlack,
                 shape = CircleShape,
             )
             .border(
                 width = 1.dp,
-                color = UiKitTheme.colors.border.general.active,
+                color = UiKitTheme2.colors.mainBlack,
                 shape = CircleShape,
             ),
     ) {
@@ -38,9 +38,9 @@ public fun ZarinaMapCluster(
             "$MaxClusterSize+"
         }
         Text(
-            text = text,
-            style = UiKitTheme.typography.tertiary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = text.uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             maxLines = 1,
         )
     }

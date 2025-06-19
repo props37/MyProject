@@ -51,10 +51,10 @@ internal fun AddressSelectorBlock(
                 val text = if (streetSelectorTextFieldState.text.isNotEmpty()) {
                     stringResource(R.string.cart_street)
                 } else ""
-                Text(text = text)
+                Text(text = text.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(R.string.cart_street))
+                Text(text = stringResource(R.string.cart_street).uppercase())
             },
             colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
             interactionSource = streetInteractionSource,
@@ -85,10 +85,10 @@ internal fun AddressSelectorBlock(
                     val text = if (buildingSelectorTextFieldState.text.isNotEmpty()) {
                         stringResource(R.string.cart_building)
                     } else ""
-                    Text(text = text)
+                    Text(text = text.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(R.string.cart_building))
+                    Text(text = stringResource(R.string.cart_building).uppercase())
                 },
                 colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                 interactionSource = buildingInteractionSource,
@@ -104,10 +104,10 @@ internal fun AddressSelectorBlock(
                     val text = if (apartmentSelectorTextFieldState.text.isNotEmpty()) {
                         stringResource(R.string.cart_apartment_or_office)
                     } else ""
-                    Text(text = text)
+                    Text(text = text.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(R.string.cart_apartment_or_office))
+                    Text(text = stringResource(R.string.cart_apartment_or_office).uppercase())
                 },
                 colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                 onKeyboardAction = { default ->

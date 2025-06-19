@@ -42,6 +42,7 @@ import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -129,7 +130,10 @@ private fun Content(
     Column(modifier = modifier.fillMaxSize()) {
         ZarinaTopBar(
             centerContent = {
-                Text(text = title)
+                Text(
+                    text = title.uppercase(),
+                    style = UiKitTheme2.typography.h4,
+                )
             },
             endContent = {
                 ZarinaCloseIconButton(
@@ -170,7 +174,7 @@ private fun SearchTextField(
         state = state,
         placeholder = {
             Text(
-                text = placeholder,
+                text = placeholder.uppercase(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )

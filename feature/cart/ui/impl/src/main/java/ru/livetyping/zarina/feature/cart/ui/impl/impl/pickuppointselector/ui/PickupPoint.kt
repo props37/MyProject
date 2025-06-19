@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun PickupPoint(
@@ -32,14 +33,14 @@ internal fun PickupPoint(
         startContent = {
             Column {
                 Text(
-                    text = pickupPoint.title,
-                    style = UiKitTheme.typography.secondary.light,
+                    text = pickupPoint.title.uppercase(),
+                    style = UiKitTheme2.typography.body,
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = pickupPoint.title,
-                    style = UiKitTheme.typography.footnote.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
+                    text = pickupPoint.address.uppercase(),
+                    style = UiKitTheme2.typography.body2,
+                    color = UiKitTheme2.colors.middleGray,
                 )
             }
         },
