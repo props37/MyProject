@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 
 @Composable
@@ -42,8 +42,8 @@ internal fun ImageBanner(
         if (showTitle) {
             Text(
                 text = banner.title?.uppercase().orEmpty(),
-                style = UiKitTheme.typography.tertiary.regular,
-                color = UiKitTheme.colors.text.general.inversed.default,
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.white,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
