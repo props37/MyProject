@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
@@ -21,6 +22,7 @@ internal fun ImageBanner(
     showTitle: Boolean,
     onBannerDisplayed: () -> Unit,
     modifier: Modifier = Modifier,
+    titleBottomPadding: Dp = 0.dp,
 ) {
     Box(
         modifier = modifier
@@ -45,7 +47,7 @@ internal fun ImageBanner(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 12.dp)
+                    .padding(bottom = 12.dp + titleBottomPadding)
                     .padding(horizontal = 12.dp),
             )
         }

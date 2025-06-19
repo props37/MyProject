@@ -8,8 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.media.MediaType
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.MultipleBanners
 import timber.log.Timber
@@ -27,14 +28,18 @@ internal fun GridBanners(
                 .chunked(BannerRowItemCount)
         }
 
-        bannerRows.fastForEach { rowBanners ->
+        bannerRows.forEachIndexed { index, rowBanners ->
             Row(modifier = Modifier.weight(1f)) {
-
+                val titleBottomPadding = if (index == bannerRows.lastIndex) {
+                    bottomNavBarHeightAsState().value
+                } else {
+                    0.dp
+                }
                 val bannerModifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
 
-                rowBanners.fastForEach { banner ->
+                rowBanners.forEach { banner ->
                     when (banner?.media?.type) {
                         MediaType.IMAGE -> {
                             ImageBanner(
@@ -42,6 +47,7 @@ internal fun GridBanners(
                                 onBannerClicked = onBannerClicked,
                                 showTitle = true,
                                 onBannerDisplayed = onBannerDisplayed,
+                                titleBottomPadding = titleBottomPadding,
                                 modifier = bannerModifier,
                             )
                         }
