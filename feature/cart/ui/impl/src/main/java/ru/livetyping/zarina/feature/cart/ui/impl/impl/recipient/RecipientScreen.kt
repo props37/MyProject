@@ -40,7 +40,7 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.recipient.model.RecipientState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.ui.topbar.CheckoutTopBar
@@ -83,7 +83,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),
@@ -98,9 +98,9 @@ private fun ScreenContent(
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.cart_personal_data),
-                style = UiKitTheme.typography.secondary.bold,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = stringResource(R.string.cart_personal_data).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
+                color = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -113,10 +113,10 @@ private fun ScreenContent(
                     val label = if (lastNameTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_last_name)
                     } else ""
-                    Text(label)
+                    Text(label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_last_name))
+                    Text(text = stringResource(RCommon.string.res_last_name).uppercase())
                 },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
@@ -144,10 +144,10 @@ private fun ScreenContent(
                     val label = if (firstNameTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_first_name)
                     } else ""
-                    Text(label)
+                    Text(label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_first_name))
+                    Text(text = stringResource(RCommon.string.res_first_name).uppercase())
                 },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
@@ -168,9 +168,9 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = stringResource(R.string.cart_contacts),
-                style = UiKitTheme.typography.secondary.bold,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = stringResource(R.string.cart_contacts).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
+                color = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -199,10 +199,10 @@ private fun ScreenContent(
                     val label = if (emailTextFieldState.text.isNotEmpty()) {
                         stringResource(RCommon.string.res_email)
                     } else ""
-                    Text(label)
+                    Text(label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_email))
+                    Text(text = stringResource(RCommon.string.res_email).uppercase())
                 },
                 innerTrailingContent = {
                     ZarinaTextFieldDefaults.ClearButton(
