@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.ui
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,11 +14,7 @@ internal fun TopBar(
 ) {
     ZarinaTopBar(
         endContent = {
-            ZarinaCloseIconButton(
-                onClick = onCloseClicked,
-                iconSize = 20.dp,
-                modifier = Modifier.padding(end = 2.dp),
-            )
+            ZarinaCloseIconButton(onClick = onCloseClicked)
         },
         contentPadding = PaddingValues(vertical = 4.dp),
         modifier = modifier,

@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
@@ -29,6 +30,7 @@ import ru.livetyping.zarina.core.uikit.order.OrderCard
 import ru.livetyping.zarina.core.uikit.order.color
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.model.ButtonType
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.model.DescriptionType
@@ -101,8 +103,8 @@ internal fun OrderConfirmedContent(
 private fun Title(modifier: Modifier = Modifier) {
     ZarinaItem(modifier = modifier) {
         Text(
-            text = stringResource(R.string.cart_thanks_for_order),
-            style = UiKitTheme.typography.primary.bold,
+            text = stringResource(R.string.cart_thanks_for_order).uppercase(),
+            style = UiKitTheme2.typography.h4,
         )
     }
 }
@@ -126,7 +128,7 @@ private fun Description(
                 R.string.cart_order_confirmed_description_should_be_paid_upon_receipt
             }
         }
-        val boldTextStyle = UiKitTheme.typography.secondary.bold
+        val boldTextStyle = UiKitTheme2.typography.bodyBold
         val orderNumber = remember(order.number) {
             "№${Typography.nbsp}${order.number.value}"
         }
@@ -168,8 +170,8 @@ private fun Description(
         }
 
         Text(
-            text = descriptionText,
-            style = UiKitTheme.typography.secondary.regular,
+            text = descriptionText.toUpperCase(),
+            style = UiKitTheme2.typography.body,
         )
     }
 }
