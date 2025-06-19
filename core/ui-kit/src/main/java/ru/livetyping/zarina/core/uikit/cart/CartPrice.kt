@@ -39,7 +39,7 @@ import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.DefaultPriceNameTe
 import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.DefaultPriceTextStyle
 import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.TotalPriceNameTextStyle
 import ru.livetyping.zarina.core.uikit.cart.CartPriceDefaults.TotalPriceTextStyle
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -116,9 +116,9 @@ public fun CartPrice(
 
             if (!isDeliveryPriceIncluded) {
                 Text(
-                    text = stringResource(R.string.uikit_excluding_delivery),
-                    style = UiKitTheme.typography.tertiary.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
+                    text = stringResource(R.string.uikit_excluding_delivery).uppercase(),
+                    style = UiKitTheme2.typography.body2,
+                    color = UiKitTheme2.colors.middleGray,
                 )
             }
         }
@@ -141,7 +141,7 @@ private fun PriceItem(
         modifier = modifier.height(IntrinsicSize.Min),
     ) {
         Text(
-            text = name,
+            text = name.uppercase(),
             style = nameTextStyle,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -183,27 +183,27 @@ private fun PriceItem(
 public object CartPriceDefaults {
     internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
     internal val ContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.general.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
     internal val ContentPadding: PaddingValues get() = PaddingValues(16.dp)
 
     internal val DefaultPriceNameTextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.light
+        get() = UiKitTheme2.typography.body
 
     internal val DefaultPriceTextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.regular
+        get() = UiKitTheme2.typography.body
 
     internal val TotalPriceNameTextStyle
         @Composable
-        get() = UiKitTheme.typography.primary.regular
+        get() = DefaultPriceNameTextStyle
 
     internal val TotalPriceTextStyle
         @Composable
-        get() = UiKitTheme.typography.primary.bold
+        get() = UiKitTheme2.typography.h4
 }

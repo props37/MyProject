@@ -6,6 +6,7 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -15,9 +16,12 @@ import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,7 +94,10 @@ public fun ZarinaPromoCodeTextField(
         size = size,
         inputTransformation = inputTransformation,
         textStyle = textStyle,
-        label = { Text(text = label) },
+        label = {
+            val text = if (state.text.isNotBlank()) label else ""
+            Text(text = text)
+        },
         placeholder = { Text(text = placeholder) },
         leadingContent = leadingContent,
         innerTrailingContent = innerTrailingContent,
@@ -143,32 +150,34 @@ public object ZarinaPromoCodeTextFieldDefaults {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     public fun ApplyButton(
         isVisible: Boolean,
         onClick: () -> Unit,
         modifier: Modifier = Modifier,
     ) {
-        @Suppress("NAME_SHADOWING")
-        AnimatedContent(
-            targetState = isVisible,
-            transitionSpec = {
-                AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
-            },
-            contentAlignment = Alignment.Center,
-            label = "ApplyButton",
-        ) { isVisible ->
-            if (isVisible) {
-                ZarinaButton(
-                    onClick = onClick,
-                    size = ZarinaButtonSize.Small,
-                    colors = ZarinaButtonDefaults.outlinedColors(),
-                    modifier = modifier,
-                ) {
-                    Text(
-                        text = stringResource(RCommon.string.res_apply).uppercase(),
-                        style = UiKitTheme.typography.caption1.regular,
-                    )
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+            AnimatedContent(
+                targetState = isVisible,
+                transitionSpec = {
+                    AnimatedContentDefaultTransitionSpec.using(SizeTransform(clip = false))
+                },
+                contentAlignment = Alignment.Center,
+                label = "ApplyButton",
+            ) { isVisible ->
+                if (isVisible) {
+                    ZarinaButton(
+                        onClick = onClick,
+                        size = ZarinaButtonSize.Small,
+                        colors = ZarinaButtonDefaults.backlessColors(),
+                        modifier = modifier.heightIn(min = 36.dp),
+                    ) {
+                        Text(
+                            text = stringResource(RCommon.string.res_apply).uppercase(),
+                            style = UiKitTheme.typography.caption1.regular,
+                        )
+                    }
                 }
             }
         }
