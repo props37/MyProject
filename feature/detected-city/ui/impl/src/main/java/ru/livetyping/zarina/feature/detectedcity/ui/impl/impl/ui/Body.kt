@@ -5,13 +5,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.R
 
 @Composable
 internal fun rememberBodyText(cityName: String): AnnotatedString {
     val bodyTextRaw = stringResource(R.string.detected_city_body, cityName)
-    val cityNameStyle = UiKitTheme.typography.secondary.bold
+    val cityNameStyle = UiKitTheme2.typography.bodyBold
     return remember(bodyTextRaw, cityNameStyle) {
         buildAnnotatedString {
             append(bodyTextRaw)

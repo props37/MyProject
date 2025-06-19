@@ -28,7 +28,7 @@ internal fun BonusHistoryTabRow(
             val isSelected = tab == state.currentTab
 
             ZarinaTab(
-                text = stringResource(textResId),
+                text = stringResource(textResId).uppercase(),
                 onClick = {
                     val event = if (!isSelected) {
                         TabRowEvent.TabChanged(tab)

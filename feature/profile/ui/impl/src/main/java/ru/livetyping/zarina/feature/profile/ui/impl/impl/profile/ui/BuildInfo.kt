@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import ru.livetyping.zarina.core.platform.copyTextToClipboard
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileState
 
@@ -22,9 +22,9 @@ internal fun BuildInfo(
     val text = "$appVersionTitle ${buildInfo.appVersion}"
 
     Text(
-        text = text,
-        style = UiKitTheme.typography.footnote.regular,
-        color = UiKitTheme.colors.text.general.regular.muted,
+        text = text.uppercase(),
+        style = UiKitTheme2.typography.body,
+        color = UiKitTheme2.colors.middleGray,
         modifier = modifier.combinedClickable(
             interactionSource = null,
             indication = null,

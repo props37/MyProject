@@ -32,7 +32,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.icon.ZarinaCheckmarkIcon
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun ListFilterItems(
@@ -50,8 +50,8 @@ internal fun ListFilterItems(
             item(key = cityHeader.id.value) {
                 ZarinaItem(modifier = Modifier.animateZarinaItem(this)) {
                     Text(
-                        text = cityHeader.name,
-                        style = UiKitTheme.typography.secondary.bold,
+                        text = cityHeader.name.uppercase(),
+                        style = UiKitTheme2.typography.bodyBold,
                     )
                 }
             }
@@ -108,9 +108,9 @@ private fun FilterItem(
         }
 
         Text(
-            text = name,
-            style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = name.uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

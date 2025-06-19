@@ -35,6 +35,7 @@ import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.loyaltyprogram.model.LoyaltyProgramState
@@ -130,14 +131,14 @@ private fun LoyaltyProgramInfo(
 
     Column(modifier = modifier) {
         LoyaltyProgramInfoItem(
-            headerText = stringResource(R.string.profile_loyalty_program_level),
+            headerText = stringResource(R.string.profile_loyalty_program_level).uppercase(),
             bodyText = loyaltyCard?.currentLevelName,
         )
 
         divider()
 
         LoyaltyProgramInfoItem(
-            headerText = stringResource(R.string.profile_my_bonuses),
+            headerText = stringResource(R.string.profile_my_bonuses).uppercase(),
             bodyText = loyaltyCard?.bonuses?.bonusCount?.let { count ->
                 pluralStringResource(
                     id = RCommon.plurals.res_bonus_count,
@@ -173,7 +174,7 @@ private fun LoyaltyProgramPolicies(
         onClick = { context.openUrlInCustomTabs(policyUrl) },
         startContent = {
             Text(
-                text = stringResource(R.string.profile_loyalty_program_policies),
+                text = stringResource(R.string.profile_loyalty_program_policies).uppercase(),
                 style = TextStyleDefault,
             )
         },
@@ -200,7 +201,7 @@ private fun BonusHistory(
         onClick = onClick,
         startContent = {
             Text(
-                text = stringResource(R.string.profile_bonus_account_history),
+                text = stringResource(R.string.profile_bonus_account_history).uppercase(),
                 style = TextStyleDefault,
             )
         },
@@ -230,9 +231,9 @@ private fun LoyaltyProgramInfoItem(
     ) {
         Column {
             Text(
-                text = headerText,
-                style = UiKitTheme.typography.footnote.light,
-                color = UiKitTheme.colors.text.general.regular.muted,
+                text = headerText.uppercase(),
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.middleGray,
             )
 
             Spacer(modifier = Modifier.height(2.dp))
@@ -246,7 +247,7 @@ private fun LoyaltyProgramInfoItem(
             ) { text ->
                 if (text != null) {
                     Text(
-                        text = text,
+                        text = text.uppercase(),
                         style = TextStyleDefault,
                     )
                 } else {
@@ -265,7 +266,7 @@ private enum class LoyaltyProgramContentKey { SuccessAndLoading }
 
 private val TextStyleDefault: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private val ItemContentPadding: PaddingValues
     get() = PaddingValues(horizontal = 16.dp, vertical = 12.dp)

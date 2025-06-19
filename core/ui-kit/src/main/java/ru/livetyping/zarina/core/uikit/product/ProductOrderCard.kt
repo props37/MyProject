@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
@@ -30,8 +31,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -44,7 +43,6 @@ import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSelector
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonSelectorSize
-import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.ImageAspectRatio
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.ImageHeight
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.InfoTextStyle
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardDefaults.SizeHeightSeparator
@@ -53,6 +51,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -91,10 +90,10 @@ public fun ProductOrderCard(
             contentScale = ContentScale.Crop,
             onSuccess = { isImageShimmerEnabled = false },
             modifier = Modifier
-                .height(ImageHeight)
-                .aspectRatio(ImageAspectRatio)
+                .requiredHeight(ImageHeight)
+                .aspectRatio(ProductDefaults.MediaAspectRatio)
                 .shimmerToggleable(rememberZarinaSkeletonShimmer(), isImageShimmerEnabled)
-                .background(UiKitTheme.colors.background.skeleton),
+                .background(UiKitTheme2.colors.skeletonBackground),
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -102,8 +101,8 @@ public fun ProductOrderCard(
         Column {
             Text(
                 text = name.uppercase(),
-                style = UiKitTheme.typography.caption1.regular,
-                color = UiKitTheme.colors.text.general.regular.default,
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.mainBlack,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -161,7 +160,7 @@ public fun ProductOrderCardSkeleton(
             shape = RectangleShape,
             modifier = Modifier
                 .height(ImageHeight)
-                .aspectRatio(ImageAspectRatio),
+                .aspectRatio(ProductDefaults.MediaAspectRatio),
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -228,15 +227,15 @@ private fun SizeText(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(RCommon.string.res_size),
+            text = stringResource(RCommon.string.res_size).uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.disabled,
+            color = UiKitTheme2.colors.middleGray,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = size + sizeRu.orEmpty(),
+            text = (size + sizeRu.orEmpty()).uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.default,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         if (height != null) {
@@ -244,13 +243,13 @@ private fun SizeText(
             Text(
                 text = SizeHeightSeparator,
                 style = InfoTextStyle,
-                color = UiKitTheme.colors.text.general.regular.disabled,
+                color = UiKitTheme2.colors.middleGray,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(RCommon.string.res_height_cm, height),
+                text = stringResource(RCommon.string.res_height_cm, height).uppercase(),
                 style = InfoTextStyle,
-                color = UiKitTheme.colors.text.general.regular.default,
+                color = UiKitTheme2.colors.mainBlack,
             )
         }
     }
@@ -266,15 +265,15 @@ private fun ColorText(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(RCommon.string.res_color),
+            text = stringResource(RCommon.string.res_color).uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.disabled,
+            color = UiKitTheme2.colors.middleGray,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = color.name.capitalize(Locale.current),
+            text = color.name.uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.default,
+            color = UiKitTheme2.colors.mainBlack,
         )
     }
 }
@@ -289,15 +288,15 @@ private fun CountInfoText(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(RCommon.string.res_quantity),
+            text = stringResource(RCommon.string.res_quantity).uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.disabled,
+            color = UiKitTheme2.colors.middleGray,
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = stringResource(R.string.uikit_item_count, count.toString()),
+            text = stringResource(R.string.uikit_item_count, count.toString()).uppercase(),
             style = InfoTextStyle,
-            color = UiKitTheme.colors.text.general.regular.default,
+            color = UiKitTheme2.colors.mainBlack,
         )
     }
 }
@@ -317,14 +316,14 @@ private fun Price(
             val priceForOne = rememberFormattedPrice(price.currentPrice)
             Text(
                 text = stringResource(RCommon.string.res_price_in_rubles_for_count, priceForOne),
-                style = UiKitTheme.typography.footnote.light,
-                color = UiKitTheme.colors.text.general.regular.muted,
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.middleGray,
             )
             Spacer(modifier = Modifier.height(2.dp))
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val textStyle = UiKitTheme.typography.secondary.regular
+            val textStyle = UiKitTheme2.typography.h4
             val totalOriginalPrice = rememberFormattedPrice(
                 price.originalPrice.multiply(BigDecimal(count))
             )
@@ -335,7 +334,7 @@ private fun Price(
                 Text(
                     text = stringResource(RCommon.string.res_price_in_rubles, totalOriginalPrice),
                     style = textStyle,
-                    color = UiKitTheme.colors.text.general.regular.disabled,
+                    color = UiKitTheme2.colors.middleGray,
                     textDecoration = TextDecoration.LineThrough,
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -343,7 +342,7 @@ private fun Price(
             Text(
                 text = stringResource(RCommon.string.res_price_in_rubles, totalCurrentPrice),
                 style = textStyle,
-                color = UiKitTheme.colors.text.general.regular.default,
+                color = UiKitTheme2.colors.mainBlack,
             )
         }
     }
@@ -366,17 +365,16 @@ public sealed class ProductOrderCardCountStyle {
 public object ProductOrderCardDefaults {
     internal val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
     internal val ContentPadding: PaddingValues
         get() = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
 
     internal val ImageHeight: Dp get() = 128.dp
-    internal const val ImageAspectRatio = 0.72f
 
     internal val InfoTextStyle: TextStyle
         @Composable
-        get() = UiKitTheme.typography.footnote.regular
+        get() = UiKitTheme2.typography.body2
 
     internal const val SizeHeightSeparator = "|"
 }

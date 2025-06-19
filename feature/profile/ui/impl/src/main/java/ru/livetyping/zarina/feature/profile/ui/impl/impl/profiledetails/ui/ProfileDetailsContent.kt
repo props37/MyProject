@@ -34,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
@@ -56,6 +57,7 @@ import ru.livetyping.zarina.core.uikit.switchh.ZarinaSwitch
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profiledetails.model.ProfileDetailsState
@@ -172,7 +174,7 @@ private fun ProfileDetailsImpl(
 
         ZarinaButton(
             onClick = { onEvent(ProfileDetailsEvent.DeleteAccountClicked) },
-            colors = ZarinaButtonDefaults.filledColors(),
+            colors = ZarinaButtonDefaults.backlessErrorColors(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -217,10 +219,10 @@ private fun PersonalData(
                     stringResource(RCommon.string.res_last_name)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_last_name))
+                Text(text = stringResource(RCommon.string.res_last_name).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -249,10 +251,10 @@ private fun PersonalData(
                     stringResource(RCommon.string.res_first_name)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_first_name))
+                Text(text = stringResource(RCommon.string.res_first_name).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -292,10 +294,10 @@ private fun PersonalData(
                     stringResource(RCommon.string.res_birth_date)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_birth_date))
+                Text(text = stringResource(RCommon.string.res_birth_date).uppercase())
             },
             colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
             modifier = Modifier
@@ -443,15 +445,15 @@ private fun Policies(
     val text = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.profile_newsletter_subscription_policies),
         substringToUrl = substringToUrl,
-        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme2.typography.body2.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = context::openUrlInCustomTabs,
     )
 
     Text(
-        text = text,
-        style = UiKitTheme.typography.footnote.light,
-        color = UiKitTheme.colors.text.general.regular.default,
+        text = text.toUpperCase(),
+        style = UiKitTheme2.typography.body2,
+        color = UiKitTheme2.colors.mainBlack,
         modifier = modifier,
     )
 }
@@ -466,9 +468,9 @@ private fun BlockTitle(
         contentPadding = PaddingValues(vertical = 4.dp),
     ) {
         Text(
-            text = text,
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = text.uppercase(),
+            style = UiKitTheme2.typography.h4,
+            color = UiKitTheme2.colors.mainBlack,
         )
     }
 }
@@ -489,18 +491,18 @@ private fun BlockItem(
             Column {
                 if (title != null) {
                     Text(
-                        text = title,
-                        style = UiKitTheme.typography.footnote.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        text = title.uppercase(),
+                        style = UiKitTheme2.typography.body2,
+                        color = UiKitTheme2.colors.middleGray,
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
                 }
 
                 Text(
-                    text = body,
+                    text = body.uppercase(),
                     style = ItemBodyTextStyle,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    color = UiKitTheme2.colors.mainBlack,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -509,9 +511,9 @@ private fun BlockItem(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = description,
-                        style = UiKitTheme.typography.footnote.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        text = description.uppercase(),
+                        style = UiKitTheme2.typography.body2,
+                        color = UiKitTheme2.colors.middleGray,
                     )
                 }
             }
@@ -539,6 +541,6 @@ private fun BlockItemEndArrow(
 
 private val ItemBodyTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private enum class ProfileDetailsContentKey { Success }

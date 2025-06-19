@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 // TODO: [Low] Add maxWidth to support landscape orientation
 
@@ -71,17 +71,13 @@ public fun ZarinaDialogContainer(
         horizontalAlignment = horizontalAlignment,
         modifier = modifier,
     ) {
-        CompositionLocalProvider(
-            LocalTextStyle provides UiKitTheme.typography.primary.bold,
-        ) {
+        CompositionLocalProvider(LocalTextStyle provides UiKitTheme2.typography.h4) {
             title()
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        CompositionLocalProvider(
-            LocalTextStyle provides UiKitTheme.typography.secondary.regular,
-        ) {
+        CompositionLocalProvider(LocalTextStyle provides UiKitTheme2.typography.body) {
             body()
         }
 
@@ -97,11 +93,11 @@ public fun ZarinaDialogContainer(
 public object ZarinaDialogContainerDefaults {
     public val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
     public val ContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.general.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
     public val Shape: Shape get() = RoundedCornerShape(4.dp)
     public val Elevation: Dp get() = 12.dp

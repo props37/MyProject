@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.model.PasswordRecoveryState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.ui.PasswordRecoveryContent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.ui.TopBar
@@ -52,7 +53,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),

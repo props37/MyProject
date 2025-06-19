@@ -12,7 +12,7 @@ import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationS
 import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.model.ProductFiltrationTopBarState
 import ru.livetyping.zarina.core.uicomponent.filtration.ui.ProductFiltrationContent
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun FiltrationScreen(
@@ -53,6 +53,6 @@ private fun ScreenContent(
         onFiltrationEvent = onFiltrationEvent,
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default),
+            .background(UiKitTheme2.colors.white),
     )
 }

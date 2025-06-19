@@ -47,6 +47,7 @@ import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import java.math.BigDecimal
 import java.time.LocalDate
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -106,13 +107,10 @@ public fun OrderCard(
             .padding(contentPadding),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val textStyle = UiKitTheme.typography.secondary.regular
-            val color = UiKitTheme.colors.text.general.regular.default
-
             Text(
-                text = "№ $orderNumber",
-                style = textStyle,
-                color = color,
+                text = "№ $orderNumber".uppercase(),
+                style = UiKitTheme2.typography.h4,
+                color = UiKitTheme2.colors.mainBlack,
             )
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -127,24 +125,21 @@ public fun OrderCard(
 
             val formattedPrice = rememberFormattedPrice(orderTotalPrice)
             Text(
-                text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice),
-                style = textStyle,
-                color = color,
+                text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice).uppercase(),
+                style = UiKitTheme2.typography.h4,
+                color = UiKitTheme2.colors.mainBlack,
             )
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val textStyle = UiKitTheme.typography.tertiary.light
-            val color = UiKitTheme.colors.text.general.regular.muted
-
             val formattedDate = rememberFormattedLocalDate(
                 localDate = orderDate,
                 formatterPattern = DateFormatterPattern,
             )
             Text(
-                text = stringResource(R.string.uikit_order_from, formattedDate),
-                style = textStyle,
-                color = color,
+                text = stringResource(R.string.uikit_order_from, formattedDate).uppercase(),
+                style = UiKitTheme2.typography.body2,
+                color = UiKitTheme2.colors.middleGray,
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -155,9 +150,9 @@ public fun OrderCard(
                     id = RCommon.plurals.res_product_count,
                     count = orderProductCount,
                     orderProductCount.toString(),
-                ),
-                style = textStyle,
-                color = color,
+                ).uppercase(),
+                style = UiKitTheme2.typography.body2,
+                color = UiKitTheme2.colors.middleGray,
             )
         }
 

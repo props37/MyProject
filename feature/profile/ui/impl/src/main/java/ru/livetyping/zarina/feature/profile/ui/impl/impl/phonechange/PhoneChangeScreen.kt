@@ -20,7 +20,7 @@ import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
 import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.ui.PhoneChangeContent
@@ -62,7 +62,7 @@ private fun ScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.background.general.regular.default)
+                .background(UiKitTheme2.colors.white)
                 .windowInsetsPadding(
                     WindowInsets.statusBars
                         .union(WindowInsets.displayCutout)

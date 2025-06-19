@@ -22,7 +22,7 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -38,7 +38,8 @@ internal fun TopBar(
         centerContent = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(RCommon.string.res_profile),
+                    text = stringResource(RCommon.string.res_profile).uppercase(),
+                    style = UiKitTheme2.typography.h3,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -54,9 +55,9 @@ internal fun TopBar(
                 ) { firstName ->
                     if (firstName != null) {
                         Text(
-                            text = firstName,
-                            style = UiKitTheme.typography.tertiary.regular,
-                            color = UiKitTheme.colors.text.general.regular.muted,
+                            text = firstName.uppercase(),
+                            style = UiKitTheme2.typography.body,
+                            color = UiKitTheme2.colors.middleGray,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )

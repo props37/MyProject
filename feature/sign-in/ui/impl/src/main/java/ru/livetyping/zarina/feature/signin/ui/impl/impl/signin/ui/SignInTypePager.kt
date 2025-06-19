@@ -42,6 +42,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
@@ -60,6 +61,7 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.signin.ui.impl.R
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInByEmailState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.model.SignInEvent
@@ -199,10 +201,10 @@ private fun SignInByEmailMain(
                     stringResource(RCommon.string.res_email)
                 } else ""
 
-                Text(text = labelResId)
+                Text(text = labelResId.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_email))
+                Text(text = stringResource(RCommon.string.res_email).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -258,7 +260,7 @@ private fun SignInByEmailMain(
         ZarinaButton(
             onClick = onForgotPasswordClicked,
             size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.outlinedColors(),
+            colors = ZarinaButtonDefaults.backlessColors(),
             contentPadding = PaddingValues(vertical = 8.dp),
             indication = null,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -306,10 +308,10 @@ private fun SignInByEmailPhoneConfirmation(
                     stringResource(RCommon.string.res_phone)
                 } else ""
 
-                Text(text = labelResId)
+                Text(text = labelResId.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_phone))
+                Text(text = stringResource(RCommon.string.res_phone).uppercase())
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -409,9 +411,9 @@ private fun SignInBottomBlock(
         Spacer(modifier = Modifier.height(48.dp))
 
         Text(
-            text = stringResource(R.string.sign_in_do_not_have_account_yet_question),
-            style = UiKitTheme.typography.tertiary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.sign_in_do_not_have_account_yet_question).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -453,15 +455,15 @@ private fun Policies(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = baseString,
         substringToUrl = substringToUrl,
-        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme2.typography.body2.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = currentContext::openUrlInCustomTabs,
     )
 
     Text(
-        text = stringWithLinks,
-        style = UiKitTheme.typography.footnote.light,
-        color = UiKitTheme.colors.text.general.regular.default,
+        text = stringWithLinks.toUpperCase(),
+        style = UiKitTheme2.typography.body2,
+        color = UiKitTheme2.colors.mainBlack,
         modifier = modifier,
     )
 }

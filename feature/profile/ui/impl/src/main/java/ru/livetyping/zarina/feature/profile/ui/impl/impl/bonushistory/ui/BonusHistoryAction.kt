@@ -19,7 +19,7 @@ import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uicompose.rememberFormattedLocalDate
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 
 @Composable
@@ -44,19 +44,19 @@ internal fun BonusHistoryAction(
                         )
 
                         Text(
-                            text = stringResource(typeTextResId),
+                            text = stringResource(typeTextResId).uppercase(),
                             style = BonusActionTitleTextStyle,
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = formattedDate,
+                            text = formattedDate.uppercase(),
                             style = BonusActionDescriptionTextStyle,
-                            color = UiKitTheme.colors.text.general.regular.muted,
+                            color = UiKitTheme2.colors.middleGray
                         )
                     }
                 } else {
                     Text(
-                        text = stringResource(typeTextResId),
+                        text = stringResource(typeTextResId).uppercase(),
                         style = BonusActionTitleTextStyle,
                     )
                 }
@@ -68,15 +68,11 @@ internal fun BonusHistoryAction(
                 LoyaltyProgramBonusAction.Type.EARNED -> "+$formattedBonusCount"
                 LoyaltyProgramBonusAction.Type.SPENT -> "-$formattedBonusCount"
             }
-            val style = when (action.type) {
-                LoyaltyProgramBonusAction.Type.EARNED -> UiKitTheme.typography.secondary.regular
-                LoyaltyProgramBonusAction.Type.SPENT -> UiKitTheme.typography.secondary.light
-            }
 
             Text(
-                text = text,
-                style = style,
-                color = UiKitTheme.colors.text.general.regular.muted,
+                text = text.uppercase(),
+                style = UiKitTheme2.typography.h4,
+                color = UiKitTheme2.colors.mainBlack,
             )
         },
         contentPadding = ContentPadding,
@@ -123,11 +119,11 @@ internal fun BonusHistoryActionSkeleton(
 
 private val BonusActionTitleTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private val BonusActionDescriptionTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.footnote.light
+    get() = UiKitTheme2.typography.body
 
 private const val DateFormatterPattern = "dd MMMM yyyy"
 

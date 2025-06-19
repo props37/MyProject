@@ -17,6 +17,7 @@ import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilter
 import ru.livetyping.zarina.core.uicommon.nameResId
 import ru.livetyping.zarina.core.uikit.counter.ZarinaCounter
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun ProductMultiSelectionListFilterItem(
@@ -34,7 +35,7 @@ internal fun ProductMultiSelectionListFilterItem(
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
-            text = stringResource(type.nameResId),
+            text = stringResource(type.nameResId).uppercase(),
             style = FilterTitleTextStyle,
             color = FilterTitleColor,
         )
@@ -44,7 +45,7 @@ internal fun ProductMultiSelectionListFilterItem(
         if (selectedCount > 0) {
             ZarinaCounter(
                 value = selectedCount.toString(),
-                textStyle = UiKitTheme.typography.footnote.bold,
+                textStyle = UiKitTheme2.typography.body2,
             )
         }
 

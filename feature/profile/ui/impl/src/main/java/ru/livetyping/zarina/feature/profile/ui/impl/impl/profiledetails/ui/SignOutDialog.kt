@@ -27,10 +27,10 @@ internal fun SignOutDialog(
     ) {
         ZarinaDialogContainer(
             title = {
-                Text(text = stringResource(R.string.profile_sign_out_question))
+                Text(text = stringResource(R.string.profile_sign_out_question).uppercase())
             },
             body = {
-                Text(text = stringResource(R.string.profile_sign_out_confirmation_body))
+                Text(text = stringResource(R.string.profile_sign_out_confirmation_body).uppercase())
             },
             buttons = {
                 ZarinaButton(

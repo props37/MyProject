@@ -42,6 +42,7 @@ import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaPasswordTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.model.PasswordChangeState
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.passwordchange.ui.TopBar
@@ -77,7 +78,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout)
@@ -106,10 +107,10 @@ private fun ScreenContent(
                         stringResource(RCommon.string.res_old_password)
                     } else ""
 
-                    Text(text = label)
+                    Text(text = label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_old_password))
+                    Text(text = stringResource(RCommon.string.res_old_password).uppercase())
                 },
                 keyboardOptions = remember {
                     ZarinaPasswordTextFieldDefaults.KeyboardOptions
@@ -132,10 +133,10 @@ private fun ScreenContent(
                         stringResource(RCommon.string.res_new_password)
                     } else ""
 
-                    Text(text = label)
+                    Text(text = label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_new_password))
+                    Text(text = stringResource(RCommon.string.res_new_password).uppercase())
                 },
                 onKeyboardAction = { defaultAction ->
                     defaultAction()

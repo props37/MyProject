@@ -16,7 +16,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.uicommon.nameResId
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun StoreItem(
@@ -30,7 +30,7 @@ internal fun StoreItem(
         Column {
             val store = availability.store
             Text(
-                text = store.name,
+                text = store.name.uppercase(),
                 style = StoreNameTextStyle,
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -40,25 +40,25 @@ internal fun StoreItem(
                 || availability.amount == ProductAvailabilityInStore.Amount.LITTLE
             ) {
                 Text(
-                    text = stringResource(availability.amount.nameResId),
-                    style = UiKitTheme.typography.tertiary.regular,
+                    text = stringResource(availability.amount.nameResId).uppercase(),
+                    style = UiKitTheme2.typography.body2Bold,
                 )
                 Spacer(modifier = Modifier.height(2.dp))
             }
 
             Text(
-                text = store.address,
+                text = store.address.uppercase(),
                 style = StoreDetailsTextStyle,
-                color = UiKitTheme.colors.text.general.regular.muted,
+                color = UiKitTheme2.colors.middleGray,
             )
 
             val schedule = store.schedule
             if (schedule != null) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = schedule,
+                    text = schedule.uppercase(),
                     style = StoreDetailsTextStyle,
-                    color = UiKitTheme.colors.text.general.regular.muted,
+                    color = UiKitTheme2.colors.middleGray,
                 )
             }
         }
@@ -101,8 +101,8 @@ private val ContentPadding: PaddingValues
 
 private val StoreNameTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
 
 private val StoreDetailsTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.tertiary.light
+    get() = UiKitTheme2.typography.body2

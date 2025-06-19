@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 
 @Composable
@@ -22,15 +23,15 @@ internal fun AuthorizationBlock(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.profile_sign_in_or_sign_up),
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.profile_sign_in_or_sign_up).uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
+            color = UiKitTheme2.colors.mainBlack,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.profile_authorization_description),
-            style = UiKitTheme.typography.tertiary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.profile_authorization_description).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
         )
 
         Spacer(modifier = Modifier.height(28.dp))

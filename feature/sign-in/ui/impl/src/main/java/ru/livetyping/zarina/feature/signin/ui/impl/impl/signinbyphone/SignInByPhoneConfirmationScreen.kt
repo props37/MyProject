@@ -38,6 +38,7 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
 import ru.livetyping.zarina.core.uikit.otp.SmsOtp
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhoneConfirmationEvent
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.model.SignInByPhoneConfirmationState
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.ui.TopBar
@@ -78,7 +79,7 @@ private fun ScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.background.general.regular.default)
+                .background(UiKitTheme2.colors.white)
                 .windowInsetsPadding(
                     WindowInsets.statusBars
                         .union(WindowInsets.displayCutout)

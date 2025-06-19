@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileMenuItem
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -75,11 +76,11 @@ private fun Item(
     ZarinaItem(
         onClick = { onItemClicked(item) },
         startContent = {
-            val textStyle = UiKitTheme.typography.secondary.light
+            val textStyle = UiKitTheme2.typography.body
             Text(
-                text = stringResource(itemNameResId),
+                text = stringResource(itemNameResId).uppercase(),
                 style = textStyle,
-                color = UiKitTheme.colors.text.general.regular.default,
+                color = UiKitTheme2.colors.mainBlack,
             )
 
             if (item == ProfileMenuItem.City) {
@@ -94,9 +95,9 @@ private fun Item(
                 ) { city ->
                     if (city != null) {
                         Text(
-                            text = city.name,
+                            text = city.name.uppercase(),
                             style = textStyle,
-                            color = UiKitTheme.colors.text.general.regular.muted,
+                            color = UiKitTheme2.colors.middleGray,
                         )
                     } else {
                         ZarinaTextSkeleton(
@@ -111,7 +112,7 @@ private fun Item(
             Icon(
                 imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
                 contentDescription = null,
-                tint = UiKitTheme.colors.icon.regular.default,
+                tint = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier
                     .size(16.dp)
                     .rotate(degrees = 90f),

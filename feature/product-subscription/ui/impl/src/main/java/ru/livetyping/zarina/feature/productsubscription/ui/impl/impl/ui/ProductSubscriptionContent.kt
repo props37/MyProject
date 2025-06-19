@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
@@ -42,7 +43,7 @@ import ru.livetyping.zarina.core.uikit.product.ProductOrderCard
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.R
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
@@ -83,9 +84,9 @@ internal fun ProductSubscriptionContent(
         Spacer(modifier = Modifier.height(36.dp))
 
         Text(
-            text = stringResource(R.string.product_subscription_description),
-            style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.product_subscription_description).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
@@ -101,10 +102,10 @@ internal fun ProductSubscriptionContent(
                     stringResource(RCommon.string.res_first_name)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_first_name))
+                Text(text = stringResource(RCommon.string.res_first_name).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -141,10 +142,10 @@ internal fun ProductSubscriptionContent(
                     stringResource(RCommon.string.res_email)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(RCommon.string.res_email))
+                Text(text = stringResource(RCommon.string.res_email).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -249,15 +250,15 @@ private fun PoliciesText(
     val stringWithLinks = rememberAnnotatedStringWithLinks(
         baseString = stringResource(R.string.product_subscription_policies),
         substringToUrl = substringToUrl,
-        linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+        linkStyle = UiKitTheme2.typography.body2.toSpanStyle()
             .copy(textDecoration = TextDecoration.Underline),
         onUrlClicked = context::openUrlInCustomTabs,
     )
 
     Text(
-        text = stringWithLinks,
-        style = UiKitTheme.typography.footnote.light,
-        color = UiKitTheme.colors.text.general.regular.default,
+        text = stringWithLinks.toUpperCase(),
+        style = UiKitTheme2.typography.body2,
+        color = UiKitTheme2.colors.mainBlack,
         modifier = modifier,
     )
 }

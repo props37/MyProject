@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.bonushistory.model.BonusHistoryTab
 
@@ -28,7 +29,7 @@ internal fun BonusHistoryListEmptyPlaceholder(
         BonusHistoryTab.BONUS_HISTORY -> R.string.profile_bonus_history_will_be_displayed_here
         BonusHistoryTab.EXPECTED_BONUSES -> R.string.profile_expected_bonuses_will_be_displayed_here
     }
-    val textColor = UiKitTheme.colors.text.general.regular.default
+    val textColor = UiKitTheme2.colors.mainBlack
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -36,15 +37,15 @@ internal fun BonusHistoryListEmptyPlaceholder(
         modifier = modifier,
     ) {
         Text(
-            text = stringResource(titleResId),
-            style = UiKitTheme.typography.primary.bold,
+            text = stringResource(titleResId).uppercase(),
+            style = UiKitTheme2.typography.h4,
             color = textColor,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(bodyResId),
-            style = UiKitTheme.typography.secondary.regular,
+            text = stringResource(bodyResId).uppercase(),
+            style = UiKitTheme2.typography.body,
             color = textColor,
             textAlign = TextAlign.Center,
         )

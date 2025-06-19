@@ -52,8 +52,8 @@ public fun ZarinaPromoCodeTextField(
     size: ZarinaTextFieldSize = ZarinaTextFieldSize.Medium,
     inputTransformation: InputTransformation? = null,
     textStyle: TextStyle = ZarinaTextFieldDefaults.textStyleFromSize(size),
-    label: String = stringResource(RCommon.string.res_promo_code),
-    placeholder: String = stringResource(RCommon.string.res_promo_code),
+    label: String = stringResource(RCommon.string.res_promo_code).uppercase(),
+    placeholder: String = stringResource(RCommon.string.res_promo_code).uppercase(),
     leadingContent: (@Composable () -> Unit)? = null,
     innerTrailingContent: (@Composable () -> Unit)? = {
         ZarinaPromoCodeTextFieldDefaults.InnerTrailingContent(

@@ -32,15 +32,15 @@ internal fun OrderCancellationDialog(
         ) {
             ZarinaDialogContainer(
                 title = {
-                    Text(text = stringResource(R.string.profile_order_cancellation_title))
+                    Text(text = stringResource(R.string.profile_order_cancellation_title).uppercase())
                 },
                 body = {
-                    Text(text = stringResource(R.string.profile_order_cancellation_body))
+                    Text(text = stringResource(R.string.profile_order_cancellation_body).uppercase())
                 },
                 buttons = {
                     ZarinaButton(
                         onClick = onCloseClicked,
-                        colors = ZarinaButtonDefaults.filledColors(),
+                        colors = ZarinaButtonDefaults.tertiaryColors(),
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(text = stringResource(RCommon.string.res_return).uppercase())
@@ -49,7 +49,7 @@ internal fun OrderCancellationDialog(
                     ZarinaButton(
                         onClick = { onEvent(OrderCancellationDialogEvent.CancelOrderClicked) },
                         isLoading = state.isCancelOrderButtonLoading,
-                        colors = ZarinaButtonDefaults.outlinedColors(),
+                        colors = ZarinaButtonDefaults.outlineErrorColors(),
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(text = stringResource(RCommon.string.res_cancel).uppercase())

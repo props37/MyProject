@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.uikit.order.OrderPriceDefaults.TotalPriceTextSt
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -124,7 +125,7 @@ private fun PriceItem(
         modifier = modifier,
     ) {
         Text(
-            text = name,
+            text = name.uppercase(),
             style = nameTextStyle,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -135,7 +136,7 @@ private fun PriceItem(
 
         val formattedPrice = rememberFormattedPrice(price)
         Text(
-            text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice),
+            text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice).uppercase(),
             style = priceTextStyle,
         )
     }
@@ -174,28 +175,28 @@ private fun PriceItemSkeleton(
 internal object OrderPriceDefaults {
     val BackgroundColor: Color
         @Composable
-        get() = UiKitTheme.colors.background.general.regular.default
+        get() = UiKitTheme2.colors.white
 
     val ContentColor: Color
         @Composable
-        get() = UiKitTheme.colors.text.general.regular.default
+        get() = UiKitTheme2.colors.mainBlack
 
     val ContentPadding: PaddingValues
         get() = PaddingValues(16.dp)
 
     val DefaultPriceNameTextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.light
+        get() = UiKitTheme2.typography.body
 
     val DefaultPriceTextStyle
         @Composable
-        get() = UiKitTheme.typography.secondary.regular
+        get() = DefaultPriceNameTextStyle
 
     val TotalPriceNameTextStyle
         @Composable
-        get() = UiKitTheme.typography.primary.regular
+        get() = UiKitTheme2.typography.h3
 
     val TotalPriceTextStyle
         @Composable
-        get() = UiKitTheme.typography.primary.bold
+        get() = UiKitTheme2.typography.h4
 }

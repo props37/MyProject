@@ -43,6 +43,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.emailchange.model.EmailChangeState
@@ -79,7 +80,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout)
@@ -93,9 +94,9 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = stringResource(R.string.profile_enter_new_email),
-                style = UiKitTheme.typography.secondary.bold,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = stringResource(R.string.profile_enter_new_email).uppercase(),
+                style = UiKitTheme2.typography.h4,
+                color = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
 
@@ -115,10 +116,10 @@ private fun ScreenContent(
                         stringResource(RCommon.string.res_email)
                     } else ""
 
-                    Text(text = label)
+                    Text(text = label.uppercase())
                 },
                 placeholder = {
-                    Text(text = stringResource(RCommon.string.res_email))
+                    Text(text = stringResource(RCommon.string.res_email).uppercase())
                 },
                 keyboardOptions = remember {
                     KeyboardOptions(

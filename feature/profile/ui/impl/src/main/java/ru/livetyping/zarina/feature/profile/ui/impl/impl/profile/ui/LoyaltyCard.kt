@@ -98,7 +98,7 @@ import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uicompose.screenbrightness.ForcedScreenBrightnessBehavior
 import ru.livetyping.zarina.core.uicompose.screenbrightness.ScreenBrightness
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.CameraDistance
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.ContentPaddingBackSide
@@ -297,8 +297,8 @@ private fun BackSide(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = card.number.value,
-                style = UiKitTheme.typography.tertiary.regular,
+                text = card.number.value.uppercase(),
+                style = UiKitTheme2.typography.body,
                 modifier = Modifier.clickable(
                     interactionSource = null,
                     indication = null,
@@ -347,8 +347,8 @@ private fun FrontSideBonuses(
 ) {
     Row(modifier = modifier) {
         Text(
-            text = bonuses.bonusCount.toString(),
-            style = UiKitTheme.typography.heading1.regular,
+            text = bonuses.bonusCount.toString().uppercase(),
+            style = UiKitTheme2.typography.h1,
         )
         Spacer(modifier = Modifier.width(6.dp))
 
@@ -357,8 +357,8 @@ private fun FrontSideBonuses(
             text = pluralStringResource(
                 id = R.plurals.profile_bonuses,
                 count = bonuses.bonusCount,
-            ),
-            style = UiKitTheme.typography.tertiary.regular,
+            ).uppercase(),
+            style = UiKitTheme2.typography.body2,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(top = topPadding),
@@ -400,7 +400,7 @@ private fun FrontSideQrCode(
         Spacer(modifier = Modifier.height(4.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val textStyle = UiKitTheme.typography.caption1.bold
+            val textStyle = UiKitTheme2.typography.bodyBold
             Text(
                 text = stringResource(R.string.profile_qr_code).uppercase(),
                 style = textStyle,
@@ -429,7 +429,7 @@ private fun FrontSideLevelInfo(
     onInfoClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val levelNameTextStyle = UiKitTheme.typography.primary.bold
+    val levelNameTextStyle = UiKitTheme2.typography.h4
 
     val levelInfoButton = @Composable {
         val iconSize = 16.dp
@@ -459,7 +459,7 @@ private fun FrontSideLevelInfo(
         val fullInfoAlpha = if (card.nextLevelInfo != null) 1f else 0f
         Column(modifier = Modifier.alpha(fullInfoAlpha)) {
             Text(
-                text = card.currentLevelName,
+                text = card.currentLevelName.uppercase(),
                 style = levelNameTextStyle,
             )
 
@@ -475,8 +475,8 @@ private fun FrontSideLevelInfo(
                     rememberFormattedPrice(remainingPurchaseSum),
                 )
                 Text(
-                    text = stringResource(R.string.profile_to_next_level, formattedRemainingPurchaseSum),
-                    style = UiKitTheme.typography.tertiary.light,
+                    text = stringResource(R.string.profile_to_next_level, formattedRemainingPurchaseSum).uppercase(),
+                    style = UiKitTheme2.typography.body,
                     modifier = Modifier.weight(1f),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -490,7 +490,7 @@ private fun FrontSideLevelInfo(
             modifier = Modifier.alpha(shortInfoAlpha),
         ) {
             Text(
-                text = card.currentLevelName,
+                text = card.currentLevelName.uppercase(),
                 style = levelNameTextStyle,
                 modifier = Modifier.weight(1f),
             )
@@ -508,10 +508,10 @@ private fun FrontSideProgressBar(
     val trackColor = animateColorAsState(
         targetValue = when (card.currentLevel) {
             LoyaltyCard.Level.PRIME, LoyaltyCard.Level.PRIORITY -> {
-                UiKitTheme.colors.text.general.inversed.default
+                UiKitTheme2.colors.white
             }
 
-            LoyaltyCard.Level.STAR -> UiKitTheme.colors.text.general.regular.default
+            LoyaltyCard.Level.STAR -> UiKitTheme2.colors.mainBlack
         },
         label = "trackColor",
     )
@@ -608,8 +608,8 @@ private fun BackSideQrCode(
             )
         } else {
             Text(
-                text = stringResource(R.string.profile_qr_code_generation_error),
-                style = UiKitTheme.typography.secondary.regular,
+                text = stringResource(R.string.profile_qr_code_generation_error).uppercase(),
+                style = UiKitTheme2.typography.body,
                 textAlign = TextAlign.Center,
             )
         }
@@ -691,14 +691,14 @@ internal fun LoyaltyCardPlaceholder(
                     .padding(30.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.profile_creating_your_loyalty_card),
-                    style = UiKitTheme.typography.tertiary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = stringResource(R.string.profile_creating_your_loyalty_card).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
                 Text(
-                    text = stringResource(R.string.profile_it_will_take_up_to_five_minutes),
-                    style = UiKitTheme.typography.footnote.light,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = stringResource(R.string.profile_it_will_take_up_to_five_minutes).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
             }
         }
@@ -836,11 +836,8 @@ internal enum class LoyaltyCardSide { FRONT, BACK }
 private val LoyaltyCard.Level.contentColor: Color
     @Composable
     get() = when (this) {
-        LoyaltyCard.Level.PRIME, LoyaltyCard.Level.PRIORITY -> {
-            UiKitTheme.colors.text.general.regular.default
-        }
-
-        LoyaltyCard.Level.STAR -> UiKitTheme.colors.text.general.inversed.default
+        LoyaltyCard.Level.PRIME, LoyaltyCard.Level.PRIORITY -> UiKitTheme2.colors.mainBlack
+        LoyaltyCard.Level.STAR -> UiKitTheme2.colors.white
     }
 
 private const val Tag = "LoyaltyCard"

@@ -30,7 +30,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.signin.ui.impl.R
 import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.model.PasswordRecoveryState
 
@@ -53,9 +53,9 @@ internal fun PasswordRecoveryContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(R.string.sign_in_enter_email_specified_during_registration),
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.sign_in_enter_email_specified_during_registration).uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -63,9 +63,9 @@ internal fun PasswordRecoveryContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.sign_in_we_will_send_link_to_reset_password_to_specified_email),
-            style = UiKitTheme.typography.tertiary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.sign_in_we_will_send_link_to_reset_password_to_specified_email).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -82,10 +82,10 @@ internal fun PasswordRecoveryContent(
                     stringResource(ru.livetyping.zarina.core.resource.R.string.res_email)
                 } else ""
 
-                Text(text = label)
+                Text(text = label.uppercase())
             },
             placeholder = {
-                Text(text = stringResource(ru.livetyping.zarina.core.resource.R.string.res_email))
+                Text(text = stringResource(ru.livetyping.zarina.core.resource.R.string.res_email).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(

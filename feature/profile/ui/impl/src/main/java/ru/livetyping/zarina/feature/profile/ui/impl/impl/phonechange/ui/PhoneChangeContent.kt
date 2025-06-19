@@ -29,6 +29,7 @@ import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaPolicies
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaPhoneTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeEvent
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.phonechange.model.PhoneChangeState
@@ -43,9 +44,9 @@ internal fun PhoneChangeContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(R.string.profile_enter_new_phone_number),
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.profile_enter_new_phone_number).uppercase(),
+            style = UiKitTheme2.typography.h4,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -54,9 +55,9 @@ internal fun PhoneChangeContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.profile_we_will_send_code_for_changing_phone_number),
-            style = UiKitTheme.typography.tertiary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.profile_we_will_send_code_for_changing_phone_number).uppercase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),

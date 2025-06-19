@@ -35,7 +35,7 @@ import ru.livetyping.zarina.core.uikit.order.OrderPrice
 import ru.livetyping.zarina.core.uikit.order.OrderStatusLabel
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCard
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardCountStyle
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -156,7 +156,7 @@ internal fun OrderSuccess(
             ) {
                 ZarinaButton(
                     onClick = onCancelOrderClicked,
-                    colors = ZarinaButtonDefaults.filledColors(),
+                    colors = ZarinaButtonDefaults.backlessErrorColors(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
@@ -178,8 +178,8 @@ private fun OrderProductContentsItem(
     ZarinaItem(
         startContent = {
             Text(
-                text = stringResource(RCommon.string.res_order_contents),
-                style = UiKitTheme.typography.secondary.bold,
+                text = stringResource(RCommon.string.res_order_contents).uppercase(),
+                style = UiKitTheme2.typography.h4,
             )
         },
         endContent = {
@@ -188,8 +188,8 @@ private fun OrderProductContentsItem(
                     id = RCommon.plurals.res_product_count,
                     count = productCount,
                     productCount.toString(),
-                ),
-                style = UiKitTheme.typography.secondary.light,
+                ).uppercase(),
+                style = UiKitTheme2.typography.body,
             )
         },
         modifier = modifier.heightIn(min = 40.dp),
@@ -205,15 +205,13 @@ private fun OrderInfo(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = OrderInfoContentPadding,
 ) {
-    CompositionLocalProvider(
-        LocalContentColor provides UiKitTheme.colors.text.general.regular.default,
-    ) {
+    CompositionLocalProvider(LocalContentColor provides UiKitTheme2.colors.mainBlack) {
         Column(
             modifier = modifier.padding(contentPadding),
         ) {
             Text(
-                text = stringResource(RCommon.string.res_order_info),
-                style = UiKitTheme.typography.secondary.bold,
+                text = stringResource(RCommon.string.res_order_info).uppercase(),
+                style = UiKitTheme2.typography.h4,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -267,13 +265,13 @@ private fun OrderInfoItem(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = name,
+            text = name.uppercase(),
             style = OrderInfoNameTextStyle,
-            color = UiKitTheme.colors.text.general.regular.muted,
+            color = UiKitTheme2.colors.middleGray,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = value,
+            text = value.uppercase(),
             style = OrderInfoValueTextStyle,
         )
     }
@@ -303,8 +301,8 @@ internal val OrderInfoContentPadding: PaddingValues
 
 internal val OrderInfoNameTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.tertiary.light
+    get() = UiKitTheme2.typography.body2
 
 internal val OrderInfoValueTextStyle: TextStyle
     @Composable
-    get() = UiKitTheme.typography.secondary.light
+    get() = UiKitTheme2.typography.body
