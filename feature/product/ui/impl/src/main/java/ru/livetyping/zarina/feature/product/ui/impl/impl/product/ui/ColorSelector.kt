@@ -33,7 +33,6 @@ import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.uikit.product.ProductDefaults
 import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -102,7 +101,7 @@ private fun Color(
             .shimmerToggleable(shimmer, isEnabled = !isImageDisplayed)
             .then(borderModifier)
             .graphicsLayer { alpha = if (isSelected) 0.3f else 1f }
-            .background(UiKitTheme.colors.background.skeleton)
+            .background(UiKitTheme2.colors.skeletonBackground)
             .clickable { onClick(color) },
     )
 }
