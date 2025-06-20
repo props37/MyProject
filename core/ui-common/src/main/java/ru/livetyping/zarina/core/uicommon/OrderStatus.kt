@@ -16,4 +16,5 @@ public val OrderStatus.nameResId: Int
         OrderStatus.APPROVED_TO_REFUND -> RCommon.string.res_order_status_refund
         OrderStatus.REFUNDED -> RCommon.string.res_order_status_refund
         OrderStatus.NOT_REFUNDABLE -> RCommon.string.res_order_status_not_refundable
+        OrderStatus.TO_DELIVERY -> RCommon.string.res_order_status_to_delivery
     }

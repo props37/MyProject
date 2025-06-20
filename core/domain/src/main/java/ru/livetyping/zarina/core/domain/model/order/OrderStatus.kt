@@ -13,4 +13,5 @@ public enum class OrderStatus {
     APPROVED_TO_REFUND,
     REFUNDED,
     NOT_REFUNDABLE,
+    TO_DELIVERY,
 }

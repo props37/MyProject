@@ -150,6 +150,7 @@
     <string name="res_order_status_cancelled">Отменён</string>
     <string name="res_order_status_refund">Возврат</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
+    <string name="res_order_status_to_delivery">Готов к отправке в магазин</string>
 
     <string name="res_payment_method_upon_receipt">При получении</string>
     <string name="res_payment_method_by_card_online">Картой онлайн</string>

@@ -18,6 +18,7 @@ public value class OrderStatusDto(public val value: String) {
         "approved_to_refund" -> OrderStatus.APPROVED_TO_REFUND
         "refunded" -> OrderStatus.REFUNDED
         "non_refundable" -> OrderStatus.NOT_REFUNDABLE
+        "to_delivery" -> OrderStatus.TO_DELIVERY
         else -> error("Unknown order status $value")
     }
 }
