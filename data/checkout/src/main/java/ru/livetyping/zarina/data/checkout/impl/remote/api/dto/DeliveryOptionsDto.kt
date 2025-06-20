@@ -3,7 +3,6 @@ package ru.livetyping.zarina.data.checkout.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
-import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import timber.log.Timber
 import java.math.BigDecimal
 
@@ -13,8 +12,9 @@ internal data class DeliveryOptionsDto(
     val tryingTypes: List<OptionDto>? = null,
 ) {
     fun toDeliveryOptions(type: DeliveryOptionsDtoType): List<DeliveryOption> {
-        checkPropertyNotNull(tryingTypes) { ::tryingTypes }
-        return tryingTypes.mapNotNull { it.toDeliveryOption(type) }
+        val firstDeliveryOption = tryingTypes?.firstOrNull()?.toDeliveryOption(type)
+        checkNotNull(firstDeliveryOption)
+        return listOf(firstDeliveryOption)
     }
 
     @Serializable
