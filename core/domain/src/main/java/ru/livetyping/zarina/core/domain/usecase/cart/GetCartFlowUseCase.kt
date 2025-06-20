@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.domain.usecase.cart
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.cart.CartType
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
@@ -14,7 +14,7 @@ public interface GetCartFlowUseCase {
 
     public data class Params(
         val cartType: CartType,
-        val cityKladrId: KladrId? = null,
+        val cityFiasId: FiasId? = null,
     )
 
     public companion object {
