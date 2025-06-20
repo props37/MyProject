@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.network.zarina.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.order.OrderStatus
+import timber.log.Timber
 
 @Serializable
 @JvmInline
@@ -18,6 +19,14 @@ public value class OrderStatusDto(public val value: String) {
         "approved_to_refund" -> OrderStatus.APPROVED_TO_REFUND
         "refunded" -> OrderStatus.REFUNDED
         "non_refundable" -> OrderStatus.NOT_REFUNDABLE
-        else -> error("Unknown order status $value")
+        "to_delivery" -> OrderStatus.TO_DELIVERY
+        else -> {
+            Timber.tag(TAG).w("Unknown order status $this")
+            OrderStatus.UNKNOWN
+        }
+    }
+
+    private companion object {
+        private const val TAG = "OrderStatusDto"
     }
 }

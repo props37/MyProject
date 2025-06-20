@@ -18,7 +18,9 @@ public enum class OrderStatusParcelable : Parcelable {
     REFUNDING,
     APPROVED_TO_REFUND,
     REFUNDED,
-    NOT_REFUNDABLE;
+    NOT_REFUNDABLE,
+    TO_DELIVERY,
+    UNKNOWN;
 
     public fun toOrderStatus(): OrderStatus = when (this) {
         OPENED -> OrderStatus.OPENED
@@ -32,6 +34,8 @@ public enum class OrderStatusParcelable : Parcelable {
         APPROVED_TO_REFUND -> OrderStatus.APPROVED_TO_REFUND
         REFUNDED -> OrderStatus.REFUNDED
         NOT_REFUNDABLE -> OrderStatus.NOT_REFUNDABLE
+        TO_DELIVERY -> OrderStatus.TO_DELIVERY
+        UNKNOWN -> OrderStatus.UNKNOWN
     }
 
     public companion object {
@@ -47,6 +51,8 @@ public enum class OrderStatusParcelable : Parcelable {
             OrderStatus.APPROVED_TO_REFUND -> APPROVED_TO_REFUND
             OrderStatus.REFUNDED -> REFUNDED
             OrderStatus.NOT_REFUNDABLE -> NOT_REFUNDABLE
+            OrderStatus.TO_DELIVERY -> TO_DELIVERY
+            OrderStatus.UNKNOWN -> UNKNOWN
         }
     }
 }
