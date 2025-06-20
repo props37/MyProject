@@ -9,7 +9,7 @@ import timber.log.Timber
 @Serializable
 internal data class PickupPointDto(
     @SerialName("id")
-    val id: Long? = null,
+    val id: String? = null,
 
     @SerialName("title")
     val title: String? = null,
@@ -32,7 +32,7 @@ internal data class PickupPointDto(
     fun toPickupPointShort(): PickupPointShort? {
         return if (id != null && title != null && address != null && location != null) {
             PickupPointShort(
-                id = PickupPoint.Id(id.toString()),
+                id = PickupPoint.Id(id),
                 title = title,
                 address = address,
                 location = location.toLocation(),

@@ -10,7 +10,7 @@ import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto.Com
 @Serializable
 internal data class PickupPointDetailedDto(
     @SerialName("id")
-    val id: Long? = null,
+    val id: String? = null,
 
     @SerialName("title")
     val title: String? = null,
@@ -53,7 +53,7 @@ internal data class PickupPointDetailedDto(
         checkPropertyNotNull(levels) { ::levels }
         check(levels.isNotEmpty()) { "levels is empty" }
         return PickupPointDetailed(
-            id = PickupPoint.Id(id.toString()),
+            id = PickupPoint.Id(id),
             title = title,
             address = address,
             location = location.toLocation(),
