@@ -41,8 +41,8 @@ public data class PickupFromPickupPointCheckoutParams(
     override val recipient: Recipient,
     val city: City,
     val pickupPoint: PickupPointDetailed,
-    val deliveryType: PickupPointDetailed.DeliveryType,
-    val dateTimePeriod: PickupPointDetailed.DeliveryType.DateTimePeriod,
+    val deliveryType: PickupPointDetailed.DeliveryType?,
+    val dateTimePeriod: PickupPointDetailed.DeliveryType.DateTimePeriod?,
 ) : CheckoutParams() {
     override val cityFiasId: FiasId get() = city.id
 }

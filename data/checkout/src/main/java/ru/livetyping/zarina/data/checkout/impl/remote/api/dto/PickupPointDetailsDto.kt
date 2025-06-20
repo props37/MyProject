@@ -65,7 +65,7 @@ internal data class PickupPointDetailedDto(
             schedule = schedule,
             expectedDeliveryDate = estimatedDelivery,
             shelfTimeInDays = shelfTime,
-            deliveryTypes = levels.map { it.toDeliveryType() },
+            deliveryTypes = levels.mapNotNull { it.toDeliveryType() },
         )
     }
 
@@ -83,18 +83,18 @@ internal data class PickupPointDetailedDto(
         @SerialName("intervals")
         val intervals: List<DateTimePeriodDto>? = null,
     ) {
-        fun toDeliveryType(): PickupPointDetailed.DeliveryType {
-            checkPropertyNotNull(code) { ::code }
-            checkPropertyNotNull(name) { ::name }
-            checkPropertyNotNull(description) { ::description }
-            checkPropertyNotNull(intervals) { ::intervals }
-            check(intervals.isNotEmpty()) { "intervals is empty" }
-            return PickupPointDetailed.DeliveryType(
-                id = PickupPointDetailed.DeliveryType.Id(code),
-                title = name,
-                description = description,
-                dateTimePeriods = intervals.map { it.toDateTimePeriod() },
-            )
+        fun toDeliveryType(): PickupPointDetailed.DeliveryType? {
+            return if (code != null && name != null && description != null && intervals != null) {
+                check(intervals.isNotEmpty()) { "intervals is empty" }
+                PickupPointDetailed.DeliveryType(
+                    id = PickupPointDetailed.DeliveryType.Id(code),
+                    title = name,
+                    description = description,
+                    dateTimePeriods = intervals.map { it.toDateTimePeriod() },
+                )
+            } else {
+                null
+            }
         }
 
         @Serializable

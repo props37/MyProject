@@ -186,8 +186,9 @@ internal data class CreateOrderRequestBody(
                             Payload(
                                 pickupStoreId = null,
                                 pickupPointId = checkoutParams.pickupPoint.id.value,
-                                tryingTypeLevelName = checkoutParams.deliveryType.id.value,
-                                periodId = checkoutParams.dateTimePeriod.id.value,
+                                // Need to pass "economy" in case of null?
+                                tryingTypeLevelName = checkoutParams.deliveryType?.id?.value,
+                                periodId = checkoutParams.dateTimePeriod?.id?.value,
                             )
                         }
 

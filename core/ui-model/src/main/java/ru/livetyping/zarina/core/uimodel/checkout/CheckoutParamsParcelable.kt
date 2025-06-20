@@ -130,8 +130,8 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
     override val recipient: RecipientParcelable,
     val city: CityParcelable,
     val pickupPoint: PickupPointParcelable,
-    val deliveryType: PickupPointParcelable.DeliveryTypeParcelable,
-    val dateTimePeriod: PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable,
+    val deliveryType: PickupPointParcelable.DeliveryTypeParcelable?,
+    val dateTimePeriod: PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable?,
 ) : CheckoutParamsParcelable() {
     override val cityFiasId: String get() = city.id
 
@@ -142,8 +142,8 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
             recipient = recipient.toRecipient(),
             city = city.toCity(),
             pickupPoint = pickupPoint.toPickupPointDetailed(),
-            deliveryType = deliveryType.toDeliveryType(),
-            dateTimePeriod = dateTimePeriod.toDateTimePeriod(),
+            deliveryType = deliveryType?.toDeliveryType(),
+            dateTimePeriod = dateTimePeriod?.toDateTimePeriod(),
         )
     }
 
@@ -157,9 +157,12 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
                 recipient = RecipientParcelable.from(params.recipient),
                 city = CityParcelable.from(params.city),
                 pickupPoint = PickupPointParcelable.from(params.pickupPoint),
-                deliveryType = PickupPointParcelable.DeliveryTypeParcelable.from(params.deliveryType),
-                dateTimePeriod = PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable
-                    .from(params.dateTimePeriod),
+                deliveryType = params.deliveryType?.let {
+                    PickupPointParcelable.DeliveryTypeParcelable.from(it)
+                },
+                dateTimePeriod = params.dateTimePeriod?.let {
+                    PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable.from(it)
+                },
             )
         }
     }

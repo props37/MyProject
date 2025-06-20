@@ -102,7 +102,7 @@ internal class SelectedPickupPointViewModel @Inject constructor(
                 val city = getUserCityFlow(GetUserCityFlowUseCase.Params(CachePolicy.LocalOnly))
                     .firstOrNull()?.getOrNull()
 
-                if (pickupPoint != null && selectedDeliveryType != null && city != null) {
+                if (pickupPoint != null && city != null) {
                     val checkoutParams = PickupFromPickupPointCheckoutParams(
                         cartType = navEntry.cartType.toCartType(),
                         deliveryMethod = navEntry.deliveryMethod.toDeliveryMethod(),
@@ -110,7 +110,7 @@ internal class SelectedPickupPointViewModel @Inject constructor(
                         city = city,
                         pickupPoint = pickupPoint,
                         deliveryType = selectedDeliveryType,
-                        dateTimePeriod = selectedDeliveryType.dateTimePeriods.first(),
+                        dateTimePeriod = selectedDeliveryType?.dateTimePeriods?.firstOrNull(),
                     )
                     val action = SelectedPickupPointScreenAction.ContinueClicked(
                         currentCheckoutStep = navEntry.checkoutStep,

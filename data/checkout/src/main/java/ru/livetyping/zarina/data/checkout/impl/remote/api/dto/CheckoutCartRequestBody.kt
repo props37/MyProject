@@ -114,13 +114,14 @@ internal data class CheckoutCartRequestBody(
                 deliveryOptionId = when (checkoutParams) {
                     is CourierDeliveryCheckoutParams -> checkoutParams.deliveryOption.id.value
                     is PostDeliveryCheckoutParams -> checkoutParams.deliveryOption.id.value
-                    is PickupFromPickupPointCheckoutParams -> checkoutParams.deliveryType.id.value
+                    // Need to pass "economy" in case of null?
+                    is PickupFromPickupPointCheckoutParams -> checkoutParams.deliveryType?.id?.value
                     else -> null
                 },
                 dateTimePeriodId = when (checkoutParams) {
                     is CourierDeliveryCheckoutParams -> checkoutParams.dateTimePeriod.id.value
                     is PostDeliveryCheckoutParams -> checkoutParams.dateTimePeriod.id.value
-                    is PickupFromPickupPointCheckoutParams -> checkoutParams.dateTimePeriod.id.value
+                    is PickupFromPickupPointCheckoutParams -> checkoutParams.dateTimePeriod?.id?.value
                     else -> null
                 },
                 pickupStoreId = when (checkoutParams) {
