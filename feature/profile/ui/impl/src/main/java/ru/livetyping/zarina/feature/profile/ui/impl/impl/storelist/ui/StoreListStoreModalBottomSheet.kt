@@ -3,6 +3,7 @@ package ru.livetyping.zarina.feature.profile.ui.impl.impl.storelist.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.store.Store
+import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -61,6 +63,7 @@ internal fun StoreListStoreModalBottomSheet(
                     )
                 },
                 contentPadding = PaddingValues(vertical = 4.dp),
+                windowInsets = WindowInsets.none,
             )
 
             Text(

@@ -37,7 +37,7 @@ import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaClubModalBottomSheet
 import ru.livetyping.zarina.core.uikit.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderplacing.OrderPlacingViewModel.DeliveryInfo
@@ -178,7 +178,7 @@ private fun ScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(UiKitTheme.colors.background.general.regular.default)
+                .background(UiKitTheme2.colors.white)
                 .windowInsetsPadding(
                     WindowInsets.statusBars
                         .union(WindowInsets.displayCutout),

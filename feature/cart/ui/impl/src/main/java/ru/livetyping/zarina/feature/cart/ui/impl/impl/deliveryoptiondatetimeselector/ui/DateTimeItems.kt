@@ -17,7 +17,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.icon.ZarinaCheckmarkIcon
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.model.DateTimeItem
 
 @Composable
@@ -45,8 +45,8 @@ internal fun DateTimeItems(
                 onClick = { onItemClicked(item) },
                 startContent = {
                     Text(
-                        text = item.text,
-                        style = UiKitTheme.typography.secondary.light,
+                        text = item.text.uppercase(),
+                        style = UiKitTheme2.typography.body,
                     )
                 },
                 endContent = {

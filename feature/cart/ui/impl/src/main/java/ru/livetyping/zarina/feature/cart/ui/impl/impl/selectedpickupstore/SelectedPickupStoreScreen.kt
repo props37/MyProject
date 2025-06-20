@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.ContinueButton
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.ProductList
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickupstore.ui.TopBar
@@ -59,7 +59,7 @@ private fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default)
+            .background(UiKitTheme2.colors.white)
             .windowInsetsPadding(
                 WindowInsets.statusBars
                     .union(WindowInsets.displayCutout),

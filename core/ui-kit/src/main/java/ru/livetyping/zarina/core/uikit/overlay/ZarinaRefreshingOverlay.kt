@@ -9,14 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.disableGestures
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaRefreshingOverlay(
     modifier: Modifier = Modifier,
     areGesturesDisabled: Boolean = true,
 ) {
-    val color = UiKitTheme.colors.background.general.regular.default.copy(alpha = 0.5f)
+    val color = UiKitTheme2.colors.white.copy(alpha = 0.5f)
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier

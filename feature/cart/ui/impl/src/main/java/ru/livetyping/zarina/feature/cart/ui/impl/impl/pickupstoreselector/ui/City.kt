@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun City(
@@ -14,8 +14,8 @@ internal fun City(
 ) {
     ZarinaItem(modifier = modifier) {
         Text(
-            text = city.name,
-            style = UiKitTheme.typography.secondary.bold,
+            text = city.name.uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
         )
     }
 }

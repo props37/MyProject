@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
@@ -19,7 +19,7 @@ public fun ZarinaMapMarker(
     Icon(
         imageVector = ImageVector.vectorResource(RCommon.drawable.ic_map_store_marker_24),
         contentDescription = contentDescription,
-        tint = UiKitTheme.colors.icon.regular.default,
+        tint = UiKitTheme2.colors.mainBlack,
         modifier = modifier.defaultMinSize(Size, Size),
     )
 }

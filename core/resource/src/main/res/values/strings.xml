@@ -85,7 +85,7 @@
     <string name="res_height_cm">%1$s см</string>
     <string name="res_color">Цвет</string>
     <string name="res_quantity">Количество</string>
-    <string name="res_price_in_rubles_for_count">%1$s₽ / шт</string>
+    <string name="res_price_in_rubles_for_count">%1$s ₽ / шт</string>
     <string name="res_share">Поделиться</string>
     <string name="res_to_cart">В корзину</string>
     <string name="res_in_cart">В корзине</string>

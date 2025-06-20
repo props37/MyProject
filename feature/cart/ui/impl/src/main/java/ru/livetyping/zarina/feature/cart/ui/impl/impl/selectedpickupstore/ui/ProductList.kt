@@ -17,7 +17,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCard
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 
 @Composable
@@ -28,8 +28,8 @@ internal fun ProductList(
     Column(modifier = modifier) {
         ZarinaItem {
             Text(
-                text = stringResource(R.string.cart_these_products_are_available_in_this_store),
-                style = UiKitTheme.typography.secondary.bold,
+                text = stringResource(R.string.cart_these_products_are_available_in_this_store).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
             )
         }
 

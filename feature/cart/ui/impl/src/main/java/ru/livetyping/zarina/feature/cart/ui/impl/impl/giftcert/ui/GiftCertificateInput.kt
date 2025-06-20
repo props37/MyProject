@@ -26,7 +26,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.giftcert.model.GiftCertificateState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -42,9 +42,9 @@ internal fun GiftCertificateInput(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = stringResource(R.string.cart_gift_certificate_description),
-            style = UiKitTheme.typography.tertiary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.cart_gift_certificate_description).uppercase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -62,7 +62,7 @@ internal fun GiftCertificateInput(
             },
             placeholder = {
                 Text(
-                    text = stringResource(R.string.cart_certificate_number),
+                    text = stringResource(R.string.cart_certificate_number).uppercase(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -102,7 +102,7 @@ internal fun GiftCertificateInput(
             },
             placeholder = {
                 Text(
-                    text = stringResource(R.string.cart_verification_code),
+                    text = stringResource(R.string.cart_verification_code).uppercase(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

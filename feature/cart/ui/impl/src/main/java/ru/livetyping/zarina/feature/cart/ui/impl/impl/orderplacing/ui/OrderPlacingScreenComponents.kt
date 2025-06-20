@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.coroutines.launch
@@ -68,7 +69,7 @@ import ru.livetyping.zarina.core.uikit.product.ProductOrderCardCountStyle
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCardSkeleton
 import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.text.ZarinaPromoCodeTextField
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
@@ -221,9 +222,9 @@ internal object OrderPlacingScreenComponents {
                 )
 
                 Text(
-                    text = textString(state.text),
-                    style = UiKitTheme.typography.secondary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = textString(state.text).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.mainBlack,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 
@@ -284,9 +285,9 @@ internal object OrderPlacingScreenComponents {
             ZarinaItem(
                 startContent = {
                     Text(
-                        text = stringResource(R.string.cart_recipient),
-                        style = UiKitTheme.typography.secondary.bold,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = stringResource(R.string.cart_recipient).uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
                 },
                 endContent = {
@@ -299,9 +300,9 @@ internal object OrderPlacingScreenComponents {
                 Column {
                     val fullName = remember(recipient) { recipient.getFullName() }
                     Text(
-                        text = fullName,
-                        style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = fullName.uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
 
                     Spacer(modifier = Modifier.height(2.dp))
@@ -316,10 +317,11 @@ internal object OrderPlacingScreenComponents {
                             }
                         }
                     }
+
                     Text(
-                        text = contacts,
-                        style = UiKitTheme.typography.tertiary.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        text = contacts.uppercase(),
+                        style = UiKitTheme2.typography.body2,
+                        color = UiKitTheme2.colors.middleGray,
                     )
                 }
             }
@@ -336,9 +338,9 @@ internal object OrderPlacingScreenComponents {
             ZarinaItem(
                 startContent = {
                     Text(
-                        text = stringResource(RCommon.string.res_delivery_method),
-                        style = UiKitTheme.typography.secondary.bold,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = stringResource(RCommon.string.res_delivery_method).uppercase(),
+                        style = UiKitTheme2.typography.bodyBold,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
                 },
                 endContent = {
@@ -350,18 +352,18 @@ internal object OrderPlacingScreenComponents {
             ZarinaItem(contentPadding = OrderPlacingListHeaderDescriptionContentPadding) {
                 Column {
                     Text(
-                        text = stringResource(deliveryInfo.deliveryMethodType.nameResId),
-                        style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = stringResource(deliveryInfo.deliveryMethodType.nameResId).uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
 
                     Spacer(modifier = Modifier.height(2.dp))
 
                     deliveryInfo.descriptions.forEachIndexed { index, description ->
                         Text(
-                            text = description,
-                            style = UiKitTheme.typography.tertiary.light,
-                            color = UiKitTheme.colors.text.general.regular.muted,
+                            text = description.uppercase(),
+                            style = UiKitTheme2.typography.body2,
+                            color = UiKitTheme2.colors.middleGray,
                         )
 
                         if (index < deliveryInfo.descriptions.lastIndex) {
@@ -379,8 +381,8 @@ internal object OrderPlacingScreenComponents {
     ) {
         ZarinaItem(modifier = modifier) {
             Text(
-                text = stringResource(R.string.cart_your_order),
-                style = UiKitTheme.typography.secondary.bold,
+                text = stringResource(R.string.cart_your_order).uppercase(),
+                style = UiKitTheme2.typography.body,
             )
         }
     }
@@ -724,13 +726,13 @@ internal object OrderPlacingScreenComponents {
             val text = selectedPaymentMethod?.let {
                 stringResource(RCommon.string.res_payment_method)
             }.orEmpty()
-            Text(text = text)
+            Text(text = text.uppercase())
         }
 
         val content: (@Composable () -> Unit)? = selectedPaymentMethod?.let {
             @Composable {
                 Text(
-                    text = selectedPaymentMethod.title,
+                    text = selectedPaymentMethod.title.uppercase(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -741,7 +743,7 @@ internal object OrderPlacingScreenComponents {
             onClick = onClick,
             placeholder = {
                 Text(
-                    text = stringResource(RCommon.string.res_payment_method),
+                    text = stringResource(RCommon.string.res_payment_method).uppercase(),
                     maxLines = 1,
                 )
             },
@@ -760,7 +762,7 @@ internal object OrderPlacingScreenComponents {
     ) {
         ZarinaTopBar(
             centerContent = {
-                Text(text = stringResource(R.string.cart_select_payment_method))
+                Text(text = stringResource(R.string.cart_select_payment_method).uppercase())
             },
             endContent = {
                 ZarinaCloseIconButton(
@@ -845,14 +847,14 @@ internal object OrderPlacingScreenComponents {
                     ) {
                         Column {
                             Text(
-                                text = paymentMethod.title,
-                                style = UiKitTheme.typography.secondary.light,
+                                text = paymentMethod.title.uppercase(),
+                                style = UiKitTheme2.typography.body,
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = paymentMethod.description,
-                                style = UiKitTheme.typography.footnote.light,
-                                color = UiKitTheme.colors.text.general.regular.muted,
+                                text = paymentMethod.description.uppercase(),
+                                style = UiKitTheme2.typography.body,
+                                color = UiKitTheme2.colors.middleGray,
                             )
                         }
                     }
@@ -877,7 +879,7 @@ internal object OrderPlacingScreenComponents {
         ZarinaButton(
             onClick = onClick,
             size = ZarinaButtonSize.Medium,
-            colors = ZarinaButtonDefaults.outlinedColors(),
+            colors = ZarinaButtonDefaults.backlessColors(),
             modifier = modifier,
         ) {
             Text(text = stringResource(RCommon.string.res_change).uppercase())
@@ -909,15 +911,15 @@ internal object OrderPlacingScreenComponents {
         val text = rememberAnnotatedStringWithLinks(
             baseString = policiesRawText,
             substringToUrl = substringToUrl,
-            linkStyle = UiKitTheme.typography.footnote.regular.toSpanStyle()
+            linkStyle = UiKitTheme2.typography.body2.toSpanStyle()
                 .copy(textDecoration = TextDecoration.Underline),
             onUrlClicked = onUrlClicked,
         )
 
         Text(
-            text = text,
-            style = UiKitTheme.typography.footnote.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = text.toUpperCase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = modifier,
         )
     }

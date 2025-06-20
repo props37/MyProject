@@ -34,6 +34,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.Filter
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.pickuppointselector.model.ToggleableFilter
@@ -60,7 +61,7 @@ internal fun Filtration(
                 )
             },
             placeholder = {
-                Text(text = stringResource(R.string.cart_address_or_name))
+                Text(text = stringResource(R.string.cart_address_or_name).uppercase())
             },
             innerTrailingContent = {
                 ZarinaTextFieldDefaults.ClearButton(
@@ -100,7 +101,10 @@ internal fun Filtration(
                             Filter.FITTING -> R.string.cart_fitting_available
                         }
 
-                        Text(text = stringResource(textResId))
+                        Text(
+                            text = stringResource(textResId).uppercase(),
+                            style = UiKitTheme2.typography.body,
+                        )
                     }
                 }
             }

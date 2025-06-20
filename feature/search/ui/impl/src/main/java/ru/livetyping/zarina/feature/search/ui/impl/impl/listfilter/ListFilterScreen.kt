@@ -13,7 +13,7 @@ import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.model.ListFil
 import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.model.ListFilterTopBarEvent
 import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.model.ListFilterTopBarState
 import ru.livetyping.zarina.core.uicomponent.filtration.listfilter.ui.ListFilterContent
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 internal fun ListFilterScreen(
@@ -54,6 +54,6 @@ private fun ScreenContent(
         onListFilterEvent = onListFilterEvent,
         modifier = Modifier
             .fillMaxSize()
-            .background(UiKitTheme.colors.background.general.regular.default),
+            .background(UiKitTheme2.colors.white),
     )
 }

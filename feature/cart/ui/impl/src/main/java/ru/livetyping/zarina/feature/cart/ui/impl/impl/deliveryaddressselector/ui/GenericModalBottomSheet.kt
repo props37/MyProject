@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaModalBottomSheet
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.GenericBottomSheetState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,9 +39,9 @@ internal fun GenericModalBottomSheet(
             Column {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = textString(state.body),
-                    style = UiKitTheme.typography.secondary.regular,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = textString(state.body).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.mainBlack,
                     modifier = Modifier.padding(horizontal = 16.dp),
                 )
 

@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.gender.GenderPicker
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 import ru.livetyping.zarina.core.uimodel.tab.TabRowState
@@ -44,7 +43,7 @@ internal fun TopBar(
 
 @Composable
 internal fun rememberTopBarScrimBrush(): Brush {
-    val scrimColor = UiKitTheme.colors.background.general.inversed.default
+    val scrimColor = UiKitTheme2.colors.mainBlack
     return remember(scrimColor) {
         val colors = listOf(
             scrimColor.copy(alpha = TopBarScrimAlpha),

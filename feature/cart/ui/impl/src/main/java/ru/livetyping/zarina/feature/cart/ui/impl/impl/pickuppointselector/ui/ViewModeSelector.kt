@@ -29,7 +29,7 @@ internal fun ViewModeSelector(
                 }
 
                 ZarinaTab(
-                    text = stringResource(textResId),
+                    text = stringResource(textResId).uppercase(),
                     isSelected = viewMode == state.currentTab,
                     onClick = {
                         if (viewMode == state.currentTab) {

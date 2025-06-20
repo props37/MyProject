@@ -19,7 +19,7 @@ import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Suppress("NAME_SHADOWING")
 @Composable
@@ -88,9 +88,9 @@ private fun AddressSearchSuccess(
                     onClick = { onAddressItemClicked(item) },
                 ) {
                     Text(
-                        text = item.address.name,
-                        style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = item.address.name.uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
                 }
             }

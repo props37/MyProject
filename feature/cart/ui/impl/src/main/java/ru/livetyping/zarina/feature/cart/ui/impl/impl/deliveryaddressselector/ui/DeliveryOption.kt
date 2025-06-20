@@ -30,6 +30,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import java.math.BigDecimal
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -49,9 +50,9 @@ internal fun DeliveryOption(
 ) {
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) {
-            UiKitTheme.colors.border.general.active
+            UiKitTheme2.colors.mainBlack
         } else {
-            UiKitTheme.colors.border.general.default
+            UiKitTheme2.colors.gray
         },
         label = "border color",
     )
@@ -60,7 +61,7 @@ internal fun DeliveryOption(
         modifier = modifier
             .clip(DeliveryOptionShape)
             .background(
-                color = UiKitTheme.colors.background.general.regular.default,
+                color = UiKitTheme2.colors.white,
                 shape = DeliveryOptionShape,
             )
             .border(width = 0.5.dp, color = borderColor, shape = DeliveryOptionShape),
@@ -69,16 +70,16 @@ internal fun DeliveryOption(
             onClick = onClick,
             startContent = {
                 Text(
-                    text = title,
-                    style = UiKitTheme.typography.secondary.regular,
+                    text = title.uppercase(),
+                    style = UiKitTheme2.typography.body,
                 )
             },
             endContent = {
                 val formattedPrice = rememberFormattedPrice(price)
                 Text(
-                    text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice),
-                    style = UiKitTheme.typography.secondary.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
+                    text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.middleGray,
                     maxLines = 1,
                 )
 
@@ -138,14 +139,14 @@ private fun DeliveryOptionDateTime(
         startContent = {
             Column {
                 Text(
-                    text = label,
-                    style = UiKitTheme.typography.footnote.light,
-                    color = UiKitTheme.colors.text.general.regular.muted,
+                    text = label.uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.middleGray,
                     maxLines = 1,
                 )
                 Text(
-                    text = text,
-                    style = UiKitTheme.typography.secondary.light,
+                    text = text.uppercase(),
+                    style = UiKitTheme2.typography.body,
                     maxLines = 1,
                 )
             }

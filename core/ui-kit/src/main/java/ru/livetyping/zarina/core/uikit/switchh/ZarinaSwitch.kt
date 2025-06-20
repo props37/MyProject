@@ -6,7 +6,7 @@ import androidx.compose.material.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 
 @Composable
 public fun ZarinaSwitch(
@@ -26,10 +26,10 @@ public fun ZarinaSwitch(
 public object ZarinaSwitchDefaults {
     @Composable
     public fun colors(
-        checkedThumbColor: Color = UiKitTheme.colors.background.general.regular.default,
-        checkedTrackColor: Color = UiKitTheme.colors.background.general.inversed.default,
-        uncheckedThumbColor: Color = UiKitTheme.colors.background.general.regular.default,
-        uncheckedTrackColor: Color = UiKitTheme.colors.background.skeleton,
+        checkedThumbColor: Color = UiKitTheme2.colors.white,
+        checkedTrackColor: Color = UiKitTheme2.colors.mainBlack,
+        uncheckedThumbColor: Color = UiKitTheme2.colors.white,
+        uncheckedTrackColor: Color = UiKitTheme2.colors.gray,
     ): SwitchColors = SwitchDefaults.colors(
         checkedThumbColor = checkedThumbColor,
         checkedTrackColor = checkedTrackColor,

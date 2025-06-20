@@ -23,6 +23,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
@@ -32,6 +33,7 @@ import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -90,9 +92,9 @@ private fun PickupPointInfo(
 
     Column(modifier = modifier) {
         Text(
-            text = pickupPoint.title,
-            style = UiKitTheme.typography.secondary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = pickupPoint.title.uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = itemModifier,
         )
 
@@ -146,18 +148,18 @@ private fun PickupPointInfoItem(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = title,
-            style = UiKitTheme.typography.footnote.regular,
-            color = UiKitTheme.colors.text.general.regular.muted,
+            text = title.uppercase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.middleGray,
             modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = info,
-            style = UiKitTheme.typography.secondary.light,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = info.uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -191,7 +193,7 @@ private fun PickupPointPaymentMethodsItem(
     if (paymentMethodsText != null) {
         PickupPointInfoItem(
             title = stringResource(R.string.cart_payment),
-            info = paymentMethodsText.lowercase().capitalize(Locale.current),
+            info = paymentMethodsText.uppercase(),
             modifier = modifier,
         )
     }
@@ -206,9 +208,9 @@ private fun PickupPointDeliveryTerms(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.cart_choose_delivery_terms),
-            style = UiKitTheme.typography.tertiary.bold,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.cart_choose_delivery_terms).uppercase(),
+            style = UiKitTheme2.typography.bodyBold,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -223,16 +225,16 @@ private fun PickupPointDeliveryTerms(
                     startContent = {
                         Column {
                             Text(
-                                text = deliveryType.title,
-                                style = UiKitTheme.typography.secondary.light,
+                                text = deliveryType.title.uppercase(),
+                                style = UiKitTheme2.typography.body,
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = remember(deliveryType.description) {
-                                    AnnotatedString.fromHtml(deliveryType.description)
+                                    AnnotatedString.fromHtml(deliveryType.description).toUpperCase()
                                 },
-                                style = UiKitTheme.typography.footnote.light,
-                                color = UiKitTheme.colors.text.general.regular.muted,
+                                style = UiKitTheme2.typography.body,
+                                color = UiKitTheme2.colors.middleGray,
                             )
                         }
                     },

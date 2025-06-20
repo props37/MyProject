@@ -27,7 +27,7 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorEvent
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryAddressSelectorState
 import ru.livetyping.zarina.core.resource.R as RCommon
@@ -104,13 +104,13 @@ private fun CityHeader(
         ) { city ->
             if (city != null) {
                 Text(
-                    text = city.name,
-                    style = UiKitTheme.typography.secondary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = city.name.uppercase(),
+                    style = UiKitTheme2.typography.bodyBold,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
             } else {
                 ZarinaTextSkeleton(
-                    textStyle = UiKitTheme.typography.secondary.bold,
+                    textStyle = UiKitTheme2.typography.bodyBold,
                     modifier = Modifier.width(80.dp),
                 )
             }

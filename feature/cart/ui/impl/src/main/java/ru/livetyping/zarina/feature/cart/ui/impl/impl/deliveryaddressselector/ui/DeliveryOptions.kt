@@ -23,7 +23,7 @@ import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionsState
 
@@ -55,9 +55,9 @@ internal fun DeliveryOptions(
             Column {
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = stringResource(R.string.cart_choose_delivery_option),
-                    style = UiKitTheme.typography.secondary.bold,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = stringResource(R.string.cart_choose_delivery_option).uppercase(),
+                    style = UiKitTheme2.typography.bodyBold,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 

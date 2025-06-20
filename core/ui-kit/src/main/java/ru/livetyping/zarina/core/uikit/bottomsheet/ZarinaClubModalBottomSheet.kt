@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,11 +23,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
+import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.R
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.button.ZarinaCloseIconButton
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.core.resource.R as RCommon
 
@@ -60,7 +62,7 @@ private fun ZarinaClubModalBottomSheetContent(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val backgroundColor = UiKitTheme.colors.background.general.regular.default
+    val backgroundColor = UiKitTheme2.colors.white
 
     Column(modifier = modifier.background(backgroundColor)) {
         ZarinaTopBar(
@@ -71,11 +73,12 @@ private fun ZarinaClubModalBottomSheetContent(
                 end = 2.dp,
                 bottom = 4.dp,
             ),
+            windowInsets = WindowInsets.none,
         ) {
             Text(
-                text = stringResource(R.string.uikit_for_zarina_club_members),
-                style = UiKitTheme.typography.primary.bold,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = stringResource(R.string.uikit_for_zarina_club_members).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
+                color = UiKitTheme2.colors.mainBlack,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .weight(1f),
@@ -90,18 +93,18 @@ private fun ZarinaClubModalBottomSheetContent(
         }
 
         Text(
-            text = stringResource(R.string.uikit_zarina_club_program_description_1),
-            style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.uikit_zarina_club_program_description_1).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.uikit_zarina_club_program_description_2),
-            style = UiKitTheme.typography.secondary.regular,
-            color = UiKitTheme.colors.text.general.regular.default,
+            text = stringResource(R.string.uikit_zarina_club_program_description_2).uppercase(),
+            style = UiKitTheme2.typography.body,
+            color = UiKitTheme2.colors.mainBlack,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 

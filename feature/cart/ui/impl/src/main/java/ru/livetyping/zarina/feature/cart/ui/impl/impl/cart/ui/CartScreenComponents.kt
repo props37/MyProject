@@ -86,6 +86,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -131,6 +132,7 @@ import ru.livetyping.zarina.core.uikit.tab.ZarinaTabRow
 import ru.livetyping.zarina.core.uikit.text.ZarinaPromoCodeTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartBonusAccountState
@@ -155,7 +157,8 @@ internal object CartScreenComponents {
         ZarinaTopBar(
             centerContent = {
                 Text(
-                    text = stringResource(RCommon.string.res_cart),
+                    text = stringResource(RCommon.string.res_cart).uppercase(),
+                    style = UiKitTheme2.typography.body,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -169,8 +172,8 @@ internal object CartScreenComponents {
                     ZarinaButton(
                         onClick = onClearClicked,
                         size = ZarinaButtonSize.Small,
-                        colors = ZarinaButtonDefaults.outlinedColors(),
-                        textStyle = UiKitTheme.typography.caption1.regular,
+                        colors = ZarinaButtonDefaults.backlessColors(),
+                        textStyle = UiKitTheme2.typography.body,
                         modifier = Modifier.padding(end = 8.dp),
                     ) {
                         Text(text = stringResource(RCommon.string.res_clear).uppercase())
@@ -282,9 +285,9 @@ internal object CartScreenComponents {
             ) {
                 if (city != null) {
                     Text(
-                        text = city.name,
-                        style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = city.name.uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f),
@@ -293,7 +296,7 @@ internal object CartScreenComponents {
                     Icon(
                         imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
                         contentDescription = stringResource(RCommon.string.res_change_city),
-                        tint = UiKitTheme.colors.icon.regular.default,
+                        tint = UiKitTheme2.colors.mainBlack,
                         modifier = Modifier
                             .size(16.dp)
                             .rotate(degrees = 90f),
@@ -364,16 +367,10 @@ internal object CartScreenComponents {
                 CartType.PICKUP -> RCommon.string.res_from_store
             }
 
-            val style = if (isSelected) {
-                UiKitTheme.typography.secondary.regular
-            } else {
-                UiKitTheme.typography.secondary.light
-            }
-
             Text(
-                text = stringResource(textResId),
-                style = style,
-                color = UiKitTheme.colors.text.general.regular.default,
+                text = stringResource(textResId).uppercase(),
+                style = UiKitTheme2.typography.body,
+                color = UiKitTheme2.colors.mainBlack,
             )
 
             AnimatedContent(
@@ -675,7 +672,7 @@ internal object CartScreenComponents {
                         Icon(
                             imageVector = ImageVector.vectorResource(RCommon.drawable.ic_question_mark_shaped_24),
                             contentDescription = stringResource(R.string.cart_product_limit_exceeded_error_content_description),
-                            tint = UiKitTheme.colors.icon.regular.error,
+                            tint = UiKitTheme2.colors.error,
                             modifier = Modifier.size(16.dp),
                         )
 
@@ -685,9 +682,9 @@ internal object CartScreenComponents {
                             text = stringResource(
                                 id = R.string.cart_product_limit_exceeded_error_text,
                                 cartState.productLimit.limit
-                            ),
-                            style = UiKitTheme.typography.footnote.light,
-                            color = UiKitTheme.colors.text.general.accent.red,
+                            ).uppercase(),
+                            style = UiKitTheme2.typography.body2,
+                            color = UiKitTheme2.colors.error,
                             modifier = Modifier.weight(1f),
                         )
                     }
@@ -736,15 +733,15 @@ internal object CartScreenComponents {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(UiKitTheme.colors.background.general.regular.default)
+                    .background(UiKitTheme2.colors.white)
                     .windowInsetsPadding(windowInsets)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Column(Modifier.weight(1f)) {
-                    val textColor = UiKitTheme.colors.text.general.regular.default
+                    val textColor = UiKitTheme2.colors.mainBlack
                     Text(
-                        text = stringResource(RCommon.string.res_total),
-                        style = UiKitTheme.typography.tertiary.light,
+                        text = stringResource(RCommon.string.res_total).uppercase(),
+                        style = UiKitTheme2.typography.body2,
                         color = textColor,
                     )
 
@@ -752,8 +749,8 @@ internal object CartScreenComponents {
 
                     val formattedPrice = rememberFormattedPrice(finalPrice)
                     Text(
-                        text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice),
-                        style = UiKitTheme.typography.primary.bold,
+                        text = stringResource(RCommon.string.res_price_in_rubles, formattedPrice).uppercase(),
+                        style = UiKitTheme2.typography.h4,
                         color = textColor,
                     )
                 }
@@ -766,7 +763,7 @@ internal object CartScreenComponents {
                     isLoading = isButtonLoading,
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = buttonText)
+                    Text(text = buttonText.uppercase())
                 }
             }
         }
@@ -927,7 +924,7 @@ internal object CartScreenComponents {
                         Box(
                             modifier = Modifier
                                 .matchParentSize()
-                                .background(UiKitTheme.colors.background.general.regular.default),
+                                .background(UiKitTheme2.colors.white),
                         )
 
                         ZarinaDivider(
@@ -968,7 +965,7 @@ internal object CartScreenComponents {
         Column(modifier = modifier) {
             ZarinaButton(
                 onClick = { onAddToFavoritesClicked(product) },
-                colors = ZarinaButtonDefaults.filledColors(),
+                colors = ZarinaButtonDefaults.tertiaryColors(),
                 shape = RectangleShape,
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier
@@ -1009,7 +1006,7 @@ internal object CartScreenComponents {
                     ) { textRedId ->
                         Text(
                             text = stringResource(textRedId).uppercase(),
-                            style = UiKitTheme.typography.caption2.regular,
+                            style = UiKitTheme2.typography.body2,
                             textAlign = TextAlign.Center,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
@@ -1039,7 +1036,7 @@ internal object CartScreenComponents {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = stringResource(RCommon.string.res_delete).uppercase(),
-                        style = UiKitTheme.typography.caption2.regular,
+                        style = UiKitTheme2.typography.body2,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -1069,8 +1066,8 @@ internal object CartScreenComponents {
                 count = bonusCount,
                 bonusCount.toString(),
             )
-            val baseTextStyle = UiKitTheme.typography.secondary.light
-            val bonusTextStyle = UiKitTheme.typography.secondary.regular
+            val baseTextStyle = UiKitTheme2.typography.body
+            val bonusTextStyle = UiKitTheme2.typography.bodyBold
             val text = remember(baseText, bonusText, baseTextStyle, bonusTextStyle) {
                 buildAnnotatedString {
                     withStyle(baseTextStyle.toSpanStyle()) {
@@ -1084,7 +1081,7 @@ internal object CartScreenComponents {
             }
 
             Text(
-                text = text,
+                text = text.toUpperCase(),
                 style = baseTextStyle,
                 modifier = Modifier.weight(1f),
             )
@@ -1120,9 +1117,9 @@ internal object CartScreenComponents {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = stringResource(R.string.cart_redeem_bonuses),
-                        style = UiKitTheme.typography.secondary.light,
-                        color = UiKitTheme.colors.text.general.regular.default,
+                        text = stringResource(R.string.cart_redeem_bonuses).uppercase(),
+                        style = UiKitTheme2.typography.body,
+                        color = UiKitTheme2.colors.mainBlack,
                     )
 
                     Spacer(modifier = Modifier.height(2.dp))
@@ -1133,9 +1130,9 @@ internal object CartScreenComponents {
                             id = R.plurals.cart_you_have_bonuses,
                             state.bonusAccount.balance,
                             formattedAvailable
-                        ),
-                        style = UiKitTheme.typography.footnote.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        ).uppercase(),
+                        style = UiKitTheme2.typography.body2,
+                        color = UiKitTheme2.colors.middleGray,
                     )
                 }
 
@@ -1179,7 +1176,7 @@ internal object CartScreenComponents {
                                     id = R.plurals.cart_you_can_redeem_bonuses,
                                     state.bonusAccount.redemption.max,
                                     formattedMaxWriteOff,
-                                ),
+                                ).uppercase(),
                             )
                         },
                         inputTransformation = InputTransformation.byValue { _, proposed ->
@@ -1216,17 +1213,17 @@ internal object CartScreenComponents {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(R.string.cart_apply_my_card),
-                    style = UiKitTheme.typography.secondary.light,
-                    color = UiKitTheme.colors.text.general.regular.default,
+                    text = stringResource(R.string.cart_apply_my_card).uppercase(),
+                    style = UiKitTheme2.typography.body,
+                    color = UiKitTheme2.colors.mainBlack,
                 )
 
                 if (state.info != null) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = state.info,
-                        style = UiKitTheme.typography.footnote.light,
-                        color = UiKitTheme.colors.text.general.regular.muted,
+                        text = state.info.uppercase(),
+                        style = UiKitTheme2.typography.body2,
+                        color = UiKitTheme2.colors.middleGray,
                     )
                 }
             }
@@ -1256,7 +1253,7 @@ internal object CartScreenComponents {
             modifier = modifier,
         ) { text ->
             if (text != null) {
-                Text(text = text)
+                Text(text = text.uppercase())
             }
         }
     }

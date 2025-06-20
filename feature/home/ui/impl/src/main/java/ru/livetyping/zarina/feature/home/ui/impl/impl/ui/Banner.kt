@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.livetyping.zarina.core.uikit.screen.ZarinaLogoLoadingScreen
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.home.domain.model.Banner
 import ru.livetyping.zarina.feature.home.domain.model.BannerContainer
 import ru.livetyping.zarina.feature.home.domain.model.MultipleBanners
@@ -64,7 +64,7 @@ internal fun Banner(
             ZarinaLogoLoadingScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(UiKitTheme.colors.background.general.regular.default),
+                    .background(UiKitTheme2.colors.white),
             )
         }
     }

@@ -22,7 +22,7 @@ internal fun FloatingBackButton(
     ZarinaButton(
         onClick = onClick,
         size = ZarinaButtonSize.Small,
-        colors = ZarinaButtonDefaults.filledColors(),
+        colors = ZarinaButtonDefaults.secondaryColors(),
         contentPadding = ZarinaButtonDefaults.ContentPaddingEven,
         modifier = modifier,
     ) {

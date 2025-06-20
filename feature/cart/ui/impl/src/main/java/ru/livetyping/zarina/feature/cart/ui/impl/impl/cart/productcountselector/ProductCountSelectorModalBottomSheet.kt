@@ -44,7 +44,7 @@ import ru.livetyping.zarina.core.uikit.icon.ZarinaCheckmarkIcon
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.loader.ZarinaCircularLoader
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 
@@ -150,8 +150,8 @@ private fun TopBar(
     ZarinaTopBar(
         centerContent = {
             Text(
-                text = stringResource(R.string.cart_select_count),
-                style = UiKitTheme.typography.primary.bold,
+                text = stringResource(R.string.cart_select_count).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -178,8 +178,8 @@ private fun CountItem(
         startContent = {
             Text(
                 text = item.count.toString(),
-                style = UiKitTheme.typography.secondary.light,
-                color = UiKitTheme.colors.text.general.regular.default,
+                style = UiKitTheme2.typography.h4,
+                color = UiKitTheme2.colors.mainBlack,
             )
         },
         endContent = {
