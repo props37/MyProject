@@ -2,7 +2,7 @@ package ru.livetyping.zarina.data.geography.impl.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.Street
 import timber.log.Timber
 
@@ -17,7 +17,7 @@ internal data class StreetDto(
     fun toStreet(): Street? {
         return if (id != null && text != null) {
             Street(
-                id = KladrId(id),
+                id = FiasId(id),
                 name = text,
             )
         } else {

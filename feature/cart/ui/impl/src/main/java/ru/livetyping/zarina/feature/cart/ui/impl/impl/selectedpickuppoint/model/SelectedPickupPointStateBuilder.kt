@@ -18,7 +18,7 @@ internal class SelectedPickupPointStateBuilder {
                     SelectedPickupPointState.Success(
                         pickupPoint = pickupPoint,
                         selectedDeliveryTypeId = selectedDeliveryTypeId
-                            ?: pickupPoint.deliveryTypes.first().id,
+                            ?: pickupPoint.deliveryTypes.firstOrNull()?.id,
                     )
                 },
                 onFailure = { t ->

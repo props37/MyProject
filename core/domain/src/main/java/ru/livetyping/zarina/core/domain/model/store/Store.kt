@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.domain.model.store
 
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.City as CityDomain
 
 // Marked as stable on config/compose/stability_config.txt
@@ -19,7 +19,7 @@ public data class Store(
     public fun getCity(): CityDomain? {
         return city?.let { city ->
             CityDomain(
-                id = city.kladrId,
+                id = city.fiasId,
                 name = city.name,
                 fullName = null,
                 region = null,
@@ -33,7 +33,7 @@ public data class Store(
 
     // Marked as stable on config/compose/stability_config.txt
     public data class City(
-        val kladrId: KladrId,
+        val fiasId: FiasId,
         val name: String,
     )
 }

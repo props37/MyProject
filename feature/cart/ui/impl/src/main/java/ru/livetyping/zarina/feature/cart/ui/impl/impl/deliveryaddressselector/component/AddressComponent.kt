@@ -123,7 +123,7 @@ internal class AddressComponent(
             val street = streetParcelable?.toStreet()
             if (street != null) {
                 val params = GetStreetBuildingsFlowUseCase.Params(
-                    streetKladrId = street.id,
+                    streetFiasId = street.id,
                     nameQuery = query.toString(),
                 )
                 getStreetBuildingsFlowUseCase(params)

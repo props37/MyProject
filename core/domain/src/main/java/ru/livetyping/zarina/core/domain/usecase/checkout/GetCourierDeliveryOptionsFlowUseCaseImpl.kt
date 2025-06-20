@@ -13,7 +13,7 @@ internal class GetCourierDeliveryOptionsFlowUseCaseImpl(
 ) : FlowUseCase<Params, List<DeliveryOption>>(logger), GetCourierDeliveryOptionsFlowUseCase {
 
     override fun execute(params: Params): Flow<List<DeliveryOption>> {
-        return checkoutRepository.getCourierDeliveryOptionsFlow(params.buildingKladrId)
+        return checkoutRepository.getCourierDeliveryOptionsFlow(params.buildingFiasId)
     }
 
     override fun invoke(params: Params): Flow<Result<List<DeliveryOption>>> {

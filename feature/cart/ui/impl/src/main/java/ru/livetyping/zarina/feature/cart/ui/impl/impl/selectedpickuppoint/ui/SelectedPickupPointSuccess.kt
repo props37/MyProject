@@ -202,57 +202,60 @@ private fun PickupPointPaymentMethodsItem(
 @Composable
 private fun PickupPointDeliveryTerms(
     pickupPoint: PickupPointDetailed,
-    selectedDeliveryTypeId: PickupPointDetailed.DeliveryType.Id,
+    selectedDeliveryTypeId: PickupPointDetailed.DeliveryType.Id?,
     onDeliveryTypeClicked: (PickupPointDetailed.DeliveryType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.cart_choose_delivery_terms).uppercase(),
-            style = UiKitTheme2.typography.bodyBold,
-            color = UiKitTheme2.colors.mainBlack,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
+    val deliveryTypes = pickupPoint.deliveryTypes
+    if (deliveryTypes.isNotEmpty()) {
+        Column(modifier = modifier) {
+            Text(
+                text = stringResource(R.string.cart_choose_delivery_terms).uppercase(),
+                style = UiKitTheme2.typography.bodyBold,
+                color = UiKitTheme2.colors.mainBlack,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        pickupPoint.deliveryTypes.forEachIndexed { index, deliveryType ->
-            key(deliveryType.id.value) {
-                ZarinaItem(
-                    onClick = { onDeliveryTypeClicked(deliveryType) },
-                    startContent = {
-                        Column {
-                            Text(
-                                text = deliveryType.title.uppercase(),
-                                style = UiKitTheme2.typography.body,
+            deliveryTypes.forEachIndexed { index, deliveryType ->
+                key(deliveryType.id.value) {
+                    ZarinaItem(
+                        onClick = { onDeliveryTypeClicked(deliveryType) },
+                        startContent = {
+                            Column {
+                                Text(
+                                    text = deliveryType.title.uppercase(),
+                                    style = UiKitTheme2.typography.body,
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = remember(deliveryType.description) {
+                                        AnnotatedString.fromHtml(deliveryType.description).toUpperCase()
+                                    },
+                                    style = UiKitTheme2.typography.body,
+                                    color = UiKitTheme2.colors.middleGray,
+                                )
+                            }
+                        },
+                        endContent = {
+                            ZarinaRadioButton(
+                                isSelected = deliveryType.id == selectedDeliveryTypeId,
+                                onClick = { onDeliveryTypeClicked(deliveryType) },
                             )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = remember(deliveryType.description) {
-                                    AnnotatedString.fromHtml(deliveryType.description).toUpperCase()
-                                },
-                                style = UiKitTheme2.typography.body,
-                                color = UiKitTheme2.colors.middleGray,
-                            )
-                        }
-                    },
-                    endContent = {
-                        ZarinaRadioButton(
-                            isSelected = deliveryType.id == selectedDeliveryTypeId,
-                            onClick = { onDeliveryTypeClicked(deliveryType) },
-                        )
-                    },
-                    contentPadding = PaddingValues(start = 16.dp, top = 12.dp, bottom = 12.dp),
-                )
-
-                if (index < pickupPoint.deliveryTypes.lastIndex) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                        },
+                        contentPadding = PaddingValues(start = 16.dp, top = 12.dp, bottom = 12.dp),
                     )
+
+                    if (index < deliveryTypes.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

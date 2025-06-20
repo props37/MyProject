@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.uimodel.common.LocationParcelable
 
@@ -31,7 +31,7 @@ public data class StoreParcelable(
             country = country,
             city = city?.let { city ->
                 Store.City(
-                    kladrId = KladrId(city.kladrId),
+                    fiasId = FiasId(city.fiasId),
                     name = city.name,
                 )
             },
@@ -41,7 +41,7 @@ public data class StoreParcelable(
     @Serializable
     @Parcelize
     public data class CityParcelable(
-        val kladrId: String,
+        val fiasId: String,
         val name: String,
     ) : Parcelable
 
@@ -57,7 +57,7 @@ public data class StoreParcelable(
                 country = store.country,
                 city = store.city?.let { city ->
                     CityParcelable(
-                        kladrId = city.kladrId.value,
+                        fiasId = city.fiasId.value,
                         name = city.name,
                     )
                 },

@@ -7,7 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.cart.CartType
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
@@ -26,10 +26,10 @@ internal class CartApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val httpClient: HttpClient,
 ) : CartApi {
-    override suspend fun getCart(cartType: CartType, cityKladrId: KladrId?): CartDto {
+    override suspend fun getCart(cartType: CartType, cityFiasId: FiasId?): CartDto {
         return httpClient.get("/api/cart") {
             parameter("cart_type", CartTypeDto.from(cartType).value)
-            parameter("city_kladr_id", cityKladrId?.value)
+            parameter("city_kladr_id", cityFiasId?.value)
         }.body()
     }
 

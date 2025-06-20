@@ -19,8 +19,8 @@ internal class GetPickupPointFlowUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<PickupPointDetailed> {
-        return if (params.cityKladrId != null) {
-            checkoutRepository.getPickupPointFlow(params.cityKladrId, params.pickupPointId)
+        return if (params.cityFiasId != null) {
+            checkoutRepository.getPickupPointFlow(params.cityFiasId, params.pickupPointId)
         } else {
             userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
                 checkNotNull(city) { "city is null" }

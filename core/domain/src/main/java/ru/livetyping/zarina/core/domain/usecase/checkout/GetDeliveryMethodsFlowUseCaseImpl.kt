@@ -19,8 +19,8 @@ internal class GetDeliveryMethodsFlowUseCaseImpl(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun execute(params: Params): Flow<List<DeliveryMethod>> {
-        return if (params.cityKladrId != null) {
-            checkoutRepository.getDeliveryMethodsFlow(params.cartType, params.cityKladrId)
+        return if (params.cityFiasId != null) {
+            checkoutRepository.getDeliveryMethodsFlow(params.cartType, params.cityFiasId)
         } else {
             userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
                 checkNotNull(city) { "city is null" }

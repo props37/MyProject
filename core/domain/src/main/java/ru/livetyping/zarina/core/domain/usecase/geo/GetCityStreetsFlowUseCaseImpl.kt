@@ -25,8 +25,8 @@ internal class GetCityStreetsFlowUseCaseImpl(
             return flow { throw EmptySearchQueryException() }
         }
 
-        return if (params.cityKladrId != null) {
-            geographyRepository.getCityStreetsFlow(params.cityKladrId, params.nameQuery)
+        return if (params.cityFiasId != null) {
+            geographyRepository.getCityStreetsFlow(params.cityFiasId, params.nameQuery)
         } else {
             userRepository.getUserCityFlow(CachePolicy.LocalOnly).flatMapLatest { city ->
                 checkNotNull(city) { "city is null" }

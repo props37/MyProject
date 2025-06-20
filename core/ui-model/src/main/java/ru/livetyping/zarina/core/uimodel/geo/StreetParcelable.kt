@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.uimodel.geo
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.Street
 
 @Serializable
@@ -14,7 +14,7 @@ public data class StreetParcelable(
 ) : Parcelable {
     public fun toStreet(): Street {
         return Street(
-            id = KladrId(id),
+            id = FiasId(id),
             name = name,
         )
     }

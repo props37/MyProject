@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.cart.Cart
 import ru.livetyping.zarina.core.domain.model.cart.CartType
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository
@@ -27,8 +27,8 @@ internal class GetCartFlowUseCaseImpl(
     override fun execute(params: Params): Flow<Cart> {
         val wishlistProductIdsFlow =
             wishlistRepository.getWishlistProductIdsFlow(CachePolicy.LocalOnly)
-        return if (params.cityKladrId != null) {
-            getCartFlow(params.cartType, params.cityKladrId, wishlistProductIdsFlow)
+        return if (params.cityFiasId != null) {
+            getCartFlow(params.cartType, params.cityFiasId, wishlistProductIdsFlow)
         } else {
             userRepository.getUserCityFlow(CachePolicy.LocalOnly)
                 .flatMapLatest { city ->
@@ -44,10 +44,10 @@ internal class GetCartFlowUseCaseImpl(
 
     private fun getCartFlow(
         cartType: CartType,
-        cityKladrId: KladrId?,
+        cityFiasId: FiasId?,
         wishlistProductIdsFlow: Flow<Set<Product.Id>>,
     ): Flow<Cart> {
-        return cartRepository.getCartFlow(cartType, cityKladrId)
+        return cartRepository.getCartFlow(cartType, cityFiasId)
             .combine(wishlistProductIdsFlow) { cart, wishlistProductIds ->
                 val products = cart.products.map { product ->
                     product.copy(isInWishlist = product.productId in wishlistProductIds)

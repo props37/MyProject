@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -73,12 +73,12 @@ internal class ProductApiImpl @Inject constructor(
 
     override suspend fun getProductAvailabilityInStores(
         offer: ProductOffer,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): List<ProductAvailabilityInStoreDto> {
         val barcode = offer.barcode.value
-        val kladrId = cityKladrId.value
+        val fiasId = cityFiasId.value
         return productAvailabilityInStoreApiExceptionConverter {
-            httpClient.get("/api/products/stock/offers/$barcode/city/$kladrId").body()
+            httpClient.get("/api/products/stock/offers/$barcode/city/$fiasId").body()
         }
     }
 

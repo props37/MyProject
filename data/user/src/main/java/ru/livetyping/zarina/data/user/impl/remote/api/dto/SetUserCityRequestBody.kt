@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class SetUserCityRequestBody(
     @SerialName("kladr_id")
-    val kladrId: String,
+    val fiasId: String,
 )

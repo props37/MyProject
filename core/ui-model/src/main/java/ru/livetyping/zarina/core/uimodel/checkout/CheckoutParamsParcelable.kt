@@ -18,7 +18,7 @@ import ru.livetyping.zarina.core.uimodel.store.StoreParcelable
 public sealed class CheckoutParamsParcelable : Parcelable {
     public abstract val cartType: CartTypeParcelable
     public abstract val deliveryMethod: DeliveryMethodParcelable
-    public abstract val cityKladrId: String
+    public abstract val cityFiasId: String
     public abstract val recipient: RecipientParcelable
 
     public abstract fun toCheckoutParams(): CheckoutParams
@@ -56,7 +56,7 @@ public data class CourierDeliveryCheckoutParamsParcelable(
     val deliveryOption: DeliveryOptionParcelable,
     val dateTimePeriod: DeliveryOptionParcelable.DateTimePeriodParcelable,
 ) : CheckoutParamsParcelable() {
-    override val cityKladrId: String get() = address.city.id
+    override val cityFiasId: String get() = address.city.id
 
     public override fun toCheckoutParams(): CourierDeliveryCheckoutParams {
         return CourierDeliveryCheckoutParams(
@@ -94,7 +94,7 @@ public data class PostDeliveryCheckoutParamsParcelable(
     val deliveryOption: DeliveryOptionParcelable,
     val dateTimePeriod: DeliveryOptionParcelable.DateTimePeriodParcelable,
 ) : CheckoutParamsParcelable() {
-    override val cityKladrId: String get() = address.city.id
+    override val cityFiasId: String get() = address.city.id
 
     public override fun toCheckoutParams(): PostDeliveryCheckoutParams {
         return PostDeliveryCheckoutParams(
@@ -130,10 +130,10 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
     override val recipient: RecipientParcelable,
     val city: CityParcelable,
     val pickupPoint: PickupPointParcelable,
-    val deliveryType: PickupPointParcelable.DeliveryTypeParcelable,
-    val dateTimePeriod: PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable,
+    val deliveryType: PickupPointParcelable.DeliveryTypeParcelable?,
+    val dateTimePeriod: PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable?,
 ) : CheckoutParamsParcelable() {
-    override val cityKladrId: String get() = city.id
+    override val cityFiasId: String get() = city.id
 
     public override fun toCheckoutParams(): PickupFromPickupPointCheckoutParams {
         return PickupFromPickupPointCheckoutParams(
@@ -142,8 +142,8 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
             recipient = recipient.toRecipient(),
             city = city.toCity(),
             pickupPoint = pickupPoint.toPickupPointDetailed(),
-            deliveryType = deliveryType.toDeliveryType(),
-            dateTimePeriod = dateTimePeriod.toDateTimePeriod(),
+            deliveryType = deliveryType?.toDeliveryType(),
+            dateTimePeriod = dateTimePeriod?.toDateTimePeriod(),
         )
     }
 
@@ -157,9 +157,12 @@ public data class PickupFromPickupPointCheckoutParamsParcelable(
                 recipient = RecipientParcelable.from(params.recipient),
                 city = CityParcelable.from(params.city),
                 pickupPoint = PickupPointParcelable.from(params.pickupPoint),
-                deliveryType = PickupPointParcelable.DeliveryTypeParcelable.from(params.deliveryType),
-                dateTimePeriod = PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable
-                    .from(params.dateTimePeriod),
+                deliveryType = params.deliveryType?.let {
+                    PickupPointParcelable.DeliveryTypeParcelable.from(it)
+                },
+                dateTimePeriod = params.dateTimePeriod?.let {
+                    PickupPointParcelable.DeliveryTypeParcelable.DateTimePeriodParcelable.from(it)
+                },
             )
         }
     }
@@ -174,7 +177,7 @@ public data class PickupFromStoreCheckoutParamsParcelable(
     val city: CityParcelable,
     val store: StoreParcelable,
 ) : CheckoutParamsParcelable() {
-    override val cityKladrId: String get() = city.id
+    override val cityFiasId: String get() = city.id
 
     public override fun toCheckoutParams(): PickupFromStoreCheckoutParams {
         return PickupFromStoreCheckoutParams(

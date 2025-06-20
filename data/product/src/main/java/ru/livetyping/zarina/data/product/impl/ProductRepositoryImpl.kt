@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
@@ -52,9 +52,9 @@ internal class ProductRepositoryImpl @Inject constructor(
 
     override fun getProductAvailabilityInStoresFlow(
         offer: ProductOffer,
-        cityKladrId: KladrId
+        cityFiasId: FiasId
     ): Flow<List<ProductAvailabilityInStore>> {
-        return remoteDataSource.getProductAvailabilityInStoresFlow(offer, cityKladrId)
+        return remoteDataSource.getProductAvailabilityInStoresFlow(offer, cityFiasId)
     }
 
     override suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email) {

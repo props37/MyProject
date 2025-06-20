@@ -13,7 +13,7 @@ internal class GetPostDeliveryOptionsFlowUseCaseImpl(
 ) : FlowUseCase<Params, List<DeliveryOption>>(logger), GetPostDeliveryOptionsFlowUseCase {
 
     override fun execute(params: Params): Flow<List<DeliveryOption>> {
-        return checkoutRepository.getPostDeliveryOptionsFlow(params.buildingKladrId)
+        return checkoutRepository.getPostDeliveryOptionsFlow(params.buildingFiasId)
     }
 
     override fun invoke(params: Params): Flow<Result<List<DeliveryOption>>> {

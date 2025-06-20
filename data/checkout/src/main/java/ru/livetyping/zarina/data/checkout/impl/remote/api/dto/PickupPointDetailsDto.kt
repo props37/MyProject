@@ -10,7 +10,7 @@ import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.PickupPointDto.Com
 @Serializable
 internal data class PickupPointDetailedDto(
     @SerialName("id")
-    val id: Long? = null,
+    val id: String? = null,
 
     @SerialName("title")
     val title: String? = null,
@@ -53,7 +53,7 @@ internal data class PickupPointDetailedDto(
         checkPropertyNotNull(levels) { ::levels }
         check(levels.isNotEmpty()) { "levels is empty" }
         return PickupPointDetailed(
-            id = PickupPoint.Id(id.toString()),
+            id = PickupPoint.Id(id),
             title = title,
             address = address,
             location = location.toLocation(),
@@ -65,7 +65,7 @@ internal data class PickupPointDetailedDto(
             schedule = schedule,
             expectedDeliveryDate = estimatedDelivery,
             shelfTimeInDays = shelfTime,
-            deliveryTypes = levels.map { it.toDeliveryType() },
+            deliveryTypes = levels.mapNotNull { it.toDeliveryType() },
         )
     }
 
@@ -83,24 +83,24 @@ internal data class PickupPointDetailedDto(
         @SerialName("intervals")
         val intervals: List<DateTimePeriodDto>? = null,
     ) {
-        fun toDeliveryType(): PickupPointDetailed.DeliveryType {
-            checkPropertyNotNull(code) { ::code }
-            checkPropertyNotNull(name) { ::name }
-            checkPropertyNotNull(description) { ::description }
-            checkPropertyNotNull(intervals) { ::intervals }
-            check(intervals.isNotEmpty()) { "intervals is empty" }
-            return PickupPointDetailed.DeliveryType(
-                id = PickupPointDetailed.DeliveryType.Id(code),
-                title = name,
-                description = description,
-                dateTimePeriods = intervals.map { it.toDateTimePeriod() },
-            )
+        fun toDeliveryType(): PickupPointDetailed.DeliveryType? {
+            return if (code != null && name != null && description != null && intervals != null) {
+                check(intervals.isNotEmpty()) { "intervals is empty" }
+                PickupPointDetailed.DeliveryType(
+                    id = PickupPointDetailed.DeliveryType.Id(code),
+                    title = name,
+                    description = description,
+                    dateTimePeriods = intervals.map { it.toDateTimePeriod() },
+                )
+            } else {
+                null
+            }
         }
 
         @Serializable
         data class DateTimePeriodDto(
             @SerialName("id")
-            val id: Long? = null,
+            val id: String? = null,
 
             @SerialName("title")
             val title: String? = null,
@@ -109,7 +109,7 @@ internal data class PickupPointDetailedDto(
                 checkPropertyNotNull(id) { ::id }
                 checkPropertyNotNull(title) { ::title }
                 return PickupPointDetailed.DeliveryType.DateTimePeriod(
-                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id.toString()),
+                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id),
                     title = title,
                 )
             }

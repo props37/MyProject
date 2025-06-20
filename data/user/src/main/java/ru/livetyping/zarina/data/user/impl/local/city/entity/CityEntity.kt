@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -22,7 +22,7 @@ internal data class CityEntity(
     fun toCity(): City {
         return City(
             name = name,
-            id = KladrId(id),
+            id = FiasId(id),
             fullName = fullName,
             region = region,
         )

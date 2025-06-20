@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import ru.livetyping.zarina.core.domain.model.geo.City
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreenState2
 
 @Stable
@@ -29,7 +29,7 @@ internal sealed class CityListState {
             cityResult: Result<List<City>>?,
             isLoadingCities: Boolean,
             selectedCity: City?,
-            priorityCityKladrIds: Set<KladrId>,
+            priorityCityFiasIds: Set<FiasId>,
             isChangeCityButtonVisible: Boolean,
             isChangeCityButtonLoading: Boolean,
         ): CityListState {
@@ -40,7 +40,7 @@ internal sealed class CityListState {
                     onSuccess = { cities ->
                         if (cities.isNotEmpty()) {
                             val (priorityCities, otherCities) = cities.partition { city ->
-                                city.id in priorityCityKladrIds
+                                city.id in priorityCityFiasIds
                             }
                             val items = buildList {
                                 val priorityItems = priorityCities.map { city ->

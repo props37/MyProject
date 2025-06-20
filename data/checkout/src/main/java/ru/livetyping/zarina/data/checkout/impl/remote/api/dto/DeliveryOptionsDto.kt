@@ -3,7 +3,6 @@ package ru.livetyping.zarina.data.checkout.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
-import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import timber.log.Timber
 import java.math.BigDecimal
 
@@ -13,8 +12,9 @@ internal data class DeliveryOptionsDto(
     val tryingTypes: List<OptionDto>? = null,
 ) {
     fun toDeliveryOptions(type: DeliveryOptionsDtoType): List<DeliveryOption> {
-        checkPropertyNotNull(tryingTypes) { ::tryingTypes }
-        return tryingTypes.mapNotNull { it.toDeliveryOption(type) }
+        val firstDeliveryOption = tryingTypes?.firstOrNull()?.toDeliveryOption(type)
+        checkNotNull(firstDeliveryOption)
+        return listOf(firstDeliveryOption)
     }
 
     @Serializable
@@ -53,29 +53,32 @@ internal data class DeliveryOptionsDto(
         @Serializable
         data class DateTimePeriodDto(
             @SerialName("id")
-            val id: Long? = null,
+            val id: String? = null,
 
             @SerialName("title")
             val title: String? = null,
         ) {
             fun toDateTimePeriod(type: DeliveryOptionsDtoType): DeliveryOption.DateTimePeriod? {
                 return if (id != null && title != null) {
+                    val segments = title.split(DATE_TIME_PERIOD_SEPARATOR)
                     val date = when (type) {
                         DeliveryOptionsDtoType.COURIER -> {
-                            title.substringBeforeLast(DATE_TIME_PERIOD_SEPARATOR)
+                            val dayOfWeek = segments.getOrNull(0)
+                            val dayOfMonth = segments.getOrNull(1)
+                            "$dayOfWeek, $dayOfMonth"
                         }
 
                         DeliveryOptionsDtoType.POST -> title
                     }
                     val time = when (type) {
                         DeliveryOptionsDtoType.COURIER -> {
-                            title.substringAfterLast(DATE_TIME_PERIOD_SEPARATOR)
+                            segments.getOrNull(2)
                         }
 
                         DeliveryOptionsDtoType.POST -> null
                     }
                     DeliveryOption.DateTimePeriod(
-                        id = DeliveryOption.DateTimePeriod.Id(id.toString()),
+                        id = DeliveryOption.DateTimePeriod.Id(id),
                         date = date,
                         time = time,
                     )

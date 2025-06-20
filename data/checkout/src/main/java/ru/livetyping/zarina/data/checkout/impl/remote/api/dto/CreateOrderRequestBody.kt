@@ -83,21 +83,21 @@ internal data class CreateOrderRequestBody(
         data class Address(
             @SerialName("city_name")
             val cityName: String,
-            
+
             @SerialName("city_kladr_id") 
-            val cityKladrId: String,
-            
+            val cityFiasId: String,
+
             @SerialName("street_name")
             val streetName: String?,
 
             @SerialName("street_kladr_id")
-            val streetKladrId: String?,
+            val streetFiasId: String?,
 
             @SerialName("building_number")
             val buildingNumber: String?,
 
             @SerialName("building_kladr_id")
-            val buildingKladrId: String?,
+            val buildingFiasId: String?,
 
             @SerialName("flat")
             val flat: String?,
@@ -110,11 +110,11 @@ internal data class CreateOrderRequestBody(
                         is PickupFromPickupPointCheckoutParams -> {
                             Address(
                                 cityName = checkoutParams.city.name,
-                                cityKladrId = checkoutParams.city.id.value,
+                                cityFiasId = checkoutParams.city.id.value,
                                 streetName = null,
-                                streetKladrId = null,
+                                streetFiasId = null,
                                 buildingNumber = null,
-                                buildingKladrId = null,
+                                buildingFiasId = null,
                                 flat = null,
                             )
                         }
@@ -122,11 +122,11 @@ internal data class CreateOrderRequestBody(
                         is PickupFromStoreCheckoutParams -> {
                             Address(
                                 cityName = checkoutParams.city.name,
-                                cityKladrId = checkoutParams.city.id.value,
+                                cityFiasId = checkoutParams.city.id.value,
                                 streetName = null,
-                                streetKladrId = null,
+                                streetFiasId = null,
                                 buildingNumber = null,
-                                buildingKladrId = null,
+                                buildingFiasId = null,
                                 flat = null,
                             )
                         }
@@ -136,11 +136,11 @@ internal data class CreateOrderRequestBody(
                 private fun from(address: AddressDomain): Address {
                     return Address(
                         cityName = address.city.name,
-                        cityKladrId = address.city.id.value,
+                        cityFiasId = address.city.id.value,
                         streetName = address.street.name,
-                        streetKladrId = address.street.id.value,
+                        streetFiasId = address.street.id.value,
                         buildingNumber = address.building.name,
-                        buildingKladrId = address.building.id.value,
+                        buildingFiasId = address.building.id.value,
                         flat = address.apartment,
                     )
                 }
@@ -186,8 +186,9 @@ internal data class CreateOrderRequestBody(
                             Payload(
                                 pickupStoreId = null,
                                 pickupPointId = checkoutParams.pickupPoint.id.value,
-                                tryingTypeLevelName = checkoutParams.deliveryType.id.value,
-                                periodId = checkoutParams.dateTimePeriod.id.value,
+                                // Need to pass "economy" in case of null?
+                                tryingTypeLevelName = checkoutParams.deliveryType?.id?.value,
+                                periodId = checkoutParams.dateTimePeriod?.id?.value,
                             )
                         }
 

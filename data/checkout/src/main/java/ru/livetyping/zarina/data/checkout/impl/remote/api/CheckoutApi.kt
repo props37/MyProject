@@ -10,7 +10,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.store.Store
@@ -39,24 +39,24 @@ internal interface CheckoutApi {
 
     suspend fun getDeliveryMethods(
         cartType: CartType,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): List<DeliveryMethodDto>
 
-    suspend fun getPickupPoints(cityKladrId: KladrId): List<PickupPointDto>
+    suspend fun getPickupPoints(cityFiasId: FiasId): List<PickupPointDto>
 
     suspend fun getPickupPoint(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         pickupPointId: PickupPoint.Id,
     ): PickupPointDetailedDto
 
     suspend fun getPickupStores(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         deliveryMethodType: DeliveryMethodType,
     ): List<PickupStoreDto>
 
-    suspend fun getCourierDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto
+    suspend fun getCourierDeliveryOptions(buildingFiasId: FiasId): DeliveryOptionsDto
 
-    suspend fun getPostDeliveryOptions(buildingKladrId: KladrId): DeliveryOptionsDto
+    suspend fun getPostDeliveryOptions(buildingFiasId: FiasId): DeliveryOptionsDto
 
     suspend fun getCart(
         checkoutParams: CheckoutParams,

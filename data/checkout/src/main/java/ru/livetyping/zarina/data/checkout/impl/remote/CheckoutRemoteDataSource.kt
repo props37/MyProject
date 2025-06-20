@@ -15,7 +15,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
@@ -34,24 +34,24 @@ internal interface CheckoutRemoteDataSource {
 
     fun getDeliveryMethodsFlow(
         cartType: CartType,
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
     ): Flow<List<DeliveryMethod>>
 
-    fun getPickupPointsFlow(cityKladrId: KladrId): Flow<List<PickupPointShort>>
+    fun getPickupPointsFlow(cityFiasId: FiasId): Flow<List<PickupPointShort>>
 
     fun getPickupPointFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         pickupPointId: PickupPoint.Id,
     ): Flow<PickupPointDetailed>
 
     fun getPickupStoresFlow(
-        cityKladrId: KladrId,
+        cityFiasId: FiasId,
         deliveryMethodType: DeliveryMethodType,
     ): Flow<List<PickupStore>>
 
-    fun getCourierDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>>
+    fun getCourierDeliveryOptionsFlow(buildingFiasId: FiasId): Flow<List<DeliveryOption>>
 
-    fun getPostDeliveryOptionsFlow(buildingKladrId: KladrId): Flow<List<DeliveryOption>>
+    fun getPostDeliveryOptionsFlow(buildingFiasId: FiasId): Flow<List<DeliveryOption>>
 
     fun getCartFlow(
         checkoutParams: CheckoutParams,

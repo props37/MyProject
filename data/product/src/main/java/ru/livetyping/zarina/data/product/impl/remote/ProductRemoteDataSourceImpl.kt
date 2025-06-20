@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
 import ru.livetyping.zarina.core.domain.model.common.Email
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
@@ -53,9 +53,9 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
 
     override fun getProductAvailabilityInStoresFlow(
         offer: ProductOffer,
-        cityKladrId: KladrId
+        cityFiasId: FiasId
     ): Flow<List<ProductAvailabilityInStore>> = flow {
-        val dto = api.getProductAvailabilityInStores(offer, cityKladrId)
+        val dto = api.getProductAvailabilityInStores(offer, cityFiasId)
         val availabilityList = dto.map { it.toProductAvailabilityInStore() }
         emit(availabilityList)
     }

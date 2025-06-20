@@ -3,7 +3,7 @@ package ru.livetyping.zarina.data.geography.impl.remote.api.dto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.geo.Building
-import ru.livetyping.zarina.core.domain.model.geo.KladrId
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import timber.log.Timber
 
 @Serializable
@@ -17,7 +17,7 @@ internal data class BuildingDto(
     fun toBuilding(): Building? {
         return if (id != null && text != null) {
             Building(
-                id = KladrId(id),
+                id = FiasId(id),
                 name = text,
             )
         } else {
