@@ -186,8 +186,10 @@ internal class ProductComponent(
         initSimilarProductsFetching()
     }
 
-    fun setProductId(id: Product.Id) {
+    fun setProductId(id: Product.Id): Boolean {
+        val prevId = productId.value
         productId.value = id
+        return id != prevId
     }
 
     suspend fun awaitProduct(): ProductDetailed? {
