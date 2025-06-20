@@ -100,7 +100,7 @@ internal data class PickupPointDetailedDto(
         @Serializable
         data class DateTimePeriodDto(
             @SerialName("id")
-            val id: Long? = null,
+            val id: String? = null,
 
             @SerialName("title")
             val title: String? = null,
@@ -109,7 +109,7 @@ internal data class PickupPointDetailedDto(
                 checkPropertyNotNull(id) { ::id }
                 checkPropertyNotNull(title) { ::title }
                 return PickupPointDetailed.DeliveryType.DateTimePeriod(
-                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id.toString()),
+                    id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id),
                     title = title,
                 )
             }
