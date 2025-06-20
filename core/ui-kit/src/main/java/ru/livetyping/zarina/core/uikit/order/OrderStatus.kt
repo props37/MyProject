@@ -20,4 +20,5 @@ public val OrderStatus.color: Color
         OrderStatus.REFUNDED -> UiKitTheme.colors.text.label.warning
         OrderStatus.NOT_REFUNDABLE -> UiKitTheme.colors.text.label.danger
         OrderStatus.TO_DELIVERY -> UiKitTheme.colors.text.label.warning
+        OrderStatus.UNKNOWN -> Color.Transparent
     }

@@ -2,6 +2,7 @@
 <resources>
     <string name="res_zarina" translatable="false">Zarina</string>
 
+    <string name="res_empty_string" translatable="false"></string>
     <string name="res_refresh">Обновить</string>
     <string name="res_internet_connection_error">Проблемы с интернетом</string>
     <string name="res_check_internet_connection">Проверьте подключение к интернету</string>
