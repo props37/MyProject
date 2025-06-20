@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryOption
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryaddressselector.model.DeliveryOptionsState
+import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable
 internal fun DeliveryOptionsSuccess(
@@ -26,7 +28,7 @@ internal fun DeliveryOptionsSuccess(
             key(optionState.deliveryOption.id.value) {
                 val option = optionState.deliveryOption
                 DeliveryOption(
-                    title = option.title,
+                    title = stringResource(RCommon.string.res_delivery_method_courier),
                     price = option.price,
                     deliveryDate = optionState.selectedDateTimePeriod.date,
                     deliveryTime = optionState.selectedDateTimePeriod.time,
