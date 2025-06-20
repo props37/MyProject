@@ -199,7 +199,9 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private fun onProductColorClicked(event: ProductEvent.ProductColorClicked) {
-        productComponent.setProductId(event.color.productId)
+        if (productComponent.setProductId(event.color.productId)) {
+            reportScreenCreated()
+        }
     }
 
     private fun onProductClicked(event: ProductEvent.ProductClicked) {
