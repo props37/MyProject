@@ -39,7 +39,6 @@ ru.livetyping.zarina.core.domain.model.media.MediaType
 
 ru.livetyping.zarina.core.domain.model.order.Order.Id
 ru.livetyping.zarina.core.domain.model.order.Order.Number
-ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
 ru.livetyping.zarina.core.domain.model.order.OrderStatus
 ru.livetyping.zarina.core.domain.model.order.OrderRecipient
 ru.livetyping.zarina.core.domain.model.order.OrderPrice

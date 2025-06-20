@@ -123,7 +123,7 @@ internal fun OrderSuccess(
             contentType = OrderListContentType.Info,
         ) {
             OrderInfo(
-                deliveryMethodType = order.deliveryInfo.type,
+                deliveryMethodType = order.deliveryMethodType,
                 deliveryAddress = order.deliveryAddress,
                 recipient = order.recipient,
                 paymentMethodType = order.paymentMethodType,
@@ -198,7 +198,7 @@ private fun OrderProductContentsItem(
 
 @Composable
 private fun OrderInfo(
-    deliveryMethodType: DeliveryMethodType,
+    deliveryMethodType: DeliveryMethodType?,
     deliveryAddress: String?,
     recipient: OrderRecipient,
     paymentMethodType: PaymentMethodType,
@@ -216,11 +216,13 @@ private fun OrderInfo(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OrderInfoItem(
-                name = stringResource(RCommon.string.res_delivery_method),
-                value = stringResource(deliveryMethodType.nameResId),
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+            if (deliveryMethodType != null) {
+                OrderInfoItem(
+                    name = stringResource(RCommon.string.res_delivery_method),
+                    value = stringResource(deliveryMethodType.nameResId),
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
 
             if (deliveryAddress != null) {
                 OrderInfoItem(

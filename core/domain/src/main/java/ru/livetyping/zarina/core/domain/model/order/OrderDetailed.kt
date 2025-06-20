@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.core.domain.model.order
 
+import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
@@ -19,8 +20,8 @@ public data class OrderDetailed(
     val price: OrderPrice,
     val paymentMethodType: PaymentMethodType,
     val paymentUrl: Url?,
-    val deliveryInfo: OrderDeliveryInfo,
     val recipient: OrderRecipient,
+    val deliveryMethodType: DeliveryMethodType?,
     val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Order() {
