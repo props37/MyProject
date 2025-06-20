@@ -7,7 +7,6 @@ import ru.livetyping.zarina.core.domain.model.common.Email
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.order.Order
-import ru.livetyping.zarina.core.domain.model.order.OrderDeliveryInfo
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.order.OrderPrice
 import ru.livetyping.zarina.core.domain.model.order.OrderRecipient
@@ -104,8 +103,8 @@ public data class OrderDto(
             price = price,
             paymentMethodType = paymentMethod,
             paymentUrl = paymentTool?.link?.let { Url.create(it) },
-            deliveryInfo = shipping.toOrderDeliveryInfo(),
             recipient = contactInfo.toOrderRecipient(),
+            deliveryMethodType = shipping.shippingMethod.type?.toDeliveryMethodType(),
             deliveryAddress = address?.takeIf { it.isNotEmpty() },
             isCancellable = isCancelable ?: false,
         )
@@ -190,14 +189,6 @@ public data class OrderDto(
         @SerialName("shipping_method")
         val shippingMethod: MethodDto? = null,
     ) {
-        internal fun toOrderDeliveryInfo(): OrderDeliveryInfo {
-            checkPropertyNotNull(shippingMethod) { ::shippingMethod }
-            checkPropertyNotNull(shippingMethod.type) { shippingMethod::type }
-            val deliveryMethodType = shippingMethod.type.toDeliveryMethodType()
-            checkNotNull(deliveryMethodType) { "deliveryMethodType is null" }
-            return OrderDeliveryInfo(deliveryMethodType)
-        }
-
         @Serializable
         public data class MethodDto(
             @SerialName("type")

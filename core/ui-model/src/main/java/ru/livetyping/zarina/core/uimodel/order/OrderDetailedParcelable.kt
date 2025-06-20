@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
+import ru.livetyping.zarina.core.uimodel.checkout.DeliveryMethodTypeParcelable
 import ru.livetyping.zarina.core.uimodel.checkout.PaymentMethodTypeParcelable
 import ru.livetyping.zarina.core.uimodel.product.ProductColorParcelable
 import ru.livetyping.zarina.core.uimodel.product.ProductPriceParcelable
@@ -24,8 +25,8 @@ public data class OrderDetailedParcelable(
     val price: OrderPriceParcelable,
     val paymentMethodType: PaymentMethodTypeParcelable,
     val paymentUrl: String?,
-    val deliveryInfo: OrderDeliveryInfoParcelable,
     val recipient: OrderRecipientParcelable,
+    val deliveryMethodType: DeliveryMethodTypeParcelable?,
     val deliveryAddress: String?,
     val isCancellable: Boolean,
 ) : Parcelable {
@@ -40,8 +41,8 @@ public data class OrderDetailedParcelable(
             price = price.toOrderPrice(),
             paymentMethodType = paymentMethodType.toPaymentMethodType(),
             paymentUrl = paymentUrl?.let { Url.create(it) },
-            deliveryInfo = deliveryInfo.toOrderDeliveryInfo(),
             recipient = recipient.toOrderRecipient(),
+            deliveryMethodType = deliveryMethodType?.toDeliveryMethodType(),
             deliveryAddress = deliveryAddress,
             isCancellable = isCancellable,
         )
@@ -100,8 +101,10 @@ public data class OrderDetailedParcelable(
                 price = OrderPriceParcelable.from(order.price),
                 paymentMethodType = PaymentMethodTypeParcelable.from(order.paymentMethodType),
                 paymentUrl = order.paymentUrl?.value,
-                deliveryInfo = OrderDeliveryInfoParcelable.from(order.deliveryInfo),
                 recipient = OrderRecipientParcelable.from(order.recipient),
+                deliveryMethodType = order.deliveryMethodType?.let {
+                    DeliveryMethodTypeParcelable.from(it)
+                },
                 deliveryAddress = order.deliveryAddress,
                 isCancellable = order.isCancellable,
             )
