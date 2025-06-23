@@ -145,7 +145,6 @@ private fun Decoration(
                     Color.Unspecified.copy(alpha = 1f),
                 )
             },
-            width = 600.dp,
         )
 
         val otp = textFieldState.text

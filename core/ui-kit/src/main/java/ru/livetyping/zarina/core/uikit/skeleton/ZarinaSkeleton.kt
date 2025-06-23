@@ -1,6 +1,7 @@
 package ru.livetyping.zarina.core.uikit.skeleton
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,10 +9,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.Shimmer
 import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 
 @Composable
 public fun ZarinaSkeleton(
@@ -27,6 +30,14 @@ public fun ZarinaSkeleton(
             .shimmerToggleable(shimmer = shimmer, isEnabled = isShimmerEnabled)
             .drawBehind { drawRect(color) },
     )
+}
+
+@Composable
+@Preview
+private fun Preview() {
+    ZarinaTheme2 {
+        ZarinaSkeleton(modifier = Modifier.fillMaxSize())
+    }
 }
 
 public object ZarinaSkeletonDefaults {

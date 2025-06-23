@@ -6,13 +6,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -61,7 +57,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
@@ -83,9 +78,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.valentinilk.shimmer.Shimmer
-import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.ShimmerTheme
-import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import kotlinx.coroutines.flow.distinctUntilChanged
 import qrcode.QRCode
@@ -98,6 +90,7 @@ import ru.livetyping.zarina.core.uicompose.price.rememberFormattedPrice
 import ru.livetyping.zarina.core.uicompose.screenbrightness.ForcedScreenBrightnessBehavior
 import ru.livetyping.zarina.core.uicompose.screenbrightness.ScreenBrightness
 import ru.livetyping.zarina.core.uikit.button.ZarinaIconButton
+import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.R
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.ui.LoyaltyCardDefaults.CameraDistance
@@ -707,30 +700,18 @@ internal fun LoyaltyCardPlaceholder(
 
 @Composable
 private fun rememberPlaceholderShimmer(): Shimmer {
-    val theme = remember {
-        ShimmerTheme(
-            animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = 1200,
-                    delayMillis = 1000,
-                    easing = LinearEasing,
-                ),
-                repeatMode = RepeatMode.Restart,
-            ),
-            blendMode = BlendMode.Overlay,
-            rotation = 345f,
-            shaderColors = listOf(
-                Color.White.copy(alpha = 0.01f),
+    return rememberZarinaSkeletonShimmer(
+        durationMillis = 1200,
+        delayMillis = 1000,
+        rotation = 345f,
+        shaderColors = remember {
+            listOf(
+                Color.White.copy(alpha = 0.25f),
                 Color.White.copy(alpha = 0.4f),
-                Color.White.copy(alpha = 0.01f),
-            ),
-            shaderColorStops = null,
-            shimmerWidth = 400.dp,
-        )
-    }
-    return rememberShimmer(
-        shimmerBounds = ShimmerBounds.View,
-        theme = theme,
+                Color.White.copy(alpha = 0.4f),
+                Color.White.copy(alpha = 0.25f),
+            )
+        },
     )
 }
 
