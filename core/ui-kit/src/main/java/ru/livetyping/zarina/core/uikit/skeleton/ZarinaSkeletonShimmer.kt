@@ -14,16 +14,22 @@ import com.valentinilk.shimmer.Shimmer
 import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.ShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.BlendMode
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.DelayMillis
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.DurationMillis
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.Rotation
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.ShaderColors
+import ru.livetyping.zarina.core.uikit.skeleton.ZarinaSkeletonShimmerDefaults.Width
 
 @Composable
 public fun rememberZarinaSkeletonShimmer(
     bounds: ShimmerBounds = ShimmerBounds.View,
-    durationMillis: Int = ZarinaSkeletonShimmerDefaults.DurationMillis,
-    delayMillis: Int = ZarinaSkeletonShimmerDefaults.DelayMillis,
-    rotation: Float = 0f,
-    blendMode: BlendMode = BlendMode.Overlay,
-    shaderColors: List<Color> = remember { ZarinaSkeletonShimmerDefaults.ShaderColors },
-    width: Dp = ZarinaSkeletonShimmerDefaults.Width,
+    durationMillis: Int = DurationMillis,
+    delayMillis: Int = DelayMillis,
+    rotation: Float = Rotation,
+    blendMode: BlendMode = BlendMode,
+    shaderColors: List<Color> = ShaderColors,
+    width: Dp = Width,
 ): Shimmer {
     val theme = rememberZarinaSkeletonShimmerTheme(
         durationMillis = durationMillis,
@@ -41,12 +47,12 @@ public fun rememberZarinaSkeletonShimmer(
 
 @Composable
 public fun rememberZarinaSkeletonShimmerTheme(
-    durationMillis: Int,
-    delayMillis: Int,
-    rotation: Float,
-    blendMode: BlendMode,
-    shaderColors: List<Color>,
-    width: Dp,
+    durationMillis: Int = DurationMillis,
+    delayMillis: Int = DelayMillis,
+    rotation: Float = Rotation,
+    blendMode: BlendMode = BlendMode,
+    shaderColors: List<Color> = ShaderColors,
+    width: Dp = Width,
 ): ShimmerTheme {
     return remember(durationMillis, delayMillis, rotation, blendMode, shaderColors, width) {
         ShimmerTheme(
@@ -69,13 +75,18 @@ public fun rememberZarinaSkeletonShimmerTheme(
 
 public object ZarinaSkeletonShimmerDefaults {
     public const val DurationMillis: Int = 1500
-    public const val DelayMillis: Int = 500
+    public const val DelayMillis: Int = 800
 
     public val ShaderColors: List<Color> = listOf(
-        Color.White.copy(alpha = 0.01f),
+        Color.White.copy(alpha = 0.25f),
         Color.White.copy(alpha = 0.6f),
-        Color.White.copy(alpha = 0.01f),
+        Color.White.copy(alpha = 0.6f),
+        Color.White.copy(alpha = 0.25f),
     )
 
-    public val Width: Dp = 200.dp
+    public const val Rotation: Float = 15f
+
+    public val BlendMode: BlendMode = androidx.compose.ui.graphics.BlendMode.Overlay
+
+    public val Width: Dp = 400.dp
 }
