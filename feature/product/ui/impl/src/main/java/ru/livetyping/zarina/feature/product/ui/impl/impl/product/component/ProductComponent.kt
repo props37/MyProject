@@ -180,6 +180,9 @@ internal class ProductComponent(
     val areSimilarProductsLoading: Flow<Boolean> =
         operationTracker.isOperationOngoing(SimilarProductsRequest)
 
+    private var productIdTotalLookProductsFetchedFor: Product.Id? = null
+    private var productIdSimilarProductsFetchedFor: Product.Id? = null
+
     init {
         initProductFetching()
         initTotalLookProductsFetching()
@@ -281,8 +284,9 @@ internal class ProductComponent(
             .filterNotNull()
             .distinctUntilChanged()
             .onEachLatest { id ->
-                // TODO: [Top] Don't fetch if the result is already there
-                fetchTotalLookProductsImpl(id)
+                if (shouldFetchTotalLookProducts(id)) {
+                    fetchTotalLookProductsImpl(id)
+                }
             }
             .launchIn(coroutineScope)
     }
@@ -308,8 +312,9 @@ internal class ProductComponent(
             .filterNotNull()
             .distinctUntilChanged()
             .onEachLatest { id ->
-                // TODO: [Top] Don't fetch if the result is already there
-                fetchSimilarProductsImpl(id)
+                if (shouldFetchSimilarProducts(id)) {
+                    fetchSimilarProductsImpl(id)
+                }
             }
             .launchIn(coroutineScope)
     }
@@ -337,6 +342,7 @@ internal class ProductComponent(
                 operationTracker.track(TotalLookProductsRequest) {
                     val params = GetProductTotalLookUseCase.Params(id)
                     _totalLookProductsResult.value = getProductTotalLookUseCase(params)
+                    productIdTotalLookProductsFetchedFor = id
                 }
             }
         }
@@ -349,6 +355,7 @@ internal class ProductComponent(
                 operationTracker.track(SimilarProductsRequest) {
                     val params = GetSimilarProductsUseCase.Params(id)
                     _similarProductsResult.value = getSimilarProductsUseCase(params)
+                    productIdSimilarProductsFetchedFor = id
                 }
             }
         }
@@ -358,6 +365,14 @@ internal class ProductComponent(
         val currentProductResult = productResult.value
         val currentProduct = currentProductResult?.getOrNull()
         return currentProduct?.id != id
+    }
+
+    private fun shouldFetchTotalLookProducts(id: Product.Id): Boolean {
+        return productIdTotalLookProductsFetchedFor != id
+    }
+
+    private fun shouldFetchSimilarProducts(id: Product.Id): Boolean {
+        return productIdSimilarProductsFetchedFor != id
     }
 
     private fun requireProductId(): Product.Id {
