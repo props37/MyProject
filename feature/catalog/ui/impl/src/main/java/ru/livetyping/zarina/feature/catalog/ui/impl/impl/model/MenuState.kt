@@ -18,7 +18,6 @@ internal sealed class MenuState {
 
     data object Loading : MenuState()
 
-    // TODO: [Top] Implement when design is ready
     @Immutable
     data class Error(val state: ZarinaErrorScreenState2) : MenuState()
 
