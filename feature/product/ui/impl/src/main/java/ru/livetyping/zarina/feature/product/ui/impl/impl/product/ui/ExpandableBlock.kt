@@ -26,13 +26,10 @@ import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
 import ru.livetyping.zarina.core.uikit.item.ZarinaExpandableItem
-import ru.livetyping.zarina.core.uikit.item.ZarinaItem
-import ru.livetyping.zarina.core.uikit.item.ZarinaItemDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.core.resource.R as RCommon
 
-// TODO: [Top] Deal with articles
 @Composable
 internal fun ProductDetailsBlock(
     product: ProductDetailed,
