@@ -56,7 +56,6 @@ composeCompiler {
 
 dependencies {
     api(projects.core.uiKit)
-    api(projects.core.paging)
     implementation(projects.core.uiCompose)
 
     api(libs.jetpack.paging.compose)
