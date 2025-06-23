@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose.compiler)
+
+    alias(libs.plugins.checkDependencyUpdates)
 }
 
 android {

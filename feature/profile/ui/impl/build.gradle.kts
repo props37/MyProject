@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.hilt)
+
+    alias(libs.plugins.checkDependencyUpdates)
 }
 
 android {
