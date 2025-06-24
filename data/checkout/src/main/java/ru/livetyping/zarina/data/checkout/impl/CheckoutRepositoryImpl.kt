@@ -135,8 +135,8 @@ internal class CheckoutRepositoryImpl @Inject constructor(
         return localDataSource.getCompletedPaymentsFlow()
     }
 
-    override fun onPaymentCompleted(paymentData: PaymentData): Flow<PaymentData> {
-        return localDataSource.getCompletedPaymentsFlow()
+    override fun onPaymentCompleted(paymentData: PaymentData) {
+        localDataSource.onPaymentCompleted(paymentData)
     }
 
     override fun clear() {
