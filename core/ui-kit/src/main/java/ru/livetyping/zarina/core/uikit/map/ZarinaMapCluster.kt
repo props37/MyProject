@@ -23,7 +23,7 @@ public fun ZarinaMapCluster(
         modifier = modifier
             .defaultMinSize(Size, Size)
             .background(
-                color = UiKitTheme2.colors.mainBlack,
+                color = UiKitTheme2.colors.white,
                 shape = CircleShape,
             )
             .border(
