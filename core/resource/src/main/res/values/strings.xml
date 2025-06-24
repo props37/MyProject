@@ -144,12 +144,15 @@
     <string name="res_not_available">Нет в наличии</string>
 
     <string name="res_order_status_accepted">Принят</string>
+    <string name="res_order_status_paid">Товар оплачен</string>
     <string name="res_order_status_confirmed">Подтверждён</string>
-    <string name="res_order_status_on_the_way">В пути</string>
-    <string name="res_order_status_delivered">Доставлен</string>
+    <string name="res_order_status_on_the_way">Товар в пути</string>
+    <string name="res_order_status_delivered">Товар доставлен</string>
     <string name="res_order_status_ready_for_pickup">Готов к выдаче</string>
     <string name="res_order_status_cancelled">Отменён</string>
     <string name="res_order_status_refund">Возврат</string>
+    <string name="res_order_status_approved_to_refund">Принят к возврату</string>
+    <string name="res_order_status_refunded">Возвращён на склад</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
     <string name="res_order_status_to_delivery">Готов к отправке в магазин</string>
 
