@@ -87,7 +87,7 @@ public interface CheckoutRepository {
 
     public fun getCompletedPaymentsFlow(): Flow<PaymentData>
 
-    public fun onPaymentCompleted(paymentData: PaymentData): Flow<PaymentData>
+    public fun onPaymentCompleted(paymentData: PaymentData)
 
     public fun clear()
 }

@@ -10,6 +10,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
+import ru.livetyping.zarina.core.domain.model.checkout.SberSbpPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
@@ -91,6 +92,8 @@ internal interface CheckoutApi {
     ): PayturePaymentResultDto
 
     suspend fun getSberPaymentResult(paymentData: SberPaymentData): SberPaymentResultDto
+
+    suspend fun getSberSbpPaymentResult(paymentData: SberSbpPaymentData): SberPaymentResultDto
 
     suspend fun updateOrderPaymentStatus(
         orderId: Order.Id,

@@ -18,6 +18,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupFromStoreCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPoint
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
+import ru.livetyping.zarina.core.domain.model.checkout.SberSbpPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
@@ -239,6 +240,12 @@ internal class CheckoutApiImpl @Inject constructor(
     override suspend fun getSberPaymentResult(paymentData: SberPaymentData): SberPaymentResultDto {
         return httpClient
             .get("/api/sber/get-status/${paymentData.sberUid.value}")
+            .body()
+    }
+
+    override suspend fun getSberSbpPaymentResult(paymentData: SberSbpPaymentData): SberPaymentResultDto {
+        return httpClient
+            .get("/api/sber/get-status/${paymentData.orderNumber.value}")
             .body()
     }
 

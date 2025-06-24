@@ -8,9 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.core.coroutinesutil.ReadOnlyStateFlow
-import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
-import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
-import ru.livetyping.zarina.core.domain.model.checkout.UrlPaymentData
 import ru.livetyping.zarina.core.domain.usecase.checkout.GetCompletedPaymentsFlowUseCase
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -44,11 +41,7 @@ internal class PaymentViewModel @Inject constructor(
         getCompletedPaymentsFlow()
             .onEach { result ->
                 val paymentData = result.getOrNull() ?: return@onEach
-                val isPaymentCompleted = when (paymentData) {
-                    is PayturePaymentData -> paymentData.paymentUrl.value == paymentUrl.value
-                    is SberPaymentData -> paymentData.paymentUrl.value == paymentUrl.value
-                    is UrlPaymentData -> paymentData.paymentUrl.value == paymentUrl.value
-                }
+                val isPaymentCompleted = paymentData.paymentUrl.value == paymentUrl.value
                 if (isPaymentCompleted) {
                     closeScreen()
                 }

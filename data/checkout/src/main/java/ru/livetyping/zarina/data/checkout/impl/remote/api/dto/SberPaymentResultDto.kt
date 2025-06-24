@@ -8,9 +8,12 @@ internal data class SberPaymentResultDto(
     @SerialName("sberOrderStatus")
     val sberOrderStatus: Int? = null,
 ) {
-    fun isSuccess(): Boolean = sberOrderStatus == STATUS_SUCCESS
+    fun isSuccess(): Boolean {
+        return sberOrderStatus == STATUS_SUCCESS_1 || sberOrderStatus == STATUS_SUCCESS_2
+    }
 
     private companion object {
-        private const val STATUS_SUCCESS = 1
+        private const val STATUS_SUCCESS_1 = 1
+        private const val STATUS_SUCCESS_2 = 2
     }
 }

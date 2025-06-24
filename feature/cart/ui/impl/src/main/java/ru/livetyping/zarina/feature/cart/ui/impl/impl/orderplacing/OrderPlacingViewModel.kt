@@ -37,13 +37,10 @@ import ru.livetyping.zarina.core.domain.model.checkout.CourierDeliveryCheckoutPa
 import ru.livetyping.zarina.core.domain.model.checkout.DeliveryMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethod
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
-import ru.livetyping.zarina.core.domain.model.checkout.PayturePaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PickupFromPickupPointCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.PickupFromStoreCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.PostDeliveryCheckoutParams
 import ru.livetyping.zarina.core.domain.model.checkout.Recipient
-import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
-import ru.livetyping.zarina.core.domain.model.checkout.UrlPaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.exception.CartChangedException
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.geo.Address
@@ -648,11 +645,7 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
         currentCheckoutStep = stage
         when (stage) {
             is CheckoutStep.PaymentStarted -> {
-                val paymentUrl = when (val data = stage.paymentData) {
-                    is PayturePaymentData -> data.paymentUrl
-                    is SberPaymentData -> data.paymentUrl
-                    is UrlPaymentData -> data.paymentUrl
-                }
+                val paymentUrl = stage.paymentData.paymentUrl
                 val action = OrderPlacingScreenAction.PaymentStarted(paymentUrl)
                 emitSideEffect(OrderPlacingSideEffect.Navigate(action))
             }
