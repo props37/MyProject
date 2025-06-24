@@ -61,23 +61,23 @@ public data class OrderDto(
     val isCancelable: Boolean? = null,
 ) {
     public fun toOrderStatus(): OrderStatus {
-        checkPropertyNotNull(status) { ::status }
+        checkPropertyNotNull(status) { "status" }
         return status.toOrderStatus()
     }
 
     public fun toOrder(): OrderDetailed {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(number) { ::number }
-        checkPropertyNotNull(productCount) { ::productCount }
-        checkPropertyNotNull(date) { ::date }
-        checkPropertyNotNull(status) { ::status }
-        checkPropertyNotNull(totalSum) { ::totalSum }
-        checkPropertyNotNull(products) { ::products }
-        checkPropertyNotNull(shipping) { ::shipping }
-        checkPropertyNotNull(shipping.shippingMethod) { shipping::shippingMethod }
-        checkPropertyNotNull(paymentMethod) { ::paymentMethod }
-        checkPropertyNotNull(paymentMethod.code) { paymentMethod::code }
-        checkPropertyNotNull(contactInfo) { ::contactInfo }
+        checkPropertyNotNull(id) { "id" }
+        checkPropertyNotNull(number) { "number" }
+        checkPropertyNotNull(productCount) { "products_count" }
+        checkPropertyNotNull(date) { "date" }
+        checkPropertyNotNull(status) { "status" }
+        checkPropertyNotNull(totalSum) { "total_sum" }
+        checkPropertyNotNull(products) { "products" }
+        checkPropertyNotNull(shipping) { "shipping" }
+        checkPropertyNotNull(shipping.shippingMethod) { "shipping_method" }
+        checkPropertyNotNull(paymentMethod) { "payment_method" }
+        checkPropertyNotNull(paymentMethod.code) { "code" }
+        checkPropertyNotNull(contactInfo) { "contact_info" }
         val date = try {
             LocalDate.parse(date)
         } catch (e: DateTimeParseException) {
@@ -137,14 +137,14 @@ public data class OrderDto(
         val quantity: Int? = null,
     ) {
         internal fun toOrderProduct(): OrderDetailed.Product {
-            checkPropertyNotNull(id) { ::id }
-            checkPropertyNotNull(vendorCode) { ::vendorCode }
-            checkPropertyNotNull(name) { ::name }
-            checkPropertyNotNull(size) { ::size }
-            checkPropertyNotNull(color) { ::color }
-            checkPropertyNotNull(coverPicture) { ::coverPicture }
-            checkPropertyNotNull(price) { ::price }
-            checkPropertyNotNull(quantity) { ::quantity }
+            checkPropertyNotNull(id) { "id" }
+            checkPropertyNotNull(vendorCode) { "vendor_code" }
+            checkPropertyNotNull(name) { "name" }
+            checkPropertyNotNull(size) { "size" }
+            checkPropertyNotNull(color) { "color" }
+            checkPropertyNotNull(coverPicture) { "cover_picture" }
+            checkPropertyNotNull(price) { "price" }
+            checkPropertyNotNull(quantity) { "quantity" }
             return OrderDetailed.Product(
                 id = OrderDetailed.Product.Id(id.toString()),
                 productId = Product.Id(vendorCode),
@@ -161,10 +161,10 @@ public data class OrderDto(
         }
 
         private fun getProductColor(): ProductColor {
-            checkPropertyNotNull(color) { ::color }
-            checkPropertyNotNull(color.code) { color::code }
-            checkPropertyNotNull(color.title) { color::title }
-            checkPropertyNotNull(vendorCode) { ::vendorCode }
+            checkPropertyNotNull(color) { "color" }
+            checkPropertyNotNull(color.code) { "code" }
+            checkPropertyNotNull(color.title) { "title" }
+            checkPropertyNotNull(vendorCode) { "vendor_code" }
             return ProductColor(
                 id = ProductColor.Id(color.code),
                 name = color.title,
@@ -226,8 +226,8 @@ public data class OrderDto(
         val phone: String? = null,
     ) {
         internal fun toOrderRecipient(): OrderRecipient {
-            checkPropertyNotNull(firstName) { ::firstName }
-            checkPropertyNotNull(email) { ::email }
+            checkPropertyNotNull(firstName) { "first_name" }
+            checkPropertyNotNull(email) { "email" }
             return OrderRecipient(
                 firstName = firstName,
                 lastName = lastName,

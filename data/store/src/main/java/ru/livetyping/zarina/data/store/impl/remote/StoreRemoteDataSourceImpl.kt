@@ -14,7 +14,7 @@ internal class StoreRemoteDataSourceImpl @Inject constructor(
         val dto = api.getStores()
         val stores = dto
             .flatMap { country ->
-                checkPropertyNotNull(country.name) { country::name }
+                checkPropertyNotNull(country.name) { "name" }
                 val cities = country.cities
                 cities?.flatMap { city ->
                     city.getStores(country.name)

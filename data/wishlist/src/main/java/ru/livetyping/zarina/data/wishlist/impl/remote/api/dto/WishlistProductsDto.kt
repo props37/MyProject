@@ -20,9 +20,9 @@ public data class WishlistProductsDto(
     val pagination: PaginationInfoDto? = null,
 ) {
     public fun toProductPage(): Page<List<ProductShort>> {
-        checkPropertyNotNull(items) { ::items }
-        checkPropertyNotNull(itemCount) { ::itemCount }
-        checkPropertyNotNull(pagination) { ::pagination }
+        checkPropertyNotNull(items) { "items" }
+        checkPropertyNotNull(itemCount) { "items_count" }
+        checkPropertyNotNull(pagination) { "pagination" }
         val data = items.mapNotNull { it.toProductShort() }
         val paginationInfo = pagination.toPaginationInfo(itemCount)
         return Page(

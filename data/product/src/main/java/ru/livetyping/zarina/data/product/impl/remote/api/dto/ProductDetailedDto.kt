@@ -52,17 +52,17 @@ internal data class ProductDetailedDto(
 
     @SerialName("model")
     val model: ModelDto? = null,
-    
+
     @SerialName("products")
     val products: List<ProductOfAnotherColorDto>? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(name) { ::name }
-        checkPropertyNotNull(price) { ::price }
-        checkPropertyNotNull(offers) { ::offers }
-        checkPropertyNotNull(media) { ::media }
-        checkPropertyNotNull(description) { ::description }
+        checkPropertyNotNull(id) { "id" }
+        checkPropertyNotNull(name) { "name" }
+        checkPropertyNotNull(price) { "price" }
+        checkPropertyNotNull(offers) { "offers" }
+        checkPropertyNotNull(media) { "media" }
+        checkPropertyNotNull(description) { "description" }
         return ProductDetailed(
             id = Product.Id(id),
             name = name,

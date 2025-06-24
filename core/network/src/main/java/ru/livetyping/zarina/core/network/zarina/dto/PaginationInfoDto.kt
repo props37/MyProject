@@ -18,9 +18,9 @@ public data class PaginationInfoDto(
 ) {
     public fun toPaginationInfo(itemTotalCount: Int): PaginationInfo {
         return PaginationInfo(
-            currentPage = checkPropertyNotNull(currentPage) { ::currentPage },
-            pageCount = checkPropertyNotNull(totalPages) { ::totalPages },
-            pageSize = checkPropertyNotNull(pageSize) { ::pageSize },
+            currentPage = checkPropertyNotNull(currentPage) { "current_page" },
+            pageCount = checkPropertyNotNull(totalPages) { "total_pages" },
+            pageSize = checkPropertyNotNull(pageSize) { "page_size" },
             itemTotalCount = itemTotalCount,
         )
     }

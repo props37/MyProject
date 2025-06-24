@@ -25,10 +25,10 @@ internal data class ProductsDto(
     val pagination: PaginationInfoDto? = null,
 ) {
     fun toProductsWithFiltersPage(): Page<ProductsWithFilters> {
-        checkPropertyNotNull(products) { ::products }
-        checkPropertyNotNull(filters) { ::filters }
-        checkPropertyNotNull(itemCount) { ::itemCount }
-        checkPropertyNotNull(pagination) { ::pagination }
+        checkPropertyNotNull(products) { "products" }
+        checkPropertyNotNull(filters) { "filters" }
+        checkPropertyNotNull(itemCount) { "items_count" }
+        checkPropertyNotNull(pagination) { "pagination" }
         val productsWithFilters = ProductsWithFilters(
             products = products.mapNotNull { it.toProductShort() },
             filters = filters.toFilters(),
@@ -40,10 +40,10 @@ internal data class ProductsDto(
     }
 
     fun toCategoryInfo(categoryId: Category.Id): CategoryInfo {
-        checkPropertyNotNull(filters) { ::filters }
+        checkPropertyNotNull(filters) { "filters" }
         return CategoryInfo(
             categoryId = categoryId,
-            productCount = checkPropertyNotNull(itemCount) { ::itemCount },
+            productCount = checkPropertyNotNull(itemCount) { "items_count" },
             availableFilters = filters.toFilters(),
         )
     }

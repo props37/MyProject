@@ -11,7 +11,7 @@ internal data class CartProductCountDto(
     val totalCount: Int? = null,
 ) {
     fun toCartProductCount(): CartProductCount {
-        checkPropertyNotNull(totalCount) { ::totalCount }
+        checkPropertyNotNull(totalCount) { "total_count" }
         return CartProductCount(totalCount)
     }
 }

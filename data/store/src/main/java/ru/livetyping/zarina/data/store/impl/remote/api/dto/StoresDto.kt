@@ -35,9 +35,9 @@ internal data class StoresDto(
         val shops: List<StoreDto>? = null,
     ) {
         fun getStores(country: String): List<Store> {
-            checkPropertyNotNull(shops) { ::shops }
+            checkPropertyNotNull(shops) { "shops" }
             return shops.mapNotNull { store ->
-                checkPropertyNotNull(name) { ::name }
+                checkPropertyNotNull(name) { "name" }
                 store.toStore(
                     cityFiasId = kladrId?.let { FiasId(it) },
                     cityName = name,

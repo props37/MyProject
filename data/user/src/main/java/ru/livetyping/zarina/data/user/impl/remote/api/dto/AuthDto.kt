@@ -19,8 +19,8 @@ internal data class AuthDto(
     val phoneVerification: PhoneConfirmationDto? = null,
 ) {
     fun toAuthResult(): AuthResult {
-        checkPropertyNotNull(jwt) { ::jwt }
-        checkPropertyNotNull(user) { ::user }
+        checkPropertyNotNull(jwt) { "jwt" }
+        checkPropertyNotNull(user) { "user" }
         return AuthResult(
             tokens = jwt.toBearerTokens(),
             user = user.toUser(),

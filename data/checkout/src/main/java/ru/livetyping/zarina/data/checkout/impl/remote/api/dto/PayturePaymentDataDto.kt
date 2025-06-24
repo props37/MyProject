@@ -15,8 +15,8 @@ internal data class PayturePaymentDataDto(
     val link: String? = null,
 ) {
     fun toPayturePaymentData(): PayturePaymentData {
-        checkPropertyNotNull(uid) { ::uid }
-        checkPropertyNotNull(link) { ::link }
+        checkPropertyNotNull(uid) { "uid" }
+        checkPropertyNotNull(link) { "link" }
         return PayturePaymentData(
             paymentId = PayturePaymentData.PaymentId(uid),
             paymentUrl = Url.create(link),

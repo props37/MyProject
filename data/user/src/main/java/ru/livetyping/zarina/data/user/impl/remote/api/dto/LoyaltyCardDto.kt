@@ -39,9 +39,9 @@ internal data class LoyaltyCardDto(
     val purchaseTotal: Float? = null,
 ) {
     fun toLoyaltyCard(): LoyaltyCard {
-        checkPropertyNotNull(number) { ::number }
-        checkPropertyNotNull(currentLevel) { ::currentLevel }
-        checkPropertyNotNull(currentLevelDescription) { ::currentLevelDescription }
+        checkPropertyNotNull(number) { "number" }
+        checkPropertyNotNull(currentLevel) { "current_level" }
+        checkPropertyNotNull(currentLevelDescription) { "current_level_description" }
         val nextLevelInfo = if (nextLevel != null && nextLevelDescription != null && nextLevelPurchaseSum != null) {
             LoyaltyCard.NextLevelInfo(
                 level = nextLevel.toLoyaltyCardLevel(),

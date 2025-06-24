@@ -63,7 +63,7 @@ public data class CartDto(
     val limit: ProductLimitDto? = null,
 ) {
     public fun toCart(cartType: CartType): Cart {
-        checkPropertyNotNull(items) { ::items }
+        checkPropertyNotNull(items) { "items" }
         return Cart(
             products = items.map { it.toCartProduct() },
             size = getCartSize(),
@@ -86,9 +86,9 @@ public data class CartDto(
     }
 
     private fun getCartPrice(): CartPrice {
-        checkPropertyNotNull(discount) { ::discount }
-        checkPropertyNotNull(totalDiscount) { ::totalDiscount }
-        checkPropertyNotNull(totalSum) { ::totalSum }
+        checkPropertyNotNull(discount) { "discount" }
+        checkPropertyNotNull(totalDiscount) { "total_discount" }
+        checkPropertyNotNull(totalSum) { "total_sum" }
         val giftCertificateRedemptionValue = giftCard?.awayAmount?.toDoubleOrNull()
         val finalPrice = if (giftCard?.total != null) {
             giftCard.total
@@ -96,20 +96,20 @@ public data class CartDto(
             totalSum
         }
         return CartPrice(
-            cartPrice = BigDecimal(discount.toDouble()),
-            discountSize = BigDecimal(totalDiscount.toDouble()),
-            finalPrice = BigDecimal(finalPrice.toDouble()),
-            deliveryPrice = deliveryPrice?.let { BigDecimal(it.toDouble()) },
-            giftCertificateRedemptionValue = giftCertificateRedemptionValue?.let { BigDecimal(it) },
+            cartPrice = discount.toBigDecimal(),
+            discountSize = totalDiscount.toBigDecimal(),
+            finalPrice = finalPrice.toBigDecimal(),
+            deliveryPrice = deliveryPrice?.toBigDecimal(),
+            giftCertificateRedemptionValue = giftCertificateRedemptionValue?.toBigDecimal(),
         )
     }
 
     private fun getBonusAccount(): Cart.BonusAccount {
-        checkPropertyNotNull(bonusAction) { ::bonusAction }
-        checkPropertyNotNull(bonusAction.bonusCharge) { bonusAction::bonusCharge }
-        checkPropertyNotNull(bonusAction.isChargingOffApplied) { bonusAction::isChargingOffApplied }
-        checkPropertyNotNull(bonusAction.bonusChargeOff) { bonusAction::bonusChargeOff }
-        checkPropertyNotNull(maxBonusToChargeOff) { ::maxBonusToChargeOff }
+        checkPropertyNotNull(bonusAction) { "bonus_action" }
+        checkPropertyNotNull(bonusAction.bonusCharge) { "bonus_charge" }
+        checkPropertyNotNull(bonusAction.isChargingOffApplied) { "is_charging_off_applied" }
+        checkPropertyNotNull(bonusAction.bonusChargeOff) { "bonus_charge_off" }
+        checkPropertyNotNull(maxBonusToChargeOff) { "max_bonuses_to_charge_off" }
         val redemption = Cart.BonusAccount.Redemption(
             isApplied = bonusAction.isChargingOffApplied,
             value = bonusAction.bonusChargeOff,
@@ -124,8 +124,8 @@ public data class CartDto(
 
     private fun getMyCard(): Cart.MyCard? {
         if (myCard?.value == null) return null
-        checkPropertyNotNull(myCard.isApplied) { myCard::isApplied }
-        checkPropertyNotNull(myCard.productsFirstPriceSum) { myCard::productsFirstPriceSum }
+        checkPropertyNotNull(myCard.isApplied) { "isApplied" }
+        checkPropertyNotNull(myCard.productsFirstPriceSum) { "productsFirstPriceSum" }
         return Cart.MyCard(
             number = MyCard.Number(myCard.value),
             info = myCard.info,
@@ -136,7 +136,7 @@ public data class CartDto(
 
     private fun getAppliedGiftCertificate(): AppliedGiftCertificate? {
         if (giftCard?.barcode == null) return null
-        checkPropertyNotNull(giftCard.amount) { giftCard::amount }
+        checkPropertyNotNull(giftCard.amount) { "amount" }
         val redemptionValue = giftCard.awayAmount?.toIntOrNull()
         checkNotNull(redemptionValue) { "writeOffSize is null" }
         return AppliedGiftCertificate(
@@ -148,7 +148,7 @@ public data class CartDto(
 
     private fun getPromoCode(): Cart.PromoCode? {
         if (promoCode?.code == null) return null
-        checkPropertyNotNull(isPromoCodeApplied) { ::isPromoCodeApplied }
+        checkPropertyNotNull(isPromoCodeApplied) { "is_promocode_applied" }
         return Cart.PromoCode(
             isApplied = isPromoCodeApplied,
             value = promoCode.code,
@@ -156,8 +156,8 @@ public data class CartDto(
     }
 
     private fun getProductLimit(cartType: CartType): Cart.ProductLimit {
-        checkPropertyNotNull(limit) { ::limit }
-        checkPropertyNotNull(limit.max) { limit::max }
+        checkPropertyNotNull(limit) { "limit" }
+        checkPropertyNotNull(limit.max) { "max" }
         val productCount = when (cartType) {
             CartType.DELIVERY -> deliveryCount
             CartType.PICKUP -> retailCount

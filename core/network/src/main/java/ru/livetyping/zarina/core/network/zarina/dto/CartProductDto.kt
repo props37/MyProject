@@ -24,18 +24,18 @@ public data class CartProductDto(
     val quantity: Int? = null,
 ) {
     public fun toCartProduct(): CartProduct {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(offer) { ::offer }
+        checkPropertyNotNull(id) { "id" }
+        checkPropertyNotNull(offer) { "offer" }
         val color = offer.color?.toProductColor()
-        checkPropertyNotNull(offer.groupId) { offer::groupId }
-        checkPropertyNotNull(offer.id) { offer::id }
-        checkPropertyNotNull(offer.title) { offer::title }
-        checkPropertyNotNull(offer.price) { offer::price }
-        checkPropertyNotNull(offer.barcode) { offer::barcode }
-        checkPropertyNotNull(offer.color) { offer::color }
-        checkPropertyNotNull(offer.coverPicture) { offer::coverPicture }
-        checkPropertyNotNull(offer.sizeName) { offer::sizeName }
-        checkPropertyNotNull(quantity) { ::quantity }
+        checkPropertyNotNull(offer.groupId) { "group_id" }
+        checkPropertyNotNull(offer.id) { "id" }
+        checkPropertyNotNull(offer.title) { "title" }
+        checkPropertyNotNull(offer.price) { "price" }
+        checkPropertyNotNull(offer.barcode) { "barcode" }
+        checkPropertyNotNull(offer.color) { "color" }
+        checkPropertyNotNull(offer.coverPicture) { "cover_picture" }
+        checkPropertyNotNull(offer.sizeName) { "size_name" }
+        checkPropertyNotNull(quantity) { "quantity" }
         checkNotNull(color) { "product color is null" }
         return CartProduct(
             id = CartProduct.Id(id.toString()),

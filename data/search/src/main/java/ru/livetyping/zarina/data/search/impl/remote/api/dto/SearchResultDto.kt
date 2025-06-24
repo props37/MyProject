@@ -34,9 +34,9 @@ internal data class SearchResultDto(
     val offset: Int? = null,
 ) {
     fun toSearchResult(): SearchResult {
-        checkPropertyNotNull(products) { ::products }
-        checkPropertyNotNull(totalHits) { ::totalHits }
-        checkPropertyNotNull(offset) { ::offset }
+        checkPropertyNotNull(products) { "products" }
+        checkPropertyNotNull(totalHits) { "totalHits" }
+        checkPropertyNotNull(offset) { "offset" }
         val products = products.mapNotNull { it.toProductShort() }
         return SearchResult(
             products = products,

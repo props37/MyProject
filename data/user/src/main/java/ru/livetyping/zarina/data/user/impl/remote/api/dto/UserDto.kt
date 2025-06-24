@@ -39,9 +39,9 @@ internal data class UserDto(
     val receiveSms: Boolean? = null,
 ) {
     fun toUser(): User {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(email) { ::email }
-        checkPropertyNotNull(gender) { ::gender }
+        checkPropertyNotNull(id) { "id" }
+        checkPropertyNotNull(email) { "email" }
+        checkPropertyNotNull(gender) { "gender" }
         val notificationSettings = User.NotificationSettings(
             receiveSms = receiveSms ?: false,
             receiveEmails = receiveEmails ?: false,

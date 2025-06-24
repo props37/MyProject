@@ -21,9 +21,9 @@ internal data class LoyaltyProgramBonusHistoryDto(
     val pagination: PaginationInfoDto? = null,
 ) {
     fun toLoyaltyProgramBonusActionPage(): Page<List<LoyaltyProgramBonusAction>> {
-        checkPropertyNotNull(items) { ::items }
-        checkPropertyNotNull(itemCount) { ::itemCount }
-        checkPropertyNotNull(pagination) { ::pagination }
+        checkPropertyNotNull(items) { "items" }
+        checkPropertyNotNull(itemCount) { "items_count" }
+        checkPropertyNotNull(pagination) { "pagination" }
         val data = items.mapNotNull { it.toLoyaltyProgramBonusAction() }
         return Page(
             data = data,

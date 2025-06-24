@@ -43,14 +43,14 @@ internal data class PickupPointDetailedDto(
     val levels: List<DeliveryTypeDto>? = null,
 ) {
     fun toPickupPointDetails(): PickupPointDetailed {
-        checkPropertyNotNull(id) { ::id }
-        checkPropertyNotNull(title) { ::title }
-        checkPropertyNotNull(address) { ::address }
-        checkPropertyNotNull(location) { ::location }
-        checkPropertyNotNull(schedule) { ::schedule }
-        checkPropertyNotNull(estimatedDelivery) { ::estimatedDelivery }
-        checkPropertyNotNull(shelfTime) { ::shelfTime }
-        checkPropertyNotNull(levels) { ::levels }
+        checkPropertyNotNull(id) { "id" }
+        checkPropertyNotNull(title) { "title" }
+        checkPropertyNotNull(address) { "address" }
+        checkPropertyNotNull(location) { "location" }
+        checkPropertyNotNull(schedule) { "schedule" }
+        checkPropertyNotNull(estimatedDelivery) { "estimated_delivery" }
+        checkPropertyNotNull(shelfTime) { "shelf_life" }
+        checkPropertyNotNull(levels) { "levels" }
         check(levels.isNotEmpty()) { "levels is empty" }
         return PickupPointDetailed(
             id = PickupPoint.Id(id),
@@ -106,8 +106,8 @@ internal data class PickupPointDetailedDto(
             val title: String? = null,
         ) {
             fun toDateTimePeriod(): PickupPointDetailed.DeliveryType.DateTimePeriod {
-                checkPropertyNotNull(id) { ::id }
-                checkPropertyNotNull(title) { ::title }
+                checkPropertyNotNull(id) { "id" }
+                checkPropertyNotNull(title) { "title" }
                 return PickupPointDetailed.DeliveryType.DateTimePeriod(
                     id = PickupPointDetailed.DeliveryType.DateTimePeriod.Id(id),
                     title = title,
