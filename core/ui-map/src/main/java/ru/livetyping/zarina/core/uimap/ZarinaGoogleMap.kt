@@ -33,6 +33,8 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.domain.model.common.Location
 import ru.livetyping.zarina.core.uicompose.none
 import ru.livetyping.zarina.core.uikit.map.ZarinaMapMyLocationButton
+import ru.livetyping.zarina.core.uikit.shimmer.shimmerToggleable
+import ru.livetyping.zarina.core.uikit.skeleton.rememberZarinaSkeletonShimmer
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -92,12 +94,17 @@ public fun ZarinaGoogleMap(
     }
 
     Box(modifier = modifier) {
+        var isMapLoaded by remember { mutableStateOf(false) }
+
         GoogleMap(
             cameraPositionState = cameraPositionState,
             properties = properties,
             uiSettings = uiSettings,
+            onMapLoaded = { isMapLoaded = true },
             content = content,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .shimmerToggleable(rememberZarinaSkeletonShimmer(), isEnabled = !isMapLoaded),
         )
 
         ZarinaMapMyLocationButton(
