@@ -15,8 +15,10 @@ import ru.livetyping.zarina.core.domain.model.checkout.PaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethod
 import ru.livetyping.zarina.core.domain.model.checkout.PaymentMethodType
 import ru.livetyping.zarina.core.domain.model.checkout.PickupFromStoreCheckoutParams
+import ru.livetyping.zarina.core.domain.model.checkout.SberSbpPaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.UrlPaymentData
 import ru.livetyping.zarina.core.domain.model.checkout.exception.CartChangedException
+import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.domain.model.order.OrderStatus
@@ -156,8 +158,16 @@ internal class CheckoutUseCaseImpl(
         )
 
         if (order.paymentUrl != null) {
-            val paymentData = UrlPaymentData(order.paymentUrl)
+            val paymentData = getOptionalPaymentData(paymentMethod, order.paymentUrl, order.number)
             emit(CheckoutStep.PaymentStarted(paymentData))
+
+            awaitPaymentCompleted(
+                paymentData = paymentData,
+                paymentMethod = paymentMethod,
+                onCheck = { emit(CheckoutStep.PaymentStatusChecked) },
+            )
+            checkoutRepository.onPaymentCompleted(paymentData)
+            emit(CheckoutStep.PaymentCompleted)
         } else {
             logger?.v(TAG, "Order payment URL is not provided")
         }
@@ -265,6 +275,18 @@ internal class CheckoutUseCaseImpl(
                 shouldAwaitPaymentCompleted = false,
             )
             emit(checkoutCompleted)
+        }
+    }
+
+    private fun getOptionalPaymentData(
+        paymentMethod: PaymentMethod,
+        paymentUrl: Url,
+        orderNumber: Order.Number,
+    ): PaymentData {
+        return if (paymentMethod.type == PaymentMethodType.SBER_SBP) {
+            SberSbpPaymentData(orderNumber, paymentUrl)
+        } else {
+            UrlPaymentData(paymentUrl)
         }
     }
 

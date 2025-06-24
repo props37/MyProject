@@ -20,6 +20,7 @@ import ru.livetyping.zarina.core.domain.model.checkout.PickupPointDetailed
 import ru.livetyping.zarina.core.domain.model.checkout.PickupPointShort
 import ru.livetyping.zarina.core.domain.model.checkout.PickupStore
 import ru.livetyping.zarina.core.domain.model.checkout.SberPaymentData
+import ru.livetyping.zarina.core.domain.model.checkout.SberSbpPaymentData
 import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.giftcert.GiftCertificate
 import ru.livetyping.zarina.core.domain.model.order.Order
@@ -173,6 +174,15 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
                 )
             }
 
+            PaymentMethodType.SBER_SBP -> {
+                check(paymentData is SberSbpPaymentData) { "Payment data must be ${SberSbpPaymentData::class.simpleName}, but was $paymentData" }
+                awaitSberSbpPaymentCompleted(
+                    paymentData = paymentData,
+                    pollingDelay = pollingDelay,
+                    onCheck = onCheck,
+                )
+            }
+
             else -> Unit
         }
     }
@@ -224,6 +234,29 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         while (coroutineContext.isActive) {
             try {
                 val result = api.getSberPaymentResult(paymentData)
+                onCheck?.invoke()
+                if (result.isSuccess()) break
+            } catch (e: Exception) {
+                Timber.e(e)
+                errorCount++
+                if (errorCount > PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT) {
+                    throw e
+                }
+            }
+
+            delay(pollingDelay)
+        }
+    }
+
+    private suspend fun awaitSberSbpPaymentCompleted(
+        paymentData: SberSbpPaymentData,
+        pollingDelay: Duration,
+        onCheck: (suspend () -> Unit)?,
+    ) {
+        var errorCount = 0
+        while (coroutineContext.isActive) {
+            try {
+                val result = api.getSberSbpPaymentResult(paymentData)
                 onCheck?.invoke()
                 if (result.isSuccess()) break
             } catch (e: Exception) {
