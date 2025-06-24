@@ -77,8 +77,8 @@ public data class CartDto(
     }
 
     private fun getCartSize(): CartSize {
-        checkPropertyNotNull(deliveryCount) { ::deliveryCount }
-        checkPropertyNotNull(retailCount) { ::retailCount }
+        checkPropertyNotNull(deliveryCount) { "deliveryCount" }
+        checkPropertyNotNull(retailCount) { "retailCount" }
         return CartSize(
             deliveryProductCount = deliveryCount,
             pickupProductCount = retailCount,

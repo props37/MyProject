@@ -85,8 +85,8 @@ internal data class ProductDetailedDto(
     }
 
     private fun getProductColors(): List<ProductColor> {
-        checkPropertyNotNull(colors) { ::colors }
-        checkPropertyNotNull(media) { ::media }
+        checkPropertyNotNull(colors) { "colors" }
+        checkPropertyNotNull(media) { "media" }
         return colors.mapNotNull { color ->
             val imageUrl = if (id == color.productId) {
                 val media = media
