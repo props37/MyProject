@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.analytics.HttpErrorLogger
 import ru.livetyping.zarina.core.buildutil.AppVersionCode
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.buildutil.MindboxKey
@@ -43,6 +44,7 @@ internal abstract class NetworkModule {
             json: Json,
             @AppVersionCode
             appVersionCode: Int,
+            errorLogger: HttpErrorLogger,
         ): HttpClient {
             return getZarinaAuthorizedHttpClient(
                 json = json,
@@ -50,6 +52,7 @@ internal abstract class NetworkModule {
                 headerProvider = ZarinaApiHeaderProvider(appVersionCode),
                 bearerTokenService = bearerTokenService,
                 buildType = buildType,
+                errorLogger = errorLogger,
             )
         }
 
@@ -64,12 +67,14 @@ internal abstract class NetworkModule {
             json: Json,
             @AppVersionCode
             appVersionCode: Int,
+            errorLogger: HttpErrorLogger,
         ): HttpClient {
             return getZarinaUnauthorizedHttpClient(
                 json = json,
                 baseUrl = baseUrl,
                 headerProvider = ZarinaApiHeaderProvider(appVersionCode),
                 buildType = buildType,
+                errorLogger = errorLogger,
             )
         }
 
@@ -80,10 +85,12 @@ internal abstract class NetworkModule {
             @NetworkJson
             json: Json,
             buildType: BuildType,
+            errorLogger: HttpErrorLogger,
         ): HttpClient {
             return getAnyQueryAutocompleteHttpClient(
                 json = json,
                 buildType = buildType,
+                errorLogger = errorLogger,
             )
         }
 
@@ -96,11 +103,13 @@ internal abstract class NetworkModule {
             buildType: BuildType,
             @MindboxKey
             mindboxKey: String,
+            errorLogger: HttpErrorLogger,
         ): HttpClient {
             return getMindboxHttpClient(
                 json = json,
                 buildType = buildType,
                 mindboxKey = mindboxKey,
+                errorLogger = errorLogger,
             )
         }
 

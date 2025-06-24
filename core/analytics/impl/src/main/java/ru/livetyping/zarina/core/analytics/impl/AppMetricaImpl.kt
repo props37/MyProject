@@ -8,6 +8,7 @@ import io.appmetrica.analytics.ecommerce.ECommercePrice
 import io.appmetrica.analytics.ecommerce.ECommerceProduct
 import io.appmetrica.analytics.ecommerce.ECommerceScreen
 import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.analytics.HttpError
 import ru.livetyping.zarina.core.analytics.impl.util.toECommerceScreen
 import ru.livetyping.zarina.core.analytics.impl.util.toNameList
 import ru.livetyping.zarina.core.analytics.model.AppliedFilters
@@ -219,6 +220,15 @@ public class AppMetricaImpl : AppMetrica {
         AppMetricaInstance.reportEvent(EVENT_CANCEL_ORDER, parameters)
     }
 
+    override fun logHttpError(error: HttpError) {
+        val parameters = buildMap<String, Any> {
+            error.request?.let { put(KEY_HTTP_REQUEST, it) }
+            error.statusCode?.let { put(KEY_HTTP_STATUS_CODE, it) }
+            error.description?.let { put(KEY_DESCRIPTION, it) }
+        }
+        AppMetricaInstance.reportEvent(EVENT_ERROR_HTTP, parameters)
+    }
+
     override fun reportError(identifier: String, message: String?, error: Throwable?) {
         AppMetricaInstance.reportError(identifier, message, error)
     }
@@ -283,6 +293,8 @@ public class AppMetricaImpl : AppMetrica {
         private const val EVENT_CANCEL_ORDER = "cancelOrder"
         private const val EVENT_REFRESH_TOKENS = "_refreshTokens"
 
+        private const val EVENT_ERROR_HTTP = "_errorHttp"
+
         private const val KEY_SKU = "sku"
         private const val KEY_NAME = "name"
         private const val KEY_DELIVERY_TYPE = "deliveryType"
@@ -306,6 +318,10 @@ public class AppMetricaImpl : AppMetrica {
         private const val KEY_PICKUP_STORES = "pickupStores"
         private const val KEY_IS_SUCCESS = "isSuccess"
         private const val KEY_ID = "id"
+        private const val KEY_DESCRIPTION = "description"
+
+        private const val KEY_HTTP_REQUEST = "request"
+        private const val KEY_HTTP_STATUS_CODE = "statusCode"
 
         private const val CURRENCY_UNIT_RUB = "RUB"
 

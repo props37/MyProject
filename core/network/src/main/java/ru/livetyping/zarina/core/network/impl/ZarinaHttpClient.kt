@@ -11,6 +11,7 @@ import io.ktor.client.plugins.plugin
 import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.analytics.HttpErrorLogger
 import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.BearerTokens
@@ -22,9 +23,11 @@ internal fun getZarinaUnauthorizedHttpClient(
     baseUrl: String,
     headerProvider: ZarinaApiHeaderProvider,
     buildType: BuildType,
+    errorLogger: HttpErrorLogger,
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     applyZarinaConfig(baseUrl, headerProvider)
+    logErrors(errorLogger)
 }
 
 internal fun getZarinaAuthorizedHttpClient(
@@ -33,10 +36,12 @@ internal fun getZarinaAuthorizedHttpClient(
     headerProvider: ZarinaApiHeaderProvider,
     bearerTokenService: BearerTokenService,
     buildType: BuildType,
+    errorLogger: HttpErrorLogger,
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     applyZarinaConfig(baseUrl, headerProvider)
     installAuthPlugin(bearerTokenService)
+    logErrors(errorLogger)
 }.also { client ->
     client.loadBearerTokensOnAuthorizationFailure()
 }

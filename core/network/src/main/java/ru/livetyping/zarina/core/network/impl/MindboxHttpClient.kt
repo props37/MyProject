@@ -5,18 +5,21 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.request.header
 import kotlinx.serialization.json.Json
+import ru.livetyping.zarina.core.analytics.HttpErrorLogger
 import ru.livetyping.zarina.core.buildutil.BuildType
 
 internal fun getMindboxHttpClient(
     json: Json,
     buildType: BuildType,
     mindboxKey: String,
+    errorLogger: HttpErrorLogger,
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     install(DefaultRequest) {
         url(BASE_URL)
         header(AUTHORIZATION_KEY, getAuthorizationValue(mindboxKey))
     }
+    logErrors(errorLogger)
 }
 
 private fun getAuthorizationValue(mindboxKey: String): String {

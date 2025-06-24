@@ -10,7 +10,7 @@ import ru.livetyping.zarina.core.analytics.model.Product
 import ru.livetyping.zarina.core.analytics.model.Screen
 import ru.livetyping.zarina.core.analytics.model.SignInMethod
 
-public interface AppMetrica {
+public interface AppMetrica : HttpErrorLogger {
     public fun reportScreenOpened(screen: Screen)
 
     public fun reportShowProductCardEvent(product: Product, screen: Screen)
@@ -50,6 +50,8 @@ public interface AppMetrica {
     public fun reportTokenRefreshAttempted(isSuccess: Boolean)
 
     public fun reportOrderCancelled(orderId: String)
+
+    public override fun logHttpError(error: HttpError)
 
     public fun reportError(identifier: String, message: String?, error: Throwable?)
 }
