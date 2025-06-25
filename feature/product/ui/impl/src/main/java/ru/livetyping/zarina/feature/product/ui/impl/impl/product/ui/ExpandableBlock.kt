@@ -134,14 +134,13 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                 appendTwoLines()
             }
 
-            // TODO: [Top] Implement
-//            product.modelInfo?.modelParams?.let {
-//                appendKeyValue(
-//                    key = context.getString(R.string.product_model_parameters),
-//                    value = it,
-//                    keyStyle = keyStyle,
-//                )
-//            }
+            product.modelInfo?.getModelParametersShortString()?.let {
+                appendKeyValue(
+                    key = context.getString(R.string.product_model_parameters),
+                    value = it,
+                    keyStyle = keyStyle,
+                )
+            }
         }
     }
 }
