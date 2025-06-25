@@ -79,7 +79,7 @@ internal sealed class MenuState {
 
                 addSpacerIfAbsent(MenuItem.Spacer.Size.SMALL)
                 add(MenuItem.SupportContactDetails)
-            }
+            }.distinctBy { it.id }
         }
 
         private fun MutableList<MenuItem>.addCatalogMenuItems(

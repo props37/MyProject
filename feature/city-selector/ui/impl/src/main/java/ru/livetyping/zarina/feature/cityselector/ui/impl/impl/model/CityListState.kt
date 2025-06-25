@@ -38,8 +38,9 @@ internal sealed class CityListState {
             } else {
                 cityResult.fold(
                     onSuccess = { cities ->
-                        if (cities.isNotEmpty()) {
-                            val (priorityCities, otherCities) = cities.partition { city ->
+                        val filteredCities = cities.distinctBy { it.id }
+                        if (filteredCities.isNotEmpty()) {
+                            val (priorityCities, otherCities) = filteredCities.partition { city ->
                                 city.id in priorityCityFiasIds
                             }
                             val items = buildList {

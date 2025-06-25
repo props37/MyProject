@@ -16,8 +16,9 @@ internal class StoreListStateBuilder {
         } else {
             productAvailabilityListResult.fold(
                 onSuccess = { availabilityList ->
-                    if (availabilityList.isNotEmpty()) {
-                        StoreListState.Success(availabilityList.toImmutableList())
+                    val filteredList = availabilityList.distinctBy { it.store.id }
+                    if (filteredList.isNotEmpty()) {
+                        StoreListState.Success(filteredList.toImmutableList())
                     } else {
                         StoreListState.Empty
                     }

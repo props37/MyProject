@@ -28,8 +28,9 @@ internal sealed class SuggestionListState {
             } else {
                 result.fold(
                     onSuccess = { products ->
-                        if (products.isNotEmpty()) {
-                            Success(products.toImmutableList())
+                        val filteredProducts = products.distinctBy { it.id }
+                        if (filteredProducts.isNotEmpty()) {
+                            Success(filteredProducts.toImmutableList())
                         } else {
                             Empty
                         }

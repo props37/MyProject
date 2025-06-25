@@ -15,6 +15,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
+import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.product.ProductOrderCard
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -36,26 +37,26 @@ internal fun ProductList(
         LazyColumn(
             contentPadding = PaddingValues(bottom = ZarinaScrollableDefaults.ScrollableBottomPadding),
         ) {
-            itemsIndexed(
-                items = products,
-            ) { index, product ->
-                ProductOrderCard(
-                    name = product.name,
-                    imageUrl = product.imageUrl.value,
-                    size = product.size,
-                    sizeRu = null,
-                    height = product.height,
-                    color = product.color,
-                    price = product.price,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                if (index < products.lastIndex) {
-                    ZarinaDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+            itemsIndexed(items = products) { index, product ->
+                Column(modifier = Modifier.animateZarinaItem(this)) {
+                    ProductOrderCard(
+                        name = product.name,
+                        imageUrl = product.imageUrl.value,
+                        size = product.size,
+                        sizeRu = null,
+                        height = product.height,
+                        color = product.color,
+                        price = product.price,
+                        modifier = Modifier.fillMaxWidth(),
                     )
+
+                    if (index < products.lastIndex) {
+                        ZarinaDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                        )
+                    }
                 }
             }
         }

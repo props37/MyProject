@@ -87,22 +87,24 @@ internal data class ProductDetailedDto(
     private fun getProductColors(): List<ProductColor> {
         checkPropertyNotNull(colors) { "colors" }
         checkPropertyNotNull(media) { "media" }
-        return colors.mapNotNull { color ->
-            val imageUrl = if (id == color.productId) {
-                val media = media
-                    .firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
-                    ?.toMedia()
-                media?.thumbnailUrl
-            } else {
-                val product = products?.firstOrNull { it.id == color.productId }
-                val media = product?.media
-                    ?.firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
-                    ?.toMedia()
-                media?.thumbnailUrl
-            }
+        return colors
+            .distinctBy { it.productId }
+            .mapNotNull { color ->
+                val imageUrl = if (id == color.productId) {
+                    val media = media
+                        .firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                        ?.toMedia()
+                    media?.thumbnailUrl
+                } else {
+                    val product = products?.firstOrNull { it.id == color.productId }
+                    val media = product?.media
+                        ?.firstOrNull { it.toMedia()?.type == MediaType.IMAGE }
+                        ?.toMedia()
+                    media?.thumbnailUrl
+                }
 
-            color.toProductColor(imageUrl = imageUrl)
-        }
+                color.toProductColor(imageUrl = imageUrl)
+            }
     }
 
     @Serializable
