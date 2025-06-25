@@ -62,6 +62,7 @@ ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 ru.livetyping.zarina.core.domain.model.product.ProductDetailed.Label
 ru.livetyping.zarina.core.domain.model.product.ProductDetailed.DescriptionEntry
 ru.livetyping.zarina.core.domain.model.product.ProductDetailed.ModelInfo
+ru.livetyping.zarina.core.domain.model.product.ProductDetailed.ModelInfo.ModelParameter
 ru.livetyping.zarina.core.domain.model.product.ProductShort
 ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 ru.livetyping.zarina.core.domain.model.product.filter.ProductPriceFilter

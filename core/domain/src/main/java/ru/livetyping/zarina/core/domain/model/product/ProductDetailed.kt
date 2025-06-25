@@ -39,9 +39,17 @@ public data class ProductDetailed(
 
     // Marked as stable on config/compose/stability_config.txt
     public data class ModelInfo(
-        val modelParams: String?,
         val sizeOnModel: String?,
+        val modelParameters: List<ModelParameter>?,
     ) {
-        public fun isEmpty(): Boolean = modelParams == null && sizeOnModel == null
+        public fun getModelParametersShortString(): String? {
+            return modelParameters?.joinToString(separator = "/") { it.value }
+        }
+
+        // Marked as stable on config/compose/stability_config.txt
+        public data class ModelParameter(
+            val title: String,
+            val value: String,
+        )
     }
 }

@@ -152,16 +152,37 @@ internal data class ProductDetailedDto(
     @Serializable
     data class ModelDto(
         @SerialName("params_model")
-        val paramsModel: String? = null,
+        val paramsModel: List<ModelParameterDto>? = null,
 
         @SerialName("size_on_model")
         val sizeOnModel: String? = null,
     ) {
         fun toModelInfo(): ProductDetailed.ModelInfo {
+            val modelParameters = paramsModel
+                ?.mapNotNull { it.toModelParameter() }
+                ?.takeIf { it.isNotEmpty() }
             return ProductDetailed.ModelInfo(
-                modelParams = paramsModel,
                 sizeOnModel = sizeOnModel,
+                modelParameters = modelParameters,
             )
+        }
+
+        @Serializable
+        data class ModelParameterDto(
+            @SerialName("title")
+            val title: String? = null,
+
+            @SerialName("value")
+            val value: String? = null,
+        ) {
+            fun toModelParameter(): ProductDetailed.ModelInfo.ModelParameter? {
+                return if (!title.isNullOrBlank() && !value.isNullOrBlank()) {
+                    ProductDetailed.ModelInfo.ModelParameter(title, value)
+                } else {
+                    Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.ModelInfo.ModelParameter")
+                    null
+                }
+            }
         }
     }
 

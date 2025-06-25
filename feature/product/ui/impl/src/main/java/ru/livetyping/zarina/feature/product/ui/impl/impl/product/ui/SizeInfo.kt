@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
@@ -45,13 +47,18 @@ internal fun SizeInfo(
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (sizeOnModel != null) {
-                SizeOnModel(sizeOnModel = sizeOnModel)
+                SizeOnModel(
+                    sizeOnModel = sizeOnModel,
+                    onClick = onSizeTableClicked,
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(8.dp))
+
+                SizeTableTextButton(onClick = onSizeTableClicked)
+            } else {
+                SizeTableButton(onClick = onSizeTableClicked)
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(8.dp))
-
-            SizeTableButton(onClick = onSizeTableClicked)
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -81,13 +88,12 @@ internal fun SizeInfo(
 @Composable
 private fun SizeOnModel(
     sizeOnModel: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .background(UiKitTheme2.colors.lightGray, CircleShape)
-            .padding(start = 12.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+    SizeOnModelButton(
+        onClick = onClick,
+        modifier = modifier,
     ) {
         val textStyle = UiKitTheme2.typography.body2
 
@@ -104,6 +110,26 @@ private fun SizeOnModel(
             style = textStyle,
             color = UiKitTheme2.colors.mainBlack,
         )
+    }
+}
+
+@Composable
+private fun SizeOnModelButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit,
+) {
+    val shape = CircleShape
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .background(UiKitTheme2.colors.lightGray, shape)
+            .clip(shape)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(start = 12.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+    ) {
+        content()
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -124,12 +150,32 @@ private fun SizeTableButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    SizeOnModelButton(
+        onClick = onClick,
+        modifier = modifier,
+    ) {
+        Text(
+            text = stringResource(RCommon.string.res_size_table).uppercase(),
+            style = UiKitTheme2.typography.body2,
+            color = UiKitTheme2.colors.mainBlack,
+        )
+    }
+}
+
+@Composable
+private fun SizeTableTextButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .heightIn(min = 40.dp)
             .clip(RoundedCornerShape(1.dp))
-            .clickable(onClick = onClick)
+            .clickable(
+                role = Role.Button,
+                onClick = onClick,
+            )
             .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(

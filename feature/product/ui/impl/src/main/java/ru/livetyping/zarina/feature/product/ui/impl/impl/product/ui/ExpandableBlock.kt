@@ -134,7 +134,7 @@ private fun rememberProductDetailsText(product: ProductDetailed): AnnotatedStrin
                 appendTwoLines()
             }
 
-            product.modelInfo?.modelParams?.let {
+            product.modelInfo?.getModelParametersShortString()?.let {
                 appendKeyValue(
                     key = context.getString(R.string.product_model_parameters),
                     value = it,
