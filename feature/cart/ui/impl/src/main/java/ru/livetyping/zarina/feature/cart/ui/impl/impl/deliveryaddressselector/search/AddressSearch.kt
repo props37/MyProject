@@ -79,10 +79,7 @@ private fun AddressSearchSuccess(
         contentPadding = contentPadding,
         modifier = modifier,
     ) {
-        itemsIndexed(
-            items = state.items,
-            key = { _, item -> item.address.id.value },
-        ) { index, item ->
+        itemsIndexed(items = state.items) { index, item ->
             Column(modifier = Modifier.animateZarinaItem(this)) {
                 ZarinaItem(
                     onClick = { onAddressItemClicked(item) },
@@ -93,14 +90,14 @@ private fun AddressSearchSuccess(
                         color = UiKitTheme2.colors.mainBlack,
                     )
                 }
-            }
 
-            if (index < state.items.lastIndex) {
-                ZarinaDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                )
+                if (index < state.items.lastIndex) {
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
             }
         }
     }

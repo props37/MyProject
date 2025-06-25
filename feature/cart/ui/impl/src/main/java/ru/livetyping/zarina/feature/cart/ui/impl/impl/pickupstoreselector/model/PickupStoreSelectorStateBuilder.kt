@@ -26,7 +26,9 @@ internal class PickupStoreSelectorStateBuilder {
             val cart = cartResult.getOrThrow()
             val stores = storesResult.getOrThrow()
             PickupStoreSelectorState.Success(
-                stores = stores.toImmutableList(),
+                stores = stores
+                    .distinctBy { it.store.id }
+                    .toImmutableList(),
                 cartItemCount = cart.products.size,
                 city = city,
             )

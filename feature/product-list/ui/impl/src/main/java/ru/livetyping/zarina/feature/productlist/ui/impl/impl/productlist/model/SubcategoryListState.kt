@@ -27,7 +27,9 @@ internal sealed class SubcategoryListState {
             return if (category != null) {
                 val children = category.children
                 if (!children.isNullOrEmpty()) {
-                    val subcategories = children.toImmutableList()
+                    val subcategories = children
+                        .distinctBy { it.id }
+                        .toImmutableList()
                     Success(subcategories, selectedSubcategoryId)
                 } else {
                     Empty

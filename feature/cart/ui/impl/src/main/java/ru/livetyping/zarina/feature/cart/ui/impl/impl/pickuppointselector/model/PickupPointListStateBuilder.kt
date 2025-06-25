@@ -34,7 +34,11 @@ internal class PickupPointListStateBuilder {
         filterQuery: String,
         appliedFilters: List<Filter>,
     ): List<PickupPoint> {
+        // Distinct by ID
+        val idSet = hashSetOf<PickupPoint.Id>()
         return pickupPoints.filter { pickupPoint ->
+            if (!idSet.add(pickupPoint.id)) return@filter false
+
             var matchFilters = true
             appliedFilters.forEach { filter ->
                 matchFilters = when (filter) {

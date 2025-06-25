@@ -1,5 +1,6 @@
 package ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -16,6 +17,7 @@ import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.icon.ZarinaCheckmarkIcon
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
+import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.deliveryoptiondatetimeselector.model.DateTimeItem
@@ -37,32 +39,31 @@ internal fun DateTimeItems(
         contentPadding = contentPadding,
         modifier = modifier,
     ) {
-        itemsIndexed(
-            items = items,
-            key = { _, item -> item.dateTimePeriod.id.value },
-        ) { index, item ->
-            ZarinaItem(
-                onClick = { onItemClicked(item) },
-                startContent = {
-                    Text(
-                        text = item.text.uppercase(),
-                        style = UiKitTheme2.typography.body,
-                    )
-                },
-                endContent = {
-                    ZarinaCheckmarkIcon(
-                        isVisible = item.isSelected,
-                        iconSize = 16.dp,
-                    )
-                },
-            )
-
-            if (index != items.lastIndex) {
-                ZarinaDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+        itemsIndexed(items = items) { index, item ->
+            Column(modifier = Modifier.animateZarinaItem(this)) {
+                ZarinaItem(
+                    onClick = { onItemClicked(item) },
+                    startContent = {
+                        Text(
+                            text = item.text.uppercase(),
+                            style = UiKitTheme2.typography.body,
+                        )
+                    },
+                    endContent = {
+                        ZarinaCheckmarkIcon(
+                            isVisible = item.isSelected,
+                            iconSize = 16.dp,
+                        )
+                    },
                 )
+
+                if (index != items.lastIndex) {
+                    ZarinaDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    )
+                }
             }
         }
     }

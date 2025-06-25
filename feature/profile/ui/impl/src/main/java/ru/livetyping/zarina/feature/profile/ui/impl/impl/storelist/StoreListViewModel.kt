@@ -205,7 +205,7 @@ internal class StoreListViewModel @Inject constructor(
                         stores.filter { it.city?.fiasId == userCity.id }
                     } else {
                         stores
-                    }
+                    }.distinctBy { it.id }
                     StoreListState.Success(cityStores.toImmutableList())
                 },
                 onFailure = {
