@@ -46,6 +46,7 @@ public data class ProductDetailed(
             return modelParameters?.joinToString(separator = "/") { it.value }
         }
 
+        // Marked as stable on config/compose/stability_config.txt
         public data class ModelParameter(
             val title: String,
             val value: String,
