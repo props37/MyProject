@@ -162,7 +162,7 @@ internal class CheckoutApiImpl @Inject constructor(
                 key = "shipping_method",
                 value = DeliveryMethodTypeDto.from(checkoutParams.deliveryMethod.type).value,
             )
-            parameter("order_price", cart.price.cartPrice)
+            parameter("order_price", cart.price.finalPrice.toInt())
             if (checkoutParams is PickupFromStoreCheckoutParams) {
                 parameter("shop", checkoutParams.store.id.value)
             }
