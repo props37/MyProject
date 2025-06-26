@@ -59,7 +59,7 @@ public data class SizeGuideParcelable(
     }
 
     public companion object {
-        public fun fromSizeGuide(sizeGuide: SizeGuide): SizeGuideParcelable {
+        public fun from(sizeGuide: SizeGuide): SizeGuideParcelable {
             return SizeGuideParcelable(
                 entries = sizeGuide.entries.map { EntryParcelable.from(it) },
             )
