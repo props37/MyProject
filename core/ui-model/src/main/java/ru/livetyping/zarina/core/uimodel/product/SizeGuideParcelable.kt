@@ -43,8 +43,8 @@ public data class SizeGuideParcelable(
             )
         }
 
-        internal companion object {
-            fun fromSizeGuideEntry(entry: SizeGuide.Entry): EntryParcelable {
+        public companion object {
+            public fun from(entry: SizeGuide.Entry): EntryParcelable {
                 return EntryParcelable(
                     sizeEn = entry.sizeEn.size,
                     sizeRu = entry.sizeRu.size,
@@ -61,7 +61,7 @@ public data class SizeGuideParcelable(
     public companion object {
         public fun fromSizeGuide(sizeGuide: SizeGuide): SizeGuideParcelable {
             return SizeGuideParcelable(
-                entries = sizeGuide.entries.map { EntryParcelable.fromSizeGuideEntry(it) },
+                entries = sizeGuide.entries.map { EntryParcelable.from(it) },
             )
         }
     }
