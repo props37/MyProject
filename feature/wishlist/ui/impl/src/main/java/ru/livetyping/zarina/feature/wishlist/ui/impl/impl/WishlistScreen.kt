@@ -96,7 +96,7 @@ private fun ScreenContent(
                 val alpha by animateFloatAsState(if (productPagingItems.itemCount > 0) 1f else 0f)
 
                 TopBar(
-                    productCount = productPagingItems.itemCount,
+                    productCount = wishlistState.productCount,
                     alphaProvider = { alpha },
                 )
             },
