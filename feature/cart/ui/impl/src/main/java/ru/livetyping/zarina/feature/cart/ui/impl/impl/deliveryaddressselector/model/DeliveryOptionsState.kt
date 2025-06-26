@@ -30,7 +30,7 @@ internal sealed class DeliveryOptionsState {
             deliveryOptionsResult: Result<List<DeliveryOption>>?,
             isLoading: Boolean,
             selectedDeliveryOptionId: DeliveryOption.Id?,
-            deliveryOptionSelectedDateTimePeriodProvider: (option: DeliveryOption) -> DeliveryOption.DateTimePeriod,
+            deliveryOptionSelectedDateTimePeriodProvider: (option: DeliveryOption) -> DeliveryOption.DateTimePeriod?,
         ): DeliveryOptionsState {
             return when {
                 isLoading -> Loading
@@ -43,11 +43,16 @@ internal sealed class DeliveryOptionsState {
                                         selectedDeliveryOptionId?.let { option.id == it } ?: (index == 0)
                                     val selectedDateTimePeriod =
                                         deliveryOptionSelectedDateTimePeriodProvider(option)
-                                    DeliveryOptionState(
-                                        deliveryOption = option,
-                                        isSelected = isSelected,
-                                        selectedDateTimePeriod = selectedDateTimePeriod,
-                                    )
+                                    if (selectedDateTimePeriod != null) {
+                                        DeliveryOptionState(
+                                            deliveryOption = option,
+                                            isSelected = isSelected,
+                                            selectedDateTimePeriod = selectedDateTimePeriod,
+                                        )
+                                    } else {
+                                        val errorState = ZarinaErrorScreenState.NETWORK
+                                        return@fold Error(errorState)
+                                    }
                                 }
                             Success(mappedOptions.toImmutableList())
                         },
