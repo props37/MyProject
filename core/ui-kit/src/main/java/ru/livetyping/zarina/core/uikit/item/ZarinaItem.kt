@@ -64,7 +64,7 @@ public fun ZarinaItem(
             modifier = modifier
                 .drawBehind { drawRect(backgroundColor) }
                 .minimumInteractiveComponentSize()
-                .padding(contentPadding),
+                .padding(contentPadding)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
