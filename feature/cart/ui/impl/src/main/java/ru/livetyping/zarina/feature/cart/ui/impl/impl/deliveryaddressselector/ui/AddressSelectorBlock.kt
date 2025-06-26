@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
@@ -17,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
@@ -100,6 +105,11 @@ internal fun AddressSelectorBlock(
 
             ZarinaTextField(
                 state = apartmentSelectorTextFieldState,
+                inputTransformation = InputTransformation
+                    .byValue { _, proposed ->
+                        proposed.filter { it.isDigit() }
+                    }
+                    .maxLength(ApartmentMaxLength),
                 label = {
                     val text = if (apartmentSelectorTextFieldState.text.isNotEmpty()) {
                         stringResource(R.string.cart_apartment_or_office)
@@ -110,6 +120,7 @@ internal fun AddressSelectorBlock(
                     Text(text = stringResource(R.string.cart_apartment_or_office).uppercase())
                 },
                 colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
+                keyboardOptions = remember { KeyboardOptions(keyboardType = KeyboardType.Number) },
                 onKeyboardAction = { default ->
                     focusManager.clearFocus()
                     default()
@@ -121,3 +132,5 @@ internal fun AddressSelectorBlock(
         }
     }
 }
+
+private const val ApartmentMaxLength = 5
