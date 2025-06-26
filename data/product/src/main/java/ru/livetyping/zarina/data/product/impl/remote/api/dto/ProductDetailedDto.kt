@@ -9,10 +9,7 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductMeasurements
-import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
-import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
-import ru.livetyping.zarina.core.domain.model.product.ProductSizeRu
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.MediaDto
 import ru.livetyping.zarina.core.network.zarina.dto.ProductColorDto
@@ -65,7 +62,7 @@ internal data class ProductDetailedDto(
     val measurements: List<ProductMeasurementDto>? = null,
 
     @SerialName("sizesList")
-    val sizesList: List<SizeInfoDto>? = null,
+    val sizesList: List<SizeGuideDto>? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { "id" }
@@ -79,9 +76,10 @@ internal data class ProductDetailedDto(
             ?.flatten()
             ?.takeIf { it.isNotEmpty() }
             ?.let { entries -> ProductMeasurements(entries) }
-        val sizeGuideList = sizesList
-            ?.mapNotNull { it.toSizeGuide() }
+        val sizeGuide = sizesList
+            ?.mapNotNull { it.toSizeGuideEntry() }
             ?.takeIf { it.isNotEmpty() }
+            ?.let { entries -> SizeGuide(entries) }
         return ProductDetailed(
             id = Product.Id(id),
             name = name,
@@ -101,7 +99,7 @@ internal data class ProductDetailedDto(
             shareUrl = shareUrl?.let { Url.create(it) },
             modelInfo = model?.toModelInfo(),
             measurements = measurements,
-            sizeGuideList = sizeGuideList,
+            sizeGuide = sizeGuide,
         )
     }
 
@@ -215,47 +213,6 @@ internal data class ProductDetailedDto(
         @SerialName("media")
         val media: List<MediaDto>? = null,
     )
-
-    @Serializable
-    data class SizeInfoDto(
-        @SerialName("id")
-        val id: String? = null,
-
-        @SerialName("name")
-        val name: String? = null,
-
-        @SerialName("ru")
-        val ru: String? = null,
-
-        @SerialName("bust")
-        val bust: String? = null,
-
-        @SerialName("waist")
-        val waist: String? = null,
-
-        @SerialName("hips")
-        val hips: String? = null,
-
-        @SerialName("growth")
-        val growth: String? = null,
-    ) {
-        fun toSizeGuide(): SizeGuide? {
-            return if (id != null && name != null && ru != null && bust != null && waist != null && hips != null && growth != null) {
-                SizeGuide(
-                    sizeEn = ProductSizeEn(id),
-                    sizeRu = ProductSizeRu(ru),
-                    sizeFull = ProductSizeFull(name),
-                    bust = bust,
-                    waist = waist,
-                    hips = hips,
-                    height = growth,
-                )
-            } else {
-                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductSizeInfo")
-                null
-            }
-        }
-    }
 
     private companion object {
         private const val TAG = "ProductDetailedDto"
