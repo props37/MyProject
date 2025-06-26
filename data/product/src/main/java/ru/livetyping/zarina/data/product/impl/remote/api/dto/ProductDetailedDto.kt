@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductMeasurements
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
@@ -60,6 +61,9 @@ internal data class ProductDetailedDto(
     @SerialName("products")
     val products: List<ProductOfAnotherColorDto>? = null,
 
+    @SerialName("measurements")
+    val measurements: List<ProductMeasurementDto>? = null,
+
     @SerialName("sizesList")
     val sizesList: List<SizeInfoDto>? = null,
 ) {
@@ -70,6 +74,11 @@ internal data class ProductDetailedDto(
         checkPropertyNotNull(offers) { "offers" }
         checkPropertyNotNull(media) { "media" }
         checkPropertyNotNull(description) { "description" }
+        val measurements = measurements
+            ?.mapNotNull { it.toProductMeasurementEntries() }
+            ?.flatten()
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { entries -> ProductMeasurements(entries) }
         val sizeGuideList = sizesList
             ?.mapNotNull { it.toSizeGuide() }
             ?.takeIf { it.isNotEmpty() }
@@ -91,6 +100,7 @@ internal data class ProductDetailedDto(
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
             modelInfo = model?.toModelInfo(),
+            measurements = measurements,
             sizeGuideList = sizeGuideList,
         )
     }
