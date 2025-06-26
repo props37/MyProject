@@ -42,6 +42,7 @@ internal fun SizeTableScreenBehavior(
 }
 
 private fun navigate(navActions: SizeTableNavActions, action: SizeTableScreenAction) {
-    // TODO: [Top] Implement
-    TODO()
+    when (action) {
+        SizeTableScreenAction.CloseClicked -> navActions.onBackClicked()
+    }
 }

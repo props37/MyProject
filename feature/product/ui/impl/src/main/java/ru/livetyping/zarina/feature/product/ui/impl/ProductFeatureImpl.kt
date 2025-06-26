@@ -40,6 +40,8 @@ public class ProductFeatureImpl : ProductFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
+            val navigateBack: () -> Unit = { navController.navigateUp() }
+
             val productNavActions = ProductNavActions(
                 onBackClicked = actions.onBackClicked,
                 onCheckAvailabilityInStoresClicked = { product ->
@@ -56,11 +58,13 @@ public class ProductFeatureImpl : ProductFeature {
             productScreen(productNavActions, DeepLinks)
 
             val availabilityInStoresNavActions = AvailabilityInStoresNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateBack,
             )
             availabilityInStoresScreen(availabilityInStoresNavActions)
 
-            val sizeTableNavActions = SizeTableNavActions()
+            val sizeTableNavActions = SizeTableNavActions(
+                onBackClicked = navigateBack,
+            )
             sizeTableScreen(sizeTableNavActions)
         }
     }
