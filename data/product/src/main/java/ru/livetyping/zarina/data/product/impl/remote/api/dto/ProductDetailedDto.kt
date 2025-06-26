@@ -10,7 +10,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
-import ru.livetyping.zarina.core.domain.model.product.ProductSizeInfo
+import ru.livetyping.zarina.core.domain.model.product.SizeGuide
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeRu
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.MediaDto
@@ -70,8 +70,8 @@ internal data class ProductDetailedDto(
         checkPropertyNotNull(offers) { "offers" }
         checkPropertyNotNull(media) { "media" }
         checkPropertyNotNull(description) { "description" }
-        val sizeInfoList = sizesList
-            ?.mapNotNull { it.toProductSizeInfo() }
+        val sizeGuideList = sizesList
+            ?.mapNotNull { it.toSizeGuide() }
             ?.takeIf { it.isNotEmpty() }
         return ProductDetailed(
             id = Product.Id(id),
@@ -91,7 +91,7 @@ internal data class ProductDetailedDto(
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
             modelInfo = model?.toModelInfo(),
-            sizeInfoList = sizeInfoList,
+            sizeGuideList = sizeGuideList,
         )
     }
 
@@ -229,9 +229,9 @@ internal data class ProductDetailedDto(
         @SerialName("growth")
         val growth: String? = null,
     ) {
-        fun toProductSizeInfo(): ProductSizeInfo? {
+        fun toSizeGuide(): SizeGuide? {
             return if (id != null && name != null && ru != null && bust != null && waist != null && hips != null && growth != null) {
-                ProductSizeInfo(
+                SizeGuide(
                     sizeEn = ProductSizeEn(id),
                     sizeRu = ProductSizeRu(ru),
                     sizeFull = ProductSizeFull(name),

@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.core.domain.model.product
 
-public data class ProductSizeInfo(
+public data class SizeGuide(
     val sizeEn: ProductSizeEn,
     val sizeRu: ProductSizeRu,
     val sizeFull: ProductSizeFull,
