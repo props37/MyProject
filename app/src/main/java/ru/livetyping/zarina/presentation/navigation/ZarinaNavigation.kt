@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -145,21 +145,22 @@ fun ZarinaNavigation(
     }
 
     val currentBackStack = navController.currentBackStack
-    var prevDestination by remember { mutableStateOf<NavDestination?>(null) }
-    var currentDestination by remember { mutableStateOf<NavDestination?>(null) }
+    var currentBackStackEntry by remember { mutableStateOf<NavBackStackEntry?>(null) }
     var prevSelectedBottomNavBarItem by remember { mutableStateOf<BottomNavBarItem?>(null) }
-    DisposableEffect(navController) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination != currentDestination) {
-                prevDestination = currentDestination
-                currentDestination = destination
+    var currentSelectedBottomNavBarItem by remember { mutableStateOf<BottomNavBarItem?>(null) }
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            if (backStackEntry.id != currentBackStackEntry?.id) {
+                currentBackStackEntry = backStackEntry
 
-                val backStack = currentBackStack.value
-                prevSelectedBottomNavBarItem =
-                    prevDestination?.findClosestBottomNavBarItem(backStack)
+                val selectedBottomNavBarItem =
+                    backStackEntry.destination.findClosestBottomNavBarItem(currentBackStack.value)
+                if (selectedBottomNavBarItem != null) {
+                    prevSelectedBottomNavBarItem = currentSelectedBottomNavBarItem
+                    currentSelectedBottomNavBarItem = selectedBottomNavBarItem
+                }
             }
         }
-        onDispose {}
     }
 
     NavHost(
