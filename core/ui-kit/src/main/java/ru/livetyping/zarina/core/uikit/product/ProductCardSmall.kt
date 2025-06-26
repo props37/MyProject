@@ -47,7 +47,7 @@ public fun ProductCardSmall(
     ) {
         var isImageDisplayed by remember(product.media) { mutableStateOf(false) }
         AsyncImage(
-            model = remember(product.media) { product.media.first().originalUrl.value },
+            model = remember(product.media) { product.media.firstOrNull()?.originalUrl?.value },
             contentDescription = null,
             onSuccess = { isImageDisplayed = true },
             contentScale = ContentScale.Crop,
