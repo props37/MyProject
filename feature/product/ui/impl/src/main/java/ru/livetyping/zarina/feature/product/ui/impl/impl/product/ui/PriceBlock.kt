@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -106,18 +105,6 @@ private fun PodeliPrice(
             text = podeliPriceText.uppercase(),
             style = UiKitTheme2.typography.body2,
             color = color,
-        )
-
-        Spacer(modifier = Modifier.width(1.dp))
-
-        Icon(
-            imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier
-                .padding(bottom = 2.dp)
-                .size(12.dp)
-                .rotate(90f),
         )
     }
 }
