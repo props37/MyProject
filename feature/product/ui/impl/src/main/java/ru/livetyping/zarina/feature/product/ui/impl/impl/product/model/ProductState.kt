@@ -20,6 +20,7 @@ internal sealed class ProductState {
         val mediaBanner: Media?,
         val totalLookProductState: SuggestionListState,
         val similarProductState: SuggestionListState,
+        val isSizeTableButtonVisible: Boolean,
         val selectedSize: ProductSizeFull?,
         val selectedHeight: ProductHeight?,
         val shouldSelectHeight: Boolean,
@@ -52,6 +53,8 @@ internal sealed class ProductState {
                         val mediaBanner = product.media
                             .drop(1)
                             .firstOrNull { it.type == MediaType.IMAGE }
+                        val isSizeTableButtonVisible =
+                            product.measurements != null && product.sizeGuide != null
 
                         Success(
                             product = product,
@@ -59,6 +62,7 @@ internal sealed class ProductState {
                             mediaBanner = mediaBanner,
                             totalLookProductState = totalLookProductState,
                             similarProductState = similarProductState,
+                            isSizeTableButtonVisible = isSizeTableButtonVisible,
                             selectedSize = selectedSize,
                             selectedHeight = selectedHeight,
                             shouldSelectHeight = shouldSelectHeight,

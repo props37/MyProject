@@ -36,6 +36,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 @Composable
 internal fun SizeInfo(
     sizeOnModel: String?,
+    isSizeTableButtonVisible: Boolean,
     onSizeTableClicked: () -> Unit,
     selectedSize: ProductSizeFull?,
     selectedHeight: ProductHeight?,
@@ -50,13 +51,16 @@ internal fun SizeInfo(
                 SizeOnModel(
                     sizeOnModel = sizeOnModel,
                     onClick = onSizeTableClicked,
+                    isClickable = isSizeTableButtonVisible,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(8.dp))
 
-                SizeTableTextButton(onClick = onSizeTableClicked)
-            } else {
+                if (isSizeTableButtonVisible) {
+                    SizeTableTextButton(onClick = onSizeTableClicked)
+                }
+            } else if (isSizeTableButtonVisible) {
                 SizeTableButton(onClick = onSizeTableClicked)
             }
         }
@@ -90,9 +94,11 @@ private fun SizeOnModel(
     sizeOnModel: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
 ) {
     SizeOnModelButton(
         onClick = onClick,
+        isClickable = isClickable,
         modifier = modifier,
     ) {
         val textStyle = UiKitTheme2.typography.body2
@@ -116,32 +122,36 @@ private fun SizeOnModel(
 @Composable
 private fun SizeOnModelButton(
     onClick: () -> Unit,
+    isClickable: Boolean,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {
     val shape = CircleShape
+    val endPadding = if (isClickable) 8.dp else 12.dp
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .background(UiKitTheme2.colors.lightGray, shape)
             .clip(shape)
-            .clickable(role = Role.Button, onClick = onClick)
-            .padding(start = 12.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+            .clickable(role = Role.Button, onClick = onClick, enabled = isClickable)
+            .padding(start = 12.dp, top = 8.dp, end = endPadding, bottom = 8.dp),
     ) {
         content()
 
-        Spacer(modifier = Modifier.width(8.dp))
+        if (isClickable) {
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
-            contentDescription = null,
-            tint = UiKitTheme2.colors.mainBlack,
-            modifier = Modifier
-                .padding(bottom = 2.dp)
-                .size(12.dp)
-                .rotate(90f),
-        )
+            Icon(
+                imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
+                contentDescription = null,
+                tint = UiKitTheme2.colors.mainBlack,
+                modifier = Modifier
+                    .padding(bottom = 2.dp)
+                    .size(12.dp)
+                    .rotate(90f),
+            )
+        }
     }
 }
 
@@ -149,9 +159,11 @@ private fun SizeOnModelButton(
 private fun SizeTableButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isClickable: Boolean = true,
 ) {
     SizeOnModelButton(
         onClick = onClick,
+        isClickable = isClickable,
         modifier = modifier,
     ) {
         Text(
