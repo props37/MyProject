@@ -16,7 +16,10 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.Av
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.AvailabilityInStoresNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.availabilityInStoresScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.productScreen
+import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.sizeTableScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ProductNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.SizeTableNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.SizeTableNavEntry
 
 public class ProductFeatureImpl : ProductFeature {
     override fun NavGraphBuilder.navigation(
@@ -45,6 +48,10 @@ public class ProductFeatureImpl : ProductFeature {
                 },
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
+                onSizeTableClicked = { measurements, sizeGuide ->
+                    val sizeTableNavEntry = SizeTableNavEntry.from(measurements, sizeGuide)
+                    navController.navigate(sizeTableNavEntry)
+                },
             )
             productScreen(productNavActions, DeepLinks)
 
@@ -52,6 +59,9 @@ public class ProductFeatureImpl : ProductFeature {
                 onBackClicked = { navController.navigateUp() },
             )
             availabilityInStoresScreen(availabilityInStoresNavActions)
+
+            val sizeTableNavActions = SizeTableNavActions()
+            sizeTableScreen(sizeTableNavActions)
         }
     }
 
