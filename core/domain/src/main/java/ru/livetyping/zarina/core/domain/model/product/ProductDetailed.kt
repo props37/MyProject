@@ -20,6 +20,7 @@ public data class ProductDetailed(
     val freeDeliveryTotalPriceThreshold: Int,
     val shareUrl: Url?,
     val modelInfo: ModelInfo?,
+    val sizeInfoList: List<ProductSizeInfo>?,
 ) : Product() {
     public val podeliPrice: PodeliPrice by lazy {
         PodeliPrice.create(price.currentPrice)
