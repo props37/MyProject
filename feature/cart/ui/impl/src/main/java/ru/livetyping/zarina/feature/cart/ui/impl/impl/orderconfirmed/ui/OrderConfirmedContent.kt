@@ -22,14 +22,13 @@ import ru.livetyping.zarina.core.domain.model.order.OrderDetailed
 import ru.livetyping.zarina.core.kotlinutil.findSubstringBounds
 import ru.livetyping.zarina.core.platform.dialPhoneNumber
 import ru.livetyping.zarina.core.uicommon.nameResId
-import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.core.uicompose.rememberSimpleFormattedPhoneNumber
 import ru.livetyping.zarina.core.uicompose.text.addStyle
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.order.OrderCard
 import ru.livetyping.zarina.core.uikit.order.color
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.orderconfirmed.model.ButtonType
@@ -133,12 +132,12 @@ private fun Description(
             "№${Typography.nbsp}${order.number.value}"
         }
         val recipientEmail = order.recipient.email.value
-        val supportPhone = rememberFormattedPhoneNumber(PhoneNumber.ZARINA_SUPPORT.value)
+        val supportPhone = rememberSimpleFormattedPhoneNumber(PhoneNumber.ZARINA_SUPPORT.value)
         val descriptionRawText = stringResource(
             descriptionRawTextResId,
             orderNumber,
             recipientEmail,
-            supportPhone.orEmpty(),
+            supportPhone,
         )
         val descriptionText = remember(
             descriptionRawText,

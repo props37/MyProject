@@ -14,7 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
 import ru.livetyping.zarina.core.platform.dialPhoneNumber
-import ru.livetyping.zarina.core.uicompose.rememberFormattedPhoneNumber
+import ru.livetyping.zarina.core.uicompose.rememberSimpleFormattedPhoneNumber
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.item.ZarinaItemDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
@@ -27,29 +27,27 @@ internal fun MenuItemSupportContactDetails(
     contentPadding: PaddingValues = ZarinaItemDefaults.ContentPadding,
 ) {
     val supportPhone = PhoneNumber.ZARINA_SUPPORT
-    val formattedPhone = rememberFormattedPhoneNumber(supportPhone.value)
+    val formattedPhone = rememberSimpleFormattedPhoneNumber(supportPhone.value)
 
-    if (formattedPhone != null) {
-        val context = LocalContext.current
+    val context = LocalContext.current
 
-        ZarinaItem(
-            onClick = { context.dialPhoneNumber(supportPhone.value) },
-            contentPadding = contentPadding,
-            modifier = modifier,
-        ) {
-            Column {
-                Text(
-                    text = formattedPhone,
-                    style = DefaultTextStyle,
-                    color = UiKitTheme2.colors.mainBlack,
-                )
+    ZarinaItem(
+        onClick = { context.dialPhoneNumber(supportPhone.value) },
+        contentPadding = contentPadding,
+        modifier = modifier,
+    ) {
+        Column {
+            Text(
+                text = formattedPhone,
+                style = DefaultTextStyle,
+                color = UiKitTheme2.colors.mainBlack,
+            )
 
-                Text(
-                    text = stringResource(R.string.catalog_free_call_in_russia).uppercase(),
-                    style = DefaultTextStyle,
-                    color = UiKitTheme2.colors.middleGray,
-                )
-            }
+            Text(
+                text = stringResource(R.string.catalog_free_call_in_russia).uppercase(),
+                style = DefaultTextStyle,
+                color = UiKitTheme2.colors.middleGray,
+            )
         }
     }
 }
