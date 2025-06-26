@@ -32,7 +32,6 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaRadioButton
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.selectedpickuppoint.model.SelectedPickupPointState
@@ -182,7 +181,7 @@ private fun PickupPointPaymentMethodsItem(
     }
     val paymentMethodsText = when (paymentMethods.size) {
         0 -> null
-        1 -> paymentMethodStrings.first()
+        1 -> paymentMethodStrings.firstOrNull()
         else -> stringResource(
             R.string.cart_or,
             paymentMethodStrings[0],
