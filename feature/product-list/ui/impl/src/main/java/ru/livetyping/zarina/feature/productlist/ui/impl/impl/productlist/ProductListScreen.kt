@@ -112,19 +112,24 @@ private fun ScreenContent(
                 collapsingProgressProvider = { topBarScrollBehavior.state.collapsedFraction },
             )
 
-            val footer: (LazyGridScope.() -> Unit)? =
-                if (productListState.isLoadMoreProductsButtonVisible) {
-                    {
-                        loadMoreProductsButtonGridItem(
-                            onClick = {
-                                onProductListEvent(ProductListEvent.LoadMoreProductsClicked)
-                            },
-                        )
-                    }
-                } else null
+            val productPagingItems = productListState.productPagingDataFlow.collectAsLazyPagingItems()
+
+            val isLoadMoreFooterVisible =
+                !productPagingItems.loadState.append.endOfPaginationReached
+                        && productListState.isLoadMoreProductsButtonVisible
+
+            val footer: (LazyGridScope.() -> Unit)? = if (isLoadMoreFooterVisible) {
+                {
+                    loadMoreProductsButtonGridItem(
+                        onClick = {
+                            onProductListEvent(ProductListEvent.LoadMoreProductsClicked)
+                        },
+                    )
+                }
+            } else null
 
             ProductGrid(
-                productPagingItems = productListState.productPagingDataFlow.collectAsLazyPagingItems(),
+                productPagingItems = productPagingItems,
                 onProductClicked = { onProductListEvent(ProductListEvent.ProductClicked(it)) },
                 onAddToWishlistClicked = {
                     onProductListEvent(ProductListEvent.AddToWishlistClicked(it))
