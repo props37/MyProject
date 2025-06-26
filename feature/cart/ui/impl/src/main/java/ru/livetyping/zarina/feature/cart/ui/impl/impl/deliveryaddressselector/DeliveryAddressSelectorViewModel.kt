@@ -148,7 +148,7 @@ internal class DeliveryAddressSelectorViewModel @AssistedInject constructor(
             selectedDeliveryOptionId = selectedDeliveryOptionId,
             deliveryOptionSelectedDateTimePeriodProvider = { deliveryOption ->
                 deliveryOptionToSelectedDateTimePeriod[deliveryOption.id]
-                    ?: deliveryOption.dateTimePeriods.first()
+                    ?: deliveryOption.dateTimePeriods.firstOrNull()
             },
         )
     }.stateIn(
@@ -332,9 +332,9 @@ internal class DeliveryAddressSelectorViewModel @AssistedInject constructor(
             val option = event.deliveryOption
             val selectedDateTimePeriod =
                 deliveryOptionToSelectedDateTimePeriod.value[option.id]
-                    ?: option.dateTimePeriods.first()
+                    ?: option.dateTimePeriods.firstOrNull()
             val timePeriods = option.dateTimePeriods.filter {
-                it.date == selectedDateTimePeriod.date
+                it.date == selectedDateTimePeriod?.date
             }
             val action = DeliveryAddressSelectorScreenAction.SelectDeliveryOptionDateTimeClicked(
                 type = DeliveryOptionDateTimeType.TIME,
