@@ -2,6 +2,7 @@ package ru.livetyping.zarina.core.domain.model.product
 
 import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.media.Media
 
 // Marked as stable on config/compose/stability_config.txt
@@ -20,6 +21,7 @@ public data class ProductDetailed(
     val freeDeliveryTotalPriceThreshold: Int,
     val shareUrl: Url?,
     val modelInfo: ModelInfo?,
+    val gender: Gender,
     val measurements: ProductMeasurements?,
     val sizeGuide: SizeGuide?,
 ) : Product() {
