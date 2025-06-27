@@ -2,6 +2,7 @@ package ru.livetyping.zarina.feature.product.ui.impl.impl.product
 
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductMeasurements
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
@@ -20,6 +21,7 @@ internal sealed interface ProductScreenAction {
 
     data class SizeTableClicked(
         val measurements: ProductMeasurements,
+        val modelInfo: ProductDetailed.ModelInfo?,
         val sizeGuide: SizeGuide,
         val gender: Gender,
     ) : ProductScreenAction

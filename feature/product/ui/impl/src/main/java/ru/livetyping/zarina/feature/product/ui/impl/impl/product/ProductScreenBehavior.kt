@@ -58,7 +58,12 @@ private fun navigate(navActions: ProductNavActions, action: ProductScreenAction)
 
         is ProductScreenAction.ProductClicked -> navActions.onProductClicked(action.product)
         is ProductScreenAction.SizeTableClicked -> {
-            navActions.onSizeTableClicked(action.measurements, action.sizeGuide, action.gender)
+            navActions.onSizeTableClicked(
+                action.measurements,
+                action.modelInfo,
+                action.sizeGuide,
+                action.gender,
+            )
         }
     }
 }

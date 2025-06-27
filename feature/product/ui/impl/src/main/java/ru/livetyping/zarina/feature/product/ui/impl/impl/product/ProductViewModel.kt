@@ -272,6 +272,7 @@ internal class ProductViewModel @Inject constructor(
                 if (measurements != null && sizeGuide != null) {
                     val action = ProductScreenAction.SizeTableClicked(
                         measurements = measurements,
+                        modelInfo = product.modelInfo,
                         sizeGuide = sizeGuide,
                         gender = product.gender,
                     )

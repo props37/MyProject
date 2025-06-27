@@ -10,26 +10,32 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductMeasurement
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
+import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
 import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.model.ProductMeasurementsState
 
@@ -85,7 +91,9 @@ internal fun ProductMeasurements(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // TODO: [Top] Implement
+            if (state.modelInfo != null) {
+                ModelInfo(info = state.modelInfo)
+            }
 
             Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
             Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
@@ -166,6 +174,49 @@ private fun ProductMeasurementsImpl(
             )
 
             ZarinaDivider(modifier = dividerModifier)
+        }
+    }
+}
+
+@Composable
+private fun ModelInfo(
+    info: ProductDetailed.ModelInfo,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        val headerStyle = UiKitTheme2.typography.bodyBold
+
+        ZarinaItem(
+            startContent = {
+                Text(
+                    text = stringResource(R.string.product_model_parameters).uppercase(),
+                    style = headerStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            endContent = {
+                info.sizeOnModel?.let {
+                    Text(
+                        text = it.uppercase(),
+                        style = headerStyle,
+                    )
+                }
+            },
+            modifier = Modifier.heightIn(min = 56.dp),
+        )
+
+        info.modelParameters?.forEach { parameter ->
+            SizeTableItem(
+                name = parameter.title,
+                value = parameter.value,
+            )
+
+            ZarinaDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
         }
     }
 }

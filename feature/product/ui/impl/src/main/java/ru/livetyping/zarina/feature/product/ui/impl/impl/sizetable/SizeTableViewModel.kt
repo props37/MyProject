@@ -35,6 +35,7 @@ internal class SizeTableViewModel @Inject constructor(
         typeMap = SizeTableNavEntry.typeMap(),
     )
     private val productMeasurements = navEntry.getProductMeasurements()
+    private val modelInfo = navEntry.getModelInfo()
     private val sizeGuide = navEntry.getSizeGuide().let {
         it.copy(entries = it.entries.sortedBy { it.sizeRu.size })
     }
@@ -69,6 +70,7 @@ internal class SizeTableViewModel @Inject constructor(
         heights = productMeasurementsHeights,
         selectedHeight = selectedProductMeasurementsHeight.value,
         measurements = persistentListOf(),
+        modelInfo = modelInfo,
     )
 
     private val productMeasurementsState = combine(
@@ -89,6 +91,7 @@ internal class SizeTableViewModel @Inject constructor(
             heights = productMeasurementsHeights,
             selectedHeight = selectedHeight,
             measurements = measurements?.toImmutableList(),
+            modelInfo = modelInfo,
         )
     }.stateIn(
         scope = viewModelScope,
