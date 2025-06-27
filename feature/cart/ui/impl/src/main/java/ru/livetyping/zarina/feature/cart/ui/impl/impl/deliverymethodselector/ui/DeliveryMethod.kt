@@ -44,7 +44,7 @@ internal fun DeliveryMethod(
                 method.description?.let {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = it,
+                        text = it.uppercase(),
                         style = UiKitTheme2.typography.body,
                         color = UiKitTheme2.colors.middleGray
                     )

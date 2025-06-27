@@ -1,9 +1,13 @@
 package ru.livetyping.zarina.core.domain.usecase.checkout
 
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.analytics.toAppMetricaOrder
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
@@ -41,7 +45,7 @@ internal class CheckoutUseCaseImpl(
 ) : FlowUseCase<Params, CheckoutStep>(logger), CheckoutUseCase {
 
     override fun execute(params: Params): Flow<CheckoutStep> {
-        return flow {
+        return channelFlow {
             val cart = params.cart
             val paymentMethod = params.paymentMethod
             val checkoutParams = params.checkoutParams
@@ -92,14 +96,14 @@ internal class CheckoutUseCaseImpl(
 
                 else -> error("Unsupported payment method type ${paymentMethod.type}")
             }
-        }
+        }.buffer(Channel.UNLIMITED)
     }
 
     override fun invoke(params: Params): Flow<Result<CheckoutStep>> {
         return call(params)
     }
 
-    private suspend fun FlowCollector<CheckoutStep>.checkoutWithCardPayment(
+    private suspend fun ProducerScope<CheckoutStep>.checkoutWithCardPayment(
         cart: Cart,
         paymentMethod: PaymentMethod,
         checkoutParams: CheckoutParams,
@@ -111,15 +115,15 @@ internal class CheckoutUseCaseImpl(
             checkoutParams = checkoutParams,
             user = user,
         )
-        emit(CheckoutStep.PaymentStarted(paymentData))
+        send(CheckoutStep.PaymentStarted(paymentData))
 
         awaitPaymentCompleted(
             paymentData = paymentData,
             paymentMethod = paymentMethod,
-            onCheck = { emit(CheckoutStep.PaymentStatusChecked) },
+            onCheck = { send(CheckoutStep.PaymentStatusChecked) },
         )
         checkoutRepository.onPaymentCompleted(paymentData)
-        emit(CheckoutStep.PaymentCompleted)
+        send(CheckoutStep.PaymentCompleted)
 
         var order = createOrder(
             cart = cart,
@@ -142,54 +146,51 @@ internal class CheckoutUseCaseImpl(
             shouldUpdateOrderStatus = false,
             shouldAwaitPaymentCompleted = false,
         )
-        emit(checkoutCompleted)
+        send(checkoutCompleted)
     }
 
-    private suspend fun FlowCollector<CheckoutStep>.checkoutWithOptionalPayment(
+    private suspend fun ProducerScope<CheckoutStep>.checkoutWithOptionalPayment(
         cart: Cart,
         paymentMethod: PaymentMethod,
         checkoutParams: CheckoutParams,
     ) {
-        val order = createOrder(
-            cart = cart,
-            paymentMethod = paymentMethod,
-            checkoutParams = checkoutParams,
-            paymentData = null,
-        )
+        coroutineScope {
+            val order = createOrder(
+                cart = cart,
+                paymentMethod = paymentMethod,
+                checkoutParams = checkoutParams,
+                paymentData = null,
+            )
 
-        var shouldAwaitPaymentCompleted = true
+            if (order.paymentUrl != null) {
+                val paymentData = getOptionalPaymentData(paymentMethod, order.paymentUrl, order.number)
+                send(CheckoutStep.PaymentStarted(paymentData))
 
-        if (order.paymentUrl != null) {
-            val paymentData = getOptionalPaymentData(paymentMethod, order.paymentUrl, order.number)
-            emit(CheckoutStep.PaymentStarted(paymentData))
-
-            if (paymentData is SberSbpPaymentData) {
-                shouldAwaitPaymentCompleted = false
+                launch {
+                    awaitPaymentCompleted(
+                        paymentData = paymentData,
+                        paymentMethod = paymentMethod,
+                    )
+                    checkoutRepository.onPaymentCompleted(paymentData)
+                    send(CheckoutStep.PaymentCompleted)
+                }
+            } else {
+                logger?.v(TAG, "Order payment URL is not provided")
             }
 
-            awaitPaymentCompleted(
-                paymentData = paymentData,
-                paymentMethod = paymentMethod,
-                onCheck = { emit(CheckoutStep.PaymentStatusChecked) },
+            appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
+
+            val checkoutCompleted = CheckoutStep.CheckoutCompleted(
+                order = order,
+                paymentMethodType = paymentMethod.type,
+                shouldUpdateOrderStatus = true,
+                shouldAwaitPaymentCompleted = true,
             )
-            checkoutRepository.onPaymentCompleted(paymentData)
-            emit(CheckoutStep.PaymentCompleted)
-        } else {
-            logger?.v(TAG, "Order payment URL is not provided")
+            send(checkoutCompleted)
         }
-
-        appMetrica.reportOrderConfirmed(order.toAppMetricaOrder())
-
-        val checkoutCompleted = CheckoutStep.CheckoutCompleted(
-            order = order,
-            paymentMethodType = paymentMethod.type,
-            shouldUpdateOrderStatus = true,
-            shouldAwaitPaymentCompleted = shouldAwaitPaymentCompleted,
-        )
-        emit(checkoutCompleted)
     }
 
-    private suspend fun FlowCollector<CheckoutStep>.checkoutWithPaymentUponReceipt(
+    private suspend fun ProducerScope<CheckoutStep>.checkoutWithPaymentUponReceipt(
         cart: Cart,
         paymentMethod: PaymentMethod,
         checkoutParams: CheckoutParams,
@@ -209,10 +210,10 @@ internal class CheckoutUseCaseImpl(
             shouldUpdateOrderStatus = false,
             shouldAwaitPaymentCompleted = false,
         )
-        emit(checkoutCompleted)
+        send(checkoutCompleted)
     }
 
-    private suspend fun FlowCollector<CheckoutStep>.checkoutWithGiftCertificatePayment(
+    private suspend fun ProducerScope<CheckoutStep>.checkoutWithGiftCertificatePayment(
         cart: Cart,
         paymentMethod: PaymentMethod,
         availablePaymentMethods: List<PaymentMethod>,
@@ -229,15 +230,15 @@ internal class CheckoutUseCaseImpl(
                 checkoutParams = checkoutParams,
                 user = user,
             )
-            emit(CheckoutStep.PaymentStarted(paymentData))
+            send(CheckoutStep.PaymentStarted(paymentData))
 
             awaitPaymentCompleted(
                 paymentData = paymentData,
                 paymentMethod = paymentMethodForRemainingPrice,
-                onCheck = { emit(CheckoutStep.PaymentStatusChecked) },
+                onCheck = { send(CheckoutStep.PaymentStatusChecked) },
             )
             checkoutRepository.onPaymentCompleted(paymentData)
-            emit(CheckoutStep.PaymentCompleted)
+            send(CheckoutStep.PaymentCompleted)
 
             // Use the original payment method to create an order
             var order = createOrder(
@@ -262,7 +263,7 @@ internal class CheckoutUseCaseImpl(
                 shouldUpdateOrderStatus = false,
                 shouldAwaitPaymentCompleted = false,
             )
-            emit(checkoutCompleted)
+            send(checkoutCompleted)
         } else {
             // The gift certificate is enough, there is no remaining price the user has to pay
             val order = createOrder(
@@ -280,7 +281,7 @@ internal class CheckoutUseCaseImpl(
                 shouldUpdateOrderStatus = false,
                 shouldAwaitPaymentCompleted = false,
             )
-            emit(checkoutCompleted)
+            send(checkoutCompleted)
         }
     }
 
