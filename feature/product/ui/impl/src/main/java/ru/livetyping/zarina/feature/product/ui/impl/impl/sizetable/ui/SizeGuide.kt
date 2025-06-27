@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,10 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.tag.ZarinaTag
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -32,9 +39,11 @@ import ru.livetyping.zarina.feature.product.ui.impl.R
 @Composable
 internal fun SizeGuide(
     sizeGuide: SizeGuide,
+    gender: Gender,
+    windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         var selectedEntry by remember { mutableStateOf(sizeGuide.entries.firstOrNull()) }
 
         SizeSelector(
@@ -53,6 +62,25 @@ internal fun SizeGuide(
                 SizeGuideImpl(entry = entry)
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        val image = when (gender) {
+            Gender.FEMALE -> R.drawable.size_guide_women
+            Gender.MALE -> R.drawable.size_guide_men
+        }
+
+        AsyncImage(
+            model = image,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+        )
+
+        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
     }
 }
 
@@ -133,7 +161,5 @@ private fun SizeGuideImpl(
         )
 
         ZarinaDivider(modifier = dividerModifier)
-
-        // TODO: [Top] Add guide image
     }
 }

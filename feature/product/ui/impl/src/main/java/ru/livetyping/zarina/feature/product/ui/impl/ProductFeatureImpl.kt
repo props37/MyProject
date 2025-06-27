@@ -50,8 +50,8 @@ public class ProductFeatureImpl : ProductFeature {
                 },
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
-                onSizeTableClicked = { measurements, sizeGuide ->
-                    val sizeTableNavEntry = SizeTableNavEntry.from(measurements, sizeGuide)
+                onSizeTableClicked = { measurements, sizeGuide, gender ->
+                    val sizeTableNavEntry = SizeTableNavEntry.from(measurements, sizeGuide, gender)
                     navController.navigate(sizeTableNavEntry)
                 },
             )

@@ -266,11 +266,15 @@ internal class ProductViewModel @Inject constructor(
     private fun onSizeTableClicked() {
         navigationThrottler.throttle {
             viewModelScope.launch {
-                val product = productComponent.awaitProduct()
-                val measurements = product?.measurements
-                val sizeGuide = product?.sizeGuide
+                val product = productComponent.awaitProduct() ?: return@launch
+                val measurements = product.measurements
+                val sizeGuide = product.sizeGuide
                 if (measurements != null && sizeGuide != null) {
-                    val action = ProductScreenAction.SizeTableClicked(measurements, sizeGuide)
+                    val action = ProductScreenAction.SizeTableClicked(
+                        measurements = measurements,
+                        sizeGuide = sizeGuide,
+                        gender = product.gender,
+                    )
                     emitSideEffect(ProductSideEffect.Navigate(action))
                 }
             }

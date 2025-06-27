@@ -37,6 +37,7 @@ internal class SizeTableViewModel @Inject constructor(
     private val sizeGuide = navEntry.getSizeGuide().let {
         it.copy(entries = it.entries.sortedBy { it.sizeRu.size })
     }
+    private val gender = navEntry.getGender()
 
     private val viewModes = ViewMode.entries.toImmutableList()
     private val currentViewMode = MutableStateFlow(ViewMode.PRODUCT_MEASUREMENTS)
@@ -49,6 +50,7 @@ internal class SizeTableViewModel @Inject constructor(
     private val initialSizeTableState = SizeTableState(
         viewModeSelectorState = viewModeSelectorState.value,
         sizeGuide = sizeGuide,
+        gender = gender,
     )
 
     val sizeTableState: StateFlow<SizeTableState> = combine(
@@ -58,6 +60,7 @@ internal class SizeTableViewModel @Inject constructor(
         SizeTableState(
             viewModeSelectorState = viewModeSelectorState,
             sizeGuide = sizeGuide,
+            gender = gender,
         )
     }.stateIn(
         scope = viewModelScope,
