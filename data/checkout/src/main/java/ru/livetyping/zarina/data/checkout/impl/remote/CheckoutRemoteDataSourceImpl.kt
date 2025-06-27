@@ -30,6 +30,7 @@ import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.data.checkout.impl.remote.api.CheckoutApi
 import ru.livetyping.zarina.data.checkout.impl.remote.api.dto.DeliveryOptionsDtoType
 import timber.log.Timber
+import java.net.UnknownHostException
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration
@@ -204,25 +205,17 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         pollingDelay: Duration,
         onCheck: (suspend () -> Unit)?,
     ) {
-        var errorCount = 0
-        while (coroutineContext.isActive) {
-            try {
+        awaitPaymentCompleted(
+            action = {
                 val result = api.getPayturePaymentResult(
                     paymentMethodType = paymentMethodType,
                     paymentData = paymentData,
                 )
                 onCheck?.invoke()
-                if (result.success == true) break
-            } catch (e: Exception) {
-                Timber.e(e)
-                errorCount++
-                if (errorCount > PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT) {
-                    throw e
-                }
-            }
-
-            delay(pollingDelay)
-        }
+                if (result.success == true) return
+            },
+            pollingDelay = pollingDelay,
+        )
     }
 
     private suspend fun awaitSberPaymentCompleted(
@@ -230,22 +223,14 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         pollingDelay: Duration,
         onCheck: (suspend () -> Unit)?,
     ) {
-        var errorCount = 0
-        while (coroutineContext.isActive) {
-            try {
+        awaitPaymentCompleted(
+            action = {
                 val result = api.getSberPaymentResult(paymentData)
                 onCheck?.invoke()
-                if (result.isSuccess()) break
-            } catch (e: Exception) {
-                Timber.e(e)
-                errorCount++
-                if (errorCount > PAYMENT_RESULT_CHECK_MAX_ERROR_COUNT) {
-                    throw e
-                }
-            }
-
-            delay(pollingDelay)
-        }
+                if (result.isSuccess()) return
+            },
+            pollingDelay = pollingDelay,
+        )
     }
 
     private suspend fun awaitSberSbpPaymentCompleted(
@@ -253,12 +238,26 @@ internal class CheckoutRemoteDataSourceImpl @Inject constructor(
         pollingDelay: Duration,
         onCheck: (suspend () -> Unit)?,
     ) {
+        awaitPaymentCompleted(
+            action = {
+                val result = api.getSberSbpPaymentResult(paymentData)
+                onCheck?.invoke()
+                if (result.isSuccess()) return
+            },
+            pollingDelay = pollingDelay,
+        )
+    }
+
+    private suspend inline fun awaitPaymentCompleted(
+        action: () -> Unit,
+        pollingDelay: Duration,
+    ) {
         var errorCount = 0
         while (coroutineContext.isActive) {
             try {
-                val result = api.getSberSbpPaymentResult(paymentData)
-                onCheck?.invoke()
-                if (result.isSuccess()) break
+                action()
+            } catch (e: UnknownHostException) {
+                Timber.e(e)
             } catch (e: Exception) {
                 Timber.e(e)
                 errorCount++
