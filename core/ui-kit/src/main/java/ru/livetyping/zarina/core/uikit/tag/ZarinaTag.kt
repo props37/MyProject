@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.uikit.tag
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -44,8 +45,8 @@ public fun ZarinaTag(
     val backgroundColor = animateColorAsState(
         targetValue = when {
             !isEnabled -> UiKitTheme.colors.background.general.regular.muted
-            isSelected -> UiKitTheme.colors.background.tag.active
-            else -> UiKitTheme.colors.background.tag.default
+            isSelected -> UiKitTheme2.colors.mainBlack
+            else -> UiKitTheme2.colors.gray
         },
         label = "ZarinaTag background color",
     )
@@ -53,17 +54,13 @@ public fun ZarinaTag(
     val contentColor = animateColorAsState(
         targetValue = when {
             !isEnabled -> UiKitTheme.colors.text.general.regular.disabled
-            isSelected -> UiKitTheme.colors.text.tag.active
-            else -> UiKitTheme.colors.text.tag.default
+            isSelected -> UiKitTheme2.colors.white
+            else -> UiKitTheme2.colors.mainBlack
         },
         label = "ZarinaTag content color",
     )
 
-    val textStyle = if (isSelected) {
-        UiKitTheme2.typography.body
-    } else {
-        UiKitTheme2.typography.body
-    }
+    val textStyle = UiKitTheme2.typography.body
 
     val ripple = if (isSelected) LightRipple else DarkRipple
 
@@ -72,6 +69,7 @@ public fun ZarinaTag(
         LocalTextStyle provides textStyle,
     ) {
         Row(
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .defaultMinSize(ZarinaTagDefaults.MinSize, ZarinaTagDefaults.MinSize)

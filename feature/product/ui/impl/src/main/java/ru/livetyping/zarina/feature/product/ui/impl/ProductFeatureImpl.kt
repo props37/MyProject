@@ -16,7 +16,10 @@ import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.Av
 import ru.livetyping.zarina.feature.product.ui.impl.impl.availabilityinstores.AvailabilityInStoresNavEntry
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.availabilityInStoresScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.productScreen
+import ru.livetyping.zarina.feature.product.ui.impl.impl.navigation.sizeTableScreen
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.ProductNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.SizeTableNavActions
+import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.SizeTableNavEntry
 
 public class ProductFeatureImpl : ProductFeature {
     override fun NavGraphBuilder.navigation(
@@ -37,6 +40,8 @@ public class ProductFeatureImpl : ProductFeature {
             popExitTransition = popExitTransition,
             sizeTransform = sizeTransform,
         ) {
+            val navigateBack: () -> Unit = { navController.navigateUp() }
+
             val productNavActions = ProductNavActions(
                 onBackClicked = actions.onBackClicked,
                 onCheckAvailabilityInStoresClicked = { product ->
@@ -45,13 +50,22 @@ public class ProductFeatureImpl : ProductFeature {
                 },
                 onSubscribeToProductClicked = actions.onSubscribeToProductClicked,
                 onProductClicked = actions.onProductClicked,
+                onSizeTableClicked = { measurements, modelInfo, sizeGuide, gender ->
+                    val sizeTableNavEntry = SizeTableNavEntry.from(measurements, modelInfo, sizeGuide, gender)
+                    navController.navigate(sizeTableNavEntry)
+                },
             )
             productScreen(productNavActions, DeepLinks)
 
             val availabilityInStoresNavActions = AvailabilityInStoresNavActions(
-                onBackClicked = { navController.navigateUp() },
+                onBackClicked = navigateBack,
             )
             availabilityInStoresScreen(availabilityInStoresNavActions)
+
+            val sizeTableNavActions = SizeTableNavActions(
+                onBackClicked = navigateBack,
+            )
+            sizeTableScreen(sizeTableNavActions)
         }
     }
 

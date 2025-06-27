@@ -185,6 +185,7 @@ private fun ContentList(
         item(key = ContentListKey.SizeInfo, contentType = ContentListContentType.SizeInfo) {
             SizeInfo(
                 sizeOnModel = state.product.modelInfo?.sizeOnModel,
+                isSizeTableButtonVisible = state.isSizeTableButtonVisible,
                 onSizeTableClicked = { onEvent(ProductEvent.SizeTableClicked) },
                 selectedSize = state.selectedSize,
                 selectedHeight = state.selectedHeight,

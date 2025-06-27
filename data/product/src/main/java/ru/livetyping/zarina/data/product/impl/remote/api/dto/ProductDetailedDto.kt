@@ -4,10 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.common.Color
 import ru.livetyping.zarina.core.domain.model.common.Url
+import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.media.MediaType
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductColor
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductMeasurements
+import ru.livetyping.zarina.core.domain.model.product.SizeGuide
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 import ru.livetyping.zarina.core.network.zarina.dto.MediaDto
 import ru.livetyping.zarina.core.network.zarina.dto.ProductColorDto
@@ -53,8 +56,17 @@ internal data class ProductDetailedDto(
     @SerialName("model")
     val model: ModelDto? = null,
 
+    @SerialName("gender")
+    val gender: GenderDto? = null,
+
     @SerialName("products")
     val products: List<ProductOfAnotherColorDto>? = null,
+
+    @SerialName("measurements")
+    val measurements: List<ProductMeasurementDto>? = null,
+
+    @SerialName("sizesList")
+    val sizesList: List<SizeGuideDto>? = null,
 ) {
     fun toProductDetailed(): ProductDetailed {
         checkPropertyNotNull(id) { "id" }
@@ -63,6 +75,15 @@ internal data class ProductDetailedDto(
         checkPropertyNotNull(offers) { "offers" }
         checkPropertyNotNull(media) { "media" }
         checkPropertyNotNull(description) { "description" }
+        val measurements = measurements
+            ?.mapNotNull { it.toProductMeasurementEntries() }
+            ?.flatten()
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { entries -> ProductMeasurements(entries) }
+        val sizeGuide = sizesList
+            ?.mapNotNull { it.toSizeGuideEntry() }
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { entries -> SizeGuide(entries) }
         return ProductDetailed(
             id = Product.Id(id),
             name = name,
@@ -81,6 +102,9 @@ internal data class ProductDetailedDto(
             freeDeliveryTotalPriceThreshold = threshold ?: 0,
             shareUrl = shareUrl?.let { Url.create(it) },
             modelInfo = model?.toModelInfo(),
+            gender = gender?.toGender() ?: Gender.FEMALE,
+            measurements = measurements,
+            sizeGuide = sizeGuide,
         )
     }
 
@@ -157,14 +181,19 @@ internal data class ProductDetailedDto(
         @SerialName("size_on_model")
         val sizeOnModel: String? = null,
     ) {
-        fun toModelInfo(): ProductDetailed.ModelInfo {
+        fun toModelInfo(): ProductDetailed.ModelInfo? {
             val modelParameters = paramsModel
                 ?.mapNotNull { it.toModelParameter() }
                 ?.takeIf { it.isNotEmpty() }
-            return ProductDetailed.ModelInfo(
-                sizeOnModel = sizeOnModel,
-                modelParameters = modelParameters,
-            )
+            return if (sizeOnModel != null && paramsModel != null) {
+                ProductDetailed.ModelInfo(
+                    sizeOnModel = sizeOnModel,
+                    modelParameters = modelParameters,
+                )
+            } else {
+                Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductDetailed.ModelInfo")
+                null
+            }
         }
 
         @Serializable
@@ -194,6 +223,23 @@ internal data class ProductDetailedDto(
         @SerialName("media")
         val media: List<MediaDto>? = null,
     )
+
+    @Serializable
+    @JvmInline
+    value class GenderDto(private val value: String) {
+        fun toGender(): Gender {
+            return when (value) {
+                WOMEN -> Gender.FEMALE
+                MEN -> Gender.MALE
+                else -> Gender.FEMALE
+            }
+        }
+
+        private companion object {
+            private const val WOMEN = "Женский"
+            private const val MEN = "Мужской"
+        }
+    }
 
     private companion object {
         private const val TAG = "ProductDetailedDto"

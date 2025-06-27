@@ -15,4 +15,13 @@
     <string name="product_podeli_price">Или %1$s X %2$s платежа</string>
     <string name="product_model_wearing_size">На модели размер</string>
     <string name="product_zarina_club_popup_text">Начислим кешбэк за покупку до 10%\nв программе лояльности Zarina Club</string>
+    <string name="product_how_to_chose_size_question">Как выбрать размер?</string>
+    <string name="product_measurements">Обмеры изделия</string>
+    <string name="product_size_guide">Таблица размеров</string>
+    <string name="product_ru_size">Российский размер</string>
+    <string name="product_bust_size">Обхват груди (см)</string>
+    <string name="product_waist_size">Обхват талии (см)</string>
+    <string name="product_hips_size">Обхват бедер (см)</string>
+    <string name="product_height">Рост (см)</string>
+    <string name="product_measurements_height_selector_item">Рост %1$s см</string>
 </resources>
