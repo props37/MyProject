@@ -77,6 +77,13 @@ private fun ScreenContent(
         ViewModePager(
             pagerState = pagerState,
             viewModes = sizeTableState.viewModeSelectorState.tabs,
+            productMeasurementsState = sizeTableState.productMeasurementsState,
+            onProductMeasurementsSizeSelected = {
+                onSizeTableEvent(SizeTableEvent.ProductMeasurementsSizeSelected(it))
+            },
+            onProductMeasurementsHeightSelected = {
+                onSizeTableEvent(SizeTableEvent.ProductMeasurementsHeightSelected(it))
+            },
             sizeGuide = sizeTableState.sizeGuide,
             gender = sizeTableState.gender,
             windowInsetsProvider = { WindowInsets.safeDrawing },

@@ -23,4 +23,5 @@
     <string name="product_waist_size">Обхват талии (см)</string>
     <string name="product_hips_size">Обхват бедер (см)</string>
     <string name="product_height">Рост (см)</string>
+    <string name="product_measurements_height_selector_item">Рост %1$s см</string>
 </resources>

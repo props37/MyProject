@@ -3,6 +3,7 @@ package ru.livetyping.zarina.core.uikit.tag
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -68,6 +69,7 @@ public fun ZarinaTag(
         LocalTextStyle provides textStyle,
     ) {
         Row(
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .defaultMinSize(ZarinaTagDefaults.MinSize, ZarinaTagDefaults.MinSize)

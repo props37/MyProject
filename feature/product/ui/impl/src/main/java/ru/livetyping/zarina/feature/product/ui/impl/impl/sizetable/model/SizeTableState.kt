@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.uimodel.tab.TabRowState
 @Immutable
 internal data class SizeTableState(
     val viewModeSelectorState: TabRowState<ViewMode>,
+    val productMeasurementsState: ProductMeasurementsState,
     val sizeGuide: SizeGuide,
     val gender: Gender,
 )

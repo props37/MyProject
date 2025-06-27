@@ -8,13 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.domain.model.product.ProductHeight
+import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
+import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.model.ProductMeasurementsState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.sizetable.model.ViewMode
 
 @Composable
 internal fun ViewModePager(
     pagerState: PagerState,
     viewModes: ImmutableList<ViewMode>,
+    productMeasurementsState: ProductMeasurementsState,
+    onProductMeasurementsSizeSelected: (ProductSizeEn) -> Unit,
+    onProductMeasurementsHeightSelected: (ProductHeight) -> Unit,
     sizeGuide: SizeGuide,
     gender: Gender,
     windowInsetsProvider: @Composable () -> WindowInsets,
@@ -27,7 +33,13 @@ internal fun ViewModePager(
     ) { page ->
         when (viewModes[page]) {
             ViewMode.PRODUCT_MEASUREMENTS -> {
-                // TODO: [Top] Implement
+                ProductMeasurements(
+                    state = productMeasurementsState,
+                    onSizeSelected = onProductMeasurementsSizeSelected,
+                    onHeightSelected = onProductMeasurementsHeightSelected,
+                    windowInsetsProvider = windowInsetsProvider,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
             ViewMode.SIZE_GUIDE -> {
