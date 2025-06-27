@@ -265,7 +265,7 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
     private val _infoModalBottomSheetState = MutableStateFlow<InfoModalBottomSheetState?>(null)
     val infoModalBottomSheetState: StateFlow<InfoModalBottomSheetState?> = _infoModalBottomSheetState.asStateFlow()
 
-    private var currentCheckoutStep: CheckoutStep? = null
+    private var checkoutCompletedStep: CheckoutStep.CheckoutCompleted? = null
 
     private var wasPaymentClosed = false
     private var paymentStatusCheckCountAfterPaymentClosed = 0
@@ -276,8 +276,8 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
     }
 
     fun onScreenOpened() {
-        val currentCheckoutStep = currentCheckoutStep
-        if (currentCheckoutStep is CheckoutStep.CheckoutCompleted) {
+        val currentCheckoutStep = checkoutCompletedStep
+        if (currentCheckoutStep != null) {
             viewModelScope.launch {
                 completeCheckout(currentCheckoutStep)
             }
@@ -641,11 +641,14 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun onCheckoutStep(stage: CheckoutStep) {
-        currentCheckoutStep = stage
-        when (stage) {
+    private suspend fun onCheckoutStep(step: CheckoutStep) {
+        if (step is CheckoutStep.CheckoutCompleted) {
+            checkoutCompletedStep = step
+        }
+
+        when (step) {
             is CheckoutStep.PaymentStarted -> {
-                val paymentUrl = stage.paymentData.paymentUrl
+                val paymentUrl = step.paymentData.paymentUrl
                 val action = OrderPlacingScreenAction.PaymentStarted(paymentUrl)
                 emitSideEffect(OrderPlacingSideEffect.Navigate(action))
             }
@@ -665,8 +668,8 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
 
             CheckoutStep.PaymentCompleted -> Unit
             is CheckoutStep.CheckoutCompleted -> {
-                if (!stage.shouldAwaitPaymentCompleted) {
-                    completeCheckout(stage)
+                if (!step.shouldAwaitPaymentCompleted) {
+                    completeCheckout(step)
                 }
             }
         }
@@ -685,10 +688,10 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
         emitSideEffect(OrderPlacingSideEffect.ShowZarinaToast(message))
     }
 
-    private suspend fun completeCheckout(completedCheckoutStep: CheckoutStep.CheckoutCompleted) {
-        var order = completedCheckoutStep.order
+    private suspend fun completeCheckout(checkoutCompletedStep: CheckoutStep.CheckoutCompleted) {
+        var order = checkoutCompletedStep.order
         operationTracker.track(Operation.CHECKOUT) {
-            if (completedCheckoutStep.shouldUpdateOrderStatus) {
+            if (checkoutCompletedStep.shouldUpdateOrderStatus) {
                 updateOrderPaymentStatus(order.id, order.paymentMethodType)
                 val updatedOrderStatus = getOrderStatus(order.id)
                 if (updatedOrderStatus != null) {
