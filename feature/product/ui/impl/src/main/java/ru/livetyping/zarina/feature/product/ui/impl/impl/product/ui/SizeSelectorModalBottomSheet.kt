@@ -50,10 +50,13 @@ internal fun SizeSelectorModalBottomSheet(
     var internalState by remember { mutableStateOf(state) }
     val internalStateValue = internalState
     LaunchedEffect(state) {
-        if (state is SizeSelectorState.Hidden) {
-            sheetState.hide()
+        try {
+            if (state is SizeSelectorState.Hidden) {
+                sheetState.hide()
+            }
+        } finally {
+            internalState = state
         }
-        internalState = state
     }
 
     if (internalStateValue is SizeSelectorState.Visible) {
