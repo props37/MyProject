@@ -143,7 +143,7 @@
     <string name="res_order_status_approved_to_refund">Принят к возврату</string>
     <string name="res_order_status_refunded">Возвращён на склад</string>
     <string name="res_order_status_not_refundable">Не подлежит возврату</string>
-    <string name="res_order_status_to_delivery">Готов к отправке в магазин</string>
+    <string name="res_order_status_to_delivery">Готов к отправке</string>
 
     <string name="res_payment_method_upon_receipt">При получении</string>
     <string name="res_payment_method_by_card_online">Картой онлайн</string>
