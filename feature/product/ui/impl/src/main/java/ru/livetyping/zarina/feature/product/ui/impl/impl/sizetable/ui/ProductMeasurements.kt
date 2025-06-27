@@ -18,12 +18,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductMeasurement
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeEn
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -37,40 +41,55 @@ internal fun ProductMeasurements(
     windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        SizeSelector(
-            sizes = state.sizes,
-            selectedSize = state.selectedSize,
-            onSizeSelected = { onSizeSelected(it) },
-        )
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
 
-        if (state.heights != null) {
+    CollapsingTopBarLayout(
+        topBar = {
+            Column(modifier = Modifier.padding(top = 20.dp)) {
+                SizeSelector(
+                    sizes = state.sizes,
+                    selectedSize = state.selectedSize,
+                    onSizeSelected = { onSizeSelected(it) },
+                )
+
+                if (state.heights != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    HeightSelector(
+                        heights = state.heights,
+                        selectedHeight = state.selectedHeight,
+                        onHeightSelected = { onHeightSelected(it) },
+                    )
+                }
+            }
+        },
+        scrollBehavior = topBarScrollBehavior,
+        modifier = modifier.clipToBounds(),
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+                .verticalScroll(rememberScrollState()),
+        ){
             Spacer(modifier = Modifier.height(8.dp))
 
-            HeightSelector(
-                heights = state.heights,
-                selectedHeight = state.selectedHeight,
-                onHeightSelected = { onHeightSelected(it) },
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Crossfade(
-            targetState = state.measurements,
-            modifier = Modifier.fillMaxSize(),
-        ) { measurements ->
-            if (measurements != null) {
-                ProductMeasurementsImpl(measurements = measurements)
+            Crossfade(
+                targetState = state.measurements,
+                modifier = Modifier.fillMaxSize(),
+            ) { measurements ->
+                if (measurements != null) {
+                    ProductMeasurementsImpl(measurements = measurements)
+                }
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // TODO: [Top] Implement
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
         }
-
-        Spacer(modifier = Modifier.height(40.dp))
-
-        // TODO: [Top] Implement
-
-        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
     }
 }
 

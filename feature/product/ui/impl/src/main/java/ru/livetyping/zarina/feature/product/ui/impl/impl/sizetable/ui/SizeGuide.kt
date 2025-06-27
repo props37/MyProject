@@ -22,12 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import ru.livetyping.zarina.core.domain.model.gender.Gender
 import ru.livetyping.zarina.core.domain.model.product.SizeGuide
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
+import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -39,44 +43,58 @@ internal fun SizeGuide(
     windowInsetsProvider: @Composable () -> WindowInsets,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        var selectedEntry by remember { mutableStateOf(sizeGuide.entries.firstOrNull()) }
+    val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior()
 
-        SizeSelector(
-            sizeEntries = sizeGuide.entries,
-            selectedSizeEntry = selectedEntry,
-            onSizeEntrySelected = { selectedEntry = it },
-        )
+    var selectedEntry by remember { mutableStateOf(sizeGuide.entries.firstOrNull()) }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Crossfade(
-            targetState = selectedEntry,
-            modifier = Modifier.fillMaxSize(),
-        ) { entry ->
-            if (entry != null) {
-                SizeGuideImpl(entry = entry)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        val image = when (gender) {
-            Gender.FEMALE -> R.drawable.size_guide_women
-            Gender.MALE -> R.drawable.size_guide_men
-        }
-
-        AsyncImage(
-            model = image,
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
+    CollapsingTopBarLayout(
+        topBar = {
+            SizeSelector(
+                sizeEntries = sizeGuide.entries,
+                selectedSizeEntry = selectedEntry,
+                onSizeEntrySelected = { selectedEntry = it },
+                modifier = Modifier.padding(top = 20.dp),
+            )
+        },
+        scrollBehavior = topBarScrollBehavior,
+        modifier = modifier.clipToBounds(),
+    ) { padding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        )
+                .padding(padding)
+                .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
+            Crossfade(
+                targetState = selectedEntry,
+                modifier = Modifier.fillMaxSize(),
+            ) { entry ->
+                if (entry != null) {
+                    SizeGuideImpl(entry = entry)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            val image = when (gender) {
+                Gender.FEMALE -> R.drawable.size_guide_women
+                Gender.MALE -> R.drawable.size_guide_men
+            }
+
+            AsyncImage(
+                model = image,
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(windowInsetsProvider()))
+        }
     }
 }
 
