@@ -157,9 +157,15 @@ internal class CheckoutUseCaseImpl(
             paymentData = null,
         )
 
+        var shouldAwaitPaymentCompleted = true
+
         if (order.paymentUrl != null) {
             val paymentData = getOptionalPaymentData(paymentMethod, order.paymentUrl, order.number)
             emit(CheckoutStep.PaymentStarted(paymentData))
+
+            if (paymentData is SberSbpPaymentData) {
+                shouldAwaitPaymentCompleted = false
+            }
 
             awaitPaymentCompleted(
                 paymentData = paymentData,
@@ -178,7 +184,7 @@ internal class CheckoutUseCaseImpl(
             order = order,
             paymentMethodType = paymentMethod.type,
             shouldUpdateOrderStatus = true,
-            shouldAwaitPaymentCompleted = true,
+            shouldAwaitPaymentCompleted = shouldAwaitPaymentCompleted,
         )
         emit(checkoutCompleted)
     }

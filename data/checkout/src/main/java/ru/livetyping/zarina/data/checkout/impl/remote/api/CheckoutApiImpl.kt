@@ -245,7 +245,7 @@ internal class CheckoutApiImpl @Inject constructor(
 
     override suspend fun getSberSbpPaymentResult(paymentData: SberSbpPaymentData): SberPaymentResultDto {
         return httpClient
-            .get("/api/sber/get-status/${paymentData.orderNumber.value}")
+            .get("/api/sber/get-order-status/${paymentData.orderNumber.value}")
             .body()
     }
 

@@ -871,7 +871,7 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
 
     companion object {
         private const val COMMA_SEPARATOR = ", "
-        private const val PAYMENT_STATUS_CHECK_COUNT_LIMIT_AFTER_PAYMENT_CLOSED = 1
+        private const val PAYMENT_STATUS_CHECK_COUNT_LIMIT_AFTER_PAYMENT_CLOSED = 2
 
         private const val KEY_RESULT_GIFT_CERTIFICATE_RESULT = "result_gift_certificate"
         private const val KEY_RESULT_PAYMENT = "result_payment"
