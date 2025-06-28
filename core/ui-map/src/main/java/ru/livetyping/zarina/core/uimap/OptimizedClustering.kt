@@ -2,8 +2,7 @@ package ru.livetyping.zarina.core.uimap
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.SideEffect
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.algo.NonHierarchicalViewBasedAlgorithm
@@ -40,32 +39,22 @@ public fun <T : ClusterItem> OptimizedClustering(
         onDispose {}
     }
 
-    // Set click listeners
-    val currentOnClusterClick by rememberUpdatedState(onClusterClick)
-    val currentOnClusterItemClick by rememberUpdatedState(onClusterItemClick)
-    val currentOnClusterItemInfoWindowClick by rememberUpdatedState(onClusterItemInfoWindowClick)
-    val currentOnClusterItemInfoWindowLongClick by rememberUpdatedState(
-        onClusterItemInfoWindowLongClick
-    )
-    DisposableEffect(clusterManager) {
-        clusterManager?.setOnClusterClickListener(currentOnClusterClick)
-        clusterManager?.setOnClusterItemClickListener(currentOnClusterItemClick)
-        clusterManager?.setOnClusterItemInfoWindowClickListener(currentOnClusterItemInfoWindowClick)
-        clusterManager?.setOnClusterItemInfoWindowLongClickListener(
-            currentOnClusterItemInfoWindowLongClick
-        )
-        onDispose {}
-    }
-
-    // Set renderer
-    DisposableEffect(clusterManager, renderer) {
+    SideEffect {
+        // Set renderer
         if (renderer != null && clusterManager?.renderer != renderer) {
             clusterManager?.renderer = renderer
         }
-        onDispose {}
+
+        // Set click listeners
+        if (clusterManager != null) {
+            clusterManager.setOnClusterClickListener(onClusterClick)
+            clusterManager.setOnClusterItemClickListener(onClusterItemClick)
+            clusterManager.setOnClusterItemInfoWindowClickListener(onClusterItemInfoWindowClick)
+            clusterManager.setOnClusterItemInfoWindowLongClickListener(onClusterItemInfoWindowLongClick)
+        }
     }
 
-    if (clusterManager != null) {
+    if (clusterManager != null && renderer != null) {
         Clustering(
             items = items,
             clusterManager = clusterManager,
