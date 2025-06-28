@@ -49,6 +49,7 @@ internal fun StoreListStoreModalBottomSheet(
                         style = UiKitTheme2.typography.body2Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 16.dp),
                     )
                 },
                 endContent = {
