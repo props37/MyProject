@@ -9,8 +9,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.overscroll
-import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -47,8 +45,6 @@ public fun ZarinaToastContainer(
         }
     }
 
-    val overscrollEffect = rememberOverscrollEffect()
-
     AnimatedContent(
         targetState = currentMessage,
         transitionSpec = {
@@ -58,7 +54,7 @@ public fun ZarinaToastContainer(
         },
         contentAlignment = Alignment.TopCenter,
         label = "ZarinaToastContainer",
-        modifier = modifier.overscroll(overscrollEffect),
+        modifier = modifier,
     ) { message ->
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
@@ -103,7 +99,6 @@ public fun ZarinaToastContainer(
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
-                        overscrollEffect = overscrollEffect,
                     ),
             )
         }
