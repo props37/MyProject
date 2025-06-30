@@ -79,6 +79,9 @@ internal sealed class MenuState {
 
                 addSpacerIfAbsent(MenuItem.Spacer.Size.SMALL)
                 add(MenuItem.SupportPhoneNumber)
+
+                addSpacerIfAbsent(MenuItem.Spacer.Size.SMALL)
+                add(MenuItem.SupportEmailAddress)
             }.distinctBy { it.id }
         }
 

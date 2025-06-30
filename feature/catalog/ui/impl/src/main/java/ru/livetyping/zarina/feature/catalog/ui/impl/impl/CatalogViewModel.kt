@@ -110,6 +110,7 @@ internal class CatalogViewModel @Inject constructor(
             is MenuItem.Basic -> onMenuItemBasicClicked(item)
             is MenuItem.City -> Unit
             MenuItem.SupportPhoneNumber -> Unit
+            MenuItem.SupportEmailAddress -> Unit
             is MenuItem.Spacer -> Unit
         }
     }
