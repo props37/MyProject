@@ -179,7 +179,6 @@ internal object OrderPlacingScreenComponents {
                     isVisible = !isPayItemVisible && !WindowInsets.isImeVisible,
                     finalPrice = cartState.price.finalPrice,
                     buttonText = stringResource(RCommon.string.res_pay).uppercase(),
-                    isButtonEnabled = true,
                     onButtonClicked = onPayClicked,
                     isButtonLoading = isPayButtonLoading,
                     windowInsets = WindowInsets.navigationBars,

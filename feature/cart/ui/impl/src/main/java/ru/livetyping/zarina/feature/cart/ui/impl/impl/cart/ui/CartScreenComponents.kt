@@ -94,6 +94,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.valentinilk.shimmer.ShimmerBounds
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.parcelize.Parcelize
 import ru.livetyping.zarina.core.domain.model.cart.CartProduct
 import ru.livetyping.zarina.core.domain.model.cart.CartSize
@@ -138,6 +140,7 @@ import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartBonusAccountState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartMyCardState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartProductItem
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartListSideEffect
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.PagerTabRowIntegration
@@ -206,6 +209,7 @@ internal object CartScreenComponents {
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
         onCheckoutClicked: () -> Unit,
+        sideEffects: Flow<CartListSideEffect>,
         modifier: Modifier = Modifier,
     ) {
         val cityScrollBehavior = CollapsingTopBarDefaults.rememberExitUntilCollapsedScrollBehavior()
@@ -257,6 +261,7 @@ internal object CartScreenComponents {
                     onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                     onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                     onCheckoutClicked = onCheckoutClicked,
+                    sideEffects = sideEffects,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -408,6 +413,7 @@ internal object CartScreenComponents {
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
         onCheckoutClicked: () -> Unit,
+        sideEffects: Flow<CartListSideEffect>,
         modifier: Modifier = Modifier,
     ) {
         HorizontalPager(
@@ -439,6 +445,7 @@ internal object CartScreenComponents {
                             onRemovePromoCodeClicked = onRemovePromoCodeClicked,
                             onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                             onCheckoutClicked = onCheckoutClicked,
+                            sideEffects = sideEffects,
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -483,10 +490,22 @@ internal object CartScreenComponents {
         onRemovePromoCodeClicked: () -> Unit,
         onPromoCodeImeDoneClicked: () -> Unit,
         onCheckoutClicked: () -> Unit,
+        sideEffects: Flow<CartListSideEffect>,
         modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
             val lazyListState = rememberLazyListState()
+
+            LaunchedEffect(lazyListState, sideEffects) {
+                sideEffects.collectLatest {
+                    when (it) {
+                        CartListSideEffect.ScrollToProductLimitExceededError -> {
+                            val index = lazyListState.layoutInfo.totalItemsCount - 1
+                            lazyListState.animateScrollToItem(index)
+                        }
+                    }
+                }
+            }
 
             CartList(
                 cartState = cartState,
@@ -514,7 +533,6 @@ internal object CartScreenComponents {
                 isVisible = !isCheckoutBlockVisible && !WindowInsets.isImeVisible,
                 finalPrice = cartState.price.finalPrice,
                 buttonText = stringResource(RCommon.string.res_checkout).uppercase(),
-                isButtonEnabled = !cartState.productLimit.isExceeded,
                 onButtonClicked = onCheckoutClicked,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
@@ -715,7 +733,6 @@ internal object CartScreenComponents {
         isVisible: Boolean,
         finalPrice: BigDecimal,
         buttonText: String,
-        isButtonEnabled: Boolean,
         onButtonClicked: () -> Unit,
         modifier: Modifier = Modifier,
         windowInsets: WindowInsets = WindowInsets.none,
@@ -759,7 +776,6 @@ internal object CartScreenComponents {
 
                 ZarinaButton(
                     onClick = onButtonClicked,
-                    isEnabled = isButtonEnabled,
                     isLoading = isButtonLoading,
                     modifier = Modifier.weight(1f),
                 ) {
