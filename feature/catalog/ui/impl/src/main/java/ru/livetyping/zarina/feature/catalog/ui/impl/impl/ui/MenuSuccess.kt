@@ -35,7 +35,7 @@ internal fun MenuSuccess(
                 when (it) {
                     is MenuItem.Basic -> ItemContentType.BasicItem
                     is MenuItem.City -> ItemContentType.City
-                    MenuItem.SupportContactDetails -> ItemContentType.SupportContactDetails
+                    MenuItem.SupportPhoneNumber -> ItemContentType.SupportPhoneNumber
                     is MenuItem.Spacer -> ItemContentType.Spacer
                 }
             },
@@ -57,8 +57,8 @@ internal fun MenuSuccess(
                     )
                 }
 
-                MenuItem.SupportContactDetails -> {
-                    MenuItemSupportContactDetails(
+                MenuItem.SupportPhoneNumber -> {
+                    MenuItemSupportPhoneNumber(
                         modifier = Modifier.animateZarinaItem(this),
                     )
                 }
@@ -83,4 +83,4 @@ internal fun MenuSuccess(
 internal val MenuSpacerHeightMedium: Dp get() = 20.dp
 internal val MenuSpacerHeightSmall: Dp get() = 8.dp
 
-private enum class ItemContentType { BasicItem, City, SupportContactDetails, Spacer }
+private enum class ItemContentType { BasicItem, City, SupportPhoneNumber, Spacer }

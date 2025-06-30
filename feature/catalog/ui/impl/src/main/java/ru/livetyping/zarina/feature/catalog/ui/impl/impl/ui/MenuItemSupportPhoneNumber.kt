@@ -22,7 +22,7 @@ import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.R
 
 @Composable
-internal fun MenuItemSupportContactDetails(
+internal fun MenuItemSupportPhoneNumber(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = ZarinaItemDefaults.ContentPadding,
 ) {
@@ -56,7 +56,7 @@ internal fun MenuItemSupportContactDetails(
 @Preview
 private fun Preview() {
     ZarinaTheme2 {
-        MenuItemSupportContactDetails(
+        MenuItemSupportPhoneNumber(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White),
