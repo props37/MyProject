@@ -27,7 +27,11 @@ internal sealed class MenuItem {
         override val id: String get() = "Current City"
     }
 
-    data object SupportContactDetails : MenuItem() {
+    data object SupportPhoneNumber : MenuItem() {
+        override val id: String get() = toString()
+    }
+
+    data object SupportEmailAddress : MenuItem() {
         override val id: String get() = toString()
     }
 

@@ -45,6 +45,19 @@ public fun Context.dialPhoneNumber(phoneNumber: String) {
     }
 }
 
+public fun Context.composeEmail(addresses: Array<String>, subject: String?) {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = "mailto:".toUri()
+        putExtra(Intent.EXTRA_EMAIL, addresses)
+        if (subject != null) {
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+        }
+    }
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    }
+}
+
 public fun Context.isPermissionGranted(permission: String): Boolean {
     return ContextCompat.checkSelfPermission(this, permission) ==
             PackageManager.PERMISSION_GRANTED

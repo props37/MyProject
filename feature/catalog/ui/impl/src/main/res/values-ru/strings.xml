@@ -3,4 +3,5 @@
     <string name="catalog_search">Поиск по каталогу</string>
     <string name="catalog_free_call_in_russia">Бесплатный звонок по России</string>
     <string name="catalog_current_city">Текущий город: %1$s</string>
+    <string name="catalog_support_email_address_description">Для любых Ваших вопросов</string>
 </resources>
