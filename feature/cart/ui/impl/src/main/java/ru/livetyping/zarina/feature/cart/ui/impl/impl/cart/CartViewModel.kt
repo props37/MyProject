@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -56,6 +58,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.feature.cart.ui.api.CartSelectedCityResult
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartListSideEffect
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartRequest
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartStateBuilder
@@ -261,6 +264,9 @@ internal class CartViewModel @AssistedInject constructor(
     private val _productCountSelectorState =
         MutableStateFlow<ProductCountSelectorState>(ProductCountSelectorState.None)
     val productCountSelectorState = _productCountSelectorState.asStateFlow()
+
+    private val _cartListSideEffects = Channel<CartListSideEffect>(Channel.UNLIMITED)
+    val cartListSideEffects = _cartListSideEffects.receiveAsFlow()
 
     init {
         removePromoCodeErrorsOnChange()
@@ -497,12 +503,16 @@ internal class CartViewModel @AssistedInject constructor(
             val cartType = currentCartType.value
             val cart = getCart(cartType)
             if (cart != null) {
-                val products = cart.products.map { it.toAppMetricaCartProduct() }
-                deps.appMetrica.reportCheckoutStarted(products)
-            }
+                if (!cart.productLimit.isExceeded) {
+                    val products = cart.products.map { it.toAppMetricaCartProduct() }
+                    deps.appMetrica.reportCheckoutStarted(products)
 
-            val action = CartScreenAction.CheckoutClicked(currentCartType.value)
-            emitSideEffect(CartSideEffect.Navigate(action))
+                    val action = CartScreenAction.CheckoutClicked(currentCartType.value)
+                    emitSideEffect(CartSideEffect.Navigate(action))
+                } else {
+                    _cartListSideEffects.trySend(CartListSideEffect.ScrollToProductLimitExceededError)
+                }
+            }
         }
     }
 

@@ -48,6 +48,7 @@ import ru.livetyping.zarina.core.uikit.overlay.ZarinaRefreshingOverlay
 import ru.livetyping.zarina.core.uikit.pullrefresh.ZarinaPullRefreshIndicator
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cart.ui.impl.R
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartListSideEffect
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.productcountselector.ProductCountSelectorEvent
@@ -112,6 +113,7 @@ internal fun CartScreen(
         onScreenCreated = viewModel::onScreenCreated,
         productCountSelectorState = productCountSelectorState,
         onProductCountSelectorEvent = viewModel::onProductCountSelectorEvent,
+        cartSideEffects = viewModel.cartListSideEffects,
         sideEffects = viewModel.sideEffects,
         navActions = navActions,
     )
@@ -147,6 +149,7 @@ private fun ScreenContent(
     onScreenCreated: () -> Unit,
     productCountSelectorState: ProductCountSelectorState,
     onProductCountSelectorEvent: (ProductCountSelectorEvent) -> Unit,
+    cartSideEffects: Flow<CartListSideEffect>,
     sideEffects: Flow<CartSideEffect>,
     navActions: CartNavActions,
 ) {
@@ -225,6 +228,7 @@ private fun ScreenContent(
                             onRemovePromoCodeClicked = onWithdrawPromoCodeClicked,
                             onPromoCodeImeDoneClicked = onPromoCodeImeDoneClicked,
                             onCheckoutClicked = onCheckoutClicked,
+                            sideEffects = cartSideEffects,
                         )
                     } else {
                         val errorState = rememberZarinaErrorScreenState(
