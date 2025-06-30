@@ -41,11 +41,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
@@ -105,7 +103,6 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultEnterTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultTransitionSpec
 import ru.livetyping.zarina.core.uicompose.Crossfade
-import ru.livetyping.zarina.core.uicompose.coercedOffset
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarDefaults
 import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayout
 import ru.livetyping.zarina.core.uicompose.none
@@ -138,9 +135,9 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
 import ru.livetyping.zarina.feature.cart.ui.impl.R
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartBonusAccountState
+import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartListSideEffect
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartMyCardState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartProductItem
-import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartListSideEffect
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.CartState
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.cart.model.ProductCardActions
 import ru.livetyping.zarina.feature.cart.ui.impl.impl.util.PagerTabRowIntegration
@@ -891,26 +888,18 @@ internal object CartScreenComponents {
             }
         }
 
-        val overscrollEffect = rememberOverscrollEffect()
-
-        Box(
-            modifier = modifier
-                .height(IntrinsicSize.Min)
-                .overscroll(overscrollEffect),
-        ) {
+        Box(modifier = modifier.height(IntrinsicSize.Min)) {
             Column(
                 modifier = Modifier
                     .zIndex(1f)
                     .offset {
-                        val xOffset =
-                            anchoredDraggableState.coercedOffset.takeIf { !it.isNaN() } ?: 0f
+                        val xOffset = anchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(x = xOffset.roundToInt(), y = 0)
                     }
                     .anchoredDraggable(
                         state = anchoredDraggableState,
                         orientation = Orientation.Horizontal,
                         interactionSource = anchoredDraggableInteractionSource,
-                        overscrollEffect = overscrollEffect,
                     ),
             ) {
                 val countStyle = remember(productItem, productCardActions.onCountClicked) {

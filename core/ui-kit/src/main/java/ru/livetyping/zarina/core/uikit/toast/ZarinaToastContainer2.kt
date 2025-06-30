@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.overscroll
-import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -56,8 +54,6 @@ public fun ZarinaToastContainer2(
 ) {
     val currentMessage by controller.currentMessage.collectAsStateWithLifecycle()
 
-    val overscrollEffect = rememberOverscrollEffect()
-
     val hazeBackgroundColor = UiKitTheme2.colors.mainBlack
     val hazeTint = rememberHazeTint(hazeBackgroundColor, hazeState.blurEnabled)
 
@@ -70,33 +66,27 @@ public fun ZarinaToastContainer2(
         },
         contentAlignment = Alignment.TopCenter,
         label = "ZarinaToastContainer",
-        modifier = modifier.overscroll(overscrollEffect),
+        modifier = modifier,
     ) { message ->
         var toastHeightPx by remember { mutableIntStateOf(0) }
 
-        val verticalAnchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
             AnchoredDraggableState(VerticalSwipeableState.Default)
         }
-        val horizontalAnchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
-            AnchoredDraggableState(HorizontalSwipeableState.Default).apply {
-                val anchors = DraggableAnchors { HorizontalSwipeableState.Default at 0f }
-                updateAnchors(anchors)
-            }
-        }
 
-        DisposableEffect(verticalAnchoredDraggableState, toastHeightPx, message) {
+        DisposableEffect(anchoredDraggableState, toastHeightPx, message) {
             val anchors = DraggableAnchors {
                 VerticalSwipeableState.Default at 0f
                 if (message?.isRemovable == true) {
                     VerticalSwipeableState.Swiped at (-toastHeightPx).toFloat()
                 }
             }
-            verticalAnchoredDraggableState.updateAnchors(anchors)
+            anchoredDraggableState.updateAnchors(anchors)
             onDispose {}
         }
 
-        LaunchedEffect(controller, verticalAnchoredDraggableState) {
-            snapshotFlow { verticalAnchoredDraggableState.settledValue }
+        LaunchedEffect(controller, anchoredDraggableState) {
+            snapshotFlow { anchoredDraggableState.settledValue }
                 .filter { it == VerticalSwipeableState.Swiped }
                 .collect {
                     controller.cancelCurrentToast()
@@ -113,7 +103,7 @@ public fun ZarinaToastContainer2(
                     .onSizeChanged { toastHeightPx = it.height }
                     .windowInsetsPadding(windowInsetsProvider())
                     .offset {
-                        val yOffset = verticalAnchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
+                        val yOffset = anchoredDraggableState.offset.takeIf { !it.isNaN() } ?: 0f
                         IntOffset(x = 0, y = yOffset.roundToInt())
                     }
                     .hazeEffect(
@@ -127,14 +117,8 @@ public fun ZarinaToastContainer2(
                         inputScale = HazeInputScale.Fixed(BlurInputScale)
                     }
                     .anchoredDraggable(
-                        state = verticalAnchoredDraggableState,
+                        state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
-                        overscrollEffect = overscrollEffect,
-                    )
-                    .anchoredDraggable(
-                        state = horizontalAnchoredDraggableState,
-                        orientation = Orientation.Horizontal,
-                        overscrollEffect = overscrollEffect,
                     ),
             )
         }
