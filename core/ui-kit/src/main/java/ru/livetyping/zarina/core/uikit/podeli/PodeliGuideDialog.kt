@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import ru.livetyping.zarina.core.uicommon.openUrlInCustomTabs
 import ru.livetyping.zarina.core.uicompose.text.rememberAnnotatedStringWithLinks
@@ -56,11 +57,15 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 public fun PodeliGuideDialog(
     onDismissRequest: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
         CompositionLocalProvider(LocalContentColor provides PodeliTheme.ContentColor) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(16.dp)
                     .background(Color.White, BackgroundShape)
                     .verticalScroll(rememberScrollState()),
             ) {
