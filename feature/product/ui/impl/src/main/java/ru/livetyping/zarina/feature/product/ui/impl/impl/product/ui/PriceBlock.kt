@@ -135,8 +135,6 @@ private fun BonusAccrualForPurchase(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.clickable(
-            interactionSource = null,
-            indication = null,
             role = Role.Button,
             onClick = { isZarinaClubPopupVisible = true },
         ),
