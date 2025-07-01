@@ -103,6 +103,7 @@ android {
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
                 buildConfigStringField(Keys.APP_METRICA_KEY, buildType.appMetricaKey)
+                buildConfigStringField(Keys.UX_FEEDBACK_APP_ID, buildType.uxFeedbackAppId)
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
 
@@ -298,6 +299,8 @@ dependencies {
     implementation(libs.mindbox.firebase)
 
     implementation(libs.appMetrica)
+
+    implementation(libs.uxFeedback)
 
     debugImplementation(libs.leakCanary)
 

@@ -11,6 +11,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven {
+            url = uri("https://nexus.uxfeedback.ru/repository/android-sdk-new/")
+        }
     }
 }
 
