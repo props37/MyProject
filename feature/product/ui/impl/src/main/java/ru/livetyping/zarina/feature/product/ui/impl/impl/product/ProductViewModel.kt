@@ -111,6 +111,8 @@ internal class ProductViewModel @Inject constructor(
 
     private val sizeSelectorState = MutableStateFlow<SizeSelectorState>(SizeSelectorState.Hidden)
 
+    private val isPodeliGuideVisible = MutableStateFlow(false)
+
     private val productStateBuilder = ProductState.Builder()
 
     val productState: StateFlow<ProductState> = combineMore(
@@ -123,9 +125,10 @@ internal class ProductViewModel @Inject constructor(
         productComponent.shouldSelectProductHeight,
         productActionButtonState,
         sizeSelectorState,
+        isPodeliGuideVisible,
     ) { productResult, isProductLoading, totalLookProductState, similarProductState,
         selectedProductSize, selectedProductHeight, shouldSelectProductHeight, productActionButtonState,
-        sizeSelectorState ->
+        sizeSelectorState, isPodeliGuideVisible ->
 
         productStateBuilder.build(
             productResult = productResult,
@@ -137,6 +140,7 @@ internal class ProductViewModel @Inject constructor(
             shouldSelectHeight = shouldSelectProductHeight,
             productActionButtonState = productActionButtonState,
             sizeSelectorState = sizeSelectorState,
+            isPodeliGuideVisible = isPodeliGuideVisible,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -172,6 +176,8 @@ internal class ProductViewModel @Inject constructor(
             ProductEvent.TotalLookProductRefreshTriggered -> onTotalLookProductRefreshTriggered()
             ProductEvent.SimilarProductRefreshTriggered -> onSimilarProductRefreshTriggered()
             ProductEvent.SizeSelectorDismissed -> onSizeSelectorDismissed()
+            ProductEvent.PodeliPriceClicked -> onPodeliPriceClicked()
+            ProductEvent.PodeliGuideDismissed -> onPodeliGuideDismissed()
         }
     }
 
@@ -361,6 +367,14 @@ internal class ProductViewModel @Inject constructor(
 
     private fun onSizeSelectorDismissed() {
         sizeSelectorState.value = SizeSelectorState.Hidden
+    }
+
+    private fun onPodeliPriceClicked() {
+        isPodeliGuideVisible.value = true
+    }
+
+    private fun onPodeliGuideDismissed() {
+        isPodeliGuideVisible.value = false
     }
 
     private fun onAddProductToCartFailure(t: Throwable) {

@@ -36,4 +36,8 @@ internal sealed interface ProductEvent {
     data object SimilarProductRefreshTriggered : ProductEvent
 
     data object SizeSelectorDismissed : ProductEvent
+
+    data object PodeliPriceClicked : ProductEvent
+
+    data object PodeliGuideDismissed : ProductEvent
 }
