@@ -14,7 +14,7 @@ class UxFeedbackInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         val application = context as? Application
         if (application != null) {
-            initializeUxFeedback(application)
+            initialize(application)
             Log.v(TAG, "UxFeedback initialized")
         } else {
             Log.e(TAG, "Could not initialize UxFeedback because context was not an application")
@@ -25,19 +25,27 @@ class UxFeedbackInitializer : Initializer<Unit> {
         return mutableListOf()
     }
 
-    private fun initializeUxFeedback(application: Application) {
+    private fun initialize(application: Application) {
         try {
-            val settings = UxFbSettings.getDefault().apply {
-                debugEnabled = BuildConfig.IS_LOGGING_ENABLED
-            }
-
             UxFeedback.setup(
                 application = application,
                 appId = BuildConfig.UX_FEEDBACK_APP_ID,
-                settings = settings,
+                settings = getSettings(),
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize UxFeedback", e)
+        }
+    }
+
+    private fun getSettings(): UxFbSettings {
+        val isDebug = BuildConfig.IS_LOGGING_ENABLED
+        return UxFbSettings.getDefault().apply {
+            slideInUiBlocked = true
+
+            debugEnabled = isDebug
+            if (isDebug) {
+                startGlobalDelayTimer = 1
+            }
         }
     }
 
