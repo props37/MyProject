@@ -529,17 +529,25 @@ internal class OrderPlacingViewModel @AssistedInject constructor(
     }
 
     private suspend fun applyBonusWriteOff(bonusCount: Int) {
-        val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
-        deps.redeemBonuses(params)
-            .onSuccess {
-                emitSideEffect(OrderPlacingSideEffect.HideKeyboard)
-                cartRequester.request(CartRequest.REFRESHING)
-            }
-            .onFailure {
-                val messageText = Text.Resource(R.string.cart_bonus_redemption_error)
-                val message = ZarinaToastMessage.error(messageText)
-                emitSideEffect(OrderPlacingSideEffect.ShowZarinaToast(message))
-            }
+        if (bonusCount > 0) {
+            val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
+            deps.redeemBonuses(params)
+                .onSuccess {
+                    emitSideEffect(OrderPlacingSideEffect.HideKeyboard)
+                    cartRequester.request(CartRequest.REFRESHING)
+                }
+                .onFailure {
+                    val messageText = Text.Resource(R.string.cart_bonus_redemption_error)
+                    val message = ZarinaToastMessage.error(messageText)
+                    emitSideEffect(OrderPlacingSideEffect.ShowZarinaToast(message))
+                }
+        } else {
+            bonusStateHolder.setIsBonusRedemptionApplied(false)
+
+            val text = Text.Resource(R.string.cart_you_cant_redeem_bonuses_for_this_order)
+            val message = ZarinaToastMessage(text = text, duration = ZarinaToastMessage.DURATION_LONG)
+            emitSideEffect(OrderPlacingSideEffect.ShowZarinaToast(message))
+        }
     }
 
     private suspend fun cancelBonusRedemption() {
