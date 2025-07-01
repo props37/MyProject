@@ -66,6 +66,7 @@ firebase-bom = "33.15.0"
 firebase-performance = "1.4.2"
 mindbox = "2.13.4"
 appMetrica = "7.8.0"
+uxFeedback = "3.0.3"
 
 junit = "4.13.2"
 
@@ -180,6 +181,7 @@ mindbox = { group = "cloud.mindbox", name = "mobile-sdk", version.ref = "mindbox
 mindbox-firebase = { group = "cloud.mindbox", name = "mindbox-firebase" }
 
 appMetrica = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appMetrica" }
+uxFeedback = { group = "ru.uxfeedback", name = "sdk", version.ref = "uxFeedback" }
 
 java-inject = { module = "javax.inject:javax.inject", version = "1" }
 

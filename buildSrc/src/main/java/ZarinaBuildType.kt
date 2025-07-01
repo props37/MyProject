@@ -19,6 +19,7 @@ sealed class ZarinaBuildType(val name: String) {
     open val anyQueryKey = "L1WU1VJBYK"
     open val googleMapsKey = "AIzaSyDxodqz9YA48xbw5T7Nc4iQr9n0YDeBxx0"
     open val appMetricaKey = "0fa7ab19-224f-4c45-9204-135cc022fb4b"
+    open val uxFeedbackAppId = "cm8raxz4c0001356tovd23ejz"
 
     val matchingFallbacks by lazy { listOf(Debug.name, Release.name) }
 
@@ -34,6 +35,7 @@ sealed class ZarinaBuildType(val name: String) {
         override val mindboxEndpoint = "zarina-android-sandbox"
         override val mindboxKey = "ofzs2DsV9J5PYHAUOrxO"
         override val appMetricaKey = "d43a0f33-15cd-4eed-9a50-e7b107125fbc"
+        override val uxFeedbackAppId = "cm8raxo0s0000356t7l5tn2cw"
     }
 
     object Qa : ZarinaBuildType("qa") {
@@ -46,6 +48,7 @@ sealed class ZarinaBuildType(val name: String) {
         override val mindboxEndpoint = "zarina-android-sandbox"
         override val mindboxKey = "ofzs2DsV9J5PYHAUOrxO"
         override val appMetricaKey = "d43a0f33-15cd-4eed-9a50-e7b107125fbc"
+        override val uxFeedbackAppId = "cm8raxo0s0000356t7l5tn2cw"
     }
 
     object Release : ZarinaBuildType("release")
