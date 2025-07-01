@@ -22,16 +22,9 @@ internal object PodeliTheme {
     internal val DividerColor = Color(0xFFCCCCCC)
 
     internal val ManropeFontFamily = FontFamily(
-        ManropeRegularFont,
         ManropeMediumFont,
         ManropeBoldFont,
     )
-
-    private val ManropeRegularFont: Font
-        get() = Font(
-            resId = R.font.manrope_regular,
-            weight = FontWeight.W400,
-        )
 
     private val ManropeMediumFont: Font
         get() = Font(
