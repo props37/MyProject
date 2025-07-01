@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -29,7 +30,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import kotlinx.coroutines.flow.collectLatest
-import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorDefaults.IndicatorSegmentInactiveAlpha
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorDefaults.ScrollTargetPageThreshold
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import kotlin.math.abs
@@ -40,7 +40,7 @@ public fun ZarinaHorizontalPagerIndicator(
     pagerState: PagerState,
     itemCount: Int,
     modifier: Modifier = Modifier,
-    style: ZarinaHorizontalPagerIndicatorStyle = ZarinaHorizontalPagerIndicatorStyle.Dots(),
+    style: ZarinaHorizontalPagerIndicatorStyle = ZarinaHorizontalPagerIndicatorDefaults.dots(),
 ) {
     val updatedDensity = rememberUpdatedState(LocalDensity.current)
 
@@ -108,23 +108,23 @@ private fun Segment(
         is ZarinaHorizontalPagerIndicatorStyle.Dots -> CircleShape
         is ZarinaHorizontalPagerIndicatorStyle.Rectangles -> RectangleShape
     }
-    val color = when (style) {
-        is ZarinaHorizontalPagerIndicatorStyle.Dots -> UiKitTheme2.colors.mainBlack
-        is ZarinaHorizontalPagerIndicatorStyle.Rectangles -> UiKitTheme2.colors.white
+
+    Box(modifier = modifier.clip(shape)) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(style.inactiveColor),
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer {
+                    alpha = progress()
+                }
+                .background(style.activeColor)
+        )
     }
-
-    Box(
-        modifier = modifier
-            .graphicsLayer {
-                alpha = (IndicatorSegmentInactiveAlpha..1f).valueAt(progress())
-            }
-            .clip(shape)
-            .background(color)
-    )
-}
-
-private fun ClosedFloatingPointRange<Float>.valueAt(progress: Float): Float {
-    return (start + (endInclusive - start) * progress).coerceIn(this)
 }
 
 @Stable
@@ -132,25 +132,64 @@ public sealed class ZarinaHorizontalPagerIndicatorStyle {
     public abstract val segmentSize: DpSize
     public abstract val spacedBy: Dp
     public abstract val maxVisibleSegmentCount: Int
+    public abstract val activeColor: Color
+    public abstract val inactiveColor: Color
 
     @Immutable
     public data class Dots(
-        val dotSize: Dp = 4.dp,
-        override val spacedBy: Dp = 3.dp,
-        override val maxVisibleSegmentCount: Int = 6,
+        val dotSize: Dp,
+        override val spacedBy: Dp,
+        override val maxVisibleSegmentCount: Int,
+        override val activeColor: Color,
+        override val inactiveColor: Color,
     ) : ZarinaHorizontalPagerIndicatorStyle() {
         override val segmentSize: DpSize get() = DpSize(dotSize, dotSize)
     }
 
     @Immutable
     public data class Rectangles(
-        override val segmentSize: DpSize = DpSize(16.dp, 2.dp),
-        override val spacedBy: Dp = 2.dp,
-        override val maxVisibleSegmentCount: Int = 4,
+        override val segmentSize: DpSize,
+        override val spacedBy: Dp,
+        override val maxVisibleSegmentCount: Int,
+        override val activeColor: Color,
+        override val inactiveColor: Color,
     ) : ZarinaHorizontalPagerIndicatorStyle()
 }
 
 public object ZarinaHorizontalPagerIndicatorDefaults {
-    internal const val IndicatorSegmentInactiveAlpha = 0.5f
     internal const val ScrollTargetPageThreshold = 2
+
+    @Composable
+    public fun dots(
+        dotSize: Dp = 4.dp,
+        spacedBy: Dp = 3.dp,
+        maxVisibleSegmentCount: Int = 6,
+        activeColor: Color = UiKitTheme2.colors.mainBlack,
+        inactiveColor: Color = activeColor.copy(alpha = 0.5f),
+    ): ZarinaHorizontalPagerIndicatorStyle.Dots {
+        return ZarinaHorizontalPagerIndicatorStyle.Dots(
+            dotSize = dotSize,
+            spacedBy = spacedBy,
+            maxVisibleSegmentCount = maxVisibleSegmentCount,
+            activeColor = activeColor,
+            inactiveColor = inactiveColor,
+        )
+    }
+
+    @Composable
+    public fun rectangles(
+        segmentSize: DpSize = DpSize(16.dp, 2.dp),
+        spacedBy: Dp = 2.dp,
+        maxVisibleSegmentCount: Int = 4,
+        activeColor: Color = UiKitTheme2.colors.white,
+        inactiveColor: Color = activeColor.copy(alpha = 0.5f),
+    ): ZarinaHorizontalPagerIndicatorStyle.Rectangles {
+        return ZarinaHorizontalPagerIndicatorStyle.Rectangles(
+            segmentSize = segmentSize,
+            spacedBy = spacedBy,
+            maxVisibleSegmentCount = maxVisibleSegmentCount,
+            activeColor = activeColor,
+            inactiveColor = inactiveColor,
+        )
+    }
 }
