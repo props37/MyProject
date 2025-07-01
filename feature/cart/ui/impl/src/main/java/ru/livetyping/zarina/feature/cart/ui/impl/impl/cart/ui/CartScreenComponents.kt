@@ -56,6 +56,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
@@ -855,26 +856,26 @@ internal object CartScreenComponents {
     ) {
         val product = productItem.product
 
+        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+            AnchoredDraggableState(ProductOrderCardSwipeableState.Default)
+        }
+
         val density = LocalDensity.current
-        val anchors = remember(density) {
-            with(density) {
+        DisposableEffect(anchoredDraggableState, density) {
+            val anchors = with(density) {
                 DraggableAnchors {
                     ProductOrderCardSwipeableState.Default at 0f
                     ProductOrderCardSwipeableState.SwipedLeft at
                             (-ProductOrderCardSwipeDistance).toPx()
                 }
             }
-        }
-        val anchoredDraggableState = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
-            AnchoredDraggableState(
-                initialValue = ProductOrderCardSwipeableState.Default,
-                anchors = anchors,
-            )
+            anchoredDraggableState.updateAnchors(anchors)
+            onDispose {}
         }
 
         val anchoredDraggableInteractionSource = remember { MutableInteractionSource() }
         val updatedProductId by rememberUpdatedState(product.id)
-        LaunchedEffect(anchoredDraggableInteractionSource) {
+        LaunchedEffect(anchoredDraggableInteractionSource, onDragStarted) {
             anchoredDraggableInteractionSource.interactions.collect {
                 when (it) {
                      is DragInteraction.Start -> onDragStarted(updatedProductId)
