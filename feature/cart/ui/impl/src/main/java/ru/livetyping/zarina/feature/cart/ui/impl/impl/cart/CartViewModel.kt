@@ -543,23 +543,26 @@ internal class CartViewModel @AssistedInject constructor(
     }
 
     private suspend fun redeemBonuses(cartType: CartType, bonusCount: Int) {
-        if (bonusCount == 0) {
+        if (bonusCount > 0) {
+            val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
+            deps.redeemBonuses(params)
+                .onSuccess {
+                    emitSideEffect(CartSideEffect.HideKeyboard)
+                    requestCarts(CartRequest.REFRESHING)
+                }
+                .onFailure {
+                    val messageText = Text.Resource(R.string.cart_bonus_redemption_error)
+                    val message = ZarinaToastMessage.error(messageText)
+                    emitSideEffect(CartSideEffect.ShowZarinaToast(message))
+                }
+        } else {
+            val bonusStateHolder = getBonusStateHolder(cartType)
+            bonusStateHolder.setIsBonusRedemptionApplied(false)
+
             val text = Text.Resource(R.string.cart_you_cant_redeem_bonuses_for_this_order)
             val message = ZarinaToastMessage(text = text, duration = ZarinaToastMessage.DURATION_LONG)
             emitSideEffect(CartSideEffect.ShowZarinaToast(message))
         }
-
-        val params = RedeemBonusesUseCase.Params(cartType, bonusCount)
-        deps.redeemBonuses(params)
-            .onSuccess {
-                emitSideEffect(CartSideEffect.HideKeyboard)
-                requestCarts(CartRequest.REFRESHING)
-            }
-            .onFailure {
-                val messageText = Text.Resource(R.string.cart_bonus_redemption_error)
-                val message = ZarinaToastMessage.error(messageText)
-                emitSideEffect(CartSideEffect.ShowZarinaToast(message))
-            }
     }
 
     private suspend fun cancelBonusRedemption(cartType: CartType) {
