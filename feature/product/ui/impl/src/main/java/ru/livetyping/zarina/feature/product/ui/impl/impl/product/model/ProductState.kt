@@ -26,6 +26,7 @@ internal sealed class ProductState {
         val shouldSelectHeight: Boolean,
         val productActionButtonState: ProductActionButtonState,
         val sizeSelectorState: SizeSelectorState,
+        val isPodeliGuideVisible: Boolean,
     ) : ProductState()
 
     data object Loading : ProductState()
@@ -44,6 +45,7 @@ internal sealed class ProductState {
             shouldSelectHeight: Boolean,
             productActionButtonState: ProductActionButtonState,
             sizeSelectorState: SizeSelectorState,
+            isPodeliGuideVisible: Boolean,
         ): ProductState {
             return if (productResult == null || isProductLoading) {
                 Loading
@@ -68,6 +70,7 @@ internal sealed class ProductState {
                             shouldSelectHeight = shouldSelectHeight,
                             productActionButtonState = productActionButtonState,
                             sizeSelectorState = sizeSelectorState,
+                            isPodeliGuideVisible = isPodeliGuideVisible,
                         )
                     },
                     onFailure = { t ->

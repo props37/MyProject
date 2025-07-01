@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +35,7 @@ import ru.livetyping.zarina.core.resource.R as RCommon
 internal fun PriceBlock(
     price: ProductPrice,
     podeliPrice: PodeliPrice,
+    onPodeliPriceClicked: () -> Unit,
     bonusAccrualForPurchase: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -69,10 +71,11 @@ internal fun PriceBlock(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             PodeliPrice(
-                podeliPrice = podeliPrice,
-                modifier = Modifier.weight(1f),
+                price = podeliPrice,
+                onClick = onPodeliPriceClicked,
             )
 
+            Spacer(modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(8.dp))
 
             BonusAccrualForPurchase(bonusAccrualForPurchase = bonusAccrualForPurchase)
@@ -82,29 +85,42 @@ internal fun PriceBlock(
 
 @Composable
 private fun PodeliPrice(
-    podeliPrice: PodeliPrice,
+    price: PodeliPrice,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val color = UiKitTheme2.colors.middleGray
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier,
+        modifier = modifier.clickable(role = Role.Button, onClick = onClick),
     ) {
         val formattedPodeliPayment = run {
-            val temp = rememberFormattedPrice(podeliPrice.payment)
+            val temp = rememberFormattedPrice(price.payment)
             stringResource(RCommon.string.res_price_in_rubles, temp)
         }
         val podeliPriceText = stringResource(
             id = R.string.product_podeli_price,
             formattedPodeliPayment,
-            podeliPrice.paymentCount
+            price.paymentCount
         )
 
         Text(
             text = podeliPriceText.uppercase(),
             style = UiKitTheme2.typography.body2,
             color = color,
+        )
+
+        Spacer(modifier = Modifier.width(1.dp))
+
+        Icon(
+            imageVector = ImageVector.vectorResource(RCommon.drawable.ic_small_arrow_up_24),
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier
+                .padding(bottom = 2.dp)
+                .size(12.dp)
+                .rotate(90f),
         )
     }
 }
@@ -119,8 +135,6 @@ private fun BonusAccrualForPurchase(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.clickable(
-            interactionSource = null,
-            indication = null,
             role = Role.Button,
             onClick = { isZarinaClubPopupVisible = true },
         ),

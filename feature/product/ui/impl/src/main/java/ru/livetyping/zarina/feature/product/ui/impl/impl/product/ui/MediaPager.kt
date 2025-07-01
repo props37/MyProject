@@ -11,7 +11,7 @@ import ru.livetyping.zarina.core.domain.model.media.Media
 import ru.livetyping.zarina.core.uicompose.pager.rememberEndlessPagerState
 import ru.livetyping.zarina.core.uikit.media.ZarinaMediaHorizontalPager
 import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicator
-import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorStyle
+import ru.livetyping.zarina.core.uikit.pager.ZarinaHorizontalPagerIndicatorDefaults
 import ru.livetyping.zarina.core.uikit.product.ProductDefaults
 
 @Composable
@@ -31,7 +31,7 @@ internal fun MediaPager(
         ZarinaHorizontalPagerIndicator(
             pagerState = pagerState,
             itemCount = mediaList.size,
-            style = ZarinaHorizontalPagerIndicatorStyle.Rectangles(),
+            style = ZarinaHorizontalPagerIndicatorDefaults.rectangles(),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 12.dp),

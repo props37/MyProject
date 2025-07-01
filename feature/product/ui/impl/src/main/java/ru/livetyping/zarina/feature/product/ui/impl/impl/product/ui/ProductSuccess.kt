@@ -34,6 +34,7 @@ import ru.livetyping.zarina.core.uikit.blur.StatusBarBlur
 import ru.livetyping.zarina.core.uikit.blur.StatusBarBlurDefaults
 import ru.livetyping.zarina.core.uikit.divider.ZarinaDivider
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
+import ru.livetyping.zarina.core.uikit.podeli.PodeliGuideDialog
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.product.ui.impl.R
@@ -55,6 +56,10 @@ internal fun ProductSuccess(
         },
         onDismissRequest = { onEvent(ProductEvent.SizeSelectorDismissed) },
     )
+
+    if (state.isPodeliGuideVisible) {
+        PodeliGuideDialog(onDismissRequest = { onEvent(ProductEvent.PodeliGuideDismissed) })
+    }
 
     val listState = rememberLazyListState()
     val topBarScrollBehavior = CollapsingTopBarDefaults.rememberEnterAlwaysScrollBehavior(
@@ -175,6 +180,7 @@ private fun ContentList(
             PriceBlock(
                 price = state.product.price,
                 podeliPrice = state.product.podeliPrice,
+                onPodeliPriceClicked = { onEvent(ProductEvent.PodeliPriceClicked) },
                 bonusAccrualForPurchase = state.product.bonusAccrualForPurchase,
                 modifier = Modifier
                     .padding(top = 10.dp)
