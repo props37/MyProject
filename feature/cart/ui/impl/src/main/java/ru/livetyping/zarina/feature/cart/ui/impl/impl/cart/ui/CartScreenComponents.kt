@@ -131,6 +131,7 @@ import ru.livetyping.zarina.core.uikit.tab.ZarinaTab
 import ru.livetyping.zarina.core.uikit.tab.ZarinaTabRow
 import ru.livetyping.zarina.core.uikit.text.ZarinaPromoCodeTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
+import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.topbar.ZarinaTopBar
@@ -1175,6 +1176,7 @@ internal object CartScreenComponents {
 
                     ZarinaTextField(
                         state = state.redemptionTextFieldState,
+                        isEnabled = false,
                         description = {
                             val formattedMaxWriteOff = rememberFormattedPrice(state.bonusAccount.redemption.max)
                             Text(
@@ -1190,6 +1192,7 @@ internal object CartScreenComponents {
                                 .dropWhile { it != '0' }
                                 .filter { it.isDigit() }
                         },
+                        colors = ZarinaTextFieldDefaults.colorsIgnoringDisabled(),
                         keyboardOptions = remember {
                             KeyboardOptions(
                                 keyboardType = KeyboardType.Decimal,
