@@ -45,14 +45,14 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort> {
         return api.getProductTotalLook(productId)
-            .distinctBy { it.id }
             .mapNotNull { it.toProductShort() }
+            .distinctBy { it.id }
     }
 
     override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort> {
         return api.getSimilarProducts(productId)
-            .distinctBy { it.id }
             .mapNotNull { it.toProductShort() }
+            .distinctBy { it.id }
     }
 
     override fun getProductAvailabilityInStoresFlow(
