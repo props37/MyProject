@@ -44,10 +44,18 @@ fun rememberWishlistNavActions(
                 navController.navigate(productNavEntry)
             },
             onCategoryShortcutClicked = { categoryId ->
+                val navItem = BottomNavBarItem.Catalog
+                navController.navigateToBottomNavBarItem(navItem)
+                navController.popBackStackToBottomNavBarItem(navItem)
                 val productListNavEntry = ProductListFeature.NavEntry.create(categoryId)
                 navController.navigate(productListNavEntry)
             },
-            onSearchClicked = { navController.navigate(SearchFeature.NavEntry)  },
+            onSearchClicked = {
+                val navItem = BottomNavBarItem.Catalog
+                navController.navigateToBottomNavBarItem(navItem)
+                navController.popBackStackToBottomNavBarItem(navItem)
+                navController.navigate(SearchFeature.NavEntry)
+            },
         )
     }
 }
