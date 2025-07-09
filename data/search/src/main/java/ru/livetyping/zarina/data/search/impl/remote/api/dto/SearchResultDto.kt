@@ -37,7 +37,9 @@ internal data class SearchResultDto(
         checkPropertyNotNull(products) { "products" }
         checkPropertyNotNull(totalHits) { "totalHits" }
         checkPropertyNotNull(offset) { "offset" }
-        val products = products.mapNotNull { it.toProductShort() }
+        val products = products
+            .mapNotNull { it.toProductShort() }
+            .distinctBy { it.id }
         return SearchResult(
             products = products,
             productTotalCount = totalHits,
