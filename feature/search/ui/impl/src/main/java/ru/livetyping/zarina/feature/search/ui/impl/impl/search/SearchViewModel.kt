@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.SavedStateHandleSaveableApi
 import androidx.lifecycle.viewmodel.compose.saveable
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.map
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -475,12 +476,18 @@ internal class SearchViewModel @AssistedInject constructor(
         ) { productPagingData, wishlistProductIdsResult, cartProductIdsResult ->
             val wishlistProductIds = wishlistProductIdsResult.getOrDefault(emptySet())
             val cartProductIds = cartProductIdsResult.getOrDefault(emptySet())
-            productPagingData.map { product ->
-                product.copy(
-                    isInWishlist = product.id in wishlistProductIds,
-                    isInCart = product.id in cartProductIds,
-                )
-            }
+            val productIdSet = HashSet<Product.Id>()
+
+            productPagingData
+                .filter { product ->
+                    productIdSet.add(product.id)
+                }
+                .map { product ->
+                    product.copy(
+                        isInWishlist = product.id in wishlistProductIds,
+                        isInCart = product.id in cartProductIds,
+                    )
+                }
         }
     }
 
