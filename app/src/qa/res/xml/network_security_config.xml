@@ -3,8 +3,9 @@
     <base-config>
         <trust-anchors>
             <certificates src="system" />
-            <certificates src="@raw/russian_trusted_root_ca" />
             <certificates src="user" />
+            <certificates src="@raw/globalsign_r6_root_ca" />
+            <certificates src="@raw/russian_trusted_root_ca" />
         </trust-anchors>
     </base-config>
 </network-security-config>
