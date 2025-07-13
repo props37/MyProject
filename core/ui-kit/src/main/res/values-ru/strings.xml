@@ -26,4 +26,21 @@
     <string name="uikit_price_filter_price_rubbles">Цена, ₽</string>
     <string name="uikit_price_filter_from">От</string>
     <string name="uikit_price_filter_to">До</string>
+    <string name="uikit_feedback_widget_title">Поделитесь мнением</string>
+    <string name="uikit_feedback_widget_body">оставить отзыв о приложении</string>
+
+    <string name="uikit_podeli_logo_description">Подели</string>
+    <string name="uikit_podeli_guide_main_block_title">Платите удобно</string>
+    <string name="uikit_podeli_guide_main_block_description">Разделите оплату покупки на 4, 6 или 10 платежей.\nОплачивайте в момент покупки только первую часть, остальное — равными платежами раз в две недели.</string>
+    <string name="uikit_podeli_guide_main_block_footnote">4 платежа — без комиссии и переплат\n6 или 10 платежей — с небольшой доплатой. Подробнее</string>
+    <string name="uikit_podeli_guide_main_block_footnote_link_text">Подробнее</string>
+    <string name="uikit_podeli_step_by_step_block_title">Как оплатить с Подели?</string>
+    <string name="uikit_podeli_step_by_step_block_step_counter">Шаг %1$d</string>
+    <string name="uikit_podeli_step_by_step_block_step_1_title">Соберите корзину и выберите Подели в способах оплаты, а затем выберите количество платежей</string>
+    <string name="uikit_podeli_step_by_step_block_step_2_title">Сегодня оплатите только первый платёж и покупка ваша, остальное — равными платежами раз в 2 недели</string>
+    <string name="uikit_podeli_step_by_step_block_step_3_title">Управляйте своими покупками в мобильном приложении Подели</string>
+    <string name="uikit_podeli_step_by_step_block_step_3_description">Скачайте приложение Подели, чтобы управлять своими покупками и узнавать об акциях и эксклюзивных предложениях</string>
+    <string name="uikit_podeli_step_by_step_block_step_3_description_link_text">Скачайте приложение Подели</string>
+    <string name="uikit_podeli_main_footnote">Сервис Подели предоставляется ООО «А-4 Технологии», ОГРН 1227700064734. 115432, г. Москва, пр-кт Андропова, д. 18, к. 3, этаж/пом./ком. 9/XIV/1. Подробная информация о работе сервиса, условиях использования Опций и их стоимости на podeli.ru</string>
+    <string name="uikit_podeli_main_footnote_link_text">podeli.ru</string>
 </resources>

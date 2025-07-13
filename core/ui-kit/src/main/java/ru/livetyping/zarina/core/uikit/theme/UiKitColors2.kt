@@ -17,4 +17,5 @@ public data class UiKitColors2(
     val skeletonBackground: Color = Colors2.Mercury,
     val shimmer: Color = Colors2.Alabaster,
     val backgroundBeige: Color = Colors2.Pampas,
+    val backgroundLightBeige: Color = Colors2.PampasLight,
 )
