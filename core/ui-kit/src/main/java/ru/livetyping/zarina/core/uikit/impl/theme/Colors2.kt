@@ -16,4 +16,5 @@ internal object Colors2 {
     val Emperor = Color(0xFF525252)
     val Mercury = Color(0xFFE7E5E5)
     val Pampas = Color(0xFFEEE9E5)
+    val PampasLight = Color(0xFFF8F5F3)
 }
