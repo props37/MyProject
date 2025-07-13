@@ -75,6 +75,9 @@ internal sealed class MenuState {
                 }
 
                 addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
+                add(MenuItem.FeedbackWidget)
+
+                addSpacerIfAbsent(MenuItem.Spacer.Size.MEDIUM)
                 add(MenuItem.City(city))
 
                 addSpacerIfAbsent(MenuItem.Spacer.Size.SMALL)

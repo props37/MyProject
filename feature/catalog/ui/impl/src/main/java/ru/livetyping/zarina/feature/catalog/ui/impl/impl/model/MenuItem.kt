@@ -22,6 +22,10 @@ internal sealed class MenuItem {
         override val id: String get() = item.id.value
     }
 
+    data object FeedbackWidget : MenuItem() {
+        override val id: String get() = toString()
+    }
+
     @Immutable
     data class City(val city: DomainCity) : MenuItem() {
         override val id: String get() = "Current City"
