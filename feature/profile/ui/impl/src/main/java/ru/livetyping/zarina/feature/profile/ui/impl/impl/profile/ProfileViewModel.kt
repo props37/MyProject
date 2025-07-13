@@ -133,6 +133,7 @@ internal class ProfileViewModel @AssistedInject constructor(
             ProfileEvent.SignUpClicked -> onSignUpClicked()
             ProfileEvent.LoyaltyCardInfoClicked -> onLoyaltyCardInfoClicked()
             is ProfileEvent.MenuItemClicked -> onMenuItemClicked(event)
+            ProfileEvent.LeaveFeedbackClicked -> onLeaveFeedbackClicked()
         }
     }
 
@@ -232,6 +233,10 @@ internal class ProfileViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private fun onLeaveFeedbackClicked() {
+        // TODO: [Top] Implement
     }
 
     private fun handleSelectedCityResult(resultFlow: Flow<ProfileSelectedCityResult?>) {
