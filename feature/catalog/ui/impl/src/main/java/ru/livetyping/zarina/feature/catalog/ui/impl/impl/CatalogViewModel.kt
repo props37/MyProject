@@ -78,6 +78,7 @@ internal class CatalogViewModel @Inject constructor(
             is CatalogEvent.GenderSelected -> genderPickerComponent.onGenderSelected(event.tab)
             CatalogEvent.SearchClicked -> onSearchClicked()
             is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
+            CatalogEvent.LeaveFeedbackClicked -> onLeaveFeedbackClicked()
             CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
             CatalogEvent.RefreshClicked -> fetchMenu()
         }
@@ -108,11 +109,12 @@ internal class CatalogViewModel @Inject constructor(
     private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
         when (val item = event.item) {
             is MenuItem.Basic -> onMenuItemBasicClicked(item)
-            is MenuItem.City -> Unit
-            MenuItem.SupportPhoneNumber -> Unit
-            MenuItem.SupportEmailAddress -> Unit
-            is MenuItem.Spacer -> Unit
+            else -> Unit
         }
+    }
+
+    private fun onLeaveFeedbackClicked() {
+        // TODO: [Top] Implement
     }
 
     private fun onChangeCityClicked() {

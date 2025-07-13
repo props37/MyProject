@@ -3,12 +3,14 @@ package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ru.livetyping.zarina.core.uikit.feedback.FeedbackWidget
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
@@ -34,6 +36,7 @@ internal fun MenuSuccess(
             contentType = {
                 when (it) {
                     is MenuItem.Basic -> ItemContentType.BasicItem
+                    MenuItem.FeedbackWidget -> ItemContentType.FeedbackWidget
                     is MenuItem.City -> ItemContentType.City
                     MenuItem.SupportPhoneNumber -> ItemContentType.SupportPhoneNumber
                     MenuItem.SupportEmailAddress -> ItemContentType.SupportEmailAddress
@@ -49,6 +52,15 @@ internal fun MenuSuccess(
                         item = item,
                         onClick = { onCatalogEvent(CatalogEvent.MenuItemClicked(it)) },
                         modifier = animateItemModifier,
+                    )
+                }
+
+                MenuItem.FeedbackWidget -> {
+                    FeedbackWidget(
+                        onClick = { onCatalogEvent(CatalogEvent.LeaveFeedbackClicked) },
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .then(animateItemModifier),
                     )
                 }
 
@@ -91,6 +103,7 @@ internal fun MenuSuccess(
 
 private enum class ItemContentType {
     BasicItem,
+    FeedbackWidget,
     City,
     SupportPhoneNumber,
     SupportEmailAddress,
