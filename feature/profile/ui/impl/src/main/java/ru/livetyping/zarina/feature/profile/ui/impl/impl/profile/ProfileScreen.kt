@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.feedback.FeedbackWidget
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.profile.ui.impl.impl.profile.model.ProfileEvent
@@ -105,7 +106,12 @@ private fun ScreenContent(
                 buildInfo = profileState.buildInfo,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(36.dp))
+
+            FeedbackWidget(
+                onClick = { onProfileEvent(ProfileEvent.LeaveFeedbackClicked) },
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
 
             Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
         }
