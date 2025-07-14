@@ -7,6 +7,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
+import ru.livetyping.zarina.core.feedback.Feedback
 import javax.inject.Inject
 
 internal class ProfileDependencies @Inject constructor(
@@ -18,4 +19,5 @@ internal class ProfileDependencies @Inject constructor(
     val appVersionName: String,
     val mindboxDeviceUuidProvider: MindboxDeviceUuidProvider,
     val appMetrica: AppMetrica,
+    val feedback: Feedback,
 )

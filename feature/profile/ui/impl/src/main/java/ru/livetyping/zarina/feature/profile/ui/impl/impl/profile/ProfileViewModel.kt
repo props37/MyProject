@@ -25,6 +25,7 @@ import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
+import ru.livetyping.zarina.core.feedback.FeedbackEvent
 import ru.livetyping.zarina.core.navigationutil.ScreenResultHandler
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
@@ -236,7 +237,7 @@ internal class ProfileViewModel @AssistedInject constructor(
     }
 
     private fun onLeaveFeedbackClicked() {
-        // TODO: [Top] Implement
+        deps.feedback.show(FeedbackEvent.GENERAL)
     }
 
     private fun handleSelectedCityResult(resultFlow: Flow<ProfileSelectedCityResult?>) {

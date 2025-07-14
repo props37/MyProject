@@ -75,6 +75,7 @@ dependencies {
     implementation(projects.core.kotlinUtil)
     implementation(projects.core.googlePlayServices)
     implementation(projects.core.permission)
+    implementation(projects.core.feedback.api)
 
     implementation(libs.jetpack.lifecycle.runtime.compose)
     implementation(libs.jetpack.lifecycle.viewModel.compose)
