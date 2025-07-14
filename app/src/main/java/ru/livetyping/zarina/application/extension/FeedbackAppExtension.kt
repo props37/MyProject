@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.onEach
 import ru.livetyping.zarina.application.extension.base.ApplicationExtension
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
-import ru.uxfeedback.pub.sdk.UxFeedback
+import ru.livetyping.zarina.core.feedback.impl.FeedbackInitializer
 import javax.inject.Inject
 
-class UxFeedbackAppExtension @Inject constructor(
+class FeedbackAppExtension @Inject constructor(
     private val coroutineScope: CoroutineScope,
     private val getUserFlowUseCase: GetUserFlowUseCase,
 ) : ApplicationExtension {
@@ -27,17 +27,8 @@ class UxFeedbackAppExtension @Inject constructor(
             }
             .distinctUntilChanged()
             .onEach { user ->
-                val userId = user?.id
-                if (userId != null) {
-                    UxFeedback.sdk?.properties?.put(USER_ID_KEY, userId.value)
-                } else {
-                    UxFeedback.sdk?.properties?.remove(USER_ID_KEY)
-                }
+                FeedbackInitializer.updateUserId(user?.id?.value)
             }
             .launchIn(coroutineScope)
-    }
-
-    private companion object {
-        private const val USER_ID_KEY = "userId"
     }
 }

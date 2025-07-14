@@ -259,6 +259,8 @@ dependencies {
     implementation(projects.core.analytics.impl)
     implementation(projects.core.platform)
     implementation(projects.core.coroutinesUtil)
+    implementation(projects.core.feedback.api)
+    implementation(projects.core.feedback.impl)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)
@@ -299,8 +301,6 @@ dependencies {
     implementation(libs.mindbox.firebase)
 
     implementation(libs.appMetrica)
-
-    implementation(libs.uxFeedback)
 
     debugImplementation(libs.leakCanary)
 
