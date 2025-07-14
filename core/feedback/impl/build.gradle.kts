@@ -41,6 +41,8 @@ kotlin {
 }
 
 dependencies {
+    api(projects.core.feedback.api)
+
     implementation(libs.uxFeedback)
 
     testImplementation(libs.junit)
