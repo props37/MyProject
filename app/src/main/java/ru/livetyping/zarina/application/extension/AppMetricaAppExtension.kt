@@ -36,6 +36,8 @@ class AppMetricaAppExtension @Inject constructor(
         AppMetrica.activate(application, config)
     }
 
+    // TODO: [Medium] Rename to updateUserId
+    // TODO: [Top] Remove passing user's gender and birth date
     private fun enableAppMetricaUserProfileUpdate() {
         getUserFlowUseCase(GetUserFlowUseCase.Params(CachePolicy.LocalOnly))
             .map { result ->
