@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.feedback.FeedbackEvent
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -114,7 +115,7 @@ internal class CatalogViewModel @Inject constructor(
     }
 
     private fun onLeaveFeedbackClicked() {
-        // TODO: [Top] Implement
+        deps.feedback.show(FeedbackEvent.GENERAL)
     }
 
     private fun onChangeCityClicked() {
