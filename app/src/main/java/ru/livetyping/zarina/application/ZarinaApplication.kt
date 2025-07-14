@@ -5,7 +5,7 @@ import android.app.Application
 import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 import ru.livetyping.zarina.application.extension.AppMetricaAppExtension
-import ru.livetyping.zarina.application.extension.UxFeedbackAppExtension
+import ru.livetyping.zarina.application.extension.FeedbackAppExtension
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -15,7 +15,7 @@ class ZarinaApplication : Application() {
     lateinit var appMetricaExtension: AppMetricaAppExtension
 
     @Inject
-    lateinit var uxFeedbackExtension: UxFeedbackAppExtension
+    lateinit var uxFeedbackExtension: FeedbackAppExtension
 
     @SuppressLint("LogNotTimber")
     override fun onCreate() {

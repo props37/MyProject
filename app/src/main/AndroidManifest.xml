@@ -120,7 +120,7 @@
                 android:value="androidx.startup" />
 
             <meta-data
-                android:name="ru.livetyping.zarina.application.startup.UxFeedbackInitializer"
+                android:name="ru.livetyping.zarina.application.startup.FeedbackInitializer"
                 android:value="androidx.startup" />
 
         </provider>
