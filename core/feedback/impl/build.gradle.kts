@@ -42,6 +42,7 @@ kotlin {
 
 dependencies {
     api(projects.core.feedback.api)
+    implementation(projects.core.uiKit)
 
     implementation(libs.uxFeedback)
 
