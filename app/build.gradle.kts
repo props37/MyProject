@@ -103,6 +103,7 @@ android {
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
                 buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
                 buildConfigStringField(Keys.APP_METRICA_KEY, buildType.appMetricaKey)
+                buildConfigStringField(Keys.UX_FEEDBACK_APP_ID, buildType.uxFeedbackAppId)
                 assetLink(buildType.backendUrl)
                 manifestPlaceholders[Keys.GOOGLE_MAPS_KEY] = buildType.googleMapsKey
 
@@ -258,6 +259,8 @@ dependencies {
     implementation(projects.core.analytics.impl)
     implementation(projects.core.platform)
     implementation(projects.core.coroutinesUtil)
+    implementation(projects.core.feedback.api)
+    implementation(projects.core.feedback.impl)
 
     implementation(libs.jetpack.core)
     implementation(libs.jetpack.appcompat)

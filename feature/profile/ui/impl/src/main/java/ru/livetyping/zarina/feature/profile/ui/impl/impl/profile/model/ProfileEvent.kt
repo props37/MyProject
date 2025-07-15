@@ -10,4 +10,6 @@ internal sealed interface ProfileEvent {
     data object LoyaltyCardInfoClicked : ProfileEvent
 
     data class MenuItemClicked(val item: ProfileMenuItem) : ProfileEvent
+
+    data object LeaveFeedbackClicked : ProfileEvent
 }

@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.common.ClickAction
 import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.feedback.FeedbackEvent
 import ru.livetyping.zarina.core.uicommon.LifecycleEvent
 import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
@@ -78,6 +79,7 @@ internal class CatalogViewModel @Inject constructor(
             is CatalogEvent.GenderSelected -> genderPickerComponent.onGenderSelected(event.tab)
             CatalogEvent.SearchClicked -> onSearchClicked()
             is CatalogEvent.MenuItemClicked -> onMenuItemClicked(event)
+            CatalogEvent.LeaveFeedbackClicked -> onLeaveFeedbackClicked()
             CatalogEvent.ChangeCityClicked -> onChangeCityClicked()
             CatalogEvent.RefreshClicked -> fetchMenu()
         }
@@ -108,11 +110,12 @@ internal class CatalogViewModel @Inject constructor(
     private fun onMenuItemClicked(event: CatalogEvent.MenuItemClicked) {
         when (val item = event.item) {
             is MenuItem.Basic -> onMenuItemBasicClicked(item)
-            is MenuItem.City -> Unit
-            MenuItem.SupportPhoneNumber -> Unit
-            MenuItem.SupportEmailAddress -> Unit
-            is MenuItem.Spacer -> Unit
+            else -> Unit
         }
+    }
+
+    private fun onLeaveFeedbackClicked() {
+        deps.feedback.show(FeedbackEvent.GENERAL)
     }
 
     private fun onChangeCityClicked() {

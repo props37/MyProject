@@ -26,6 +26,8 @@
     <string name="uikit_price_filter_price_rubbles">Цена, ₽</string>
     <string name="uikit_price_filter_from">От</string>
     <string name="uikit_price_filter_to">До</string>
+    <string name="uikit_feedback_widget_title">Поделитесь мнением</string>
+    <string name="uikit_feedback_widget_body">оставить отзыв о приложении</string>
 
     <string name="uikit_podeli_logo_description">Подели</string>
     <string name="uikit_podeli_guide_main_block_title">Платите удобно</string>

@@ -11,6 +11,8 @@ internal sealed interface CatalogEvent {
 
     data class MenuItemClicked(val item: MenuItem) : CatalogEvent
 
+    data object LeaveFeedbackClicked : CatalogEvent
+
     data object ChangeCityClicked : CatalogEvent
 
     data object RefreshClicked : CatalogEvent

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="UxFeedbackTheme" parent="UXFBLightTheme">
+        <item name="uxfbBgColor">#FFFFFF</item>
+        <item name="uxfbIconColor">#232323</item>
+        <item name="uxfbText01Color">#232735</item>
+        <item name="uxfbText02Color">#817F7F</item>
+        <item name="uxfbText03Color">#817F7F</item>
+        <item name="uxfbMainColor">#232323</item>
+        <item name="uxfbErrorColorPrimary">#FF1A1A</item>
+        <item name="uxfbErrorColorSecondary">#80E84047</item>
+        <item name="uxfbBtnBgColor">#232323</item>
+        <item name="uxfbBtnBgColorActive">#232323</item>
+        <item name="uxfbBtnTextColor">#FFFFFF</item>
+        <item name="uxfbInputBgColor">#F9F9F9</item>
+        <item name="uxfbInputBorderColor">#F0F0F0</item>
+        <item name="uxfbControlBgColor">#F9F9F9</item>
+        <item name="uxfbControlBgColorActive">#F9F9F9</item>
+        <item name="uxfbControlIconColor">#FFFFFF</item>
+        <item name="uxfbIconStarColor">#FECA00</item>
+        <item name="uxfbIconSmile1Color">#feca00</item>
+        <item name="uxfbIconSmile2Color">#232735</item>
+        <item name="uxfbIconSmile3Color">#e84047</item>
+        <item name="uxfbFormBorderRadius">0dp</item>
+        <item name="uxfbBtnBorderRadius">0dp</item>
+        <item name="uxfbLightNavigationBar">false</item>
+        <item name="uxfbFontH1">@style/UxFeedbackFontH1Style</item>
+        <item name="uxfbFontH2">@style/UxFeedbackFontH2Style</item>
+        <item name="uxfbFontP1">@style/UxFeedbackFontP1Style</item>
+        <item name="uxfbFontP2">@style/UxFeedbackFontP2Style</item>
+        <item name="uxfbFontBtn">@style/UxFeedbackFontButtonStyle</item>
+    </style>
+
+    <style name="UxFeedbackFontH1Style">
+        <item name="fontFamily">@font/circe_regular</item>
+        <item name="uxfbFontSize">25sp</item>
+    </style>
+
+    <style name="UxFeedbackFontH2Style">
+        <item name="fontFamily">@font/circe_regular</item>
+        <item name="uxfbFontSize">18sp</item>
+    </style>
+
+    <style name="UxFeedbackFontP1Style">
+        <item name="fontFamily">@font/circe_regular</item>
+        <item name="uxfbFontSize">14sp</item>
+    </style>
+
+    <style name="UxFeedbackFontP2Style">
+        <item name="fontFamily">@font/circe_regular</item>
+        <item name="uxfbFontSize">12sp</item>
+    </style>
+
+    <style name="UxFeedbackFontButtonStyle">
+        <item name="fontFamily">@font/circe_regular</item>
+        <item name="uxfbFontSize">14sp</item>
+    </style>
+
+</resources>

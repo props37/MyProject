@@ -11,6 +11,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven {
+            url = uri("https://nexus.uxfeedback.ru/repository/android-sdk-new/")
+        }
     }
 }
 
@@ -114,3 +118,5 @@ include(":core:deep-link")
 include(":core:analytics:api")
 include(":core:analytics:api-compose")
 include(":core:analytics:impl")
+include(":core:feedback:api")
+include(":core:feedback:impl")
