@@ -68,8 +68,8 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
-import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
@@ -108,7 +108,6 @@ import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
-import ru.livetyping.zarina.core.domain.usecase.wishlist.ClearWishlistUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageUseCase
 import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
@@ -203,17 +202,6 @@ internal class UseCaseModule {
     ): GetCategoriesFlowUseCase {
         return GetCategoriesFlowUseCase.getInstance(
             categoryRepository = categoryRepository,
-            logger = logger,
-        )
-    }
-
-    @Provides
-    fun provideClearWishlistUseCase(
-        wishlistRepository: WishlistRepository,
-        logger: UseCaseLogger,
-    ): ClearWishlistUseCase {
-        return ClearWishlistUseCase.getInstance(
-            wishlistRepository = wishlistRepository,
             logger = logger,
         )
     }
