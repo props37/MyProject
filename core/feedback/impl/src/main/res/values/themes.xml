@@ -30,37 +30,31 @@
         <item name="uxfbFontP1">@style/UxFeedbackFontP1Style</item>
         <item name="uxfbFontP2">@style/UxFeedbackFontP2Style</item>
         <item name="uxfbFontBtn">@style/UxFeedbackFontButtonStyle</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="UxFeedbackFontH1Style">
         <item name="fontFamily">@font/circe_regular</item>
         <item name="uxfbFontSize">25sp</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="UxFeedbackFontH2Style">
         <item name="fontFamily">@font/circe_regular</item>
         <item name="uxfbFontSize">18sp</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="UxFeedbackFontP1Style">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">12sp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="uxfbFontSize">14sp</item>
     </style>
 
     <style name="UxFeedbackFontP2Style">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">10sp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="uxfbFontSize">12sp</item>
     </style>
 
     <style name="UxFeedbackFontButtonStyle">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">12sp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="uxfbFontSize">14sp</item>
     </style>
 
 </resources>
