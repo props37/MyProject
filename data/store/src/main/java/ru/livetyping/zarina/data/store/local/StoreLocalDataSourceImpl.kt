@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.store.impl.local
+package ru.livetyping.zarina.data.store.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.store.Store

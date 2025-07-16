@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.store.impl
+package ru.livetyping.zarina.data.store
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -9,8 +9,8 @@ import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.store.Store
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
-import ru.livetyping.zarina.data.store.impl.local.StoreLocalDataSource
-import ru.livetyping.zarina.data.store.impl.remote.StoreRemoteDataSource
+import ru.livetyping.zarina.data.store.local.StoreLocalDataSource
+import ru.livetyping.zarina.data.store.remote.StoreRemoteDataSource
 import javax.inject.Inject
 
 internal class StoreRepositoryImpl @Inject constructor(
