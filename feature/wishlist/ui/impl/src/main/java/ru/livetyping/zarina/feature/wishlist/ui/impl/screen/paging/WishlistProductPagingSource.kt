@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.paging
+package ru.livetyping.zarina.feature.wishlist.ui.impl.screen.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

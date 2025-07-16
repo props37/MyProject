@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
+package ru.livetyping.zarina.feature.wishlist.ui.impl.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
@@ -32,10 +32,10 @@ import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGrid
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistState
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.NoProductsPlaceholder
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui.TopBar
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.model.WishlistEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.model.WishlistState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.ui.NoProductsPlaceholder
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.ui.TopBar
 
 @Composable
 internal fun WishlistScreen(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model
+package ru.livetyping.zarina.feature.wishlist.ui.impl.screen.model
 
 import androidx.compose.runtime.Stable
 import androidx.paging.PagingData

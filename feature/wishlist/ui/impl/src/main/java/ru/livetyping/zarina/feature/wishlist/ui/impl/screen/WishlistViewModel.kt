@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl
+package ru.livetyping.zarina.feature.wishlist.ui.impl.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,8 +36,8 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uikitpaging.product.ProductGridSideEffect
 import ru.livetyping.zarina.feature.wishlist.ui.impl.R
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistEvent
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.model.WishlistState
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.model.WishlistEvent
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.model.WishlistState
 import java.io.IOException
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon

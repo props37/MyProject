@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.wishlist.ui.WishlistFeature
-import ru.livetyping.zarina.feature.wishlist.ui.impl.impl.WishlistScreen
+import ru.livetyping.zarina.feature.wishlist.ui.impl.screen.WishlistScreen
 
 public class WishlistFeatureImpl : WishlistFeature {
     override fun NavGraphBuilder.navigation(

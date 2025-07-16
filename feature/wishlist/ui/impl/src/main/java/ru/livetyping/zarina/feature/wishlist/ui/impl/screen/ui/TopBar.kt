@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.wishlist.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.wishlist.ui.impl.screen.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.material.Text
