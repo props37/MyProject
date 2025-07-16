@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.order.impl.remote.api
+package ru.livetyping.zarina.data.order.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,7 +9,7 @@ import ru.livetyping.zarina.core.domain.model.order.Order
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.zarina.dto.OrderDto
-import ru.livetyping.zarina.data.order.impl.remote.api.dto.GetOrdersDto
+import ru.livetyping.zarina.data.order.remote.api.dto.GetOrdersDto
 import javax.inject.Inject
 
 internal class OrderApiImpl @Inject constructor(

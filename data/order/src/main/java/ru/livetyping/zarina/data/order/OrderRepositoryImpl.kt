@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.order.impl
+package ru.livetyping.zarina.data.order
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.order.Order
@@ -7,7 +7,7 @@ import ru.livetyping.zarina.core.domain.model.order.OrderShort
 import ru.livetyping.zarina.core.domain.model.order.OrderStatus
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.repository.OrderRepository
-import ru.livetyping.zarina.data.order.impl.remote.OrderRemoteDataSource
+import ru.livetyping.zarina.data.order.remote.OrderRemoteDataSource
 import javax.inject.Inject
 
 internal class OrderRepositoryImpl @Inject constructor(

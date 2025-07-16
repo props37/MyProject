@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.order.impl.remote
+package ru.livetyping.zarina.data.order.remote
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.order.Order
