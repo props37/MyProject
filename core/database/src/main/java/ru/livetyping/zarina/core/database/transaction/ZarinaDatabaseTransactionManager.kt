@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.database.transaction
 
 import ru.livetyping.zarina.core.database.ZarinaDatabase2
-import ru.livetyping.zarina.core.database.impl.transaction.ZarinaDatabaseTransactionManagerImpl
 
 public interface ZarinaDatabaseTransactionManager {
     public suspend fun <R> withTransaction(block: suspend () -> R): R
