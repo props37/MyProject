@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.location.impl
+package ru.livetyping.zarina.data.location
 
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority

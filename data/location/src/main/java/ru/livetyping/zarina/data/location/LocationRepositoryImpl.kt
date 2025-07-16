@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.location.impl
+package ru.livetyping.zarina.data.location
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

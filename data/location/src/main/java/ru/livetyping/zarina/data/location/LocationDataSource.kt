@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.location.impl
+package ru.livetyping.zarina.data.location
 
 import ru.livetyping.zarina.core.domain.model.common.Location
 

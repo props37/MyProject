@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.LocationRepository
-import ru.livetyping.zarina.data.location.impl.GooglePlayServicesLocationDataSource
-import ru.livetyping.zarina.data.location.impl.LocationDataSource
-import ru.livetyping.zarina.data.location.impl.LocationRepositoryImpl
+import ru.livetyping.zarina.data.location.GooglePlayServicesLocationDataSource
+import ru.livetyping.zarina.data.location.LocationDataSource
+import ru.livetyping.zarina.data.location.LocationRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
