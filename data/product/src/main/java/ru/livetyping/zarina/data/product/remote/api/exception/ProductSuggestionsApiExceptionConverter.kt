@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote.api.exception
+package ru.livetyping.zarina.data.product.remote.api.exception
 
 import io.ktor.client.plugins.ResponseException
 import io.ktor.http.HttpStatusCode

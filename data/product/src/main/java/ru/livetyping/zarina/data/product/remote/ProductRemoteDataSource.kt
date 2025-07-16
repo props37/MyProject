@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote
+package ru.livetyping.zarina.data.product.remote
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Category

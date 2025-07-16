@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote.api.exception
+package ru.livetyping.zarina.data.product.remote.api.exception
 
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
@@ -7,9 +7,9 @@ import ru.livetyping.zarina.core.domain.model.user.exception.InvalidEmailExcepti
 import ru.livetyping.zarina.core.domain.model.user.exception.InvalidFirstNameException
 import ru.livetyping.zarina.core.network.KtorApiExceptionConverter
 import ru.livetyping.zarina.core.network.di.NetworkJson
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductEmailErrorDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductErrorDtoSerializer
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductFirstNameErrorDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductEmailErrorDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductErrorDtoSerializer
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductFirstNameErrorDto
 import javax.inject.Inject
 
 internal class SubscribeToProductApiExceptionConverter @Inject constructor(

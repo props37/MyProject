@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote.api
+package ru.livetyping.zarina.data.product.remote.api
 
 import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.common.Email
@@ -9,9 +9,9 @@ import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductAvailabilityInStoreDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductDetailedDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductsDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductDetailedDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
 
 internal interface ProductApi {
     suspend fun getProducts(

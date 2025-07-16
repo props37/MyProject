@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote.api
+package ru.livetyping.zarina.data.product.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -16,16 +16,16 @@ import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.FiltersRequestDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.GetProductsRequestBody
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductAvailabilityInStoreDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductDetailedDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.ProductsDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.SortingDto
-import ru.livetyping.zarina.data.product.impl.remote.api.dto.SubscribeToProductRequestBody
-import ru.livetyping.zarina.data.product.impl.remote.api.exception.ProductAvailabilityInStoreApiExceptionConverter
-import ru.livetyping.zarina.data.product.impl.remote.api.exception.ProductSuggestionsApiExceptionConverter
-import ru.livetyping.zarina.data.product.impl.remote.api.exception.SubscribeToProductApiExceptionConverter
+import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
+import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductDetailedDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SortingDto
+import ru.livetyping.zarina.data.product.remote.api.dto.SubscribeToProductRequestBody
+import ru.livetyping.zarina.data.product.remote.api.exception.ProductAvailabilityInStoreApiExceptionConverter
+import ru.livetyping.zarina.data.product.remote.api.exception.ProductSuggestionsApiExceptionConverter
+import ru.livetyping.zarina.data.product.remote.api.exception.SubscribeToProductApiExceptionConverter
 import javax.inject.Inject
 
 internal class ProductApiImpl @Inject constructor(

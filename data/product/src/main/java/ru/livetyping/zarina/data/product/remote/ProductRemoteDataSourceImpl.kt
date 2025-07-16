@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.product.impl.remote
+package ru.livetyping.zarina.data.product.remote
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +16,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
-import ru.livetyping.zarina.data.product.impl.remote.api.ProductApi
+import ru.livetyping.zarina.data.product.remote.api.ProductApi
 import javax.inject.Inject
 
 internal class ProductRemoteDataSourceImpl @Inject constructor(
