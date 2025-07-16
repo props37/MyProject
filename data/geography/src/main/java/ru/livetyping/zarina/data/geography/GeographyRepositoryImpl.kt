@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.geography.impl
+package ru.livetyping.zarina.data.geography
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -13,8 +13,8 @@ import ru.livetyping.zarina.core.domain.model.geo.City
 import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.geo.Street
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
-import ru.livetyping.zarina.data.geography.impl.local.GeographyLocalDataSource
-import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSource
+import ru.livetyping.zarina.data.geography.local.GeographyLocalDataSource
+import ru.livetyping.zarina.data.geography.remote.GeographyRemoteDataSource
 import javax.inject.Inject
 
 internal class GeographyRepositoryImpl @Inject constructor(

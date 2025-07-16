@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.geography.impl.local
+package ru.livetyping.zarina.data.geography.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.geo.City
