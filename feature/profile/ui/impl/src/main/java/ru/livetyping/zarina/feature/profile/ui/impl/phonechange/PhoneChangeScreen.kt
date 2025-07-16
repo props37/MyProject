@@ -1,0 +1,88 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.phonechange
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechange.model.PhoneChangeEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechange.model.PhoneChangeState
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechange.ui.PhoneChangeContent
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechange.ui.TopBar
+
+@Composable
+internal fun PhoneChangeScreen(
+    navActions: PhoneChangeNavActions,
+    viewModel: PhoneChangeViewModel = hiltViewModel(),
+) {
+    val state by viewModel.phoneChangeState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        state = state,
+        onEvent = viewModel::onPhoneChangeEvent,
+        yandexCaptchaState = yandexCaptchaState,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    state: PhoneChangeState,
+    onEvent: (PhoneChangeEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
+    sideEffects: Flow<PhoneChangeSideEffect>,
+    navActions: PhoneChangeNavActions,
+) {
+    PhoneChangeScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme2.colors.white)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout)
+                        .union(WindowInsets.ime),
+                )
+                .bottomNavBarPadding(WindowInsets.ime),
+        ) {
+            TopBar(
+                onBackClicked = { onEvent(PhoneChangeEvent.BackClicked) },
+            )
+
+            PhoneChangeContent(
+                state = state,
+                onEvent = onEvent,
+            )
+        }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
+    }
+}
