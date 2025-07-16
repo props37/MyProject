@@ -1,0 +1,14 @@
+package ru.livetyping.zarina.feature.signup.ui.impl.phoneconfirmation
+
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
+import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
+import javax.inject.Inject
+
+internal class SignUpConfirmationDependencies @Inject constructor(
+    val smsCodeRetriever: SmsCodeRetriever,
+    val confirmSignUp: ConfirmSignUpUseCase,
+    val requestNewOtp: RequestNewAuthOtpUseCase,
+    val getYandexCaptcha: GetYandexCaptchaUseCase,
+)
