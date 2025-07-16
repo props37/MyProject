@@ -1,7 +1,7 @@
-package ru.livetyping.zarina.data.content.impl.remote
+package ru.livetyping.zarina.data.content.remote
 
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
-import ru.livetyping.zarina.data.content.impl.remote.api.ContentApi
+import ru.livetyping.zarina.data.content.remote.api.ContentApi
 import javax.inject.Inject
 
 internal class ContentRemoteDataSourceImpl @Inject constructor(

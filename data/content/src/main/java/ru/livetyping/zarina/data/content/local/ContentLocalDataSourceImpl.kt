@@ -1,8 +1,8 @@
-package ru.livetyping.zarina.data.content.impl.local
+package ru.livetyping.zarina.data.content.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
-import ru.livetyping.zarina.data.content.impl.local.catalog.CatalogDataHolder
+import ru.livetyping.zarina.data.content.local.catalog.CatalogDataHolder
 import javax.inject.Inject
 
 internal class ContentLocalDataSourceImpl @Inject constructor(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.content.impl.local.catalog
+package ru.livetyping.zarina.data.content.local.catalog
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

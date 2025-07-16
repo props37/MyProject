@@ -1,12 +1,12 @@
-package ru.livetyping.zarina.data.content.impl
+package ru.livetyping.zarina.data.content
 
 import kotlinx.coroutines.flow.firstOrNull
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
 import ru.livetyping.zarina.core.domain.model.catalog.CatalogMenuByGender
 import ru.livetyping.zarina.core.domain.repository.ContentRepository
-import ru.livetyping.zarina.data.content.impl.local.ContentLocalDataSource
-import ru.livetyping.zarina.data.content.impl.remote.ContentRemoteDataSource
+import ru.livetyping.zarina.data.content.local.ContentLocalDataSource
+import ru.livetyping.zarina.data.content.remote.ContentRemoteDataSource
 import javax.inject.Inject
 
 internal class ContentRepositoryImpl @Inject constructor(
