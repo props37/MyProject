@@ -14,12 +14,12 @@ import ru.livetyping.zarina.core.buildutil.MindboxKey
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
-import ru.livetyping.zarina.core.network.impl.ZarinaApiHeaderProvider
-import ru.livetyping.zarina.core.network.impl.ZarinaHttpClientBearerTokenCleanerImpl
-import ru.livetyping.zarina.core.network.impl.getAnyQueryAutocompleteHttpClient
-import ru.livetyping.zarina.core.network.impl.getMindboxHttpClient
-import ru.livetyping.zarina.core.network.impl.getZarinaAuthorizedHttpClient
-import ru.livetyping.zarina.core.network.impl.getZarinaUnauthorizedHttpClient
+import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleanerImpl
+import ru.livetyping.zarina.core.network.client.getAnyQueryAutocompleteHttpClient
+import ru.livetyping.zarina.core.network.client.getMindboxHttpClient
+import ru.livetyping.zarina.core.network.client.getZarinaAuthorizedHttpClient
+import ru.livetyping.zarina.core.network.client.getZarinaUnauthorizedHttpClient
+import ru.livetyping.zarina.core.network.zarina.ZarinaApiHeaderProvider
 import javax.inject.Singleton
 
 @Module

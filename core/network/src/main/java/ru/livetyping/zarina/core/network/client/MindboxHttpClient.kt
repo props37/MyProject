@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -16,7 +16,7 @@ internal fun getMindboxHttpClient(
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     install(DefaultRequest) {
-        url(BASE_URL)
+        url(MINDBOX_BASE_URL)
         header(AUTHORIZATION_KEY, getAuthorizationValue(mindboxKey))
     }
     logErrors(errorLogger)
@@ -26,6 +26,6 @@ private fun getAuthorizationValue(mindboxKey: String): String {
     return "$AUTHORIZATION_VALUE_PREFIX $mindboxKey"
 }
 
-private const val BASE_URL = "https://api.mindbox.ru/"
+private const val MINDBOX_BASE_URL = "https://api.mindbox.ru/"
 private const val AUTHORIZATION_KEY = "Authorization"
 private const val AUTHORIZATION_VALUE_PREFIX = "SecretKey"

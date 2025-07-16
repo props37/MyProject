@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.client
 
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.HttpResponseValidator

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.zarina
 
 internal class ZarinaApiHeaderProvider(private val appVersionCode: Int) {
     fun provide(): Map<String, String> {

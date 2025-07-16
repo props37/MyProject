@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -16,6 +16,7 @@ import ru.livetyping.zarina.core.buildutil.BuildType
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.BearerTokens
 import ru.livetyping.zarina.core.network.util.clearBearerTokens
+import ru.livetyping.zarina.core.network.zarina.ZarinaApiHeaderProvider
 import timber.log.Timber
 
 internal fun getZarinaUnauthorizedHttpClient(

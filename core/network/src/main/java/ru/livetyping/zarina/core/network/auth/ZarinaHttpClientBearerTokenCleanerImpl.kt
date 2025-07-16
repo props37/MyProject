@@ -1,7 +1,6 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.auth
 
 import io.ktor.client.HttpClient
-import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.clearBearerTokens

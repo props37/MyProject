@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.network.impl
+package ru.livetyping.zarina.core.network.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -14,9 +14,9 @@ internal fun getAnyQueryAutocompleteHttpClient(
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     install(DefaultRequest) {
-        url(BASE_URL)
+        url(ANY_QUERY_AUTOCOMPLETE_BASE_URL)
     }
     logErrors(errorLogger)
 }
 
-private const val BASE_URL = "https://autocomplete.diginetica.net/"
+private const val ANY_QUERY_AUTOCOMPLETE_BASE_URL = "https://autocomplete.diginetica.net/"
