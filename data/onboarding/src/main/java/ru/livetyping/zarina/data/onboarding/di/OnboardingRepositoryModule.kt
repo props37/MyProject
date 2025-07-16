@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
-import ru.livetyping.zarina.data.onboarding.impl.OnboardingRepositoryImpl
-import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingDataHolder
-import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingDataHolderImpl
-import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingLocalDataSource
-import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingLocalDataSourceImpl
-import ru.livetyping.zarina.data.onboarding.impl.remote.OnboardingRemoteDataSource
-import ru.livetyping.zarina.data.onboarding.impl.remote.OnboardingRemoteDataSourceImpl
-import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApi
-import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApiImpl
+import ru.livetyping.zarina.data.onboarding.OnboardingRepositoryImpl
+import ru.livetyping.zarina.data.onboarding.local.OnboardingDataHolder
+import ru.livetyping.zarina.data.onboarding.local.OnboardingDataHolderImpl
+import ru.livetyping.zarina.data.onboarding.local.OnboardingLocalDataSource
+import ru.livetyping.zarina.data.onboarding.local.OnboardingLocalDataSourceImpl
+import ru.livetyping.zarina.data.onboarding.remote.OnboardingRemoteDataSource
+import ru.livetyping.zarina.data.onboarding.remote.OnboardingRemoteDataSourceImpl
+import ru.livetyping.zarina.data.onboarding.remote.api.OnboardingApi
+import ru.livetyping.zarina.data.onboarding.remote.api.OnboardingApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

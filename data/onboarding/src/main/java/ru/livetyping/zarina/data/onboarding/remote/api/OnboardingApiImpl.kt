@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.onboarding.impl.remote.api
+package ru.livetyping.zarina.data.onboarding.remote.api
 
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.domain.model.common.Url

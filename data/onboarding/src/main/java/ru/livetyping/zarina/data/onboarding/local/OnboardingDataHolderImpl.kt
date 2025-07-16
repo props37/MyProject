@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.onboarding.impl.local
+package ru.livetyping.zarina.data.onboarding.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -1,10 +1,10 @@
-package ru.livetyping.zarina.data.onboarding.impl
+package ru.livetyping.zarina.data.onboarding
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.common.Url
 import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
-import ru.livetyping.zarina.data.onboarding.impl.local.OnboardingLocalDataSource
-import ru.livetyping.zarina.data.onboarding.impl.remote.OnboardingRemoteDataSource
+import ru.livetyping.zarina.data.onboarding.local.OnboardingLocalDataSource
+import ru.livetyping.zarina.data.onboarding.remote.OnboardingRemoteDataSource
 import javax.inject.Inject
 
 internal class OnboardingRepositoryImpl @Inject constructor(

@@ -1,9 +1,9 @@
-package ru.livetyping.zarina.data.onboarding.impl.remote
+package ru.livetyping.zarina.data.onboarding.remote
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.livetyping.zarina.core.domain.model.common.Url
-import ru.livetyping.zarina.data.onboarding.impl.remote.api.OnboardingApi
+import ru.livetyping.zarina.data.onboarding.remote.api.OnboardingApi
 import javax.inject.Inject
 
 internal class OnboardingRemoteDataSourceImpl @Inject constructor(

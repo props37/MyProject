@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.onboarding.impl.local
+package ru.livetyping.zarina.data.onboarding.local
 
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
