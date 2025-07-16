@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.search.impl.remote
+package ru.livetyping.zarina.data.search.remote
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting

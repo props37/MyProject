@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.search.impl.remote
+package ru.livetyping.zarina.data.search.remote
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.search.SearchResult
 import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
-import ru.livetyping.zarina.data.search.impl.remote.api.SearchApi
+import ru.livetyping.zarina.data.search.remote.api.SearchApi
 import javax.inject.Inject
 
 internal class SearchRemoteDataSourceImpl @Inject constructor(

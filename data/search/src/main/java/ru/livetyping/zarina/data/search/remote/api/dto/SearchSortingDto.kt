@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.search.impl.remote.api.dto
+package ru.livetyping.zarina.data.search.remote.api.dto
 
 import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting

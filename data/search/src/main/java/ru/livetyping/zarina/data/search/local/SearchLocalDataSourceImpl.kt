@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.search.impl.local
+package ru.livetyping.zarina.data.search.local
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
