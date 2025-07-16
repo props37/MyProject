@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
-import ru.livetyping.zarina.data.category.impl.CategoryRepositoryImpl
-import ru.livetyping.zarina.data.category.impl.local.CategoryDataHolder
-import ru.livetyping.zarina.data.category.impl.local.CategoryDataHolderImpl
-import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSource
-import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSourceImpl
-import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSource
-import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSourceImpl
-import ru.livetyping.zarina.data.category.impl.remote.api.CategoryApi
-import ru.livetyping.zarina.data.category.impl.remote.api.CategoryApiImpl
+import ru.livetyping.zarina.data.category.CategoryRepositoryImpl
+import ru.livetyping.zarina.data.category.local.CategoryDataHolder
+import ru.livetyping.zarina.data.category.local.CategoryDataHolderImpl
+import ru.livetyping.zarina.data.category.local.CategoryLocalDataSource
+import ru.livetyping.zarina.data.category.local.CategoryLocalDataSourceImpl
+import ru.livetyping.zarina.data.category.remote.CategoryRemoteDataSource
+import ru.livetyping.zarina.data.category.remote.CategoryRemoteDataSourceImpl
+import ru.livetyping.zarina.data.category.remote.api.CategoryApi
+import ru.livetyping.zarina.data.category.remote.api.CategoryApiImpl
 import javax.inject.Singleton
 
 @Module

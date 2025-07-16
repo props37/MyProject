@@ -2,7 +2,6 @@ package ru.livetyping.zarina.core.googleplayservices.sms
 
 import android.content.Context
 import androidx.activity.result.ActivityResultRegistry
-import ru.livetyping.zarina.core.googleplayservices.impl.sms.SmsCodeRetrieverImpl
 
 public interface SmsCodeRetriever {
     public fun start(sender: String, codeRegexPattern: String)

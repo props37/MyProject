@@ -1,6 +1,6 @@
 package ru.livetyping.zarina.core.domain.usecase.user
 
-import ru.livetyping.zarina.core.domain.impl.SignOutCleaner
+import ru.livetyping.zarina.core.domain.manager.SignOutCleaner
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
 import ru.livetyping.zarina.core.domain.repository.CheckoutRepository

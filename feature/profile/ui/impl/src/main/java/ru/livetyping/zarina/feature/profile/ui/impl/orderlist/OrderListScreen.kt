@@ -1,0 +1,71 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.orderlist
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.order.Order
+import ru.livetyping.zarina.core.domain.model.order.OrderShort
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.profile.ui.impl.orderlist.ui.OrderList
+import ru.livetyping.zarina.feature.profile.ui.impl.orderlist.ui.TopBar
+
+@Composable
+internal fun OrderListScreen(
+    navActions: OrderListNavActions,
+    viewModel: OrderListViewModel = hiltViewModel(),
+) {
+    ScreenContent(
+        orderPagingDataFlow = viewModel.orderPagingDataFlow,
+        onOrderClicked = viewModel::onOrderClicked,
+        onBackClicked = viewModel::onBackClicked,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    orderPagingDataFlow: Flow<PagingData<OrderShort>>,
+    onOrderClicked: (Order) -> Unit,
+    onBackClicked: () -> Unit,
+    sideEffects: Flow<OrderListSideEffect>,
+    navActions: OrderListNavActions,
+) {
+    OrderListScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme2.colors.white)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout),
+            )
+            .bottomNavBarPadding(),
+    ) {
+        TopBar(onBackClicked = onBackClicked)
+
+        val orderPagingItems = orderPagingDataFlow.collectAsLazyPagingItems()
+
+        OrderList(
+            orderPagingItems = orderPagingItems,
+            onOrderClicked = onOrderClicked,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}

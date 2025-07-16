@@ -16,17 +16,18 @@ import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductListFilterParcelable
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListFeature
 import ru.livetyping.zarina.feature.productlist.ui.api.ProductListNavEntry
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavActions
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationNavEntry
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.filtration.FiltrationResult
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterNavActions
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterNavEntry
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.listfilter.ListFilterResult
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.filtrationScreen
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.listFilterScreen
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.navigation.productListScreen
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListNavActions
-import ru.livetyping.zarina.feature.productlist.ui.impl.impl.productlist.ProductListNavEntry as ProductListScreenNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.filtration.FiltrationNavActions
+import ru.livetyping.zarina.feature.productlist.ui.impl.filtration.FiltrationNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.filtration.FiltrationResult
+import ru.livetyping.zarina.feature.productlist.ui.impl.listfilter.ListFilterNavActions
+import ru.livetyping.zarina.feature.productlist.ui.impl.listfilter.ListFilterNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.listfilter.ListFilterResult
+import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.filtrationScreen
+import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.listFilterScreen
+import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.productListScreen
+import ru.livetyping.zarina.feature.productlist.ui.impl.productlist.ProductListNavActions
+import ru.livetyping.zarina.feature.productlist.ui.impl.productlist.ProductListNavEntry.Companion as ProductListScreenNavEntry
+
 
 public class ProductListFeatureImpl : ProductListFeature {
     override fun NavGraphBuilder.navigation(

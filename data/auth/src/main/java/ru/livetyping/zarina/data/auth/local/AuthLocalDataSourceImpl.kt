@@ -1,0 +1,22 @@
+package ru.livetyping.zarina.data.auth.local
+
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
+import ru.livetyping.zarina.data.auth.local.storage.AuthEncryptedStorage
+import javax.inject.Inject
+
+internal class AuthLocalDataSourceImpl @Inject constructor(
+    private val authEncryptedStorage: AuthEncryptedStorage,
+) : AuthLocalDataSource {
+    override fun getBearerTokensFlow(): Flow<BearerTokens?> {
+        return authEncryptedStorage.getBearerTokensFlow()
+    }
+
+    override suspend fun setBearerTokens(tokens: BearerTokens?) {
+        authEncryptedStorage.setBearerTokens(tokens)
+    }
+
+    override suspend fun clear() {
+        authEncryptedStorage.clear()
+    }
+}

@@ -1,0 +1,19 @@
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model
+
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.runtime.Stable
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
+
+@Stable
+internal data class ProductSubscriptionState(
+    val product: Product,
+    val productOffer: ProductOffer,
+    val nameTextFieldState: TextFieldState,
+    val isNameInvalid: Boolean,
+    val emailTextFieldState: TextFieldState,
+    val isEmailInvalid: Boolean,
+    val arePoliciesAccepted: Boolean,
+    val arePoliciesInvalid: Boolean,
+    val isSubscribeButtonLoading: Boolean,
+)

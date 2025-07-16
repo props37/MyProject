@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.home.ui.HomeFeature
-import ru.livetyping.zarina.feature.home.ui.impl.impl.HomeScreen
+import ru.livetyping.zarina.feature.home.ui.impl.screen.HomeScreen
 
 public class HomeFeatureImpl : HomeFeature {
     override fun NavGraphBuilder.navigation(

@@ -1,7 +1,6 @@
 package ru.livetyping.zarina.core.uikit.theme
 
 import androidx.compose.ui.graphics.Color
-import ru.livetyping.zarina.core.uikit.impl.theme.Colors
 
 // TODO: [Top] Remove after full migration
 
@@ -176,3 +175,6 @@ public data class UiKitColors(
         )
     }
 }
+
+internal val LightUiKitColors: UiKitColors
+    get() = UiKitColors()

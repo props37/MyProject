@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
-import ru.livetyping.zarina.data.auth.impl.AuthRepositoryImpl
-import ru.livetyping.zarina.data.auth.impl.local.AuthLocalDataSource
-import ru.livetyping.zarina.data.auth.impl.local.AuthLocalDataSourceImpl
-import ru.livetyping.zarina.data.auth.impl.local.storage.AuthEncryptedStorage
-import ru.livetyping.zarina.data.auth.impl.local.storage.AuthEncryptedStorageImpl
-import ru.livetyping.zarina.data.auth.impl.remote.AuthRemoteDataSource
-import ru.livetyping.zarina.data.auth.impl.remote.AuthRemoteDataSourceImpl
-import ru.livetyping.zarina.data.auth.impl.remote.api.AuthApi
-import ru.livetyping.zarina.data.auth.impl.remote.api.AuthApiImpl
+import ru.livetyping.zarina.data.auth.AuthRepositoryImpl
+import ru.livetyping.zarina.data.auth.local.AuthLocalDataSource
+import ru.livetyping.zarina.data.auth.local.AuthLocalDataSourceImpl
+import ru.livetyping.zarina.data.auth.local.storage.AuthEncryptedStorage
+import ru.livetyping.zarina.data.auth.local.storage.AuthEncryptedStorageImpl
+import ru.livetyping.zarina.data.auth.remote.AuthRemoteDataSource
+import ru.livetyping.zarina.data.auth.remote.AuthRemoteDataSourceImpl
+import ru.livetyping.zarina.data.auth.remote.api.AuthApi
+import ru.livetyping.zarina.data.auth.remote.api.AuthApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

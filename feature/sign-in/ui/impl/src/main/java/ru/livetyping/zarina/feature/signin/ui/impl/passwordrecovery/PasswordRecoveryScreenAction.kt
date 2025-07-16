@@ -1,0 +1,7 @@
+package ru.livetyping.zarina.feature.signin.ui.impl.passwordrecovery
+
+internal sealed interface PasswordRecoveryScreenAction {
+    data object BackClicked : PasswordRecoveryScreenAction
+
+    data object PasswordResetRequested : PasswordRecoveryScreenAction
+}

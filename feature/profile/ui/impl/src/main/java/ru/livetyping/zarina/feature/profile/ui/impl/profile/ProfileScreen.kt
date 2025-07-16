@@ -1,0 +1,118 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.profile
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.feedback.FeedbackWidget
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileState
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileUserState
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.ui.AuthorizationOrLoyaltyCard
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.ui.BuildInfo
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.ui.ProfileMenu
+import ru.livetyping.zarina.feature.profile.ui.impl.profile.ui.TopBar
+
+@Composable
+internal fun ProfileScreen(
+    navActions: ProfileNavActions,
+    viewModel: ProfileViewModel,
+) {
+    val profileState by viewModel.profileState.collectAsStateWithLifecycle()
+
+    BackHandler(onBack = viewModel::onBackClicked)
+
+    ScreenContent(
+        profileState = profileState,
+        onProfileEvent = viewModel::onProfileEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    profileState: ProfileState,
+    onProfileEvent: (ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
+    sideEffects: Flow<ProfileSideEffect>,
+    navActions: ProfileNavActions,
+) {
+    ProfileScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme2.colors.white)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout),
+            )
+            .bottomNavBarPadding(),
+    ) {
+        val userState = profileState.userState
+        val user = (userState as? ProfileUserState.Success)?.user
+
+        TopBar(
+            userFirstName = user?.firstName,
+            isProfileDetailsButtonVisible = user != null,
+            onProfileDetailsClicked = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.ProfileDetailsClicked) },
+        )
+
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            AuthorizationOrLoyaltyCard(
+                userState = profileState.userState,
+                loyaltyCard = profileState.loyaltyCard,
+                onSignInClicked = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.SignInClicked) },
+                onSignUpClicked = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.SignUpClicked) },
+                onLoyaltyCardInfoClicked = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.LoyaltyCardInfoClicked) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            ProfileMenu(
+                items = profileState.menuItems,
+                onItemClicked = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.MenuItemClicked(it)) },
+                city = profileState.userCity,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            BuildInfo(
+                buildInfo = profileState.buildInfo,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Spacer(modifier = Modifier.height(36.dp))
+
+            FeedbackWidget(
+                onClick = { onProfileEvent(ru.livetyping.zarina.feature.profile.ui.impl.profile.model.ProfileEvent.LeaveFeedbackClicked) },
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+        }
+    }
+}

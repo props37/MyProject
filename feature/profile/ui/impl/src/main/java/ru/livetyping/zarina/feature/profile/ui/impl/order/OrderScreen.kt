@@ -1,0 +1,87 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.order
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.profile.ui.impl.order.model.OrderCancellationDialogEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.order.model.OrderCancellationDialogState
+import ru.livetyping.zarina.feature.profile.ui.impl.order.model.OrderEvent
+import ru.livetyping.zarina.feature.profile.ui.impl.order.model.OrderState
+import ru.livetyping.zarina.feature.profile.ui.impl.order.ui.Order
+import ru.livetyping.zarina.feature.profile.ui.impl.order.ui.OrderCancellationDialog
+import ru.livetyping.zarina.feature.profile.ui.impl.order.ui.TopBar
+
+@Composable
+internal fun OrderScreen(
+    navActions: OrderNavActions,
+    viewModel: OrderViewModel = hiltViewModel(),
+) {
+    val orderState by viewModel.orderState.collectAsStateWithLifecycle()
+    val orderCancellationDialogState by viewModel.orderCancellationDialogState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        orderState = orderState,
+        onOrderEvent = viewModel::onOrderEvent,
+        orderCancellationDialogState = orderCancellationDialogState,
+        onOrderCancellationDialogEvent = viewModel::onOrderCancellationDialogEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    orderState: OrderState,
+    onOrderEvent: (OrderEvent) -> Unit,
+    orderCancellationDialogState: OrderCancellationDialogState,
+    onOrderCancellationDialogEvent: (OrderCancellationDialogEvent) -> Unit,
+    sideEffects: Flow<OrderSideEffect>,
+    navActions: OrderNavActions,
+) {
+    OrderScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    OrderCancellationDialog(
+        state = orderCancellationDialogState,
+        onEvent = onOrderCancellationDialogEvent,
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme2.colors.white)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout),
+            )
+            .bottomNavBarPadding(),
+    ) {
+        val order = (orderState as? OrderState.Success)?.order
+
+        TopBar(
+            orderNumber = order?.number,
+            onBackClicked = { onOrderEvent(OrderEvent.BackClicked) },
+        )
+
+        Order(
+            state = orderState,
+            onEvent = onOrderEvent,
+            modifier = Modifier.fillMaxSize(),
+        )
+    }
+}

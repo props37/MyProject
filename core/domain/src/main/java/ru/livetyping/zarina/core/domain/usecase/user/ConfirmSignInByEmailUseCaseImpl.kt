@@ -2,7 +2,7 @@ package ru.livetyping.zarina.core.domain.usecase.user
 
 import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.analytics.model.SignInMethod
-import ru.livetyping.zarina.core.domain.impl.UserManager
+import ru.livetyping.zarina.core.domain.manager.UserManager
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
 import ru.livetyping.zarina.core.domain.repository.UserRepository

@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uicompose.none
-import ru.livetyping.zarina.core.uikit.impl.theme.Colors
+import ru.livetyping.zarina.core.uikit.theme.Colors
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 
 @Composable

@@ -10,12 +10,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signup.ui.api.SignUpFeature
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpConfirmationScreen
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.navigation.signUpScreen
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavActions
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.phoneconfirmation.SignUpConfirmationNavEntry
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavActions as SignUpScreenNavActions
-import ru.livetyping.zarina.feature.signup.ui.impl.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
+import ru.livetyping.zarina.feature.signup.ui.impl.navigation.signUpConfirmationScreen
+import ru.livetyping.zarina.feature.signup.ui.impl.navigation.signUpScreen
+import ru.livetyping.zarina.feature.signup.ui.impl.phoneconfirmation.SignUpConfirmationNavActions
+import ru.livetyping.zarina.feature.signup.ui.impl.phoneconfirmation.SignUpConfirmationNavEntry
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.SignUpNavActions as SignUpScreenNavActions
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.SignUpNavEntry as SignUpScreenNavEntry
 
 public class SignUpFeatureImpl : SignUpFeature {
     override fun NavGraphBuilder.navigation(

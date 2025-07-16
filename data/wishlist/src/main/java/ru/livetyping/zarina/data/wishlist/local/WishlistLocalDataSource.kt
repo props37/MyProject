@@ -1,0 +1,20 @@
+package ru.livetyping.zarina.data.wishlist.local
+
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.Product
+
+internal interface WishlistLocalDataSource {
+    fun getWishlistProductIdsFlow(): Flow<Set<Product.Id>>
+
+    fun setWishlistProductIds(ids: Set<Product.Id>)
+
+    fun areWishlistProductIdsFetched(): Boolean
+
+    fun setAreWishlistProductIdsFetched(fetched: Boolean)
+
+    fun addProductToWishlist(productId: Product.Id)
+
+    fun removeProductFromWishlist(productId: Product.Id)
+
+    fun clear()
+}

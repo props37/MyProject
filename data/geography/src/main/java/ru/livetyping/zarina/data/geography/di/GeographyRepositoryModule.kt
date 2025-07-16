@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.GeographyRepository
-import ru.livetyping.zarina.data.geography.impl.GeographyRepositoryImpl
-import ru.livetyping.zarina.data.geography.impl.local.CityDataHolder
-import ru.livetyping.zarina.data.geography.impl.local.CityDataHolderImpl
-import ru.livetyping.zarina.data.geography.impl.local.GeographyLocalDataSource
-import ru.livetyping.zarina.data.geography.impl.local.GeographyLocalDataSourceImpl
-import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSource
-import ru.livetyping.zarina.data.geography.impl.remote.GeographyRemoteDataSourceImpl
-import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApi
-import ru.livetyping.zarina.data.geography.impl.remote.api.GeographyApiImpl
+import ru.livetyping.zarina.data.geography.GeographyRepositoryImpl
+import ru.livetyping.zarina.data.geography.local.CityDataHolder
+import ru.livetyping.zarina.data.geography.local.CityDataHolderImpl
+import ru.livetyping.zarina.data.geography.local.GeographyLocalDataSource
+import ru.livetyping.zarina.data.geography.local.GeographyLocalDataSourceImpl
+import ru.livetyping.zarina.data.geography.remote.GeographyRemoteDataSource
+import ru.livetyping.zarina.data.geography.remote.GeographyRemoteDataSourceImpl
+import ru.livetyping.zarina.data.geography.remote.api.GeographyApi
+import ru.livetyping.zarina.data.geography.remote.api.GeographyApiImpl
 import javax.inject.Singleton
 
 @Module

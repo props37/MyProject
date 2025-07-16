@@ -1,0 +1,118 @@
+package ru.livetyping.zarina.feature.signup.ui.impl.signup
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.user.User
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
+import ru.livetyping.zarina.core.uikit.date.ZarinaDatePickerDialog
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.model.SignUpEvent
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.model.SignUpState
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.ui.SignUpScreenContent
+import ru.livetyping.zarina.feature.signup.ui.impl.signup.ui.TopBar
+import java.time.LocalDate
+
+@Composable
+internal fun SignUpScreen(
+    navActions: SignUpNavActions,
+    viewModel: SignUpViewModel = hiltViewModel(),
+) {
+    val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        signUpState = signUpState,
+        onSignUpEvent = viewModel::onSignUpEvent,
+        yandexCaptchaState = yandexCaptchaState,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ScreenContent(
+    signUpState: SignUpState,
+    onSignUpEvent: (SignUpEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
+    sideEffects: Flow<SignUpSideEffect>,
+    navActions: SignUpNavActions,
+) {
+    SignUpScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    var isDatePickerVisible by remember { mutableStateOf(false) }
+    if (isDatePickerVisible) {
+        val currentMillis = remember(signUpState.birthDateEpochMillis) {
+            signUpState.birthDateEpochMillis ?: System.currentTimeMillis()
+        }
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = currentMillis,
+            yearRange = remember { User.BIRTH_DATE_MIN_VALUE.year..LocalDate.now().year },
+        )
+
+        ZarinaDatePickerDialog(
+            onDismissRequest = { isDatePickerVisible = false },
+            datePickerState = datePickerState,
+            onDateSelected = {
+                val event = SignUpEvent.BirthDateEpochMillisChanged(it)
+                onSignUpEvent(event)
+                isDatePickerVisible = false
+            },
+        )
+    }
+
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme2.colors.white)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .bottomNavBarPadding(),
+        ) {
+            TopBar(
+                onBackClicked = { onSignUpEvent(SignUpEvent.BackClicked) },
+            )
+
+            SignUpScreenContent(
+                signUpState = signUpState,
+                onSignUpEvent = onSignUpEvent,
+                onBirthDateClicked = { isDatePickerVisible = true },
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
+    }
+}

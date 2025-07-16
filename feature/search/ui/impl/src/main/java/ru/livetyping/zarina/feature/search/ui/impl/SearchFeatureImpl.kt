@@ -13,16 +13,16 @@ import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductFiltersParcelable
 import ru.livetyping.zarina.core.uimodel.product.filter.ProductListFilterParcelable
 import ru.livetyping.zarina.feature.search.ui.api.SearchFeature
-import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationNavActions
-import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationNavEntry
-import ru.livetyping.zarina.feature.search.ui.impl.impl.filtration.FiltrationResult
-import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterNavActions
-import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterNavEntry
-import ru.livetyping.zarina.feature.search.ui.impl.impl.listfilter.ListFilterResult
-import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.filtrationScreen
-import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.listFilterScreen
-import ru.livetyping.zarina.feature.search.ui.impl.impl.navigation.searchScreen
-import ru.livetyping.zarina.feature.search.ui.impl.impl.search.SearchNavActions
+import ru.livetyping.zarina.feature.search.ui.impl.filtration.FiltrationNavActions
+import ru.livetyping.zarina.feature.search.ui.impl.filtration.FiltrationNavEntry
+import ru.livetyping.zarina.feature.search.ui.impl.filtration.FiltrationResult
+import ru.livetyping.zarina.feature.search.ui.impl.listfilter.ListFilterNavActions
+import ru.livetyping.zarina.feature.search.ui.impl.listfilter.ListFilterNavEntry
+import ru.livetyping.zarina.feature.search.ui.impl.listfilter.ListFilterResult
+import ru.livetyping.zarina.feature.search.ui.impl.navigation.filtrationScreen
+import ru.livetyping.zarina.feature.search.ui.impl.navigation.listFilterScreen
+import ru.livetyping.zarina.feature.search.ui.impl.navigation.searchScreen
+import ru.livetyping.zarina.feature.search.ui.impl.search.SearchNavActions
 
 public class SearchFeatureImpl : SearchFeature {
     override fun NavGraphBuilder.navigation(

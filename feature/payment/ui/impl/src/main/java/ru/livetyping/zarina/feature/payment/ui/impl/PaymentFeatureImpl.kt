@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
-import ru.livetyping.zarina.feature.payment.ui.impl.payment.PaymentScreen
+import ru.livetyping.zarina.feature.payment.ui.impl.screen.PaymentScreen
 
 public class PaymentFeatureImpl : PaymentFeature {
     override fun NavGraphBuilder.composable(

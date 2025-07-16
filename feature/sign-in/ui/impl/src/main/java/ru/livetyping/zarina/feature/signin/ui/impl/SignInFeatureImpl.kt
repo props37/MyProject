@@ -10,18 +10,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigation
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.signin.ui.api.SignInFeature
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.passwordRecoveryScreen
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByEmailPhoneConfirmationScreen
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInByPhonePhoneConfirmationScreen
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.navigation.signInScreen
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.passwordrecovery.PasswordRecoveryNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyemail.SignInByEmailConfirmationNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhoneConfirmationNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signinbyphone.SignInByPhoneConfirmationNavEntry
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavActions as SignInScreenNavActions
-import ru.livetyping.zarina.feature.signin.ui.impl.impl.signin.SignInNavEntry as SignInScreenNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.navigation.passwordRecoveryScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.navigation.signInByEmailPhoneConfirmationScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.navigation.signInByPhonePhoneConfirmationScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.navigation.signInScreen
+import ru.livetyping.zarina.feature.signin.ui.impl.passwordrecovery.PasswordRecoveryNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.passwordrecovery.PasswordRecoveryNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.signinbyemail.SignInByEmailConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.signinbyemail.SignInByEmailConfirmationNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.signinbyphone.SignInByPhoneConfirmationNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.signinbyphone.SignInByPhoneConfirmationNavEntry
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.SignInNavActions as SignInScreenNavActions
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.SignInNavEntry as SignInScreenNavEntry
 
 public class SignInFeatureImpl : SignInFeature {
     override fun NavGraphBuilder.navigation(

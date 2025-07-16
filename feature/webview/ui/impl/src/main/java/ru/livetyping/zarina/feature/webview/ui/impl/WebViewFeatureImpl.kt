@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
-import ru.livetyping.zarina.feature.webview.ui.impl.impl.WebViewScreen
+import ru.livetyping.zarina.feature.webview.ui.impl.screen.WebViewScreen
 
 public class WebViewFeatureImpl : WebViewFeature {
     override fun NavGraphBuilder.composable(

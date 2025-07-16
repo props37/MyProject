@@ -1,0 +1,98 @@
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingEvent
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.Banner
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.Onboarding
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.ProgressIndicator
+
+@Composable
+internal fun OnboardingScreen(
+    navActions: OnboardingFeature.NavActions,
+    viewModel: OnboardingViewModel,
+) {
+    val onboardingState by viewModel.onboardingState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        onboardingState = onboardingState,
+        onOnboardingEvent = viewModel::onOnboardingEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    onboardingState: OnboardingState,
+    onOnboardingEvent: (OnboardingEvent) -> Unit,
+    sideEffects: Flow<OnboardingSideEffect>,
+    navActions: OnboardingFeature.NavActions,
+) {
+    OnboardingScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme2.colors.white),
+    ) {
+        Banner(
+            url = onboardingState.bannerUrl,
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        ZarinaBottomSheet(modifier = Modifier.align(Alignment.BottomCenter)) {
+            Column(
+                modifier = Modifier
+                    .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .union(WindowInsets.displayCutout)
+                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
+                    )
+                    .padding(top = 24.dp, bottom = 16.dp),
+            ) {
+                ProgressIndicator(
+                    onboardingState = onboardingState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Onboarding(
+                    state = onboardingState,
+                    onEvent = onOnboardingEvent,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+    }
+}

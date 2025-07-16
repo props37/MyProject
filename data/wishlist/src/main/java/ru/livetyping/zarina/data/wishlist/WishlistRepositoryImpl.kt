@@ -1,0 +1,106 @@
+package ru.livetyping.zarina.data.wishlist
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.pagination.Page
+import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.repository.WishlistRepository
+import ru.livetyping.zarina.data.wishlist.local.WishlistLocalDataSource
+import ru.livetyping.zarina.data.wishlist.remote.WishlistRemoteDataSource
+import javax.inject.Inject
+
+internal class WishlistRepositoryImpl @Inject constructor(
+    private val remoteDataSource: WishlistRemoteDataSource,
+    private val localDataSource: WishlistLocalDataSource,
+) : WishlistRepository {
+    override fun getWishlistProductIdsFlow(cachePolicy: CachePolicy): Flow<Set<Product.Id>> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getWishlistProductIdsFlow()
+            is CachePolicy.LocalFirstThenRemote -> {
+                getWishlistProductIdsFlowLocalFirstThenRemote(cachePolicy)
+            }
+
+            is CachePolicy.Remote -> flow { emit(getWishlistProductIdsRemote(cachePolicy)) }
+        }
+    }
+
+    override fun areWishlistProductIdsFetched(): Boolean {
+        return localDataSource.areWishlistProductIdsFetched()
+    }
+
+    override suspend fun getWishlistProductPage(page: Int): Page<List<ProductShort>> {
+        return remoteDataSource.getFavoriteProductPage(page)
+    }
+
+    override suspend fun addProductToWishlist(productId: Product.Id) {
+        remoteDataSource.addProductToWishlist(productId)
+        localDataSource.addProductToWishlist(productId)
+    }
+
+    override suspend fun removeProductFromWishlist(productId: Product.Id) {
+        remoteDataSource.removeProductFromWishlist(productId)
+        localDataSource.removeProductFromWishlist(productId)
+    }
+
+    override suspend fun clearWishlist() {
+        remoteDataSource.clearWishlist()
+        localDataSource.setWishlistProductIds(emptySet())
+        localDataSource.setAreWishlistProductIdsFetched(false)
+    }
+
+    override fun clear() {
+        localDataSource.clear()
+    }
+
+    private fun getWishlistProductIdsFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<Set<Product.Id>> {
+        return localDataSource.getWishlistProductIdsFlow()
+            .map { cached ->
+                if (!localDataSource.areWishlistProductIdsFetched()) {
+                    val productIds = remoteDataSource.getWishlistProductIds()
+                    wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
+                    productIds
+                } else {
+                    cached
+                }
+            }
+    }
+
+    private suspend fun getWishlistProductIdsRemote(
+        cachePolicy: CachePolicy.Remote,
+    ): Set<Product.Id> {
+        val productIds = remoteDataSource.getWishlistProductIds()
+        wishlistProductIdsCacheUpdatePolicyImpl(productIds, cachePolicy.updatePolicy)
+        return productIds
+    }
+
+    private fun wishlistProductIdsCacheUpdatePolicyImpl(
+        productIds: Set<Product.Id>,
+        policy: CacheUpdatePolicy,
+    ) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> clearLocalWishlistProductIds()
+            CacheUpdatePolicy.UPDATE -> setLocalFetchedWishlistProductIds(productIds)
+        }
+    }
+
+    private fun setLocalFetchedWishlistProductIds(productIds: Set<Product.Id>) {
+        localDataSource.setWishlistProductIds(productIds)
+        localDataSource.setAreWishlistProductIdsFetched(true)
+    }
+
+    private fun clearLocalWishlistProductIds() {
+        localDataSource.setWishlistProductIds(emptySet())
+        localDataSource.setAreWishlistProductIdsFetched(false)
+    }
+
+    private companion object {
+        private const val TAG = "WishlistRepositoryImpl"
+    }
+}

@@ -1,0 +1,53 @@
+package ru.livetyping.zarina.data.search
+
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.product.ProductSorting
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+import ru.livetyping.zarina.core.domain.model.search.SearchHistoryQuery
+import ru.livetyping.zarina.core.domain.model.search.SearchResult
+import ru.livetyping.zarina.core.domain.model.search.SearchSuggestions
+import ru.livetyping.zarina.core.domain.repository.SearchRepository
+import ru.livetyping.zarina.data.search.local.SearchLocalDataSource
+import ru.livetyping.zarina.data.search.remote.SearchRemoteDataSource
+import javax.inject.Inject
+
+internal class SearchRepositoryImpl @Inject constructor(
+    private val remoteDataSource: SearchRemoteDataSource,
+    private val localDataSource: SearchLocalDataSource,
+) : SearchRepository {
+    override fun getSearchSuggestionsFlow(query: String): Flow<SearchSuggestions> {
+        return remoteDataSource.getSearchSuggestionsFlow(query)
+    }
+
+    override fun search(
+        query: String,
+        sorting: ProductSorting,
+        filters: ProductFilters?,
+        offset: Int,
+    ): Flow<SearchResult> {
+        return remoteDataSource.search(query, sorting, filters, offset)
+    }
+
+    override fun getLastSearchHistoryQueriesFlow(
+        query: String,
+        limit: Int
+    ): Flow<List<SearchHistoryQuery>> {
+        return localDataSource.getLastSearchHistoryQueriesFlow(query, limit)
+    }
+
+    override suspend fun saveSearchHistoryQuery(query: SearchHistoryQuery) {
+        localDataSource.saveSearchHistoryQuery(query)
+    }
+
+    override suspend fun deleteSearchHistoryQuery(query: String) {
+        localDataSource.deleteSearchHistoryQuery(query)
+    }
+
+    override suspend fun clearSearchHistory() {
+        localDataSource.clearSearchHistory()
+    }
+
+    override suspend fun clear() {
+        localDataSource.clear()
+    }
+}

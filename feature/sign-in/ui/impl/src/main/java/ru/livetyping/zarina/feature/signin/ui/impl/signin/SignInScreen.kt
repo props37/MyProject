@@ -1,0 +1,130 @@
+package ru.livetyping.zarina.feature.signin.ui.impl.signin
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicommon.LifecycleEvent
+import ru.livetyping.zarina.core.uicompose.pager.rememberPagerStateIntegratedWithTabRow
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaDialog
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaEvent
+import ru.livetyping.zarina.core.uikit.captcha.YandexCaptchaState
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.core.uimodel.tab.TabRowEvent
+import ru.livetyping.zarina.core.uimodel.tab.TabRowState
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.model.SignInByEmailState
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.model.SignInEvent
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.model.SignInState
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.model.SignInType
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.ui.SignInTypePager
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.ui.SignInTypeSelector
+import ru.livetyping.zarina.feature.signin.ui.impl.signin.ui.TopBar
+
+@Composable
+internal fun SignInScreen(
+    navActions: SignInNavActions,
+    viewModel: SignInViewModel = hiltViewModel(),
+) {
+    val signInTypeSelectorState by viewModel.signInTypeSelectorState.collectAsStateWithLifecycle()
+    val signInState by viewModel.signInState.collectAsStateWithLifecycle()
+    val yandexCaptchaState by viewModel.yandexCaptchaState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        signInTypeSelectorState = signInTypeSelectorState,
+        onSignInTypeSelectorEvent = viewModel::onSignInTypeSelectorEvent,
+        signInState = signInState,
+        onSignInEvent = viewModel::onSignInEvent,
+        yandexCaptchaState = yandexCaptchaState,
+        onYandexCaptchaEvent = viewModel::onYandexCaptchaEvent,
+        onLifecycleEvent = viewModel::onLifecycleEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    signInTypeSelectorState: TabRowState<SignInType>,
+    onSignInTypeSelectorEvent: (TabRowEvent<SignInType>) -> Unit,
+    signInState: SignInState,
+    onSignInEvent: (SignInEvent) -> Unit,
+    yandexCaptchaState: YandexCaptchaState,
+    onYandexCaptchaEvent: (YandexCaptchaEvent) -> Unit,
+    onLifecycleEvent: (LifecycleEvent) -> Unit,
+    sideEffects: Flow<SignInSideEffect>,
+    navActions: SignInNavActions,
+) {
+    SignInScreenBehavior(
+        onLifecycleEvent = onLifecycleEvent,
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    val isBackHandlerEnabled = signInState.signInByEmailState is SignInByEmailState.PhoneConfirmation
+    BackHandler(isBackHandlerEnabled) {
+        onSignInEvent(SignInEvent.BackClicked)
+    }
+
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(UiKitTheme2.colors.white)
+                .windowInsetsPadding(
+                    WindowInsets.statusBars
+                        .union(WindowInsets.displayCutout),
+                )
+                .bottomNavBarPadding(),
+        ) {
+            TopBar(
+                onBackClicked = { onSignInEvent(SignInEvent.BackClicked) },
+            )
+
+            val signInTypePagerState = rememberPagerStateIntegratedWithTabRow(
+                tabs = signInTypeSelectorState.tabs,
+                currentTab = signInTypeSelectorState.currentTab,
+                onTabChanged = { onSignInTypeSelectorEvent(TabRowEvent.TabChanged(it)) },
+                initialPage = remember { signInTypeSelectorState.currentTabIndex },
+                pageCount = { signInTypeSelectorState.tabs.size },
+            )
+
+            SignInTypeSelector(
+                state = signInTypeSelectorState,
+                onEvent = onSignInTypeSelectorEvent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+            )
+
+            SignInTypePager(
+                signInTypes = signInTypeSelectorState.tabs,
+                pagerState = signInTypePagerState,
+                signInState = signInState,
+                onSignInEvent = onSignInEvent,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        YandexCaptchaDialog(
+            state = yandexCaptchaState,
+            onEvent = onYandexCaptchaEvent,
+        )
+    }
+}

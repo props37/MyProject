@@ -10,7 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.dialog
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
-import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.DetectedCityScreen
+import ru.livetyping.zarina.feature.detectedcity.ui.impl.screen.DetectedCityScreen
 
 public class DetectedCityFeatureImpl : DetectedCityFeature {
     override fun NavGraphBuilder.composable(

@@ -5,15 +5,15 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.StoreRepository
-import ru.livetyping.zarina.data.store.impl.StoreRepositoryImpl
-import ru.livetyping.zarina.data.store.impl.local.StoreDataHolder
-import ru.livetyping.zarina.data.store.impl.local.StoreDataHolderImpl
-import ru.livetyping.zarina.data.store.impl.local.StoreLocalDataSource
-import ru.livetyping.zarina.data.store.impl.local.StoreLocalDataSourceImpl
-import ru.livetyping.zarina.data.store.impl.remote.StoreRemoteDataSource
-import ru.livetyping.zarina.data.store.impl.remote.StoreRemoteDataSourceImpl
-import ru.livetyping.zarina.data.store.impl.remote.api.StoreApi
-import ru.livetyping.zarina.data.store.impl.remote.api.StoreApiImpl
+import ru.livetyping.zarina.data.store.StoreRepositoryImpl
+import ru.livetyping.zarina.data.store.local.StoreDataHolder
+import ru.livetyping.zarina.data.store.local.StoreDataHolderImpl
+import ru.livetyping.zarina.data.store.local.StoreLocalDataSource
+import ru.livetyping.zarina.data.store.local.StoreLocalDataSourceImpl
+import ru.livetyping.zarina.data.store.remote.StoreRemoteDataSource
+import ru.livetyping.zarina.data.store.remote.StoreRemoteDataSourceImpl
+import ru.livetyping.zarina.data.store.remote.api.StoreApi
+import ru.livetyping.zarina.data.store.remote.api.StoreApiImpl
 import javax.inject.Singleton
 
 @Module

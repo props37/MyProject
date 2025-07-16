@@ -5,11 +5,11 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.ProductRepository
-import ru.livetyping.zarina.data.product.impl.ProductRepositoryImpl
-import ru.livetyping.zarina.data.product.impl.remote.ProductRemoteDataSource
-import ru.livetyping.zarina.data.product.impl.remote.ProductRemoteDataSourceImpl
-import ru.livetyping.zarina.data.product.impl.remote.api.ProductApi
-import ru.livetyping.zarina.data.product.impl.remote.api.ProductApiImpl
+import ru.livetyping.zarina.data.product.ProductRepositoryImpl
+import ru.livetyping.zarina.data.product.remote.ProductRemoteDataSource
+import ru.livetyping.zarina.data.product.remote.ProductRemoteDataSourceImpl
+import ru.livetyping.zarina.data.product.remote.api.ProductApi
+import ru.livetyping.zarina.data.product.remote.api.ProductApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

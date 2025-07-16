@@ -9,8 +9,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingScreen
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.OnboardingViewModel
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.OnboardingScreen
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.OnboardingViewModel
 
 public class OnboardingFeatureImpl : OnboardingFeature {
     override fun NavGraphBuilder.composable(

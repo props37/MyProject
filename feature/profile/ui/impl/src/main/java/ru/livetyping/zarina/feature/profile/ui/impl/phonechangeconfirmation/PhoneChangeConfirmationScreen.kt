@@ -1,0 +1,108 @@
+package ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameMillis
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.uicompose.tryRequestFocus
+import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
+import ru.livetyping.zarina.core.uikit.otp.SmsOtp
+import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
+import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.model.PhoneChangeConfirmationState
+import ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.ui.TopBar
+
+@Composable
+internal fun PhoneChangeConfirmationScreen(
+    navActions: PhoneChangeConfirmationNavActions,
+    viewModel: PhoneChangeConfirmationViewModel = hiltViewModel(),
+) {
+    val state by viewModel.phoneChangeConfirmationState.collectAsStateWithLifecycle()
+
+    ScreenContent(
+        state = state,
+        onEvent = viewModel::onPhoneChangeConfirmationEvent,
+        sideEffects = viewModel.sideEffects,
+        navActions = navActions,
+    )
+}
+
+@Composable
+private fun ScreenContent(
+    state: PhoneChangeConfirmationState,
+    onEvent: (ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent) -> Unit,
+    sideEffects: Flow<PhoneChangeConfirmationSideEffect>,
+    navActions: PhoneChangeConfirmationNavActions,
+) {
+    PhoneChangeConfirmationScreenBehavior(
+        sideEffects = sideEffects,
+        navActions = navActions,
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(UiKitTheme2.colors.white)
+            .windowInsetsPadding(
+                WindowInsets.statusBars
+                    .union(WindowInsets.displayCutout)
+                    .union(WindowInsets.ime),
+            )
+            .bottomNavBarPadding(WindowInsets.ime),
+    ) {
+        TopBar(
+            onBackClicked = { onEvent(ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent.BackClicked) },
+        )
+
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                withFrameMillis {}
+                focusRequester.tryRequestFocus()
+            }
+
+            SmsOtp(
+                otpState = state.otpState,
+                phone = state.phone,
+                onOtpEntered = { onEvent(ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent.OtpEntered) },
+                onRequestNewOtpClicked = {
+                    onEvent(ru.livetyping.zarina.feature.profile.ui.impl.phonechangeconfirmation.model.PhoneChangeConfirmationEvent.RequestNewOtpClicked)
+                },
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+            )
+
+            Spacer(modifier = Modifier.height(ZarinaScrollableDefaults.ScrollableBottomPadding))
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+        }
+    }
+}
