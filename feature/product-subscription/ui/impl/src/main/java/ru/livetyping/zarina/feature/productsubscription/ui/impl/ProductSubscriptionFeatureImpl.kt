@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ProductSubscriptionScreen
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.ProductSubscriptionScreen
 
 public class ProductSubscriptionFeatureImpl : ProductSubscriptionFeature {
     override fun NavGraphBuilder.composable(

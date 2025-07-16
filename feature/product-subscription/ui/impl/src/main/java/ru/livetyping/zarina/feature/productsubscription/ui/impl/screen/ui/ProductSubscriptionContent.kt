@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,8 +45,8 @@ import ru.livetyping.zarina.core.uikit.text.ZarinaTextField
 import ru.livetyping.zarina.core.uikit.text.ZarinaTextFieldDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.R
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionEvent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionState
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen
 
 internal sealed interface ProductSubscriptionScreenAction {
     data object BackClicked : ProductSubscriptionScreenAction

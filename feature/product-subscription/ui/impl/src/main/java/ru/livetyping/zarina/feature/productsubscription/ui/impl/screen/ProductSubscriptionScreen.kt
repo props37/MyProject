@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui.ProductSubscriptionContent
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui.TopBar
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionEvent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionState
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.ui.ProductSubscriptionContent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.ui.TopBar
 
 @Composable
 internal fun ProductSubscriptionScreen(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
@@ -39,8 +39,8 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage
 import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import ru.livetyping.zarina.feature.productsubscription.ui.api.ProductSubscriptionFeature
 import ru.livetyping.zarina.feature.productsubscription.ui.impl.R
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionEvent
-import ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model.ProductSubscriptionState
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionEvent
+import ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model.ProductSubscriptionState
 import javax.inject.Inject
 import ru.livetyping.zarina.core.resource.R as RCommon
 

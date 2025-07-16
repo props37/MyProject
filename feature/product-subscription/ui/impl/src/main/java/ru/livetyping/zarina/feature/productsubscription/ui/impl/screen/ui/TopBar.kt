@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.Text

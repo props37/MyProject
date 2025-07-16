@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.productsubscription.ui.impl.impl.model
+package ru.livetyping.zarina.feature.productsubscription.ui.impl.screen.model
 
 internal sealed interface ProductSubscriptionEvent {
     data object BackClicked : ProductSubscriptionEvent
