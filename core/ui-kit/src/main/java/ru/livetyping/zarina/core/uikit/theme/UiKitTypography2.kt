@@ -3,7 +3,7 @@ package ru.livetyping.zarina.core.uikit.theme
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import ru.livetyping.zarina.core.uikit.impl.theme.W350
+import ru.livetyping.zarina.core.uikit.util.W350
 
 // TODO: [Top] Rename after full migration
 

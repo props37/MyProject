@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import ru.livetyping.zarina.core.uikit.R
-import ru.livetyping.zarina.core.uikit.impl.theme.W350
+import ru.livetyping.zarina.core.uikit.util.W350
 
 // TODO: [Top] Remove after full migration
 

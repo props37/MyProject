@@ -5,7 +5,6 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import ru.livetyping.zarina.core.uikit.impl.theme.Colors2
 
 // TODO: [Top] Rename after full migration
 
