@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable

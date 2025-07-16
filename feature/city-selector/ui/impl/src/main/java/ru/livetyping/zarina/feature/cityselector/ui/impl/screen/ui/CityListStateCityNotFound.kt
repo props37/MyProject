@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding

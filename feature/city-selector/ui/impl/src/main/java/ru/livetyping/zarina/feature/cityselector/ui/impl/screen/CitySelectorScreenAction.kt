@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen
 
 import ru.livetyping.zarina.core.domain.model.geo.City
 

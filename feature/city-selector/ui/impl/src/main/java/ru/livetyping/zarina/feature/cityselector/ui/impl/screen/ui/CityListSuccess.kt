@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -21,8 +21,8 @@ import ru.livetyping.zarina.core.uicompose.AnimatedContentDefaultExitTransition
 import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CityListState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorEvent
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

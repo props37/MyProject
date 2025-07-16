@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +14,7 @@ import ru.livetyping.zarina.core.uikit.icon.ZarinaCheckmarkIcon
 import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListItem
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CityListItem
 import kotlin.random.Random
 
 @Composable

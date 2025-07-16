@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
@@ -37,9 +37,9 @@ import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.core.uicompose.text.textAsFlow
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.impl.R
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CityListState
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CityListState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorState
 import java.io.IOException
 import javax.inject.Inject
 

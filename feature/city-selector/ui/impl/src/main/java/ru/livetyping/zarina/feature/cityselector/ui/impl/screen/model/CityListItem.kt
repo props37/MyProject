@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model
 
 import androidx.compose.runtime.Immutable
 import ru.livetyping.zarina.core.domain.model.geo.City

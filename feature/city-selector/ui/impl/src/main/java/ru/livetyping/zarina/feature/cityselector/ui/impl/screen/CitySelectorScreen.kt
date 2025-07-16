@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.cityselector.ui.impl.impl
+package ru.livetyping.zarina.feature.cityselector.ui.impl.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,11 +26,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorEvent
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.model.CitySelectorState
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.CityList
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.SearchTextField
-import ru.livetyping.zarina.feature.cityselector.ui.impl.impl.ui.TopBar
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorEvent
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorState
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.CityList
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.SearchTextField
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.TopBar
 
 @Composable
 internal fun CitySelectorScreen(
