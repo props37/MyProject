@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.googleplayservices.impl
+package ru.livetyping.zarina.core.googleplayservices.util
 
 import android.os.Build
 import android.os.Bundle

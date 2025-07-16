@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.googleplayservices.impl.sms
+package ru.livetyping.zarina.core.googleplayservices.sms
 
 import android.app.Activity
 import android.content.Context

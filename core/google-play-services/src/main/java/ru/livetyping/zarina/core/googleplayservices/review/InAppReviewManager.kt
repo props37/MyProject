@@ -3,7 +3,6 @@ package ru.livetyping.zarina.core.googleplayservices.review
 import android.app.Activity
 import android.content.Context
 import ru.livetyping.zarina.core.analytics.AppMetrica
-import ru.livetyping.zarina.core.googleplayservices.impl.review.InAppReviewManagerImpl
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 

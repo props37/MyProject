@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.googleplayservices.impl.review
+package ru.livetyping.zarina.core.googleplayservices.review
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,6 @@ import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
 import ru.livetyping.zarina.core.analytics.AppMetrica
-import ru.livetyping.zarina.core.googleplayservices.review.InAppReviewManager
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration

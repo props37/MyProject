@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.googleplayservices.impl.sms
+package ru.livetyping.zarina.core.googleplayservices.sms
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -12,9 +12,8 @@ import androidx.activity.result.ActivityResultRegistry
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import ru.livetyping.zarina.core.googleplayservices.impl.BundleCompat
-import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever
 import ru.livetyping.zarina.core.googleplayservices.sms.SmsCodeRetriever.Listener
+import ru.livetyping.zarina.core.googleplayservices.util.BundleCompat
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
