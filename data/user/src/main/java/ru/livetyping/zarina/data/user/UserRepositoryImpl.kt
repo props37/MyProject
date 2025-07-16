@@ -1,0 +1,315 @@
+package ru.livetyping.zarina.data.user
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import ru.livetyping.zarina.core.domain.cache.CachePolicy
+import ru.livetyping.zarina.core.domain.cache.CacheUpdatePolicy
+import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptcha
+import ru.livetyping.zarina.core.domain.model.captcha.YandexCaptchaToken
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.common.PhoneNumber
+import ru.livetyping.zarina.core.domain.model.gender.Gender
+import ru.livetyping.zarina.core.domain.model.geo.City
+import ru.livetyping.zarina.core.domain.model.pagination.Page
+import ru.livetyping.zarina.core.domain.model.user.AuthResult
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyCard
+import ru.livetyping.zarina.core.domain.model.user.LoyaltyProgramBonusAction
+import ru.livetyping.zarina.core.domain.model.user.User
+import ru.livetyping.zarina.core.domain.repository.UserRepository
+import ru.livetyping.zarina.data.user.local.UserLocalDataSource
+import ru.livetyping.zarina.data.user.remote.UserRemoteDataSource
+import java.time.LocalDate
+import javax.inject.Inject
+
+internal class UserRepositoryImpl @Inject constructor(
+    private val remoteDataSource: UserRemoteDataSource,
+    private val localDataSource: UserLocalDataSource,
+) : UserRepository {
+    override fun getUserFlow(cachePolicy: CachePolicy): Flow<User?> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getUserFlow()
+            is CachePolicy.LocalFirstThenRemote -> getUserFlowLocalFirstThenRemote(cachePolicy)
+            is CachePolicy.Remote -> getUserFlowRemote(cachePolicy)
+        }
+    }
+
+    override suspend fun setUser(user: User) {
+        localDataSource.setUser(user)
+    }
+
+    override fun getUserCityFlow(cachePolicy: CachePolicy): Flow<City?> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getUserCityFlow()
+            is CachePolicy.LocalFirstThenRemote -> getUserCityFlowLocalFirstThenRemote(cachePolicy)
+            is CachePolicy.Remote -> getUserCityFlowRemote(cachePolicy)
+        }
+    }
+
+    override suspend fun setUserCity(city: City) {
+        remoteDataSource.setUserCity(city)
+        localDataSource.setUserCity(city)
+    }
+
+    override suspend fun setLocalUserCity(city: City) {
+        localDataSource.setUserCity(city)
+    }
+
+    override fun getLoyaltyCardFlow(cachePolicy: CachePolicy): Flow<LoyaltyCard?> {
+        return when (cachePolicy) {
+            CachePolicy.LocalOnly -> localDataSource.getLoyaltyCardFlow()
+            is CachePolicy.LocalFirstThenRemote -> {
+                getLoyaltyCardFlowLocalFirstThenRemote(cachePolicy)
+            }
+
+            is CachePolicy.Remote -> getLoyaltyCardFlowRemote(cachePolicy)
+        }
+    }
+
+    override fun getLoyaltyProgramBonusHistoryPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyProgramBonusHistoryPageFlow(page)
+    }
+
+    override fun getLoyaltyProgramExpectedBonusesPageFlow(page: Int): Flow<Page<List<LoyaltyProgramBonusAction>>> {
+        return remoteDataSource.getLoyaltyProgramExpectedBonusesFlow(page)
+    }
+
+    override suspend fun signIn(
+        email: Email,
+        password: String,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ): AuthResult {
+        return remoteDataSource.signIn(email, password, yandexCaptchaToken)
+    }
+
+    override suspend fun signIn(phone: PhoneNumber, yandexCaptchaToken: YandexCaptchaToken) {
+        remoteDataSource.signIn(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun confirmSignInByPhone(phone: PhoneNumber, otp: String): AuthResult {
+        return remoteDataSource.confirmSignInByPhone(phone, otp)
+    }
+
+    override suspend fun signUp(
+        firstName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        password: String,
+        receiveEmails: Boolean,
+        receiveSms: Boolean,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        remoteDataSource.signUp(
+            firstName = firstName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            password = password,
+            receiveEmails = receiveEmails,
+            receiveSms = receiveSms,
+            yandexCaptchaToken = yandexCaptchaToken,
+        )
+    }
+
+    override suspend fun confirmSignUp(phone: PhoneNumber, otp: String): AuthResult {
+        return remoteDataSource.confirmSignUp(phone, otp)
+    }
+
+    override suspend fun requestNewAuthOtp(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        remoteDataSource.requestNewAuthOtp(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun confirmPhoneNumberChange(phone: PhoneNumber, otp: String) {
+        remoteDataSource.confirmPhoneNumberChange(phone, otp)
+    }
+
+    override suspend fun requestSignInByEmailConfirmation(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken,
+    ) {
+        remoteDataSource.requestSignInByEmailConfirmation(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun confirmSignInByEmail(phone: PhoneNumber, otp: String): AuthResult {
+        return remoteDataSource.confirmSignInByEmail(phone, otp)
+    }
+
+    override suspend fun requestNewSignInByEmailConfirmationOtp(phone: PhoneNumber) {
+        remoteDataSource.requestNewSignInByEmailConfirmationOtp(phone)
+    }
+
+    override suspend fun requestNewPhoneNumberChangeOtp(phone: PhoneNumber) {
+        remoteDataSource.requestNewPhoneNumberChangeOtp(phone)
+    }
+
+    override suspend fun updateUserInfo(
+        firstName: String,
+        lastName: String,
+        birthDate: LocalDate,
+        email: Email,
+        phone: PhoneNumber,
+        gender: Gender?,
+        oldPassword: String?,
+        newPassword: String?,
+    ) {
+        remoteDataSource.updateUserInfo(
+            firstName = firstName,
+            lastName = lastName,
+            birthDate = birthDate,
+            email = email,
+            phone = phone,
+            gender = gender,
+            oldPassword = oldPassword,
+            newPassword = newPassword,
+        )
+
+        // TODO: [Backend] Refactor when backend starts to return a user as a response
+        val user = remoteDataSource.getUserFlow().firstOrNull()
+        if (user != null) setUser(user)
+    }
+
+    override suspend fun requestPasswordReset(email: Email) {
+        remoteDataSource.requestPasswordReset(email)
+    }
+
+    override suspend fun changePhoneNumber(
+        phone: PhoneNumber,
+        yandexCaptchaToken: YandexCaptchaToken
+    ) {
+        remoteDataSource.changePhoneNumber(phone, yandexCaptchaToken)
+    }
+
+    override suspend fun updateUserNotificationSettings(
+        receiveSms: Boolean,
+        receiveEmails: Boolean
+    ) {
+        remoteDataSource.updateUserNotificationSettings(receiveSms, receiveEmails)
+    }
+
+    override suspend fun signOut(): BearerTokens {
+        return remoteDataSource.signOut()
+    }
+
+    override suspend fun deleteAccount() {
+        remoteDataSource.deleteAccount()
+    }
+
+    override fun getYandexCaptcha(): YandexCaptcha {
+        return remoteDataSource.getYandexCaptcha()
+    }
+
+    override fun getInAppReviewRequestFlow(): Flow<Unit> {
+        return localDataSource.getInAppReviewRequestFlow()
+    }
+
+    override fun requestInAppReview() {
+        localDataSource.requestInAppReview()
+    }
+
+    override suspend fun clear() {
+        localDataSource.clear()
+    }
+
+    private fun getUserFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<User?> {
+        return localDataSource.getUserFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val user = remoteDataSource.getUserFlow().firstOrNull()
+                checkNotNull(user) { "Failed to fetch user" }
+                userCacheUpdatePolicyImpl(user, cachePolicy.updatePolicy)
+                user
+            }
+        }
+    }
+
+    private fun getUserFlowRemote(cachePolicy: CachePolicy.Remote): Flow<User?> {
+        return remoteDataSource.getUserFlow()
+            .onEach { user ->
+                userCacheUpdatePolicyImpl(user, cachePolicy.updatePolicy)
+            }
+    }
+
+    private fun getLoyaltyCardFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<LoyaltyCard?> {
+        return localDataSource.getLoyaltyCardFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val loyaltyCard = remoteDataSource.getLoyaltyCardFlow().firstOrNull()
+                checkNotNull(loyaltyCard) { "Failed to fetch loyalty card" }
+                loyaltyCardCacheUpdatePolicyImpl(loyaltyCard, cachePolicy.updatePolicy)
+                loyaltyCard
+            }
+        }
+    }
+
+    private fun getLoyaltyCardFlowRemote(cachePolicy: CachePolicy.Remote): Flow<LoyaltyCard?> {
+        return remoteDataSource.getLoyaltyCardFlow()
+            .onEach { loyaltyCard ->
+                loyaltyCardCacheUpdatePolicyImpl(loyaltyCard, cachePolicy.updatePolicy)
+            }
+    }
+
+    private fun getUserCityFlowLocalFirstThenRemote(
+        cachePolicy: CachePolicy.LocalFirstThenRemote,
+    ): Flow<City?> {
+        return localDataSource.getUserCityFlow().map { cached ->
+            if (cached != null) {
+                cached
+            } else {
+                val city = remoteDataSource.getUserCityFlow().firstOrNull()
+                checkNotNull(city) { "Failed to fetch user city" }
+                userCityCacheUpdatePolicyImpl(city, cachePolicy.updatePolicy)
+                city
+            }
+        }
+    }
+
+    private fun getUserCityFlowRemote(cachePolicy: CachePolicy.Remote): Flow<City?> {
+        return remoteDataSource.getUserCityFlow()
+            .onEach { city ->
+                userCityCacheUpdatePolicyImpl(city, cachePolicy.updatePolicy)
+            }
+    }
+
+    private suspend fun userCacheUpdatePolicyImpl(user: User, policy: CacheUpdatePolicy) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setUser(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setUser(user)
+        }
+    }
+
+    private fun loyaltyCardCacheUpdatePolicyImpl(
+        loyaltyCard: LoyaltyCard,
+        policy: CacheUpdatePolicy,
+    ) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setLoyaltyCard(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setLoyaltyCard(loyaltyCard)
+        }
+    }
+
+    private suspend fun userCityCacheUpdatePolicyImpl(city: City, policy: CacheUpdatePolicy) {
+        when (policy) {
+            CacheUpdatePolicy.NONE -> Unit
+            CacheUpdatePolicy.CLEAR -> localDataSource.setUserCity(null)
+            CacheUpdatePolicy.UPDATE -> localDataSource.setUserCity(city)
+        }
+    }
+
+    private companion object {
+        private const val TAG = "UserRepositoryImpl"
+    }
+}
