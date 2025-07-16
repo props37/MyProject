@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.wishlist.impl
+package ru.livetyping.zarina.data.wishlist
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -9,8 +9,8 @@ import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.repository.WishlistRepository
-import ru.livetyping.zarina.data.wishlist.impl.local.WishlistLocalDataSource
-import ru.livetyping.zarina.data.wishlist.impl.remote.WishlistRemoteDataSource
+import ru.livetyping.zarina.data.wishlist.local.WishlistLocalDataSource
+import ru.livetyping.zarina.data.wishlist.remote.WishlistRemoteDataSource
 import javax.inject.Inject
 
 internal class WishlistRepositoryImpl @Inject constructor(

@@ -1,8 +1,8 @@
-package ru.livetyping.zarina.data.wishlist.impl.remote.api
+package ru.livetyping.zarina.data.wishlist.remote.api
 
 import ru.livetyping.zarina.core.domain.model.product.Product
-import ru.livetyping.zarina.data.wishlist.impl.remote.api.dto.WishlistProductIdsDto
-import ru.livetyping.zarina.data.wishlist.impl.remote.api.dto.WishlistProductsDto
+import ru.livetyping.zarina.data.wishlist.remote.api.dto.WishlistProductIdsDto
+import ru.livetyping.zarina.data.wishlist.remote.api.dto.WishlistProductsDto
 
 internal interface WishlistApi {
     suspend fun getWishlistProductIds(): WishlistProductIdsDto

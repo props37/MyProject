@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.wishlist.impl.local
+package ru.livetyping.zarina.data.wishlist.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.product.Product

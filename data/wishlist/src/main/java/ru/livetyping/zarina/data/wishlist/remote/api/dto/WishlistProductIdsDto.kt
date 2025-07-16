@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.wishlist.impl.remote.api.dto
+package ru.livetyping.zarina.data.wishlist.remote.api.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

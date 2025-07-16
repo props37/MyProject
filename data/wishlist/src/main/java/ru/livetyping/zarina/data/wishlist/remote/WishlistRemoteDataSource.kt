@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.wishlist.impl.remote
+package ru.livetyping.zarina.data.wishlist.remote
 
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Product

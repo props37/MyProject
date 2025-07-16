@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.wishlist.impl.remote.api
+package ru.livetyping.zarina.data.wishlist.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -9,8 +9,8 @@ import io.ktor.client.request.post
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
-import ru.livetyping.zarina.data.wishlist.impl.remote.api.dto.WishlistProductIdsDto
-import ru.livetyping.zarina.data.wishlist.impl.remote.api.dto.WishlistProductsDto
+import ru.livetyping.zarina.data.wishlist.remote.api.dto.WishlistProductIdsDto
+import ru.livetyping.zarina.data.wishlist.remote.api.dto.WishlistProductsDto
 import javax.inject.Inject
 
 internal class WishlistApiImpl @Inject constructor(
