@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.domain.impl
+package ru.livetyping.zarina.core.domain.manager
 
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.model.user.User

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.domain.impl
+package ru.livetyping.zarina.core.domain.manager
 
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.domain.repository.CartRepository
