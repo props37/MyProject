@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,7 +24,7 @@ import ru.livetyping.zarina.core.uikit.item.ZarinaItem
 import ru.livetyping.zarina.core.uikit.skeleton.ZarinaTextSkeleton
 import ru.livetyping.zarina.core.uikit.text.withZarinaBrackets
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuItem
 import kotlin.random.Random
 
 @Composable

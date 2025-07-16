@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.component
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.component
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope

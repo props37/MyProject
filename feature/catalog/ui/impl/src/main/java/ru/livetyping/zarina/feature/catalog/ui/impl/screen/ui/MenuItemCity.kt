@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +21,7 @@ import ru.livetyping.zarina.core.uikit.item.ZarinaItemDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.catalog.ui.impl.R
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuItem
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

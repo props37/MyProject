@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

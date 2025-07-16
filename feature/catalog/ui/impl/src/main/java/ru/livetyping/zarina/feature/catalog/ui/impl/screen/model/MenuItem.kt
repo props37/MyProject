@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.model
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.model
 
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Immutable

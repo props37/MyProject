@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -22,11 +22,11 @@ import ru.livetyping.zarina.core.uicompose.collapsingtopbar.CollapsingTopBarLayo
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarHeightAsState
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.Menu
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.SearchButton
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui.TopBar
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui.Menu
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui.SearchButton
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui.TopBar
 
 // TODO: [Top] Add banner
 

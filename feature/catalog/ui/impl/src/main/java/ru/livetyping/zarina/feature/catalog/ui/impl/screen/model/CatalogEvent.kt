@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.model
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.model
 
 import ru.livetyping.zarina.core.uimodel.tab.GenderTab
 

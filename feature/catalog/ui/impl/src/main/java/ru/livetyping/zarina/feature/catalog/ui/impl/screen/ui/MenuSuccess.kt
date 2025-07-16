@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import ru.livetyping.zarina.core.uikit.feedback.FeedbackWidget
 import ru.livetyping.zarina.core.uikit.list.ZarinaListDefaults.animateZarinaItem
 import ru.livetyping.zarina.core.uikit.scroll.ZarinaScrollableDefaults
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuState
 
 @Composable
 internal fun MenuSuccess(

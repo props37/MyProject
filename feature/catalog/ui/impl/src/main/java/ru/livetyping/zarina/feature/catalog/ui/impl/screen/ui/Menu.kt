@@ -1,12 +1,12 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import ru.livetyping.zarina.core.uicompose.Crossfade
 import ru.livetyping.zarina.core.uikit.error.ZarinaErrorScreen2
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuState
 
 @Suppress("NAME_SHADOWING")
 @Composable

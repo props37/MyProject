@@ -13,7 +13,7 @@ import androidx.navigation.navDeepLink
 import ru.livetyping.zarina.core.deeplink.ZarinaWebLinkUris
 import ru.livetyping.zarina.core.navigation.EmptyNavResultRetrievers
 import ru.livetyping.zarina.feature.catalog.ui.CatalogFeature
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.CatalogScreen
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.CatalogScreen
 
 public class CatalogFeatureImpl : CatalogFeature {
     override fun NavGraphBuilder.navigation(

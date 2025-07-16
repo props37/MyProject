@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,11 +22,11 @@ import ru.livetyping.zarina.core.uicommon.Throttler
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicomponent.gender.GenderPickerComponent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.component.MenuComponent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogEvent
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.CatalogState
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuItem
-import ru.livetyping.zarina.feature.catalog.ui.impl.impl.model.MenuState
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.component.MenuComponent
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogEvent
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.CatalogState
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuItem
+import ru.livetyping.zarina.feature.catalog.ui.impl.screen.model.MenuState
 import javax.inject.Inject
 
 @HiltViewModel

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.catalog.ui.impl.impl
+package ru.livetyping.zarina.feature.catalog.ui.impl.screen
 
 import ru.livetyping.zarina.core.analytics.AppMetrica
 import ru.livetyping.zarina.core.domain.usecase.catalog.GetCatalogMenuUseCase
