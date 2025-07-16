@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.mindbox.impl.api
+package ru.livetyping.zarina.data.mindbox.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.buildutil.MindboxDeviceUuidProvider
 import ru.livetyping.zarina.core.buildutil.MindboxEndpoint
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.network.util.setJsonBody
-import ru.livetyping.zarina.data.mindbox.impl.api.dto.UserDto
+import ru.livetyping.zarina.data.mindbox.api.dto.UserDto
 import javax.inject.Inject
 import ru.livetyping.zarina.core.network.di.MindboxApi as MindboxApiQualifier
 

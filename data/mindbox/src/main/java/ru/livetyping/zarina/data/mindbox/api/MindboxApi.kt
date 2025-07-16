@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.mindbox.impl.api
+package ru.livetyping.zarina.data.mindbox.api
 
 import ru.livetyping.zarina.core.domain.model.user.User
 

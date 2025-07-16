@@ -5,9 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
-import ru.livetyping.zarina.data.mindbox.impl.MindboxRepositoryImpl
-import ru.livetyping.zarina.data.mindbox.impl.api.MindboxApi
-import ru.livetyping.zarina.data.mindbox.impl.api.MindboxApiImpl
+import ru.livetyping.zarina.data.mindbox.MindboxRepositoryImpl
+import ru.livetyping.zarina.data.mindbox.api.MindboxApi
+import ru.livetyping.zarina.data.mindbox.api.MindboxApiImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

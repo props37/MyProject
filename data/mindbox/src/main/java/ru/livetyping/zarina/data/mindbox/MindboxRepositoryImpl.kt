@@ -1,8 +1,8 @@
-package ru.livetyping.zarina.data.mindbox.impl
+package ru.livetyping.zarina.data.mindbox
 
 import ru.livetyping.zarina.core.domain.model.user.User
 import ru.livetyping.zarina.core.domain.repository.MindboxRepository
-import ru.livetyping.zarina.data.mindbox.impl.api.MindboxApi
+import ru.livetyping.zarina.data.mindbox.api.MindboxApi
 import javax.inject.Inject
 
 internal class MindboxRepositoryImpl @Inject constructor(
