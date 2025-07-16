@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.auth.impl.local.storage
+package ru.livetyping.zarina.data.auth.local.storage
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

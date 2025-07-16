@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.auth.impl.remote.api
+package ru.livetyping.zarina.data.auth.remote.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

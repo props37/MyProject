@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.auth.impl.local.storage
+package ru.livetyping.zarina.data.auth.local.storage
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens

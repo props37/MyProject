@@ -1,7 +1,7 @@
-package ru.livetyping.zarina.data.auth.impl.remote
+package ru.livetyping.zarina.data.auth.remote
 
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
-import ru.livetyping.zarina.data.auth.impl.remote.api.AuthApi
+import ru.livetyping.zarina.data.auth.remote.api.AuthApi
 import javax.inject.Inject
 
 internal class AuthRemoteDataSourceImpl @Inject constructor(

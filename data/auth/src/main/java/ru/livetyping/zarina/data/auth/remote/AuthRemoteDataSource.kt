@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.auth.impl.remote
+package ru.livetyping.zarina.data.auth.remote
 
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 

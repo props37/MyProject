@@ -1,11 +1,11 @@
-package ru.livetyping.zarina.data.auth.impl
+package ru.livetyping.zarina.data.auth
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.auth.BearerTokens
 import ru.livetyping.zarina.core.domain.repository.AuthRepository
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
-import ru.livetyping.zarina.data.auth.impl.local.AuthLocalDataSource
-import ru.livetyping.zarina.data.auth.impl.remote.AuthRemoteDataSource
+import ru.livetyping.zarina.data.auth.local.AuthLocalDataSource
+import ru.livetyping.zarina.data.auth.remote.AuthRemoteDataSource
 import javax.inject.Inject
 
 internal class AuthRepositoryImpl @Inject constructor(
