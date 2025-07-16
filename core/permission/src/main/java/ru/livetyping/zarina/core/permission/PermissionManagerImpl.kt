@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.core.permission.impl
+package ru.livetyping.zarina.core.permission
 
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
@@ -7,8 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.suspendCancellableCoroutine
-import ru.livetyping.zarina.core.permission.PermissionManager
-import ru.livetyping.zarina.core.permission.PermissionState
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicReference
