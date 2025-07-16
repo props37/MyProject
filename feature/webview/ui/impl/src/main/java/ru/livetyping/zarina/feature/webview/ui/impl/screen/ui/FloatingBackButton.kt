@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.webview.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.webview.ui.impl.screen.ui
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon

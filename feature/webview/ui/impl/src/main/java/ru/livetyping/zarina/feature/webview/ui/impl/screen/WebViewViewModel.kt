@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.webview.ui.impl.impl
+package ru.livetyping.zarina.feature.webview.ui.impl.screen
 
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle

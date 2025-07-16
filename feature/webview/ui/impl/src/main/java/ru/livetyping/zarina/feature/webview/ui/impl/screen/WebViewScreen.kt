@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.webview.ui.impl.impl
+package ru.livetyping.zarina.feature.webview.ui.impl.screen
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.webview.ui.WebViewFeature
-import ru.livetyping.zarina.feature.webview.ui.impl.impl.ui.FloatingBackButton
+import ru.livetyping.zarina.feature.webview.ui.impl.screen.ui.FloatingBackButton
 
 @Composable
 internal fun WebViewScreen(
