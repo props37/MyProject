@@ -26,7 +26,7 @@ import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.filtrationScr
 import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.listFilterScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.navigation.productListScreen
 import ru.livetyping.zarina.feature.productlist.ui.impl.productlist.ProductListNavActions
-import ru.livetyping.zarina.feature.productlist.ui.impl.productlist.ProductListNavEntry.Companion as ProductListScreenNavEntry
+import ru.livetyping.zarina.feature.productlist.ui.impl.productlist.ProductListNavEntry as ProductListScreenNavEntry
 
 
 public class ProductListFeatureImpl : ProductListFeature {
