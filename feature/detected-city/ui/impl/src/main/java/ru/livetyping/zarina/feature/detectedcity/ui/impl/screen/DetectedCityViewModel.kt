@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.detectedcity.ui.impl.impl
+package ru.livetyping.zarina.feature.detectedcity.ui.impl.screen
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

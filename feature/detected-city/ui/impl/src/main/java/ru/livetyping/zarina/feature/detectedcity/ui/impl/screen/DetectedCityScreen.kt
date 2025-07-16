@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.detectedcity.ui.impl.impl
+package ru.livetyping.zarina.feature.detectedcity.ui.impl.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
@@ -17,7 +17,7 @@ import ru.livetyping.zarina.core.uikit.dialog.ZarinaDialogContainer
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
 import ru.livetyping.zarina.feature.detectedcity.ui.DetectedCityFeature
 import ru.livetyping.zarina.feature.detectedcity.ui.impl.R
-import ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.ui.rememberBodyText
+import ru.livetyping.zarina.feature.detectedcity.ui.impl.screen.ui.rememberBodyText
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

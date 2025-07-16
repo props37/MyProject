@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.detectedcity.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.detectedcity.ui.impl.screen.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
