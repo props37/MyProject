@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.category.impl.local
+package ru.livetyping.zarina.data.category.local
 
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.domain.model.category.Categories

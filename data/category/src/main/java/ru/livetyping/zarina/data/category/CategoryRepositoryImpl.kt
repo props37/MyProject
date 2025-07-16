@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.category.impl
+package ru.livetyping.zarina.data.category
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -12,8 +12,8 @@ import ru.livetyping.zarina.core.domain.model.category.Category
 import ru.livetyping.zarina.core.domain.model.category.CategoryPath
 import ru.livetyping.zarina.core.domain.model.category.find
 import ru.livetyping.zarina.core.domain.repository.CategoryRepository
-import ru.livetyping.zarina.data.category.impl.local.CategoryLocalDataSource
-import ru.livetyping.zarina.data.category.impl.remote.CategoryRemoteDataSource
+import ru.livetyping.zarina.data.category.local.CategoryLocalDataSource
+import ru.livetyping.zarina.data.category.remote.CategoryRemoteDataSource
 import javax.inject.Inject
 
 internal class CategoryRepositoryImpl @Inject constructor(

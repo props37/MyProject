@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.data.category.impl.local
+package ru.livetyping.zarina.data.category.local
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
