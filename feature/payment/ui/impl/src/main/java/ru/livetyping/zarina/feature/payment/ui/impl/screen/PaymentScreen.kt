@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.payment.ui.impl.payment
+package ru.livetyping.zarina.feature.payment.ui.impl.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottombar.navigation.bottomNavBarPadding
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.payment.ui.api.PaymentFeature
-import ru.livetyping.zarina.feature.payment.ui.impl.payment.ui.PaymentWebView
-import ru.livetyping.zarina.feature.payment.ui.impl.payment.ui.TopBar
+import ru.livetyping.zarina.feature.payment.ui.impl.screen.ui.PaymentWebView
+import ru.livetyping.zarina.feature.payment.ui.impl.screen.ui.TopBar
 
 @Composable
 internal fun PaymentScreen(

@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.payment.ui.impl.payment.ui
+package ru.livetyping.zarina.feature.payment.ui.impl.screen.ui
 
 import android.content.Context
 import android.content.Intent

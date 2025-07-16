@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.payment.ui.impl.payment
+package ru.livetyping.zarina.feature.payment.ui.impl.screen
 
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage

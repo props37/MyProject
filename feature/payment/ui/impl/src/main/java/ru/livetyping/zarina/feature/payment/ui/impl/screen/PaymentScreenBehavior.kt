@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.payment.ui.impl.payment
+package ru.livetyping.zarina.feature.payment.ui.impl.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
