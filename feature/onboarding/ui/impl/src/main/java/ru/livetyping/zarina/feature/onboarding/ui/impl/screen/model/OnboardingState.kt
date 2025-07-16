@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model
 
 import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList

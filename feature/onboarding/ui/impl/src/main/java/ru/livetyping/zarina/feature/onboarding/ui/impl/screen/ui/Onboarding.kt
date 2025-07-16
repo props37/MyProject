@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
@@ -27,9 +27,9 @@ import ru.livetyping.zarina.core.uikit.button.ZarinaButton
 import ru.livetyping.zarina.core.uikit.button.ZarinaButtonDefaults
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.onboarding.ui.impl.R
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingEvent
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingStep
 import ru.livetyping.zarina.core.resource.R as RCommon
 
 @Composable

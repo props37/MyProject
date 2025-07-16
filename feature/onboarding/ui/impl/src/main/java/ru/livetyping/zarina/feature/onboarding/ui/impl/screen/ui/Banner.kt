@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui
 
 import android.content.Context
 import androidx.compose.animation.animateColorAsState

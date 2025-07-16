@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
 
 import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
@@ -6,7 +6,7 @@ import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingComple
 import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
 import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
 import ru.livetyping.zarina.core.permission.PermissionManager
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStepsBuilder
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingStepsBuilder
 import javax.inject.Inject
 
 internal class OnboardingDependencies @Inject constructor(

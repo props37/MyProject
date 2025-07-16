@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
 
 import android.Manifest
 import android.os.Build
@@ -38,9 +38,9 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSource
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uimodel.geo.CityParcelable
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingSelectedCityResult
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingStep
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingEvent
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingStep
 import timber.log.Timber
 import ru.livetyping.zarina.core.resource.R as RCommon
 

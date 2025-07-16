@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -19,7 +19,7 @@ import ru.livetyping.zarina.core.resource.R
 import ru.livetyping.zarina.core.uicompose.text.FontFeatureSettings
 import ru.livetyping.zarina.core.uikit.progress.ZarinaLinearProgressIndicator
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingState
 
 @Composable
 internal fun ProgressIndicator(

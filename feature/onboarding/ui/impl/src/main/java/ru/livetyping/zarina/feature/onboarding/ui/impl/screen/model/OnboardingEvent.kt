@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model
 
 internal sealed interface OnboardingEvent {
     data object RequestNotificationsPermissionClicked : OnboardingEvent

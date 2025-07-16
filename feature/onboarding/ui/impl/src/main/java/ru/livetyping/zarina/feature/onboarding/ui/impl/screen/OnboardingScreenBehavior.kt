@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable

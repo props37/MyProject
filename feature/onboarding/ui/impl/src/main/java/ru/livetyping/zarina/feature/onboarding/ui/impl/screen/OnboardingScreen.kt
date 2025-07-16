@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,14 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.livetyping.zarina.core.uikit.bottomsheet.ZarinaBottomSheet
-import ru.livetyping.zarina.core.uikit.theme.UiKitTheme
 import ru.livetyping.zarina.core.uikit.theme.UiKitTheme2
 import ru.livetyping.zarina.feature.onboarding.ui.OnboardingFeature
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingEvent
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.model.OnboardingState
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.Banner
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.Onboarding
-import ru.livetyping.zarina.feature.onboarding.ui.impl.impl.ui.ProgressIndicator
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingEvent
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.model.OnboardingState
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.Banner
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.Onboarding
+import ru.livetyping.zarina.feature.onboarding.ui.impl.screen.ui.ProgressIndicator
 
 @Composable
 internal fun OnboardingScreen(

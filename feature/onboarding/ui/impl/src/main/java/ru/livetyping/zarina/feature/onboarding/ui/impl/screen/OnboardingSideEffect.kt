@@ -1,4 +1,4 @@
-package ru.livetyping.zarina.feature.onboarding.ui.impl.impl
+package ru.livetyping.zarina.feature.onboarding.ui.impl.screen
 
 import ru.livetyping.zarina.core.text.Text
 import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffect
