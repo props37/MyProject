@@ -44,17 +44,17 @@
 
     <style name="UxFeedbackFontP1Style">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">14sp</item>
+        <item name="uxfbFontSize">12sp</item>
     </style>
 
     <style name="UxFeedbackFontP2Style">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">12sp</item>
+        <item name="uxfbFontSize">10sp</item>
     </style>
 
     <style name="UxFeedbackFontButtonStyle">
         <item name="fontFamily">@font/circe_regular</item>
-        <item name="uxfbFontSize">14sp</item>
+        <item name="uxfbFontSize">12sp</item>
     </style>
 
 </resources>
