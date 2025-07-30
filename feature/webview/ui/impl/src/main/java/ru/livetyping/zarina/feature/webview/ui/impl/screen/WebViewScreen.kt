@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
@@ -71,7 +72,8 @@ private fun ScreenContent(
             onClick = onBackClicked,
             modifier = Modifier
                 .zIndex(1f)
-                .padding(top = 16.dp, start = 16.dp),
+                .padding(top = 16.dp, start = 16.dp)
+                .shadow(elevation = 4.dp),
         )
 
         AndroidView(
