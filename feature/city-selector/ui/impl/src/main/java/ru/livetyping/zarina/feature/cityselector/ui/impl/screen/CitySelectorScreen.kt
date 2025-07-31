@@ -80,7 +80,7 @@ private fun ScreenContent(
             state = citySelectorState.citySearchTextFieldState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 16.dp)
                 .focusRequester(searchTextFieldFocusRequester),
         )
 
