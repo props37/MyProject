@@ -61,7 +61,7 @@ internal fun CityListItemSkeleton(
 }
 
 private val ContentPadding: PaddingValues
-    get() = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    get() = PaddingValues(horizontal = HorizontalPadding, vertical = 8.dp)
 
 private val DefaultTextStyle: TextStyle
     @Composable

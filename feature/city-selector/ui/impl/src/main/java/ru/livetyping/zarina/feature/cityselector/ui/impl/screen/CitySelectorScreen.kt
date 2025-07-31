@@ -29,6 +29,7 @@ import ru.livetyping.zarina.feature.cityselector.ui.CitySelectorFeature
 import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorEvent
 import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.model.CitySelectorState
 import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.CityList
+import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.HorizontalPadding
 import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.SearchTextField
 import ru.livetyping.zarina.feature.cityselector.ui.impl.screen.ui.TopBar
 
@@ -80,7 +81,7 @@ private fun ScreenContent(
             state = citySelectorState.citySearchTextFieldState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = HorizontalPadding)
                 .focusRequester(searchTextFieldFocusRequester),
         )
 

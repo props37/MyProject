@@ -17,7 +17,7 @@ internal fun TopBar(
 ) {
     ZarinaTopBar(
         contentPadding = PaddingValues(
-            start = 16.dp,
+            start = HorizontalPadding,
             top = 16.dp,
             bottom = 4.dp,
         ),
