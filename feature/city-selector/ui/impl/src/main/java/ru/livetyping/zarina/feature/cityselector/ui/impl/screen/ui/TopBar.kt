@@ -19,7 +19,6 @@ internal fun TopBar(
         contentPadding = PaddingValues(
             start = HorizontalPadding,
             top = 16.dp,
-            end = 8.dp,
             bottom = 4.dp,
         ),
         modifier = modifier,
