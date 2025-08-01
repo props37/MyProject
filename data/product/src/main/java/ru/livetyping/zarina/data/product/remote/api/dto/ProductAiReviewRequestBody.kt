@@ -6,14 +6,20 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ProductAiReviewRequestBody(
     @SerialName("withDescription")
-    val withDescription: Boolean = true,
+    var withDescription: Boolean,
 
     @SerialName("withLongDescription")
-    val withLongDescription: Boolean = true,
+    var withLongDescription: Boolean,
 
     @SerialName("withTableTagsData")
-    val withTableTagsData: Boolean = true,
+    var withTableTagsData: Boolean,
 
     @SerialName("externalIds")
     val externalIds: List<String>
-)
+) {
+    init {
+        withDescription = true
+        withLongDescription = true
+        withTableTagsData = true
+    }
+}

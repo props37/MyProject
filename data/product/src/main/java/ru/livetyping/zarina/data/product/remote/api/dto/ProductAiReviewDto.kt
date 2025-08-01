@@ -25,12 +25,12 @@ internal data class ProductAiReviewDto(
     val tableTagsData: List<TagDto>? = null,
 ) {
     fun toProductAiReviews(): ProductAiReviews {
-        checkPropertyNotNull(externalId) { "externalId" }
+        checkPropertyNotNull(externalId) { " externalId " }
         return ProductAiReviews(
             productId = Product.Id(externalId),
-            description = checkPropertyNotNull(description) {"description"},
-            reviewsCount = checkPropertyNotNull(reviewsCount) {"reviewsCount"},
-            longDescription = checkPropertyNotNull(longDescription) {"longDescription"},
+            description = checkPropertyNotNull(description) { "description" },
+            reviewsCount = checkPropertyNotNull(reviewsCount) { "reviewsCount" },
+            longDescription = checkPropertyNotNull(longDescription) { "longDescription" },
             tags = tableTagsData?.map { it.toTag() } ?: emptyList(),
         )
     }
@@ -48,9 +48,9 @@ internal data class ProductAiReviewDto(
     ) {
         fun toTag(): ProductAiReviews.Tag {
             return ProductAiReviews.Tag(
-                name = checkPropertyNotNull(tagName) {"tagName"},
-                focus = checkPropertyNotNull(tagFocus) {"tagFocus"},
-                count = checkPropertyNotNull(tagCount) {"tagCount"}
+                name = checkPropertyNotNull(tagName) { "tagName" },
+                focus = checkPropertyNotNull(tagFocus) { "tagFocus" },
+                count = checkPropertyNotNull(tagCount) { "tagCount" }
             )
         }
     }

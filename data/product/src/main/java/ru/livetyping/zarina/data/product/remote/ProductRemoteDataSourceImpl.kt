@@ -81,6 +81,6 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
         val dtoList = api.getProductAiReviews(productId)
         val dto = dtoList.firstOrNull()
         val productAiReviews = dto?.toProductAiReviews()
-        return checkNotNull(productAiReviews) { "productAiReviews not found"}
+        return checkNotNull(productAiReviews) { "productAiReviews not found" }
     }
 }
