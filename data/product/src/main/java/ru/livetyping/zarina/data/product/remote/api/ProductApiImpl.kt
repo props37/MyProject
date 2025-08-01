@@ -12,6 +12,8 @@ import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+import ru.livetyping.zarina.core.network.di.DigineticaApi
+import ru.livetyping.zarina.core.network.di.DigineticaApiType
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
@@ -30,7 +32,9 @@ import javax.inject.Inject
 
 internal class ProductApiImpl @Inject constructor(
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
-    private val httpClient: HttpClient,
+    private val zarinaHttpClient: HttpClient,
+    @DigineticaApi(DigineticaApiType.REVIEW)
+    private val digineticaReviewHttpClient: HttpClient,
     private val subscribeToProductApiExceptionConverter: SubscribeToProductApiExceptionConverter,
     private val productSuggestionsApiExceptionConverter: ProductSuggestionsApiExceptionConverter,
     private val productAvailabilityInStoreApiExceptionConverter: ProductAvailabilityInStoreApiExceptionConverter,
@@ -50,24 +54,24 @@ internal class ProductApiImpl @Inject constructor(
             page = page,
             pageSize = pageSize,
         )
-        return httpClient.post("/api/v1/products") {
+        return zarinaHttpClient.post("/api/v1/products") {
             setJsonBody(body)
         }.body()
     }
 
     override suspend fun getProduct(productId: Product.Id): ProductDetailedDto {
-        return httpClient.get("/api/v1/products/${productId.value}").body()
+        return zarinaHttpClient.get("/api/v1/products/${productId.value}").body()
     }
 
     override suspend fun getProductTotalLook(productId: Product.Id): List<ProductShortDto> {
         return productSuggestionsApiExceptionConverter {
-            httpClient.get("/api/v1/products/${productId.value}/total_look").body()
+            zarinaHttpClient.get("/api/v1/products/${productId.value}/total_look").body()
         }
     }
 
     override suspend fun getSimilarProducts(productId: Product.Id): List<ProductShortDto> {
         return productSuggestionsApiExceptionConverter {
-            httpClient.get("api/v1/products/${productId.value}/similar_products").body()
+            zarinaHttpClient.get("api/v1/products/${productId.value}/similar_products").body()
         }
     }
 
@@ -78,7 +82,7 @@ internal class ProductApiImpl @Inject constructor(
         val barcode = offer.barcode.value
         val fiasId = cityFiasId.value
         return productAvailabilityInStoreApiExceptionConverter {
-            httpClient.get("/api/products/stock/offers/$barcode/city/$fiasId").body()
+            zarinaHttpClient.get("/api/products/stock/offers/$barcode/city/$fiasId").body()
         }
     }
 
@@ -89,7 +93,7 @@ internal class ProductApiImpl @Inject constructor(
             firstName = firstName,
         )
         subscribeToProductApiExceptionConverter {
-            httpClient.post("/api/subscriptions/subscribe/") {
+            zarinaHttpClient.post("/api/subscriptions/subscribe/") {
                 setJsonBody(body)
             }
         }
@@ -107,12 +111,15 @@ internal class ProductApiImpl @Inject constructor(
             pageSize = 10,
             returnProducts = false,
         )
-        return httpClient.post("/api/v1/products") {
+        return zarinaHttpClient.post("/api/v1/products") {
             setJsonBody(body)
         }.body()
     }
 
+    // TODO: Доработать метод
     override suspend fun getProductAiReviews(productId: Product.Id) {
-
+        digineticaReviewHttpClient.post("/v1/micro-reviews/reviews/get") {
+            // TODO: Передать входные параметры с помощью setJsonBody()
+        }
     }
 }
