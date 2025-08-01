@@ -36,4 +36,6 @@ internal interface ProductApi {
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
 
     suspend fun getCategoryInfo(categoryId: Category.Id, filters: ProductFilters?): ProductsDto
+
+    suspend fun getProductAiReviews(productId: Product.Id):
 }
