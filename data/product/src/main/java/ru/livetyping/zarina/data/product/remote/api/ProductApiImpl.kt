@@ -20,6 +20,8 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewDto
+import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewRequestBody
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductDetailedDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
@@ -116,10 +118,13 @@ internal class ProductApiImpl @Inject constructor(
         }.body()
     }
 
-    // TODO: Доработать метод
-    override suspend fun getProductAiReviews(productId: Product.Id) {
-        digineticaReviewHttpClient.post("/v1/micro-reviews/reviews/get") {
-            // TODO: Передать входные параметры с помощью setJsonBody()
-        }
+    override suspend fun getProductAiReviews(productId: Product.Id): List<ProductAiReviewDto> {
+        val body = ProductAiReviewRequestBody(
+            externalIds = listOf(productId.value)
+        )
+
+        return digineticaReviewHttpClient.post("/v1/micro-reviews/reviews/get") {
+            setJsonBody(body)
+        }.body()
     }
 }
