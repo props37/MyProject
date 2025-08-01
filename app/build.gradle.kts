@@ -101,7 +101,7 @@ android {
                 buildConfigStringField(Keys.BACKEND_URL, buildType.backendUrl)
                 buildConfigStringField(Keys.MINDBOX_ENDPOINT, buildType.mindboxEndpoint)
                 buildConfigStringField(Keys.MINDBOX_KEY, buildType.mindboxKey)
-                buildConfigStringField(Keys.ANY_QUERY_KEY, buildType.anyQueryKey)
+                buildConfigStringField(Keys.DIGINETICA_KEY, buildType.digineticaKey)
                 buildConfigStringField(Keys.APP_METRICA_KEY, buildType.appMetricaKey)
                 buildConfigStringField(Keys.UX_FEEDBACK_APP_ID, buildType.uxFeedbackAppId)
                 assetLink(buildType.backendUrl)

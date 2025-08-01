@@ -16,7 +16,7 @@ sealed class ZarinaBuildType(val name: String) {
     open val backendUrl = "https://api.zarina.ru"
     open val mindboxEndpoint = "ZarinaAppAndroid"
     open val mindboxKey = "GvAwDWq8TZ8eRh340LsM"
-    open val anyQueryKey = "L1WU1VJBYK"
+    open val digineticaKey = "L1WU1VJBYK"
     open val googleMapsKey = "AIzaSyDxodqz9YA48xbw5T7Nc4iQr9n0YDeBxx0"
     open val appMetricaKey = "0fa7ab19-224f-4c45-9204-135cc022fb4b"
     open val uxFeedbackAppId = "cm8raxz4c0001356tovd23ejz"

@@ -7,16 +7,16 @@ import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.analytics.HttpErrorLogger
 import ru.livetyping.zarina.core.buildutil.BuildType
 
-internal fun getAnyQueryAutocompleteHttpClient(
+internal fun getDigineticaAutocompleteHttpClient(
     json: Json,
     buildType: BuildType,
     errorLogger: HttpErrorLogger,
 ): HttpClient = HttpClient(OkHttp) {
     applyBaseConfig(json, buildType)
     install(DefaultRequest) {
-        url(ANY_QUERY_AUTOCOMPLETE_BASE_URL)
+        url(DIGINETICA_AUTOCOMPLETE_BASE_URL)
     }
     logErrors(errorLogger)
 }
 
-private const val ANY_QUERY_AUTOCOMPLETE_BASE_URL = "https://autocomplete.diginetica.net/"
+private const val DIGINETICA_AUTOCOMPLETE_BASE_URL = "https://autocomplete.diginetica.net/"

@@ -15,7 +15,7 @@ import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleanerImpl
-import ru.livetyping.zarina.core.network.client.getAnyQueryAutocompleteHttpClient
+import ru.livetyping.zarina.core.network.client.getDigineticaAutocompleteHttpClient
 import ru.livetyping.zarina.core.network.client.getMindboxHttpClient
 import ru.livetyping.zarina.core.network.client.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.client.getZarinaUnauthorizedHttpClient
@@ -80,14 +80,14 @@ internal abstract class NetworkModule {
 
         @Provides
         @Singleton
-        @AnyQueryAutocompleteApi
-        fun provideAnyQueryAutocompleteHttpClient(
+        @DigineticaApi(DigineticaApiType.AUTOCOMPLETE)
+        fun provideDigineticaAutocompleteHttpClient(
             @NetworkJson
             json: Json,
             buildType: BuildType,
             errorLogger: HttpErrorLogger,
         ): HttpClient {
-            return getAnyQueryAutocompleteHttpClient(
+            return getDigineticaAutocompleteHttpClient(
                 json = json,
                 buildType = buildType,
                 errorLogger = errorLogger,

@@ -6,10 +6,11 @@ import io.ktor.client.plugins.timeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
-import ru.livetyping.zarina.core.buildutil.AnyQueryApiKey
+import ru.livetyping.zarina.core.buildutil.DigineticaApiKey
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
-import ru.livetyping.zarina.core.network.di.AnyQueryAutocompleteApi
+import ru.livetyping.zarina.core.network.di.DigineticaApi
+import ru.livetyping.zarina.core.network.di.DigineticaApiType
 import ru.livetyping.zarina.core.network.di.ZarinaApi
 import ru.livetyping.zarina.core.network.di.ZarinaApiType
 import ru.livetyping.zarina.core.network.util.setJsonBody
@@ -21,11 +22,11 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 internal class SearchApiImpl @Inject constructor(
-    @AnyQueryAutocompleteApi
+    @DigineticaApi(DigineticaApiType.AUTOCOMPLETE)
     private val autocompleteHttpClient: HttpClient,
     @ZarinaApi(ZarinaApiType.AUTHORIZED)
     private val zarinaHttpClient: HttpClient,
-    @AnyQueryApiKey
+    @DigineticaApiKey
     private val apiKey: String,
 ) : SearchApi {
     override suspend fun getSearchSuggestions(query: String): SearchSuggestionsDto {
