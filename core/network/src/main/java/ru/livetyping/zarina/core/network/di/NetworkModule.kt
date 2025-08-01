@@ -10,12 +10,14 @@ import kotlinx.serialization.json.Json
 import ru.livetyping.zarina.core.analytics.HttpErrorLogger
 import ru.livetyping.zarina.core.buildutil.AppVersionCode
 import ru.livetyping.zarina.core.buildutil.BuildType
+import ru.livetyping.zarina.core.buildutil.DigineticaApiKey
 import ru.livetyping.zarina.core.buildutil.MindboxKey
 import ru.livetyping.zarina.core.buildutil.ZarinaBaseUrl
 import ru.livetyping.zarina.core.network.auth.BearerTokenService
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleaner
 import ru.livetyping.zarina.core.network.auth.ZarinaHttpClientBearerTokenCleanerImpl
 import ru.livetyping.zarina.core.network.client.getDigineticaAutocompleteHttpClient
+import ru.livetyping.zarina.core.network.client.getDigineticaReviewHttpClient
 import ru.livetyping.zarina.core.network.client.getMindboxHttpClient
 import ru.livetyping.zarina.core.network.client.getZarinaAuthorizedHttpClient
 import ru.livetyping.zarina.core.network.client.getZarinaUnauthorizedHttpClient
@@ -89,6 +91,25 @@ internal abstract class NetworkModule {
         ): HttpClient {
             return getDigineticaAutocompleteHttpClient(
                 json = json,
+                buildType = buildType,
+                errorLogger = errorLogger,
+            )
+        }
+
+        @Provides
+        @Singleton
+        @DigineticaApi(DigineticaApiType.REVIEW)
+        fun provideDigineticaReviewHttpClient(
+            @NetworkJson
+            json: Json,
+            @DigineticaApiKey
+            apiKey: String,
+            buildType: BuildType,
+            errorLogger: HttpErrorLogger,
+        ): HttpClient {
+            return getDigineticaReviewHttpClient(
+                json = json,
+                apiKey = apiKey,
                 buildType = buildType,
                 errorLogger = errorLogger,
             )

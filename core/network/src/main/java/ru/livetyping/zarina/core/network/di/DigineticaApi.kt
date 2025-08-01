@@ -6,4 +6,4 @@ import javax.inject.Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 public annotation class DigineticaApi(val api: DigineticaApiType)
 
-public enum class DigineticaApiType { AUTOCOMPLETE, REVIEWS }
+public enum class DigineticaApiType { AUTOCOMPLETE, REVIEW }
