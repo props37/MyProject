@@ -112,7 +112,7 @@ internal class ProductApiImpl @Inject constructor(
         }.body()
     }
 
-    override suspend fun getProductAiReviews(productId: Product.Id): {
-        return httpClient.get()
+    override suspend fun getProductAiReviews(productId: Product.Id) {
+
     }
 }
