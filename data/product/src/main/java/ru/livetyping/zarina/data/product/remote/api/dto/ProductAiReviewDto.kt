@@ -25,7 +25,7 @@ internal data class ProductAiReviewDto(
     val tableTagsData: List<TagDto>? = null,
 ) {
     fun toProductAiReviews(): ProductAiReviews {
-        checkPropertyNotNull(externalId) { " externalId " }
+        checkPropertyNotNull(externalId) { "externalId" }
         return ProductAiReviews(
             productId = Product.Id(externalId),
             description = checkPropertyNotNull(description) { "description" },
