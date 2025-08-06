@@ -67,6 +67,7 @@ import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductAiReviewsUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
@@ -191,6 +192,17 @@ internal class UseCaseModule {
     ): GetHomeContentUseCase {
         return GetHomeContentUseCase.getInstance(
             homeContentRepository = homeContentRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductAiReviewsUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetProductAiReviewsUseCase {
+        return GetProductAiReviewsUseCase.getInstance(
+            productRepository = productRepository,
             logger = logger,
         )
     }

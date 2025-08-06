@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -67,4 +68,10 @@ internal class ProductRepositoryImpl @Inject constructor(
     ): Flow<CategoryInfo> {
         return remoteDataSource.getCategoryInfoFlow(categoryId, filters)
     }
+
+    override suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews {
+        return remoteDataSource.getProductAiReviews(productId)
+    }
+
+
 }

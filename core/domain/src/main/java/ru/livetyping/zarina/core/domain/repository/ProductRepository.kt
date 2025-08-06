@@ -8,6 +8,7 @@ import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -42,4 +43,6 @@ public interface ProductRepository {
         categoryId: Category.Id,
         filters: ProductFilters?,
     ): Flow<CategoryInfo>
+
+    public suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews
 }
