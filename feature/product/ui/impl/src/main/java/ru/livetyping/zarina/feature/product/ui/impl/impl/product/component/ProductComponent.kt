@@ -22,12 +22,14 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
+import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductAiReviewsUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
@@ -42,6 +44,7 @@ internal class ProductComponent(
     getWishlistProductIdsFlowUseCase: GetWishlistProductIdsFlowUseCase,
     getCartProductIdsFlowUseCase: GetCartProductIdsFlowUseCase,
     private val coroutineScope: CoroutineScope,
+    private val getProductAiReviewsUseCase: GetProductAiReviewsUseCase,
 ) {
     private val operationTracker = OperationTracker()
 
@@ -468,4 +471,18 @@ internal class ProductComponent(
     private data object TotalLookProductsRequest : OperationKey
 
     private data object SimilarProductsRequest : OperationKey
+
+    private val _productAiReviewsResult = MutableStateFlow<Result<ProductAiReviews>?>(null)
+    val productAiReviewsResult: StateFlow<Result<ProductAiReviews>?> = _productAiReviewsResult
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+
+    suspend fun fetchProductAiReviews() {
+        _productAiReviewsResult.value = getProductAiReviewsUseCase(
+            GetProductAiReviewsUseCase.Params(requireProductId())
+        )
+    }
 }

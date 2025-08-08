@@ -60,6 +60,7 @@ internal class ProductViewModel @Inject constructor(
         getWishlistProductIdsFlowUseCase = deps.getWishlistProductIdsFlow,
         getCartProductIdsFlowUseCase = deps.getCartProductIdsFlow,
         coroutineScope = viewModelScope,
+        getProductAiReviewsUseCase = deps.getProductAiReviewsUseCase,
     )
 
     private val navEntry = savedStateHandle.toRoute<ProductFeature.NavEntry.StartNavEntry>()
@@ -147,6 +148,22 @@ internal class ProductViewModel @Inject constructor(
         started = SharingStarted.WhileUiSubscribed,
         initialValue = ProductState.Loading,
     )
+
+    init {
+        viewModelScope.launch {
+            if (productComponent.setProductId(navEntry.getProductId())) {
+                productComponent.fetchProductAiReviews()
+            }
+        }
+    }
+
+    private fun loadProductAiReviews() {
+        if (productComponent.setProductId(navEntry.getProductId())) {
+            viewModelScope.launch {
+                productComponent.fetchProductAiReviews()
+            }
+        }
+    }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
@@ -416,4 +433,6 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private data object AddProductToCartOperation : OperationKey
+
+
 }
