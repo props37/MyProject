@@ -31,6 +31,7 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.ProductComponent
+import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.AiReviewsState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductActionButtonState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
@@ -127,9 +128,10 @@ internal class ProductViewModel @Inject constructor(
         productActionButtonState,
         sizeSelectorState,
         isPodeliGuideVisible,
+        productComponent.productAiReviewsResult
     ) { productResult, isProductLoading, totalLookProductState, similarProductState,
         selectedProductSize, selectedProductHeight, shouldSelectProductHeight, productActionButtonState,
-        sizeSelectorState, isPodeliGuideVisible ->
+        sizeSelectorState, isPodeliGuideVisible, aiReviewsState ->
 
         productStateBuilder.build(
             productResult = productResult,
@@ -142,28 +144,13 @@ internal class ProductViewModel @Inject constructor(
             productActionButtonState = productActionButtonState,
             sizeSelectorState = sizeSelectorState,
             isPodeliGuideVisible = isPodeliGuideVisible,
+            aiReviewsState = aiReviewsState?.getOrNull()?.let { AiReviewsState.from(it) }
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileUiSubscribed,
         initialValue = ProductState.Loading,
     )
-
-    init {
-        viewModelScope.launch {
-            if (productComponent.setProductId(navEntry.getProductId())) {
-                productComponent.fetchProductAiReviews()
-            }
-        }
-    }
-
-    private fun loadProductAiReviews() {
-        if (productComponent.setProductId(navEntry.getProductId())) {
-            viewModelScope.launch {
-                productComponent.fetchProductAiReviews()
-            }
-        }
-    }
 
     fun onLifecycleEvent(event: LifecycleEvent) {
         when (event) {
@@ -433,6 +420,4 @@ internal class ProductViewModel @Inject constructor(
     }
 
     private data object AddProductToCartOperation : OperationKey
-
-
 }

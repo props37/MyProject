@@ -102,6 +102,10 @@ internal class ProductComponent(
             initialValue = null,
         )
 
+    private val _productAiReviewsResult = MutableStateFlow<Result<ProductAiReviews>?>(null)
+    val productAiReviewsResult: StateFlow<Result<ProductAiReviews>?> = _productAiReviewsResult
+        .asStateFlow()
+
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
     private val _selectedProductSize = MutableStateFlow<ProductSizeFull?>(null)
@@ -190,6 +194,7 @@ internal class ProductComponent(
         initProductFetching()
         initTotalLookProductsFetching()
         initSimilarProductsFetching()
+        initProductAiReviewsFetching()
     }
 
     fun setProductId(id: Product.Id): Boolean {
@@ -251,6 +256,13 @@ internal class ProductComponent(
             .onEach { isActive ->
                 if (isActive) startProductFetching() else stopProductFetching()
             }
+            .launchIn(coroutineScope)
+    }
+
+    private fun initProductAiReviewsFetching() {
+        productId
+            .filterNotNull()
+            .onEach { fetchProductAiReviews(it) }
             .launchIn(coroutineScope)
     }
 
@@ -364,6 +376,12 @@ internal class ProductComponent(
         }
     }
 
+    private suspend fun fetchProductAiReviews(productId: Product.Id) {
+        _productAiReviewsResult.value = getProductAiReviewsUseCase(
+            GetProductAiReviewsUseCase.Params(productId)
+        )
+    }
+
     private fun shouldFetchProduct(id: Product.Id): Boolean {
         val currentProductResult = productResult.value
         val currentProduct = currentProductResult?.getOrNull()
@@ -471,18 +489,4 @@ internal class ProductComponent(
     private data object TotalLookProductsRequest : OperationKey
 
     private data object SimilarProductsRequest : OperationKey
-
-    private val _productAiReviewsResult = MutableStateFlow<Result<ProductAiReviews>?>(null)
-    val productAiReviewsResult: StateFlow<Result<ProductAiReviews>?> = _productAiReviewsResult
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = null,
-        )
-
-    suspend fun fetchProductAiReviews() {
-        _productAiReviewsResult.value = getProductAiReviewsUseCase(
-            GetProductAiReviewsUseCase.Params(requireProductId())
-        )
-    }
 }
