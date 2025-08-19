@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import ru.livetyping.zarina.core.domain.model.product.Product
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
+import timber.log.Timber
 
 @Serializable
 internal data class ProductAiReviewDto(
@@ -24,15 +25,20 @@ internal data class ProductAiReviewDto(
     @SerialName("tableTagsData")
     val tableTagsData: List<TagDto>? = null,
 ) {
-    fun toProductAiReviews(): ProductAiReviews {
-        checkPropertyNotNull(externalId) { "externalId" }
-        return ProductAiReviews(
-            productId = Product.Id(externalId),
-            description = checkPropertyNotNull(description) { "description" },
-            reviewsCount = checkPropertyNotNull(reviewsCount) { "reviewsCount" },
-            longDescription = checkPropertyNotNull(longDescription) { "longDescription" },
-            tags = tableTagsData?.map { it.toTag() } ?: emptyList(),
-        )
+    fun toProductAiReviews(): ProductAiReviews? {
+        return try {
+            checkPropertyNotNull(externalId) { "externalId" }
+            ProductAiReviews(
+                productId = Product.Id(externalId),
+                description = description,
+                reviewsCount = checkPropertyNotNull(reviewsCount) { "reviewsCount" },
+                longDescription = longDescription,
+                tags = tableTagsData?.map { it.toTag() } ?: emptyList(),
+            )
+        } catch (e: Exception) {
+            Timber.tag(TAG).e("Ignore $this because it can't be mapped to ProductAiReview")
+            null
+        }
     }
 
     @Serializable
@@ -41,17 +47,21 @@ internal data class ProductAiReviewDto(
         val tagName: String? = null,
 
         @SerialName("tagFocus")
-        val tagFocus: String? = null,
+        val tagFocus: ProductAiReviewTypeDto? = null,
 
         @SerialName("tagCount")
-        val tagCount: String? = null,
+        val tagCount: Int? = null,
     ) {
         fun toTag(): ProductAiReviews.Tag {
             return ProductAiReviews.Tag(
-                name = checkPropertyNotNull(tagName) { "tagName" },
-                focus = checkPropertyNotNull(tagFocus) { "tagFocus" },
-                count = checkPropertyNotNull(tagCount) { "tagCount" }
+                text = checkPropertyNotNull(tagName?.takeIf { it.isNotBlank() }) { "tagName" },
+                focus = checkPropertyNotNull(tagFocus?.toProductAiReviewType()) { "tagFocus" },
+                count = tagCount
             )
         }
+    }
+
+    private companion object {
+        private const val TAG = "ProductAiReviewDto"
     }
 }
