@@ -24,4 +24,6 @@
     <string name="product_hips_size">Обхват бедер (см)</string>
     <string name="product_height">Рост (см)</string>
     <string name="product_measurements_height_selector_item">Рост %1$s см</string>
+    <string name="product_ai_reviews_neural_highlight">Выделила нейросеть</string>
+    <string name="product_ai_reviews_open_source_reviews">На основе отзывов из открытых источников</string>
 </resources>

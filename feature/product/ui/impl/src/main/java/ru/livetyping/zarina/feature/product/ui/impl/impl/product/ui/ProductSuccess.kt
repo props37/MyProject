@@ -204,6 +204,18 @@ private fun ContentList(
             )
         }
 
+        if (state.aiReviewsState != null) {
+            item(key = ContentListKey.AiReviews, contentType = ContentListContentType.AiReviews) {
+                AiReviews(
+                    longDescription = state.aiReviewsState.longDescription,
+                    tags = state.aiReviewsState.tags,
+                    modifier = Modifier
+                        //.padding(top = 24.dp)
+                        //.padding(horizontal = 16.dp),
+                )
+            }
+        }
+
         item(key = ContentListKey.ColorSelector, contentType = ContentListContentType.ColorSelector) {
             ColorSelector(
                 colors = state.product.colors,
@@ -305,6 +317,7 @@ private enum class ContentListKey {
     CheckAvailabilityInStoresButton,
     TotalLookProducts,
     SimilarProducts,
+    AiReviews,
 }
 
 private enum class ContentListContentType {
@@ -319,6 +332,7 @@ private enum class ContentListContentType {
     DeliveryAndPaymentBlock,
     CheckAvailabilityInStoresButton,
     SuggestionList,
+    AiReviews,
 }
 
 private val FloatingButtonBlockPadding: Dp = 4.dp
