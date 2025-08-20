@@ -5,26 +5,30 @@ import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 
 @Immutable
 public data class AiReviewsState(
-    val reviewsCount: Int,
-    val tags: List<AiReviewTag>
+    val longDescription: String?,
+    val tags: List<Tag>
 ) {
     @Immutable
-    public data class AiReviewTag(
+    public data class Tag(
         val text: String,
-        val focus: ProductAiReviews.FocusType,
+        val focus: ProductAiReviews.Tag.Focus,
     )
 
     internal companion object {
-        fun from (productAiReviews: ProductAiReviews): AiReviewsState {
-            return AiReviewsState(
-                reviewsCount = productAiReviews.reviewsCount,
+        fun from (productAiReviews: ProductAiReviews): AiReviewsState? {
+            return if (productAiReviews.longDescription != null && productAiReviews.tags.isNotEmpty()) {
+                AiReviewsState(
+                longDescription = productAiReviews.longDescription,
                 tags = productAiReviews.tags.map { tag ->
-                    AiReviewTag(
+                    Tag(
                         text = tag.text,
                         focus = tag.focus
                     )
                 }
             )
+        } else {
+            null
+            }
         }
     }
 }
