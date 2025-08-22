@@ -207,11 +207,11 @@ private fun ContentList(
         if (state.aiReviewsState != null) {
             item(key = ContentListKey.AiReviews, contentType = ContentListContentType.AiReviews) {
                 AiReviews(
-                    longDescription = state.aiReviewsState.longDescription,
-                    tags = state.aiReviewsState.tags,
+                    aiReviewsState = state.aiReviewsState,
                     modifier = Modifier
-                        //.padding(top = 24.dp)
-                        //.padding(horizontal = 16.dp),
+                        .padding(top = 30.dp)
+                        .padding(horizontal = 15.dp)
+                        .fillMaxWidth()
                 )
             }
         }
