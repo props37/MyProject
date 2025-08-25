@@ -44,5 +44,5 @@ public interface ProductRepository {
         filters: ProductFilters?,
     ): Flow<CategoryInfo>
 
-    public suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews
+    public suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews
 }

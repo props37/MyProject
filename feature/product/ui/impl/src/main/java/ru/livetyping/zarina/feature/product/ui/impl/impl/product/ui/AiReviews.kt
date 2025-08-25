@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -38,7 +37,7 @@ internal fun AiReviews(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row {
             Icon(
                 imageVector = ImageVector.vectorResource(RCommon.drawable.ic_ai_24),
                 contentDescription = null,
@@ -48,23 +47,23 @@ internal fun AiReviews(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            Text(
-                text = stringResource(R.string.product_ai_reviews_neural_highlight).uppercase(),
-                style = UiKitTheme2.typography.body2,
-                color = UiKitTheme2.colors.mainBlack,
-            )
-        }
+            Column {
+                Text(
+                    text = stringResource(R.string.product_ai_reviews_neural_highlight).uppercase(),
+                    style = UiKitTheme2.typography.body2,
+                    color = UiKitTheme2.colors.mainBlack,
+                )
 
-        Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
-        Row {
-            Spacer(modifier = Modifier.width(23.dp))
+                Text(
+                    text = stringResource(R.string.product_ai_reviews_open_source_reviews).uppercase(),
+                    style = UiKitTheme2.typography.body2,
+                    color = UiKitTheme2.colors.middleGray,
+                )
+            }
 
-            Text(
-                text = stringResource(R.string.product_ai_reviews_open_source_reviews).uppercase(),
-                style = UiKitTheme2.typography.body2,
-                color = UiKitTheme2.colors.middleGray,
-            )
+
         }
 
         if (aiReviewsState.tags.isNotEmpty()) {
@@ -93,6 +92,7 @@ private fun TagsSection(
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = modifier,
     ) {
         tags.forEach {
             TagItem(tag = it)
@@ -106,7 +106,7 @@ private fun TagItem(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = UiKitTheme2.colors.lightGray,
                 shape = RoundedCornerShape(
@@ -116,7 +116,7 @@ private fun TagItem(
                     bottomStart = CornerSize(50),
                 )
             )
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
             text = "«${tag.text}»".uppercase(),
@@ -134,7 +134,8 @@ private fun LongDescriptionSection(
     Text(
         text = longDescription.uppercase(),
         style = UiKitTheme2.typography.body2,
-        color = UiKitTheme2.colors.mainBlack
+        color = UiKitTheme2.colors.mainBlack,
+        modifier = modifier,
     )
 }
 
@@ -155,7 +156,7 @@ private fun Preview(modifier: Modifier = Modifier) {
 
         AiReviews(
             aiReviewsState = aiReviewsState,
-            modifier = Modifier
+            modifier = modifier
                 .background(Color.White)
                 .padding(16.dp)
         )

@@ -80,7 +80,7 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
     override suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
         val dtoList = api.getProductAiReviews(groupId)
         val dto = dtoList.firstOrNull()
-        val productAiReviews = dto?.toProductAiReviews(groupId)
+        val productAiReviews = dto?.toProductAiReviews()
         return checkNotNull(productAiReviews) { "productAiReviews not found" }
     }
 }

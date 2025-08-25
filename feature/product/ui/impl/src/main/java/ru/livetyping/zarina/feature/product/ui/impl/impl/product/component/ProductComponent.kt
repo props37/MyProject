@@ -262,7 +262,7 @@ internal class ProductComponent(
     private fun initProductAiReviewsFetching() {
         productId
             .filterNotNull()
-            .onEach { fetchProductAiReviews(it) }
+            .onEach { fetchProductAiReviews(it.toGroupId()) }
             .launchIn(coroutineScope)
     }
 
@@ -376,9 +376,9 @@ internal class ProductComponent(
         }
     }
 
-    private suspend fun fetchProductAiReviews(productId: Product.Id) {
+    private suspend fun fetchProductAiReviews(groupId: Product.GroupId) {
         _productAiReviewsResult.value = getProductAiReviewsUseCase(
-            GetProductAiReviewsUseCase.Params(productId)
+            GetProductAiReviewsUseCase.Params(groupId)
         )
     }
 

@@ -27,11 +27,11 @@ internal data class ProductAiReviewDto(
     @SerialName("tableTagsData")
     val tableTagsData: List<TagDto>? = null,
 ) {
-    fun toProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
+    fun toProductAiReviews(): ProductAiReviews {
         checkPropertyNotNull(externalId) { "externalId" }
 
         return ProductAiReviews(
-            groupId = groupId,
+            groupId = Product.GroupId(externalId),
             description = description?.takeIf { it.isNotBlank() },
             longDescription = longDescription?.takeIf { it.isNotBlank() },
             tags = tableTagsData?.mapNotNull { it.toTag() } ?: emptyList(),

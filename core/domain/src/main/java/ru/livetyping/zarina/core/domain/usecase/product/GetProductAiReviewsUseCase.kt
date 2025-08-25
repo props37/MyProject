@@ -8,7 +8,7 @@ import ru.livetyping.zarina.core.usecase.UseCaseLogger
 public interface GetProductAiReviewsUseCase {
     public suspend operator fun invoke(params: Params): Result<ProductAiReviews>
 
-    public data class Params(val productId: Product.Id)
+    public data class Params(val groupId: Product.GroupId)
 
     public companion object {
         public fun getInstance(

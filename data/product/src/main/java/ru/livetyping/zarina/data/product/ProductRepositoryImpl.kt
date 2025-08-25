@@ -69,8 +69,7 @@ internal class ProductRepositoryImpl @Inject constructor(
         return remoteDataSource.getCategoryInfoFlow(categoryId, filters)
     }
 
-    override suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews {
-        val groupId = productId.toGroupId()
+    override suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
         return remoteDataSource.getProductAiReviews(groupId)
     }
 }

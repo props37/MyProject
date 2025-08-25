@@ -4,12 +4,12 @@ import androidx.compose.runtime.Immutable
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
 
 @Immutable
-public data class AiReviewsState(
+internal data class AiReviewsState(
     val longDescription: String?,
     val tags: List<Tag>,
 ) {
     @Immutable
-    public data class Tag(
+    internal data class Tag(
         val text: String,
         val focus: ProductAiReviews.Tag.Focus,
     )

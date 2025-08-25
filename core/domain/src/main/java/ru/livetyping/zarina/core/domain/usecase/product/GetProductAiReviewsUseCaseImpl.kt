@@ -10,7 +10,7 @@ internal class GetProductAiReviewsUseCaseImpl(
     logger: UseCaseLogger?,
 ): UseCase<GetProductAiReviewsUseCase.Params, ProductAiReviews>(logger), GetProductAiReviewsUseCase {
     override suspend fun execute(params: GetProductAiReviewsUseCase.Params): ProductAiReviews {
-        return productRepository.getProductAiReviews(params.productId)
+        return productRepository.getProductAiReviews(params.groupId)
     }
 
     override suspend fun invoke(params: GetProductAiReviewsUseCase.Params): Result<ProductAiReviews> {
