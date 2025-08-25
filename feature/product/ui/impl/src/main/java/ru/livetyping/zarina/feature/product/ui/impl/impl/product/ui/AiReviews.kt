@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import ru.livetyping.zarina.core.uikit.theme.ZarinaTheme2
@@ -49,7 +50,7 @@ internal fun AiReviews(
 
             Text(
                 text = stringResource(R.string.product_ai_reviews_neural_highlight).uppercase(),
-                style = UiKitTheme2.typography.body,
+                style = UiKitTheme2.typography.body2,
                 color = UiKitTheme2.colors.mainBlack,
             )
         }
@@ -61,18 +62,22 @@ internal fun AiReviews(
 
             Text(
                 text = stringResource(R.string.product_ai_reviews_open_source_reviews).uppercase(),
-                style = UiKitTheme2.typography.body,
+                style = UiKitTheme2.typography.body2,
                 color = UiKitTheme2.colors.middleGray,
             )
         }
 
         if (aiReviewsState.tags.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(15.dp))
+
             TagsSection(
                 tags = aiReviewsState.tags,
             )
         }
 
         if (aiReviewsState.longDescription != null) {
+            Spacer(modifier = Modifier.height(15.dp))
+
             LongDescriptionSection(
                 longDescription = aiReviewsState.longDescription,
             )
@@ -83,40 +88,39 @@ internal fun AiReviews(
 @Composable
 private fun TagsSection(
     tags:  List<Tag>,
+    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = Modifier) {
-        Spacer(modifier = Modifier.height(15.dp))
-
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-        ) {
-            tags.forEach {
-                TagItem(tag = it)
-            }
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        tags.forEach {
+            TagItem(tag = it)
         }
     }
 }
 
 @Composable
-private fun TagItem(tag: Tag) {
+private fun TagItem(
+    tag: Tag,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = Modifier
             .background(
                 color = UiKitTheme2.colors.lightGray,
                 shape = RoundedCornerShape(
-                    topStart = 20.dp,
-                    topEnd = 0.dp,
-                    bottomEnd = 20.dp,
-                    bottomStart = 20.dp,
+                    topStart = CornerSize(50),
+                    topEnd = CornerSize(0),
+                    bottomEnd = CornerSize(50),
+                    bottomStart = CornerSize(50),
                 )
             )
             .padding(horizontal = 16.dp, vertical = 8.dp)
-
     ) {
         Text(
-            text = "«${tag.text.uppercase()}»",
-            style = UiKitTheme2.typography.body,
+            text = "«${tag.text}»".uppercase(),
+            style = UiKitTheme2.typography.body2,
             color = UiKitTheme2.colors.mainBlack,
         )
     }
@@ -127,20 +131,16 @@ private fun LongDescriptionSection(
     longDescription: String,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        Spacer(modifier = Modifier.height(15.dp))
-
-        Text(
-            text = longDescription.uppercase(),
-            style = UiKitTheme2.typography.body,
-            color = UiKitTheme2.colors.mainBlack
-        )
-    }
+    Text(
+        text = longDescription.uppercase(),
+        style = UiKitTheme2.typography.body2,
+        color = UiKitTheme2.colors.mainBlack
+    )
 }
 
 @Composable
 @Preview
-private fun Preview() {
+private fun Preview(modifier: Modifier = Modifier) {
     ZarinaTheme2 {
         val aiReviewsState = AiReviewsState(
             longDescription = "не ТОНКАЯ ЮБКА С ИНТЕРЕСНОЙ РАСЦВЕТКОЙ И ПЛОТНОЙ ПОСАДКОЙ, УКРАШЕНА ЖЕСТКОЙ РЕЗИНКОЙ ДЛЯ КОМФОРТНОЙ ФИКСАЦИИ НА ТАЛИИ",

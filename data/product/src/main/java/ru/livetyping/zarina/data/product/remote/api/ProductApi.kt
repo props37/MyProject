@@ -38,5 +38,5 @@ internal interface ProductApi {
 
     suspend fun getCategoryInfo(categoryId: Category.Id, filters: ProductFilters?): ProductsDto
 
-    suspend fun getProductAiReviews(productId: Product.Id): List<ProductAiReviewDto>
+    suspend fun getProductAiReviews(groupId: Product.GroupId): List<ProductAiReviewDto>
 }

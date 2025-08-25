@@ -1,7 +1,7 @@
 package ru.livetyping.zarina.core.domain.model.product
 
 public data class ProductAiReviews(
-    val productId: Product.Id,
+    val groupId: Product.GroupId,
     val description: String?,
     val longDescription: String?,
     val tags: List<Tag>,

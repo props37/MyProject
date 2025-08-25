@@ -118,9 +118,9 @@ internal class ProductApiImpl @Inject constructor(
         }.body()
     }
 
-    override suspend fun getProductAiReviews(productId: Product.Id): List<ProductAiReviewDto> {
+    override suspend fun getProductAiReviews(groupId: Product.GroupId): List<ProductAiReviewDto> {
         val body = ProductAiReviewRequestBody(
-            externalIds = listOf(productId.value)
+            externalIds = listOf(groupId.value)
         )
 
         return digineticaReviewHttpClient.post("/v1/micro-reviews/reviews/get") {

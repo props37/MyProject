@@ -70,6 +70,7 @@ internal class ProductRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews {
-        return remoteDataSource.getProductAiReviews(productId)
+        val groupId = productId.toGroupId()
+        return remoteDataSource.getProductAiReviews(groupId)
     }
 }

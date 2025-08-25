@@ -210,7 +210,7 @@ private fun ContentList(
                     aiReviewsState = state.aiReviewsState,
                     modifier = Modifier
                         .padding(top = 30.dp)
-                        .padding(horizontal = 15.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                 )
             }

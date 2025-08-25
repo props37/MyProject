@@ -77,10 +77,10 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
         emit(categoryInfo)
     }
 
-    override suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews {
-        val dtoList = api.getProductAiReviews(productId)
+    override suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
+        val dtoList = api.getProductAiReviews(groupId)
         val dto = dtoList.firstOrNull()
-        val productAiReviews = dto?.toProductAiReviews()
+        val productAiReviews = dto?.toProductAiReviews(groupId)
         return checkNotNull(productAiReviews) { "productAiReviews not found" }
     }
 }

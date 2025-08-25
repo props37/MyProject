@@ -9,6 +9,9 @@ import ru.livetyping.zarina.core.network.util.checkPropertyNotNull
 @Serializable
 internal data class ProductAiReviewDto(
 
+    @SerialName("rate")
+    val rate: Double? = null,
+
     @SerialName("externalId")
     val externalId: String? = null,
 
@@ -24,11 +27,11 @@ internal data class ProductAiReviewDto(
     @SerialName("tableTagsData")
     val tableTagsData: List<TagDto>? = null,
 ) {
-    fun toProductAiReviews(): ProductAiReviews {
+    fun toProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
         checkPropertyNotNull(externalId) { "externalId" }
 
         return ProductAiReviews(
-            productId = Product.Id(externalId),
+            groupId = groupId,
             description = description?.takeIf { it.isNotBlank() },
             longDescription = longDescription?.takeIf { it.isNotBlank() },
             tags = tableTagsData?.mapNotNull { it.toTag() } ?: emptyList(),

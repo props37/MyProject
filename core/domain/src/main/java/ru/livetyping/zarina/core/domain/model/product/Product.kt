@@ -18,5 +18,10 @@ public sealed class Product {
 
     // Marked as stable on config/compose/stability_config.txt
     @JvmInline
-    public value class Id(public val value: String)
+    public value class Id(public val value: String) {
+        public fun toGroupId(): GroupId = GroupId(value.substringBefore("-").lowercase())
+    }
+
+    @JvmInline
+    public value class GroupId(public val value: String)
 }

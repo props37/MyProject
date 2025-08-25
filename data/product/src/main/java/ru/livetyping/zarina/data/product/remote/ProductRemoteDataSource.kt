@@ -16,7 +16,6 @@ import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
-import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewDto
 
 internal interface ProductRemoteDataSource {
     suspend fun getProductsWithFiltersPage(
@@ -42,5 +41,5 @@ internal interface ProductRemoteDataSource {
 
     fun getCategoryInfoFlow(categoryId: Category.Id, filters: ProductFilters?): Flow<CategoryInfo>
 
-    suspend fun getProductAiReviews(productId: Product.Id): ProductAiReviews
+    suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews
 }
