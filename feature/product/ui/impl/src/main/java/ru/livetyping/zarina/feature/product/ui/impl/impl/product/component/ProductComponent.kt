@@ -262,7 +262,9 @@ internal class ProductComponent(
     private fun initProductAiReviewsFetching() {
         productId
             .filterNotNull()
-            .onEach { fetchProductAiReviews(it.toGroupId()) }
+            .map { it.toGroupId() }
+            .distinctUntilChanged()
+            .onEach { fetchProductAiReviews(it) }
             .launchIn(coroutineScope)
     }
 
