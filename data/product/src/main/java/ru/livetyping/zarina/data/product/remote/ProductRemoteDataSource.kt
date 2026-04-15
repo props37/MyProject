@@ -8,7 +8,9 @@ import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -40,6 +42,7 @@ internal interface ProductRemoteDataSource {
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
 
     fun getCategoryInfoFlow(categoryId: Category.Id, filters: ProductFilters?): Flow<CategoryInfo>
-
+    // ========== REVIEW FROM HERE ==========
     suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews
+    // ========== TO HERE ==========
 }

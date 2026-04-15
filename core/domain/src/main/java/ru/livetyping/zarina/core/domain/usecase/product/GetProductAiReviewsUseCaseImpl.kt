@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.core.domain.usecase.product
 
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
@@ -21,3 +22,4 @@ internal class GetProductAiReviewsUseCaseImpl(
         private const val TAG = "GetProductAiReviewsUseCaseImpl"
     }
 }
+// ========== TO HERE ==========

@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.ui
 
 import androidx.compose.foundation.background
@@ -162,3 +163,4 @@ private fun Preview(modifier: Modifier = Modifier) {
         )
     }
 }
+// ========== TO HERE ==========

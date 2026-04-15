@@ -21,7 +21,8 @@ public sealed class Product {
     public value class Id(public val value: String) {
         public fun toGroupId(): GroupId = GroupId(value.substringBeforeLast("-"))
     }
-
+    // ========== REVIEW FROM HERE ==========
     @JvmInline
     public value class GroupId(public val value: String)
+    // ========== TO HERE ==========
 }

@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.feature.product.ui.impl.impl.product.model
 
 import androidx.compose.runtime.Immutable
@@ -27,3 +28,4 @@ internal data class AiReviewsState(
         }
     }
 }
+// ========== TO HERE ==========

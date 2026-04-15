@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.Serializable
@@ -23,3 +24,4 @@ internal value class ProductAiReviewTagFocusDto(val value: String) {
         private const val TAG = "ProductAiReviewTypeDto"
     }
 }
+// ========== TO HERE ==========

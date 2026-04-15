@@ -9,7 +9,9 @@ import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductSorting
 import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewDto
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductDetailedDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
@@ -37,6 +39,7 @@ internal interface ProductApi {
     suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
 
     suspend fun getCategoryInfo(categoryId: Category.Id, filters: ProductFilters?): ProductsDto
-
+    // ========== REVIEW FROM HERE ==========
     suspend fun getProductAiReviews(groupId: Product.GroupId): List<ProductAiReviewDto>
+    // ========== TO HERE ==========
 }

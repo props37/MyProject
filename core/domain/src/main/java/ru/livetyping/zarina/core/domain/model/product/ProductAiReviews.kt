@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.core.domain.model.product
 
 public data class ProductAiReviews(
@@ -16,3 +17,4 @@ public data class ProductAiReviews(
         }
     }
 }
+// ========== TO HERE ==========

@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
@@ -57,3 +58,4 @@ internal data class ProductAiReviewDto(
         }
     }
 }
+// ========== TO HERE ==========

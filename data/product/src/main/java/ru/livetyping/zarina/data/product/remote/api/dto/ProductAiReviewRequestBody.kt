@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.data.product.remote.api.dto
 
 import kotlinx.serialization.SerialName
@@ -17,3 +18,4 @@ internal data class ProductAiReviewRequestBody(
     @SerialName("withTableTagsData")
     val withTableTagsData: Boolean = true
 )
+// ========== TO HERE ==========

@@ -9,7 +9,9 @@ import ru.livetyping.zarina.core.domain.model.geo.FiasId
 import ru.livetyping.zarina.core.domain.model.pagination.Page
 import ru.livetyping.zarina.core.domain.model.product.Barcode
 import ru.livetyping.zarina.core.domain.model.product.Product
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
@@ -76,11 +78,12 @@ internal class ProductRemoteDataSourceImpl @Inject constructor(
         val categoryInfo = api.getCategoryInfo(categoryId, filters).toCategoryInfo(categoryId)
         emit(categoryInfo)
     }
-
+    // ========== REVIEW FROM HERE ==========
     override suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews {
         val dtoList = api.getProductAiReviews(groupId)
         val dto = dtoList.firstOrNull()
         val productAiReviews = dto?.toProductAiReviews()
         return checkNotNull(productAiReviews) { "productAiReviews not found" }
     }
+    // ========== TO HERE ==========
 }

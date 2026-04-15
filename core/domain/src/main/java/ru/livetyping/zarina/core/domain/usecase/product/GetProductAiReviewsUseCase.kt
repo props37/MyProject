@@ -1,3 +1,4 @@
+// ========== REVIEW FROM HERE ==========
 package ru.livetyping.zarina.core.domain.usecase.product
 
 import ru.livetyping.zarina.core.domain.model.product.Product
@@ -19,3 +20,4 @@ public interface GetProductAiReviewsUseCase {
         }
     }
 }
+// ========== TO HERE ==========

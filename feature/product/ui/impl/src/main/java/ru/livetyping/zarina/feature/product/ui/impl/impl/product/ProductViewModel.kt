@@ -31,7 +31,9 @@ import ru.livetyping.zarina.core.uicommon.sideeffect.SideEffectSourceImpl
 import ru.livetyping.zarina.core.uicommon.toast.ZarinaToastMessage2
 import ru.livetyping.zarina.feature.product.ui.api.ProductFeature
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.component.ProductComponent
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.AiReviewsState
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductActionButtonState
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductEvent
 import ru.livetyping.zarina.feature.product.ui.impl.impl.product.model.ProductState
@@ -61,7 +63,9 @@ internal class ProductViewModel @Inject constructor(
         getWishlistProductIdsFlowUseCase = deps.getWishlistProductIdsFlow,
         getCartProductIdsFlowUseCase = deps.getCartProductIdsFlow,
         coroutineScope = viewModelScope,
+        // ========== REVIEW FROM HERE ==========
         getProductAiReviewsUseCase = deps.getProductAiReviewsUseCase,
+        // ========== TO HERE, AND ==========
     )
 
     private val navEntry = savedStateHandle.toRoute<ProductFeature.NavEntry.StartNavEntry>()
@@ -128,10 +132,12 @@ internal class ProductViewModel @Inject constructor(
         productActionButtonState,
         sizeSelectorState,
         isPodeliGuideVisible,
+        // ========== REVIEW FROM HERE ==========
         productComponent.productAiReviewsResult
+        // ========== TO HERE, AND ==========
     ) { productResult, isProductLoading, totalLookProductState, similarProductState,
         selectedProductSize, selectedProductHeight, shouldSelectProductHeight, productActionButtonState,
-        sizeSelectorState, isPodeliGuideVisible, aiReviewsState ->
+        sizeSelectorState, isPodeliGuideVisible, /* FROM HERE */ aiReviewsState /* TO HERE */ ->
 
         productStateBuilder.build(
             productResult = productResult,
@@ -144,7 +150,9 @@ internal class ProductViewModel @Inject constructor(
             productActionButtonState = productActionButtonState,
             sizeSelectorState = sizeSelectorState,
             isPodeliGuideVisible = isPodeliGuideVisible,
+            // ========== REVIEW FROM HERE ==========
             aiReviewsState = aiReviewsState?.getOrNull()?.let { AiReviewsState.from(it) }
+            // ========== TO HERE ==========
         )
     }.stateIn(
         scope = viewModelScope,

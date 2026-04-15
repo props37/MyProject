@@ -20,8 +20,10 @@ import ru.livetyping.zarina.core.network.util.setJsonBody
 import ru.livetyping.zarina.core.network.zarina.dto.ProductShortDto
 import ru.livetyping.zarina.data.product.remote.api.dto.FiltersRequestDto
 import ru.livetyping.zarina.data.product.remote.api.dto.GetProductsRequestBody
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAiReviewRequestBody
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductAvailabilityInStoreDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductDetailedDto
 import ru.livetyping.zarina.data.product.remote.api.dto.ProductsDto
@@ -117,7 +119,7 @@ internal class ProductApiImpl @Inject constructor(
             setJsonBody(body)
         }.body()
     }
-
+    // ========== REVIEW FROM HERE ==========
     override suspend fun getProductAiReviews(groupId: Product.GroupId): List<ProductAiReviewDto> {
         val body = ProductAiReviewRequestBody(
             externalIds = listOf(groupId.value)
@@ -127,4 +129,5 @@ internal class ProductApiImpl @Inject constructor(
             setJsonBody(body)
         }.body()
     }
+    // ========== TO HERE ==========
 }

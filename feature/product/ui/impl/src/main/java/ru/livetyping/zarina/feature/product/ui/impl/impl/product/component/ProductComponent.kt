@@ -22,14 +22,18 @@ import kotlinx.coroutines.launch
 import ru.livetyping.zarina.core.coroutinesutil.onEachLatest
 import ru.livetyping.zarina.core.domain.cache.CachePolicy
 import ru.livetyping.zarina.core.domain.model.product.Product
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
 import ru.livetyping.zarina.core.domain.model.product.ProductHeight
 import ru.livetyping.zarina.core.domain.model.product.ProductOffer
 import ru.livetyping.zarina.core.domain.model.product.ProductShort
 import ru.livetyping.zarina.core.domain.model.product.ProductSizeFull
 import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
+// ========== REVIEW FROM HERE ==========
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductAiReviewsUseCase
+// ========== TO HERE, AND ==========
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
 import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
@@ -44,7 +48,9 @@ internal class ProductComponent(
     getWishlistProductIdsFlowUseCase: GetWishlistProductIdsFlowUseCase,
     getCartProductIdsFlowUseCase: GetCartProductIdsFlowUseCase,
     private val coroutineScope: CoroutineScope,
+    // ========== REVIEW FROM HERE ==========
     private val getProductAiReviewsUseCase: GetProductAiReviewsUseCase,
+    // ========== TO HERE, AND ==========
 ) {
     private val operationTracker = OperationTracker()
 
@@ -101,11 +107,11 @@ internal class ProductComponent(
             started = SharingStarted.WhileSubscribed(),
             initialValue = null,
         )
-
+    // ========== REVIEW FROM HERE ==========
     private val _productAiReviewsResult = MutableStateFlow<Result<ProductAiReviews>?>(null)
     val productAiReviewsResult: StateFlow<Result<ProductAiReviews>?> = _productAiReviewsResult
         .asStateFlow()
-
+    // ========== TO HERE, AND ==========
     val isProductLoading: Flow<Boolean> = operationTracker.isOperationOngoing(ProductRequest)
 
     private val _selectedProductSize = MutableStateFlow<ProductSizeFull?>(null)
@@ -194,7 +200,9 @@ internal class ProductComponent(
         initProductFetching()
         initTotalLookProductsFetching()
         initSimilarProductsFetching()
+        // ========== REVIEW FROM HERE ==========
         initProductAiReviewsFetching()
+        // ========== TO HERE, AND ==========
     }
 
     fun setProductId(id: Product.Id): Boolean {
@@ -258,7 +266,7 @@ internal class ProductComponent(
             }
             .launchIn(coroutineScope)
     }
-
+    // ========== REVIEW FROM HERE ==========
     private fun initProductAiReviewsFetching() {
         productId
             .filterNotNull()
@@ -267,7 +275,7 @@ internal class ProductComponent(
             .onEach { fetchProductAiReviews(it) }
             .launchIn(coroutineScope)
     }
-
+    // ========== TO HERE, AND ==========
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun startProductFetching() {
         productFetchingJob?.cancel()
@@ -377,13 +385,13 @@ internal class ProductComponent(
             }
         }
     }
-
+    // ========== REVIEW FROM HERE ==========
     private suspend fun fetchProductAiReviews(groupId: Product.GroupId) {
         _productAiReviewsResult.value = getProductAiReviewsUseCase(
             GetProductAiReviewsUseCase.Params(groupId)
         )
     }
-
+    // ========== TO HERE ==========
     private fun shouldFetchProduct(id: Product.Id): Boolean {
         val currentProductResult = productResult.value
         val currentProduct = currentProductResult?.getOrNull()
