@@ -1,0 +1,1256 @@
+package ru.livetyping.zarina.di
+
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import ru.livetyping.zarina.core.analytics.AppMetrica
+import ru.livetyping.zarina.core.domain.manager.ForcedSignOutCoordinator
+import ru.livetyping.zarina.core.domain.repository.AuthRepository
+import ru.livetyping.zarina.core.domain.repository.CartRepository
+import ru.livetyping.zarina.core.domain.repository.CategoryRepository
+import ru.livetyping.zarina.core.domain.repository.CheckoutRepository
+import ru.livetyping.zarina.core.domain.repository.ContentRepository
+import ru.livetyping.zarina.core.domain.repository.GeographyRepository
+import ru.livetyping.zarina.core.domain.repository.LocationRepository
+import ru.livetyping.zarina.core.domain.repository.MindboxRepository
+import ru.livetyping.zarina.core.domain.repository.OnboardingRepository
+import ru.livetyping.zarina.core.domain.repository.OrderRepository
+import ru.livetyping.zarina.core.domain.repository.ProductRepository
+import ru.livetyping.zarina.core.domain.repository.SearchRepository
+import ru.livetyping.zarina.core.domain.repository.StoreRepository
+import ru.livetyping.zarina.core.domain.repository.UserRepository
+import ru.livetyping.zarina.core.domain.repository.WishlistRepository
+import ru.livetyping.zarina.core.domain.usecase.auth.FetchUnauthorizedUserBearerTokensUseCase
+import ru.livetyping.zarina.core.domain.usecase.auth.GetBearerTokensFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.auth.RefreshBearerTokensUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.AddProductToCartUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ApplyMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ApplyPromoCodeUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.CancelBonusRedemptionUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ChangeProductCountInCartUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.ClearCartUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductCountFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.GetCartProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.RedeemBonusesUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.RemoveProductFromCartUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawMyCardUseCase
+import ru.livetyping.zarina.core.domain.usecase.cart.WithdrawPromoCodeUseCase
+import ru.livetyping.zarina.core.domain.usecase.catalog.GetCatalogMenuUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoriesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryPathUseCase
+import ru.livetyping.zarina.core.domain.usecase.category.GetCategoryUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.ApplyGiftCertificateUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.CheckoutUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCheckoutCartFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCompletedPaymentsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetCourierDeliveryOptionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetDeliveryMethodsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPaymentMethodsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupPointsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPickupStoresFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.GetPostDeliveryOptionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.UpdateOrderPaymentStatusUseCase
+import ru.livetyping.zarina.core.domain.usecase.checkout.WithdrawGiftCertificateUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCitiesUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCityStreetsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetCurrentCityByLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.geo.GetStreetBuildingsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.location.GetCurrentLocationFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.GetIsOnboardingCompletedFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.GetOnboardingBannerUrlFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.onboarding.SetIsOnboardingCompletedUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.CancelOrderUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.GetOrderFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.GetOrderPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.order.GetOrderStatusUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetCategoryInfoFlowUseCase
+// ========== REVIEW FROM HERE ==========
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductAiReviewsUseCase
+// ========== TO HERE, AND ==========
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductAvailabilityInStoresFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductTotalLookUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetProductsWithFiltersPageUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.GetSimilarProductsUseCase
+import ru.livetyping.zarina.core.domain.usecase.product.SubscribeToProductUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.ClearSearchHistoryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.DeleteSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetLastSearchHistoryQueriesFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.GetSearchSuggestionsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.SaveSearchHistoryQueryUseCase
+import ru.livetyping.zarina.core.domain.usecase.search.SearchFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.store.GetStoresFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ChangePhoneNumberUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmPhoneNumberChangeUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByEmailUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignInByPhoneUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ConfirmSignUpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.DeleteAccountUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.ForcedSignOutUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetInAppReviewRequestFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyCardFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramBonusHistoryPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetLoyaltyProgramExpectedBonusesPageFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserCityFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetUserFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.GetYandexCaptchaUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestInAppReviewUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewAuthOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewPhoneNumberChangeOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestNewSignInByEmailConfirmationOtpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestPasswordResetUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.RequestSignInByEmailConfirmationUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetLocalUserCityUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SetUserCityUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignInByEmailUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignInByPhoneUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignOutUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.SignUpUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserInfoUseCase
+import ru.livetyping.zarina.core.domain.usecase.user.UpdateUserNotificationsSettingsUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductIdsFlowUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.GetWishlistProductPageUseCase
+import ru.livetyping.zarina.core.domain.usecase.wishlist.ToggleProductInWishlistUseCase
+import ru.livetyping.zarina.core.usecase.UseCaseLogger
+import ru.livetyping.zarina.feature.home.domain.repository.HomeContentRepository
+import ru.livetyping.zarina.feature.home.domain.usecase.GetHomeContentUseCase
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal class UseCaseModule {
+
+    @Provides
+    fun provideRequestNewSignInByEmailPhoneNumberConfirmationOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewSignInByEmailConfirmationOtpUseCase {
+        return RequestNewSignInByEmailConfirmationOtpUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmSignInByEmailUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): ConfirmSignInByEmailUseCase {
+        return ConfirmSignInByEmailUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideFetchUnauthorizedUserBearerTokensUseCase(
+        authRepository: AuthRepository,
+        logger: UseCaseLogger,
+    ): FetchUnauthorizedUserBearerTokensUseCase {
+        return FetchUnauthorizedUserBearerTokensUseCase.getInstance(
+            authRepository = authRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetBearerTokensFlowUseCase(
+        authRepository: AuthRepository,
+        logger: UseCaseLogger,
+    ): GetBearerTokensFlowUseCase {
+        return GetBearerTokensFlowUseCase.getInstance(
+            authRepository = authRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRefreshBearerTokensUseCase(
+        authRepository: AuthRepository,
+        forcedSignOutCoordinator: ForcedSignOutCoordinator,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): RefreshBearerTokensUseCase {
+        return RefreshBearerTokensUseCase.getInstance(
+            authRepository = authRepository,
+            forcedSignOutCoordinator = forcedSignOutCoordinator,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetHomeContentUseCase(
+        homeContentRepository: HomeContentRepository,
+        logger: UseCaseLogger,
+    ): GetHomeContentUseCase {
+        return GetHomeContentUseCase.getInstance(
+            homeContentRepository = homeContentRepository,
+            logger = logger,
+        )
+    }
+    // ========== REVIEW FROM HERE ==========
+    @Provides
+    fun provideGetProductAiReviewsUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetProductAiReviewsUseCase {
+        return GetProductAiReviewsUseCase.getInstance(
+            productRepository = productRepository,
+            logger = logger,
+        )
+    }
+    // ========== TO HERE ==========
+    @Provides
+    fun provideGetCategoriesFlowUseCase(
+        categoryRepository: CategoryRepository,
+        logger: UseCaseLogger,
+    ): GetCategoriesFlowUseCase {
+        return GetCategoriesFlowUseCase.getInstance(
+            categoryRepository = categoryRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetWishlistProductIdsFlowUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetWishlistProductIdsFlowUseCase {
+        return GetWishlistProductIdsFlowUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetWishlistProductPageUseCase(
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetWishlistProductPageUseCase {
+        return GetWishlistProductPageUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideToggleProductInWishlistUseCase(
+        wishlistRepository: WishlistRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): ToggleProductInWishlistUseCase {
+        return ToggleProductInWishlistUseCase.getInstance(
+            wishlistRepository = wishlistRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCurrentLocationFlowUseCase(
+        locationRepository: LocationRepository,
+        logger: UseCaseLogger,
+    ): GetCurrentLocationFlowUseCase {
+        return GetCurrentLocationFlowUseCase.getInstance(
+            locationRepository = locationRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOnboardingBannerUrlFlowUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): GetOnboardingBannerUrlFlowUseCase {
+        return GetOnboardingBannerUrlFlowUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCurrentCityByLocationFlowUseCase(
+        locationRepository: LocationRepository,
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetCurrentCityByLocationFlowUseCase {
+        return GetCurrentCityByLocationFlowUseCase.getInstance(
+            locationRepository = locationRepository,
+            geographyRepository = geographyRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetIsOnboardingCompletedUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): SetIsOnboardingCompletedUseCase {
+        return SetIsOnboardingCompletedUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetUserCityUseCase(
+        userRepository: UserRepository,
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): SetUserCityUseCase {
+        return SetUserCityUseCase.getInstance(
+            userRepository = userRepository,
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSetLocalUserCityUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SetLocalUserCityUseCase {
+        return SetLocalUserCityUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCitiesUseCase(
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetCitiesUseCase {
+        return GetCitiesUseCase.getInstance(
+            geographyRepository = geographyRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetUserFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetUserFlowUseCase {
+        return GetUserFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLoyaltyCardFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetLoyaltyCardFlowUseCase {
+        return GetLoyaltyCardFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetUserCityFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetUserCityFlowUseCase {
+        return GetUserCityFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignInByEmailUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): SignInByEmailUseCase {
+        return SignInByEmailUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignInByPhoneUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SignInByPhoneUseCase {
+        return SignInByPhoneUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetYandexCaptchaUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetYandexCaptchaUseCase {
+        return GetYandexCaptchaUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOrderPageFlowUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): GetOrderPageFlowUseCase {
+        return GetOrderPageFlowUseCase.getInstance(
+            orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignUpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): SignUpUseCase {
+        return SignUpUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestPasswordResetUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestPasswordResetUseCase {
+        return RequestPasswordResetUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideForcedSignOutUseCase(
+        authRepository: AuthRepository,
+        userRepository: UserRepository,
+        contentRepository: ContentRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): ForcedSignOutUseCase {
+        return ForcedSignOutUseCase.getInstance(
+            authRepository = authRepository,
+            userRepository = userRepository,
+            contentRepository = contentRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideUpdateUserNotificationsSettingsUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): UpdateUserNotificationsSettingsUseCase {
+        return UpdateUserNotificationsSettingsUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSignOutUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        contentRepository: ContentRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): SignOutUseCase {
+        return SignOutUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            contentRepository = contentRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideDeleteAccountUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        contentRepository: ContentRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
+        storeRepository: StoreRepository,
+        searchRepository: SearchRepository,
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): DeleteAccountUseCase {
+        return DeleteAccountUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            contentRepository = contentRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
+            storeRepository = storeRepository,
+            searchRepository = searchRepository,
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoryUseCase(
+        categoryRepository: CategoryRepository,
+        logger: UseCaseLogger,
+    ): GetCategoryUseCase {
+        return GetCategoryUseCase.getInstance(
+            categoryRepository = categoryRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoryPathUseCase(
+        categoryRepository: CategoryRepository,
+        logger: UseCaseLogger,
+    ): GetCategoryPathUseCase {
+        return GetCategoryPathUseCase.getInstance(
+            categoryRepository = categoryRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductsWithFiltersPageUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetProductsWithFiltersPageUseCase {
+        return GetProductsWithFiltersPageUseCase.getInstance(
+            productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCartProductIdsFlowUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): GetCartProductIdsFlowUseCase {
+        return GetCartProductIdsFlowUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideAddProductToCartUseCase(
+        cartRepository: CartRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): AddProductToCartUseCase {
+        return AddProductToCartUseCase.getInstance(
+            cartRepository = cartRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRemoveProductFromCartUseCase(
+        cartRepository: CartRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): RemoveProductFromCartUseCase {
+        return RemoveProductFromCartUseCase.getInstance(
+            cartRepository = cartRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSubscribeToProductUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): SubscribeToProductUseCase {
+        return SubscribeToProductUseCase.getInstance(
+            productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductUseCase(
+        productRepository: ProductRepository,
+        cartRepository: CartRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetProductUseCase {
+        return GetProductUseCase.getInstance(
+            productRepository = productRepository,
+            cartRepository = cartRepository,
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOrderFlowUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): GetOrderFlowUseCase {
+        return GetOrderFlowUseCase.getInstance(
+            orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmSignUpUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): ConfirmSignUpUseCase {
+        return ConfirmSignUpUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestNewAuthOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewAuthOtpUseCase {
+        return RequestNewAuthOtpUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmSignInByPhoneUseCase(
+        userRepository: UserRepository,
+        authRepository: AuthRepository,
+        mindboxRepository: MindboxRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): ConfirmSignInByPhoneUseCase {
+        return ConfirmSignInByPhoneUseCase.getInstance(
+            userRepository = userRepository,
+            authRepository = authRepository,
+            mindboxRepository = mindboxRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLoyaltyProgramBonusHistoryPageFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetLoyaltyProgramBonusHistoryPageFlowUseCase {
+        return GetLoyaltyProgramBonusHistoryPageFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLoyaltyProgramExpectedBonusesPageFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetLoyaltyProgramExpectedBonusesPageFlowUseCase {
+        return GetLoyaltyProgramExpectedBonusesPageFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideUpdateUserInfoUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): UpdateUserInfoUseCase {
+        return UpdateUserInfoUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideChangePhoneNumberUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): ChangePhoneNumberUseCase {
+        return ChangePhoneNumberUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideConfirmPhoneNumberChangeUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): ConfirmPhoneNumberChangeUseCase {
+        return ConfirmPhoneNumberChangeUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestNewPhoneNumberChangeOtpUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestNewPhoneNumberChangeOtpUseCase {
+        return RequestNewPhoneNumberChangeOtpUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetStoresFlowUseCase(
+        storeRepository: StoreRepository,
+        logger: UseCaseLogger,
+    ): GetStoresFlowUseCase {
+        return GetStoresFlowUseCase.getInstance(
+            storeRepository = storeRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCartProductCountFlowUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): GetCartProductCountFlowUseCase {
+        return GetCartProductCountFlowUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideClearCartUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): ClearCartUseCase {
+        return ClearCartUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCartFlowUseCase(
+        cartRepository: CartRepository,
+        userRepository: UserRepository,
+        wishlistRepository: WishlistRepository,
+        logger: UseCaseLogger,
+    ): GetCartFlowUseCase {
+        return GetCartFlowUseCase.getInstance(
+            cartRepository = cartRepository,
+            userRepository = userRepository,
+            wishlistRepository = wishlistRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideApplyMyCardUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): ApplyMyCardUseCase {
+        return ApplyMyCardUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideWithdrawMyCardUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): WithdrawMyCardUseCase {
+        return WithdrawMyCardUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideApplyPromoCodeUseCase(
+        cartRepository: CartRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): ApplyPromoCodeUseCase {
+        return ApplyPromoCodeUseCase.getInstance(
+            cartRepository = cartRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideWithdrawPromoCodeUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): WithdrawPromoCodeUseCase {
+        return WithdrawPromoCodeUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRedeemBonusesUseCase(
+        cartRepository: CartRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): RedeemBonusesUseCase {
+        return RedeemBonusesUseCase.getInstance(
+            cartRepository = cartRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCancelBonusRedemptionUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): CancelBonusRedemptionUseCase {
+        return CancelBonusRedemptionUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideChangeProductCountInCartUseCase(
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): ChangeProductCountInCartUseCase {
+        return ChangeProductCountInCartUseCase.getInstance(
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCancelOrderUseCase(
+        orderRepository: OrderRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): CancelOrderUseCase {
+        return CancelOrderUseCase.getInstance(
+            orderRepository = orderRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductTotalLookUseCase(
+        productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): GetProductTotalLookUseCase {
+        return GetProductTotalLookUseCase.getInstance(
+            productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetSimilarProductsUseCase(
+        productRepository: ProductRepository,
+        wishlistRepository: WishlistRepository,
+        cartRepository: CartRepository,
+        logger: UseCaseLogger,
+    ): GetSimilarProductsUseCase {
+        return GetSimilarProductsUseCase.getInstance(
+            productRepository = productRepository,
+            wishlistRepository = wishlistRepository,
+            cartRepository = cartRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetIsOnboardingCompletedFlowUseCase(
+        onboardingRepository: OnboardingRepository,
+        logger: UseCaseLogger,
+    ): GetIsOnboardingCompletedFlowUseCase {
+        return GetIsOnboardingCompletedFlowUseCase.getInstance(
+            onboardingRepository = onboardingRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCategoryInfoFlowUseCase(
+        productRepository: ProductRepository,
+        logger: UseCaseLogger,
+    ): GetCategoryInfoFlowUseCase {
+        return GetCategoryInfoFlowUseCase.getInstance(
+            productRepository = productRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetSearchSuggestionsFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): GetSearchSuggestionsFlowUseCase {
+        return GetSearchSuggestionsFlowUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetLastSearchHistoryQueriesFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): GetLastSearchHistoryQueriesFlowUseCase {
+        return GetLastSearchHistoryQueriesFlowUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSaveSearchHistoryQueryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): SaveSearchHistoryQueryUseCase {
+        return SaveSearchHistoryQueryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideDeleteSearchHistoryQueryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): DeleteSearchHistoryQueryUseCase {
+        return DeleteSearchHistoryQueryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideClearSearchHistoryUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): ClearSearchHistoryUseCase {
+        return ClearSearchHistoryUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideSearchFlowUseCase(
+        searchRepository: SearchRepository,
+        logger: UseCaseLogger,
+    ): SearchFlowUseCase {
+        return SearchFlowUseCase.getInstance(
+            searchRepository = searchRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetProductAvailabilityInStoresFlowUseCase(
+        productRepository: ProductRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetProductAvailabilityInStoresFlowUseCase {
+        return GetProductAvailabilityInStoresFlowUseCase.getInstance(
+            productRepository = productRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestSignInPhoneConfirmationUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestSignInByEmailConfirmationUseCase {
+        return RequestSignInByEmailConfirmationUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetDeliveryMethodsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetDeliveryMethodsFlowUseCase {
+        return GetDeliveryMethodsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPickupStoresFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetPickupStoresFlowUseCase {
+        return GetPickupStoresFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPickupPointsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetPickupPointsFlowUseCase {
+        return GetPickupPointsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPickupPointFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetPickupPointFlowUseCase {
+        return GetPickupPointFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCityStreetsFlowUseCase(
+        geographyRepository: GeographyRepository,
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetCityStreetsFlowUseCase {
+        return GetCityStreetsFlowUseCase.getInstance(
+            geographyRepository = geographyRepository,
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetStreetBuildingsFlowUseCase(
+        geographyRepository: GeographyRepository,
+        logger: UseCaseLogger,
+    ): GetStreetBuildingsFlowUseCase {
+        return GetStreetBuildingsFlowUseCase.getInstance(
+            geographyRepository = geographyRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCourierDeliveryOptionsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCourierDeliveryOptionsFlowUseCase {
+        return GetCourierDeliveryOptionsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPostDeliveryOptionsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetPostDeliveryOptionsFlowUseCase {
+        return GetPostDeliveryOptionsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideCheckoutUseCase(
+        checkoutRepository: CheckoutRepository,
+        orderRepository: OrderRepository,
+        userRepository: UserRepository,
+        appMetrica: AppMetrica,
+        logger: UseCaseLogger,
+    ): CheckoutUseCase {
+        return CheckoutUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            orderRepository = orderRepository,
+            userRepository = userRepository,
+            appMetrica = appMetrica,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCheckoutCartFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCheckoutCartFlowUseCase {
+        return GetCheckoutCartFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetOrderStatusUseCase(
+        orderRepository: OrderRepository,
+        logger: UseCaseLogger,
+    ): GetOrderStatusUseCase {
+        return GetOrderStatusUseCase.getInstance(
+            orderRepository = orderRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetPaymentMethodsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetPaymentMethodsFlowUseCase {
+        return GetPaymentMethodsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideUpdateOrderPaymentStatusUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): UpdateOrderPaymentStatusUseCase {
+        return UpdateOrderPaymentStatusUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideWithdrawGiftCertificateUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): WithdrawGiftCertificateUseCase {
+        return WithdrawGiftCertificateUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideApplyGiftCertificateUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): ApplyGiftCertificateUseCase {
+        return ApplyGiftCertificateUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCompletedPaymentsFlowUseCase(
+        checkoutRepository: CheckoutRepository,
+        logger: UseCaseLogger,
+    ): GetCompletedPaymentsFlowUseCase {
+        return GetCompletedPaymentsFlowUseCase.getInstance(
+            checkoutRepository = checkoutRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideRequestInAppReviewUseCaseUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): RequestInAppReviewUseCase {
+        return RequestInAppReviewUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetInAppReviewRequestFlowUseCase(
+        userRepository: UserRepository,
+        logger: UseCaseLogger,
+    ): GetInAppReviewRequestFlowUseCase {
+        return GetInAppReviewRequestFlowUseCase.getInstance(
+            userRepository = userRepository,
+            logger = logger,
+        )
+    }
+
+    @Provides
+    fun provideGetCatalogMenuUseCase(
+        contentRepository: ContentRepository,
+        logger: UseCaseLogger,
+    ): GetCatalogMenuUseCase {
+        return GetCatalogMenuUseCase.getInstance(
+            contentRepository = contentRepository,
+            logger = logger,
+        )
+    }
+}

@@ -1,0 +1,80 @@
+
+.
+├── app
+│   └── src
+│       └── main
+│           └── java
+│               └── ru
+│                   └── livetyping
+│                       └── zarina
+│                           └── di
+│                               └── UseCaseModule.kt
+├── core
+│   └── domain
+│       └── src
+│           └── main
+│               └── java
+│                   └── ru
+│                       └── livetyping
+│                           └── zarina
+│                               └── core
+│                                   └── domain
+│                                       ├── model
+│                                       │   └── product
+│                                       │       ├── Product.kt
+│                                       │       └── ProductAiReviews.kt
+│                                       ├── repository
+│                                       │   └── ProductRepository.kt
+│                                       └── usecase
+│                                           └── product
+│                                               ├── GetProductAiReviewsUseCase.kt
+│                                               └── GetProductAiReviewsUseCaseImpl.kt
+├── data
+│   └── product
+│       └── src
+│           └── main
+│               └── java
+│                   └── ru
+│                       └── livetyping
+│                           └── zarina
+│                               └── data
+│                                   └── product
+│                                       ├── ProductRepositoryImpl.kt
+│                                       └── remote
+│                                           ├── api
+│                                           │   ├── dto
+│                                           │   │   ├── ProductAiReviewDto.kt
+│                                           │   │   ├── ProductAiReviewRequestBody.kt
+│                                           │   │   └── ProductAiReviewTypeDto.kt
+│                                           │   ├── ProductApi.kt
+│                                           │   └── ProductApiImpl.kt
+│                                           ├── ProductRemoteDataSource.kt
+│                                           └── ProductRemoteDataSourceImpl.kt
+└── feature
+    └── product
+        └── ui
+            └── impl
+                └── src
+                    └── main
+                        └── java
+                            └── ru
+                                └── livetyping
+                                    └── zarina
+                                        └── feature
+                                            └── product
+                                                └── ui
+                                                    └── impl
+                                                        └── impl
+                                                            └── product
+                                                                ├── component
+                                                                │   └── ProductComponent.kt
+                                                                ├── model
+                                                                │   ├── AiReviewsState.kt
+                                                                │   └── ProductState.kt
+                                                                ├── ProductDependencies.kt
+                                                                ├── ProductViewModel.kt
+                                                                └── ui
+                                                                    ├── AiReviews.kt
+                                                                    └── ProductSuccess.kt
+
+56 directories, 21 files

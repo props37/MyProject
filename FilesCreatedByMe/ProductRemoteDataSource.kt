@@ -1,0 +1,48 @@
+package ru.livetyping.zarina.data.product.remote
+
+import kotlinx.coroutines.flow.Flow
+import ru.livetyping.zarina.core.domain.model.category.Category
+import ru.livetyping.zarina.core.domain.model.category.CategoryInfo
+import ru.livetyping.zarina.core.domain.model.common.Email
+import ru.livetyping.zarina.core.domain.model.geo.FiasId
+import ru.livetyping.zarina.core.domain.model.pagination.Page
+import ru.livetyping.zarina.core.domain.model.product.Barcode
+import ru.livetyping.zarina.core.domain.model.product.Product
+// ========== REVIEW FROM HERE ==========
+import ru.livetyping.zarina.core.domain.model.product.ProductAiReviews
+// ========== TO HERE, AND ==========
+import ru.livetyping.zarina.core.domain.model.product.ProductAvailabilityInStore
+import ru.livetyping.zarina.core.domain.model.product.ProductDetailed
+import ru.livetyping.zarina.core.domain.model.product.ProductOffer
+import ru.livetyping.zarina.core.domain.model.product.ProductShort
+import ru.livetyping.zarina.core.domain.model.product.ProductSorting
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductFilters
+import ru.livetyping.zarina.core.domain.model.product.filter.ProductsWithFilters
+
+internal interface ProductRemoteDataSource {
+    suspend fun getProductsWithFiltersPage(
+        categoryId: Category.Id,
+        filters: ProductFilters?,
+        sorting: ProductSorting,
+        page: Int,
+        pageSize: Int,
+    ): Page<ProductsWithFilters>
+
+    suspend fun getProduct(productId: Product.Id): ProductDetailed
+
+    suspend fun getProductTotalLook(productId: Product.Id): List<ProductShort>
+
+    suspend fun getSimilarProducts(productId: Product.Id): List<ProductShort>
+
+    fun getProductAvailabilityInStoresFlow(
+        offer: ProductOffer,
+        cityFiasId: FiasId,
+    ): Flow<List<ProductAvailabilityInStore>>
+
+    suspend fun subscribeToProduct(barcode: Barcode, firstName: String, email: Email)
+
+    fun getCategoryInfoFlow(categoryId: Category.Id, filters: ProductFilters?): Flow<CategoryInfo>
+    // ========== REVIEW FROM HERE ==========
+    suspend fun getProductAiReviews(groupId: Product.GroupId): ProductAiReviews
+    // ========== TO HERE ==========
+}
